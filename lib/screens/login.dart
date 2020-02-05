@@ -1,12 +1,14 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/screens/demo_screen.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/dimens.dart';
 import 'package:hutano/utils/validations.dart';
 import 'package:hutano/widgets/app_logo.dart';
 import 'package:hutano/widgets/email_widget.dart';
 import 'package:hutano/widgets/fancy_button.dart';
+import 'package:hutano/widgets/password_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 
 class Login extends StatefulWidget {
@@ -19,6 +21,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormFieldState> _emailKey = GlobalKey<FormFieldState>();
+  final GlobalKey<FormFieldState> _passwordKey = GlobalKey<FormFieldState>();
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -83,7 +86,24 @@ class _LoginState extends State<Login> {
       ),
     ));
     formWidget.add(Widgets.sizedBox(height: 30.0));
-    formWidget.add(passwordField());
+    formWidget.add(PasswordTextField(
+      passwordKey: _passwordKey,
+      obscureText: _obscureText,
+      labelText: Strings.passwordText,
+      passwordController: _passwordController,
+      style: style,
+      suffixIcon: GestureDetector(
+        dragStartBehavior: DragStartBehavior.down,
+        onTap: () {
+          setState(() {
+            _obscureText = !_obscureText;
+          });
+        },
+        child: Icon(
+          _obscureText ? Icons.visibility : Icons.visibility_off,
+        ),
+      ),
+    ));
     formWidget.add(Widgets.sizedBox(height: 30.0));
     formWidget.add(FancyButton(
       buttonHeight: Dimens.buttonHeight,
@@ -100,31 +120,4 @@ class _LoginState extends State<Login> {
 
     return formWidget;
   }
-
-  Widget passwordField() => TextFormField(
-        autovalidate: true,
-        maxLines: 1,
-        keyboardType: TextInputType.visiblePassword,
-        obscureText: _obscureText,
-        style: style,
-        validator: Validations.validatePassword,
-        controller: _passwordController,
-        decoration: InputDecoration(
-          labelText: Strings.passwordText,
-          suffixIcon: GestureDetector(
-            dragStartBehavior: DragStartBehavior.down,
-            onTap: () {
-              setState(() {
-                _obscureText = !_obscureText;
-              });
-            },
-            child: Icon(
-              _obscureText ? Icons.visibility : Icons.visibility_off,
-            ),
-          ),
-          prefixIcon: Icon(Icons.lock, color: AppColors.windsor, size: 13.0),
-          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          border: OutlineInputBorder(),
-        ),
-      );
 }

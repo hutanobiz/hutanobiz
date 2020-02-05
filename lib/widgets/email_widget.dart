@@ -10,7 +10,7 @@ class EmailTextField extends StatelessWidget {
 
   final TextStyle style;
   final TextEditingController emailController;
-  final Icon suffixIcon;
+  final Widget suffixIcon;
   final GlobalKey<FormFieldState> emailKey;
 
   @override
@@ -19,23 +19,20 @@ class EmailTextField extends StatelessWidget {
       key: emailKey,
       autofocus: true,
       autovalidate: true,
-      textInputAction: TextInputAction.next,
+      maxLines: 1,
       keyboardType: TextInputType.emailAddress,
       style: style,
       validator: Validations.validateEmail,
       controller: emailController,
       decoration: InputDecoration(
+        labelStyle: TextStyle(color: Colors.grey),
         labelText: Strings.emailText,
-        suffix:
+        suffixIcon:
             emailController.text.isNotEmpty && emailKey.currentState.validate()
-                ? FittedBox(
-                    child: suffixIcon,
-                    fit: BoxFit.fitWidth,
-                    alignment: Alignment.center,
-                  )
+                ? suffixIcon
                 : null,
-        prefixIcon: const Icon(Icons.email, color: AppColors.windsor, size: 13.0),
-        // contentPadding: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 15.0),
+        prefixIcon: Icon(Icons.email, color: AppColors.windsor, size: 13.0),
+        // contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         border: OutlineInputBorder(),
       ),
     );
