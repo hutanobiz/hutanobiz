@@ -1,10 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:hutano/colors.dart';
-import 'package:hutano/screens/demo_screen.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/dimens.dart';
-import 'package:hutano/utils/validations.dart';
 import 'package:hutano/widgets/app_logo.dart';
 import 'package:hutano/widgets/email_widget.dart';
 import 'package:hutano/widgets/fancy_button.dart';
@@ -82,7 +79,6 @@ class _LoginState extends State<Login> {
       suffixIcon: Icon(
         Icons.check_circle,
         color: Colors.green,
-        // size: 18.0,
       ),
     ));
     formWidget.add(Widgets.sizedBox(height: 30.0));
@@ -112,7 +108,7 @@ class _LoginState extends State<Login> {
         if (_emailController.text.isNotEmpty &&
             _formKey.currentState.validate()) {
           _formKey.currentState.save();
-          Navigator.pushNamed(context, "/second");
+          // Navigator.pushNamed(context, "/second");
         }
       },
     ));
