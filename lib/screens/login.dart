@@ -95,25 +95,33 @@ class _LoginState extends State<Login> {
             _obscureText = !_obscureText;
           });
         },
-        child: Icon(
-          _obscureText ? Icons.visibility : Icons.visibility_off,
-        ),
+        child: Icon(_obscureText ? Icons.visibility : Icons.visibility_off,
+            color: Colors.grey),
       ),
     ));
     formWidget.add(Widgets.sizedBox(height: 30.0));
     formWidget.add(FancyButton(
       buttonHeight: Dimens.buttonHeight,
       title: Strings.logIn,
-      onPressed: () {
-        if (_emailController.text.isNotEmpty &&
-            _formKey.currentState.validate()) {
-          _formKey.currentState.save();
-          // Navigator.pushNamed(context, "/second");
-        }
-      },
+      onPressed: isButtonEnable()
+          ? () {
+              _formKey.currentState.save();
+              // Navigator.pushNamed(context, "/second");
+            }
+          : null,
     ));
     formWidget.add(Widgets.sizedBox(height: 30.0));
 
     return formWidget;
+  }
+
+  bool isButtonEnable() {
+    if (_emailController.text.isEmpty || !_emailKey.currentState.validate()) {
+      return false;
+    } else if (_passwordController.text.isEmpty ||
+        !_passwordKey.currentState.validate()) {
+      return false;
+    } else
+      return true;
   }
 }

@@ -22,37 +22,40 @@ class FancyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialButton(
-      elevation: elevation ?? 0.0,
+    return ButtonTheme(
       height: buttonHeight,
       minWidth: buttonWidth == 0.0 ? 0.0 : MediaQuery.of(context).size.width,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          CustomVisibility(
-            visibility:
-                icon == null ? VisibilityFlag.gone : VisibilityFlag.visible,
-            child: Row(
-              children: <Widget>[
-                Icon(
-                  icon,
-                  color: Colors.red,
-                ),
-                SizedBox(width: 8.0),
-              ],
+      child: RaisedButton(
+        elevation: elevation ?? 0.0,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            CustomVisibility(
+              visibility:
+                  icon == null ? VisibilityFlag.gone : VisibilityFlag.visible,
+              child: Row(
+                children: <Widget>[
+                  Icon(
+                    icon,
+                    color: Colors.red,
+                  ),
+                  SizedBox(width: 8.0),
+                ],
+              ),
             ),
-          ),
-          Text(
-            title,
-            style: TextStyle(color: Colors.white, fontSize: 16.0),
-          ),
-        ],
-      ),
-      color: buttonColor == null ? Theme.of(context).primaryColor : buttonColor,
-      splashColor: Colors.orange,
-      onPressed: onPressed,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(Dimens.buttonCornerRadius),
+            Text(
+              title,
+              style: TextStyle(color: Colors.white, fontSize: 16.0),
+            ),
+          ],
+        ),
+        color:
+            buttonColor == null ? Theme.of(context).primaryColor : buttonColor,
+        splashColor: Colors.orange,
+        onPressed: onPressed,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Dimens.buttonCornerRadius),
+        ),
       ),
     );
   }
