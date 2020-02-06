@@ -32,7 +32,7 @@ class EmailTextField extends StatelessWidget {
                 ? suffixIcon
                 : null,
         prefixIcon: Icon(Icons.email, color: AppColors.windsor, size: 13.0),
-        // contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         border: OutlineInputBorder(),
       ),
     );
