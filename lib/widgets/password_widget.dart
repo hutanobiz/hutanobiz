@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/colors.dart';
 import 'package:hutano/utils/validations.dart';
 
 class PasswordTextField extends StatelessWidget {

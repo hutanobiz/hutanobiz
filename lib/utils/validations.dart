@@ -1,6 +1,13 @@
 import 'package:hutano/strings.dart';
 
 class Validations {
+  static String validateEmpty(String value) {
+    if (value.isEmpty) {
+      return "Field Can't be empty";
+    } else
+      return null;
+  }
+
   static String validateEmail(String value) {
     if (value.isEmpty) {
       return null;

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/utils/validations.dart';
 
-import '../colors.dart';
 import '../strings.dart';
 
 class EmailTextField extends StatelessWidget {

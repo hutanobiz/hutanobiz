@@ -192,11 +192,10 @@ class _LoginState extends State<LoginScreen> {
             Widgets.showToast(Strings.loggedIn);
 
             setLoading(false);
-            Navigator.pushNamed(context, Routes.homeRoute);
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                Routes.homeRoute, (Route<dynamic> route) => false);
 
-            // SharedPref.saveToken(response.tokens[0].token);
-
-            // print("Token: " + SharedPref.getToken());
+            SharedPref().saveToken(response.tokens[0].token);
           })
           .timeout(const Duration(seconds: 10))
           .catchError((onError) {

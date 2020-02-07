@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/screens/register_email.dart';
 import 'package:hutano/utils/dimens.dart';
 import 'package:hutano/widgets/app_logo.dart';
@@ -8,8 +9,6 @@ import 'package:hutano/widgets/widgets.dart';
 import 'package:pin_view/pin_view.dart';
 
 class VerifyOTP extends StatefulWidget {
-  // static const routeName = '/passArguments';
-
   @override
   _VerifyOTPState createState() => _VerifyOTPState();
 }
@@ -95,16 +94,13 @@ class _VerifyOTPState extends State<VerifyOTP> {
                 loginData["step"] = "2";
                 loginData["fullName"] = "user";
                 loginData["verificationCode"] = otp;
+
                 api.register(loginData).then((dynamic user) {
-                  // Navigator.pushNamed(context, '/sign-up');
-                  // Navigator.pushNamed(
-                  //   context,
-                  //   SignUpForm.routeName,
-                  //   arguments: RegisterArguments(
-                  //     email,
-                  //     "user"
-                  //   ),
-                  // );
+                  Navigator.pushNamed(
+                    context,
+                    Routes.registerRoute,
+                    arguments: RegisterArguments(email, "user"),
+                  );
                 });
               }
             },

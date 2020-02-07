@@ -9,7 +9,7 @@ import 'package:hutano/widgets/widgets.dart';
 
 class ApiBaseHelper {
   NetworkUtil _netUtil = new NetworkUtil();
-  static const String _base_url = "http://206.189.137.24:8000/";
+  static const String _base_url = "http://139.59.40.62:5300/";
 
   Future<User> login(Map<String, String> loginData) {
     return _netUtil
