@@ -1,6 +1,10 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class AppLogo extends StatelessWidget {
+  const AppLogo({this.appLogoText});
+
+  final String appLogoText;
+
   @override
   Widget build(BuildContext context) {
     AssetImage assetImage = AssetImage("images/hutano-logo.png");
@@ -11,7 +15,11 @@ class AppLogo extends StatelessWidget {
     );
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[image, SizedBox(height: 12.0), Text("Please sign in to continue.")],
+      children: <Widget>[
+        image,
+        SizedBox(height: 12.0),
+        appLogoText != null ? Text(appLogoText) : Container()
+      ],
     );
   }
 }
