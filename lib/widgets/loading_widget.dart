@@ -9,13 +9,11 @@ class LoadingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Stack(
-        children: <Widget>[
-          widget,
-          isLoading ? Center(child: CircularProgressIndicator()) : Container(),
-        ],
-      ),
+    return Stack(
+      children: <Widget>[
+        widget,
+        isLoading ? Center(child: CircularProgressIndicator()) : Container(),
+      ],
     );
   }
 }
