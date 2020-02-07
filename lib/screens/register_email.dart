@@ -97,16 +97,20 @@ class _RegisterEmailState extends State<RegisterEmail> {
         onPressed: isButtonEnable()
             ? () {
                 ApiBaseHelper api = new ApiBaseHelper();
+
                 Map<String, String> loginData = Map();
                 loginData["email"] = _emailController.text.toString();
                 loginData["type"] = "1";
                 loginData["step"] = "1";
                 loginData["fullName"] = "user";
                 api.register(loginData).then((dynamic user) {
+                  Widgets.showToast(user.toString());
+
                   Navigator.pushNamed(
                     context,
                     Routes.verifyOtpRoute,
-                    arguments: RegisterArguments(_emailController.text, user),
+                    arguments:
+                        RegisterArguments(_emailController.text, user, false),
                   );
                 });
               }
@@ -130,5 +134,7 @@ class _RegisterEmailState extends State<RegisterEmail> {
 class RegisterArguments {
   final String email;
   final String otp;
-  RegisterArguments(this.email, this.otp);
+  final bool isForgot;
+
+  RegisterArguments(this.email, this.otp, this.isForgot);
 }

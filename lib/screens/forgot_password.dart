@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/screens/register_email.dart';
 import 'package:hutano/utils/dimens.dart';
 import 'package:hutano/widgets/app_logo.dart';
 import 'package:hutano/widgets/email_widget.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/loading_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
+
+import '../routes.dart';
 
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({Key key}) : super(key: key);
@@ -20,6 +24,21 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 14.0);
 
   bool isLoading = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _emailController.addListener(() {
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,9 +106,24 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     formWidget.add(
       FancyButton(
         title: "Confirm",
-        onPressed: () {
-          Navigator.pushNamed(context, '/second');
-        },
+        onPressed: isButtonEnable()
+            ? () {
+                ApiBaseHelper api = new ApiBaseHelper();
+                Map<String, String> loginData = Map();
+                loginData["email"] = _emailController.text.toString();
+                loginData["step"] = "1";
+                api.resetPassword(loginData).then((dynamic user) {
+                  Widgets.showToast(user.toString());
+
+                  Navigator.pushNamed(
+                    context,
+                    Routes.verifyOtpRoute,
+                    arguments:
+                        RegisterArguments(_emailController.text, user, true),
+                  );
+                });
+              }
+            : null,
         buttonHeight: Dimens.buttonHeight,
       ),
     );
@@ -118,5 +152,13 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     );
 
     return formWidget;
+  }
+
+  bool isButtonEnable() {
+    if (_emailController.text.isEmpty || !_emailKey.currentState.validate()) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }

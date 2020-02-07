@@ -16,7 +16,7 @@ class User {
   bool isContactInformationVerified;
   int status;
   int type;
-  String resetPasswordVerificationCode;
+  int resetPasswordVerificationCode;
   String resetPasswordVerificationCodeSentAt;
   String sId;
   String email;

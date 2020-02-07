@@ -200,7 +200,7 @@ class _LoginState extends State<LoginScreen> {
           .timeout(const Duration(seconds: 10))
           .catchError((onError) {
             setLoading(false);
-            print("error");
+            print(onError);
           });
     } on TimeoutException catch (_) {
       Widgets.showToast("Timeout!");

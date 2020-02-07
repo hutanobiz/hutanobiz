@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -24,6 +23,16 @@ class ApiBaseHelper {
   Future<dynamic> register(Map<String, String> map) {
     return _netUtil
         .post(_base_url + "auth/api/register", body: map)
+        .then((res) {
+      print(res.toString());
+
+      return (res["response"]);
+    });
+  }
+
+  Future<dynamic> resetPassword(Map<String, String> map) {
+    return _netUtil
+        .post(_base_url + "auth/api/reset-password", body: map)
         .then((res) {
       print(res.toString());
 

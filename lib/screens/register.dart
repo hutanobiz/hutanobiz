@@ -8,9 +8,11 @@ import 'package:hutano/utils/dimens.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/utils/validations.dart';
 import 'package:hutano/widgets/app_logo.dart';
-import 'package:hutano/widgets/email_widget.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/password_widget.dart';
+import 'package:hutano/widgets/widgets.dart';
+
+import '../strings.dart';
 
 class Register extends StatefulWidget {
   Register({Key key}) : super(key: key);
@@ -92,7 +94,8 @@ class _SignUpFormState extends State<Register> {
         key: _formKey,
         child: ListView(
           children: getFormWidget(),
-          padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+          padding: const EdgeInsets.fromLTRB(
+              Dimens.padding, 51.0, Dimens.padding, Dimens.padding),
         ),
       ),
     );
@@ -102,30 +105,31 @@ class _SignUpFormState extends State<Register> {
     List<Widget> formWidget = new List();
     formWidget.add(AppLogo());
     formWidget.add(
-      Padding(
-        padding: EdgeInsets.only(top: 10, bottom: 10),
-        child: Center(child: Text("Please sign in to continue.")),
-      ),
+      Center(child: Text("Let's start creating your account.")),
     );
+
+    formWidget.add(Widgets.sizedBox(height: 60.0));
 
     formWidget.add(Row(
       children: <Widget>[
         Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(right: 5.0, top: 5, bottom: 5),
-            child: TextFormField(
-              controller: _firstNameController,
-              decoration: InputDecoration(
-                  labelText: "First Name",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0))),
-              keyboardType: TextInputType.text,
-              onSaved: (value) {
-                setState(() {});
-              },
-            ),
+          child: TextFormField(
+            autofocus: true,
+            controller: _firstNameController,
+            decoration: InputDecoration(
+                labelText: "First Name",
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey[300]),
+                    borderRadius: BorderRadius.circular(5.0)),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0))),
+            keyboardType: TextInputType.text,
+            onSaved: (value) {
+              setState(() {});
+            },
           ),
         ),
+        SizedBox(width: 20.0),
         Expanded(
           child: Padding(
             padding: EdgeInsets.only(left: 5.0, top: 5, bottom: 5),
@@ -133,6 +137,9 @@ class _SignUpFormState extends State<Register> {
               controller: _lastNameController,
               decoration: InputDecoration(
                   labelText: "Last Name",
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey[300]),
+                      borderRadius: BorderRadius.circular(5.0)),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0))),
               keyboardType: TextInputType.text,
@@ -145,20 +152,28 @@ class _SignUpFormState extends State<Register> {
       ],
     ));
 
+    formWidget.add(Widgets.sizedBox(height: 29.0));
+
     formWidget.add(
-      Padding(
-        padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
-        child: EmailTextField(
-          emailKey: _emailKey,
-          emailController: _emailController,
-          style: style,
-          suffixIcon: Icon(
-            Icons.check_circle,
-            color: Colors.green,
-          ),
+      TextFormField(
+        key: _emailKey,
+        initialValue: email,
+        autofocus: true,
+        autovalidate: true,
+        maxLines: 1,
+        enabled: false,
+        keyboardType: TextInputType.emailAddress,
+        style: style,
+        validator: Validations.validateEmail,
+        decoration: InputDecoration(
+          labelStyle: TextStyle(color: Colors.grey),
+          labelText: Strings.emailText,
+          border: OutlineInputBorder(),
         ),
       ),
     );
+
+    formWidget.add(Widgets.sizedBox(height: 29.0));
 
     formWidget.add(
       Padding(
@@ -166,13 +181,10 @@ class _SignUpFormState extends State<Register> {
         child: TextFormField(
           controller: _phoneController,
           decoration: InputDecoration(
-              suffixIcon: _phoneController.text == null
-                  ? null
-                  : Icon(
-                      Icons.check_circle,
-                      color: Colors.green,
-                    ),
               labelText: "Phone",
+              enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey[300]),
+                  borderRadius: BorderRadius.circular(5.0)),
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
           keyboardType: TextInputType.phone,
@@ -180,100 +192,104 @@ class _SignUpFormState extends State<Register> {
       ),
     );
 
+    formWidget.add(Widgets.sizedBox(height: 29.0));
+
     formWidget.add(
-      Padding(
-          padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
-          child: PasswordTextField(
-            labelText: "Password",
-            passwordController: _passwordController,
-            passwordKey: _passwordKey,
-            obscureText: _obscureText,
-            style: style,
-            suffixIcon: GestureDetector(
-              dragStartBehavior: DragStartBehavior.down,
-              onTap: () {
-                setState(() {
-                  _obscureText = !_obscureText;
-                });
-              },
-              child: Icon(
-                  _obscureText ? Icons.visibility : Icons.visibility_off,
-                  color: Colors.grey),
-            ),
+      PasswordTextField(
+          labelText: "Password",
+          passwordController: _passwordController,
+          passwordKey: _passwordKey,
+          obscureText: _obscureText,
+          style: style,
+          suffixIcon: GestureDetector(
+            dragStartBehavior: DragStartBehavior.down,
+            onTap: () {
+              setState(() {
+                _obscureText = !_obscureText;
+              });
+            },
+            child: Icon(_obscureText ? Icons.visibility : Icons.visibility_off,
+                color: Colors.grey),
           )),
     );
 
+    formWidget.add(Widgets.sizedBox(height: 29.0));
+
     formWidget.add(
-      Padding(
-        padding: EdgeInsets.only(top: 5, bottom: 5),
-        child: TextFormField(
-          controller: _addressController,
-          decoration: InputDecoration(
-              labelText: "Address",
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
-          keyboardType: TextInputType.text,
-          validator: Validations.validateEmpty,
-        ),
+      TextFormField(
+        controller: _addressController,
+        decoration: InputDecoration(
+            labelText: "Address",
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey[300]),
+                borderRadius: BorderRadius.circular(5.0)),
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
+        keyboardType: TextInputType.text,
+        validator: Validations.validateEmpty,
       ),
     );
 
+    formWidget.add(Widgets.sizedBox(height: 29.0));
+
     formWidget.add(
-      Padding(
-        padding: EdgeInsets.only(top: 5, bottom: 5),
-        child: TextFormField(
-          controller: _cityController,
-          decoration: InputDecoration(
-              labelText: "City",
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
-          keyboardType: TextInputType.emailAddress,
-          onSaved: (value) {
-            setState(() {});
-          },
-        ),
+      TextFormField(
+        controller: _cityController,
+        decoration: InputDecoration(
+            labelText: "City",
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey[300])),
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
+        keyboardType: TextInputType.emailAddress,
+        onSaved: (value) {
+          setState(() {});
+        },
       ),
     );
+
+    formWidget.add(Widgets.sizedBox(height: 29.0));
 
     formWidget.add(Row(
       children: <Widget>[
         Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(right: 5.0, top: 5, bottom: 5),
-            child: TextFormField(
-              controller: _stateController,
-              decoration: InputDecoration(
-                  labelText: "State",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0))),
-              keyboardType: TextInputType.emailAddress,
-              // validator: validateEmail,
-              onSaved: (value) {
-                setState(() {});
-              },
-            ),
+          child: TextFormField(
+            controller: _stateController,
+            decoration: InputDecoration(
+                labelText: "State",
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey[300])),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0))),
+            keyboardType: TextInputType.emailAddress,
+            // validator: validateEmail,
+            onSaved: (value) {
+              setState(() {});
+            },
           ),
         ),
+        SizedBox(width: 20.0),
         Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(left: 5.0, top: 5, bottom: 5),
-            child: TextFormField(
-              controller: _codeController,
-              decoration: InputDecoration(
-                labelText: "ZipCode",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
+          child: TextFormField(
+            controller: _codeController,
+            decoration: InputDecoration(
+              labelText: "ZipCode",
+              enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey[300])),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5.0),
               ),
-              keyboardType: TextInputType.number,
-              onSaved: (value) {
-                setState(() {});
-              },
             ),
+            keyboardType: TextInputType.number,
+            onSaved: (value) {
+              setState(() {});
+            },
           ),
         ),
       ],
     ));
+
+    formWidget.add(Widgets.sizedBox(height: 29.0));
 
     formWidget.add(
       Row(
@@ -311,40 +327,37 @@ class _SignUpFormState extends State<Register> {
               ),
             ),
           ),
-          SizedBox(width: 4),
+          SizedBox(width: 20.0),
           Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(right: 5.0, top: 5, bottom: 5),
-              child: GestureDetector(
-                onTap: () => setState(() => _genderGroup = "female"),
-                child: Container(
-                  height: 56,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5.0),
-                      border: Border.all(
-                        width: 1,
-                        color: _genderGroup == "female"
-                            ? Colors.blue
-                            : Colors.grey[300],
-                      )),
-                  child: Center(
-                      child: Row(children: <Widget>[
-                    Image(
-                      image: AssetImage('images/female.png'),
-                      height: 16.0,
-                      width: 16.0,
+            child: GestureDetector(
+              onTap: () => setState(() => _genderGroup = "female"),
+              child: Container(
+                height: 56,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5.0),
+                    border: Border.all(
+                      width: 1,
+                      color: _genderGroup == "female"
+                          ? Colors.blue
+                          : Colors.grey[300],
+                    )),
+                child: Center(
+                    child: Row(children: <Widget>[
+                  Image(
+                    image: AssetImage('images/female.png'),
+                    height: 16.0,
+                    width: 16.0,
+                  ),
+                  SizedBox(
+                    width: 5.0,
+                  ),
+                  Text(
+                    "Female",
+                    style: TextStyle(
+                      color: Colors.red,
                     ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    Text(
-                      "Female",
-                      style: TextStyle(
-                        color: Colors.red,
-                      ),
-                    ),
-                  ], mainAxisAlignment: MainAxisAlignment.center)),
-                ),
+                  ),
+                ], mainAxisAlignment: MainAxisAlignment.center)),
               ),
             ),
           ),
@@ -352,19 +365,22 @@ class _SignUpFormState extends State<Register> {
       ),
     );
 
+    formWidget.add(Widgets.sizedBox(height: 29.0));
+
     formWidget.add(
-      Padding(
-        padding: EdgeInsets.only(top: 5, bottom: 5),
-        child: TextFormField(
-          key: _passKey,
-          obscureText: true,
-          decoration: InputDecoration(
-              labelText: "Primary Language",
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
-        ),
+      TextFormField(
+        key: _passKey,
+        obscureText: true,
+        decoration: InputDecoration(
+            labelText: "Primary Language",
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey[300])),
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
       ),
     );
+
+    formWidget.add(Widgets.sizedBox(height: 48.0));
 
     formWidget.add(
       Padding(
@@ -375,7 +391,7 @@ class _SignUpFormState extends State<Register> {
           onPressed: () {
             ApiBaseHelper api = new ApiBaseHelper();
             Map<String, String> loginData = Map();
-            loginData["email"] = _emailController.text;
+            loginData["email"] = email;
             loginData["type"] = "1";
             loginData["step"] = "3";
             loginData["fullName"] = "user";
