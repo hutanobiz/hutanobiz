@@ -20,6 +20,16 @@ class ApiBaseHelper {
       return User.fromJson(res["response"]);
     });
   }
+
+  Future<dynamic> register(Map<String, String> map) {
+    return _netUtil
+        .post(_base_url + "auth/api/register", body: map)
+        .then((res) {
+      print(res.toString());
+
+      return (res["response"]);
+    });
+  }
 }
 
 class NetworkUtil {

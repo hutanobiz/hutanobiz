@@ -3,9 +3,12 @@ import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
+import 'package:hutano/colors.dart';
 import 'package:hutano/models/user.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/dimens.dart';
+import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/app_logo.dart';
 import 'package:hutano/widgets/email_widget.dart';
 import 'package:hutano/widgets/fancy_button.dart';
@@ -88,6 +91,7 @@ class _LoginState extends State<LoginScreen> {
       emailKey: _emailKey,
       emailController: _emailController,
       style: style,
+      prefixIcon: Icon(Icons.email, color: AppColors.windsor, size: 13.0),
       suffixIcon: Icon(
         Icons.check_circle,
         color: Colors.green,
@@ -100,6 +104,7 @@ class _LoginState extends State<LoginScreen> {
       labelText: Strings.passwordText,
       passwordController: _passwordController,
       style: style,
+      prefixIcon: Icon(Icons.lock, color: AppColors.windsor, size: 13.0),
       suffixIcon: GestureDetector(
         dragStartBehavior: DragStartBehavior.down,
         onTap: () {
@@ -111,7 +116,21 @@ class _LoginState extends State<LoginScreen> {
             color: Colors.grey),
       ),
     ));
-    formWidget.add(Widgets.sizedBox(height: 30.0));
+    formWidget.add(Widgets.sizedBox(height: 5.0));
+
+    formWidget.add(Align(
+      alignment: Alignment.centerRight,
+      child: FlatButton(
+          onPressed: () =>
+              Navigator.pushNamed(context, Routes.forgotPasswordRoute),
+          child: Text(
+            "Forgot Password",
+            style: TextStyle(color: AppColors.windsor, fontSize: 12.0),
+          )),
+    ));
+
+    formWidget.add(Widgets.sizedBox(height: 16.0));
+
     formWidget.add(FancyButton(
       buttonHeight: Dimens.buttonHeight,
       title: Strings.logIn,
@@ -128,7 +147,35 @@ class _LoginState extends State<LoginScreen> {
           : null,
     ));
 
-    formWidget.add(Widgets.sizedBox(height: 30.0));
+    formWidget.add(Widgets.sizedBox(height: 13.0));
+
+    formWidget.add(
+      FlatButton(
+        onPressed: () {
+          Navigator.pushNamed(context, Routes.registerEmailRoute);
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              "Don't have an account.",
+              style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black,
+                  fontSize: 14.0),
+            ),
+            SizedBox(width: 2.0),
+            Text(
+              "Register",
+              style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: AppColors.sunglow,
+                  fontSize: 14.0),
+            )
+          ],
+        ),
+      ),
+    );
 
     return formWidget;
   }
@@ -145,7 +192,11 @@ class _LoginState extends State<LoginScreen> {
             Widgets.showToast(Strings.loggedIn);
 
             setLoading(false);
-            Navigator.pushNamed(context, "/home");
+            Navigator.pushNamed(context, Routes.homeRoute);
+
+            // SharedPref.saveToken(response.tokens[0].token);
+
+            // print("Token: " + SharedPref.getToken());
           })
           .timeout(const Duration(seconds: 10))
           .catchError((onError) {

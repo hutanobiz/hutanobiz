@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/screens/home.dart';
-import 'package:hutano/screens/login.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/theme.dart';
 
 void main() {
@@ -9,11 +8,8 @@ void main() {
       title: "Flutter Home",
       debugShowCheckedModeBanner: false,
       theme: AppTheme.theme,
-      initialRoute: "/",
-      routes: {
-        '/': (context) => LoginScreen(),
-        '/home': (context) => HomeScreen(),
-      },
+      initialRoute: Routes.initialRoute,
+      routes: Routes.routes,
     ),
   );
 }
