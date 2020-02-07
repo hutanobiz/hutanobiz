@@ -12,7 +12,7 @@ class HomeScreen extends StatelessWidget {
       resizeToAvoidBottomPadding: false,
       body: SafeArea(
         child: Center(
-          child: FlatButton(
+          child: RaisedButton(
             child: Text("Logout"),
             onPressed: () {
               SharedPref().clearSharedPref();
