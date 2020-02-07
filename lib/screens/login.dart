@@ -124,7 +124,7 @@ class _LoginState extends State<LoginScreen> {
           onPressed: () =>
               Navigator.pushNamed(context, Routes.forgotPasswordRoute),
           child: Text(
-            "Forgot Password",
+            "Forgot Password?",
             style: TextStyle(color: AppColors.windsor, fontSize: 12.0),
           )),
     ));

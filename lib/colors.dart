@@ -5,4 +5,5 @@ class AppColors {
   static const accentColor = Color(0xFFFFAA1A);
   static const windsor = Color(0xFF372786);
   static const sunglow  = Color(0xFFFDC635);
+  static const female  = Color(0xFFFF7675);
 }

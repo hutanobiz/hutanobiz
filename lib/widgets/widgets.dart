@@ -14,7 +14,7 @@ class Widgets {
     Fluttertoast.showToast(
       msg: message,
       textColor: Colors.white,
-      toastLength: Toast.LENGTH_SHORT,
+      toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.BOTTOM,
       backgroundColor: Colors.indigo,
     );

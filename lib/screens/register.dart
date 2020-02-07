@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
+import 'package:hutano/colors.dart';
 import 'package:hutano/models/user.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/register_email.dart';
@@ -273,7 +274,7 @@ class _SignUpFormState extends State<Register> {
           child: TextFormField(
             controller: _codeController,
             decoration: InputDecoration(
-              labelText: "ZipCode",
+              labelText: "Zip Code",
               enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey[300])),
               border: OutlineInputBorder(
@@ -338,7 +339,7 @@ class _SignUpFormState extends State<Register> {
                     border: Border.all(
                       width: 1,
                       color: _genderGroup == "female"
-                          ? Colors.blue
+                          ? AppColors.female
                           : Colors.grey[300],
                     )),
                 child: Center(
@@ -370,7 +371,7 @@ class _SignUpFormState extends State<Register> {
     formWidget.add(
       TextFormField(
         key: _passKey,
-        obscureText: true,
+        obscureText: false,
         decoration: InputDecoration(
             labelText: "Primary Language",
             enabledBorder: OutlineInputBorder(

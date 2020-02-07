@@ -74,7 +74,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     formWidget.add(Column(
       children: <Widget>[
         Text(
-          "Forget Password",
+          "Forgot Password",
           style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
         ),
         Widgets.sizedBox(height: 10.0),
@@ -84,7 +84,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
           style: TextStyle(
               color: Colors.black26,
               fontSize: 13.0,
-              fontWeight: FontWeight.bold),
+              fontWeight: FontWeight.normal),
         ),
       ],
     ));
