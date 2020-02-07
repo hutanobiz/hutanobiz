@@ -9,12 +9,14 @@ class PasswordTextField extends StatelessWidget {
       @required this.suffixIcon,
       @required this.style,
       @required this.labelText,
-      @required this.passwordController});
+      @required this.passwordController,
+      this.prefixIcon});
 
   final GlobalKey<FormFieldState> passwordKey;
   final TextEditingController passwordController;
   final bool obscureText;
   final Widget suffixIcon;
+  final Widget prefixIcon;
   final TextStyle style;
   final String labelText;
 
@@ -33,7 +35,7 @@ class PasswordTextField extends StatelessWidget {
         labelStyle: TextStyle(color: Colors.grey),
         labelText: labelText,
         suffixIcon: suffixIcon,
-        prefixIcon: Icon(Icons.lock, color: AppColors.windsor, size: 13.0),
+        prefixIcon: prefixIcon != null ? prefixIcon : null,
         contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         border: OutlineInputBorder(),
       ),

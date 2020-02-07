@@ -6,11 +6,16 @@ import '../strings.dart';
 
 class EmailTextField extends StatelessWidget {
   const EmailTextField(
-      {this.emailKey, this.style, this.emailController, this.suffixIcon});
+      {this.emailKey,
+      this.style,
+      this.emailController,
+      this.suffixIcon,
+      this.prefixIcon});
 
   final TextStyle style;
   final TextEditingController emailController;
   final Widget suffixIcon;
+  final Widget prefixIcon;
   final GlobalKey<FormFieldState> emailKey;
 
   @override
@@ -31,7 +36,7 @@ class EmailTextField extends StatelessWidget {
             emailController.text.isNotEmpty && emailKey.currentState.validate()
                 ? suffixIcon
                 : null,
-        prefixIcon: Icon(Icons.email, color: AppColors.windsor, size: 13.0),
+        prefixIcon: prefixIcon != null ? prefixIcon : null,
         contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         border: OutlineInputBorder(),
       ),
