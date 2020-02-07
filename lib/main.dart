@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/screens/home.dart';
 import 'package:hutano/screens/login.dart';
 import 'package:hutano/theme.dart';
 
@@ -10,7 +11,8 @@ void main() {
       theme: AppTheme.theme,
       initialRoute: "/",
       routes: {
-        '/': (context) => Login(),
+        '/': (context) => LoginScreen(),
+        '/home': (context) => HomeScreen(),
       },
     ),
   );

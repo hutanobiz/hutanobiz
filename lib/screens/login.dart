@@ -1,21 +1,28 @@
+import 'dart:async';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:hutano/api/api_helper.dart';
+import 'package:hutano/models/user.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/dimens.dart';
 import 'package:hutano/widgets/app_logo.dart';
 import 'package:hutano/widgets/email_widget.dart';
 import 'package:hutano/widgets/fancy_button.dart';
+import 'package:hutano/widgets/loading_widget.dart';
 import 'package:hutano/widgets/password_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 
-class Login extends StatefulWidget {
-  Login({Key key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  LoginScreen({Key key}) : super(key: key);
 
   @override
   _LoginState createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginState extends State<LoginScreen> {
+  Map<String, String> loginData = Map();
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormFieldState> _emailKey = GlobalKey<FormFieldState>();
   final GlobalKey<FormFieldState> _passwordKey = GlobalKey<FormFieldState>();
@@ -26,6 +33,7 @@ class _LoginState extends State<Login> {
 
   bool checked = false;
   bool _obscureText = true;
+  bool isLoading = false;
 
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 14.0);
 
@@ -52,15 +60,19 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       key: _scaffoldKey,
       body: SafeArea(
         child: Form(
           key: _formKey,
-          child: ListView(
-            physics: new ClampingScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(
-                Dimens.padding, 51.0, Dimens.padding, Dimens.padding),
-            children: widgetList(),
+          child: LoadingView(
+            isLoading: isLoading,
+            widget: ListView(
+              physics: new ClampingScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(
+                  Dimens.padding, 51.0, Dimens.padding, Dimens.padding),
+              children: widgetList(),
+            ),
           ),
         ),
       ),
@@ -106,13 +118,49 @@ class _LoginState extends State<Login> {
       onPressed: isButtonEnable()
           ? () {
               _formKey.currentState.save();
-              // Navigator.pushNamed(context, "/second");
+
+              loginData["email"] = _emailController.text.toString();
+              loginData["password"] = _passwordController.text.toString();
+              loginData["type"] = "1";
+
+              onClick();
             }
           : null,
     ));
+
     formWidget.add(Widgets.sizedBox(height: 30.0));
 
     return formWidget;
+  }
+
+  void onClick() {
+    ApiBaseHelper api = ApiBaseHelper();
+
+    setLoading(true);
+
+    try {
+      api
+          .login(loginData)
+          .then((User response) {
+            Widgets.showToast(Strings.loggedIn);
+
+            setLoading(false);
+            Navigator.pushNamed(context, "/home");
+          })
+          .timeout(const Duration(seconds: 10))
+          .catchError((onError) {
+            setLoading(false);
+            print("error");
+          });
+    } on TimeoutException catch (_) {
+      Widgets.showToast("Timeout!");
+    }
+  }
+
+  void setLoading(bool value) {
+    setState(() {
+      isLoading = value;
+    });
   }
 
   bool isButtonEnable() {
@@ -121,7 +169,8 @@ class _LoginState extends State<Login> {
     } else if (_passwordController.text.isEmpty ||
         !_passwordKey.currentState.validate()) {
       return false;
-    } else
+    } else {
       return true;
+    }
   }
 }

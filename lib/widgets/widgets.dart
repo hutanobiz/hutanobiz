@@ -4,9 +4,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class Widgets {
   static void showSnackBar(
-      GlobalKey<ScaffoldState> _scaffoldKey, String value) {
+      GlobalKey<ScaffoldState> _scaffoldKey, Widget value, int duration) {
     _scaffoldKey.currentState.hideCurrentSnackBar();
-    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(value)));
+    _scaffoldKey.currentState.showSnackBar(
+        SnackBar(duration: new Duration(seconds: duration), content: value));
   }
 
   static void showToast(String message) {
@@ -22,18 +23,15 @@ class Widgets {
   static void showAlertDialog(BuildContext context, String message) {
     showDialog(
       context: context,
-      builder: (BuildContext context) => new CupertinoAlertDialog(
+      builder: (BuildContext context) => new AlertDialog(
         title: new Text("Alert"),
-        content: new Text("My alert message"),
+        content: new Text(message),
         actions: [
-          CupertinoDialogAction(
-            isDefaultAction: true,
-            child: new FlatButton(
-              child: Text("close"),
-              onPressed: () =>
-                  Navigator.of(context, rootNavigator: true).pop("Discard"),
-            ),
-          )
+          new RaisedButton(
+            child: Text("close"),
+            onPressed: () =>
+                Navigator.of(context, rootNavigator: true).pop("Discard"),
+          ),
         ],
       ),
     );
