@@ -5,8 +5,8 @@ import 'package:hutano/screens/register_email.dart';
 import 'package:hutano/utils/dimens.dart';
 import 'package:hutano/widgets/app_logo.dart';
 import 'package:hutano/widgets/fancy_button.dart';
+import 'package:hutano/widgets/pin_view.dart';
 import 'package:hutano/widgets/widgets.dart';
-import 'package:pin_view/pin_view.dart';
 
 import '../colors.dart';
 
@@ -78,6 +78,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
         style: TextStyle(fontSize: 19.0, fontWeight: FontWeight.w500),
         dashStyle: TextStyle(fontSize: 25.0, color: Colors.grey),
         inputDecoration: InputDecoration(
+          counterText: "",
             enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey[300]),
                 borderRadius: BorderRadius.circular(14.0)),
