@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/models/user.dart';
-import 'package:hutano/routes.dart';
-import 'package:hutano/screens/register_email.dart';
+import 'package:hutano/strings.dart';
 import 'package:hutano/utils/dimens.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/utils/validations.dart';
@@ -13,27 +12,35 @@ import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/password_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 
-import '../strings.dart';
+import '../routes.dart';
 
 class Register extends StatefulWidget {
-  Register({Key key}) : super(key: key);
+  Register({Key key, @required this.args}) : super(key: key);
+
+  final RegisterArguments args;
 
   @override
   _SignUpFormState createState() => _SignUpFormState();
 }
 
 class _SignUpFormState extends State<Register> {
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _addressController = TextEditingController();
   final _cityController = TextEditingController();
   final _stateController = TextEditingController();
-  final _codeController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _zipController = TextEditingController();
+  final _langController = TextEditingController();
+
   String _genderGroup = "male";
-  var _passKey = GlobalKey<FormFieldState>();
+
+  ApiBaseHelper api = new ApiBaseHelper();
+  List stateList;
+
   final GlobalKey<FormFieldState> _passwordKey = GlobalKey<FormFieldState>();
   final _passwordController = TextEditingController();
 
@@ -47,6 +54,11 @@ class _SignUpFormState extends State<Register> {
   @override
   void initState() {
     super.initState();
+
+    api.getStates().then((value) {
+      stateList = value;
+    });
+
     _firstNameController.addListener(() {
       setState(() {});
     });
@@ -54,6 +66,9 @@ class _SignUpFormState extends State<Register> {
       setState(() {});
     });
     _emailController.addListener(() {
+      setState(() {});
+    });
+    _passwordController.addListener(() {
       setState(() {});
     });
     _addressController.addListener(() {
@@ -65,10 +80,13 @@ class _SignUpFormState extends State<Register> {
     _stateController.addListener(() {
       setState(() {});
     });
-    _codeController.addListener(() {
+    _zipController.addListener(() {
       setState(() {});
     });
     _phoneController.addListener(() {
+      setState(() {});
+    });
+    _langController.addListener(() {
       setState(() {});
     });
   }
@@ -81,15 +99,16 @@ class _SignUpFormState extends State<Register> {
     _addressController.dispose();
     _stateController.dispose();
     _cityController.dispose();
-    _codeController.dispose();
+    _zipController.dispose();
     _phoneController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final RegisterArguments args = ModalRoute.of(context).settings.arguments;
-    email = args.email;
+    email = widget.args.email;
+
     return Scaffold(
       body: Form(
         key: _formKey,
@@ -125,9 +144,6 @@ class _SignUpFormState extends State<Register> {
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0))),
             keyboardType: TextInputType.text,
-            onSaved: (value) {
-              setState(() {});
-            },
           ),
         ),
         SizedBox(width: 20.0),
@@ -144,9 +160,6 @@ class _SignUpFormState extends State<Register> {
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0))),
               keyboardType: TextInputType.text,
-              onSaved: (value) {
-                setState(() {});
-              },
             ),
           ),
         ),
@@ -243,9 +256,6 @@ class _SignUpFormState extends State<Register> {
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
         keyboardType: TextInputType.emailAddress,
-        onSaved: (value) {
-          setState(() {});
-        },
       ),
     );
 
@@ -254,25 +264,12 @@ class _SignUpFormState extends State<Register> {
     formWidget.add(Row(
       children: <Widget>[
         Expanded(
-          child: TextFormField(
-            controller: _stateController,
-            decoration: InputDecoration(
-                labelText: "State",
-                enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey[300])),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0))),
-            keyboardType: TextInputType.emailAddress,
-            // validator: validateEmail,
-            onSaved: (value) {
-              setState(() {});
-            },
-          ),
-        ),
+            child: picker(_stateController, "State",
+                () => listBottomDialog(stateList, _stateController))),
         SizedBox(width: 20.0),
         Expanded(
           child: TextFormField(
-            controller: _codeController,
+            controller: _zipController,
             decoration: InputDecoration(
               labelText: "Zip Code",
               enabledBorder: OutlineInputBorder(
@@ -282,9 +279,6 @@ class _SignUpFormState extends State<Register> {
               ),
             ),
             keyboardType: TextInputType.number,
-            onSaved: (value) {
-              setState(() {});
-            },
           ),
         ),
       ],
@@ -370,7 +364,7 @@ class _SignUpFormState extends State<Register> {
 
     formWidget.add(
       TextFormField(
-        key: _passKey,
+        controller: _langController,
         obscureText: false,
         decoration: InputDecoration(
             labelText: "Primary Language",
@@ -389,29 +383,114 @@ class _SignUpFormState extends State<Register> {
         child: FancyButton(
           buttonHeight: Dimens.buttonHeight,
           title: "Next",
-          onPressed: () {
-            ApiBaseHelper api = new ApiBaseHelper();
-            Map<String, String> loginData = Map();
-            loginData["email"] = email;
-            loginData["type"] = "1";
-            loginData["step"] = "3";
-            loginData["fullName"] = "user";
-            loginData["password"] = _passwordController.text;
+          onPressed: isValidate()
+              ? () {
+                  Map<String, String> loginData = Map();
+                  loginData["email"] = email;
+                  loginData["type"] = "2";
+                  loginData["step"] = "3";
+                  loginData["fullName"] =
+                      "${_firstNameController.text} ${_lastNameController.text}";
+                  loginData["password"] = _passwordController.text;
+                  loginData["address"] = _addressController.text;
+                  loginData["city"] = _cityController.text;
+                  loginData["state"] = _stateController.text;
+                  loginData["zipCode"] = _zipController.text;
+                  loginData["phoneNumber"] = _phoneController.text;
+                  loginData["gender"] = _genderGroup.trim().toString();
+                  loginData["language"] = _langController.text;
 
-            api.register(loginData).then((dynamic response) {
-              User user = User.fromJson(response);
+                  api.register(loginData).then((dynamic response) {
+                    User user = User.fromJson(response);
 
-              SharedPref().saveToken(user.tokens[0].token);
-              SharedPref().saveValue("fullName", user.fullName);
+                    SharedPref().saveToken(user.tokens[0].token);
+                    SharedPref().setValue("fullName", user.fullName);
 
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                  Routes.homeRoute, (Route<dynamic> route) => false);
-            });
-          },
+                    Widgets.showToast("Updated successfully");
+
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        Routes.homeRoute, (Route<dynamic> route) => false);
+                  });
+                }
+              : null,
         ),
       ),
     );
 
     return formWidget;
+  }
+
+  Widget picker(final controller, String labelText, onTap) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        splashColor: Colors.grey[300],
+        onTap: onTap,
+        child: TextFormField(
+          controller: controller,
+          enabled: false,
+          style: const TextStyle(fontSize: 14.0, color: Colors.black87),
+          decoration: InputDecoration(
+            suffixIcon: Icon(
+              Icons.keyboard_arrow_down,
+              color: AppColors.nero,
+            ),
+            labelText: labelText,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void listBottomDialog(List<dynamic> list, TextEditingController controller) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return ListView.builder(
+            itemCount: list.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Center(
+                  child: Text(
+                    list[index]["title"],
+                    style: TextStyle(
+                      color: list[index]["title"] == controller.text
+                          ? AppColors.goldenTainoi
+                          : Colors.black,
+                      fontSize:
+                          list[index]["title"] == controller.text ? 20.0 : 16.0,
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  setState(() {
+                    controller.text = list[index]["title"];
+                    Navigator.pop(context);
+                  });
+                },
+              );
+            },
+          );
+        });
+  }
+
+  bool isValidate() {
+    if (_firstNameController.text.isEmpty ||
+        _lastNameController.text.isEmpty ||
+        _phoneController.text.isEmpty ||
+        _passwordController.text.isEmpty ||
+        _addressController.text.isEmpty ||
+        _cityController.text.isEmpty ||
+        _stateController.text.isEmpty ||
+        _zipController.text.isEmpty ||
+        _langController.text.isEmpty)
+      return false;
+    else if (_passwordController.text.length < 6)
+      return false;
+    else
+      return true;
   }
 }

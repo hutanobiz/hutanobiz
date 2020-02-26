@@ -39,6 +39,14 @@ class ApiBaseHelper {
       return (res["response"]);
     });
   }
+
+  Future<List<dynamic>> getStates() {
+    return _netUtil.get(_base_url + "api/states").then((res) {
+      print(res.toString());
+      List responseJson = res["response"];
+      return responseJson.map((m) => m).toList();
+    });
+  }
 }
 
 class NetworkUtil {
@@ -56,10 +64,18 @@ class NetworkUtil {
 
       if (statusCode < 200 || statusCode > 400 || json == null) {
         final en = json.decode(response.body);
-        Widgets.showToast(en["response"]);
 
-        throw Exception(en["response"]);
+        if (en["response"] is String)
+          Widgets.showToast(en["response"]);
+        else if (en["response"] is Map)
+          Widgets.showToast(en);
+        else {
+          en["response"].map((m) => Widgets.showToast(m["msg"])).toList();
+        }
+
+        throw Exception(en);
       }
+
       responseJson = _decoder.convert(response.body);
     } on SocketException {
       Widgets.showToast(Strings.noInternet);
@@ -78,9 +94,16 @@ class NetworkUtil {
 
       if (statusCode < 200 || statusCode > 400 || json == null) {
         final en = json.decode(response.body);
-        Widgets.showToast(en["response"]);
 
-        throw Exception(en["response"]);
+        if (en["response"] is String)
+          Widgets.showToast(en["response"]);
+        else if (en["response"] is Map)
+          Widgets.showToast(en);
+        else {
+          en["response"].map((m) => Widgets.showToast(m["msg"])).toList();
+        }
+
+        throw Exception(en);
       }
 
       responseJson = _decoder.convert(response.body);
