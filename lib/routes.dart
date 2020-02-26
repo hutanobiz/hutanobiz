@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hutano/screens/register.dart';
-import 'package:hutano/screens/reset_password.dart';
+import 'package:hutano/screens/registration/forgot_password.dart';
+import 'package:hutano/screens/registration/register.dart';
+import 'package:hutano/screens/registration/register_email.dart';
+import 'package:hutano/screens/registration/reset_password.dart';
+import 'package:hutano/screens/registration/verify_otp.dart';
 
-import 'screens/forgot_password.dart';
 import 'screens/home.dart';
 import 'screens/login.dart';
-import 'screens/register_email.dart';
-import 'screens/verify_otp.dart';
 
 class Routes {
   static const String loginRoute = '/login';

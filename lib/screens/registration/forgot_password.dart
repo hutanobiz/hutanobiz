@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
+import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/dimens.dart';
 import 'package:hutano/widgets/app_logo.dart';
 import 'package:hutano/widgets/email_widget.dart';
 import 'package:hutano/widgets/fancy_button.dart';
+import 'package:hutano/widgets/loading_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 
-import '../colors.dart';
-
-class RegisterEmail extends StatefulWidget {
-  RegisterEmail({Key key}) : super(key: key);
+class ForgetPassword extends StatefulWidget {
+  const ForgetPassword({Key key}) : super(key: key);
 
   @override
-  _RegisterEmailState createState() => _RegisterEmailState();
+  _ForgetPasswordState createState() => _ForgetPasswordState();
 }
 
-class _RegisterEmailState extends State<RegisterEmail> {
+class _ForgetPasswordState extends State<ForgetPassword> {
   final GlobalKey<FormFieldState> _emailKey = GlobalKey<FormFieldState>();
   final _emailController = TextEditingController();
-
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 14.0);
+
+  bool isLoading = false;
 
   @override
   void dispose() {
@@ -40,38 +41,48 @@ class _RegisterEmailState extends State<RegisterEmail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Form(
-          child: ListView(
-              children: getFormWidget(),
+          child: LoadingView(
+            isLoading: isLoading,
+            widget: ListView(
+              physics: new ClampingScrollPhysics(),
               padding: const EdgeInsets.fromLTRB(
-                  Dimens.padding, 51.0, Dimens.padding, Dimens.padding)),
+                  Dimens.padding, 51.0, Dimens.padding, Dimens.padding),
+              children: getFormWidget(),
+            ),
+          ),
         ),
       ),
     );
   }
 
+  void setLoading(bool value) {
+    setState(() {
+      isLoading = value;
+    });
+  }
+
   List<Widget> getFormWidget() {
     List<Widget> formWidget = new List();
     formWidget.add(AppLogo());
-
     formWidget.add(Widgets.sizedBox(height: 51.0));
 
     formWidget.add(Column(
       children: <Widget>[
         Text(
-          "Welcome To Hutano",
+          "Forgot Password",
           style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
         ),
         Widgets.sizedBox(height: 10.0),
         Text(
-          "Please enter your Email.\n A 6 digit OTP will be sent to verify your email!",
+          "Please enter your e-mail address.\nWe will send you link to reset your password.",
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.black26,
               fontSize: 13.0,
-              fontWeight: FontWeight.bold),
+              fontWeight: FontWeight.normal),
         ),
       ],
     ));
@@ -82,7 +93,6 @@ class _RegisterEmailState extends State<RegisterEmail> {
       emailKey: _emailKey,
       emailController: _emailController,
       style: style,
-      prefixIcon: Icon(Icons.email, color: AppColors.windsor, size: 13.0),
       suffixIcon: Icon(
         Icons.check_circle,
         color: Colors.green,
@@ -93,28 +103,48 @@ class _RegisterEmailState extends State<RegisterEmail> {
 
     formWidget.add(
       FancyButton(
-        title: "Next",
+        title: "Confirm",
         onPressed: isButtonEnable()
             ? () {
                 ApiBaseHelper api = new ApiBaseHelper();
-
                 Map<String, String> loginData = Map();
                 loginData["email"] = _emailController.text.toString();
-                loginData["type"] = "1";
                 loginData["step"] = "1";
-                loginData["fullName"] = "user";
-                api.register(loginData).then((dynamic user) {
+                api.resetPassword(loginData).then((dynamic user) {
                   Widgets.showToast(user.toString());
 
                   Navigator.pushNamed(
                     context,
                     Routes.verifyOtpRoute,
-                    arguments: RegisterArguments(_emailController.text, false),
+                    arguments: RegisterArguments(_emailController.text, true),
                   );
                 });
               }
             : null,
         buttonHeight: Dimens.buttonHeight,
+      ),
+    );
+
+    formWidget.add(Widgets.sizedBox(height: 13.0));
+
+    formWidget.add(
+      FlatButton(
+        onPressed: () => Navigator.pop(context),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              Icons.arrow_back,
+              color: AppColors.windsor,
+              size: 17.0,
+            ),
+            SizedBox(width: 5.0),
+            Text(
+              "Return to Log In.",
+              style: TextStyle(color: AppColors.windsor, fontSize: 14.0),
+            )
+          ],
+        ),
       ),
     );
 

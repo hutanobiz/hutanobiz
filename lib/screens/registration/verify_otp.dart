@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
+import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/dimens.dart';
 import 'package:hutano/widgets/app_logo.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/pin_view.dart';
 import 'package:hutano/widgets/widgets.dart';
-
-import '../colors.dart';
 
 class VerifyOTP extends StatefulWidget {
   final RegisterArguments args;

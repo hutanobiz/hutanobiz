@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/models/user.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/dimens.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
@@ -12,8 +13,6 @@ import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/loading_widget.dart';
 import 'package:hutano/widgets/password_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
-
-import '../routes.dart';
 
 class Register extends StatefulWidget {
   Register({Key key, @required this.args}) : super(key: key);
