@@ -20,7 +20,7 @@ void main() async {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.theme,
       home: _defaultHome,
-      routes: Routes.routes,
+      onGenerateRoute: Routes.generateRoute,
     ),
   );
 }

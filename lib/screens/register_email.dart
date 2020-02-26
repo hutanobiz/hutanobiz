@@ -109,8 +109,7 @@ class _RegisterEmailState extends State<RegisterEmail> {
                   Navigator.pushNamed(
                     context,
                     Routes.verifyOtpRoute,
-                    arguments:
-                        RegisterArguments(_emailController.text, user, false),
+                    arguments: RegisterArguments(_emailController.text, false),
                   );
                 });
               }
@@ -129,12 +128,4 @@ class _RegisterEmailState extends State<RegisterEmail> {
       return true;
     }
   }
-}
-
-class RegisterArguments {
-  final String email;
-  final String otp;
-  final bool isForgot;
-
-  RegisterArguments(this.email, this.otp, this.isForgot);
 }

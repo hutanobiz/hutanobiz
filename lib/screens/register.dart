@@ -9,6 +9,7 @@ import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/utils/validations.dart';
 import 'package:hutano/widgets/app_logo.dart';
 import 'package:hutano/widgets/fancy_button.dart';
+import 'package:hutano/widgets/loading_widget.dart';
 import 'package:hutano/widgets/password_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 
@@ -50,6 +51,7 @@ class _SignUpFormState extends State<Register> {
   final GlobalKey<FormFieldState> _emailKey = GlobalKey<FormFieldState>();
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 14.0);
   String email;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -112,10 +114,13 @@ class _SignUpFormState extends State<Register> {
     return Scaffold(
       body: Form(
         key: _formKey,
-        child: ListView(
-          children: getFormWidget(),
-          padding: const EdgeInsets.fromLTRB(
-              Dimens.padding, 51.0, Dimens.padding, Dimens.padding),
+        child: LoadingView(
+          isLoading: isLoading,
+          widget: ListView(
+            children: getFormWidget(),
+            padding: const EdgeInsets.fromLTRB(
+                Dimens.padding, 51.0, Dimens.padding, Dimens.padding),
+          ),
         ),
       ),
     );
@@ -385,6 +390,8 @@ class _SignUpFormState extends State<Register> {
           title: "Next",
           onPressed: isValidate()
               ? () {
+                  setLoading(true);
+
                   Map<String, String> loginData = Map();
                   loginData["email"] = email;
                   loginData["type"] = "2";
@@ -400,17 +407,26 @@ class _SignUpFormState extends State<Register> {
                   loginData["gender"] = _genderGroup.trim().toString();
                   loginData["language"] = _langController.text;
 
-                  api.register(loginData).then((dynamic response) {
-                    User user = User.fromJson(response);
+                  api
+                      .register(loginData)
+                      .then((dynamic response) {
+                        setLoading(false);
 
-                    SharedPref().saveToken(user.tokens[0].token);
-                    SharedPref().setValue("fullName", user.fullName);
+                        User user = User.fromJson(response);
 
-                    Widgets.showToast("Updated successfully");
+                        SharedPref().saveToken(user.tokens[0].token);
+                        SharedPref().setValue("fullName", user.fullName);
 
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        Routes.homeRoute, (Route<dynamic> route) => false);
-                  });
+                        Widgets.showToast("Profile created successfully");
+
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            Routes.homeRoute, (Route<dynamic> route) => false);
+                      })
+                      .timeout(Duration(seconds: 10))
+                      .catchError((error) {
+                        setLoading(false);
+                        Widgets.showToast(error);
+                      });
                 }
               : null,
         ),
@@ -492,5 +508,11 @@ class _SignUpFormState extends State<Register> {
       return false;
     else
       return true;
+  }
+
+  void setLoading(bool value) {
+    setState(() {
+      isLoading = value;
+    });
   }
 }

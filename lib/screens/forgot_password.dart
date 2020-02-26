@@ -118,8 +118,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                   Navigator.pushNamed(
                     context,
                     Routes.verifyOtpRoute,
-                    arguments:
-                        RegisterArguments(_emailController.text, user, true),
+                    arguments: RegisterArguments(_emailController.text, true),
                   );
                 });
               }

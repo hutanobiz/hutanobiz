@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
-import 'package:hutano/screens/register_email.dart';
 import 'package:hutano/utils/dimens.dart';
 import 'package:hutano/widgets/app_logo.dart';
 import 'package:hutano/widgets/fancy_button.dart';
@@ -13,14 +12,16 @@ import '../routes.dart';
 import '../strings.dart';
 
 class ResetPassword extends StatefulWidget {
-  const ResetPassword({Key key}) : super(key: key);
+  const ResetPassword({Key key, @required this.args}) : super(key: key);
+
+  final RegisterArguments args;
 
   @override
   _ResetPasswordState createState() => _ResetPasswordState();
 }
 
 class _ResetPasswordState extends State<ResetPassword> {
-  String email, otp;
+  String email;
 
   final GlobalKey<FormFieldState> _passwordKey = GlobalKey<FormFieldState>();
   final GlobalKey<FormFieldState> _confirmPassKey = GlobalKey<FormFieldState>();
@@ -54,8 +55,7 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   @override
   Widget build(BuildContext context) {
-    final RegisterArguments args = ModalRoute.of(context).settings.arguments;
-    email = args.email;
+    email = widget.args.email;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -153,7 +153,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                 api.resetPassword(loginData).then((dynamic user) {
                   Widgets.showToast("Password reset successfully!");
 
-                  Navigator.pushNamed(context, Routes.loginRoute);
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      Routes.loginRoute, (Route<dynamic> route) => false);
                 });
               }
             : null,

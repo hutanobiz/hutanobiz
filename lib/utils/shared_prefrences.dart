@@ -8,7 +8,7 @@ class SharedPref {
     prefs.setString("token", "Bearer $token");
   }
 
-  void saveValue(String key, String value) async {
+  Future<dynamic> setValue(String key, dynamic value) async {
     prefs = await SharedPreferences.getInstance();
     prefs.setString(key, value);
   }
@@ -16,6 +16,11 @@ class SharedPref {
   Future<String> getToken() async {
     prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
+  }
+
+  Future<dynamic> getValue(String key) async {
+    prefs = await SharedPreferences.getInstance();
+    return prefs.get(key);
   }
 
   removeValue(String key) async {

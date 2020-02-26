@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/screens/register_email.dart';
 import 'package:hutano/utils/dimens.dart';
 import 'package:hutano/widgets/app_logo.dart';
 import 'package:hutano/widgets/fancy_button.dart';
@@ -11,6 +10,10 @@ import 'package:hutano/widgets/widgets.dart';
 import '../colors.dart';
 
 class VerifyOTP extends StatefulWidget {
+  final RegisterArguments args;
+
+  const VerifyOTP({Key key, @required this.args}) : super(key: key);
+
   @override
   _VerifyOTPState createState() => _VerifyOTPState();
 }
@@ -21,9 +24,8 @@ class _VerifyOTPState extends State<VerifyOTP> {
 
   @override
   Widget build(BuildContext context) {
-    final RegisterArguments args = ModalRoute.of(context).settings.arguments;
-    email = args.email;
-    isForgot = args.isForgot;
+    email = widget.args.email;
+    isForgot = widget.args.isForgot;
 
     return Scaffold(
       resizeToAvoidBottomPadding: false,
@@ -78,7 +80,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
         style: TextStyle(fontSize: 19.0, fontWeight: FontWeight.w500),
         dashStyle: TextStyle(fontSize: 25.0, color: Colors.grey),
         inputDecoration: InputDecoration(
-          counterText: "",
+            counterText: "",
             enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey[300]),
                 borderRadius: BorderRadius.circular(14.0)),
@@ -99,8 +101,6 @@ class _VerifyOTPState extends State<VerifyOTP> {
                 ApiBaseHelper api = new ApiBaseHelper();
                 Map<String, String> loginData = Map();
 
-                // print(isForgot);
-
                 if (isForgot) {
                   loginData["email"] = email;
                   loginData["step"] = "2";
@@ -111,7 +111,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                     Navigator.pushNamed(
                       context,
                       Routes.resetPasswordRoute,
-                      arguments: RegisterArguments(email, user, false),
+                      arguments: RegisterArguments(email, false),
                     );
                   });
                 } else {
@@ -122,11 +122,10 @@ class _VerifyOTPState extends State<VerifyOTP> {
                   loginData["verificationCode"] = otp;
 
                   api.register(loginData).then((dynamic user) {
-                    Navigator.pushNamed(
-                      context,
-                      Routes.registerRoute,
-                      arguments: RegisterArguments(email, "user", false),
-                    );
+                    Widgets.showToast("Verified successfully");
+
+                    Navigator.pushNamed(context, Routes.registerRoute,
+                        arguments: RegisterArguments(email, false));
                   });
                 }
               }

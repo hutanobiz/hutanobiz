@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:hutano/screens/register.dart';
 import 'package:hutano/screens/reset_password.dart';
 
@@ -16,13 +18,75 @@ class Routes {
   static const String registerRoute = '/register';
   static const String resetPasswordRoute = '/resetPassword';
 
-  static final routes = {
-    loginRoute: (context) => LoginScreen(),
-    homeRoute: (context) => HomeScreen(),
-    forgotPasswordRoute: (context) => ForgetPassword(),
-    registerEmailRoute: (context) => RegisterEmail(),
-    verifyOtpRoute: (context) => VerifyOTP(),
-    registerRoute: (context) => Register(),
-    resetPasswordRoute: (context) => ResetPassword(),
-  };
+  static Route<dynamic> generateRoute(RouteSettings settings) {
+    final args = settings.arguments;
+
+    switch (settings.name) {
+      case loginRoute:
+        return _buildRoute(settings, LoginScreen());
+        break;
+      case homeRoute:
+        return _buildRoute(settings, HomeScreen());
+        break;
+      case forgotPasswordRoute:
+        return _buildRoute(settings, ForgetPassword());
+        break;
+      case registerEmailRoute:
+        return _buildRoute(settings, RegisterEmail());
+        break;
+      case verifyOtpRoute:
+        if (args is RegisterArguments) {
+          return _buildRoute(settings, VerifyOTP(args: args));
+        }
+        return _errorRoute();
+        break;
+      case registerRoute:
+        if (args is RegisterArguments) {
+          return _buildRoute(settings, Register(args: args));
+        }
+        return _errorRoute();
+        break;
+      case resetPasswordRoute:
+        if (args is RegisterArguments) {
+          return _buildRoute(settings, ResetPassword(args: args));
+        }
+        return _errorRoute();
+        break;
+      default:
+        return _errorRoute();
+    }
+  }
+
+  static Route<dynamic> _errorRoute() {
+    return MaterialPageRoute(builder: (_) {
+      return Scaffold(
+        backgroundColor: Colors.red,
+        appBar: AppBar(
+          title: Text('Error'),
+        ),
+        body: Center(
+          child: Text('ERROR'),
+        ),
+      );
+    });
+  } 
+}
+
+CupertinoPageRoute _buildRoute(RouteSettings settings, Widget builder) {
+  return CupertinoPageRoute(
+      settings: settings, maintainState: true, builder: (_) => builder
+      // builder: (_) => AnnotatedRegion<SystemUiOverlayStyle>(
+      //   value: SystemUiOverlayStyle(
+      //       statusBarIconBrightness: Brightness.dark,
+      //       statusBarColor: AppColors.snow),
+      //   child: builder,
+      // ),
+      );
+}
+
+class RegisterArguments {
+  final String email;
+  final bool isForgot;
+
+  RegisterArguments(this.email, this.isForgot);
 }
