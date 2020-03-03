@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
+import 'package:hutano/routes.dart';
+import 'package:hutano/widgets/arrow_button.dart';
 import 'package:hutano/widgets/round_corners_background.dart';
 
 class ChooseSpecialities extends StatefulWidget {
@@ -25,7 +27,7 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
   @override
   void initState() {
     Map<String, String> map = Map();
-    
+
     map["professionalTitleId"] = widget.professionalId;
     _todoFuture = api.getProfessionalSpecility(map);
     super.initState();
@@ -71,26 +73,36 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
                         border: Border.all(color: Colors.grey[300], width: 0.5),
                       ),
                       child: ListTile(
-                          contentPadding: EdgeInsets.all(8.0),
-                          leading: ClipRRect(
-                            child: Image.network(
-                              data[index]["cover"],
-                              width: 66.0,
-                              height: 64.0,
-                              fit: BoxFit.cover,
-                            ),
-                            borderRadius: BorderRadius.circular(10.0),
+                        contentPadding: EdgeInsets.all(8.0),
+                        leading: ClipRRect(
+                          child: Image.network(
+                            data[index]["cover"],
+                            width: 66.0,
+                            height: 64.0,
+                            fit: BoxFit.cover,
                           ),
-                          title: Text(
-                            data[index]["title"],
-                            maxLines: 2,
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontWeight: FontWeight.normal,
-                              fontSize: 12,
-                            ),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        title: Text(
+                          data[index]["title"],
+                          maxLines: 2,
+                          style: TextStyle(
+                            color: Colors.black87,
+                            fontWeight: FontWeight.normal,
+                            fontSize: 12,
                           ),
-                          onTap: () => {}),
+                        ),
+                        onTap: () {
+                          Map map = Map();
+                          map["specialityId"] = data[index]["_id"];
+
+                          Navigator.pushNamed(
+                            context,
+                            Routes.appointmentTypeScreen,
+                            arguments: MapArguments(map),
+                          );
+                        },
+                      ),
                     );
                   },
                 );
@@ -104,14 +116,14 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
           ),
         ),
         SizedBox(height: 20.0),
+        Align(
+          alignment: FractionalOffset.bottomLeft,
+          child: ArrowButton(
+            iconData: Icons.arrow_back,
+            onTap: () => Navigator.pop(context),
+          ),
+        ),
       ],
     );
-  }
-
-  void onSelectdynamic(dynamic response) {
-    setState(() {
-      response.isSelected = !response.isSelected;
-      selecteddynamicList.add(response);
-    });
   }
 }
