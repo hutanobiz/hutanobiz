@@ -189,8 +189,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ],
                 ),
                 onTap: () {
-                  Navigator.pushNamed(context, Routes.chooseSpecialities,
-                      arguments: data[index]["_id"]);
+                  Map map = Map();
+                  map["professionalId"] = data[index]["_id"];
+
+                  Navigator.pushNamed(
+                    context,
+                    Routes.chooseSpecialities,
+                    arguments: MapArguments(map),
+                  );
                 },
               );
             },

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hutano/screens/dashboard/appointment_type_screen.dart';
 import 'package:hutano/screens/dashboard/choose_specialities.dart';
 import 'package:hutano/screens/dashboard/dashboardScreen.dart';
 import 'package:hutano/screens/login.dart';
@@ -18,6 +19,7 @@ class Routes {
   static const String registerRoute = '/register';
   static const String resetPasswordRoute = '/resetPassword';
   static const String chooseSpecialities = '/chooseSpecialities';
+  static const String appointmentTypeScreen = '/appointmentTypeScreen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -54,11 +56,15 @@ class Routes {
         return _errorRoute();
         break;
       case chooseSpecialities:
-        if (args is String) {
-          return _buildRoute(
-              settings, ChooseSpecialities(professionalId: args));
+        if (args is MapArguments) {
+          return _buildRoute(settings,
+              ChooseSpecialities(professionalId: args.map["professionalId"]));
         }
         return _errorRoute();
+        break;
+      case appointmentTypeScreen:
+        return _buildRoute(settings, AppointmentTypeScreen());
+        break;
       default:
         return _errorRoute();
     }
@@ -96,4 +102,10 @@ class RegisterArguments {
   final bool isForgot;
 
   RegisterArguments(this.email, this.isForgot);
+}
+
+class MapArguments {
+  final Map map;
+
+  MapArguments(this.map);
 }
