@@ -8,4 +8,7 @@ class AppColors {
   static const female  = Color(0xFFFF7675);
   static const nero  = Color(0xFF262626);
   static const snow  = Color(0xFFFAFAFA);
+  static const persian_indigo  = Color(0xFF3A0D86);
+  static const white_smoke  = Color(0xFFF8F8F8);
+  static const midnight_express  = Color(0xFF040238);
 }

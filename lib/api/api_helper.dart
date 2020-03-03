@@ -40,6 +40,26 @@ class ApiBaseHelper {
     });
   }
 
+  Future<List<dynamic>> getProfessionalTitle() {
+    return _netUtil.get(_base_url + "api/professional-titles").then((res) {
+      print(res.toString());
+
+      List responseJson = res["response"];
+
+      return responseJson.map((m) => m).toList();
+    });
+  }
+
+  Future<List<dynamic>> getProfessionalSpecility(Map<String, String> map) {
+    return _netUtil
+        .post(_base_url + "api/provider/specialties", body: map)
+        .then((res) {
+      print(res["response"]);
+      List responseJson = res["response"];
+      return responseJson.map((m) => m).toList();
+    });
+  }
+
   Future<List<dynamic>> getStates() {
     return _netUtil.get(_base_url + "api/states").then((res) {
       print(res.toString());

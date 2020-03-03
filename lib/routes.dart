@@ -1,22 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hutano/screens/dashboard/choose_specialities.dart';
+import 'package:hutano/screens/dashboard/dashboardScreen.dart';
+import 'package:hutano/screens/login.dart';
 import 'package:hutano/screens/registration/forgot_password.dart';
 import 'package:hutano/screens/registration/register.dart';
 import 'package:hutano/screens/registration/register_email.dart';
 import 'package:hutano/screens/registration/reset_password.dart';
 import 'package:hutano/screens/registration/verify_otp.dart';
 
-import 'screens/home.dart';
-import 'screens/login.dart';
-
 class Routes {
   static const String loginRoute = '/login';
-  static const String homeRoute = '/home';
+  static const String dashboardScreen = '/dashboardScreen';
   static const String forgotPasswordRoute = '/forgotPassword';
   static const String registerEmailRoute = '/registerEmail';
   static const String verifyOtpRoute = '/verifyOtp';
   static const String registerRoute = '/register';
   static const String resetPasswordRoute = '/resetPassword';
+  static const String chooseSpecialities = '/chooseSpecialities';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -25,8 +26,8 @@ class Routes {
       case loginRoute:
         return _buildRoute(settings, LoginScreen());
         break;
-      case homeRoute:
-        return _buildRoute(settings, HomeScreen());
+      case dashboardScreen:
+        return _buildRoute(settings, DashboardScreen());
         break;
       case forgotPasswordRoute:
         return _buildRoute(settings, ForgetPassword());
@@ -52,6 +53,12 @@ class Routes {
         }
         return _errorRoute();
         break;
+      case chooseSpecialities:
+        if (args is String) {
+          return _buildRoute(
+              settings, ChooseSpecialities(professionalId: args));
+        }
+        return _errorRoute();
       default:
         return _errorRoute();
     }
@@ -69,7 +76,7 @@ class Routes {
         ),
       );
     });
-  } 
+  }
 }
 
 CupertinoPageRoute _buildRoute(RouteSettings settings, Widget builder) {

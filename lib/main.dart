@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/screens/home.dart';
+import 'package:hutano/screens/dashboard/dashboardScreen.dart';
 import 'package:hutano/screens/login.dart';
 import 'package:hutano/theme.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
@@ -11,7 +11,7 @@ void main() async {
 
   bool _result = await SharedPref().checkValue("token");
   if (_result) {
-    _defaultHome = new HomeScreen();
+    _defaultHome = DashboardScreen();
   }
 
   runApp(

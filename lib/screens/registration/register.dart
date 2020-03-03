@@ -419,7 +419,7 @@ class _SignUpFormState extends State<Register> {
                         Widgets.showToast("Profile created successfully");
 
                         Navigator.of(context).pushNamedAndRemoveUntil(
-                            Routes.homeRoute, (Route<dynamic> route) => false);
+                            Routes.dashboardScreen, (Route<dynamic> route) => false);
                       })
                       .timeout(Duration(seconds: 10))
                       .catchError((error) {
