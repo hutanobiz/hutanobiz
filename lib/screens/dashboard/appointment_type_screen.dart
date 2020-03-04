@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/widgets/arrow_button.dart';
 import 'package:hutano/widgets/custom_card_view.dart';
@@ -15,10 +14,6 @@ class AppointmentTypeScreen extends StatefulWidget {
 class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: AppColors.goldenTainoi,
-    ));
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.goldenTainoi,
