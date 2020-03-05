@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/screens/dashboard/appointment_type_screen.dart';
+import 'package:hutano/screens/dashboard/choose_location_screen.dart';
 import 'package:hutano/screens/dashboard/choose_specialities.dart';
 import 'package:hutano/screens/dashboard/dashboardScreen.dart';
 import 'package:hutano/screens/login.dart';
@@ -20,6 +22,7 @@ class Routes {
   static const String resetPasswordRoute = '/resetPassword';
   static const String chooseSpecialities = '/chooseSpecialities';
   static const String appointmentTypeScreen = '/appointmentTypeScreen';
+  static const String chooseLocation = '/chooseLocation';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -64,6 +67,15 @@ class Routes {
         break;
       case appointmentTypeScreen:
         return _buildRoute(settings, AppointmentTypeScreen());
+        break;
+      case chooseLocation:
+        if (args is LatLng) {
+          return _buildRoute(
+            settings,
+            ChooseLocationScreen(latLng: args),
+          );
+        }
+        return _errorRoute();
         break;
       default:
         return _errorRoute();
