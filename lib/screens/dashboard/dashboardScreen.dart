@@ -1,7 +1,15 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/widgets/widgets.dart';
+import 'package:location/location.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key key}) : super(key: key);
@@ -14,25 +22,35 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormFieldState> _searchKey = GlobalKey<FormFieldState>();
 
-  ApiBaseHelper api = new ApiBaseHelper();
+  ApiBaseHelper _api = new ApiBaseHelper();
 
   Future<List<dynamic>> _titleFuture;
+
+  String _currentddress;
 
   EdgeInsetsGeometry _edgeInsetsGeometry =
       const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0);
 
+  LatLng _latLng;
+
+  bool _isLoading = false;
+
   @override
   void initState() {
-    _titleFuture = api.getProfessionalTitle();
     super.initState();
+    _titleFuture = _api.getProfessionalTitle();
+
+    setState(() {
+      initPlatformState();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.white_smoke,
-      resizeToAvoidBottomPadding: false,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,16 +93,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
           height: 18.0,
           image: AssetImage("images/ic_location.png"),
         ),
-        SizedBox(width: 5.0),
-        Text(
-          "138,Las Vegas..",
-          style: TextStyle(
-            color: AppColors.midnight_express,
-            fontSize: 15.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(width: 15.0),
+        _isLoading
+            ? Expanded(
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              )
+            : Expanded(
+                flex: 3,
+                child: InkWell(
+                  onTap: () => _navigateToMap(context),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Text(
+                      _currentddress,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: AppColors.midnight_express,
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
         Image(
           width: 8.0,
           height: 4.0,
@@ -99,7 +132,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               image: AssetImage("images/ic_notification.png"),
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -211,6 +244,92 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
+  _navigateToMap(BuildContext context) async {
+    final result = await Navigator.pushNamed(
+      context,
+      Routes.chooseLocation,
+      arguments: _latLng,
+    );
+
+    LatLng latLng = result;
+
+    _loading();
+
+    if (latLng != null) {
+      _latLng = latLng;
+      log(latLng.toString());
+
+      getLocationAddress(latLng.latitude, latLng.longitude);
+    }
+  }
+
+  initPlatformState() async {
+    _loading();
+
+    Location _locationService = Location();
+    PermissionStatus _permission;
+    Geolocator geolocator = Geolocator();
+
+    _permission = await _locationService.requestPermission();
+    print("Permission: $_permission");
+
+    switch (_permission) {
+      case PermissionStatus.GRANTED:
+        bool serviceStatus = await _locationService.serviceEnabled();
+        print("Service status: $serviceStatus");
+
+        if (serviceStatus) {
+          Widgets.showToast("Getting Location. Please wait..");
+
+          try {
+            Position position = await geolocator.getLastKnownPosition();
+            if (position == null) {
+              position = await geolocator.getCurrentPosition();
+            }
+
+            getLocationAddress(position.latitude, position.longitude);
+
+            _latLng = LatLng(position.latitude, position.longitude);
+          } on PlatformException catch (e) {
+            print(e);
+            if (e.code == 'PERMISSION_DENIED') {
+              log(e.code);
+              Widgets.showToast(e.message.toString());
+            } else if (e.code == 'SERVICE_STATUS_ERROR') {
+              log(e.code);
+              Widgets.showToast(e.message.toString());
+            }
+            _locationService = null;
+          }
+        } else {
+          bool serviceStatusResult = await _locationService.requestService();
+          print("Service status activated after request: $serviceStatusResult");
+          initPlatformState();
+        }
+
+        break;
+      case PermissionStatus.DENIED:
+        initPlatformState();
+        break;
+      case PermissionStatus.DENIED_FOREVER:
+        break;
+    }
+  }
+
+  getLocationAddress(latitude, longitude) async {
+    var addresses =
+        await Geolocator().placemarkFromCoordinates(latitude, longitude);
+
+    var first = addresses.first;
+
+    setState(() {
+      _isLoading = false;
+
+      _currentddress =
+          '${first.name}, ${first.subLocality}, ${first.locality}, ${first.administrativeArea}';
+    });
+  }
+
   Widget bottomnavigationBar() {
     return Container(
       decoration: BoxDecoration(
@@ -253,5 +372,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
     );
+  }
+
+  void _loading() {
+    setState(() {
+      _isLoading = true;
+    });
   }
 }
