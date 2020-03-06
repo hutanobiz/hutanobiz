@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/widgets/arrow_button.dart';
 import 'package:hutano/widgets/custom_card_view.dart';
-import 'package:hutano/widgets/widgets.dart';
 
 class AppointmentTypeScreen extends StatefulWidget {
   AppointmentTypeScreen({Key key}) : super(key: key);
@@ -79,9 +79,21 @@ class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
   Widget cardView(String image, String cardText) {
     return CustomCardView(
       onTap: () {
-        Widgets.showToast(cardText);
         Map map = Map();
-        map["appointmentType"] = cardText;
+
+        if (cardText.contains("office")) {
+          map["appointmentType"] = "1";
+        } else if (cardText.toLowerCase().contains("video")) {
+          map["appointmentType"] = "2";
+        } else {
+          map["appointmentType"] = "3";
+        }
+
+        Navigator.pushNamed(
+          context,
+          Routes.providerListScreen,
+          arguments: MapArguments(map),
+        );
       },
       image: image,
       cardText: cardText,

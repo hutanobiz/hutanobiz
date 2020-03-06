@@ -67,6 +67,15 @@ class ApiBaseHelper {
       return responseJson.map((m) => m).toList();
     });
   }
+
+  Future<dynamic> getProviderList(Map<String, String> map) {
+    return _netUtil
+        .post(_base_url + "api/patient/provider-search", body: map)
+        .then((res) {
+      print(res);
+      return res;
+    });
+  }
 }
 
 class NetworkUtil {
