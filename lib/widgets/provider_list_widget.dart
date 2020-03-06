@@ -43,7 +43,7 @@ class ProviderWidget extends StatelessWidget {
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
+                    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -58,34 +58,37 @@ class ProviderWidget extends StatelessWidget {
                         SizedBox(
                           height: 5.0,
                         ),
-                        Row(
-                          children: <Widget>[
-                            Icon(
-                              Icons.star,
-                              color: AppColors.goldenTainoi,
-                              size: 14.0,
-                            ),
-                            SizedBox(
-                              width: 2,
-                            ),
-                            Text(
-                              "0.0",
-                              style: TextStyle(
-                                color: Colors.black.withOpacity(0.6),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Row(
+                            children: <Widget>[
+                              Icon(
+                                Icons.star,
+                                color: AppColors.goldenTainoi,
+                                size: 12.0,
                               ),
-                            ),
-                            SizedBox(width: 8.0),
-                            Expanded(
-                              child: Text(
-                                data['UserDoctorDetails    '][0]['supervising']
-                                    ['professionalTitle'],
-                                overflow: TextOverflow.ellipsis,
+                              SizedBox(
+                                width: 2,
+                              ),
+                              Text(
+                                "0.0",
                                 style: TextStyle(
                                   color: Colors.black.withOpacity(0.6),
                                 ),
                               ),
-                            ),
-                          ],
+                              SizedBox(width: 8.0),
+                              Expanded(
+                                child: Text(
+                                  data['UserDoctorDetails    '][0]
+                                      ['supervising']['professionalTitle'],
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Colors.black.withOpacity(0.6),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         SizedBox(
                           height: 4.0,
