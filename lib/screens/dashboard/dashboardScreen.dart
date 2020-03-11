@@ -26,7 +26,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Future<List<dynamic>> _titleFuture;
 
+  String _searchText = "";
+  List<dynamic> names = List();
+
   String _currentddress;
+
+  Future<dynamic> _searchFuture;
 
   EdgeInsetsGeometry _edgeInsetsGeometry =
       const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0);
@@ -74,13 +79,73 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     topRight: const Radius.circular(22.0),
                   ),
                 ),
-                child: professionalTitle(),
+                child: _searchText.length < 0 || _searchText == ""
+                    ? professionalTitle()
+                    : _buildList(),
               ),
             ),
           ],
         ),
       ),
       bottomNavigationBar: bottomnavigationBar(),
+    );
+  }
+
+  Widget _buildList() {
+    return FutureBuilder<dynamic>(
+      future: _searchFuture,
+      builder: (_, snapshot) {
+        if (snapshot.hasData) {
+          names.clear();
+
+          if (snapshot.data["professionalTitle"].length > 0) {
+            names.addAll(snapshot.data["professionalTitle"]);
+          }
+          if (snapshot.data["doctorName"].length > 0) {
+            names.addAll(snapshot.data["doctorName"]);
+          }
+          if (snapshot.data["specialty"].length > 0) {
+            names.addAll(snapshot.data["specialty"]);
+          }
+
+          return ListView.builder(
+            itemCount: names == null ? 0 : names.length,
+            itemBuilder: (context, index) {
+              List<dynamic> tempList = List();
+
+              names.forEach((f) {
+                if (f['title'] != null) {
+                  if (f['title']
+                      .toLowerCase()
+                      .contains(_searchText.toLowerCase())) {
+                    tempList.add(f);
+                  }
+                }
+                if (f['fullName'] != null) {
+                  if (f['fullName']
+                      .toLowerCase()
+                      .contains(_searchText.toLowerCase())) {
+                    tempList.add(f);
+                  }
+                }
+              });
+
+              return ListTile(
+                title:
+                    Text(tempList[index]['fullName'] ?? names[index]['title']),
+                // onTap: () => Widgets.showToast(tempList[index]['_id']),
+                onTap: () => Widgets.showToast(
+                    tempList[index]['title'] ?? tempList[index]['fullName']),
+              );
+            },
+          );
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
   }
 
@@ -154,6 +219,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
         TextFormField(
           key: _searchKey,
           maxLines: 1,
+          onChanged: (value) {
+            _searchText = value;
+
+            setState(() {
+              _searchFuture = _api.searchDoctors(_searchText);
+            });
+          },
           keyboardType: TextInputType.text,
           decoration: InputDecoration(
             hasFloatingPlaceholder: false,

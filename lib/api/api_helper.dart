@@ -76,6 +76,16 @@ class ApiBaseHelper {
       return res;
     });
   }
+
+  Future<dynamic> searchDoctors(String string) {
+    return _netUtil
+        .get(Uri.encodeFull(_base_url +
+            "api/patient/professional-title/name/specialty?search=$string"))
+        .then((res) {
+     print(res);
+      return res["response"];
+    });
+  }
 }
 
 class NetworkUtil {
@@ -85,7 +95,7 @@ class NetworkUtil {
 
   final JsonDecoder _decoder = new JsonDecoder();
 
-  Future<dynamic> get(String url, {Map headers}) async {
+  Future<dynamic> get(url, {Map headers}) async {
     var responseJson;
     try {
       final response = await http.get(url, headers: headers);
