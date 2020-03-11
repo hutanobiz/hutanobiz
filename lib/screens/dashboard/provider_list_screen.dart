@@ -121,20 +121,18 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
             String degree;
 
             return ListView.builder(
-              itemCount: data[0].length,
+              itemCount: data.length,
               itemBuilder: (context, index) {
-                Map degreeMap = snapshot.data["degree"];
+                // Map degreeMap = snapshot.data["education"];
 
-                if (degreeMap.containsKey(data[index][0]
-                    ['UserDoctorDetails    '][0]['education'][0]['degree'])) {
-                  degree = degreeMap[data[index][0]['UserDoctorDetails    '][0]
-                      ['education'][0]['degree']];
-                }
-                print("Degree: $degree");
-                print(
-                    "Name: ${data[index][0]['UserDoctorDetails    '][0]['education'][0]['degree']}");
+                // if (degreeMap.containsKey(data[index]
+                //    ['education']['degree'])) {
+                //   degree = degreeMap[data[index]
+                //       ['education']['degree']];
+                // }
+                //TODO: check dregreeMap
                 return ProviderWidget(
-                  data: data[index][0],
+                  data: data[index],
                   degree: degree,
                 );
               },

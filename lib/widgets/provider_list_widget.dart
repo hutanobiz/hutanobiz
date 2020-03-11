@@ -48,7 +48,10 @@ class ProviderWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "${data["fullName"]}, $degree",
+                          "${data["userId"]["fullName"]}, MD",
+                          // "${data["userId"]["fullName"]}, $degree",
+                          //TODO: check dregreeMap
+                          
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 14.0,
@@ -79,8 +82,7 @@ class ProviderWidget extends StatelessWidget {
                               SizedBox(width: 8.0),
                               Expanded(
                                 child: Text(
-                                  data['UserDoctorDetails    '][0]
-                                      ['supervising']['professionalTitle'],
+                                  data['supervising']['professionalTitle'],
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     color: Colors.black.withOpacity(0.6),
@@ -107,7 +109,7 @@ class ProviderWidget extends StatelessWidget {
                             ),
                             Expanded(
                               child: Text(
-                                data['UserDoctorDetails    '][0]['about'],
+                                data['about'],
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -157,8 +159,7 @@ class ProviderWidget extends StatelessWidget {
                       SizedBox(width: 3.0),
                       Expanded(
                         child: Text(
-                          data['UserDoctorDetails    '][0]['businessLocation']
-                              ['address'],
+                          data['businessLocation']['address'],
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                           ),
