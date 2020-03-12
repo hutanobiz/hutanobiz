@@ -6,7 +6,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 
-const kGoogleApiKey = "AIzaSyC8Foj0EQFzLwUUHg2vWyD0-biDfb3Swpg";
+// const kGoogleApiKey = "AIzaSyC8Foj0EQFzLwUUHg2vWyD0-biDfb3Swpg";
+const kGoogleApiKey = "AIzaSyAkq7DnUBTkddWXddoHAX02Srw6570ktx8";
 
 class ChooseLocationScreen extends StatefulWidget {
   ChooseLocationScreen({Key key, @required this.latLng}) : super(key: key);

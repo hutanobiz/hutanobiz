@@ -389,17 +389,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   getLocationAddress(latitude, longitude) async {
-    var addresses =
-        await Geolocator().placemarkFromCoordinates(latitude, longitude);
+    try {
+      var addresses =
+          await Geolocator().placemarkFromCoordinates(latitude, longitude);
 
-    var first = addresses.first;
+      var first = addresses.first;
 
-    setState(() {
-      _isLoading = false;
+      setState(() {
+        _isLoading = false;
 
-      _currentddress =
-          '${first.name}, ${first.subLocality}, ${first.locality}, ${first.administrativeArea}';
-    });
+        _currentddress =
+            '${first.name}, ${first.subLocality}, ${first.locality}, ${first.administrativeArea}';
+      });
+    } catch (e) {
+      print(e.getMessage() ?? e.toString());
+    }
   }
 
   Widget bottomnavigationBar() {
