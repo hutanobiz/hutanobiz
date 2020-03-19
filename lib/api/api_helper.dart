@@ -80,7 +80,7 @@ class ApiBaseHelper {
   Future<dynamic> searchDoctors(String string) {
     return _netUtil
         .get(Uri.encodeFull(_base_url +
-            "api/patient/professional-title/name/specialty?search=$string"))
+            "api/patient/name/specialty/service?search=$string"))
         .then((res) {
      print(res);
       return res["response"];

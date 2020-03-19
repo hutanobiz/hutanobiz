@@ -5,6 +5,7 @@ import 'package:hutano/screens/dashboard/appointment_type_screen.dart';
 import 'package:hutano/screens/dashboard/choose_location_screen.dart';
 import 'package:hutano/screens/dashboard/choose_specialities.dart';
 import 'package:hutano/screens/dashboard/dashboardScreen.dart';
+import 'package:hutano/screens/dashboard/dashboard_search_screen.dart';
 import 'package:hutano/screens/dashboard/provider_list_screen.dart';
 import 'package:hutano/screens/login.dart';
 import 'package:hutano/screens/registration/forgot_password.dart';
@@ -25,6 +26,7 @@ class Routes {
   static const String appointmentTypeScreen = '/appointmentTypeScreen';
   static const String chooseLocation = '/chooseLocation';
   static const String providerListScreen = '/providerListScreen';
+  static const String dashboardSearchScreen = '/dashboardSearchScreen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -84,6 +86,9 @@ class Routes {
           return _buildRoute(settings, ProviderListScreen(argumentsMap: args));
         }
         return _errorRoute();
+        break;
+      case dashboardSearchScreen:
+        return _buildRoute(settings, DashboardSearchScreen());
         break;
       default:
         return _errorRoute();

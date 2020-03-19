@@ -20,18 +20,11 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final GlobalKey<FormFieldState> _searchKey = GlobalKey<FormFieldState>();
-
   ApiBaseHelper _api = new ApiBaseHelper();
 
   Future<List<dynamic>> _titleFuture;
 
-  String _searchText = "";
-  List<dynamic> names = List();
-
   String _currentddress;
-
-  Future<dynamic> _searchFuture;
 
   EdgeInsetsGeometry _edgeInsetsGeometry =
       const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0);
@@ -70,82 +63,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             Expanded(
               child: Container(
-                width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.only(top: 16.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: const Radius.circular(22.0),
-                    topRight: const Radius.circular(22.0),
+                  width: MediaQuery.of(context).size.width,
+                  margin: const EdgeInsets.only(top: 16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(22.0),
+                      topRight: const Radius.circular(22.0),
+                    ),
                   ),
-                ),
-                child: _searchText.length < 0 || _searchText == ""
-                    ? professionalTitle()
-                    : _buildList(),
-              ),
+                  child: professionalTitle()),
             ),
           ],
         ),
       ),
       bottomNavigationBar: bottomnavigationBar(),
-    );
-  }
-
-  Widget _buildList() {
-    return FutureBuilder<dynamic>(
-      future: _searchFuture,
-      builder: (_, snapshot) {
-        if (snapshot.hasData) {
-          names.clear();
-
-          if (snapshot.data["professionalTitle"].length > 0) {
-            names.addAll(snapshot.data["professionalTitle"]);
-          }
-          if (snapshot.data["doctorName"].length > 0) {
-            names.addAll(snapshot.data["doctorName"]);
-          }
-          if (snapshot.data["specialty"].length > 0) {
-            names.addAll(snapshot.data["specialty"]);
-          }
-
-          return ListView.builder(
-            itemCount: names == null ? 0 : names.length,
-            itemBuilder: (context, index) {
-              List<dynamic> tempList = List();
-
-              names.forEach((f) {
-                if (f['title'] != null) {
-                  if (f['title']
-                      .toLowerCase()
-                      .contains(_searchText.toLowerCase())) {
-                    tempList.add(f);
-                  }
-                }
-                if (f['fullName'] != null) {
-                  if (f['fullName']
-                      .toLowerCase()
-                      .contains(_searchText.toLowerCase())) {
-                    tempList.add(f);
-                  }
-                }
-              });
-
-              return ListTile(
-                title:
-                    Text(tempList[index]['fullName'] ?? names[index]['title']),
-                // onTap: () => Widgets.showToast(tempList[index]['_id']),
-                onTap: () => Widgets.showToast(
-                    tempList[index]['title'] ?? tempList[index]['fullName']),
-              );
-            },
-          );
-        } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
-        }
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      },
     );
   }
 
@@ -216,40 +148,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
         SizedBox(height: 6.0),
-        TextFormField(
-          key: _searchKey,
-          maxLines: 1,
-          onChanged: (value) {
-            _searchText = value;
-
-            setState(() {
-              _searchFuture = _api.searchDoctors(_searchText);
-            });
-          },
-          keyboardType: TextInputType.text,
-          decoration: InputDecoration(
-            hasFloatingPlaceholder: false,
-            filled: true,
-            fillColor: Colors.white,
-            labelStyle: TextStyle(fontSize: 13.0, color: Colors.grey),
-            labelText: "Search for doctors or by specialty...",
-            suffixIcon: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Image(
-                width: 34.0,
-                height: 34.0,
+        InkWell(
+          onTap: () =>
+              Navigator.of(context).pushNamed(Routes.dashboardSearchScreen),
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            padding: const EdgeInsets.fromLTRB(12.0, 15.0, 14.0, 14.0),
+            decoration: BoxDecoration(
+              image: DecorationImage(
                 image: AssetImage("images/ic_search.png"),
+                alignment: Alignment.centerRight,
+              ),
+              color: Colors.white,
+              borderRadius: BorderRadius.all(
+                Radius.circular(
+                  8.0,
+                ),
               ),
             ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white),
-              borderRadius: BorderRadius.circular(8.0),
+            child: Text(
+              "Search for doctors or by specialty...",
+              style: TextStyle(
+                fontSize: 13.0,
+                color: Colors.grey,
+              ),
             ),
-            border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white),
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            contentPadding: EdgeInsets.fromLTRB(12.0, 15.0, 14.0, 14.0),
           ),
         ),
       ],
