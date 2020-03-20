@@ -48,10 +48,7 @@ class ProviderWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "${data["userId"]["fullName"]}, MD",
-                          // "${data["userId"]["fullName"]}, $degree",
-                          //TODO: check dregreeMap
-                          
+                          "${data["userId"]["fullName"]}, $degree",
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 14.0,

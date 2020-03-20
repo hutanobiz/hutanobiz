@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:hutano/models/user.dart';
 import 'package:hutano/strings.dart';
@@ -14,8 +15,6 @@ class ApiBaseHelper {
     return _netUtil
         .post(_base_url + "auth/api/login", body: loginData)
         .then((res) {
-      print(res.toString());
-
       return User.fromJson(res["response"]);
     });
   }
@@ -24,8 +23,6 @@ class ApiBaseHelper {
     return _netUtil
         .post(_base_url + "auth/api/register", body: map)
         .then((res) {
-      print(res.toString());
-
       return (res["response"]);
     });
   }
@@ -34,16 +31,12 @@ class ApiBaseHelper {
     return _netUtil
         .post(_base_url + "auth/api/reset-password", body: map)
         .then((res) {
-      print(res.toString());
-
       return (res["response"]);
     });
   }
 
   Future<List<dynamic>> getProfessionalTitle() {
     return _netUtil.get(_base_url + "api/professional-titles").then((res) {
-      print(res.toString());
-
       List responseJson = res["response"];
 
       return responseJson.map((m) => m).toList();
@@ -54,7 +47,6 @@ class ApiBaseHelper {
     return _netUtil
         .post(_base_url + "api/provider/specialties", body: map)
         .then((res) {
-      print(res["response"]);
       List responseJson = res["response"];
       return responseJson.map((m) => m).toList();
     });
@@ -62,7 +54,6 @@ class ApiBaseHelper {
 
   Future<List<dynamic>> getStates() {
     return _netUtil.get(_base_url + "api/states").then((res) {
-      print(res.toString());
       List responseJson = res["response"];
       return responseJson.map((m) => m).toList();
     });
@@ -72,17 +63,15 @@ class ApiBaseHelper {
     return _netUtil
         .post(_base_url + "api/patient/provider-search", body: map)
         .then((res) {
-      print(res);
       return res;
     });
   }
 
   Future<dynamic> searchDoctors(String string) {
     return _netUtil
-        .get(Uri.encodeFull(_base_url +
-            "api/patient/name/specialty/service?search=$string"))
+        .get(Uri.encodeFull(
+            _base_url + "api/patient/name/specialty/service?search=$string"))
         .then((res) {
-     print(res);
       return res["response"];
     });
   }
@@ -116,6 +105,8 @@ class NetworkUtil {
       }
 
       responseJson = _decoder.convert(response.body);
+
+      debugPrint(responseJson.toString(), wrapWidth: 1024);
     } on SocketException {
       Widgets.showToast(Strings.noInternet);
       throw Exception(Strings.noInternet);
@@ -146,6 +137,8 @@ class NetworkUtil {
       }
 
       responseJson = _decoder.convert(response.body);
+
+      debugPrint(responseJson.toString(), wrapWidth: 1024);
     } on SocketException {
       Widgets.showToast(Strings.noInternet);
       throw Exception(Strings.noInternet);
