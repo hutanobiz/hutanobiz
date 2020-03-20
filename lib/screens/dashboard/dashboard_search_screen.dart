@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/widgets/loading_background.dart';
-import 'package:hutano/widgets/widgets.dart';
+import 'package:hutano/widgets/provider_tile_widget.dart';
 
 class DashboardSearchScreen extends StatefulWidget {
   @override
@@ -100,18 +101,15 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  heading("Specialities", _specialityList.isNotEmpty,
-                      _specialityList.length > 5),
+                  heading("Specialities", _specialityList),
                   _specialityList.isNotEmpty
                       ? _listWidget(_specialityList, "title", false)
                       : Container(),
-                  heading("Providers", _doctorList.isNotEmpty,
-                      _doctorList.length > 5),
+                  heading("Providers", _doctorList),
                   _doctorList.isNotEmpty
                       ? _listWidget(_doctorList, "fullName", true)
                       : Container(),
-                  heading("Services", _servicesList.isNotEmpty,
-                      _servicesList.length > 5),
+                  heading("Services", _servicesList),
                   _servicesList.isNotEmpty
                       ? _listWidget(_servicesList, "title", false)
                       : Container(),
@@ -127,8 +125,8 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
     );
   }
 
-  Widget heading(String heading, bool isHeadingShow, bool isShow) {
-    return isHeadingShow
+  Widget heading(String heading, List<dynamic> list) {
+    return list.isNotEmpty
         ? Container(
             width: MediaQuery.of(context).size.width,
             margin: const EdgeInsets.only(top: 20.0),
@@ -145,13 +143,19 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                isShow
+                list.isNotEmpty
                     ? Expanded(
                         child: Align(
                           alignment: Alignment.centerRight,
                           child: InkWell(
                             customBorder: CircleBorder(),
-                            onTap: () => Widgets.showToast("tapped"),
+                            onTap: () => Navigator.of(context).pushNamed(
+                              Routes.seeAllSearchScreeen,
+                              arguments: SearchArguments(
+                                list: list,
+                                title: heading,
+                              ),
+                            ),
                             child: Padding(
                               padding:
                                   const EdgeInsets.only(left: 8.0, right: 8.0),
@@ -195,34 +199,22 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
         itemBuilder: (context, index) {
           if (tempList.isNotEmpty) {
             return isDoctorList
-                ? providersWidget(
-                    tempList[index][searchKey], tempList[index][searchKey])
+                ? ProviderTileWidget(
+                    name: tempList[index][searchKey],
+                    profession: tempList[index][searchKey],
+                    onTap: () => Navigator.of(context).pushNamed(
+                        Routes.searchInfoScreen,
+                        arguments: tempList[index]),
+                  )
                 : ListTile(
                     title: Text(tempList[index][searchKey]),
-                    onTap: () => Widgets.showToast(tempList[index][searchKey]),
+                    onTap: () => Navigator.of(context).pushNamed(
+                        Routes.searchInfoScreen,
+                        arguments: tempList[index]),
                   );
           }
 
           return Container();
         });
-  }
-
-  Widget providersWidget(String name, String profession) {
-    return ListTile(
-      leading: Container(
-        width: 32.0,
-        height: 32.0,
-        decoration: BoxDecoration(
-          color: AppColors.snow,
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-        child: Center(
-          child: Text(name[0]),
-        ),
-      ),
-      title: Text(name),
-      subtitle: Text(profession),
-      onTap: () => Widgets.showToast(name),
-    );
   }
 }

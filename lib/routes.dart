@@ -7,6 +7,8 @@ import 'package:hutano/screens/dashboard/choose_specialities.dart';
 import 'package:hutano/screens/dashboard/dashboardScreen.dart';
 import 'package:hutano/screens/dashboard/dashboard_search_screen.dart';
 import 'package:hutano/screens/dashboard/provider_list_screen.dart';
+import 'package:hutano/screens/dashboard/search_info.dart';
+import 'package:hutano/screens/dashboard/see_all_searches.dart';
 import 'package:hutano/screens/login.dart';
 import 'package:hutano/screens/registration/forgot_password.dart';
 import 'package:hutano/screens/registration/register.dart';
@@ -27,6 +29,8 @@ class Routes {
   static const String chooseLocation = '/chooseLocation';
   static const String providerListScreen = '/providerListScreen';
   static const String dashboardSearchScreen = '/dashboardSearchScreen';
+  static const String seeAllSearchScreeen = '/seeAllSearchScreeen';
+  static const String searchInfoScreen = '/searchInfoScreen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -90,6 +94,17 @@ class Routes {
       case dashboardSearchScreen:
         return _buildRoute(settings, DashboardSearchScreen());
         break;
+      case seeAllSearchScreeen:
+        if (args is SearchArguments) {
+          return _buildRoute(settings, SeeAllSearchScreeen(arguments: args));
+        }
+        return _errorRoute();
+      case searchInfoScreen:
+        if (args is Map) {
+          return _buildRoute(settings, SearchInfoScreen(map: args));
+        }
+        return _errorRoute();
+        break;
       default:
         return _errorRoute();
     }
@@ -127,6 +142,13 @@ class RegisterArguments {
   final bool isForgot;
 
   RegisterArguments(this.email, this.isForgot);
+}
+
+class SearchArguments {
+  final List<dynamic> list;
+  final String title;
+
+  SearchArguments({this.list, this.title});
 }
 
 class MapArguments {
