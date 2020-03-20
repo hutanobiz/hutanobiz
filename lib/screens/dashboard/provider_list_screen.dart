@@ -20,9 +20,14 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
   final GlobalKey<FormFieldState> _searchKey = GlobalKey<FormFieldState>();
 
   ApiBaseHelper api = new ApiBaseHelper();
-  Future<dynamic> _todoFuture;
+  Future<dynamic> _providerFuture;
 
-  Map selecteddynamic = Map();
+  List<dynamic> _responseData;
+  String _searchText = "";
+
+  Map degreeMap;
+
+  List<dynamic> dummySearchList = List();
 
   @override
   void initState() {
@@ -33,7 +38,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
     map["serviceType"] = widget.argumentsMap.map["appointmentType"];
 
     //TODO: change static professionalTitleId and specialtyId[]
-    _todoFuture = api.getProviderList(map);
+    _providerFuture = api.getProviderList(map);
 
     super.initState();
   }
@@ -82,6 +87,12 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
           key: _searchKey,
           maxLines: 1,
           keyboardType: TextInputType.text,
+          onChanged: (value) {
+            setState(() {
+              _searchText = value;
+            });
+            filterSearch(value);
+          },
           decoration: InputDecoration(
             hasFloatingPlaceholder: false,
             filled: true,
@@ -114,30 +125,15 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
   Widget listWidget() {
     return Expanded(
       child: FutureBuilder<dynamic>(
-        future: _todoFuture,
+        future: _providerFuture,
         builder: (_, snapshot) {
           if (snapshot.hasData) {
-            List<dynamic> data = snapshot.data["response"];
-            String degree;
+            _responseData = snapshot.data["response"];
+            degreeMap = snapshot.data["degree"];
 
-            return ListView.builder(
-              itemCount: data.length,
-              itemBuilder: (context, index) {
-                Map degreeMap = snapshot.data["degree"];
-                List educatonList = data[index]["education"];
-
-                educatonList.map((f) {
-                  if (degreeMap.containsKey(f["degree"])) {
-                    degree = degreeMap[f["degree"]];
-                  }
-                }).toList();
-
-                return ProviderWidget(
-                  data: data[index],
-                  degree: degree ?? "---",
-                );
-              },
-            );
+            return _searchText == null || _searchText == ""
+                ? _listWidget(degreeMap, _responseData)
+                : _listWidget(degreeMap, dummySearchList);
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");
           }
@@ -147,5 +143,42 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
         },
       ),
     );
+  }
+
+  Widget _listWidget(Map degreeMap, List _responseData) {
+    return ListView.builder(
+      itemCount: _responseData.length,
+      itemBuilder: (context, index) {
+        List educatonList = _responseData[index]["education"];
+        String degree;
+
+        educatonList.map((f) {
+          if (degreeMap.containsKey(f["degree"])) {
+            degree = degreeMap[f["degree"]];
+          }
+        }).toList();
+
+        return ProviderWidget(
+          data: _responseData[index],
+          degree: degree ?? "---",
+        );
+      },
+    );
+  }
+
+  void filterSearch(String searchKey) {
+    dummySearchList.clear();
+
+    if (searchKey.isNotEmpty) {
+      _responseData.forEach((f) {
+        if (f["userId"]["fullName"] != null) {
+          if (f["userId"]["fullName"]
+              .toLowerCase()
+              .contains(searchKey.toLowerCase())) {
+            dummySearchList.add(f);
+          }
+        }
+      });
+    }
   }
 }
