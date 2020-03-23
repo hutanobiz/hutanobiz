@@ -62,7 +62,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
       body: LoadingBackground(
         title: "General Medicine",
         color: AppColors.snow,
-        isAddBack: true,
+        isAddBack: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -133,23 +133,33 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
       child: FutureBuilder<dynamic>(
         future: _providerFuture,
         builder: (_, snapshot) {
-          if (snapshot.hasData) {
-            _responseData = snapshot.data["response"];
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+              return Text("NO data available");
+              break;
+            case ConnectionState.waiting:
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+              break;
+            case ConnectionState.active:
+              break;
+            case ConnectionState.done:
+              if (snapshot.hasData) {
+                _responseData = snapshot.data["response"];
 
-            if (snapshot.data["degree"] != null)
-              _degreeMap = snapshot.data["degree"];
+                if (snapshot.data["degree"] != null)
+                  _degreeMap = snapshot.data["degree"];
 
-            return _searchText == null || _searchText == ""
-                ? _listWidget(_degreeMap, _responseData)
-                : _listWidget(_degreeMap, _dummySearchList);
-          } else if (!snapshot.hasData) {
-            return Text("NO data available!");
-          } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
+                return _searchText == null || _searchText == ""
+                    ? _listWidget(_degreeMap, _responseData)
+                    : _listWidget(_degreeMap, _dummySearchList);
+              } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
+              break;
           }
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return null;
         },
       ),
     );
