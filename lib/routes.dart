@@ -67,9 +67,9 @@ class Routes {
         return _errorRoute();
         break;
       case chooseSpecialities:
-        if (args is MapArguments) {
-          return _buildRoute(settings,
-              ChooseSpecialities(professionalId: args.map["professionalId"]));
+        if (args is String) {
+          return _buildRoute(
+              settings, ChooseSpecialities(professionalId: args));
         }
         return _errorRoute();
         break;
@@ -86,10 +86,7 @@ class Routes {
         return _errorRoute();
         break;
       case providerListScreen:
-        if (args is MapArguments) {
-          return _buildRoute(settings, ProviderListScreen(argumentsMap: args));
-        }
-        return _errorRoute();
+        return _buildRoute(settings, ProviderListScreen());
         break;
       case dashboardSearchScreen:
         return _buildRoute(settings, DashboardSearchScreen());
@@ -147,12 +144,7 @@ class RegisterArguments {
 class SearchArguments {
   final List<dynamic> list;
   final String title;
+  final int type;
 
-  SearchArguments({this.list, this.title});
-}
-
-class MapArguments {
-  final Map map;
-
-  MapArguments(this.map);
+  SearchArguments({this.list, this.title, this.type});
 }

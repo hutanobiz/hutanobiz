@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -59,9 +60,27 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> getProviderList(Map<String, String> map) {
+  Future<dynamic> getProviderList(Map map) {
     return _netUtil
         .post(_base_url + "api/patient/provider-search", body: map)
+        .then((res) {
+      return res;
+    });
+  }
+
+  Future<dynamic> getSpecialityProviderList(String query) {
+    return _netUtil
+        .get(Uri.encodeFull(
+            _base_url + "api/specialty-providers?specialtyId=$query"))
+        .then((res) {
+      return res;
+    });
+  }
+
+  Future<dynamic> getServiceProviderList(String query) {
+    return _netUtil
+        .get(Uri.encodeFull(
+            _base_url + "api/service-providers?serviceId=$query"))
         .then((res) {
       return res;
     });
@@ -89,6 +108,7 @@ class NetworkUtil {
     try {
       final response = await http.get(url, headers: headers);
       final int statusCode = response.statusCode;
+      log("Status code: $statusCode");
 
       if (statusCode < 200 || statusCode > 400 || json == null) {
         final en = json.decode(response.body);
@@ -100,6 +120,8 @@ class NetworkUtil {
         else {
           en["response"].map((m) => Widgets.showToast(m["msg"])).toList();
         }
+
+        debugPrint(en["response"].toString(), wrapWidth: 1024);
 
         throw Exception(en);
       }
@@ -121,6 +143,7 @@ class NetworkUtil {
       final response = await http.post(url,
           body: body, headers: headers, encoding: encoding);
       final int statusCode = response.statusCode;
+      log("Status code: $statusCode");
 
       if (statusCode < 200 || statusCode > 400 || json == null) {
         final en = json.decode(response.body);
@@ -133,6 +156,7 @@ class NetworkUtil {
           en["response"].map((m) => Widgets.showToast(m["msg"])).toList();
         }
 
+        debugPrint(en["response"].toString(), wrapWidth: 1024);
         throw Exception(en);
       }
 

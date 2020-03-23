@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_tile_widget.dart';
 
@@ -14,6 +17,7 @@ class SeeAllSearchScreeen extends StatelessWidget {
   Widget build(BuildContext context) {
     List<dynamic> _list = arguments.list;
     String title = arguments.title;
+    int type = arguments.type;
 
     debugPrint("List: ${_list.toString()}", wrapWidth: 1024);
 
@@ -42,9 +46,23 @@ class SeeAllSearchScreeen extends StatelessWidget {
                       )
                     : ListTile(
                         title: Text(_list[index]["title"]),
-                        onTap: () => Navigator.of(context).pushNamed(
-                            Routes.searchInfoScreen,
-                            arguments: _list[index]),
+                        onTap: () {
+                          log(type.toString());
+                          final container = InheritedContainer.of(context);
+
+                          container.getProjectsResponse().clear();
+
+                          if (type == 1) {
+                            container.setProjectsResponse(
+                                "specialityId", _list[index]["_id"]);
+                          } else if (type == 3) {
+                            InheritedContainer.of(context).setProjectsResponse(
+                                "serviceId", _list[index]["_id"]);
+                          }
+
+                          Navigator.of(context)
+                              .pushNamed(Routes.providerListScreen);
+                        },
                       );
               }
 

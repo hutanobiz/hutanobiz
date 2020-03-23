@@ -1,15 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
-import 'package:hutano/routes.dart';
 import 'package:hutano/widgets/arrow_button.dart';
+import 'package:hutano/widgets/inherited_widget.dart';
+import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
-import 'package:hutano/widgets/round_corners_background.dart';
 
 class ProviderListScreen extends StatefulWidget {
-  ProviderListScreen({Key key, this.argumentsMap}) : super(key: key);
-
-  final MapArguments argumentsMap;
+  ProviderListScreen({Key key}) : super(key: key);
 
   @override
   _ProviderListScreenState createState() => _ProviderListScreenState();
@@ -25,29 +25,44 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
   List<dynamic> _responseData;
   String _searchText = "";
 
-  Map degreeMap;
+  Map _degreeMap;
 
-  List<dynamic> dummySearchList = List();
+  List<dynamic> _dummySearchList = List();
+
+  Map _containerMap;
 
   @override
   void initState() {
-    Map<String, String> map = Map();
-
-    map["professionalTitleId"] = "5e5f7e90a266960a8524f2d5";
-    map["specialtyId[]"] = "5e5f7e90a266960a8524f338";
-    map["serviceType"] = widget.argumentsMap.map["appointmentType"];
-
-    //TODO: change static professionalTitleId and specialtyId[]
-    _providerFuture = api.getProviderList(map);
-
     super.initState();
+
+    Future.delayed(Duration.zero, () {
+      final container = InheritedContainer.of(context);
+      _containerMap = container.getProjectsResponse();
+
+      log(container.getProjectsResponse().toString());
+
+      if (_containerMap.length == 1) {
+        if (_containerMap.containsKey("specialityId"))
+          _providerFuture = api.getSpecialityProviderList(
+              _containerMap["specialityId"].toString());
+        else
+          _providerFuture =
+              api.getServiceProviderList(_containerMap["serviceId"].toString());
+      } else {
+        _providerFuture = api.getProviderList(_containerMap);
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: RoundCornerBackground(
-        scaffoldKey: _scaffoldKey,
+    return Scaffold(
+      key: _scaffoldKey,
+      backgroundColor: AppColors.goldenTainoi,
+      body: LoadingBackground(
+        title: "General Medicine",
+        color: AppColors.snow,
+        isAddBack: true,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -74,15 +89,6 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Text(
-          "General Medicine",
-          style: TextStyle(
-            color: AppColors.midnight_express,
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 19.0),
         TextFormField(
           key: _searchKey,
           maxLines: 1,
@@ -129,11 +135,15 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
         builder: (_, snapshot) {
           if (snapshot.hasData) {
             _responseData = snapshot.data["response"];
-            degreeMap = snapshot.data["degree"];
+
+            if (snapshot.data["degree"] != null)
+              _degreeMap = snapshot.data["degree"];
 
             return _searchText == null || _searchText == ""
-                ? _listWidget(degreeMap, _responseData)
-                : _listWidget(degreeMap, dummySearchList);
+                ? _listWidget(_degreeMap, _responseData)
+                : _listWidget(_degreeMap, _dummySearchList);
+          } else if (!snapshot.hasData) {
+            return Text("NO data available!");
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");
           }
@@ -150,24 +160,25 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
       itemCount: _responseData.length,
       itemBuilder: (context, index) {
         List educatonList = _responseData[index]["education"];
-        String degree;
+        String degree = "---";
 
-        educatonList.map((f) {
-          if (degreeMap.containsKey(f["degree"])) {
-            degree = degreeMap[f["degree"]];
-          }
-        }).toList();
+        if (degreeMap != null)
+          educatonList.map((f) {
+            if (degreeMap.containsKey(f["degree"])) {
+              degree = degreeMap[f["degree"]];
+            }
+          }).toList();
 
         return ProviderWidget(
           data: _responseData[index],
-          degree: degree ?? "---",
+          degree: degree,
         );
       },
     );
   }
 
   void filterSearch(String searchKey) {
-    dummySearchList.clear();
+    _dummySearchList.clear();
 
     if (searchKey.isNotEmpty) {
       _responseData.forEach((f) {
@@ -175,7 +186,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
           if (f["userId"]["fullName"]
               .toLowerCase()
               .contains(searchKey.toLowerCase())) {
-            dummySearchList.add(f);
+            _dummySearchList.add(f);
           }
         }
       });

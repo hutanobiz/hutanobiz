@@ -8,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:location/location.dart';
 
@@ -33,6 +34,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   bool _isLoading = false;
 
+  InheritedContainerState conatiner;
+
   @override
   void initState() {
     super.initState();
@@ -45,6 +48,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    conatiner = InheritedContainer.of(context);
+
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
@@ -217,13 +222,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ],
                 ),
                 onTap: () {
-                  Map map = Map();
-                  map["professionalId"] = data[index]["_id"];
+                  conatiner.getProjectsResponse().clear();
+                  conatiner.setProjectsResponse(
+                      "professionalTitleId", data[index]["_id"]);
+
+                  log(conatiner.getProjectsResponse().toString());
 
                   Navigator.pushNamed(
                     context,
                     Routes.chooseSpecialities,
-                    arguments: MapArguments(map),
+                    arguments: data[index]["_id"],
                   );
                 },
               );

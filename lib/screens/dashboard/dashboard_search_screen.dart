@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_tile_widget.dart';
 
@@ -101,17 +104,17 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  heading("Specialities", _specialityList),
+                  heading("Specialities", _specialityList, 1),
                   _specialityList.isNotEmpty
-                      ? _listWidget(_specialityList, "title", false)
+                      ? _listWidget(_specialityList, "title", false, 1)
                       : Container(),
-                  heading("Providers", _doctorList),
+                  heading("Providers", _doctorList, 2),
                   _doctorList.isNotEmpty
-                      ? _listWidget(_doctorList, "fullName", true)
+                      ? _listWidget(_doctorList, "fullName", true, 2)
                       : Container(),
-                  heading("Services", _servicesList),
+                  heading("Services", _servicesList, 3),
                   _servicesList.isNotEmpty
-                      ? _listWidget(_servicesList, "title", false)
+                      ? _listWidget(_servicesList, "title", false, 3)
                       : Container(),
                 ]),
           );
@@ -125,7 +128,7 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
     );
   }
 
-  Widget heading(String heading, List<dynamic> list) {
+  Widget heading(String heading, List<dynamic> list, int type) {
     return list.isNotEmpty
         ? Container(
             width: MediaQuery.of(context).size.width,
@@ -154,6 +157,7 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
                               arguments: SearchArguments(
                                 list: list,
                                 title: heading,
+                                type: type,
                               ),
                             ),
                             child: Padding(
@@ -178,7 +182,8 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
         : Container();
   }
 
-  Widget _listWidget(List<dynamic> _list, String searchKey, bool isDoctorList) {
+  Widget _listWidget(
+      List<dynamic> _list, String searchKey, bool isDoctorList, int type) {
     List<dynamic> tempList = List();
 
     if (_list.isNotEmpty)
@@ -208,9 +213,23 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
                   )
                 : ListTile(
                     title: Text(tempList[index][searchKey]),
-                    onTap: () => Navigator.of(context).pushNamed(
-                        Routes.searchInfoScreen,
-                        arguments: tempList[index]),
+                    onTap: () {
+                      log(type.toString());
+                      final container = InheritedContainer.of(context);
+
+                      container.getProjectsResponse().clear();
+
+                      if (type == 1) {
+                        container.setProjectsResponse(
+                            "specialityId", tempList[index]["_id"]);
+                      } else if (type == 3) {
+                        InheritedContainer.of(context).setProjectsResponse(
+                            "serviceId", tempList[index]["_id"]);
+                      }
+
+                      Navigator.of(context)
+                          .pushNamed(Routes.providerListScreen);
+                    },
                   );
           }
 

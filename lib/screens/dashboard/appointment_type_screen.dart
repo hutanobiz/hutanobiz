@@ -3,6 +3,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/widgets/arrow_button.dart';
 import 'package:hutano/widgets/custom_card_view.dart';
+import 'package:hutano/widgets/inherited_widget.dart';
 
 class AppointmentTypeScreen extends StatefulWidget {
   AppointmentTypeScreen({Key key}) : super(key: key);
@@ -12,8 +13,12 @@ class AppointmentTypeScreen extends StatefulWidget {
 }
 
 class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
+  InheritedContainerState conatiner;
+
   @override
   Widget build(BuildContext context) {
+    conatiner = InheritedContainer.of(context);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.goldenTainoi,
@@ -79,20 +84,20 @@ class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
   Widget cardView(String image, String cardText) {
     return CustomCardView(
       onTap: () {
-        Map map = Map();
-
+        String type;
         if (cardText.contains("office")) {
-          map["appointmentType"] = "1";
+          type = "1";
         } else if (cardText.toLowerCase().contains("video")) {
-          map["appointmentType"] = "2";
+          type = "2";
         } else {
-          map["appointmentType"] = "3";
+          type = "3";
         }
+
+        conatiner.setProjectsResponse("serviceType", type);
 
         Navigator.pushNamed(
           context,
           Routes.providerListScreen,
-          arguments: MapArguments(map),
         );
       },
       image: image,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/widgets/arrow_button.dart';
+import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/round_corners_background.dart';
 
 class ChooseSpecialities extends StatefulWidget {
@@ -23,6 +24,7 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
   Map selecteddynamic = Map();
 
   List<dynamic> selecteddynamicList = List();
+  InheritedContainerState conatiner;
 
   @override
   void initState() {
@@ -35,6 +37,7 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
 
   @override
   Widget build(BuildContext context) {
+    conatiner = InheritedContainer.of(context);
     return RoundCornerBackground(scaffoldKey: _scaffoldKey, child: column());
   }
 
@@ -93,13 +96,12 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
                           ),
                         ),
                         onTap: () {
-                          Map map = Map();
-                          map["specialityId"] = data[index]["_id"];
+                          conatiner.setProjectsResponse(
+                              "specialtyId[]", data[index]["_id"]);
 
                           Navigator.pushNamed(
                             context,
                             Routes.appointmentTypeScreen,
-                            arguments: MapArguments(map),
                           );
                         },
                       ),
