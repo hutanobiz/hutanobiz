@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hutano/screens/book_appointment/select_appointment_time_screen.dart';
 import 'package:hutano/screens/dashboard/appointment_type_screen.dart';
 import 'package:hutano/screens/dashboard/choose_location_screen.dart';
 import 'package:hutano/screens/dashboard/choose_specialities.dart';
@@ -31,6 +32,8 @@ class Routes {
   static const String dashboardSearchScreen = '/dashboardSearchScreen';
   static const String seeAllSearchScreeen = '/seeAllSearchScreeen';
   static const String searchInfoScreen = '/searchInfoScreen';
+  static const String selectAppointmentTimeScreen =
+      '/selectAppointmentTimeScreen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -101,6 +104,9 @@ class Routes {
           return _buildRoute(settings, SearchInfoScreen(map: args));
         }
         return _errorRoute();
+        break;
+      case selectAppointmentTimeScreen:
+        return _buildRoute(settings, SelectAppointmentTimeScreen());
         break;
       default:
         return _errorRoute();

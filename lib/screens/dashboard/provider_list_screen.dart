@@ -1,8 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/widgets/arrow_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
@@ -32,26 +31,22 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
   Map _containerMap;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
-    Future.delayed(Duration.zero, () {
-      final container = InheritedContainer.of(context);
-      _containerMap = container.getProjectsResponse();
+    final _containerMap = InheritedContainer.of(context).getProjectsResponse();
+    if (this._containerMap != _containerMap) this._containerMap = _containerMap;
 
-      log(container.getProjectsResponse().toString());
-
-      if (_containerMap.length == 1) {
-        if (_containerMap.containsKey("specialityId"))
-          _providerFuture = api.getSpecialityProviderList(
-              _containerMap["specialityId"].toString());
-        else
-          _providerFuture =
-              api.getServiceProviderList(_containerMap["serviceId"].toString());
-      } else {
-        _providerFuture = api.getProviderList(_containerMap);
-      }
-    });
+    if (_containerMap.length == 1) {
+      if (_containerMap.containsKey("specialityId"))
+        _providerFuture = api.getSpecialityProviderList(
+            _containerMap["specialityId"].toString());
+      else
+        _providerFuture =
+            api.getServiceProviderList(_containerMap["serviceId"].toString());
+    } else {
+      _providerFuture = api.getProviderList(_containerMap);
+    }
   }
 
   @override
@@ -182,6 +177,13 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
         return ProviderWidget(
           data: _responseData[index],
           degree: degree,
+          bookAppointment: () {
+            final container = InheritedContainer.of(context);
+            container.setProviderData("providerData", _responseData[index]);
+            container.setProviderData("degree", degree);
+
+            Navigator.of(context).pushNamed(Routes.selectAppointmentTimeScreen);
+          },
         );
       },
     );

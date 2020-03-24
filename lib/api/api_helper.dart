@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import 'package:hutano/models/user.dart';
+import 'package:hutano/models/schedule.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/widgets/widgets.dart';
 
@@ -12,11 +12,11 @@ class ApiBaseHelper {
   NetworkUtil _netUtil = new NetworkUtil();
   static const String _base_url = "http://139.59.40.62:5300/";
 
-  Future<User> login(Map<String, String> loginData) {
+  Future<dynamic> login(Map loginData) {
     return _netUtil
         .post(_base_url + "auth/api/login", body: loginData)
         .then((res) {
-      return User.fromJson(res["response"]);
+      return res["response"];
     });
   }
 
@@ -74,6 +74,16 @@ class ApiBaseHelper {
             _base_url + "api/specialty-providers?specialtyId=$query"))
         .then((res) {
       return res;
+    });
+  }
+
+  Future<List<Schedule>> getScheduleList(String providerId, Map doctorData) {
+    return _netUtil
+        .post(Uri.encodeFull(_base_url + "api/provider/schedule/$providerId"),
+            body: doctorData)
+        .then((res) {
+      List responseJson = res["response"];
+      return responseJson.map((m) => Schedule.fromJson(m)).toList();
     });
   }
 

@@ -2,12 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 
 class ProviderWidget extends StatelessWidget {
-  ProviderWidget({Key key, @required this.data, @required this.degree})
-      : assert(data != null),
+  ProviderWidget({
+    Key key,
+    @required this.data,
+    @required this.degree,
+    this.bookAppointment,
+    this.isOptionsShow = true,
+  })  : assert(data != null),
         super(key: key);
 
   final data;
   final String degree;
+  final Function bookAppointment;
+  final bool isOptionsShow;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +29,7 @@ class ProviderWidget extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.only(top: 15, left: 12, right: 12),
+            padding: EdgeInsets.only(top: 18, left: 12, right: 12),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -140,7 +147,9 @@ class ProviderWidget extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+            padding: isOptionsShow
+                ? const EdgeInsets.only(left: 12.0, right: 12.0)
+                : const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 18.0),
             child: Row(
               children: <Widget>[
                 Expanded(
@@ -186,61 +195,63 @@ class ProviderWidget extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            padding: EdgeInsets.only(
-              top: 12.0,
-            ),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: FlatButton(
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    color: Colors.transparent,
-                    splashColor: Colors.grey[300],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(13.0),
+          isOptionsShow
+              ? Padding(
+                  padding: EdgeInsets.only(top: 12.0),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: FlatButton(
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          color: Colors.transparent,
+                          splashColor: Colors.grey[300],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(13.0),
+                            ),
+                            side: BorderSide(
+                                width: 0.5, color: AppColors.persian_indigo),
+                          ),
+                          child: Text(
+                            "View Profile",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 12.0,
+                              color: AppColors.persian_indigo,
+                            ),
+                          ),
+                          onPressed: () {},
+                        ),
                       ),
-                      side: BorderSide(
-                          width: 0.5, color: AppColors.persian_indigo),
-                    ),
-                    child: Text(
-                      "View Profile",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 12.0,
-                        color: AppColors.persian_indigo,
+                      Expanded(
+                        child: FlatButton(
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          color: AppColors.persian_indigo,
+                          splashColor: Colors.grey[300],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular(13.0),
+                            ),
+                            side: BorderSide(
+                                width: 0.5, color: AppColors.persian_indigo),
+                          ),
+                          child: Text(
+                            "Book Appointment",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 12.0,
+                              color: Colors.white,
+                            ),
+                          ),
+                          onPressed: bookAppointment,
+                        ),
                       ),
-                    ),
-                    onPressed: () {},
+                    ],
                   ),
-                ),
-                Expanded(
-                  child: FlatButton(
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    color: AppColors.persian_indigo,
-                    splashColor: Colors.grey[300],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        bottomRight: Radius.circular(13.0),
-                      ),
-                      side: BorderSide(
-                          width: 0.5, color: AppColors.persian_indigo),
-                    ),
-                    child: Text(
-                      "Book Appointment",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 12.0,
-                        color: Colors.white,
-                      ),
-                    ),
-                    onPressed: () {},
-                  ),
-                ),
-              ],
-            ),
-          ),
+                )
+              : Container(),
         ],
       ),
     );

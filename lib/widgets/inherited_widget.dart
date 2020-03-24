@@ -17,14 +17,23 @@ class InheritedContainer extends StatefulWidget {
 }
 
 class InheritedContainerState extends State<InheritedContainer> {
-  Map response = Map();
+  Map _response = Map();
+  Map _providerResponse = Map();
 
   void setProjectsResponse(String key, String data) {
-    response[key] = data;
+    _response[key] = data;
   }
 
   Map getProjectsResponse() {
-    return response;
+    return _response;
+  }
+
+  void setProviderData(String key, dynamic data) {
+    _providerResponse[key] = data;
+  }
+
+  Map getProviderData() {
+    return _providerResponse;
   }
 
   @override
