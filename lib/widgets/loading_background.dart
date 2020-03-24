@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/widgets/bottom_arrows.dart';
 
 class LoadingBackground extends StatelessWidget {
-  LoadingBackground(
-      {Key key,
-      this.isLoading: false,
-      @required this.title,
-      this.isAddBack: true,
-      this.padding,
-      @required this.child,
-      this.isAddAppBar: true,
-      this.color: AppColors.snow})
-      : super(key: key);
+  LoadingBackground({
+    Key key,
+    this.isLoading: false,
+    @required this.title,
+    this.isAddBack: true,
+    this.padding,
+    @required this.child,
+    this.isAddAppBar: true,
+    this.addBottomArrows: false,
+    this.color: AppColors.snow,
+  }) : super(key: key);
 
   final bool isLoading;
   final Widget child;
   final bool isAddBack;
   final title;
   final EdgeInsets padding;
-  final bool isAddAppBar;
+  final bool isAddAppBar, addBottomArrows;
   final color;
 
   @override
@@ -61,7 +63,7 @@ class LoadingBackground extends StatelessWidget {
                   : Container(),
               Expanded(
                 child: Container(
-                    width: MediaQuery.of(context).size.width,
+                    // width: MediaQuery.of(context).size.width,
                     padding: padding ?? const EdgeInsets.all(20.0),
                     decoration: BoxDecoration(
                       color: color,
@@ -76,16 +78,21 @@ class LoadingBackground extends StatelessWidget {
           ),
           isLoading
               ? Container(
+                  alignment: Alignment.center,
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.4),
                   ),
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      backgroundColor: Colors.grey[200],
-                    ),
+                  child: CircularProgressIndicator(
+                    backgroundColor: Colors.grey[200],
                   ),
+                )
+              : Container(),
+          addBottomArrows
+              ? Padding(
+                  padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 20.0),
+                  child: BottomArrows(onForwardTap: () {}),
                 )
               : Container(),
         ],
