@@ -4,7 +4,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
-import 'package:hutano/models/user.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/dimens.dart';
@@ -188,14 +187,14 @@ class _LoginState extends State<LoginScreen> {
     try {
       api
           .login(loginData)
-          .then((User response) {
+          .then((dynamic response) {
             Widgets.showToast(Strings.loggedIn);
 
             setLoading(false);
             Navigator.of(context).pushNamedAndRemoveUntil(
                 Routes.dashboardScreen, (Route<dynamic> route) => false);
 
-            SharedPref().saveToken(response.tokens[0].token);
+            SharedPref().saveToken(response["tokens"][0]["token"].toString());
           })
           .timeout(const Duration(seconds: 10))
           .catchError((onError) {
