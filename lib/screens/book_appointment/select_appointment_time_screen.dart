@@ -3,6 +3,7 @@ import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/models/schedule.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/widgets/bottom_arrows.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
@@ -65,8 +66,9 @@ class _SelectAppointmentTimeScreenState
         color: AppColors.snow,
         isAddBack: false,
         addBottomArrows: true,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.only(bottom: 70.0),
           children: widgetList(),
         ),
         onForwardTap: () {
@@ -92,7 +94,7 @@ class _SelectAppointmentTimeScreenState
       isOptionsShow: false,
     ));
 
-    formWidget.add(SizedBox(height: 30.0));
+    formWidget.add(SizedBox(height: 5.0));
 
     formWidget.add(ScrollingDayCalendar(
       startDate: DateTime.now(),
