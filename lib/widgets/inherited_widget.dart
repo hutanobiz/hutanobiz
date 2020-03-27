@@ -19,6 +19,7 @@ class InheritedContainer extends StatefulWidget {
 class InheritedContainerState extends State<InheritedContainer> {
   Map _response = Map();
   Map _providerResponse = Map();
+  Map appointmentData = Map();
 
   void setProjectsResponse(String key, String data) {
     _response[key] = data;
@@ -30,6 +31,10 @@ class InheritedContainerState extends State<InheritedContainer> {
 
   void setProviderData(String key, dynamic data) {
     _providerResponse[key] = data;
+  }
+
+  void setAppointmentData(String key, dynamic data) {
+    appointmentData[key] = data;
   }
 
   Map getProviderData() {

@@ -87,6 +87,19 @@ class ApiBaseHelper {
     });
   }
 
+  Future<dynamic> bookAppointment(String token, Map appointmentData) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .post(_base_url + "api/patient/appointment-booking",
+            body: appointmentData, headers: headers)
+        .then((res) {
+      return res;
+    });
+  }
+
   Future<dynamic> getServiceProviderList(String query) {
     return _netUtil
         .get(Uri.encodeFull(
