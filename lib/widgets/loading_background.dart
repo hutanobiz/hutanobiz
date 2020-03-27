@@ -4,18 +4,20 @@ import 'package:hutano/widgets/arrow_button.dart';
 import 'package:hutano/widgets/bottom_arrows.dart';
 
 class LoadingBackground extends StatelessWidget {
-  LoadingBackground({
-    Key key,
-    this.isLoading: false,
-    @required this.title,
-    this.isAddBack: true,
-    this.padding,
-    @required this.child,
-    this.isAddAppBar: true,
-    this.addBottomArrows: false,
-    this.addBackButton: false,
-    this.color: AppColors.snow,
-  }) : super(key: key);
+  LoadingBackground(
+      {Key key,
+      this.isLoading: false,
+      @required this.title,
+      this.isAddBack: true,
+      this.padding,
+      @required this.child,
+      this.isAddAppBar: true,
+      this.addBottomArrows: false,
+      this.addBackButton: false,
+      this.color: AppColors.snow,
+      this.buttonColor = AppColors.goldenTainoi,
+      this.onForwardTap})
+      : super(key: key);
 
   final bool isLoading;
   final Widget child;
@@ -25,6 +27,8 @@ class LoadingBackground extends StatelessWidget {
   final bool isAddAppBar, addBottomArrows;
   final color;
   final bool addBackButton;
+  final Function onForwardTap;
+  final Color buttonColor;
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +103,7 @@ class LoadingBackground extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 20.0),
                     child: ArrowButton(
                       iconData: Icons.arrow_back,
+                      buttonColor: buttonColor,
                       onTap: () => Navigator.pop(context),
                     ),
                   ),
@@ -107,7 +112,7 @@ class LoadingBackground extends StatelessWidget {
           addBottomArrows
               ? Padding(
                   padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 20.0),
-                  child: BottomArrows(onForwardTap: () {}),
+                  child: BottomArrows(onForwardTap: onForwardTap),
                 )
               : Container(),
         ],
