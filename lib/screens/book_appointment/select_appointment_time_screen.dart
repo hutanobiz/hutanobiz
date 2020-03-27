@@ -5,6 +5,7 @@ import 'package:hutano/models/schedule.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
+import 'package:hutano/widgets/scrolling_day_calendar_widget.dart';
 import 'package:intl/intl.dart';
 
 class SelectAppointmentTimeScreen extends StatefulWidget {
@@ -32,9 +33,9 @@ class _SelectAppointmentTimeScreenState
 
     if (this._providerData != _providerData) this._providerData = _providerData;
 
-    String currentDate = DateFormat('MM-dd-yyyy').format(DateTime.now());
+    String currentDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
 
-    _dayDateMap["day"] = "1";
+    _dayDateMap["day"] = DateTime.now().weekday.toString();
     _dayDateMap["date"] = currentDate;
 
     _scheduleFuture = _apiBaseHelper.getScheduleList(
@@ -69,6 +70,28 @@ class _SelectAppointmentTimeScreenState
       degree: _providerData["degree"].toString(),
       isOptionsShow: false,
     ));
+
+    formWidget.add(SizedBox(height: 30.0));
+
+    formWidget.add(ScrollingDayCalendar(
+      startDate: DateTime.now(),
+      endDate: DateTime.now().add(Duration(days: 14)),
+      selectedDate: DateTime.now(),
+      displayDateFormat: "EEEE, dd MMMM",
+      onDateChange: (DateTime selectedDate) {
+        _dayDateMap["day"] = selectedDate.weekday.toString();
+        _dayDateMap["date"] =
+            DateFormat("dd-MM-yyyy").format(selectedDate).toString();
+
+        setState(() {
+          _scheduleFuture = _apiBaseHelper.getScheduleList(
+            _providerData["providerData"]["userId"]["_id"].toString(),
+            _dayDateMap,
+          );
+        });
+      },
+    ));
+
     formWidget.add(SizedBox(height: 30.0));
 
     formWidget.add(_futureWidget());
@@ -113,11 +136,11 @@ class _SelectAppointmentTimeScreenState
 
               return Column(
                 children: <Widget>[
-                  _timingWidget("Morning", _morningList),
+                  _timingWidget("Morning", "ic_morning", _morningList),
                   SizedBox(height: 40.0),
-                  _timingWidget("Afternoon", _afternoonList),
+                  _timingWidget("Afternoon", "ic_afternoon", _afternoonList),
                   SizedBox(height: 40.0),
-                  _timingWidget("Evening", _eveningList),
+                  _timingWidget("Evening", "ic_night", _eveningList),
                 ],
               );
             } else if (snapshot.hasError) {
@@ -131,7 +154,7 @@ class _SelectAppointmentTimeScreenState
     );
   }
 
-  Widget _timingWidget(String timeType, List<Schedule> list) {
+  Widget _timingWidget(String timeType, String icon, List<Schedule> list) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,8 +162,12 @@ class _SelectAppointmentTimeScreenState
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Icon(Icons.ac_unit),
-            SizedBox(width: 6.0),
+            Image(
+              width: 15.0,
+              height: 18.0,
+              image: AssetImage("images/$icon.png"),
+            ),
+            SizedBox(width: 9.0),
             Text(
               timeType,
               style: TextStyle(
