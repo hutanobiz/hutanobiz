@@ -19,6 +19,7 @@ class ProviderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.only(bottom: 22.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(
@@ -86,7 +87,8 @@ class ProviderWidget extends StatelessWidget {
                               SizedBox(width: 8.0),
                               Expanded(
                                 child: Text(
-                                  data['supervising']['professionalTitle'],
+                                  data['supervising']['professionalTitle'] ??
+                                      "----",
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     color: Colors.black.withOpacity(0.6),
@@ -113,7 +115,7 @@ class ProviderWidget extends StatelessWidget {
                             ),
                             Expanded(
                               child: Text(
-                                data['about'],
+                                data['about'] ?? "---",
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -165,7 +167,7 @@ class ProviderWidget extends StatelessWidget {
                       SizedBox(width: 3.0),
                       Expanded(
                         child: Text(
-                          data['businessLocation']['address'],
+                          data['businessLocation']['address'] ?? "---",
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                           ),
