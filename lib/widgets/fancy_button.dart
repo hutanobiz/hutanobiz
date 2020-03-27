@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:hutano/colors.dart';
 import 'package:hutano/utils/dimens.dart';
 import 'package:hutano/utils/visibility_flag.dart';
 
 class FancyButton extends StatelessWidget {
-  FancyButton(
-      {this.buttonWidth,
-      @required this.buttonHeight,
-      @required this.title,
-      this.buttonColor,
-      @required this.onPressed,
-      this.icon,
-      this.elevation});
+  FancyButton({
+    this.buttonWidth,
+    this.buttonHeight = 55.0,
+    @required this.title,
+    this.buttonColor,
+    @required this.onPressed,
+    this.icon,
+    this.elevation = 0.0,
+  });
 
   final VoidCallback onPressed;
   final String title;
@@ -24,9 +26,9 @@ class FancyButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ButtonTheme(
       height: buttonHeight,
-      minWidth: buttonWidth == 0.0 ? 0.0 : MediaQuery.of(context).size.width,
+      minWidth: buttonWidth ?? MediaQuery.of(context).size.width,
       child: RaisedButton(
-        elevation: elevation ?? 0.0,
+        elevation: elevation,
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
@@ -37,7 +39,7 @@ class FancyButton extends StatelessWidget {
                 children: <Widget>[
                   Icon(
                     icon,
-                    color: Colors.red,
+                    color: Colors.white,
                   ),
                   SizedBox(width: 8.0),
                 ],
@@ -49,8 +51,7 @@ class FancyButton extends StatelessWidget {
             ),
           ],
         ),
-        color:
-            buttonColor == null ? Theme.of(context).primaryColor : buttonColor,
+        color: buttonColor ?? AppColors.goldenTainoi,
         splashColor: Colors.orange,
         onPressed: onPressed,
         shape: RoundedRectangleBorder(
