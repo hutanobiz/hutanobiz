@@ -70,47 +70,19 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
     formWidget.add(SizedBox(height: 30.0));
 
-    formWidget.add(Container(
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.all(20.0),
-      color: Colors.grey[100],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            "Date & Time",
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          SizedBox(height: 12.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Image(
-                width: 16.0,
-                height: 16.0,
-                image: AssetImage("images/ic_calendar.png"),
-              ),
-              SizedBox(width: 8.0),
-              Text(
-                "${DateFormat('EEEE, dd MMMM').format(_appointmentData['date']).toString()} " +
-                    TimeOfDay(
-                            hour: int.parse(_timeHours),
-                            minute: int.parse(_timeMins))
-                        .format(context),
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
-                  fontSize: 14.0,
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
-    ));
+    formWidget.add(container(
+        "Date & Time",
+        "${DateFormat('EEEE, dd MMMM').format(_appointmentData['date']).toString()} " +
+            TimeOfDay(hour: int.parse(_timeHours), minute: int.parse(_timeMins))
+                .format(context),
+        "ic_calendar"));
+
+    formWidget.add(SizedBox(height: 12.0));
+
+    formWidget.add(container(
+        "Office Address",
+        _providerData["providerData"]['businessLocation']['address'] ?? "---",
+        "ic_office_address"));
 
     formWidget.add(Expanded(
       child: Align(
@@ -166,6 +138,46 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
       ),
     ));
     return formWidget;
+  }
+
+  Widget container(String heading, String subtitle, String icon) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.all(20.0),
+      color: Colors.grey[100],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            heading,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(height: 12.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Image(
+                width: 16.0,
+                height: 16.0,
+                image: AssetImage("images/$icon.png"),
+              ),
+              SizedBox(width: 8.0),
+              Text(
+                subtitle,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                  fontSize: 14.0,
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
   }
 
   void _loading(bool load) {
