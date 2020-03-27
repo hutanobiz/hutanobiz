@@ -95,10 +95,10 @@ class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
 
         conatiner.setProjectsResponse("serviceType", type);
 
-        Navigator.pushNamed(
-          context,
-          Routes.providerListScreen,
-        );
+        if (conatiner.getProjectsResponse().length < 3)
+          Navigator.of(context).pushNamed(Routes.selectAppointmentTimeScreen);
+        else
+          Navigator.pushNamed(context, Routes.providerListScreen);
       },
       image: image,
       cardText: cardText,

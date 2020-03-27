@@ -36,7 +36,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
     final _containerMap = InheritedContainer.of(context).getProjectsResponse();
     if (this._containerMap != _containerMap) this._containerMap = _containerMap;
 
-    if (_containerMap.length == 1) {
+    if (_containerMap.length < 3) {
       if (_containerMap.containsKey("specialityId"))
         _providerFuture = api.getSpecialityProviderList(
             _containerMap["specialityId"].toString());
@@ -173,7 +173,11 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
             container.setProviderData("providerData", _responseData[index]);
             container.setProviderData("degree", degree);
 
-            Navigator.of(context).pushNamed(Routes.selectAppointmentTimeScreen);
+            if (_containerMap.length < 3)
+              Navigator.of(context).pushNamed(Routes.appointmentTypeScreen);
+            else
+              Navigator.of(context)
+                  .pushNamed(Routes.selectAppointmentTimeScreen);
           },
         );
       },
