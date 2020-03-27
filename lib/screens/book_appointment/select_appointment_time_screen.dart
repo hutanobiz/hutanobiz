@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/models/schedule.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
 import 'package:hutano/widgets/scrolling_day_calendar_widget.dart';
+import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 
 class SelectAppointmentTimeScreen extends StatefulWidget {
@@ -26,17 +28,26 @@ class _SelectAppointmentTimeScreenState
   List<Schedule> _eveningList = List();
 
   List<Schedule> _scheduleList;
+  InheritedContainerState _container;
+
+  String _selectedTiming;
+  DateTime _selectedDate;
 
   @override
-  void didChangeDependencies() {
-    final _providerData = InheritedContainer.of(context).getProviderData();
-
-    if (this._providerData != _providerData) this._providerData = _providerData;
+  void initState() {
+    super.initState();
 
     String currentDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+    _selectedDate = DateTime.now();
 
     _dayDateMap["day"] = DateTime.now().weekday.toString();
     _dayDateMap["date"] = currentDate;
+  }
+
+  @override
+  void didChangeDependencies() {
+    _container = InheritedContainer.of(context);
+    _providerData = _container.getProviderData();
 
     _scheduleFuture = _apiBaseHelper.getScheduleList(
       _providerData["providerData"]["userId"]["_id"].toString(),
@@ -58,6 +69,16 @@ class _SelectAppointmentTimeScreenState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: widgetList(),
         ),
+        onForwardTap: () {
+          if (_selectedDate != null && _selectedTiming != null) {
+            _container.setAppointmentData("date", _selectedDate);
+            _container.setAppointmentData("time", _selectedTiming);
+
+            Navigator.of(context).pushNamed(Routes.appointmentForScreen);
+          } else {
+            Widgets.showToast("Please select a timing");
+          }
+        },
       ),
     );
   }
@@ -83,12 +104,17 @@ class _SelectAppointmentTimeScreenState
         _dayDateMap["date"] =
             DateFormat("dd-MM-yyyy").format(selectedDate).toString();
 
+        _selectedTiming = null;
+        _container.appointmentData.clear();
+
         setState(() {
           _scheduleFuture = _apiBaseHelper.getScheduleList(
             _providerData["providerData"]["userId"]["_id"].toString(),
             _dayDateMap,
           );
         });
+
+        _selectedDate = selectedDate;
       },
     ));
 
@@ -207,6 +233,13 @@ class _SelectAppointmentTimeScreenState
 
   Widget _slotWidget(
       int index, List<Schedule> _scheduleList, Schedule schedule) {
+    String timing = TimeOfDay(
+            hour: int.parse(schedule.startTime.toString().substring(0, 2)),
+            minute: int.parse(schedule.startTime.toString().substring(2)))
+        .format(context)
+        .toString()
+        .toLowerCase();
+
     return InkWell(
       onTap: schedule.isBlock
           ? null
@@ -226,6 +259,8 @@ class _SelectAppointmentTimeScreenState
                   });
                 }
               }
+
+              _selectedTiming = schedule.startTime.toString();
             },
       child: Container(
         alignment: Alignment.center,
@@ -244,13 +279,7 @@ class _SelectAppointmentTimeScreenState
               width: 0.5),
         ),
         child: Text(
-          TimeOfDay(
-                  hour:
-                      int.parse(schedule.startTime.toString().substring(0, 2)),
-                  minute: int.parse(schedule.startTime.toString().substring(2)))
-              .format(context)
-              .toString()
-              .toLowerCase(),
+          timing,
           style: TextStyle(
             color: schedule.isBlock
                 ? Colors.grey.withOpacity(0.6)
