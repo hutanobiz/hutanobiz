@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/widgets/arrow_button.dart';
 import 'package:hutano/widgets/bottom_arrows.dart';
 
 class LoadingBackground extends StatelessWidget {
@@ -12,6 +13,7 @@ class LoadingBackground extends StatelessWidget {
     @required this.child,
     this.isAddAppBar: true,
     this.addBottomArrows: false,
+    this.addBackButton: false,
     this.color: AppColors.snow,
   }) : super(key: key);
 
@@ -22,6 +24,7 @@ class LoadingBackground extends StatelessWidget {
   final EdgeInsets padding;
   final bool isAddAppBar, addBottomArrows;
   final color;
+  final bool addBackButton;
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +89,18 @@ class LoadingBackground extends StatelessWidget {
                   ),
                   child: CircularProgressIndicator(
                     backgroundColor: Colors.grey[200],
+                  ),
+                )
+              : Container(),
+          addBackButton
+              ? Align(
+                  alignment: FractionalOffset.bottomLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 20.0),
+                    child: ArrowButton(
+                      iconData: Icons.arrow_back,
+                      onTap: () => Navigator.pop(context),
+                    ),
                   ),
                 )
               : Container(),
