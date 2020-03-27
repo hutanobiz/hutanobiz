@@ -20,6 +20,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   Map _appointmentData;
   Map _providerData;
   bool _isLoading = false;
+  String _timeHours, _timeMins;
 
   @override
   void didChangeDependencies() {
@@ -29,6 +30,9 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
     _providerData = _container.getProviderData();
     _appointmentData = _container.appointmentData;
+
+    _timeHours = _appointmentData["time"].substring(0, 2);
+    _timeMins = _appointmentData["time"].substring(2, 4);
   }
 
   @override
@@ -91,8 +95,11 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
               ),
               SizedBox(width: 8.0),
               Text(
-                "${DateFormat('EEEE, dd MMMM').format(_appointmentData['date']).toString()}" +
-                    " ${_appointmentData["time"].toString()}",
+                "${DateFormat('EEEE, dd MMMM').format(_appointmentData['date']).toString()} " +
+                    TimeOfDay(
+                            hour: int.parse(_timeHours),
+                            minute: int.parse(_timeMins))
+                        .format(context),
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Colors.black,
@@ -122,19 +129,15 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
               String doctorId =
                   _providerData["providerData"]["userId"]["_id"].toString();
 
-              String startTime = _appointmentData["time"].substring(0, 2) +
-                  ":" +
-                  _appointmentData["time"].substring(2, 4);
+              String startTime = _timeHours + ":" + _timeMins;
 
               String endTime =
-                  (int.parse(_appointmentData["time"].substring(0, 2)) + 1)
-                          .toString() +
-                      ":" +
-                      _appointmentData["time"].substring(2, 4);
+                  (int.parse(_timeHours) + 1).toString() + ":" + _timeMins;
 
               Map appointmentData = Map();
 
-              appointmentData["type"] = "1";
+              appointmentData["type"] =
+                  _container.getProjectsResponse()["serviceType"];
               appointmentData["date"] = DateFormat("MM/dd/yyyy")
                   .format(_appointmentData["date"])
                   .toString();
