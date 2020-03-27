@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/widgets/arrow_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
@@ -58,21 +57,13 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
         title: "General Medicine",
         color: AppColors.snow,
         isAddBack: false,
+        addBackButton: true,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             searchBar(),
             SizedBox(height: 23.0),
             listWidget(),
-            Expanded(
-              child: Align(
-                alignment: FractionalOffset.bottomLeft,
-                child: ArrowButton(
-                  iconData: Icons.arrow_back,
-                  onTap: () => Navigator.pop(context),
-                ),
-              ),
-            )
           ],
         ),
       ),
