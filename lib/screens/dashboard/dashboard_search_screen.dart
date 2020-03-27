@@ -199,7 +199,7 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
         separatorBuilder: (BuildContext context, int index) => Divider(),
         physics: ClampingScrollPhysics(),
         shrinkWrap: true,
-        padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0.0),
+        padding: const EdgeInsets.fromLTRB(20.0, 4.0, 20.0, 0.0),
         itemCount: tempList.length >= 5 ? 5 : tempList.length,
         itemBuilder: (context, index) {
           if (tempList.isNotEmpty) {
