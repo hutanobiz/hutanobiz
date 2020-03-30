@@ -12,6 +12,7 @@ import 'package:hutano/screens/dashboard/dashboard_search_screen.dart';
 import 'package:hutano/screens/dashboard/provider_list_screen.dart';
 import 'package:hutano/screens/dashboard/search_info.dart';
 import 'package:hutano/screens/dashboard/see_all_searches.dart';
+import 'package:hutano/screens/dashboard/tab_home.dart';
 import 'package:hutano/screens/login.dart';
 import 'package:hutano/screens/registration/forgot_password.dart';
 import 'package:hutano/screens/registration/register.dart';
@@ -47,7 +48,7 @@ class Routes {
         return _buildRoute(settings, LoginScreen());
         break;
       case dashboardScreen:
-        return _buildRoute(settings, DashboardScreen());
+        return _buildRoute(settings, Home());
         break;
       case forgotPasswordRoute:
         return _buildRoute(settings, ForgetPassword());

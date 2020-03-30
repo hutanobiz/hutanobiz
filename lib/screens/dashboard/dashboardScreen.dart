@@ -82,7 +82,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: bottomnavigationBar(),
     );
   }
 
@@ -335,50 +334,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } catch (e) {
       print(e.getMessage() ?? e.toString());
     }
-  }
-
-  Widget bottomnavigationBar() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(14.0),
-          topLeft: Radius.circular(14.0),
-        ),
-        border: Border.all(width: 0.5, color: Colors.grey[300]),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(14.0),
-          topLeft: Radius.circular(14.0),
-        ),
-        child: BottomNavigationBar(
-          backgroundColor: Colors.white,
-          selectedItemColor: AppColors.persian_indigo,
-          unselectedItemColor: Colors.grey[400],
-          currentIndex: 0,
-          items: [
-            BottomNavigationBarItem(
-              icon: ImageIcon(AssetImage("images/ic_home.png")),
-              activeIcon: ImageIcon(AssetImage("images/ic_active_home.png")),
-              title: Text('Home'),
-            ),
-            BottomNavigationBarItem(
-              icon: ImageIcon(AssetImage("images/ic_appointments.png")),
-              activeIcon:
-                  ImageIcon(AssetImage("images/ic_active_appointments.png")),
-              title: Text('Appointments'),
-            ),
-            BottomNavigationBarItem(
-                icon: ImageIcon(AssetImage("images/ic_settings.png")),
-                activeIcon:
-                    ImageIcon(AssetImage("images/ic_active_settings.png")),
-                title: Text('Settings'))
-          ],
-        ),
-      ),
-    );
   }
 
   void _loading() {
