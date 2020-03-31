@@ -393,7 +393,7 @@ class _SignUpFormState extends State<Register> {
 
                   Map<String, String> loginData = Map();
                   loginData["email"] = email;
-                  loginData["type"] = "2";
+                  loginData["type"] = "1";
                   loginData["step"] = "3";
                   loginData["fullName"] =
                       "${_firstNameController.text} ${_lastNameController.text}";
@@ -410,16 +410,14 @@ class _SignUpFormState extends State<Register> {
                       .register(loginData)
                       .then((dynamic response) {
                         setLoading(false);
-
-                        User user = User.fromJson(response);
-
-                        SharedPref().saveToken(user.tokens[0].token);
-                        SharedPref().setValue("fullName", user.fullName);
+                        SharedPref().saveToken(response["tokens"][0]["token"]);
+                        SharedPref().setValue("fullName", response["fullName"]);
 
                         Widgets.showToast("Profile created successfully");
 
                         Navigator.of(context).pushNamedAndRemoveUntil(
-                            Routes.dashboardScreen, (Route<dynamic> route) => false);
+                            Routes.dashboardScreen,
+                            (Route<dynamic> route) => false);
                       })
                       .timeout(Duration(seconds: 10))
                       .catchError((error) {

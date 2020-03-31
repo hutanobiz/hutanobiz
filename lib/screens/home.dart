@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/screens/dashboard/appointments_screen.dart';
 import 'package:hutano/screens/dashboard/dashboardScreen.dart';
+import 'package:hutano/screens/dashboard/setting.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -12,10 +13,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
-  
+
   final List<Widget> _children = [
     DashboardScreen(),
     AppointmentsScreen(),
+    SettingScreen(),
   ];
 
   @override
