@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/utils/dimens.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/visibility_flag.dart';
 
 class FancyButton extends StatelessWidget {
@@ -13,10 +14,11 @@ class FancyButton extends StatelessWidget {
     @required this.onPressed,
     this.icon,
     this.elevation = 0.0,
+    this.svgIcon,
   });
 
   final VoidCallback onPressed;
-  final String title;
+  final String title, svgIcon;
   final IconData icon;
   final double buttonHeight, buttonWidth;
   final Color buttonColor;
@@ -41,6 +43,17 @@ class FancyButton extends StatelessWidget {
                     icon,
                     color: Colors.white,
                   ),
+                  SizedBox(width: 8.0),
+                ],
+              ),
+            ),
+            CustomVisibility(
+              visibility: svgIcon == null
+                  ? VisibilityFlag.gone
+                  : VisibilityFlag.visible,
+              child: Row(
+                children: <Widget>[
+                  "svgIcon".svgIcon(),
                   SizedBox(width: 8.0),
                 ],
               ),

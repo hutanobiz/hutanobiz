@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
@@ -93,7 +94,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           padding: const EdgeInsets.only(right: 20.0, left: 20.0),
           child: FancyButton(
             title: "Send Office Request",
-            icon: Icons.send,
+            svgIcon: "ic_send_request",
             buttonColor: AppColors.windsor,
             onPressed: () {
               _loading(true);
@@ -159,11 +160,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Image(
-                width: 16.0,
-                height: 16.0,
-                image: AssetImage("images/$icon.png"),
-              ),
+              "icon".svgIcon(),
               SizedBox(width: 8.0),
               Text(
                 subtitle,
