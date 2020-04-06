@@ -1,4 +1,11 @@
+import 'dart:async';
+import 'dart:math' show cos, sqrt, asin;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/utils/extensions.dart';
@@ -23,6 +30,48 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   bool _isLoading = false;
   String _timeHours, _timeMins;
 
+  final Set<Marker> _markers = {};
+  final Set<Polyline> _polyline = {};
+
+  PolylinePoints polylinePoints = PolylinePoints();
+
+  List<LatLng> latlng = [];
+  LatLng _initialPosition;
+  LatLng _news = LatLng(28.5355, 77.3910);
+  Completer<GoogleMapController> _controller = Completer();
+  BitmapDescriptor sourceIcon;
+  BitmapDescriptor destinationIcon;
+
+  double _totalDistance = 0;
+
+  setPolylines() async {
+    List<PointLatLng> result = await polylinePoints?.getRouteBetweenCoordinates(
+      "AIzaSyAkq7DnUBTkddWXddoHAX02Srw6570ktx8",
+      _initialPosition.latitude,
+      _initialPosition.longitude,
+      _news.latitude,
+      _news.longitude,
+    );
+
+    if (result.isNotEmpty) {
+      result.forEach((PointLatLng point) {
+        latlng.add(LatLng(point.latitude, point.longitude));
+      });
+    }
+    setState(() {
+      _polyline.add(
+        Polyline(
+          polylineId: PolylineId(_initialPosition.toString()),
+          color: AppColors.persian_indigo,
+          points: latlng,
+          width: 5,
+          startCap: Cap.roundCap,
+          endCap: Cap.roundCap,
+        ),
+      );
+    });
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -32,8 +81,59 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     _providerData = _container.getProviderData();
     _appointmentData = _container.appointmentData;
 
-    _timeHours = _appointmentData["time"].substring(0, 2);
-    _timeMins = _appointmentData["time"].substring(2, 4);
+    String bookedTime = _appointmentData["time"];
+
+    if (bookedTime.length < 4) {
+      if (bookedTime[0] != "0") {
+        bookedTime = bookedTime.substring(0, 2) + "0" + bookedTime.substring(2);
+      } else {
+        bookedTime = "0" + bookedTime;
+      }
+    }
+    _timeHours = bookedTime.substring(0, 2);
+    _timeMins = bookedTime.substring(2, 4);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserLocation();
+    setSourceAndDestinationIcons();
+  }
+
+  void setSourceAndDestinationIcons() async {
+    sourceIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5),
+        "images/ic_initial_marker.png");
+    destinationIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5),
+        "images/ic_destination_marker.png");
+  }
+
+  void _getUserLocation() async {
+    try {
+      Position position = await Geolocator()
+          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+
+      setState(() {
+        _initialPosition = LatLng(position.latitude, position.longitude);
+      });
+    } on PlatformException catch (e) {
+      print(e);
+    }
+
+    await Geolocator()
+        .distanceBetween(
+      _initialPosition.latitude,
+      _initialPosition.longitude,
+      _news.latitude,
+      _news.longitude,
+    )
+        .then((distance) {
+      setState(() {
+        _totalDistance = distance;
+      });
+    });
   }
 
   @override
@@ -84,6 +184,82 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         "Office Address",
         _providerData["providerData"]['businessLocation']['address'] ?? "---",
         "ic_office_address"));
+
+    SizedBox(height: 6.0);
+
+    formWidget.add(_initialPosition == null
+        ? Container()
+        : Stack(
+            children: <Widget>[
+              Container(
+                height: 155.0,
+                margin: const EdgeInsets.all(20.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(14.0),
+                  child: GoogleMap(
+                    myLocationEnabled: false,
+                    compassEnabled: false,
+                    rotateGesturesEnabled: false,
+                    initialCameraPosition: CameraPosition(
+                      target: _initialPosition,
+                      zoom: 9.0,
+                    ),
+                    polylines: _polyline,
+                    markers: _markers,
+                    onMapCreated: (GoogleMapController controller) {
+                      setState(() {
+                        setPolylines();
+
+                        _controller.complete(controller);
+
+                        _markers.add(Marker(
+                          markerId: MarkerId(_initialPosition.toString()),
+                          position: _initialPosition,
+                          icon: sourceIcon,
+                        ));
+
+                        _markers.add(Marker(
+                          markerId: MarkerId(_news.toString()),
+                          position: _news,
+                          icon: destinationIcon,
+                        ));
+                      });
+                    },
+                  ),
+                ),
+              ),
+              Container(
+                width: 133.0,
+                height: 56.0,
+                margin: const EdgeInsets.fromLTRB(60.0, 33.0, 0.0, 0.0),
+                padding: const EdgeInsets.fromLTRB(45.0, 8.0, 5.0, 16.0),
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("images/ic_box.png"),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      "10-15 mins",
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      "${(_totalDistance * 0.000621371).toStringAsFixed(1)} miles away",
+                      style: TextStyle(
+                        fontSize: 11.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ));
 
     formWidget.add(Expanded(
       child: Align(
