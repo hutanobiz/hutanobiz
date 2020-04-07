@@ -2,7 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
-import 'package:hutano/models/user.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/dimens.dart';
