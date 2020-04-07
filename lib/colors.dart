@@ -11,4 +11,5 @@ class AppColors {
   static const persian_indigo  = Color(0xFF3A0D86);
   static const white_smoke  = Color(0xFFF8F8F8);
   static const midnight_express  = Color(0xFF040238);
+  static const tundora  = Color(0xFF4C4C4C);
 }

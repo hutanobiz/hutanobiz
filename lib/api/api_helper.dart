@@ -117,6 +117,18 @@ class ApiBaseHelper {
       return res["response"];
     });
   }
+
+  Future<dynamic> appointmentRequests(String token) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .get(_base_url + "api/patient/user-notification", headers: headers)
+        .then((res) {
+      return res["response"];
+    });
+  }
 }
 
 class NetworkUtil {
