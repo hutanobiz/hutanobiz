@@ -12,6 +12,7 @@ import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/loading_widget.dart';
 import 'package:hutano/widgets/password_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class Register extends StatefulWidget {
   Register({Key key, @required this.args}) : super(key: key);
@@ -33,9 +34,13 @@ class _SignUpFormState extends State<Register> {
   final _stateController = TextEditingController();
   final _phoneController = TextEditingController();
   final _zipController = TextEditingController();
-  final _langController = TextEditingController();
+  final _langController =
+      TextEditingController(text: "Select Primary Language");
+  List languages = ['English', 'Spanish', 'French', 'Mandarin', 'Tigalog'];
 
-  String _genderGroup = "male";
+  String _genderGroup = "";
+  var maskFormatter = new MaskTextInputFormatter(
+      mask: '+# (###) ###-####', filter: {"#": RegExp(r'[0-9]')});
 
   ApiBaseHelper api = new ApiBaseHelper();
   List stateList;
@@ -196,6 +201,7 @@ class _SignUpFormState extends State<Register> {
       Padding(
         padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
         child: TextFormField(
+          inputFormatters: [maskFormatter],
           controller: _phoneController,
           decoration: InputDecoration(
               labelText: "Phone",
@@ -303,7 +309,7 @@ class _SignUpFormState extends State<Register> {
                         borderRadius: BorderRadius.circular(5.0),
                         border: Border.all(
                             color: _genderGroup == "male"
-                                ? Colors.blue
+                                ? AppColors.female
                                 : Colors.grey[300],
                             width: 1.0)),
                     child: Row(children: <Widget>[
@@ -311,6 +317,9 @@ class _SignUpFormState extends State<Register> {
                         image: AssetImage('images/male.png'),
                         height: 16.0,
                         width: 16.0,
+                        color: _genderGroup == "male"
+                            ? AppColors.female
+                            : Colors.blue,
                       ),
                       SizedBox(
                         width: 5.0,
@@ -318,7 +327,9 @@ class _SignUpFormState extends State<Register> {
                       Text(
                         "Male",
                         style: TextStyle(
-                          color: Colors.blue,
+                          color: _genderGroup == "male"
+                              ? AppColors.female
+                              : Colors.blue,
                         ),
                       ),
                     ], mainAxisAlignment: MainAxisAlignment.center)),
@@ -345,6 +356,9 @@ class _SignUpFormState extends State<Register> {
                     image: AssetImage('images/female.png'),
                     height: 16.0,
                     width: 16.0,
+                    color: _genderGroup == "female"
+                        ? AppColors.female
+                        : Colors.blue,
                   ),
                   SizedBox(
                     width: 5.0,
@@ -352,7 +366,9 @@ class _SignUpFormState extends State<Register> {
                   Text(
                     "Female",
                     style: TextStyle(
-                      color: Colors.red,
+                      color: _genderGroup == "female"
+                          ? AppColors.female
+                          : Colors.blue,
                     ),
                   ),
                 ], mainAxisAlignment: MainAxisAlignment.center)),
@@ -365,18 +381,8 @@ class _SignUpFormState extends State<Register> {
 
     formWidget.add(Widgets.sizedBox(height: 29.0));
 
-    formWidget.add(
-      TextFormField(
-        controller: _langController,
-        obscureText: false,
-        decoration: InputDecoration(
-            labelText: "Primary Language",
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[300])),
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
-      ),
-    );
+    formWidget.add(picker(_langController, "Primary Language",
+        () => languageBottomDialog(languages, _langController)));
 
     formWidget.add(Widgets.sizedBox(height: 48.0));
 
@@ -401,7 +407,8 @@ class _SignUpFormState extends State<Register> {
                   loginData["city"] = _cityController.text;
                   loginData["state"] = _stateController.text;
                   loginData["zipCode"] = _zipController.text;
-                  loginData["phoneNumber"] = _phoneController.text;
+                  loginData["phoneNumber"] =
+                      maskFormatter.getUnmaskedText().toString();
                   loginData["gender"] = _genderGroup.trim().toString();
                   loginData["language"] = _langController.text;
 
@@ -480,6 +487,37 @@ class _SignUpFormState extends State<Register> {
                 onTap: () {
                   setState(() {
                     controller.text = list[index]["title"];
+                    Navigator.pop(context);
+                  });
+                },
+              );
+            },
+          );
+        });
+  }
+
+  void languageBottomDialog(list, controller) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return ListView.builder(
+            itemCount: list.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Center(
+                  child: Text(
+                    list[index],
+                    style: TextStyle(
+                      color: list[index] == controller.text
+                          ? AppColors.goldenTainoi
+                          : Colors.black,
+                      fontSize: list[index] == controller.text ? 20.0 : 16.0,
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  setState(() {
+                    controller.text = list[index];
                     Navigator.pop(context);
                   });
                 },
