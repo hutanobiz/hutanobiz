@@ -242,7 +242,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      "10-15 mins",
+                      "${(((_totalDistance * 0.000621371) / 30) * 60).toStringAsFixed(1)} mins",
                       style: TextStyle(
                         fontSize: 14.0,
                         fontWeight: FontWeight.bold,
