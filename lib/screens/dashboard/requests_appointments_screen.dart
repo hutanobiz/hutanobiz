@@ -5,14 +5,14 @@ import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/widgets.dart';
 
-class AppointmentsScreen extends StatefulWidget {
-  const AppointmentsScreen({Key key}) : super(key: key);
+class RequestAppointmentsScreen extends StatefulWidget {
+  const RequestAppointmentsScreen({Key key}) : super(key: key);
 
   @override
-  _AppointmentsScreenState createState() => _AppointmentsScreenState();
+  _RequestAppointmentsScreenState createState() => _RequestAppointmentsScreenState();
 }
 
-class _AppointmentsScreenState extends State<AppointmentsScreen> {
+class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   ApiBaseHelper _api = ApiBaseHelper();
