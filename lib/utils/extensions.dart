@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class Extensions {}
-
-extension SvgIcon on String {
-  svgIcon() => SvgPicture.asset("images/$this.svg");
-}
 
 extension ImageIcon on String {
   imageIcon({double height, double width}) => Image(
@@ -15,4 +10,18 @@ extension ImageIcon on String {
         height: height ?? 14.0,
         width: width ?? 14.0,
       );
+}
+
+extension FutureError<T> on Future<T> {
+  Future<T> futureError(Function onError) =>
+      this.timeout(const Duration(seconds: 10)).catchError(onError);
+}
+
+extension DebugLog on String {
+  debugLog() {
+    return debugPrint(
+        "\n******************************* DebugLog *******************************\n" +
+            " $this",
+        wrapWidth: 1024);
+  }
 }

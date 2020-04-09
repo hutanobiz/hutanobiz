@@ -14,11 +14,11 @@ class FancyButton extends StatelessWidget {
     @required this.onPressed,
     this.icon,
     this.elevation = 0.0,
-    this.svgIcon,
+    this.buttonIcon,
   });
 
   final VoidCallback onPressed;
-  final String title, svgIcon;
+  final String title, buttonIcon;
   final IconData icon;
   final double buttonHeight, buttonWidth;
   final Color buttonColor;
@@ -48,12 +48,12 @@ class FancyButton extends StatelessWidget {
               ),
             ),
             CustomVisibility(
-              visibility: svgIcon == null
+              visibility: buttonIcon == null
                   ? VisibilityFlag.gone
                   : VisibilityFlag.visible,
               child: Row(
                 children: <Widget>[
-                  "svgIcon".svgIcon(),
+                  "$buttonIcon".imageIcon(height: 20, width: 20),
                   SizedBox(width: 8.0),
                 ],
               ),

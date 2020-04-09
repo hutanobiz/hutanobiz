@@ -269,7 +269,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           padding: const EdgeInsets.only(right: 20.0, left: 20.0),
           child: FancyButton(
             title: "Send Office Request",
-            svgIcon: "ic_send_request",
+            buttonIcon: "ic_send_request",
             buttonColor: AppColors.windsor,
             onPressed: () {
               _loading(true);
@@ -335,7 +335,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              "icon".svgIcon(),
+              "$icon".imageIcon(),
               SizedBox(width: 8.0),
               Text(
                 subtitle,
