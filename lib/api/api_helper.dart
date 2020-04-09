@@ -129,6 +129,33 @@ class ApiBaseHelper {
       return res["response"];
     });
   }
+
+  Future<List<dynamic>> userAppointments(String token) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .get(_base_url + "api/patient/user-schedule-appointmnet",
+            headers: headers)
+        .then((res) {
+      return res["response"];
+    });
+  }
+
+  Future<dynamic> getProviderProfile(String token, String providerId) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    return _netUtil
+        .get(
+      Uri.encodeFull(_base_url + "api/patient/doctor-details?id=$providerId"),
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
 }
 
 class NetworkUtil {
