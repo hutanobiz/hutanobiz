@@ -157,7 +157,6 @@ class _SettingsScreenState extends State<SettingScreen> {
             borderRadius: BorderRadius.all(Radius.circular(14.0)),
             border: Border.all(color: Colors.grey[300]),
           ),
-          height: 264,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -172,15 +171,6 @@ class _SettingsScreenState extends State<SettingScreen> {
               ),
               customListButton("Payment History",
                   "images/profile_payment_history.png", () {}),
-              Padding(
-                padding: const EdgeInsets.only(left: 28.0),
-                child: Divider(
-                  color: Colors.grey[300],
-                  height: 0,
-                ),
-              ),
-              customListButton("Treatment Documents",
-                  "images/profile_treatment_document.png", () {}),
               Padding(
                 padding: const EdgeInsets.only(left: 28.0),
                 child: Divider(
