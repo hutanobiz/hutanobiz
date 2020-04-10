@@ -243,29 +243,29 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                       SizedBox(
                         height: 4.0,
                       ),
-                      listType == 1 && response["consentToTreat"] == false
-                          ? Container()
-                          : Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 4.0),
-                                  child: Text(
-                                    "View consent to treat",
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      color: AppColors.windsor,
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 10.0,
-                                  color: AppColors.windsor,
-                                ),
-                              ],
-                            ),
+                      // listType == 1 && response["consentToTreat"] == false
+                      //     ? Container()
+                      //     : Row(
+                      //         children: <Widget>[
+                      //           Padding(
+                      //             padding: const EdgeInsets.only(right: 4.0),
+                      //             child: Text(
+                      //               "View consent to treat",
+                      //               overflow: TextOverflow.ellipsis,
+                      //               style: TextStyle(
+                      //                 color: AppColors.windsor,
+                      //                 fontSize: 12.0,
+                      //                 fontWeight: FontWeight.w500,
+                      //               ),
+                      //             ),
+                      //           ),
+                      //           Icon(
+                      //             Icons.arrow_forward_ios,
+                      //             size: 10.0,
+                      //             color: AppColors.windsor,
+                      //           ),
+                      //         ],
+                      //       ),
                     ],
                   ),
                 ),
@@ -378,18 +378,19 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                       ? leftButton(
                           listType, response, "Treatment summary", () {})
                       : Container(),
-              listType == 1
-                  ? rightButton(
-                      listType,
-                      response,
-                      "View Details",
-                      () {
-                        _container.setAppointmentId(response["_id"]);
-                        Navigator.of(context)
-                            .pushNamed(Routes.appointmentDetailScreen);
-                      },
-                    )
-                  : listType == 2 && status == "1"
+              // listType == 1
+              //     ? rightButton(
+              //         listType,
+              //         response,
+              //         "View Details",
+              //         () {
+              //           _container.setAppointmentId(response["_id"]);
+              //           Navigator.of(context)
+              //               .pushNamed(Routes.appointmentDetailScreen);
+              //         },
+              //       )
+              //     :
+                   listType == 2 && status == "1"
                       ? rightButton(listType, response, "Rate Now", () {})
                       : Container(),
             ],
