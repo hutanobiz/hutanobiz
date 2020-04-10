@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/screens/dashboard/appointments_screen.dart';
 import 'package:hutano/screens/dashboard/dashboardScreen.dart';
+import 'package:hutano/screens/dashboard/requests_appointments_screen.dart';
 import 'package:hutano/screens/dashboard/setting.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,6 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _children = [
     DashboardScreen(),
     AppointmentsScreen(),
+    RequestAppointmentsScreen(),
     SettingScreen(),
   ];
 
@@ -68,6 +70,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 AssetImage("images/ic_active_appointments.png"),
               ),
               title: Text('Appointments'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.receipt),
+              title: Text('Requests'),
             ),
             BottomNavigationBarItem(
               icon: ImageIcon(
