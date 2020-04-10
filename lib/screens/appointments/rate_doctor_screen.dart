@@ -118,15 +118,19 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
 
     widgetList.add(rateWidget());
 
-    widgetList.add(Text(
-      "Tell us what went wrong",
-      style: TextStyle(
-        fontSize: 14.0,
-        fontWeight: FontWeight.w700,
-      ),
-    ));
+    widgetList.add(_rating.round() >= 1
+        ? Text(
+            _rating.round() >= 5
+                ? "Tell us what went right"
+                : "Tell us what went wrong",
+            style: TextStyle(
+              fontSize: 14.0,
+              fontWeight: FontWeight.w700,
+            ),
+          )
+        : Container());
 
-    widgetList.add(_selectWrongWidget());
+    widgetList.add(_rating.round() >= 1 ? _selectWrongWidget() : Container());
 
     widgetList.add(Text(
       "Leave a Review",
@@ -154,6 +158,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
         decoration: InputDecoration(
           labelStyle: TextStyle(color: Colors.grey),
           labelText: "Type something here...",
+          alignLabelWithHint: true,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(14.0)),
         ),
       ),
@@ -285,7 +290,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
           ),
           SizedBox(height: 22.0),
           RatingBar(
-            initialRating: 0,
+            initialRating: _rating,
             itemSize: 35.0,
             minRating: 1,
             itemPadding: const EdgeInsets.only(right: 24.0),
@@ -373,7 +378,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
   Widget selectWrongTypeWidget(
       String title, bool isChecked, Function onChanged) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 30.0),
+      padding: const EdgeInsets.only(bottom: 10.0),
       child: CheckboxListTile(
         title: Text(title),
         onChanged: onChanged,
