@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
@@ -214,7 +215,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                       ),
                       SizedBox(height: 5.0),
                       Text(
-                        "\$50",
+                        "\$---",
                         style: TextStyle(
                           fontSize: 22.0,
                           fontWeight: FontWeight.w600,
@@ -247,7 +248,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             .format(DateTime.parse(_providerData['date']))
             .toString()),
         divider(topPadding: 8.0),
-        locationWidget("location"),
+        locationWidget("location", _providerData["doctor"]),
         divider(),
         paymentWidget("cardNumber"),
         divider(topPadding: 10.0),
@@ -397,7 +398,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     );
   }
 
-  Widget locationWidget(String location) {
+  Widget locationWidget(String location, Map doctorMap) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
       child: Column(
@@ -410,38 +411,80 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             ),
           ),
           SizedBox(height: 12.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
+          Column(
             children: <Widget>[
-              "ic_location_grey".imageIcon(),
-              SizedBox(width: 8.0),
-              Expanded(
-                child: Text(
-                  "location", //TODO: location
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                    fontSize: 14.0,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  "ic_location_grey".imageIcon(),
+                  SizedBox(width: 8.0),
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        "---", //TODO: location
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(width: 30.0),
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: FlatButton(
+                        padding: const EdgeInsets.all(0.0),
+                        onPressed: () {},
+                        child: Text(
+                          "Get Directions",
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: AppColors.windsor,
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                height: 155.0,
+                margin: const EdgeInsets.only(top: 11.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(14.0),
+                  border: Border.all(color: Colors.grey[300]),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(14.0),
+                  child: GoogleMap(
+                    myLocationEnabled: false,
+                    compassEnabled: false,
+                    rotateGesturesEnabled: false,
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(
+                          doctorMap["location"]["coordinates"][0].toDouble() ==
+                                  0.0
+                              ? 28.5355
+                              : doctorMap["location"]["coordinates"][0]
+                                  .toDouble(),
+                          doctorMap["location"]["coordinates"][1].toDouble() ==
+                                  0.0
+                              ? 77.3910
+                              : doctorMap["location"]["coordinates"][1]
+                                  .toDouble()),
+                      zoom: 9.0,
+                    ),
+                    onMapCreated: (GoogleMapController controller) {},
                   ),
                 ),
-              ),
-              SizedBox(width: 30.0),
-              FlatButton(
-                padding: const EdgeInsets.all(0.0),
-                onPressed: () {},
-                child: Text(
-                  "Get Directions",
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: AppColors.windsor,
-                    fontSize: 12.0,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
+              )
             ],
           ),
         ],
