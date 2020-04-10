@@ -25,3 +25,29 @@ extension DebugLog on String {
         wrapWidth: 1024);
   }
 }
+
+extension InkWellTap on Widget {
+  onClick({
+    BuildContext context,
+    String routeName,
+    Function onTap,
+    bool roundCorners = true,
+  }) {
+    return Material(
+      type: MaterialType.transparency,
+      child: InkWell(
+        borderRadius: roundCorners
+            ? BorderRadius.circular(14.0)
+            : BorderRadius.circular(0.0),
+        splashColor: Colors.grey[200],
+        onTap: () {
+          if (context != null && routeName != null)
+            Navigator.of(context).pushNamed(routeName);
+
+          onTap();
+        },
+        child: this,
+      ),
+    );
+  }
+}
