@@ -28,22 +28,26 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
   List<dynamic> _dummySearchList = List();
 
   Map _containerMap;
+  InheritedContainerState _container;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    final _containerMap = InheritedContainer.of(context).getProjectsResponse();
-    if (this._containerMap != _containerMap) this._containerMap = _containerMap;
+    _container = InheritedContainer.of(context);
 
-    if (_containerMap.containsKey("specialityId"))
-      _providerFuture = api
-          .getSpecialityProviderList(_containerMap["specialityId"].toString());
-    else if (_containerMap.containsKey("serviceId"))
+    final _projectResponse = _container.getProjectsResponse();
+    if (this._containerMap != _projectResponse)
+      this._containerMap = _projectResponse;
+
+    if (_projectResponse.containsKey("specialityId"))
+      _providerFuture = api.getSpecialityProviderList(
+          _projectResponse["specialityId"].toString());
+    else if (_projectResponse.containsKey("serviceId"))
       _providerFuture =
-          api.getServiceProviderList(_containerMap["serviceId"].toString());
+          api.getServiceProviderList(_projectResponse["serviceId"].toString());
     else {
-      _providerFuture = api.getProviderList(_containerMap);
+      _providerFuture = api.getProviderList(_projectResponse);
     }
   }
 
@@ -164,21 +168,26 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
             }
           }).toList();
 
-        return ProviderWidget(
-          data: _responseData[index],
-          degree: degree,
-          bookAppointment: () {
-            final container = InheritedContainer.of(context);
-            container.setProviderData("providerData", _responseData[index]);
-            container.setProviderData("degree", degree);
+        _container.getProviderData().clear();
+        _container.setProviderData("providerData", _responseData[index]);
+        _container.setProviderData("degree", degree);
 
-            if (_containerMap.containsKey("specialityId") ||
-                _containerMap.containsKey("serviceId"))
-              Navigator.of(context).pushNamed(Routes.appointmentTypeScreen);
-            else
-              Navigator.of(context)
-                  .pushNamed(Routes.selectAppointmentTimeScreen);
+        return InkWell(
+          onTap: () {
+            Navigator.of(context).pushNamed(Routes.providerProfileScreen);
           },
+          child: ProviderWidget(
+            data: _responseData[index],
+            degree: degree,
+            bookAppointment: () {
+              if (_containerMap.containsKey("specialityId") ||
+                  _containerMap.containsKey("serviceId"))
+                Navigator.of(context).pushNamed(Routes.appointmentTypeScreen);
+              else
+                Navigator.of(context)
+                    .pushNamed(Routes.selectAppointmentTimeScreen);
+            },
+          ),
         );
       },
     );
