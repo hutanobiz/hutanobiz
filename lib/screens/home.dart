@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/screens/dashboard/appointments_screen.dart';
 import 'package:hutano/screens/dashboard/dashboardScreen.dart';
-import 'package:hutano/screens/dashboard/requests_appointments_screen.dart';
 import 'package:hutano/screens/dashboard/setting.dart';
 
 class HomeScreen extends StatefulWidget {
