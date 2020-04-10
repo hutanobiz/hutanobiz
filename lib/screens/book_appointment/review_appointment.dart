@@ -231,28 +231,37 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                 width: 133.0,
                 height: 56.0,
                 margin: const EdgeInsets.fromLTRB(60.0, 33.0, 0.0, 0.0),
-                padding: const EdgeInsets.fromLTRB(45.0, 8.0, 5.0, 16.0),
+                padding: const EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
                 decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("images/ic_box.png"),
-                    fit: BoxFit.cover,
-                  ),
+                  color: Colors.white,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(14.0),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text(
-                      "${(((_totalDistance * 0.000621371) / 30) * 60).toStringAsFixed(1)} mins",
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Image.asset(
+                      "images/ic_map_clock.png",
                     ),
-                    Text(
-                      "${(_totalDistance * 0.000621371).toStringAsFixed(1)} miles away",
-                      style: TextStyle(
-                        fontSize: 11.0,
-                      ),
+                    SizedBox(width: 5.0),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          "${(((_totalDistance * 0.000621371) / 30) * 60).toStringAsFixed(1)} mins",
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "${(_totalDistance * 0.000621371).toStringAsFixed(1)} miles away",
+                          style: TextStyle(
+                            fontSize: 11.0,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
