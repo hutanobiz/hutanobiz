@@ -41,7 +41,7 @@ class _SettingsScreenState extends State<SettingScreen> {
             child: Padding(
               padding: const EdgeInsets.only(left: 20.0, top: 30.0),
               child: Text(
-                "Settings",
+                "My profile",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
             ),
