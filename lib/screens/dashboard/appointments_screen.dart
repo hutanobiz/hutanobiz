@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
-import 'package:hutano/widgets/widgets.dart';
-import 'package:hutano/utils/extensions.dart';
 import 'package:intl/intl.dart';
 
 class AppointmentsScreen extends StatefulWidget {
@@ -28,6 +27,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
   List<dynamic> _upcomingList = List();
 
   Future<List<dynamic>> _requestsFuture;
+  InheritedContainerState _container;
 
   @override
   void initState() {
@@ -38,6 +38,13 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
         _requestsFuture = _api.userAppointments(token);
       });
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _container = InheritedContainer.of(context);
   }
 
   // @override
@@ -166,10 +173,13 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Container(
+          Padding(
             padding: EdgeInsets.only(left: 14, right: 14.0),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  listType == 1 && response["consentToTreat"] == false
+                      ? CrossAxisAlignment.center
+                      : CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
                   width: 62.0,
@@ -187,113 +197,120 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                     ),
                   ),
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 14.0, left: 10.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          "$name",
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w700,
-                          ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 14.0, left: 10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "$name",
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w700,
                         ),
-                        SizedBox(
-                          height: 5.0,
-                        ),
-                        listType == 1
-                            ? Text(
-                                "---",
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Colors.black.withOpacity(0.6),
+                      ),
+                      SizedBox(
+                        height: 5.0,
+                      ),
+                      listType == 1
+                          ? Text(
+                              "---",
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Colors.black.withOpacity(0.6),
+                              ),
+                            )
+                          : Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.star,
+                                  color: AppColors.goldenTainoi,
+                                  size: 12.0,
                                 ),
-                              )
-                            : Row(
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.star,
-                                    color: AppColors.goldenTainoi,
-                                    size: 12.0,
+                                SizedBox(width: 4.0),
+                                Text(
+                                  "4.5 ---",
+                                  style: TextStyle(
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black.withOpacity(0.7),
                                   ),
-                                  SizedBox(width: 4.0),
-                                  Text(
-                                    "4.5 ---",
+                                ),
+                                //TODO: doctor rating, speciality
+                              ],
+                            ),
+                      SizedBox(
+                        height: 4.0,
+                      ),
+                      listType == 1 && response["consentToTreat"] == false
+                          ? Container()
+                          : Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 4.0),
+                                  child: Text(
+                                    "View consent to treat",
+                                    overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
+                                      color: AppColors.windsor,
                                       fontSize: 12.0,
                                       fontWeight: FontWeight.w500,
-                                      color: Colors.black.withOpacity(0.7),
                                     ),
                                   ),
-                                  //TODO: doctor rating, speciality
-                                ],
-                              ),
-                        SizedBox(
-                          height: 4.0,
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(right: 4.0),
-                              child: Text(
-                                "View consent to treat",
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: AppColors.windsor,
-                                  fontSize: 12.0,
-                                  fontWeight: FontWeight.w500,
                                 ),
+                                Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 10.0,
+                                  color: AppColors.windsor,
+                                ),
+                              ],
+                            ),
+                    ],
+                  ),
+                ),
+                listType == 1
+                    ? Container()
+                    : Expanded(
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            width: 84.0,
+                            height: 40.0,
+                            alignment: Alignment.center,
+                            padding:
+                                const EdgeInsets.fromLTRB(12.0, 5.0, 12.0, 5.0),
+                            decoration: BoxDecoration(
+                              color: status == "1"
+                                  ? Colors.lightGreen.withOpacity(0.12)
+                                  : Colors.red.withOpacity(0.12),
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(7.0),
+                                bottomLeft: Radius.circular(7.0),
                               ),
                             ),
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              size: 10.0,
-                              color: AppColors.windsor,
+                            child: Text(
+                              status == "1" ? "Completed" : "Cancelled",
+                              softWrap: true,
+                              style: TextStyle(
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.w500,
+                                color: status == "1"
+                                    ? Colors.lightGreen
+                                    : Colors.red,
+                              ),
                             ),
-                          ],
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Container(
-                    width: 84.0,
-                    height: 40.0,
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.fromLTRB(12.0, 5.0, 12.0, 5.0),
-                    decoration: BoxDecoration(
-                      color: status == "1"
-                          ? Colors.lightGreen.withOpacity(0.12)
-                          : Colors.red.withOpacity(0.12),
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.only(
-                        bottomRight: Radius.circular(7.0),
-                        bottomLeft: Radius.circular(7.0),
                       ),
-                    ),
-                    child: Text(
-                      status == "1" ? "Completed" : "Cancelled",
-                      softWrap: true,
-                      style: TextStyle(
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w500,
-                        color: status == "1" ? Colors.lightGreen : Colors.red,
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(8.0, 3.0, 8.0, 3.0),
             child: Divider(
-              color: Colors.grey,
+              color: Colors.grey[300],
             ),
           ),
           Padding(
@@ -353,38 +370,35 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
               ],
             ),
           ),
-          InkWell(
-            onTap: () => Widgets.showToast("cancel"),
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              alignment: Alignment.center,
-              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-              decoration: BoxDecoration(
-                color: listType == 1
-                    ? AppColors.tundora.withOpacity(0.05)
-                    : AppColors.goldenTainoi.withOpacity(0.1),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(14.0),
-                  bottomRight: Radius.circular(14.0),
-                ),
-              ),
-              child: Text(
-                listType == 1 ? "View Details" : "Rate Now",
-                style: TextStyle(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w500,
-                  color:
-                      listType == 1 ? Colors.black54 : AppColors.goldenTainoi,
-                ),
-              ),
-            ),
+          Row(
+            children: <Widget>[
+              listType == 1 && response["consentToTreat"] == false
+                  ? leftButton(listType, response, "Add consent", () {})
+                  : listType == 2
+                      ? leftButton(
+                          listType, response, "Treatment summary", () {})
+                      : Container(),
+              listType == 1
+                  ? rightButton(
+                      listType,
+                      response,
+                      "View Details",
+                      () {
+                        _container.setAppointmentId(response["_id"]);
+                        Navigator.of(context)
+                            .pushNamed(Routes.appointmentDetailScreen);
+                      },
+                    )
+                  : listType == 2 && status == "1"
+                      ? rightButton(listType, response, "Rate Now", () {})
+                      : Container(),
+            ],
           ),
         ],
       ).onClick(
         context: context,
         routeName: Routes.appointmentDetailScreen,
-        onTap: () => InheritedContainer.of(context)
-            .setAppointmentId(response["_id"]),
+        onTap: () => _container.setAppointmentId(response["_id"]),
       ),
     );
   }
@@ -438,4 +452,55 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
   //     ),
   //   );
   // }
+
+  Widget leftButton(
+      int listType, Map response, String title, Function onPressed) {
+    return Expanded(
+      child: FlatButton(
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        color: AppColors.tundora.withOpacity(0.05),
+        splashColor: Colors.grey[300],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(12.0),
+          ),
+          side: BorderSide(width: 0.3, color: Colors.grey[300]),
+        ),
+        child: Text(
+          title,
+          style: TextStyle(
+            fontSize: 14.0,
+            fontWeight: FontWeight.w500,
+            color: Colors.black54,
+          ),
+        ),
+        onPressed: onPressed,
+      ),
+    );
+  }
+
+  Widget rightButton(
+      int listType, Map response, String title, Function onPressed) {
+    return Expanded(
+      child: FlatButton(
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        color: AppColors.goldenTainoi.withOpacity(0.1),
+        splashColor: Colors.grey[300],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.circular(12.0),
+          ),
+          side: BorderSide(width: 0.3, color: Colors.grey[300]),
+        ),
+        child: Text(
+          title,
+          style: TextStyle(
+              fontSize: 14.0,
+              fontWeight: FontWeight.w500,
+              color: AppColors.goldenTainoi),
+        ),
+        onPressed: onPressed,
+      ),
+    );
+  }
 }
