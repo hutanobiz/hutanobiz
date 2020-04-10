@@ -20,6 +20,8 @@ class InheritedContainerState extends State<InheritedContainer> {
   Map _response = Map();
   Map _providerResponse = Map();
   Map appointmentData = Map();
+  Map appointmentIdMap = Map();
+  Map userDataMap = Map();
 
   void setProjectsResponse(String key, String data) {
     _response[key] = data;
@@ -35,6 +37,14 @@ class InheritedContainerState extends State<InheritedContainer> {
 
   void setAppointmentData(String key, dynamic data) {
     appointmentData[key] = data;
+  }
+
+  void setUserData(Map userDataMap) {
+    this.userDataMap = userDataMap;
+  }
+
+  void setAppointmentId(String appointmentId) {
+    appointmentIdMap["appointmentId"] = appointmentId;
   }
 
   Map getProviderData() {

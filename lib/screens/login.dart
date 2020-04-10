@@ -11,6 +11,7 @@ import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/app_logo.dart';
 import 'package:hutano/widgets/email_widget.dart';
 import 'package:hutano/widgets/fancy_button.dart';
+import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_widget.dart';
 import 'package:hutano/widgets/password_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
@@ -194,6 +195,7 @@ class _LoginState extends State<LoginScreen> {
             Navigator.of(context).pushNamedAndRemoveUntil(
                 Routes.dashboardScreen, (Route<dynamic> route) => false);
 
+            InheritedContainer.of(context).setUserData(response);
             SharedPref().saveToken(response["tokens"][0]["token"].toString());
           })
           .timeout(const Duration(seconds: 10))
