@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hutano/screens/appointments/appointment_detail_screen.dart';
+import 'package:hutano/screens/appointments/rate_doctor_screen.dart';
 import 'package:hutano/screens/book_appointment/review_appointment.dart';
 import 'package:hutano/screens/book_appointment/select_appointment_time_screen.dart';
 import 'package:hutano/screens/dashboard/appointment_for.dart';
@@ -9,6 +11,7 @@ import 'package:hutano/screens/dashboard/choose_location_screen.dart';
 import 'package:hutano/screens/dashboard/choose_specialities.dart';
 import 'package:hutano/screens/dashboard/dashboard_search_screen.dart';
 import 'package:hutano/screens/dashboard/provider_list_screen.dart';
+import 'package:hutano/screens/dashboard/provider_profile_screen.dart';
 import 'package:hutano/screens/dashboard/search_info.dart';
 import 'package:hutano/screens/dashboard/see_all_searches.dart';
 import 'package:hutano/screens/home.dart';
@@ -38,6 +41,9 @@ class Routes {
       '/selectAppointmentTimeScreen';
   static const String appointmentForScreen = '/appointmentForScreen';
   static const String reviewAppointmentScreen = '/reviewAppointmentScreen';
+  static const String providerProfileScreen = '/providerProfileScreen';
+  static const String appointmentDetailScreen = '/appointmentDetailScreen';
+  static const String rateDoctorScreen = '/rateDoctorScreen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -117,6 +123,15 @@ class Routes {
         break;
       case reviewAppointmentScreen:
         return _buildRoute(settings, ReviewAppointmentScreen());
+        break;
+      case providerProfileScreen:
+        return _buildRoute(settings, ProviderProfileScreen());
+        break;
+      case appointmentDetailScreen:
+        return _buildRoute(settings, AppointmentDetailScreen());
+        break;
+      case rateDoctorScreen:
+        return _buildRoute(settings, RateDoctorScreen());
         break;
       default:
         return _errorRoute();
