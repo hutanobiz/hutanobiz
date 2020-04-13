@@ -16,6 +16,8 @@ import 'package:hutano/screens/dashboard/search_info.dart';
 import 'package:hutano/screens/dashboard/see_all_searches.dart';
 import 'package:hutano/screens/home.dart';
 import 'package:hutano/screens/login.dart';
+import 'package:hutano/screens/payment/add_new_card.dart';
+import 'package:hutano/screens/payment/payments_methods.dart';
 import 'package:hutano/screens/registration/forgot_password.dart';
 import 'package:hutano/screens/registration/register.dart';
 import 'package:hutano/screens/registration/register_email.dart';
@@ -44,6 +46,8 @@ class Routes {
   static const String providerProfileScreen = '/providerProfileScreen';
   static const String appointmentDetailScreen = '/appointmentDetailScreen';
   static const String rateDoctorScreen = '/rateDoctorScreen';
+  static const String paymentMethodScreen = '/paymentMethodScreen';
+  static const String addNewCardScreen = '/addNewCardScreen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -132,6 +136,12 @@ class Routes {
         break;
       case rateDoctorScreen:
         return _buildRoute(settings, RateDoctorScreen());
+        break;
+      case paymentMethodScreen:
+        return _buildRoute(settings, PaymentMethodScreen());
+        break;
+      case addNewCardScreen:
+        return _buildRoute(settings, AddNewCardScreen());
         break;
       default:
         return _errorRoute();

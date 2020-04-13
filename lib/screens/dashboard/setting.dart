@@ -169,8 +169,11 @@ class _SettingsScreenState extends State<SettingScreen> {
                   height: 0,
                 ),
               ),
-              customListButton("Payment History",
-                  "images/profile_payment_history.png", () {}),
+              customListButton(
+                  "Payment History",
+                  "images/profile_payment_history.png",
+                  () => Navigator.of(context)
+                      .pushNamed(Routes.paymentMethodScreen)),
               Padding(
                 padding: const EdgeInsets.only(left: 28.0),
                 child: Divider(
