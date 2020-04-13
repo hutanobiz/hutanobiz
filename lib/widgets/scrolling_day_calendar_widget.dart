@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:intl/intl.dart';
 
 typedef ScrollingDayCalendarBuilder = Widget Function(
@@ -43,7 +44,6 @@ class _ScrollingDayCalendarState extends State<ScrollingDayCalendar> {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: 20.0,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -115,6 +115,23 @@ class _ScrollingDayCalendarState extends State<ScrollingDayCalendar> {
           ),
         ],
       ),
-    );
+    ).onClick(onTap: () {
+      
+      showDatePicker(
+        context: context,
+        initialDate: _selectedDate,
+        firstDate: DateTime.now().subtract(Duration(days: 1)),
+        lastDate: _selectedDate.day == DateTime.now().day &&
+                _selectedDate.month == DateTime.now().month
+            ? _selectedDate.add(Duration(days: 30))
+            : _selectedDate.add(Duration(days: 14)),
+      ).then((date) {
+        if (date != null)
+          setState(() {
+            _selectedDate = date;
+            widget.onDateChange(_selectedDate);
+          });
+      });
+    });
   }
 }
