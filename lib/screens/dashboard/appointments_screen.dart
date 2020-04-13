@@ -26,7 +26,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
   List<dynamic> _pastList = List();
   List<dynamic> _upcomingList = List();
 
-  Future<List<dynamic>> _requestsFuture;
+  Future<dynamic> _requestsFuture;
   InheritedContainerState _container;
 
   @override
@@ -82,7 +82,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
   }
 
   Widget _buildList() {
-    return FutureBuilder<List<dynamic>>(
+    return FutureBuilder<dynamic>(
       future: _requestsFuture,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -91,7 +91,9 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
 
           DateTime now = DateTime.now();
 
-          for (dynamic schedule in snapshot.data) {
+          List<dynamic> _scheduleList = snapshot.data["scheduleAppoitment"];
+
+          for (dynamic schedule in _scheduleList) {
             if (now.isBefore(DateTime.parse(schedule["date"]))) {
               _upcomingList.add(schedule);
             } else {
@@ -390,9 +392,9 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
               //         },
               //       )
               //     :
-                   listType == 2 && status == "1"
-                      ? rightButton(listType, response, "Rate Now", () {})
-                      : Container(),
+              listType == 2 && status == "1"
+                  ? rightButton(listType, response, "Rate Now", () {})
+                  : Container(),
             ],
           ),
         ],
