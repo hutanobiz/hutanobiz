@@ -93,8 +93,6 @@ class _SelectAppointmentTimeScreenState
       isOptionsShow: false,
     ));
 
-    formWidget.add(SizedBox(height: 5.0));
-
     formWidget.add(ScrollingDayCalendar(
       startDate: DateTime.now(),
       endDate: DateTime.now().add(Duration(days: 14)),
@@ -119,7 +117,7 @@ class _SelectAppointmentTimeScreenState
       },
     ));
 
-    formWidget.add(SizedBox(height: 30.0));
+    formWidget.add(SizedBox(height: 20.0));
 
     formWidget.add(_futureWidget());
 

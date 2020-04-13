@@ -130,7 +130,7 @@ class ApiBaseHelper {
     });
   }
 
-  Future<List<dynamic>> userAppointments(String token) {
+  Future<dynamic> userAppointments(String token) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
@@ -179,6 +179,19 @@ class ApiBaseHelper {
 
     return _netUtil
         .post(_base_url + "api/patient/provider-rating",
+            body: rateDoctorData, headers: headers)
+        .then((res) {
+      return res["response"];
+    });
+  }
+
+  Future<dynamic> deleteRequestAppointment(String token, Map rateDoctorData) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .post(_base_url + "api/patient/cancel-request",
             body: rateDoctorData, headers: headers)
         .then((res) {
       return res["response"];

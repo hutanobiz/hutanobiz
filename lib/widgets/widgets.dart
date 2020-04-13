@@ -20,38 +20,25 @@ class Widgets {
     );
   }
 
-  static void showAlertDialog(BuildContext context, String message) {
+  static void showAlertDialog(
+      BuildContext context, String title, String message, Function onPressed) {
     showDialog(
       context: context,
-      builder: (BuildContext context) => new AlertDialog(
-        title: new Text("Alert"),
-        content: new Text(message),
+      builder: (BuildContext context) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
         actions: [
-          new RaisedButton(
-            child: Text("close"),
-            onPressed: () =>
-                Navigator.of(context, rootNavigator: true).pop("Discard"),
+          FlatButton(
+            child: Text("No"),
+            onPressed: () => Navigator.of(context).pop(),
           ),
-        ],
-      ),
-    );
-  }
-
-  static void checkBox(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => new CupertinoAlertDialog(
-        title: new Text("Alert"),
-        content: new Text("My alert message"),
-        actions: [
-          CupertinoDialogAction(
-            isDefaultAction: true,
-            child: new FlatButton(
-              child: Text("close"),
-              onPressed: () =>
-                  Navigator.of(context, rootNavigator: true).pop("Discard"),
-            ),
-          )
+          FlatButton(
+            child: Text("Yes"),
+            onPressed: () {
+              Navigator.of(context).pop();
+              onPressed();
+            },
+          ),
         ],
       ),
     );

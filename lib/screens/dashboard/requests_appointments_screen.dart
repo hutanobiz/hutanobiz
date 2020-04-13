@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/widgets.dart';
@@ -9,7 +10,8 @@ class RequestAppointmentsScreen extends StatefulWidget {
   const RequestAppointmentsScreen({Key key}) : super(key: key);
 
   @override
-  _RequestAppointmentsScreenState createState() => _RequestAppointmentsScreenState();
+  _RequestAppointmentsScreenState createState() =>
+      _RequestAppointmentsScreenState();
 }
 
 class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
@@ -52,31 +54,42 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
     return FutureBuilder<dynamic>(
       future: _requestsFuture,
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          _presentList = snapshot.data["presentRequest"];
-          _pastList = snapshot.data["pastRequest"];
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return Text("NO data available");
+            break;
+          case ConnectionState.waiting:
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+            break;
+          case ConnectionState.active:
+            break;
+          case ConnectionState.done:
+            if (snapshot.hasData) {
+              _presentList = snapshot.data["presentRequest"];
+              _pastList = snapshot.data["pastRequest"];
 
-          return SingleChildScrollView(
-            physics: ClampingScrollPhysics(),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  heading("Pending", _presentList, 1),
-                  _presentList.isNotEmpty
-                      ? _listWidget(_presentList, 1)
-                      : Container(),
-                  heading("Past", _pastList, 2),
-                  _pastList.isNotEmpty
-                      ? _listWidget(_pastList, 2)
-                      : Container(),
-                ]),
-          );
-        } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
+              return SingleChildScrollView(
+                physics: ClampingScrollPhysics(),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      heading("Pending", _presentList, 1),
+                      _presentList.isNotEmpty
+                          ? _listWidget(_presentList, 1)
+                          : Container(),
+                      heading("Past", _pastList, 2),
+                      _pastList.isNotEmpty
+                          ? _listWidget(_pastList, 2)
+                          : Container(),
+                    ]),
+              );
+            } else if (snapshot.hasError) {
+              return Text("${snapshot.error}");
+            }
         }
-        return Center(
-          child: CircularProgressIndicator(),
-        );
+        return null;
       },
     );
   }
@@ -329,7 +342,35 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
           ),
           listType == 1
               ? InkWell(
-                  onTap: () => Widgets.showToast("cancel"),
+                  onTap: () {
+                    Widgets.showAlertDialog(
+                      context,
+                      "Cancel Appointment",
+                      "Are you sure you want to cancel this appointment?",
+                      () {
+                        SharedPref().getToken().then((token) {
+                          Map appointmentIdAmp = Map();
+
+                          appointmentIdAmp["appointmentId"] =
+                              response["_id"].toString();
+                          // appointmentIdAmp["cancelledReason"] =
+                          //     "Booked by mistake";
+                          // appointmentIdAmp["cancellationFees"] = "20";
+                          _api
+                              .deleteRequestAppointment(token, appointmentIdAmp)
+                              .then((deleteResponse) {
+                            Widgets.showToast(
+                                "Appointment cancelled successfully");
+
+                            setState(() {
+                              _requestsFuture = _api.appointmentRequests(token);
+                            });
+                          }).futureError(
+                                  (onError) => onError.toString().debugLog());
+                        });
+                      },
+                    );
+                  },
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     alignment: Alignment.center,

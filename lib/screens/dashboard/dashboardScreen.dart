@@ -230,8 +230,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   conatiner.setProjectsResponse(
                       "professionalTitleId", data[index]["_id"]);
 
-                  log(conatiner.getProjectsResponse().toString());
-
                   Navigator.pushNamed(
                     context,
                     Routes.chooseSpecialities,
@@ -260,9 +258,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     LatLng latLng = result;
 
-    _loading();
-
     if (latLng != null) {
+      _loading();
+
       _latLng = latLng;
       log(latLng.toString());
 
@@ -298,13 +296,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
             _latLng = LatLng(position.latitude, position.longitude);
           } on PlatformException catch (e) {
+            setState(() {
+              _isLoading = false;
+            });
+
+            Widgets.showToast(e.message.toString());
             print(e);
             if (e.code == 'PERMISSION_DENIED') {
               log(e.code);
               Widgets.showToast(e.message.toString());
             } else if (e.code == 'SERVICE_STATUS_ERROR') {
               log(e.code);
-              Widgets.showToast(e.message.toString());
             }
             _locationService = null;
           }
@@ -336,8 +338,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         _currentddress =
             '${first.name}, ${first.subLocality}, ${first.locality}, ${first.administrativeArea}';
       });
-    } catch (e) {
-      print(e.getMessage() ?? e.toString());
+    } on PlatformException catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      print(e.message.toString() ?? e.toString());
     }
   }
 
