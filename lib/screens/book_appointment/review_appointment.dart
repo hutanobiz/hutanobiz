@@ -333,18 +333,54 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            heading,
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-            ),
+          Row(
+            children: <Widget>[
+              Text(
+                heading,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              heading.toLowerCase().contains("date")
+                  ? Expanded(
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Icon(
+                                Icons.edit,
+                                size: 10.0,
+                                color: AppColors.jade,
+                              ),
+                              SizedBox(width: 4.0),
+                              Text(
+                                "Edit",
+                                style: TextStyle(
+                                  fontSize: 12.0,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.jade.withOpacity(0.7),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ).onClick(
+                          roundCorners: false,
+                          onTap: () => Navigator.pop(context),
+                        ),
+                      ),
+                    )
+                  : Container(),
+            ],
           ),
           SizedBox(height: 12.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              "$icon".imageIcon(),
+              icon.imageIcon(),
               SizedBox(width: 8.0),
               Text(
                 subtitle,
