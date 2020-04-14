@@ -232,7 +232,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                                 ),
                                 SizedBox(width: 4.0),
                                 Text(
-                                  "4.5 ---",
+                                  response["averageRating"].toString() ??
+                                      "4.5 ---",
                                   style: TextStyle(
                                     fontSize: 12.0,
                                     fontWeight: FontWeight.w500,
