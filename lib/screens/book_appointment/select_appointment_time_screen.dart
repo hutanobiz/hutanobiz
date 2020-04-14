@@ -9,6 +9,7 @@ import 'package:hutano/widgets/provider_list_widget.dart';
 import 'package:hutano/widgets/scrolling_day_calendar_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:hutano/utils/extensions.dart';
 
 class SelectAppointmentTimeScreen extends StatefulWidget {
   @override
@@ -169,7 +170,10 @@ class _SelectAppointmentTimeScreenState
                 ],
               );
             } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
+              snapshot.error.toString().debugLog();
+              return Center(
+                child: Text("NO slots available"),
+              );
             }
 
             break;
