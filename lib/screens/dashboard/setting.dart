@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:package_info/package_info.dart';
 
 import '../../colors.dart';
 
@@ -12,6 +13,27 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingScreen> {
+
+    PackageInfo _packageInfo = PackageInfo(
+    appName: 'Unknown',
+    packageName: 'Unknown',
+    version: 'Unknown',
+    buildNumber: 'Unknown',
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _initPackageInfo();
+  }
+
+  Future<void> _initPackageInfo() async {
+    final PackageInfo info = await PackageInfo.fromPlatform();
+    setState(() {
+      _packageInfo = info;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -241,7 +263,7 @@ class _SettingsScreenState extends State<SettingScreen> {
         padding: const EdgeInsets.only(top: 6.0, bottom: 20.0),
         child: Align(
           alignment: Alignment.center,
-          child: Text("ver-1.0.0",
+          child: Text("version: "+_packageInfo.version,
               style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w400,
