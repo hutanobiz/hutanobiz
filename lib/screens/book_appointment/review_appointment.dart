@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -25,7 +24,7 @@ class ReviewAppointmentScreen extends StatefulWidget {
 class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   InheritedContainerState _container;
   Map _appointmentData;
-  Map _providerData;
+  Map _providerData, _userLocationMap;
   bool _isLoading = false;
   String _timeHours, _timeMins;
 
@@ -35,8 +34,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   PolylinePoints polylinePoints = PolylinePoints();
 
   List<LatLng> latlng = [];
-  LatLng _initialPosition;
-  LatLng _news = LatLng(28.5355, 77.3910);
+  LatLng _initialPosition, _middlePoint;
+  LatLng _news;
   Completer<GoogleMapController> _controller = Completer();
   BitmapDescriptor sourceIcon;
   BitmapDescriptor destinationIcon;
@@ -72,6 +71,13 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    setSourceAndDestinationIcons();
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
@@ -79,6 +85,16 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
     _providerData = _container.getProviderData();
     _appointmentData = _container.appointmentData;
+    _userLocationMap = _container.userLocationMap;
+
+    _initialPosition = _userLocationMap["latLng"];
+    _news = LatLng(
+        _providerData["providerData"]["businessLocation"]["coordinates"][0],
+        _providerData["providerData"]["businessLocation"]["coordinates"][1]);
+
+    _middlePoint = LatLng((_initialPosition.latitude + _news.latitude) / 2,
+        (_initialPosition.longitude + _news.longitude) / 2);
+    _getUserLocation();
 
     String bookedTime = _appointmentData["time"];
 
@@ -93,13 +109,6 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     _timeMins = bookedTime.substring(2, 4);
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _getUserLocation();
-    setSourceAndDestinationIcons();
-  }
-
   void setSourceAndDestinationIcons() async {
     sourceIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
@@ -110,17 +119,6 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   }
 
   void _getUserLocation() async {
-    try {
-      Position position = await Geolocator()
-          .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-
-      setState(() {
-        _initialPosition = LatLng(position.latitude, position.longitude);
-      });
-    } on PlatformException catch (e) {
-      print(e);
-    }
-
     await Geolocator()
         .distanceBetween(
       _initialPosition.latitude,
@@ -200,8 +198,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                     compassEnabled: false,
                     rotateGesturesEnabled: false,
                     initialCameraPosition: CameraPosition(
-                      target: _initialPosition,
-                      zoom: 9.0,
+                      target: _middlePoint,
                     ),
                     polylines: _polyline,
                     markers: _markers,
@@ -228,8 +225,6 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                 ),
               ),
               Container(
-                width: 133.0,
-                height: 56.0,
                 margin: const EdgeInsets.fromLTRB(60.0, 33.0, 0.0, 0.0),
                 padding: const EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
                 decoration: BoxDecoration(
@@ -239,10 +234,9 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Image.asset(
-                      "images/ic_map_clock.png",
-                    ),
+                    "ic_map_clock".imageIcon(width: 30.0, height: 30.0),
                     SizedBox(width: 5.0),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
