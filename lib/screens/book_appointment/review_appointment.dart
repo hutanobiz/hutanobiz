@@ -145,9 +145,70 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         addBackButton: true,
         buttonColor: AppColors.windsor,
         padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: widgetList(),
+        child: Stack(
+          children: <Widget>[
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: widgetList(),
+              ),
+            ),
+            Align(
+              alignment: FractionalOffset.bottomRight,
+              child: Container(
+                height: 55.0,
+                width: MediaQuery.of(context).size.width - 76.0,
+                padding: const EdgeInsets.only(right: 20.0, left: 20.0),
+                child: FancyButton(
+                  title: "Send Office Request",
+                  buttonIcon: "ic_send_request",
+                  buttonColor: AppColors.windsor,
+                  onPressed: () {
+                    _loading(true);
+
+                    String doctorId = _providerData["providerData"]["userId"]
+                            ["_id"]
+                        .toString();
+
+                    String startTime = _timeHours + ":" + _timeMins;
+
+                    String endTime = (int.parse(_timeHours) + 1).toString() +
+                        ":" +
+                        _timeMins;
+
+                    Map appointmentData = Map();
+
+                    appointmentData["type"] =
+                        _container.getProjectsResponse()["serviceType"];
+                    appointmentData["date"] = DateFormat("MM/dd/yyyy")
+                        .format(_appointmentData["date"])
+                        .toString();
+
+                    appointmentData["fromTime"] = startTime;
+                    appointmentData["toTime"] = endTime;
+                    appointmentData["doctor"] = doctorId;
+
+                    SharedPref().getToken().then((String token) {
+                      debugPrint(token, wrapWidth: 1024);
+
+                      ApiBaseHelper api = ApiBaseHelper();
+
+                      api
+                          .bookAppointment(token, appointmentData)
+                          .then((response) {
+                        _loading(false);
+
+                        Widgets.showToast("Booking request sent successfully!");
+                      }).catchError((error) {
+                        _loading(false);
+                        debugPrint(error.toString(), wrapWidth: 1024);
+                      });
+                    });
+                  },
+                ),
+              ),
+            ),
+          ],
         ),
         onForwardTap: () {},
       ),
@@ -199,7 +260,6 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                     rotateGesturesEnabled: false,
                     initialCameraPosition: CameraPosition(
                       target: _middlePoint,
-                      zoom: 11
                     ),
                     polylines: _polyline,
                     markers: _markers,
@@ -264,59 +324,6 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             ],
           ));
 
-    formWidget.add(Expanded(
-      child: Align(
-        alignment: FractionalOffset.bottomRight,
-        child: Container(
-          height: 55.0,
-          width: MediaQuery.of(context).size.width - 76.0,
-          padding: const EdgeInsets.only(right: 20.0, left: 20.0),
-          child: FancyButton(
-            title: "Send Office Request",
-            buttonIcon: "ic_send_request",
-            buttonColor: AppColors.windsor,
-            onPressed: () {
-              _loading(true);
-
-              String doctorId =
-                  _providerData["providerData"]["userId"]["_id"].toString();
-
-              String startTime = _timeHours + ":" + _timeMins;
-
-              String endTime =
-                  (int.parse(_timeHours) + 1).toString() + ":" + _timeMins;
-
-              Map appointmentData = Map();
-
-              appointmentData["type"] =
-                  _container.getProjectsResponse()["serviceType"];
-              appointmentData["date"] = DateFormat("MM/dd/yyyy")
-                  .format(_appointmentData["date"])
-                  .toString();
-
-              appointmentData["fromTime"] = startTime;
-              appointmentData["toTime"] = endTime;
-              appointmentData["doctor"] = doctorId;
-
-              SharedPref().getToken().then((String token) {
-                debugPrint(token, wrapWidth: 1024);
-
-                ApiBaseHelper api = ApiBaseHelper();
-
-                api.bookAppointment(token, appointmentData).then((response) {
-                  _loading(false);
-
-                  Widgets.showToast("Booking request sent successfully!");
-                }).catchError((error) {
-                  _loading(false);
-                  debugPrint(error.toString(), wrapWidth: 1024);
-                });
-              });
-            },
-          ),
-        ),
-      ),
-    ));
     return formWidget;
   }
 
