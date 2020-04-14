@@ -89,8 +89,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
     _initialPosition = _userLocationMap["latLng"];
     _news = LatLng(
-        _providerData["providerData"]["businessLocation"]["coordinates"][0],
-        _providerData["providerData"]["businessLocation"]["coordinates"][1]);
+        _providerData["providerData"]["businessLocation"]["coordinates"][1],
+        _providerData["providerData"]["businessLocation"]["coordinates"][0]);
 
     _middlePoint = LatLng((_initialPosition.latitude + _news.latitude) / 2,
         (_initialPosition.longitude + _news.longitude) / 2);
@@ -199,6 +199,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                     rotateGesturesEnabled: false,
                     initialCameraPosition: CameraPosition(
                       target: _middlePoint,
+                      zoom: 11
                     ),
                     polylines: _polyline,
                     markers: _markers,
