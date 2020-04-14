@@ -168,19 +168,20 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
             }
           }).toList();
 
-        _container.getProviderData().clear();
-        _container.setProviderData("providerData", _responseData[index]);
-        _container.setProviderData("degree", degree);
-        _container.setProviderId(_responseData[index]["userId"]["_id"]);
-
         return InkWell(
           onTap: () {
+            _container.setProviderId(_responseData[index]["userId"]["_id"]);
             Navigator.of(context).pushNamed(Routes.providerProfileScreen);
           },
           child: ProviderWidget(
             data: _responseData[index],
             degree: degree,
             bookAppointment: () {
+              _container.getProviderData().clear();
+
+              _container.setProviderData("providerData", _responseData[index]);
+              _container.setProviderData("degree", degree);
+
               if (_containerMap.containsKey("specialityId") ||
                   _containerMap.containsKey("serviceId"))
                 Navigator.of(context).pushNamed(Routes.appointmentTypeScreen);
