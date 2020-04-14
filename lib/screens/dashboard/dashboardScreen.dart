@@ -262,7 +262,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       _loading();
 
       _latLng = latLng;
-      log(latLng.toString());
 
       getLocationAddress(latLng.latitude, latLng.longitude);
     }
@@ -330,6 +329,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       var addresses =
           await Geolocator().placemarkFromCoordinates(latitude, longitude);
 
+      conatiner.setUserLocation("latLng", LatLng(latitude, longitude));
+
       var first = addresses.first;
 
       setState(() {
@@ -337,6 +338,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
         _currentddress =
             '${first.name}, ${first.subLocality}, ${first.locality}, ${first.administrativeArea}';
+
+        conatiner.setUserLocation("userAddress", _currentddress);
       });
     } on PlatformException catch (e) {
       setState(() {
