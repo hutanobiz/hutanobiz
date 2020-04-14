@@ -22,14 +22,14 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
   @override
   void didChangeDependencies() {
     InheritedContainerState _container = InheritedContainer.of(context);
-    Map _providerData = _container.getProviderData();
+    Map _providerData = _container.providerIdMap;
 
     SharedPref().getToken().then((token) {
       ApiBaseHelper api = ApiBaseHelper();
 
       setState(() {
-        _profileFuture = api.getProviderProfile(
-            token, _providerData["providerData"]["userId"]["_id"]);
+        _profileFuture =
+            api.getProviderProfile(token, _providerData["providerId"]);
       });
     });
 
@@ -53,27 +53,41 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
               child: FutureBuilder(
                   future: _profileFuture,
                   builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      List response = snapshot.data["data"];
-                      Map profileMap = Map();
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.none:
+                        return Text("NO data available");
+                        break;
+                      case ConnectionState.waiting:
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                        break;
+                      case ConnectionState.active:
+                        break;
+                      case ConnectionState.done:
+                        if (snapshot.hasData) {
+                          List response = snapshot.data["data"];
 
-                      response.map((f) {
-                        profileMap.addAll(f);
-                      }).toList();
+                          if (response.isEmpty) return Container();
+                          Map profileMap = Map();
 
-                      return SingleChildScrollView(
-                        padding: const EdgeInsets.only(bottom: 100),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: widgetList(profileMap),
-                        ),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text("${snapshot.error}");
+                          response.map((f) {
+                            profileMap.addAll(f);
+                          }).toList();
+
+                          return SingleChildScrollView(
+                            padding: const EdgeInsets.only(bottom: 100),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: widgetList(profileMap),
+                            ),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text("${snapshot.error}");
+                        }
+                        break;
                     }
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
+                    return null;
                   }),
             ),
             Align(
@@ -179,7 +193,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
           borderRadius: BorderRadius.circular(14.0),
         ),
         child: Text(
-          "${_providerData["userId"]["language"]}",
+          _providerData["userId"]["language"] ?? "---",
           style: TextStyle(
             color: AppColors.windsor,
             fontSize: 14.0,

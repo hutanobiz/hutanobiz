@@ -171,6 +171,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
         _container.getProviderData().clear();
         _container.setProviderData("providerData", _responseData[index]);
         _container.setProviderData("degree", degree);
+        _container.setProviderId(_responseData[index]["userId"]["_id"]);
 
         return InkWell(
           onTap: () {

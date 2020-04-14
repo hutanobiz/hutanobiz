@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
@@ -7,17 +5,30 @@ import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_tile_widget.dart';
 
-class SeeAllSearchScreeen extends StatelessWidget {
+class SeeAllSearchScreeen extends StatefulWidget {
   const SeeAllSearchScreeen({Key key, @required this.arguments})
       : super(key: key);
 
   final SearchArguments arguments;
 
   @override
+  _SeeAllSearchScreeenState createState() => _SeeAllSearchScreeenState();
+}
+
+class _SeeAllSearchScreeenState extends State<SeeAllSearchScreeen> {
+  InheritedContainerState _container;
+
+  @override
+  void didChangeDependencies() {
+    _container = InheritedContainer.of(context);
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    List<dynamic> _list = arguments.list;
-    String title = arguments.title;
-    int type = arguments.type;
+    List<dynamic> _list = widget.arguments.list;
+    String title = widget.arguments.title;
+    int type = widget.arguments.type;
 
     debugPrint("List: ${_list.toString()}", wrapWidth: 1024);
 
@@ -40,23 +51,23 @@ class SeeAllSearchScreeen extends StatelessWidget {
                     ? ProviderTileWidget(
                         name: _list[index]["fullName"],
                         profession: _list[index]["fullName"],
-                        onTap: () => Navigator.of(context).pushNamed(
-                            Routes.searchInfoScreen,
-                            arguments: _list[index]),
+                        onTap: () {
+                          _container
+                              .setProviderId(_list[index]["_id"].toString());
+                          Navigator.of(context)
+                              .pushNamed(Routes.providerProfileScreen);
+                        },
                       )
                     : ListTile(
                         title: Text(_list[index]["title"]),
                         onTap: () {
-                          log(type.toString());
-                          final container = InheritedContainer.of(context);
-
-                          container.getProjectsResponse().clear();
+                          _container.getProjectsResponse().clear();
 
                           if (type == 1) {
-                            container.setProjectsResponse(
+                            _container.setProjectsResponse(
                                 "specialityId", _list[index]["_id"]);
                           } else if (type == 3) {
-                            InheritedContainer.of(context).setProjectsResponse(
+                            _container.setProjectsResponse(
                                 "serviceId", _list[index]["_id"]);
                           }
 

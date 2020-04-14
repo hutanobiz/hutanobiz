@@ -22,6 +22,13 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
   ApiBaseHelper _api = ApiBaseHelper();
 
   Future<dynamic> _searchFuture;
+  InheritedContainerState _container;
+
+  @override
+  void didChangeDependencies() {
+    _container = InheritedContainer.of(context);
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -207,9 +214,12 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
                 ? ProviderTileWidget(
                     name: tempList[index][searchKey],
                     profession: tempList[index][searchKey],
-                    onTap: () => Navigator.of(context).pushNamed(
-                        Routes.searchInfoScreen,
-                        arguments: tempList[index]),
+                    onTap: () {
+                      _container
+                          .setProviderId(tempList[index]["_id"].toString());
+                      Navigator.of(context)
+                          .pushNamed(Routes.providerProfileScreen);
+                    },
                   )
                 : ListTile(
                     title: Text(tempList[index][searchKey]),
