@@ -36,6 +36,20 @@ class ApiBaseHelper {
     });
   }
 
+   Future<dynamic> profile(String token, Map map) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.contentTypeHeader: "application/json"
+    };
+
+    return _netUtil
+        .post(_base_url + "api/profile/update",
+            headers: headers, body: json.encode(map))
+        .then((res) {
+      return res;
+    });
+  }
+
   Future<List<dynamic>> getProfessionalTitle() {
     return _netUtil.get(_base_url + "api/professional-titles").then((res) {
       List responseJson = res["response"];

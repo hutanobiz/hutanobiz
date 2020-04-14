@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:package_info/package_info.dart';
@@ -13,13 +14,14 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingScreen> {
-
-    PackageInfo _packageInfo = PackageInfo(
+  ApiBaseHelper api = ApiBaseHelper();
+  PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
     packageName: 'Unknown',
     version: 'Unknown',
     buildNumber: 'Unknown',
   );
+  String name = "---", email = "---", phone = "---";
 
   @override
   void initState() {
@@ -32,6 +34,20 @@ class _SettingsScreenState extends State<SettingScreen> {
     setState(() {
       _packageInfo = info;
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    SharedPref().getToken().then((token) {
+      api.profile(token, Map()).then((dynamic response) {
+        setState(() {
+          name = response['response']['fullName'] ?? "---";
+          email = response['response']['email'] ?? "---";
+          phone = response['response']['phoneNumber'] ?? "---";
+        });
+      });
+    });
+    super.didChangeDependencies();
   }
 
   @override
@@ -93,7 +109,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                           height: 8,
                         ),
                         Text(
-                          "Joseph Mathew",
+                          name,
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w600),
                         ),
@@ -110,7 +126,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                             SizedBox(
                               width: 4,
                             ),
-                            Text("patient3@appening.xyz",
+                            Text(email,
                                 style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w400,
@@ -130,7 +146,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                             SizedBox(
                               width: 4,
                             ),
-                            Text("8778787767",
+                            Text(phone,
                                 style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w400,
@@ -263,7 +279,7 @@ class _SettingsScreenState extends State<SettingScreen> {
         padding: const EdgeInsets.only(top: 6.0, bottom: 20.0),
         child: Align(
           alignment: Alignment.center,
-          child: Text("version: "+_packageInfo.version,
+          child: Text("version: " + _packageInfo.version,
               style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w400,
