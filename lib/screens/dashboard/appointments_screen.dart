@@ -177,132 +177,130 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
         children: <Widget>[
           Padding(
             padding: EdgeInsets.only(left: 14, right: 14.0),
-            child: Row(
-              crossAxisAlignment:
-                  listType == 1 && response["consentToTreat"] == false
-                      ? CrossAxisAlignment.center
-                      : CrossAxisAlignment.start,
+            child: Stack(
               children: <Widget>[
-                Container(
-                  width: 62.0,
-                  height: 62.0,
-                  margin: const EdgeInsets.only(top: 14.0),
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage('http://i.imgur.com/QSev0hg.jpg'),
-                      fit: BoxFit.cover,
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                    border: Border.all(
-                      color: Colors.grey[300],
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 14.0, left: 10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        "$name",
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w700,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      width: 62.0,
+                      height: 62.0,
+                      margin: const EdgeInsets.only(top: 14.0),
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage('http://i.imgur.com/QSev0hg.jpg'),
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                        border: Border.all(
+                          color: Colors.grey[300],
+                          width: 1.0,
                         ),
                       ),
-                      SizedBox(
-                        height: 5.0,
-                      ),
-                      listType == 1
-                          ? Text(
-                              "---",
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: Colors.black.withOpacity(0.6),
-                              ),
-                            )
-                          : Row(
-                              children: <Widget>[
-                                Icon(
-                                  Icons.star,
-                                  color: AppColors.goldenTainoi,
-                                  size: 12.0,
-                                ),
-                                SizedBox(width: 4.0),
-                                Text(
-                                  response["averageRating"].toString() ??
-                                      "4.5 ---",
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black.withOpacity(0.7),
-                                  ),
-                                ),
-                                //TODO: doctor rating, speciality
-                              ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 14.0, left: 10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "$name",
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w700,
                             ),
-                      SizedBox(
-                        height: 4.0,
+                          ),
+                          SizedBox(
+                            height: 5.0,
+                          ),
+                          listType == 1
+                              ? Text(
+                                  "---",
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Colors.black.withOpacity(0.6),
+                                  ),
+                                )
+                              : Row(
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.star,
+                                      color: AppColors.goldenTainoi,
+                                      size: 12.0,
+                                    ),
+                                    SizedBox(width: 4.0),
+                                    Text(
+                                      "4.5 ---",
+                                      style: TextStyle(
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black.withOpacity(0.7),
+                                      ),
+                                    ),
+                                    //TODO: doctor rating, speciality
+                                  ],
+                                ),
+                          SizedBox(
+                            height: 4.0,
+                          ),
+                          // listType == 1 && response["consentToTreat"] == false
+                          //     ? Container()
+                          //     : Row(
+                          //         children: <Widget>[
+                          //           Padding(
+                          //             padding: const EdgeInsets.only(right: 4.0),
+                          //             child: Text(
+                          //               "View consent to treat",
+                          //               overflow: TextOverflow.ellipsis,
+                          //               style: TextStyle(
+                          //                 color: AppColors.windsor,
+                          //                 fontSize: 12.0,
+                          //                 fontWeight: FontWeight.w500,
+                          //               ),
+                          //             ),
+                          //           ),
+                          //           Icon(
+                          //             Icons.arrow_forward_ios,
+                          //             size: 10.0,
+                          //             color: AppColors.windsor,
+                          //           ),
+                          //         ],
+                          //       ),
+                        ],
                       ),
-                      // listType == 1 && response["consentToTreat"] == false
-                      //     ? Container()
-                      //     : Row(
-                      //         children: <Widget>[
-                      //           Padding(
-                      //             padding: const EdgeInsets.only(right: 4.0),
-                      //             child: Text(
-                      //               "View consent to treat",
-                      //               overflow: TextOverflow.ellipsis,
-                      //               style: TextStyle(
-                      //                 color: AppColors.windsor,
-                      //                 fontSize: 12.0,
-                      //                 fontWeight: FontWeight.w500,
-                      //               ),
-                      //             ),
-                      //           ),
-                      //           Icon(
-                      //             Icons.arrow_forward_ios,
-                      //             size: 10.0,
-                      //             color: AppColors.windsor,
-                      //           ),
-                      //         ],
-                      //       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 listType == 1
                     ? Container()
-                    : Expanded(
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: Container(
-                            width: 84.0,
-                            height: 40.0,
-                            alignment: Alignment.center,
-                            padding:
-                                const EdgeInsets.fromLTRB(12.0, 5.0, 12.0, 5.0),
-                            decoration: BoxDecoration(
-                              color: status == "1"
-                                  ? Colors.lightGreen.withOpacity(0.12)
-                                  : Colors.red.withOpacity(0.12),
-                              shape: BoxShape.rectangle,
-                              borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(7.0),
-                                bottomLeft: Radius.circular(7.0),
-                              ),
+                    : Align(
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                          width: 84.0,
+                          height: 40.0,
+                          alignment: Alignment.center,
+                          padding:
+                              const EdgeInsets.fromLTRB(12.0, 5.0, 12.0, 5.0),
+                          decoration: BoxDecoration(
+                            color: status == "1"
+                                ? Colors.lightGreen.withOpacity(0.12)
+                                : Colors.red.withOpacity(0.12),
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular(7.0),
+                              bottomLeft: Radius.circular(7.0),
                             ),
-                            child: Text(
-                              status == "1" ? "Completed" : "Cancelled",
-                              softWrap: true,
-                              style: TextStyle(
-                                fontSize: 12.0,
-                                fontWeight: FontWeight.w500,
-                                color: status == "1"
-                                    ? Colors.lightGreen
-                                    : Colors.red,
-                              ),
+                          ),
+                          child: Text(
+                            status == "1" ? "Completed" : "Cancelled",
+                            softWrap: true,
+                            style: TextStyle(
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w500,
+                              color: status == "1"
+                                  ? Colors.lightGreen
+                                  : Colors.red,
                             ),
                           ),
                         ),
@@ -394,7 +392,10 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
               //       )
               //     :
               listType == 2 && status == "1"
-                  ? rightButton(listType, response, "Rate Now", () {})
+                  ? rightButton(listType, response, "Rate Now", () {
+                      _container.setAppointmentId(response["_id"].toString());
+                      Navigator.of(context).pushNamed(Routes.rateDoctorScreen);
+                    })
                   : Container(),
             ],
           ),
@@ -402,7 +403,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
       ).onClick(
         context: context,
         routeName: Routes.appointmentDetailScreen,
-        onTap: () => _container.setAppointmentId(response["_id"]),
+        onTap: () => _container.setAppointmentId(response["_id"].toString()),
       ),
     );
   }

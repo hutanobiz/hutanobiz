@@ -27,6 +27,8 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
       _easeOfScheduling = false,
       _staffFriendliness = false;
 
+  ApiBaseHelper api = ApiBaseHelper();
+
   final TextEditingController _reviewController = TextEditingController();
   Map rateMap = Map();
   bool _isLoading = false;
@@ -34,6 +36,15 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
   @override
   void initState() {
     _reviewController.addListener(() => setState(() {}));
+
+    SharedPref().getToken().then((token) {
+      api.profile(token, Map()).then((dynamic response) {
+        setState(() {
+          rateMap["user"] = response["response"]["_id"];
+          rateMap["userType"] = response["response"]["type"].toString();
+        });
+      });
+    });
     super.initState();
   }
 
@@ -54,8 +65,6 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
         "How was your experience with ${_providerMap['providerData']["doctor"]["fullName"]}?";
 
     rateMap["appointment"] = _container.appointmentIdMap["appointmentId"];
-    rateMap["user"] = _container.userDataMap["_id"];
-    rateMap["userType"] = "1";
   }
 
   @override
@@ -88,8 +97,6 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                       ? () {
                           setState(() => _isLoading = true);
 
-                          ApiBaseHelper api = ApiBaseHelper();
-
                           SharedPref().getToken().then((token) {
                             api.rateDoctor(token, rateMap).then((response) {
                               setState(() => _isLoading = false);
@@ -99,7 +106,8 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                                 setState(() => _isLoading = false));
 
                             //TODO: add doctor friendliness, etc checkboxes values to api
-                          });
+                          }).futureError(
+                              (onError) => onError.toString().debugLog());
                         }
                       : null,
                 ),
