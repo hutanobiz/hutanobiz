@@ -121,8 +121,8 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen>
                                   Expanded(
                                     child: TextFormField(
                                       textAlign: TextAlign.justify,
-                                      maxLines: 3,
                                       enabled: false,
+                                      maxLines: null,
                                       decoration: InputDecoration(
                                         border: InputBorder.none,
                                       ),
