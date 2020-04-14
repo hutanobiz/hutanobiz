@@ -31,6 +31,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
     SharedPref().getToken().then((token) {
       ApiBaseHelper api = ApiBaseHelper();
+      token.debugLog();
 
       setState(() {
         _profileFuture = api.getAppointmentDetails(
@@ -59,7 +60,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                     future: _profileFuture,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        Map profileMap = snapshot.data;
+                        Map profileMap = snapshot.data["data"];
 
                         return SingleChildScrollView(
                           padding: const EdgeInsets.only(bottom: 100),
