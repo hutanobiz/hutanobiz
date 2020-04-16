@@ -5,6 +5,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/dimens.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/utils/validations.dart';
 import 'package:hutano/widgets/app_logo.dart';
@@ -402,6 +403,8 @@ class _SignUpFormState extends State<Register> {
                   loginData["step"] = "3";
                   loginData["fullName"] =
                       "${_firstNameController.text} ${_lastNameController.text}";
+                  loginData["firstName"] = _firstNameController.text;
+                  loginData["lastName"] = _lastNameController.text;
                   loginData["password"] = _passwordController.text;
                   loginData["address"] = _addressController.text;
                   loginData["city"] = _cityController.text;
@@ -412,24 +415,20 @@ class _SignUpFormState extends State<Register> {
                   loginData["gender"] = _genderGroup.trim().toString();
                   loginData["language"] = _langController.text;
 
-                  api
-                      .register(loginData)
-                      .then((dynamic response) {
-                        setLoading(false);
-                        SharedPref().saveToken(response["tokens"][0]["token"]);
-                        SharedPref().setValue("fullName", response["fullName"]);
+                  api.register(loginData).then((dynamic response) {
+                    setLoading(false);
+                    SharedPref().saveToken(response["tokens"][0]["token"]);
+                    SharedPref().setValue("fullName", response["fullName"]);
+                    SharedPref().setValue("complete", "0");
 
-                        Widgets.showToast("Profile created successfully");
+                    Widgets.showToast("Profile created successfully");
 
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                            Routes.dashboardScreen,
-                            (Route<dynamic> route) => false);
-                      })
-                      .timeout(Duration(seconds: 10))
-                      .catchError((error) {
-                        setLoading(false);
-                        Widgets.showToast(error);
-                      });
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        Routes.dashboardScreen,
+                        (Route<dynamic> route) => false);
+                  }).futureError((error) {
+                    setLoading(false);
+                  });
                 }
               : null,
         ),
