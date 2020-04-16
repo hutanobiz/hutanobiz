@@ -30,6 +30,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
 
     SharedPref().getToken().then((token) {
       setState(() {
+        token.toString().debugLog();
         _requestsFuture = _api.appointmentRequests(token);
       });
     });
@@ -149,10 +150,13 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
       default:
     }
 
-    for (dynamic docResponse in response["DoctorDetail"]) {
-      name = docResponse["fullName"] ?? "--";
-      name = docResponse["address"] ?? "---";
-    }
+    name = response["doctor"]["fullName"] ?? "--";
+    address = response["doctor"]["address"] ?? "---";
+
+    // for (dynamic docResponse in response["DoctorDetail"]) {
+    //   name = docResponse["fullName"] ?? "--";
+    //   address = docResponse["address"] ?? "---";
+    // }
 
     for (dynamic docResponse in response["DoctorProfessionalDetail"]) {
       for (dynamic eduResponse in docResponse["education"]) {
