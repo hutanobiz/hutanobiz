@@ -260,6 +260,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                     rotateGesturesEnabled: false,
                     initialCameraPosition: CameraPosition(
                       target: _middlePoint,
+                      zoom: 8,
                     ),
                     polylines: _polyline,
                     markers: _markers,
