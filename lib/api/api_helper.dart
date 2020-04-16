@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:hutano/models/medicalHistory.dart';
 import 'package:hutano/models/schedule.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/widgets/widgets.dart';
@@ -24,7 +25,7 @@ class ApiBaseHelper {
     return _netUtil
         .post(_base_url + "auth/api/register", body: map)
         .then((res) {
-      return (res["response"]);
+      return (res["response"][0]);
     });
   }
 
@@ -36,7 +37,7 @@ class ApiBaseHelper {
     });
   }
 
-   Future<dynamic> profile(String token, Map map) {
+  Future<dynamic> profile(String token, Map map) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
       HttpHeaders.contentTypeHeader: "application/json"
@@ -209,6 +210,13 @@ class ApiBaseHelper {
             body: rateDoctorData, headers: headers)
         .then((res) {
       return res["response"];
+    });
+  }
+
+  Future<List<MedicalHistory>> getDiseases() {
+    return _netUtil.get(_base_url + "api/disease").then((res) {
+      List responseJson = res["response"];
+      return responseJson.map((m) => MedicalHistory.fromJson(m)).toList();
     });
   }
 }

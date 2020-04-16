@@ -91,7 +91,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
 
           DateTime now = DateTime.now();
 
-          List<dynamic> _scheduleList = snapshot.data["scheduleAppoitment"];
+          List<dynamic> _scheduleList = snapshot.data["data"];
 
           for (dynamic schedule in _scheduleList) {
             if (now.isBefore(DateTime.parse(schedule["date"]))) {
@@ -374,7 +374,11 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
           Row(
             children: <Widget>[
               listType == 1 && response["consentToTreat"] == false
-                  ? leftButton(listType, response, "Add consent", () {})
+                  ? leftButton(listType, response, "Add consent", () {
+                      _container.setAppointmentId(response["_id"].toString());
+                      Navigator.of(context)
+                          .pushNamed(Routes.consentToTreatScreen);
+                    })
                   : listType == 2
                       ? leftButton(
                           listType, response, "Treatment summary", () {})

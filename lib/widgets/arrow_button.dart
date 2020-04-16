@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 
 class ArrowButton extends StatelessWidget {
-  ArrowButton(
-      {Key key,
-      @required this.iconData,
-      @required this.onTap,
-      this.buttonColor = AppColors.goldenTainoi})
-      : super(key: key);
+  ArrowButton({
+    Key key,
+    @required this.iconData,
+    @required this.onTap,
+    this.buttonColor = AppColors.goldenTainoi,
+    this.iconColor = Colors.black,
+    this.buttonWidth = 55.0,
+  }) : super(key: key);
 
   final IconData iconData;
   final Function onTap;
-  final Color buttonColor;
+  final double buttonWidth;
+  final Color buttonColor, iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +28,12 @@ class ArrowButton extends StatelessWidget {
           splashColor: AppColors.accentColor,
           onTap: onTap,
           child: Container(
-            width: 55.0,
+            width: buttonWidth,
             height: 55.0,
-            child: Icon(iconData),
+            child: Icon(
+              iconData,
+              color: iconColor,
+            ),
           ),
         ),
       ),

@@ -2,7 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/screens/appointments/appointment_detail_screen.dart';
+import 'package:hutano/screens/appointments/consent_to_treat_screen.dart';
+import 'package:hutano/screens/appointments/medical_history.dart';
 import 'package:hutano/screens/appointments/rate_doctor_screen.dart';
+import 'package:hutano/screens/appointments/seeking_cure.dart';
+import 'package:hutano/screens/appointments/upload_images.dart';
 import 'package:hutano/screens/book_appointment/review_appointment.dart';
 import 'package:hutano/screens/book_appointment/select_appointment_time_screen.dart';
 import 'package:hutano/screens/dashboard/appointment_for.dart';
@@ -48,6 +52,10 @@ class Routes {
   static const String rateDoctorScreen = '/rateDoctorScreen';
   static const String paymentMethodScreen = '/paymentMethodScreen';
   static const String addNewCardScreen = '/addNewCardScreen';
+  static const String consentToTreatScreen = '/consentToTreatScreen';
+  static const String medicalHistoryScreen = '/medicalHistoryScreen';
+  static const String seekingCureScreen = '/seekingCureScreen';
+  static const String uploadImagesScreen = '/uploadImagesScreen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -142,6 +150,18 @@ class Routes {
         break;
       case addNewCardScreen:
         return _buildRoute(settings, AddNewCardScreen());
+        break;
+      case consentToTreatScreen:
+        return _buildRoute(settings, ConsentToTreatScreen());
+        break;
+      case medicalHistoryScreen:
+        return _buildRoute(settings, MedicalHistoryScreen());
+        break;
+      case seekingCureScreen:
+        return _buildRoute(settings, SeekingCureScreen());
+        break;
+      case uploadImagesScreen:
+        return _buildRoute(settings, UploadImagesScreen());
         break;
       default:
         return _errorRoute();
