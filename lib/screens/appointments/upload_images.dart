@@ -48,7 +48,11 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
         isLoading: _isLoading,
         isAddBack: false,
         addBottomArrows: true,
-        onForwardTap: () {},
+        onForwardTap: () {
+          imagesList.length > 0
+              ? _uploadImage(imagesList, 'Uploaded!')
+              : Widgets.showToast("Please select image(s) to upload");
+        },
         color: Colors.white,
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
         child: Stack(
@@ -61,34 +65,45 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
             ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: SizedBox(
-                      height: 55.0,
-                      child: FancyButton(
-                        title: "Upload images",
-                        buttonIcon: "ic_send_request",
-                        buttonColor: AppColors.windsor,
-                        onPressed: () {
-                          imagesList.length > 0
-                              ? _uploadImage(imagesList, 'Uploaded!')
-                              : Widgets.showToast(
-                                  "Please select image(s) to upload");
-                        },
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 22.0),
-                  ArrowButton(
-                    buttonWidth: 58.0,
-                    buttonColor: AppColors.windsor.withOpacity(0.10),
-                    iconData: Icons.camera_alt,
-                    iconColor: AppColors.windsor,
-                    onTap: () => showPickerDialog(),
-                  ),
-                ],
+              child: SizedBox(
+                height: 55.0,
+                child: FancyButton(
+                  title: "Upload images",
+                  buttonIcon: "ic_upload",
+                  buttonColor: AppColors.windsor,
+                  onPressed: () {
+                    showPickerDialog();
+                  },
+                ),
               ),
+              // child: Row(
+              //   children: <Widget>[
+              //     Expanded(
+              //       child: SizedBox(
+              //         height: 55.0,
+              //         child: FancyButton(
+              //           title: "Upload images",
+              //           buttonIcon: "ic_send_request",
+              //           buttonColor: AppColors.windsor,
+              //           onPressed: () {
+              //             imagesList.length > 0
+              //                 ? _uploadImage(imagesList, 'Uploaded!')
+              //                 : Widgets.showToast(
+              //                     "Please select image(s) to upload");
+              //           },
+              //         ),
+              //       ),
+              //     ),
+              //     SizedBox(width: 22.0),
+              //     ArrowButton(
+              //       buttonWidth: 58.0,
+              //       buttonColor: AppColors.windsor.withOpacity(0.10),
+              //       iconData: Icons.camera_alt,
+              //       iconColor: AppColors.windsor,
+              //       onTap: () => showPickerDialog(),
+              //     ),
+              //   ],
+              // ),
             ),
           ],
         ),
@@ -144,26 +159,29 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                   fit: BoxFit.fill,
                 ),
               ),
-              Align(
-                alignment: Alignment.topRight,
-                child: SizedBox(
-                  height: 22,
-                  width: 22,
-                  child: RawMaterialButton(
-                    onPressed: () {
-                      setState(() => imagesList.remove(content));
-                      _uploadImage(imagesList, null);
-                    },
-                    child: Icon(
-                      Icons.close,
-                      color: Colors.grey,
-                      size: 16.0,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: SizedBox(
+                    height: 22,
+                    width: 22,
+                    child: RawMaterialButton(
+                      onPressed: () {
+                        setState(() => imagesList.remove(content));
+                        _uploadImage(imagesList, null);
+                      },
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.grey,
+                        size: 16.0,
+                      ),
+                      shape: CircleBorder(),
+                      elevation: 2.0,
+                      fillColor: Colors.white,
+                      constraints:
+                          const BoxConstraints(minWidth: 22.0, minHeight: 22.0),
                     ),
-                    shape: CircleBorder(),
-                    elevation: 2.0,
-                    fillColor: Colors.white,
-                    constraints:
-                        const BoxConstraints(minWidth: 22.0, minHeight: 22.0),
                   ),
                 ),
               ),
