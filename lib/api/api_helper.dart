@@ -25,7 +25,7 @@ class ApiBaseHelper {
     return _netUtil
         .post(_base_url + "auth/api/register", body: map)
         .then((res) {
-      return (res["response"][0]);
+      return (res["response"]);
     });
   }
 

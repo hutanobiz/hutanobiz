@@ -417,8 +417,8 @@ class _SignUpFormState extends State<Register> {
 
                   api.register(loginData).then((dynamic response) {
                     setLoading(false);
-                    SharedPref().saveToken(response["tokens"][0]["token"]);
-                    SharedPref().setValue("fullName", response["fullName"]);
+                    SharedPref().saveToken(response[0]["tokens"][0]["token"]);
+                    SharedPref().setValue("fullName", response[0]["fullName"]);
                     SharedPref().setValue("complete", "0");
 
                     Widgets.showToast("Profile created successfully");
