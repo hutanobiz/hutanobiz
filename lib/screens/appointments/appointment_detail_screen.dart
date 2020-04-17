@@ -159,27 +159,39 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                     SizedBox(
                       height: 4.0,
                     ),
-                    Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(right: 4.0),
-                          child: Text(
-                            "View consent to treat",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: AppColors.windsor,
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.w500,
+                    _providerData["consentToTreat"] == false
+                        ? Container()
+                        : RawMaterialButton(
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                            onPressed: () {
+                              _container.setAppointmentId(
+                                  _providerData["_id"].toString());
+                              Navigator.of(context)
+                                  .pushNamed(Routes.consentToTreatScreen);
+                            },
+                            child: Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 4.0),
+                                  child: Text(
+                                    "View consent to treat",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: AppColors.windsor,
+                                      fontSize: 12.0,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 10.0,
+                                  color: AppColors.windsor,
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          size: 10.0,
-                          color: AppColors.windsor,
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ),
