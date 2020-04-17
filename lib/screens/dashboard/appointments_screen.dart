@@ -91,31 +91,37 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
 
           DateTime now = DateTime.now();
 
-          List<dynamic> _scheduleList = snapshot.data["data"];
+          if (snapshot.data is String) {
+            return Center(
+              child: Text(snapshot.data),
+            );
+          } else {
+            List<dynamic> _scheduleList = snapshot.data["data"];
 
-          for (dynamic schedule in _scheduleList) {
-            if (now.isBefore(DateTime.parse(schedule["date"]))) {
-              _upcomingList.add(schedule);
-            } else {
-              _pastList.add(schedule);
+            for (dynamic schedule in _scheduleList) {
+              if (now.isBefore(DateTime.parse(schedule["date"]))) {
+                _upcomingList.add(schedule);
+              } else {
+                _pastList.add(schedule);
+              }
             }
-          }
 
-          return SingleChildScrollView(
-            physics: ClampingScrollPhysics(),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  heading("Upcoming", _upcomingList, 1),
-                  _upcomingList.isNotEmpty
-                      ? _listWidget(_upcomingList, 1)
-                      : Container(),
-                  heading("Past", _pastList, 2),
-                  _pastList.isNotEmpty
-                      ? _listWidget(_pastList, 2)
-                      : Container(),
-                ]),
-          );
+            return SingleChildScrollView(
+              physics: ClampingScrollPhysics(),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    heading("Upcoming", _upcomingList, 1),
+                    _upcomingList.isNotEmpty
+                        ? _listWidget(_upcomingList, 1)
+                        : Container(),
+                    heading("Past", _pastList, 2),
+                    _pastList.isNotEmpty
+                        ? _listWidget(_pastList, 2)
+                        : Container(),
+                  ]),
+            );
+          }
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }
