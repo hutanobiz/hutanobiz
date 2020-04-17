@@ -365,7 +365,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
           Row(
             children: <Widget>[
               listType == 1 && response["consentToTreat"] == false
-                  ? leftButton(listType, response, "Add consent", () {
+                  ? rightButton(listType, response, "Add consent", () {
                       _container.setAppointmentId(response["_id"].toString());
                       Navigator.of(context)
                           .pushNamed(Routes.consentToTreatScreen);
@@ -446,7 +446,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
     return Expanded(
       child: FlatButton(
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        color: AppColors.tundora.withOpacity(0.05),
+        color: Colors.white,
         splashColor: Colors.grey[300],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -459,7 +459,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
           style: TextStyle(
             fontSize: 14.0,
             fontWeight: FontWeight.w500,
-            color: Colors.black54,
+            color: AppColors.windsor,
           ),
         ),
         onPressed: onPressed,
@@ -472,20 +472,22 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
     return Expanded(
       child: FlatButton(
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        color: AppColors.goldenTainoi.withOpacity(0.1),
+        color: AppColors.windsor,
         splashColor: Colors.grey[300],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomRight: Radius.circular(12.0),
+            bottomLeft: listType == 1 ? Radius.circular(12.0) : Radius.zero,
           ),
           side: BorderSide(width: 0.3, color: Colors.grey[300]),
         ),
         child: Text(
           title,
           style: TextStyle(
-              fontSize: 14.0,
-              fontWeight: FontWeight.w500,
-              color: AppColors.goldenTainoi),
+            fontSize: 14.0,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
         ),
         onPressed: onPressed,
       ),
