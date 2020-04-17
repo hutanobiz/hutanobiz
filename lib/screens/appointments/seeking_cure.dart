@@ -49,6 +49,8 @@ class _SeekingCureScreenState extends State<SeekingCureScreen> {
         isAddBack: false,
         addBottomArrows: true,
         onForwardTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+
           if (!isHoursSelect &&
               !isDaysSelect &&
               !isWeeksSelect &&
@@ -96,6 +98,52 @@ class _SeekingCureScreenState extends State<SeekingCureScreen> {
 
   List<Widget> widgetList() {
     List<Widget> formWidget = new List();
+
+    formWidget.add(Text(
+      "Brief description of your symptoms",
+      style: TextStyle(
+        fontSize: 14.0,
+        fontWeight: FontWeight.w500,
+      ),
+    ));
+
+    formWidget.add(SizedBox(height: 14.0));
+
+    formWidget.add(Container(
+      height: 150.0,
+      child: TextField(
+        controller: _descController,
+        keyboardType: TextInputType.multiline,
+        maxLines: null,
+        minLines: 10,
+        textInputAction: TextInputAction.newline,
+        decoration: InputDecoration(
+          labelStyle: TextStyle(color: Colors.grey),
+          labelText: "Tell us why you are seeking care..",
+          alignLabelWithHint: true,
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14.0),
+            borderSide: BorderSide(
+              color: Colors.grey[300],
+              width: 0.5,
+            ),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14.0),
+            borderSide: BorderSide(
+              color: Colors.grey[300],
+              width: 0.5,
+            ),
+          ),
+        ),
+      ),
+    ));
+
+    formWidget.add(SizedBox(height: 30));
+
+    formWidget.add(Divider());
+
+    formWidget.add(SizedBox(height: 30));
 
     formWidget.add(Text(
       "How long have you had this problem.",
@@ -156,7 +204,12 @@ class _SeekingCureScreenState extends State<SeekingCureScreen> {
     formWidget.add(YesNoCheckWidget(
         labelValue: "Is the problem improving.",
         value: isProblemImproving,
-        onYesTap: (value) => setState(() => isProblemImproving = value),
+        onYesTap: (value) {
+          FocusScope.of(context).requestFocus(FocusNode());
+          setState(
+            () => isProblemImproving = value,
+          );
+        },
         onNoTap: (value) => setState(() => isProblemImproving = !value)));
 
     formWidget.add(SizedBox(height: 30));
@@ -169,53 +222,15 @@ class _SeekingCureScreenState extends State<SeekingCureScreen> {
         labelValue:
             "Have you received treatment for this condition in the past 3 months.",
         value: isReceivedTreatment,
-        onYesTap: (value) => setState(() => isReceivedTreatment = value),
+        onYesTap: (value) {
+          FocusScope.of(context).requestFocus(FocusNode());
+          setState(
+            () => isReceivedTreatment = value,
+          );
+        },
         onNoTap: (value) => setState(() => isReceivedTreatment = !value)));
 
-    formWidget.add(SizedBox(height: 30));
-
-    formWidget.add(Divider());
-
-    formWidget.add(SizedBox(height: 30));
-
-    formWidget.add(Text(
-      "Brief description of your symptoms",
-      style: TextStyle(
-        fontSize: 14.0,
-        fontWeight: FontWeight.w500,
-      ),
-    ));
-
-    formWidget.add(SizedBox(height: 14.0));
-
-    formWidget.add(Container(
-      height: 150.0,
-      child: TextField(
-        controller: _descController,
-        keyboardType: TextInputType.multiline,
-        maxLines: 10,
-        textInputAction: TextInputAction.newline,
-        decoration: InputDecoration(
-          labelStyle: TextStyle(color: Colors.grey),
-          labelText: "Tell us why you are seeking care..",
-          alignLabelWithHint: true,
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14.0),
-            borderSide: BorderSide(
-              color: Colors.grey[300],
-              width: 0.5,
-            ),
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14.0),
-            borderSide: BorderSide(
-              color: Colors.grey[300],
-              width: 0.5,
-            ),
-          ),
-        ),
-      ),
-    ));
+    formWidget.add(SizedBox(height: 65));
 
     return formWidget;
   }
@@ -238,6 +253,9 @@ class _SeekingCureScreenState extends State<SeekingCureScreen> {
               : Colors.black.withOpacity(0.5),
         ),
       ),
-    ).onClick(onTap: onTap);
+    ).onClick(onTap: () {
+      FocusScope.of(context).requestFocus(FocusNode());
+      onTap();
+    });
   }
 }
