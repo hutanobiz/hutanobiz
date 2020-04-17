@@ -57,7 +57,9 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
-            return Text("NO data available");
+            return Center(
+              child: Text("NO data available"),
+            );
             break;
           case ConnectionState.waiting:
             return Center(
