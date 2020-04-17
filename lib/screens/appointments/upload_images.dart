@@ -1,9 +1,10 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
@@ -22,17 +23,19 @@ class UploadImagesScreen extends StatefulWidget {
 
 class _UploadImagesScreenState extends State<UploadImagesScreen> {
   File croppedFile;
-  final JsonDecoder _decoder = new JsonDecoder();
+  JsonDecoder _decoder = new JsonDecoder();
 
   List<String> imagesList = List();
   InheritedContainerState _container;
+  Map _consentToTreatMap;
 
-  Uri uri;
-  var request;
+  bool _isLoading = false;
 
   @override
   void didChangeDependencies() {
     _container = InheritedContainer.of(context);
+    _consentToTreatMap = _container.consentToTreatMap;
+
     super.didChangeDependencies();
   }
 
@@ -42,6 +45,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackground(
         title: "Upload Images",
+        isLoading: _isLoading,
         isAddBack: false,
         addBottomArrows: true,
         onForwardTap: () {},
@@ -67,7 +71,10 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                         buttonIcon: "ic_send_request",
                         buttonColor: AppColors.windsor,
                         onPressed: () {
-                          imagesList.forEach((f) => _uploadImage(f));
+                          imagesList.length > 0
+                              ? _uploadImage(imagesList, 'Uploaded!')
+                              : Widgets.showToast(
+                                  "Please select image(s) to upload");
                         },
                       ),
                     ),
@@ -145,6 +152,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                   child: RawMaterialButton(
                     onPressed: () {
                       setState(() => imagesList.remove(content));
+                      _uploadImage(imagesList, null);
                     },
                     child: Icon(
                       Icons.close,
@@ -197,34 +205,62 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
     }
   }
 
-  _uploadImage(String image) async {
-    // setLoading(true);
+  _uploadImage(List<String> imagesList, String message) async {
+    try {
+      SharedPref().getToken().then((token) async {
+        setLoading(true);
+        Uri uri = Uri.parse(
+            "http://139.59.40.62:5300/api/patient/appointment-details/" +
+                _container.appointmentIdMap["appointmentId"]);
+        http.MultipartRequest request = http.MultipartRequest('POST', uri);
+        request.headers['authorization'] = token;
 
-    SharedPref().getToken().then((token) async {
-      uri = Uri.parse(
-          "http://139.59.40.62:5300/api/patient/appointment-details/" +
-              _container.appointmentIdMap["appointmentId"]);
-      request = http.MultipartRequest('POST', uri);
-      request.files.add(await http.MultipartFile.fromPath("images", image));
+        request.fields['consentToTreat'] = '1';
+        request.fields['problemTimeSpan'] =
+            _consentToTreatMap["problemTimeSpan"];
+        request.fields['isProblemImproving'] =
+            _consentToTreatMap["isProblemImproving"];
+        request.fields['isTreatmentReceived'] =
+            _consentToTreatMap["isTreatmentReceived"];
+        request.fields['description'] =
+            _consentToTreatMap["description"].toString().trim();
 
-      request.headers['authorization'] = token;
+        for (int i = 0; i < _consentToTreatMap["medicalHistory"].length; i++) {
+          request.fields["medicalHistory[$i]"] =
+              _consentToTreatMap["medicalHistory"][i];
+        }
 
-      try {
-        final response = await request.send();
-        log(response.statusCode.toString());
+        List<MultipartFile> newList = List<MultipartFile>();
+
+        for (int i = 0; i < imagesList.length; i++) {
+          File imageFile = File(imagesList[i].toString());
+          var stream =
+              http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+          var length = await imageFile.length();
+          var multipartFile = http.MultipartFile("images", stream, length,
+              filename: imageFile.path);
+          newList.add(multipartFile);
+        }
+
+        request.files.addAll(newList);
+
+        var response = await request.send();
 
         if (response.statusCode == 200) {
-          final respStr = await response.stream.bytesToString();
+          var respStr = await response.stream.bytesToString();
           var responseJson = _decoder.convert(respStr);
 
-          responseJson["response"]["images"].toString().debugLog();
-          Widgets.showToast('Uploaded!');
+          responseJson["response"].toString().debugLog();
+
+          if (message != null) Widgets.showToast(message);
         }
-      } on Exception catch (error) {
-        error.toString().debugLog();
-      }
-      // setLoading(false);
-    });
+
+        setLoading(false);
+      });
+    } on Exception catch (error) {
+      setLoading(false);
+      error.toString().debugLog();
+    }
   }
 
   void showPickerDialog() {
@@ -255,21 +291,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
     );
   }
 
-  // _deleteImage(int imageId) {
-  //   // setLoading(true);
-  //   var uri =
-  //       Uri.parse('http://line.appening.xyz/api/user/projects/location/images');
-  //   var request = http.MultipartRequest('POST', uri);
-  //   SharedPref().getToken().then((token) async {
-  //     request.headers['authorization'] = token;
-  //     final response = await request.send();
-  //     if (response.statusCode == 200) {
-  //       final respStr = await response.stream.bytesToString();
-  //       var responseJson = _decoder.convert(respStr);
-  //     } else {
-  //       print('Error!');
-  //     }
-  //     // setLoading(false);
-  //   });
-  // }
+  void setLoading(bool value) {
+    setState(() => _isLoading = value);
+  }
 }
