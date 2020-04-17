@@ -166,10 +166,18 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
   }
 
   Widget _requestList(Map response, int listType) {
-    String name = "---", address = "---", status = "---";
+    String name = "---",
+        address = "---",
+        status = "---",
+        professionalTitle = "---";
 
     status = response["status"].toString();
     name = response["doctor"]["fullName"].toString();
+
+    if (response["doctorData"] != null)
+      for (dynamic detail in response["doctorData"]) {
+        professionalTitle = detail["professionalTitle"]["title"];
+      }
 
     return Container(
       margin: const EdgeInsets.only(bottom: 22.0),
@@ -222,7 +230,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                           ),
                           listType == 1
                               ? Text(
-                                  "---",
+                                  professionalTitle,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     color: Colors.black.withOpacity(0.6),
@@ -237,42 +245,19 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                                     ),
                                     SizedBox(width: 4.0),
                                     Text(
-                                      "4.5 ---",
+                                      "---, $professionalTitle",
                                       style: TextStyle(
                                         fontSize: 12.0,
                                         fontWeight: FontWeight.w500,
                                         color: Colors.black.withOpacity(0.7),
                                       ),
                                     ),
-                                    //TODO: doctor rating, speciality
+                                    //TODO: doctor rating
                                   ],
                                 ),
                           SizedBox(
                             height: 4.0,
                           ),
-                          // listType == 1 && response["consentToTreat"] == false
-                          //     ? Container()
-                          //     : Row(
-                          //         children: <Widget>[
-                          //           Padding(
-                          //             padding: const EdgeInsets.only(right: 4.0),
-                          //             child: Text(
-                          //               "View consent to treat",
-                          //               overflow: TextOverflow.ellipsis,
-                          //               style: TextStyle(
-                          //                 color: AppColors.windsor,
-                          //                 fontSize: 12.0,
-                          //                 fontWeight: FontWeight.w500,
-                          //               ),
-                          //             ),
-                          //           ),
-                          //           Icon(
-                          //             Icons.arrow_forward_ios,
-                          //             size: 10.0,
-                          //             color: AppColors.windsor,
-                          //           ),
-                          //         ],
-                          //       ),
                         ],
                       ),
                     ),
@@ -346,7 +331,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                     "ic_app_distance".imageIcon(),
                     SizedBox(width: 5.0),
                     Text(
-                      "0.0 miles",
+                      "--- miles",
                       style: TextStyle(
                         color: AppColors.windsor,
                       ),
@@ -389,18 +374,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                       ? leftButton(
                           listType, response, "Treatment summary", () {})
                       : Container(),
-              // listType == 1
-              //     ? rightButton(
-              //         listType,
-              //         response,
-              //         "View Details",
-              //         () {
-              //           _container.setAppointmentId(response["_id"]);
-              //           Navigator.of(context)
-              //               .pushNamed(Routes.appointmentDetailScreen);
-              //         },
-              //       )
-              //     :
               listType == 2 && status == "1"
                   ? rightButton(listType, response, "Rate Now", () {
                       _container.setAppointmentId(response["_id"].toString());

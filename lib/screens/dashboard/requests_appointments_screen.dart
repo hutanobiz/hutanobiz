@@ -133,7 +133,8 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
         address = "---",
         appointmentType = "---",
         degree = "---",
-        status = "---";
+        status = "---",
+        professionalTitle = "---";
 
     status = response["status"].toString();
 
@@ -153,16 +154,14 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
     name = response["doctor"]["fullName"] ?? "--";
     address = response["doctor"]["address"] ?? "---";
 
-    // for (dynamic docResponse in response["DoctorDetail"]) {
-    //   name = docResponse["fullName"] ?? "--";
-    //   address = docResponse["address"] ?? "---";
-    // }
+    if (response["DoctorProfessionalDetail"] != null)
+      for (dynamic detail in response["DoctorProfessionalDetail"]) {
+        professionalTitle = detail["professionalTitle"]["title"];
 
-    for (dynamic docResponse in response["DoctorProfessionalDetail"]) {
-      for (dynamic eduResponse in docResponse["education"]) {
-        degree = eduResponse["degree"].toString();
+        for (dynamic eduResponse in detail["education"]) {
+          degree = eduResponse["degree"].toString();
+        }
       }
-    }
 
     return Container(
       margin: const EdgeInsets.only(bottom: 22.0),
@@ -252,7 +251,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                                 ? Padding(
                                     padding: const EdgeInsets.only(right: 4.0),
                                     child: Text(
-                                      "--- \u2022",
+                                      "$professionalTitle \u2022",
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         color: Colors.black.withOpacity(0.7),
@@ -261,7 +260,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                                   )
                                 : Container(),
                             Text(
-                              "\$120",
+                              "\$---",
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
