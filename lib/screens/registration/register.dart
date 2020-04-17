@@ -38,6 +38,7 @@ class _SignUpFormState extends State<Register> {
   final _langController =
       TextEditingController(text: "Select Primary Language");
   List languages = ['English', 'Spanish', 'French', 'Mandarin', 'Tigalog'];
+  String stateId = "";
 
   String _genderGroup = "";
   var maskFormatter = new MaskTextInputFormatter(
@@ -412,8 +413,10 @@ class _SignUpFormState extends State<Register> {
                   loginData["zipCode"] = _zipController.text;
                   loginData["phoneNumber"] =
                       maskFormatter.getUnmaskedText().toString();
-                  loginData["gender"] = _genderGroup.trim().toString();
+                  loginData["gender"] =
+                      _genderGroup.trim().toString() == "male" ? "1" : "2";
                   loginData["language"] = _langController.text;
+                  loginData["state"] = stateId;
 
                   api.register(loginData).then((dynamic response) {
                     setLoading(false);
@@ -486,6 +489,7 @@ class _SignUpFormState extends State<Register> {
                 onTap: () {
                   setState(() {
                     controller.text = list[index]["title"];
+                    stateId = list[index]["_id"];
                     Navigator.pop(context);
                   });
                 },
