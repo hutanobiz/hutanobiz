@@ -200,57 +200,30 @@ class ProviderWidget extends StatelessWidget {
           isOptionsShow
               ? Padding(
                   padding: EdgeInsets.only(top: 12.0),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: FlatButton(
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
-                          color: Colors.transparent,
-                          splashColor: Colors.grey[300],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(13.0),
-                            ),
-                            side: BorderSide(
-                                width: 0.5, color: AppColors.persian_indigo),
-                          ),
-                          child: Text(
-                            "View Profile",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 12.0,
-                              color: AppColors.persian_indigo,
-                            ),
-                          ),
-                          onPressed: () {},
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: FlatButton(
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      color: AppColors.persian_indigo,
+                      splashColor: Colors.grey[300],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          bottomRight: Radius.circular(13.0),
+                          bottomLeft: Radius.circular(13.0),
+                        ),
+                        side: BorderSide(
+                            width: 0.5, color: AppColors.persian_indigo),
+                      ),
+                      child: Text(
+                        "Request Appointment",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 12.0,
+                          color: Colors.white,
                         ),
                       ),
-                      Expanded(
-                        child: FlatButton(
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
-                          color: AppColors.persian_indigo,
-                          splashColor: Colors.grey[300],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                              bottomRight: Radius.circular(13.0),
-                            ),
-                            side: BorderSide(
-                                width: 0.5, color: AppColors.persian_indigo),
-                          ),
-                          child: Text(
-                            "Book Appointment",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 12.0,
-                              color: Colors.white,
-                            ),
-                          ),
-                          onPressed: bookAppointment,
-                        ),
-                      ),
-                    ],
+                      onPressed: bookAppointment,
+                    ),
                   ),
                 )
               : Container(),
