@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
@@ -372,7 +373,12 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                           ),
                         ).onClick(
                           roundCorners: false,
-                          onTap: () => Navigator.pop(context),
+                          onTap: () {
+                            Navigator.of(context).popUntil(
+                              ModalRoute.withName(
+                                  Routes.selectAppointmentTimeScreen),
+                            );
+                          },
                         ),
                       ),
                     )
