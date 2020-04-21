@@ -5,6 +5,7 @@ import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/widgets.dart';
+import 'package:intl/intl.dart';
 
 class RequestAppointmentsScreen extends StatefulWidget {
   const RequestAppointmentsScreen({Key key}) : super(key: key);
@@ -292,9 +293,33 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(8.0, 3.0, 8.0, 3.0),
+            padding: const EdgeInsets.fromLTRB(8.0, 3.0, 8.0, 10.0),
             child: Divider(
-              color: Colors.grey,
+              color: Colors.grey[300],
+              thickness: 0.5,
+            ),
+          ),
+          Padding(
+            padding:
+                const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 8.0),
+            child: Row(
+              children: <Widget>[
+                "ic_appointment_time".imageIcon(height: 12.0, width: 12.0),
+                SizedBox(width: 5.0),
+                Expanded(
+                  child: Text(
+                    DateFormat('dd MMMM, ')
+                            .format(DateTime.parse(response['date']))
+                            .toString() +
+                        response["fromTime"].toString().timeOfDay(context) +
+                        " - " +
+                        response["toTime"].toString().timeOfDay(context),
+                    style: TextStyle(
+                      color: Colors.black.withOpacity(0.5),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           Padding(
@@ -312,7 +337,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                         height: 14.0,
                         width: 11.0,
                       ),
-                      SizedBox(width: 3.0),
+                      SizedBox(width: 5.0),
                       Expanded(
                         child: Text(
                           "$address",

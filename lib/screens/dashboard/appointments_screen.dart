@@ -351,9 +351,12 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                 SizedBox(width: 3.0),
                 Expanded(
                   child: Text(
-                    DateFormat('EEEE, dd MMMM, hh:mm aa')
-                        .format(DateTime.parse(response['date']))
-                        .toString(),
+                    DateFormat('EEEE, dd MMMM, ')
+                            .format(DateTime.parse(response['date']))
+                            .toString() +
+                        response["fromTime"].toString().timeOfDay(context) +
+                        " - " +
+                        response["toTime"].toString().timeOfDay(context),
                     style: TextStyle(
                       color: Colors.black.withOpacity(0.5),
                     ),

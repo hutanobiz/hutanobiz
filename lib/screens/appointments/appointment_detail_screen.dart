@@ -257,9 +257,12 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           _providerData["type"],
         ),
         divider(topPadding: 18.0),
-        dateTimeWidget(DateFormat('EEEE, dd MMMM, hh:mm aa')
-            .format(DateTime.parse(_providerData['date']))
-            .toString()),
+        dateTimeWidget(
+            DateFormat(
+              'EEEE, dd MMMM, ',
+            ).format(DateTime.parse(_providerData['date'])).toString(),
+            _providerData["fromTime"].toString(),
+            _providerData["toTime"].toString()),
         divider(topPadding: 8.0),
         locationWidget("location", _providerData["doctor"]),
         divider(),
@@ -350,7 +353,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     );
   }
 
-  Widget dateTimeWidget(String dateTime) {
+  Widget dateTimeWidget(String dateTime, String fromTime, String toTime) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 20.0),
       child: Column(
@@ -370,7 +373,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               "ic_appointment_time".imageIcon(),
               SizedBox(width: 8.0),
               Text(
-                dateTime,
+                dateTime +
+                    fromTime.timeOfDay(context) +
+                    " - " +
+                    toTime.timeOfDay(context),
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Colors.black,

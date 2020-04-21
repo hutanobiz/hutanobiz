@@ -51,3 +51,16 @@ extension InkWellTap on Widget {
     );
   }
 }
+
+extension TimeOfDayExt on String {
+  timeOfDay(BuildContext context) {
+    return TimeOfDay(
+      hour: int.parse(
+        "${this}".substring(0, 2),
+      ),
+      minute: int.parse(
+        "${this}".substring(3),
+      ),
+    ).format(context).toString();
+  }
+}
