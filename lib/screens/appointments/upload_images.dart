@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
@@ -49,6 +50,8 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
         addBottomArrows: true,
         onForwardTap: () {
           _uploadImage(imagesList, imagesList.length > 0 ? 'Uploaded!' : null);
+
+          Navigator.of(context).pushNamed(Routes.uploadDocumentsScreen);
         },
         color: Colors.white,
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),

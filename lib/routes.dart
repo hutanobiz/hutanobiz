@@ -6,6 +6,7 @@ import 'package:hutano/screens/appointments/consent_to_treat_screen.dart';
 import 'package:hutano/screens/appointments/medical_history.dart';
 import 'package:hutano/screens/appointments/rate_doctor_screen.dart';
 import 'package:hutano/screens/appointments/seeking_cure.dart';
+import 'package:hutano/screens/appointments/upload_documents.dart';
 import 'package:hutano/screens/appointments/upload_images.dart';
 import 'package:hutano/screens/book_appointment/review_appointment.dart';
 import 'package:hutano/screens/book_appointment/select_appointment_time_screen.dart';
@@ -56,6 +57,7 @@ class Routes {
   static const String medicalHistoryScreen = '/medicalHistoryScreen';
   static const String seekingCureScreen = '/seekingCureScreen';
   static const String uploadImagesScreen = '/uploadImagesScreen';
+  static const String uploadDocumentsScreen = '/uploadDocumentsScreen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -162,6 +164,9 @@ class Routes {
         break;
       case uploadImagesScreen:
         return _buildRoute(settings, UploadImagesScreen());
+        break;
+      case uploadDocumentsScreen:
+        return _buildRoute(settings, UploadDocumentsScreen());
         break;
       default:
         return _errorRoute();
