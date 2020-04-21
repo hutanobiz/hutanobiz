@@ -141,16 +141,18 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         title: "Review Appointment",
         color: AppColors.snow,
         isLoading: _isLoading,
-        isAddBack: false,
         addBackButton: true,
         buttonColor: AppColors.windsor,
         padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
         child: Stack(
           children: <Widget>[
-            SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: widgetList(),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 60),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: widgetList(),
+                ),
               ),
             ),
             Align(
@@ -210,7 +212,6 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             ),
           ],
         ),
-        onForwardTap: () {},
       ),
     );
   }
