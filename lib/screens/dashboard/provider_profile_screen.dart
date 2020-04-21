@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
@@ -18,11 +19,16 @@ class ProviderProfileScreen extends StatefulWidget {
 
 class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
   Future<dynamic> _profileFuture;
+  Map _containerMap;
+  InheritedContainerState _container;
+  Map profileMap = Map();
+  String degree;
 
   @override
   void didChangeDependencies() {
-    InheritedContainerState _container = InheritedContainer.of(context);
+    _container = InheritedContainer.of(context);
     Map _providerData = _container.providerIdMap;
+    _containerMap = _container.getProjectsResponse();
 
     SharedPref().getToken().then((token) {
       ApiBaseHelper api = ApiBaseHelper();
@@ -41,7 +47,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackground(
-        title: "Select an Appointment Time",
+        title: "Provider Profile",
         color: AppColors.snow,
         isAddBack: false,
         addBackButton: true,
@@ -69,7 +75,6 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                           List response = snapshot.data["data"];
 
                           if (response.isEmpty) return Container();
-                          Map profileMap = Map();
 
                           response.map((f) {
                             profileMap.addAll(f);
@@ -100,7 +105,20 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                   title: "Send Office Request",
                   buttonIcon: "ic_send_request",
                   buttonColor: AppColors.windsor,
-                  onPressed: () {},
+                  onPressed: () {
+                    _container.getProviderData().clear();
+
+                    _container.setProviderData("providerData", profileMap);
+                    _container.setProviderData("degree", degree);
+
+                    if (_containerMap.containsKey("specialityId") ||
+                        _containerMap.containsKey("serviceId"))
+                      Navigator.of(context)
+                          .pushNamed(Routes.appointmentTypeScreen);
+                    else
+                      Navigator.of(context)
+                          .pushNamed(Routes.selectAppointmentTimeScreen);
+                  },
                 ),
               ),
             )
@@ -111,14 +129,14 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
   }
 
   List<Widget> widgetList(Map _providerData) {
-    String institute, degree;
+    String institute;
 
     for (dynamic education in _providerData["education"]) {
       institute = education["institute"] ?? "---";
       degree = education["degree"] ?? "---";
     }
 
-    List<Widget> formWidget = new List();
+    List<Widget> formWidget = List();
 
     formWidget.add(ProviderWidget(
       data: _providerData,
