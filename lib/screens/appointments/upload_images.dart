@@ -8,7 +8,6 @@ import 'package:http/http.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
-import 'package:hutano/widgets/arrow_button.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
@@ -49,9 +48,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
         isAddBack: false,
         addBottomArrows: true,
         onForwardTap: () {
-          imagesList.length > 0
-              ? _uploadImage(imagesList, 'Uploaded!')
-              : Widgets.showToast("Please select image(s) to upload");
+          _uploadImage(imagesList, imagesList.length > 0 ? 'Uploaded!' : null);
         },
         color: Colors.white,
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
@@ -243,24 +240,31 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
         request.fields['description'] =
             _consentToTreatMap["description"].toString().trim();
 
-        for (int i = 0; i < _consentToTreatMap["medicalHistory"].length; i++) {
-          request.fields["medicalHistory[$i]"] =
-              _consentToTreatMap["medicalHistory"][i];
+        if (_consentToTreatMap["medicalHistory"] != null &&
+            _consentToTreatMap["medicalHistory"].length > 0) {
+          for (int i = 0;
+              i < _consentToTreatMap["medicalHistory"].length;
+              i++) {
+            request.fields["medicalHistory[$i]"] =
+                _consentToTreatMap["medicalHistory"][i];
+          }
         }
 
-        List<MultipartFile> newList = List<MultipartFile>();
+        if (imagesList != null && imagesList.length > 0) {
+          List<MultipartFile> newList = List<MultipartFile>();
 
-        for (int i = 0; i < imagesList.length; i++) {
-          File imageFile = File(imagesList[i].toString());
-          var stream =
-              http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
-          var length = await imageFile.length();
-          var multipartFile = http.MultipartFile("images", stream, length,
-              filename: imageFile.path);
-          newList.add(multipartFile);
+          for (int i = 0; i < imagesList.length; i++) {
+            File imageFile = File(imagesList[i].toString());
+            var stream =
+                http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+            var length = await imageFile.length();
+            var multipartFile = http.MultipartFile("images", stream, length,
+                filename: imageFile.path);
+            newList.add(multipartFile);
+          }
+
+          request.files.addAll(newList);
         }
-
-        request.files.addAll(newList);
 
         var response = await request.send();
 

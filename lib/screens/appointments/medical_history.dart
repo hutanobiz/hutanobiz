@@ -46,9 +46,9 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
         onForwardTap: () {
           if (_diseaseList.length > 0) {
             _container.setConsentToTreatData("medicalHistory", _diseaseList);
-            Navigator.of(context).pushNamed(Routes.seekingCureScreen);
-          } else
-            Widgets.showToast("Please select at least one disease");
+          }
+
+          Navigator.of(context).pushNamed(Routes.seekingCureScreen);
         },
         color: Colors.white,
         padding: const EdgeInsets.all(5.0),
