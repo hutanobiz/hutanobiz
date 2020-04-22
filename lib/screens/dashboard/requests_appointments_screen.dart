@@ -138,6 +138,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
         address = "---",
         appointmentType = "---",
         degree = "---",
+        fee = "---",
         status = "---",
         professionalTitle = "---";
 
@@ -151,7 +152,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
         case 2:
           appointmentType = "Video Chat Appt.";
           break;
-        case 1:
+        case 3:
           appointmentType = "Onsite Appt.";
           break;
         default:
@@ -160,16 +161,29 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
     name = response["doctor"]["fullName"] ?? "--";
     address = response["doctor"]["address"] ?? "---";
 
-    if (response["DoctorProfessionalDetail"] != null)
+    if (response["DoctorProfessionalDetail"] != null) {
       for (dynamic detail in response["DoctorProfessionalDetail"]) {
-        if (detail["professionalTitle"] != null)
+        if (detail["professionalTitle"] != null) {
           professionalTitle = detail["professionalTitle"]["title"] ?? "---";
+        }
 
-        if (detail["education"] != null)
+        if (detail["education"] != null) {
           for (dynamic eduResponse in detail["education"]) {
             degree = eduResponse["degree"].toString() ?? "---";
           }
+        }
+
+        if (detail["consultanceFee"] != null) {
+          for (dynamic consultanceFee in detail["consultanceFee"]) {
+            fee = consultanceFee["fee"].toString() ?? "---";
+          }
+        }
+
+        if (detail["businessLocation"] != null) {
+          address = detail["businessLocation"]["address"] ?? "---";
+        }
       }
+    }
 
     return Container(
       margin: const EdgeInsets.only(bottom: 22.0),
@@ -268,7 +282,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                                   )
                                 : Container(),
                             Text(
-                              "\$---",
+                              "\$$fee",
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
@@ -313,17 +327,18 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                 SizedBox(width: 5.0),
                 Expanded(
                   child: Text(
-                    response['date'] != null
-                        ? DateFormat('dd MMMM, ')
-                            .format(DateTime.parse(response['date']))
-                            .toString()
-                        : "---" + response["fromTime"] != null
+                    (response['date'] != null
+                            ? DateFormat('dd MMMM, ')
+                                .format(DateTime.parse(response['date']))
+                                .toString()
+                            : "---") +
+                        (response["fromTime"] != null
                             ? response["fromTime"].toString().timeOfDay(context)
-                            : "---" + " - " + response["toTime"] != null
-                                ? response["toTime"]
-                                    .toString()
-                                    .timeOfDay(context)
-                                : "---",
+                            : "---") +
+                        " - " +
+                        (response["toTime"] != null
+                            ? response["toTime"].toString().timeOfDay(context)
+                            : "---"),
                     style: TextStyle(
                       color: Colors.black.withOpacity(0.5),
                     ),
@@ -370,7 +385,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                     ),
                     SizedBox(width: 5.0),
                     Text(
-                      "--- miles",
+                      "--- miles", //TODO: provider distance
                       style: TextStyle(
                         color: Colors.black.withOpacity(0.5),
                       ),
