@@ -194,6 +194,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<dynamic> data = snapshot.data;
+
+          if (data == null || data.length == 0) return Container();
+
           return GridView.builder(
             padding: const EdgeInsets.all(20.0),
             shrinkWrap: true,
@@ -204,18 +207,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             itemCount: data.length,
             itemBuilder: (context, index) {
+              if (data == null || data.length == 0) return Container();
+
               return ListTile(
                 contentPadding: EdgeInsets.all(0.0),
                 title: Column(
                   children: <Widget>[
-                    FadeInImage.assetNetwork(
-                      placeholder: "images/dummy_title_image.png",
-                      image: '',
-                      //TODO: add title image
-                    ),
+                    data[index]["image"] != null
+                        ? Image.network(
+                            data[index]["image"],
+                          )
+                        : Image(
+                            image: AssetImage(
+                              "images/dummy_title_image.png",
+                            ),
+                          ),
                     SizedBox(height: 10.0),
                     Text(
-                      data[index]["title"],
+                      data[index]["title"] ?? "---",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.black87,

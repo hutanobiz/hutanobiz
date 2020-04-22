@@ -71,6 +71,8 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
             break;
           case ConnectionState.done:
             if (snapshot.hasData) {
+              if (snapshot.hasData == null) return Container();
+
               _presentList = snapshot.data["presentRequest"];
               _pastList = snapshot.data["pastRequest"];
 
@@ -139,31 +141,34 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
         status = "---",
         professionalTitle = "---";
 
-    status = response["status"].toString();
+    status = response["status"].toString() ?? "0";
 
-    switch (response["type"]) {
-      case 1:
-        appointmentType = "Office Appt.";
-        break;
-      case 2:
-        appointmentType = "Video Chat Appt.";
-        break;
-      case 1:
-        appointmentType = "Onsite Appt.";
-        break;
-      default:
-    }
+    if (response["type"] != null)
+      switch (response["type"]) {
+        case 1:
+          appointmentType = "Office Appt.";
+          break;
+        case 2:
+          appointmentType = "Video Chat Appt.";
+          break;
+        case 1:
+          appointmentType = "Onsite Appt.";
+          break;
+        default:
+      }
 
     name = response["doctor"]["fullName"] ?? "--";
     address = response["doctor"]["address"] ?? "---";
 
     if (response["DoctorProfessionalDetail"] != null)
       for (dynamic detail in response["DoctorProfessionalDetail"]) {
-        professionalTitle = detail["professionalTitle"]["title"];
+        if (detail["professionalTitle"] != null)
+          professionalTitle = detail["professionalTitle"]["title"] ?? "---";
 
-        for (dynamic eduResponse in detail["education"]) {
-          degree = eduResponse["degree"].toString();
-        }
+        if (detail["education"] != null)
+          for (dynamic eduResponse in detail["education"]) {
+            degree = eduResponse["degree"].toString() ?? "---";
+          }
       }
 
     return Container(
@@ -308,12 +313,17 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                 SizedBox(width: 5.0),
                 Expanded(
                   child: Text(
-                    DateFormat('dd MMMM, ')
+                    response['date'] != null
+                        ? DateFormat('dd MMMM, ')
                             .format(DateTime.parse(response['date']))
-                            .toString() +
-                        response["fromTime"].toString().timeOfDay(context) +
-                        " - " +
-                        response["toTime"].toString().timeOfDay(context),
+                            .toString()
+                        : "---" + response["fromTime"] != null
+                            ? response["fromTime"].toString().timeOfDay(context)
+                            : "---" + " - " + response["toTime"] != null
+                                ? response["toTime"]
+                                    .toString()
+                                    .timeOfDay(context)
+                                : "---",
                     style: TextStyle(
                       color: Colors.black.withOpacity(0.5),
                     ),
@@ -360,7 +370,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                     ),
                     SizedBox(width: 5.0),
                     Text(
-                      "0.0 miles",
+                      "--- miles",
                       style: TextStyle(
                         color: Colors.black.withOpacity(0.5),
                       ),
@@ -381,8 +391,9 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                         SharedPref().getToken().then((token) {
                           Map appointmentIdAmp = Map();
 
-                          appointmentIdAmp["appointmentId"] =
-                              response["_id"].toString();
+                          if (response["_id"].toString() != null)
+                            appointmentIdAmp["appointmentId"] =
+                                response["_id"].toString();
                           // appointmentIdAmp["cancelledReason"] =
                           //     "Booked by mistake";
                           // appointmentIdAmp["cancellationFees"] = "20";

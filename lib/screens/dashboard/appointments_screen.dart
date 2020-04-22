@@ -160,6 +160,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
       shrinkWrap: true,
       itemCount: _list.length,
       itemBuilder: (context, index) {
+        if (_list == null || _list.length == 0) return Container();
+
         return _requestList(_list[index], listType);
       },
     );
@@ -171,12 +173,13 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
         status = "---",
         professionalTitle = "---";
 
-    status = response["status"].toString();
-    name = response["doctor"]["fullName"].toString();
+    status = response["status"].toString() ?? "---";
+    name = response["doctor"]["fullName"].toString() ?? "---";
 
     if (response["doctorData"] != null)
       for (dynamic detail in response["doctorData"]) {
-        professionalTitle = detail["professionalTitle"]["title"];
+        if (detail["professionalTitle"] != null)
+          professionalTitle = detail["professionalTitle"]["title"] ?? "---";
       }
 
     return Container(
@@ -351,12 +354,17 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                 SizedBox(width: 3.0),
                 Expanded(
                   child: Text(
-                    DateFormat('EEEE, dd MMMM, ')
+                    response['date'] != null
+                        ? DateFormat('EEEE, dd MMMM, ')
                             .format(DateTime.parse(response['date']))
-                            .toString() +
-                        response["fromTime"].toString().timeOfDay(context) +
-                        " - " +
-                        response["toTime"].toString().timeOfDay(context),
+                            .toString()
+                        : "---" + response["fromTime"] != null
+                            ? response["fromTime"].toString().timeOfDay(context)
+                            : "---" + " - " + response["toTime"] != null
+                                ? response["toTime"]
+                                    .toString()
+                                    .timeOfDay(context)
+                                : "---",
                     style: TextStyle(
                       color: Colors.black.withOpacity(0.5),
                     ),
@@ -367,7 +375,9 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
           ),
           Row(
             children: <Widget>[
-              listType == 1 && response["consentToTreat"] == false
+              listType == 1 &&
+                      (response["consentToTreat"] != null &&
+                          response["consentToTreat"] == false)
                   ? rightButton(listType, response, "Add consent", () {
                       _container.setAppointmentId(response["_id"].toString());
                       Navigator.of(context)

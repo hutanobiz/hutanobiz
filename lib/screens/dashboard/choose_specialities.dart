@@ -58,6 +58,8 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
         if (snapshot.hasData) {
           List<dynamic> data = snapshot.data;
 
+          if (data == null || data.length == 0) return Container();
+
           return GridView.builder(
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -68,6 +70,8 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
             ),
             itemCount: data.length,
             itemBuilder: (context, index) {
+              if (data == null || data.length == 0) return Container();
+
               return Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
@@ -80,7 +84,7 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
                   contentPadding: EdgeInsets.all(8.0),
                   leading: ClipRRect(
                     child: Image.network(
-                      data[index]["cover"],
+                      data[index]["cover"] ?? "http://i.imgur.com/QSev0hg.jpg",
                       width: 66.0,
                       height: 64.0,
                       fit: BoxFit.cover,
@@ -88,7 +92,7 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   title: Text(
-                    data[index]["title"],
+                    data[index]["title"] ?? "---",
                     maxLines: 2,
                     style: TextStyle(
                       color: Colors.black87,
@@ -98,7 +102,7 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
                   ),
                   onTap: () {
                     conatiner.setProjectsResponse(
-                        "specialtyId[]", data[index]["_id"]);
+                        "specialtyId[]", data[index]["_id"] ?? "---");
 
                     Navigator.pushNamed(
                       context,
