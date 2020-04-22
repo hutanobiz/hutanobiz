@@ -60,7 +60,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                     future: _profileFuture,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        Map profileMap = snapshot.data["data"];
+                        Map profileMap = snapshot.data;
 
                         return SingleChildScrollView(
                           padding: const EdgeInsets.only(bottom: 100),
@@ -93,9 +93,52 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     );
   }
 
-  Widget profileWidget(Map _providerData) {
+  Widget profileWidget(Map _data) {
+    Map _providerData = _data["data"];
+
     _container.getProviderData().clear();
     _container.setProviderData("providerData", _providerData);
+
+    String name = "---",
+        rating = "---",
+        professionalTitle = "---",
+        fee = "---",
+        avatar,
+        address = "---";
+
+    LatLng latLng;
+
+    rating = _data["averageRating"] ?? "---";
+
+    if (_data["doctorData"] != null) {
+      for (dynamic detail in _data["doctorData"]) {
+        if (detail["averageRating"] != null) if (detail["professionalTitle"] !=
+            null) {
+          professionalTitle = detail["professionalTitle"]["title"] ?? "---";
+        }
+
+        if (detail["consultanceFee"] != null) {
+          for (dynamic consultanceFee in detail["consultanceFee"]) {
+            fee = consultanceFee["fee"].toString() ?? "---";
+          }
+        }
+
+        if (detail["businessLocation"] != null) {
+          address = detail["businessLocation"]["address"] ?? "---";
+
+          if (detail["businessLocation"]["coordinates"] != null)
+            latLng = LatLng(
+              detail["businessLocation"]["coordinates"][0] ?? 28.5355,
+              detail["businessLocation"]["coordinates"][1] ?? 77.3910,
+            );
+        }
+      }
+    }
+
+    if (_providerData["doctor"] != null) {
+      name = _providerData["doctor"]["fullName"] ?? "---";
+      avatar = _providerData["doctor"]["avatar"];
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,7 +153,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                 height: 62.0,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage('http://i.imgur.com/QSev0hg.jpg'),
+                    image: NetworkImage(
+                        avatar ?? 'http://i.imgur.com/QSev0hg.jpg'),
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.all(Radius.circular(50.0)),
@@ -127,7 +171,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      _providerData["doctor"]["fullName"],
+                      name,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 14.0,
@@ -146,14 +190,13 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         ),
                         SizedBox(width: 4.0),
                         Text(
-                          "4.5 ---",
+                          "$rating \u2022 $professionalTitle",
                           style: TextStyle(
                             fontSize: 12.0,
                             fontWeight: FontWeight.w500,
                             color: Colors.black.withOpacity(0.7),
                           ),
                         ),
-                        //TODO: doctor rating, speciality
                       ],
                     ),
                     SizedBox(
@@ -199,18 +242,18 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       Container(
-                        width: 84.0,
-                        height: 40.0,
+                        width: 62.0,
+                        height: 23.0,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: _providerData["status"].toString() == "1"
                               ? Colors.lightGreen.withOpacity(0.12)
                               : Colors.red.withOpacity(0.12),
                           shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.circular(8.0),
                         ),
                         child: Text(
                           _providerData["status"].toString() == "1"
@@ -228,7 +271,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                       ),
                       SizedBox(height: 5.0),
                       Text(
-                        "\$---",
+                        "\$$fee",
                         style: TextStyle(
                           fontSize: 22.0,
                           fontWeight: FontWeight.w600,
@@ -264,7 +307,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             _providerData["fromTime"].toString(),
             _providerData["toTime"].toString()),
         divider(topPadding: 8.0),
-        locationWidget("location", _providerData["doctor"]),
+        locationWidget(address, latLng),
         divider(),
         paymentWidget("cardNumber"),
         divider(topPadding: 10.0),
@@ -417,7 +460,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     );
   }
 
-  Widget locationWidget(String location, Map doctorMap) {
+  Widget locationWidget(String location, LatLng latLng) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
       child: Column(
@@ -441,7 +484,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                   Column(
                     children: <Widget>[
                       Text(
-                        "---", //TODO: location
+                        location,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -487,17 +530,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                     compassEnabled: false,
                     rotateGesturesEnabled: false,
                     initialCameraPosition: CameraPosition(
-                      target: LatLng(
-                          doctorMap["location"]["coordinates"][0].toDouble() ==
-                                  0.0
-                              ? 28.5355
-                              : doctorMap["location"]["coordinates"][0]
-                                  .toDouble(),
-                          doctorMap["location"]["coordinates"][1].toDouble() ==
-                                  0.0
-                              ? 77.3910
-                              : doctorMap["location"]["coordinates"][1]
-                                  .toDouble()),
+                      target: latLng,
                       zoom: 9.0,
                     ),
                     onMapCreated: (GoogleMapController controller) {},
