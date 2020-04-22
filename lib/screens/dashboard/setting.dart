@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:package_info/package_info.dart';
 
@@ -41,9 +42,11 @@ class _SettingsScreenState extends State<SettingScreen> {
     SharedPref().getToken().then((token) {
       api.profile(token, Map()).then((dynamic response) {
         setState(() {
-          name = response['response']['fullName'] ?? "---";
-          email = response['response']['email'] ?? "---";
-          phone = response['response']['phoneNumber'] ?? "---";
+          if (response['response'] != null) {
+            name = response['response']['fullName'].toString() ?? "---";
+            email = response['response']['email'].toString() ?? "---";
+            phone = response['response']['phoneNumber'].toString() ?? "---";
+          }
         });
       });
     });
@@ -254,10 +257,9 @@ class _SettingsScreenState extends State<SettingScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Image.asset(
-                  "images/logout.png",
-                  width: 24,
-                  height: 24,
+                "ic_logout".imageIcon(
+                  width: 16,
+                  height: 16,
                 ),
                 SizedBox(width: 10),
                 Text(

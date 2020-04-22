@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 class Extensions {}
 
 extension ImageIcon on String {
-  imageIcon({double height, double width}) => Image(
-        image: AssetImage(
-          "images/$this.png",
-        ),
+  imageIcon({double height, double width}) => Image.asset(
+        "images/$this.png",
         height: height ?? 14.0,
         width: width ?? 14.0,
       );
