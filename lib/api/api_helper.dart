@@ -219,6 +219,20 @@ class ApiBaseHelper {
       return responseJson.map((m) => MedicalHistory.fromJson(m)).toList();
     });
   }
+
+  Future<dynamic> getLastAppointmentDetails(String token) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    return _netUtil
+        .get(
+      _base_url + "api/patient/last-appointment-detail",
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
 }
 
 class NetworkUtil {
