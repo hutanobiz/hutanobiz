@@ -192,14 +192,20 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
     status = response["status"].toString() ?? "---";
     name = response["doctor"]["fullName"].toString() ?? "---";
 
-    if (response["doctorData"] != null)
+    if (response["doctorData"] != null) {
       for (dynamic detail in response["doctorData"]) {
         if (detail["averageRating"] != null)
           averageRating = detail["averageRating"].toString() ?? "---";
 
-        if (detail["professionalTitle"] != null)
+        if (detail["professionalTitle"] != null) {
           professionalTitle = detail["professionalTitle"]["title"] ?? "---";
+        }
+
+        if (detail["businessLocation"] != null) {
+          address = detail["businessLocation"]["address"] ?? "---";
+        }
       }
+    }
 
     return Container(
       margin: const EdgeInsets.only(bottom: 22.0),
