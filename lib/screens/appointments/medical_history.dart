@@ -3,9 +3,9 @@ import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/models/medicalHistory.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
-import 'package:hutano/widgets/widgets.dart';
 
 class MedicalHistoryScreen extends StatefulWidget {
   MedicalHistoryScreen({Key key}) : super(key: key);
@@ -21,10 +21,24 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
 
   InheritedContainerState _container;
   List<dynamic> _diseaseList = List();
+  List _medicalHistoryList = List();
 
   @override
   void initState() {
     _todoFuture = api.getDiseases();
+
+    SharedPref().getToken().then((token) {
+      api.getLastAppointmentDetails(token).then((response) {
+        if (response != null) {
+          if (response["medicalHistory"] != null) {
+            for (dynamic medical in response["medicalHistory"]) {
+              if (medical["_id"].toString() != null)
+                _medicalHistoryList.add(medical["_id"].toString());
+            }
+          }
+        }
+      });
+    });
     super.initState();
   }
 
@@ -65,6 +79,13 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                 itemBuilder: (context, index) {
                   MedicalHistory medicalHistory = data[index];
 
+                  if (_medicalHistoryList != null &&
+                      _medicalHistoryList.length > 0) {
+                    if (_medicalHistoryList.contains(medicalHistory.sId)) {
+                      medicalHistory.isSelected = true;
+                    }
+                  }
+
                   return CheckboxListTile(
                     title: Text(medicalHistory.name),
                     value: medicalHistory.isSelected,
@@ -72,8 +93,17 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                     onChanged: (value) {
                       if (value)
                         _diseaseList.add(medicalHistory.sId);
-                      else
+                      else {
                         _diseaseList.remove(medicalHistory.sId);
+
+                        if (_medicalHistoryList != null &&
+                            _medicalHistoryList.length > 0) {
+                          if (_medicalHistoryList
+                              .contains(medicalHistory.sId)) {
+                            _medicalHistoryList.remove(medicalHistory.sId);
+                          }
+                        }
+                      }
 
                       setState(() => medicalHistory.isSelected = value);
                     },
