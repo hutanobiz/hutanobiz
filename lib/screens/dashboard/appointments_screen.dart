@@ -171,13 +171,32 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
     String name = "---",
         address = "---",
         status = "---",
+        averageRating = "---",
+        appointmentType = "---",
         professionalTitle = "---";
+
+    if (response["type"] != null)
+      switch (response["type"]) {
+        case 1:
+          appointmentType = "Office Appt.";
+          break;
+        case 2:
+          appointmentType = "Video Chat Appt.";
+          break;
+        case 3:
+          appointmentType = "Onsite Appt.";
+          break;
+        default:
+      }
 
     status = response["status"].toString() ?? "---";
     name = response["doctor"]["fullName"].toString() ?? "---";
 
     if (response["doctorData"] != null)
       for (dynamic detail in response["doctorData"]) {
+        if (detail["averageRating"] != null)
+          averageRating = detail["averageRating"].toString() ?? "---";
+
         if (detail["professionalTitle"] != null)
           professionalTitle = detail["professionalTitle"]["title"] ?? "---";
       }
@@ -231,33 +250,25 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                           SizedBox(
                             height: 5.0,
                           ),
-                          listType == 1
-                              ? Text(
-                                  professionalTitle,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: Colors.black.withOpacity(0.6),
-                                  ),
-                                )
-                              : Row(
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.star,
-                                      color: AppColors.goldenTainoi,
-                                      size: 12.0,
-                                    ),
-                                    SizedBox(width: 4.0),
-                                    Text(
-                                      "---, $professionalTitle",
-                                      style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black.withOpacity(0.7),
-                                      ),
-                                    ),
-                                    //TODO: doctor rating
-                                  ],
+                          Row(
+                            children: <Widget>[
+                              Image.asset(
+                                "images/ic_star_rating.png",
+                                width: 12,
+                                height: 12,
+                                color: AppColors.goldenTainoi,
+                              ),
+                              SizedBox(width: 4.0),
+                              Text(
+                                "$averageRating \u2022 $professionalTitle",
+                                style: TextStyle(
+                                  fontSize: 12.0,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black.withOpacity(0.7),
                                 ),
+                              ),
+                            ],
+                          ),
                           SizedBox(
                             height: 4.0,
                           ),
@@ -266,39 +277,53 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                     ),
                   ],
                 ),
-                listType == 1
-                    ? Container()
-                    : Align(
+                Padding(
+                  padding: EdgeInsets.only(top: listType == 1 ? 25.0 : 20.0),
+                  child: Column(
+                    children: <Widget>[
+                      Align(
                         alignment: Alignment.centerRight,
-                        child: Container(
-                          width: 84.0,
-                          height: 40.0,
-                          alignment: Alignment.center,
-                          padding:
-                              const EdgeInsets.fromLTRB(12.0, 5.0, 12.0, 5.0),
-                          decoration: BoxDecoration(
-                            color: status == "1"
-                                ? Colors.lightGreen.withOpacity(0.12)
-                                : Colors.red.withOpacity(0.12),
-                            shape: BoxShape.rectangle,
-                            borderRadius: BorderRadius.only(
-                              bottomRight: Radius.circular(7.0),
-                              bottomLeft: Radius.circular(7.0),
-                            ),
-                          ),
-                          child: Text(
-                            status == "1" ? "Completed" : "Cancelled",
-                            softWrap: true,
-                            style: TextStyle(
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.w500,
-                              color: status == "1"
-                                  ? Colors.lightGreen
-                                  : Colors.red,
-                            ),
+                        child: Text(
+                          appointmentType,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 12.0,
                           ),
                         ),
                       ),
+                      SizedBox(height: 13.0),
+                      listType == 1
+                          ? Container()
+                          : Align(
+                              alignment: Alignment.centerRight,
+                              child: Container(
+                                width: 62.0,
+                                height: 23.0,
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.fromLTRB(
+                                    0.0, 5.0, 0.0, 5.0),
+                                decoration: BoxDecoration(
+                                  color: status == "1"
+                                      ? Colors.lightGreen.withOpacity(0.12)
+                                      : Colors.red.withOpacity(0.12),
+                                  shape: BoxShape.rectangle,
+                                ),
+                                child: Text(
+                                  status == "1" ? "Completed" : "Cancelled",
+                                  softWrap: true,
+                                  style: TextStyle(
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.w500,
+                                    color: status == "1"
+                                        ? Colors.lightGreen
+                                        : Colors.red,
+                                  ),
+                                ),
+                              ),
+                            ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -354,17 +379,18 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                 SizedBox(width: 3.0),
                 Expanded(
                   child: Text(
-                    response['date'] != null
-                        ? DateFormat('EEEE, dd MMMM, ')
-                            .format(DateTime.parse(response['date']))
-                            .toString()
-                        : "---" + response["fromTime"] != null
+                    (response['date'] != null
+                            ? DateFormat('EEEE, dd MMMM, ')
+                                .format(DateTime.parse(response['date']))
+                                .toString()
+                            : "---") +
+                        (response["fromTime"] != null
                             ? response["fromTime"].toString().timeOfDay(context)
-                            : "---" + " - " + response["toTime"] != null
-                                ? response["toTime"]
-                                    .toString()
-                                    .timeOfDay(context)
-                                : "---",
+                            : "---") +
+                        " - " +
+                        (response["toTime"] != null
+                            ? response["toTime"].toString().timeOfDay(context)
+                            : "---"),
                     style: TextStyle(
                       color: Colors.black.withOpacity(0.5),
                     ),
