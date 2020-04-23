@@ -23,6 +23,7 @@ import 'package:hutano/screens/home.dart';
 import 'package:hutano/screens/login.dart';
 import 'package:hutano/screens/payment/add_new_card.dart';
 import 'package:hutano/screens/payment/payments_methods.dart';
+import 'package:hutano/screens/payment/saved_cards.dart';
 import 'package:hutano/screens/registration/forgot_password.dart';
 import 'package:hutano/screens/registration/register.dart';
 import 'package:hutano/screens/registration/register_email.dart';
@@ -58,6 +59,7 @@ class Routes {
   static const String seekingCureScreen = '/seekingCureScreen';
   static const String uploadImagesScreen = '/uploadImagesScreen';
   static const String uploadDocumentsScreen = '/uploadDocumentsScreen';
+  static const String savedCardsScreen = '/savedCardsScreen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -167,6 +169,9 @@ class Routes {
         break;
       case uploadDocumentsScreen:
         return _buildRoute(settings, UploadDocumentsScreen());
+        break;
+      case savedCardsScreen:
+        return _buildRoute(settings, SavedCardsScreen());
         break;
       default:
         return _errorRoute();
