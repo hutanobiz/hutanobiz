@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/strings.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:package_info/package_info.dart';
@@ -22,7 +23,7 @@ class _SettingsScreenState extends State<SettingScreen> {
     version: 'Unknown',
     buildNumber: 'Unknown',
   );
-  String name = "---", email = "---", phone = "---";
+  String name = "---", email = "---", phone = "---", avatar;
 
   @override
   void initState() {
@@ -46,6 +47,7 @@ class _SettingsScreenState extends State<SettingScreen> {
             name = response['response']['fullName'].toString() ?? "---";
             email = response['response']['email'].toString() ?? "---";
             phone = response['response']['phoneNumber'].toString() ?? "---";
+            avatar = response['response']['avatar'].toString();
           }
         });
       });
@@ -98,10 +100,31 @@ class _SettingsScreenState extends State<SettingScreen> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Image(
-                      image: AssetImage('images/profile_user.png'),
-                      height: 74.0,
+                    Container(
                       width: 74.0,
+                      height: 74.0,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.grey[300],
+                        ),
+                      ),
+                      child: avatar == null
+                          ? Image(
+                              image: AssetImage('images/profile_user.png'),
+                              height: 74.0,
+                              width: 74.0,
+                            )
+                          : ClipOval(
+                              child: Image.network(
+                                Strings.imageUrl + avatar,
+                                width: 76.0,
+                                height: 76.0,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                     ),
                     SizedBox(
                       width: 8,
@@ -232,7 +255,11 @@ class _SettingsScreenState extends State<SettingScreen> {
                 ),
               ),
               customListButton(
-                  "Payment Method", "images/profile_payment_method.png", () {}),
+                  "Payment Method",
+                  "images/profile_payment_method.png",
+                  () => Navigator.of(context).pushNamed(
+                        Routes.savedCardsScreen,
+                      )),
             ],
           )),
     ));
