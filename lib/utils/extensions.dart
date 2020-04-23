@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/colors.dart';
 
 class Extensions {}
 
@@ -60,5 +61,69 @@ extension TimeOfDayExt on String {
         "${this}".substring(3),
       ),
     ).format(context).toString();
+  }
+}
+
+extension StatusExt on String {
+  appointmentStatus({bool isAddBackground = true}) {
+    String status = "---";
+    Color statusTextColor = Colors.lightGreen;
+    Color backgroundColor = Colors.lightGreen.withOpacity(0.12);
+
+    switch (this) {
+      case "0":
+        status = "Pending";
+        statusTextColor = Colors.black.withOpacity(0.75);
+        backgroundColor = Colors.black.withOpacity(0.08);
+        break;
+      case "1":
+        status = "Accepted";
+        statusTextColor = AppColors.atlantis;
+        backgroundColor = AppColors.atlantis.withOpacity(0.12);
+        break;
+      case "2":
+        status = "Rejected";
+        statusTextColor = AppColors.alizarin_crimson;
+        backgroundColor = AppColors.alizarin_crimson.withOpacity(0.12);
+        break;
+      case "3":
+        status = "Initiated";
+        statusTextColor = AppColors.koromiko;
+        backgroundColor = AppColors.koromiko.withOpacity(0.12);
+        break;
+      case "4":
+        status = "Completed";
+        statusTextColor = AppColors.emerald;
+        backgroundColor = AppColors.emerald.withOpacity(0.12);
+        break;
+      default:
+    }
+    return isAddBackground
+        ? Container(
+            width: 62.0,
+            height: 23.0,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              shape: BoxShape.rectangle,
+            ),
+            child: Text(
+              status,
+              softWrap: true,
+              style: TextStyle(
+                fontSize: 12.0,
+                fontWeight: FontWeight.w500,
+                color: statusTextColor,
+              ),
+            ),
+          )
+        : Text(
+            status,
+            style: TextStyle(
+              fontSize: 12.0,
+              fontWeight: FontWeight.w500,
+              color: statusTextColor,
+            ),
+          );
   }
 }

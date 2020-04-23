@@ -102,9 +102,11 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     String name = "---",
         rating = "---",
         professionalTitle = "---",
-        fee = "---",
+        fee = "0.0",
         avatar,
-        address = "---";
+        address = "---",
+        inOfficeFee = "0.0", //TODO: in-office charge
+        officeVisitFee = "0.0";
 
     LatLng latLng;
 
@@ -138,6 +140,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     if (_providerData["doctor"] != null) {
       name = _providerData["doctor"]["fullName"] ?? "---";
       avatar = _providerData["doctor"]["avatar"];
+    }
+
+    if (_providerData["parking"] != null) {
+      officeVisitFee = _providerData["parking"]["fee"] ?? "0.0";
     }
 
     return Column(
@@ -245,30 +251,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
-                      Container(
-                        width: 62.0,
-                        height: 23.0,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: _providerData["status"].toString() == "1"
-                              ? Colors.lightGreen.withOpacity(0.12)
-                              : Colors.red.withOpacity(0.12),
-                          shape: BoxShape.rectangle,
-                        ),
-                        child: Text(
-                          _providerData["status"].toString() == "1"
-                              ? "Completed"
-                              : "Cancelled",
-                          softWrap: true,
-                          style: TextStyle(
-                            fontSize: 12.0,
-                            fontWeight: FontWeight.w500,
-                            color: _providerData["status"].toString() == "1"
-                                ? Colors.lightGreen
-                                : Colors.red,
-                          ),
-                        ),
-                      ),
+                      _providerData["status"].toString()?.appointmentStatus(),
                       SizedBox(height: 5.0),
                       Text(
                         "\$$fee",
@@ -308,6 +291,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             _providerData["toTime"].toString()),
         divider(topPadding: 8.0),
         locationWidget(address, latLng),
+        divider(),
+        feeWidget(fee, officeVisitFee, inOfficeFee),
         divider(),
         paymentWidget("cardNumber"),
         divider(topPadding: 10.0),
@@ -538,6 +523,83 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                 ),
               )
             ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget feeWidget(
+      String generalFee, String officeVisitCharge, String inOfficeCharge) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Consultation Fee Breakdown",
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(height: 18.0),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14.0),
+              border: Border.all(
+                color: Colors.grey[100],
+              ),
+            ),
+            child: Column(
+              children: <Widget>[
+                subFeeWidget("General Medicine Consult", "\$$generalFee"),
+                subFeeWidget("In-office Charge", "\$$inOfficeCharge"),
+                subFeeWidget("Office Visit charge", "\$$officeVisitCharge"),
+                SizedBox(height: 16),
+                Divider(),
+                subFeeWidget(
+                    "Total",
+                    "\$" +
+                        (double.parse(generalFee) +
+                                double.parse(inOfficeCharge) +
+                                double.parse(officeVisitCharge))
+                            .toString()),
+                SizedBox(height: 16),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget subFeeWidget(String title, String fee) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      child: Row(
+        children: <Widget>[
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 14.0,
+              fontWeight: title.toLowerCase().contains("total")
+                  ? FontWeight.w700
+                  : FontWeight.w500,
+              color: Colors.black.withOpacity(0.80),
+            ),
+          ),
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                fee,
+                style: TextStyle(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black.withOpacity(0.80),
+                ),
+              ),
+            ),
           ),
         ],
       ),
