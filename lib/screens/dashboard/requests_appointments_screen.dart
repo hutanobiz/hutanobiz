@@ -142,7 +142,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
         status = "---",
         professionalTitle = "---";
 
-    status = response["status"].toString() ?? "0";
+    status = response["status"].toString();
 
     if (response["type"] != null)
       switch (response["type"]) {
@@ -234,36 +234,37 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                         ),
                         listType == 1
                             ? Text(
-                                "---",
+                                professionalTitle,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   color: Colors.black.withOpacity(0.6),
                                 ),
                               )
-                            : Row(
-                                children: <Widget>[
-                                  Icon(
-                                    status == "1"
-                                        ? Icons.check_circle_outline
-                                        : Icons.error_outline,
-                                    size: 12.0,
-                                    color: status == "1"
-                                        ? Colors.lightGreen
-                                        : Colors.red,
-                                  ),
-                                  SizedBox(width: 4.0),
-                                  Text(
-                                    status == "1" ? "Accepted" : "Rejected",
-                                    style: TextStyle(
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.w500,
-                                      color: status == "1"
-                                          ? Colors.lightGreen
-                                          : Colors.red,
-                                    ),
-                                  )
-                                ],
-                              ),
+                            : status?.appointmentStatus(isAddBackground: false),
+                        // Row(
+                        //     children: <Widget>[
+                        //       Icon(
+                        //         status == "1"
+                        //             ? Icons.check_circle_outline
+                        //             : Icons.error_outline,
+                        //         size: 12.0,
+                        //         color: status == "1"
+                        //             ? Colors.lightGreen
+                        //             : Colors.red,
+                        //       ),
+                        //       SizedBox(width: 4.0),
+                        //       Text(
+                        //         status == "1" ? "Accepted" : "Rejected",
+                        //         style: TextStyle(
+                        //           fontSize: 12.0,
+                        //           fontWeight: FontWeight.w500,
+                        //           color: status == "1"
+                        //               ? Colors.lightGreen
+                        //               : Colors.red,
+                        //         ),
+                        //       )
+                        //     ],
+                        //   ),
                         SizedBox(
                           height: 4.0,
                         ),
@@ -273,7 +274,9 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                                 ? Padding(
                                     padding: const EdgeInsets.only(right: 4.0),
                                     child: Text(
-                                      "$professionalTitle \u2022",
+                                      listType == 2
+                                          ? "$professionalTitle \u2022"
+                                          : "\$$fee",
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         color: Colors.black.withOpacity(0.7),
@@ -286,7 +289,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
-                                color: Colors.black.withOpacity(0.7),
+                                color: Colors.black.withOpacity(0.80),
                               ),
                             ),
                           ],

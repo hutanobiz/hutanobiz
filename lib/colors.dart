@@ -14,4 +14,8 @@ class AppColors {
   static const tundora = Color(0xFF4C4C4C);
   static const persian_blue = Color(0xFF1E36BA);
   static const jade = Color(0xFF00C871);
+  static const alizarin_crimson = Color(0xFFE22D2D);
+  static const koromiko = Color(0xFFFFC059);
+  static const atlantis = Color(0xFF8AD625);
+  static const emerald = Color(0xFF44C963);
 }

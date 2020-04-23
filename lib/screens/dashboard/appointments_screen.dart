@@ -302,30 +302,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                           ? Container()
                           : Align(
                               alignment: Alignment.centerRight,
-                              child: Container(
-                                width: 62.0,
-                                height: 23.0,
-                                alignment: Alignment.center,
-                                padding: const EdgeInsets.fromLTRB(
-                                    0.0, 5.0, 0.0, 5.0),
-                                decoration: BoxDecoration(
-                                  color: status == "1"
-                                      ? Colors.lightGreen.withOpacity(0.12)
-                                      : Colors.red.withOpacity(0.12),
-                                  shape: BoxShape.rectangle,
-                                ),
-                                child: Text(
-                                  status == "1" ? "Completed" : "Cancelled",
-                                  softWrap: true,
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.w500,
-                                    color: status == "1"
-                                        ? Colors.lightGreen
-                                        : Colors.red,
-                                  ),
-                                ),
-                              ),
+                              child: status?.appointmentStatus(),
                             ),
                     ],
                   ),
