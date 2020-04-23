@@ -1,5 +1,11 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:async/async.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
@@ -13,6 +19,8 @@ import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/loading_widget.dart';
 import 'package:hutano/widgets/password_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class Register extends StatefulWidget {
@@ -25,8 +33,6 @@ class Register extends StatefulWidget {
 }
 
 class _SignUpFormState extends State<Register> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -56,6 +62,7 @@ class _SignUpFormState extends State<Register> {
   final GlobalKey<FormFieldState> _emailKey = GlobalKey<FormFieldState>();
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 14.0);
   String email;
+  File profileImage;
   bool isLoading = false;
 
   @override
@@ -117,8 +124,14 @@ class _SignUpFormState extends State<Register> {
     email = widget.args.email;
 
     return Scaffold(
-      body: Form(
-        key: _formKey,
+      body: GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
         child: LoadingView(
           isLoading: isLoading,
           widget: ListView(
@@ -135,10 +148,79 @@ class _SignUpFormState extends State<Register> {
     List<Widget> formWidget = new List();
     formWidget.add(AppLogo());
     formWidget.add(
-      Center(child: Text("Let's start creating your account.")),
+      Center(
+          child: Text(
+        "Let's start creating your account.",
+        style: TextStyle(
+          fontSize: 13.0,
+          fontWeight: FontWeight.w600,
+        ),
+      )),
     );
 
-    formWidget.add(Widgets.sizedBox(height: 60.0));
+    formWidget.add(Widgets.sizedBox(height: 26.0));
+
+    formWidget.add(Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          width: 100.0,
+          height: 100.0,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: Colors.grey[100],
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: Colors.grey[300],
+            ),
+          ),
+          child: profileImage == null
+              ? "ic_profile".imageIcon(
+                  height: 27,
+                  width: 27,
+                )
+              : ClipOval(
+                  child: Image.file(
+                    profileImage,
+                    width: 100.0,
+                    height: 100.0,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+        ),
+        SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Image.asset(
+                "images/ic_upload.png",
+                height: 14.0,
+                width: 17.0,
+                color: AppColors.persian_indigo,
+              ),
+              SizedBox(width: 6),
+              Text(
+                "Upload photo",
+                style: TextStyle(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ).onClick(
+          onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+            showPickerDialog();
+          },
+        )
+      ],
+    ));
+
+    formWidget.add(Widgets.sizedBox(height: 35.0));
 
     formWidget.add(Row(
       children: <Widget>[
@@ -275,8 +357,10 @@ class _SignUpFormState extends State<Register> {
     formWidget.add(Row(
       children: <Widget>[
         Expanded(
-            child: picker(_stateController, "State",
-                () => listBottomDialog(stateList, _stateController))),
+            child: picker(_stateController, "State", () {
+          FocusScope.of(context).requestFocus(FocusNode());
+          listBottomDialog(stateList, _stateController);
+        })),
         SizedBox(width: 20.0),
         Expanded(
           child: TextFormField(
@@ -383,8 +467,10 @@ class _SignUpFormState extends State<Register> {
 
     formWidget.add(Widgets.sizedBox(height: 29.0));
 
-    formWidget.add(picker(_langController, "Primary Language",
-        () => languageBottomDialog(languages, _langController)));
+    formWidget.add(picker(_langController, "Primary Language", () {
+      FocusScope.of(context).requestFocus(FocusNode());
+      languageBottomDialog(languages, _langController);
+    }));
 
     formWidget.add(Widgets.sizedBox(height: 48.0));
 
@@ -396,8 +482,6 @@ class _SignUpFormState extends State<Register> {
           title: "Next",
           onPressed: isValidate()
               ? () {
-                  setLoading(true);
-
                   Map<String, String> loginData = Map();
                   loginData["email"] = email;
                   loginData["type"] = "1";
@@ -418,20 +502,11 @@ class _SignUpFormState extends State<Register> {
                   loginData["language"] = _langController.text;
                   loginData["state"] = stateId;
 
-                  api.register(loginData).then((dynamic response) {
-                    setLoading(false);
-                    SharedPref().saveToken(response[0]["tokens"][0]["token"]);
-                    SharedPref().setValue("fullName", response[0]["fullName"]);
-                    SharedPref().setValue("complete", "0");
-
-                    Widgets.showToast("Profile created successfully");
-
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        Routes.dashboardScreen,
-                        (Route<dynamic> route) => false);
-                  }).futureError((error) {
-                    setLoading(false);
-                  });
+                  if (profileImage != null) {
+                    _register(loginData);
+                  } else {
+                    Widgets.showToast("Please upload your profile pic");
+                  }
                 }
               : null,
         ),
@@ -439,6 +514,125 @@ class _SignUpFormState extends State<Register> {
     );
 
     return formWidget;
+  }
+
+  _register(Map<String, String> loginData) async {
+    try {
+      setLoading(true);
+      Uri uri = Uri.parse("http://139.59.40.62:5300/auth/api/register");
+      http.MultipartRequest request = http.MultipartRequest('POST', uri);
+
+      request.fields.addAll(loginData);
+
+      var stream =
+          http.ByteStream(DelegatingStream.typed(profileImage.openRead()));
+      var length = await profileImage.length();
+
+      request.files.add(http.MultipartFile("avatar", stream, length,
+          filename: profileImage.path));
+
+      http.StreamedResponse response = await request.send();
+      final int statusCode = response.statusCode;
+      log("Status code: $statusCode");
+
+      JsonDecoder _decoder = new JsonDecoder();
+
+      String respStr = await response.stream.bytesToString();
+      var responseJson = _decoder.convert(respStr);
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        setLoading(false);
+        if (responseJson["response"] is String)
+          Widgets.showToast(responseJson["response"]);
+        else if (responseJson["response"] is Map)
+          Widgets.showToast(responseJson);
+        else {
+          responseJson["response"]
+              .map((m) => Widgets.showToast(m.toString()))
+              .toList();
+        }
+
+        responseJson["response"].toString().debugLog();
+        throw Exception(responseJson);
+      } else {
+        responseJson["response"].toString().debugLog();
+
+        SharedPref()
+            .saveToken(responseJson["response"][0]["tokens"][0]["token"]);
+        SharedPref()
+            .setValue("fullName", responseJson["response"][0]["fullName"]);
+        SharedPref().setValue("complete", "0");
+
+        Widgets.showToast("Profile created successfully");
+
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            Routes.dashboardScreen, (Route<dynamic> route) => false);
+
+        setLoading(false);
+      }
+    } on Exception catch (error) {
+      setLoading(false);
+      error.toString().debugLog();
+    }
+  }
+
+  void showPickerDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text("Picker"),
+          content: new Text("Select image picker type."),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Camera"),
+              onPressed: () {
+                getImage(1);
+                Navigator.pop(context);
+              },
+            ),
+            new FlatButton(
+              child: new Text("Gallery"),
+              onPressed: () {
+                getImage(2);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future getImage(int source) async {
+    var image = await ImagePicker.pickImage(
+        source: (source == 1) ? ImageSource.camera : ImageSource.gallery);
+    if (image != null) {
+      File croppedFile = await ImageCropper.cropImage(
+        sourcePath: image.path,
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        androidUiSettings: AndroidUiSettings(
+            toolbarColor: Colors.transparent,
+            toolbarWidgetColor: Colors.transparent,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        iosUiSettings: IOSUiSettings(
+          minimumAspectRatio: 1.0,
+        ),
+      );
+      if (croppedFile == null) {
+      } else {
+        setState(
+          () => profileImage = croppedFile,
+        );
+      }
+    }
   }
 
   Widget picker(final controller, String labelText, onTap) {

@@ -8,4 +8,5 @@ class Strings {
   static const String enterValidPassword = "Password should not be less than 6";
   static const String noInternet = "No Internet connection. Please try again";
   static const String loggedIn = "Logged in successfully";
+  static const String imageUrl = "http://139.59.40.62:5300/uploads/";
 }
