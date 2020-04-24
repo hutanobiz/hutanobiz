@@ -5,6 +5,7 @@ import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
@@ -227,9 +228,9 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
     try {
       SharedPref().getToken().then((token) async {
         setLoading(true);
-        Uri uri = Uri.parse(
-            "http://139.59.40.62:5300/api/patient/appointment-details/" +
-                _container.appointmentIdMap["appointmentId"]);
+        Uri uri = Uri.parse(ApiBaseHelper.base_url +
+            "api/patient/appointment-details/" +
+            _container.appointmentIdMap["appointmentId"]);
         http.MultipartRequest request = http.MultipartRequest('POST', uri);
         request.headers['authorization'] = token;
 

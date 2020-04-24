@@ -519,7 +519,7 @@ class _SignUpFormState extends State<Register> {
   _register(Map<String, String> loginData) async {
     try {
       setLoading(true);
-      Uri uri = Uri.parse("http://139.59.40.62:5300/auth/api/register");
+      Uri uri = Uri.parse(ApiBaseHelper.base_url + "auth/api/register");
       http.MultipartRequest request = http.MultipartRequest('POST', uri);
 
       request.fields.addAll(loginData);
