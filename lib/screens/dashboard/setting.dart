@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/strings.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:package_info/package_info.dart';
@@ -111,7 +110,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                           color: Colors.grey[300],
                         ),
                       ),
-                      child: avatar == null
+                      child: avatar == null || avatar == "null"
                           ? Image(
                               image: AssetImage('images/profile_user.png'),
                               height: 74.0,
@@ -119,7 +118,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                             )
                           : ClipOval(
                               child: Image.network(
-                                Strings.imageUrl + avatar,
+                                ApiBaseHelper.imageUrl + avatar,
                                 width: 76.0,
                                 height: 76.0,
                                 fit: BoxFit.cover,

@@ -11,11 +11,12 @@ import 'package:hutano/widgets/widgets.dart';
 
 class ApiBaseHelper {
   NetworkUtil _netUtil = new NetworkUtil();
-  static const String _base_url = "http://139.59.40.62:5300/";
+  static const String base_url = "http://139.59.40.62:5300/";
+  static const String imageUrl = "http://139.59.40.62:5300/uploads/";
 
   Future<dynamic> login(Map loginData) {
     return _netUtil
-        .post(_base_url + "auth/api/login", body: loginData)
+        .post(base_url + "auth/api/login", body: loginData)
         .then((res) {
       return res["response"];
     });
@@ -23,7 +24,7 @@ class ApiBaseHelper {
 
   Future<dynamic> register(Map<String, String> map) {
     return _netUtil
-        .post(_base_url + "auth/api/register", body: map)
+        .post(base_url + "auth/api/register", body: map)
         .then((res) {
       return (res["response"]);
     });
@@ -31,7 +32,7 @@ class ApiBaseHelper {
 
   Future<dynamic> resetPassword(Map<String, String> map) {
     return _netUtil
-        .post(_base_url + "auth/api/reset-password", body: map)
+        .post(base_url + "auth/api/reset-password", body: map)
         .then((res) {
       return (res["response"]);
     });
@@ -44,7 +45,7 @@ class ApiBaseHelper {
     };
 
     return _netUtil
-        .post(_base_url + "api/profile/update",
+        .post(base_url + "api/profile/update",
             headers: headers, body: json.encode(map))
         .then((res) {
       return res;
@@ -52,7 +53,7 @@ class ApiBaseHelper {
   }
 
   Future<List<dynamic>> getProfessionalTitle() {
-    return _netUtil.get(_base_url + "api/professional-titles").then((res) {
+    return _netUtil.get(base_url + "api/professional-titles").then((res) {
       List responseJson = res["response"];
 
       return responseJson.map((m) => m).toList();
@@ -61,7 +62,7 @@ class ApiBaseHelper {
 
   Future<List<dynamic>> getProfessionalSpecility(Map<String, String> map) {
     return _netUtil
-        .post(_base_url + "api/provider/specialties", body: map)
+        .post(base_url + "api/provider/specialties", body: map)
         .then((res) {
       List responseJson = res["response"];
       return responseJson.map((m) => m).toList();
@@ -69,7 +70,7 @@ class ApiBaseHelper {
   }
 
   Future<List<dynamic>> getStates() {
-    return _netUtil.get(_base_url + "api/states").then((res) {
+    return _netUtil.get(base_url + "api/states").then((res) {
       List responseJson = res["response"];
       return responseJson.map((m) => m).toList();
     });
@@ -77,7 +78,7 @@ class ApiBaseHelper {
 
   Future<dynamic> getProviderList(Map map) {
     return _netUtil
-        .post(_base_url + "api/patient/provider-search", body: map)
+        .post(base_url + "api/patient/provider-search", body: map)
         .then((res) {
       return res;
     });
@@ -86,7 +87,7 @@ class ApiBaseHelper {
   Future<dynamic> getSpecialityProviderList(String query) {
     return _netUtil
         .get(Uri.encodeFull(
-            _base_url + "api/specialty-providers?specialtyId=$query"))
+            base_url + "api/specialty-providers?specialtyId=$query"))
         .then((res) {
       return res;
     });
@@ -94,7 +95,7 @@ class ApiBaseHelper {
 
   Future<List<Schedule>> getScheduleList(String providerId, Map doctorData) {
     return _netUtil
-        .post(Uri.encodeFull(_base_url + "api/provider/schedule/$providerId"),
+        .post(Uri.encodeFull(base_url + "api/provider/schedule/$providerId"),
             body: doctorData)
         .then((res) {
       List responseJson = res["response"];
@@ -108,7 +109,7 @@ class ApiBaseHelper {
     };
 
     return _netUtil
-        .post(_base_url + "api/patient/appointment-booking",
+        .post(base_url + "api/patient/appointment-booking",
             body: appointmentData, headers: headers)
         .then((res) {
       return res;
@@ -118,7 +119,7 @@ class ApiBaseHelper {
   Future<dynamic> getServiceProviderList(String query) {
     return _netUtil
         .get(Uri.encodeFull(
-            _base_url + "api/service-providers?serviceId=$query"))
+            base_url + "api/service-providers?serviceId=$query"))
         .then((res) {
       return res;
     });
@@ -127,7 +128,7 @@ class ApiBaseHelper {
   Future<dynamic> searchDoctors(String string) {
     return _netUtil
         .get(Uri.encodeFull(
-            _base_url + "api/patient/name/specialty/service?search=$string"))
+            base_url + "api/patient/name/specialty/service?search=$string"))
         .then((res) {
       return res["response"];
     });
@@ -139,7 +140,7 @@ class ApiBaseHelper {
     };
 
     return _netUtil
-        .get(_base_url + "api/patient/user-notification", headers: headers)
+        .get(base_url + "api/patient/user-notification", headers: headers)
         .then((res) {
       return res["response"];
     });
@@ -151,7 +152,7 @@ class ApiBaseHelper {
     };
 
     return _netUtil
-        .get(_base_url + "api/patient/user-schedule-appointmnet",
+        .get(base_url + "api/patient/user-schedule-appointmnet",
             headers: headers)
         .then((res) {
       return res["response"];
@@ -164,7 +165,7 @@ class ApiBaseHelper {
     };
     return _netUtil
         .get(
-      Uri.encodeFull(_base_url + "api/patient/doctor-details?id=$providerId"),
+      Uri.encodeFull(base_url + "api/patient/doctor-details?id=$providerId"),
       headers: headers,
     )
         .then((res) {
@@ -179,7 +180,7 @@ class ApiBaseHelper {
     return _netUtil
         .get(
       Uri.encodeFull(
-          _base_url + "api/patient/doctor-appointment-details?id=$providerId"),
+          base_url + "api/patient/doctor-appointment-details?id=$providerId"),
       headers: headers,
     )
         .then((res) {
@@ -193,7 +194,7 @@ class ApiBaseHelper {
     };
 
     return _netUtil
-        .post(_base_url + "api/patient/provider-rating",
+        .post(base_url + "api/patient/provider-rating",
             body: rateDoctorData, headers: headers)
         .then((res) {
       return res["response"];
@@ -206,7 +207,7 @@ class ApiBaseHelper {
     };
 
     return _netUtil
-        .post(_base_url + "api/patient/cancel-request",
+        .post(base_url + "api/patient/cancel-request",
             body: rateDoctorData, headers: headers)
         .then((res) {
       return res["response"];
@@ -214,7 +215,7 @@ class ApiBaseHelper {
   }
 
   Future<List<MedicalHistory>> getDiseases() {
-    return _netUtil.get(_base_url + "api/disease").then((res) {
+    return _netUtil.get(base_url + "api/disease").then((res) {
       List responseJson = res["response"];
       return responseJson.map((m) => MedicalHistory.fromJson(m)).toList();
     });
@@ -226,7 +227,7 @@ class ApiBaseHelper {
     };
     return _netUtil
         .get(
-      _base_url + "api/patient/last-appointment-detail",
+      base_url + "api/patient/last-appointment-detail",
       headers: headers,
     )
         .then((res) {

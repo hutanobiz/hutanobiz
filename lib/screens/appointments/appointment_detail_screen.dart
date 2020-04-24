@@ -97,7 +97,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     Map _providerData = _data["data"];
 
     _container.getProviderData().clear();
-    _container.setProviderData("providerData", _providerData);
+    _container.setProviderData("providerData", _data);
 
     String name = "---",
         rating = "---",
@@ -159,8 +159,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                 height: 62.0,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage(
-                        avatar ?? 'http://i.imgur.com/QSev0hg.jpg'),
+                    image: NetworkImage(avatar == null || avatar == "null"
+                        ? 'http://i.imgur.com/QSev0hg.jpg'
+                        : ApiBaseHelper.imageUrl + avatar),
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.all(Radius.circular(50.0)),
