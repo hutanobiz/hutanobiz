@@ -117,7 +117,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                           .pushNamed(Routes.appointmentTypeScreen);
                     else
                       Navigator.of(context)
-                          .pushNamed(Routes.selectAppointmentTimeScreen);
+                          .pushNamed(Routes.selectServicesScreen);
                   },
                 ),
               ),

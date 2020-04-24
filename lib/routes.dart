@@ -10,6 +10,7 @@ import 'package:hutano/screens/appointments/upload_documents.dart';
 import 'package:hutano/screens/appointments/upload_images.dart';
 import 'package:hutano/screens/book_appointment/review_appointment.dart';
 import 'package:hutano/screens/book_appointment/select_appointment_time_screen.dart';
+import 'package:hutano/screens/book_appointment/select_services.dart';
 import 'package:hutano/screens/dashboard/appointment_for.dart';
 import 'package:hutano/screens/dashboard/appointment_type_screen.dart';
 import 'package:hutano/screens/dashboard/choose_location_screen.dart';
@@ -60,6 +61,7 @@ class Routes {
   static const String uploadImagesScreen = '/uploadImagesScreen';
   static const String uploadDocumentsScreen = '/uploadDocumentsScreen';
   static const String savedCardsScreen = '/savedCardsScreen';
+  static const String selectServicesScreen = '/selectServicesScreen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -172,6 +174,9 @@ class Routes {
         break;
       case savedCardsScreen:
         return _buildRoute(settings, SavedCardsScreen());
+        break;
+      case selectServicesScreen:
+        return _buildRoute(settings, SelectServicesScreen());
         break;
       default:
         return _errorRoute();

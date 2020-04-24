@@ -18,6 +18,20 @@ class ProviderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String fee = "---";
+
+    if (data["consultanceFee"] != null) {
+      for (dynamic consultanceFee in data["consultanceFee"]) {
+        fee = consultanceFee["fee"].toString() ?? "---";
+      }
+    } else if (data["userId"] != null) {
+      if (data["userId"]["consultanceFee"] != null) {
+        for (dynamic consultanceFee in data["userId"]["consultanceFee"]) {
+          fee = consultanceFee["fee"].toString() ?? "---";
+        }
+      }
+    }
+
     return Container(
       margin: const EdgeInsets.only(bottom: 22.0),
       decoration: BoxDecoration(
@@ -79,7 +93,7 @@ class ProviderWidget extends StatelessWidget {
                                 width: 2,
                               ),
                               Text(
-                                "0.0",
+                                "--- \u2022", //TODO: rating
                                 style: TextStyle(
                                   color: Colors.black.withOpacity(0.6),
                                 ),
@@ -88,7 +102,7 @@ class ProviderWidget extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   data['supervising']['professionalTitle'] ??
-                                      "----",
+                                      "----", //TODO professionalTitle
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     color: Colors.black.withOpacity(0.6),
@@ -132,7 +146,7 @@ class ProviderWidget extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 5.0),
                   child: Text(
-                    "\$120",
+                    "\$$fee",
                     style: TextStyle(
                       fontSize: 22.0,
                       fontWeight: FontWeight.w700,
@@ -187,7 +201,7 @@ class ProviderWidget extends StatelessWidget {
                     ),
                     SizedBox(width: 5.0),
                     Text(
-                      "0.0 miles",
+                      "--- miles", //TODO: distance
                       style: TextStyle(
                         color: Colors.black.withOpacity(0.5),
                       ),

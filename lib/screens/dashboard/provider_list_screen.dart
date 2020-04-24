@@ -187,7 +187,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                 Navigator.of(context).pushNamed(Routes.appointmentTypeScreen);
               else
                 Navigator.of(context)
-                    .pushNamed(Routes.selectAppointmentTimeScreen);
+                    .pushNamed(Routes.selectServicesScreen);
             },
           ),
         );
