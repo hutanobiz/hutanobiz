@@ -3,13 +3,13 @@ import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/models/schedule.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
 import 'package:hutano/widgets/scrolling_day_calendar_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
-import 'package:hutano/utils/extensions.dart';
 
 class SelectAppointmentTimeScreen extends StatefulWidget {
   @override
@@ -76,7 +76,7 @@ class _SelectAppointmentTimeScreenState
             _container.setAppointmentData("date", _selectedDate);
             _container.setAppointmentData("time", _selectedTiming);
 
-            Navigator.of(context).pushNamed(Routes.appointmentForScreen);
+            Navigator.of(context).pushNamed(Routes.reviewAppointmentScreen);
           } else {
             Widgets.showToast("Please select a timing");
           }
