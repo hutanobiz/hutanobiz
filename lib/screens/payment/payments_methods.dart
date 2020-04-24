@@ -13,6 +13,8 @@ class PaymentMethodScreen extends StatefulWidget {
 }
 
 class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
+  int _radioValue = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,7 +71,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
     _widgetList.add(paymentCard(
       "ic_dummy_card",
       "**** ***** **** 2563",
-      (value) {},
+      1,
     ));
 
     _widgetList.add(SizedBox(height: 14.0));
@@ -81,13 +83,13 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
     _widgetList.add(paymentCard(
       "ic_cash_payment",
       "Cash/Check",
-      (value) {},
+      2,
     ));
 
     return _widgetList;
   }
 
-  Widget paymentCard(String imageIcon, String title, Function onChanged) {
+  Widget paymentCard(String imageIcon, String title, int value) {
     return Container(
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
@@ -132,10 +134,10 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
               alignment: Alignment.centerRight,
               child: Radio(
                 activeColor: AppColors.persian_blue,
-                value: false,
-                groupValue: true,
+                value: value,
+                groupValue: _radioValue,
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                onChanged: onChanged,
+                onChanged: _handleRadioValueChange,
               ),
             ),
           )
@@ -160,5 +162,18 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         ),
       ),
     );
+  }
+
+  void _handleRadioValueChange(int value) {
+    setState(() {
+      _radioValue = value;
+
+      switch (_radioValue) {
+        case 1:
+          break;
+        case 2:
+          break;
+      }
+    });
   }
 }
