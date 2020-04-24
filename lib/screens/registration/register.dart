@@ -698,6 +698,7 @@ class _SignUpFormState extends State<Register> {
         context: context,
         builder: (context) {
           return ListView.builder(
+            shrinkWrap: true,
             itemCount: list.length,
             itemBuilder: (context, index) {
               return ListTile(
