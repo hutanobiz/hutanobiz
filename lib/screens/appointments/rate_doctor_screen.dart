@@ -62,7 +62,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
     _providerMap = _container.getProviderData();
 
     _ratingText =
-        "How was your experience with ${_providerMap['providerData']["doctor"]["fullName"]}?";
+        "How was your experience with ${_providerMap['providerData']["data"]["doctor"]["fullName"]}?";
 
     rateMap["appointment"] = _container.appointmentIdMap["appointmentId"];
   }
@@ -95,19 +95,43 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                   title: "Submit",
                   onPressed: rateMap.length >= 5
                       ? () {
+                          List reasonList = List();
+                          if (_doctorFriendliness) {
+                            reasonList.add("1");
+                          }
+                          if (_responseTime) {
+                            reasonList.add("2");
+                          }
+                          if (_doctorAdvise) {
+                            reasonList.add("3");
+                          }
+                          if (_easeOfScheduling) {
+                            reasonList.add("4");
+                          }
+                          if (_staffFriendliness) {
+                            reasonList.add("5");
+                          }
+
+                          if (reasonList != null || reasonList.length > 0) {
+                            for (var i = 0; i < reasonList.length; i++) {
+                              rateMap["reason[$i]"] = reasonList[i];
+                            }
+                          }
+
                           setState(() => _isLoading = true);
 
                           SharedPref().getToken().then((token) {
                             api.rateDoctor(token, rateMap).then((response) {
                               setState(() => _isLoading = false);
 
-                              Widgets.showToast("Rated doctor successfully");
-                            }).futureError((onError) =>
-                                setState(() => _isLoading = false));
+                              Widgets.showToast(response.toString());
 
-                            //TODO: add doctor friendliness, etc checkboxes values to api
-                          }).futureError(
-                              (onError) => onError.toString().debugLog());
+                              Widgets.showToast("Rated doctor successfully");
+                            }).futureError((onError) {
+                              setState(() => _isLoading = false);
+                              onError.toString().debugLog();
+                            });
+                          });
                         }
                       : null,
                 ),
@@ -176,6 +200,22 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
   }
 
   Widget profileWidget(Map _providerData) {
+    String name = "---", avatar = "---", professionalTitle = "---";
+    Map _dataMap = _providerData['providerData']["data"];
+
+    if (_dataMap["doctor"] != null) {
+      name = _dataMap["doctor"]["fullName"] ?? "---";
+      avatar = _dataMap["doctor"]["avatar"];
+    }
+
+    if (_providerData["doctorData"] != null) {
+      for (dynamic detail in _providerData["doctorData"]) {
+        if (detail["averageRating"] != null) if (detail["professionalTitle"] !=
+            null) {
+          professionalTitle = detail["professionalTitle"]["title"] ?? "---";
+        }
+      }
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -187,7 +227,9 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
               height: 62.0,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage('http://i.imgur.com/QSev0hg.jpg'),
+                  image: NetworkImage(avatar == null || avatar == "null"
+                      ? 'http://i.imgur.com/QSev0hg.jpg'
+                      : (ApiBaseHelper.imageUrl + avatar)),
                   fit: BoxFit.cover,
                 ),
                 borderRadius: BorderRadius.all(Radius.circular(50.0)),
@@ -204,7 +246,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    _providerData["providerData"]["doctor"]["fullName"],
+                    name,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 14.0,
@@ -244,7 +286,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                     borderRadius: BorderRadius.circular(9.0),
                   ),
                   child: Text(
-                    "Internist", //TODO: provider professional title
+                    professionalTitle,
                     style: TextStyle(
                       fontSize: 12.0,
                       fontWeight: FontWeight.w500,
