@@ -124,9 +124,9 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                             api.rateDoctor(token, rateMap).then((response) {
                               setState(() => _isLoading = false);
 
-                              Widgets.showToast(response.toString());
-
                               Widgets.showToast("Rated doctor successfully");
+
+                              Navigator.of(context).pop();
                             }).futureError((onError) {
                               setState(() => _isLoading = false);
                               onError.toString().debugLog();
