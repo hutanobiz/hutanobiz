@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/loading_background.dart';
-import 'package:hutano/utils/extensions.dart';
 
 class PaymentMethodScreen extends StatefulWidget {
   PaymentMethodScreen({Key key}) : super(key: key);
@@ -78,7 +78,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
     _widgetList.add(addCard());
 
-    _widgetList.add(SizedBox(height: 40.0));
+    _widgetList.add(SizedBox(height: 14.0));
 
     _widgetList.add(paymentCard(
       "ic_cash_payment",
