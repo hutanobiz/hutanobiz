@@ -398,6 +398,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                       : Container(),
               listType == 2 && status == "1"
                   ? rightButton(listType, response, "Rate Now", () {
+                      _container.setProviderData("providerData", response);
                       _container.setAppointmentId(response["_id"].toString());
                       Navigator.of(context).pushNamed(Routes.rateDoctorScreen);
                     })
