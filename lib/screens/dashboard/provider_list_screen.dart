@@ -156,6 +156,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
 
   Widget _listWidget(Map degreeMap, List _responseData) {
     return ListView.builder(
+      padding: const EdgeInsets.only(bottom: 50),
       itemCount: _responseData.length,
       itemBuilder: (context, index) {
         List educatonList = _responseData[index]["education"];
@@ -186,8 +187,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                   _containerMap.containsKey("serviceId"))
                 Navigator.of(context).pushNamed(Routes.appointmentTypeScreen);
               else
-                Navigator.of(context)
-                    .pushNamed(Routes.selectServicesScreen);
+                Navigator.of(context).pushNamed(Routes.selectServicesScreen);
             },
           ),
         );
