@@ -23,9 +23,7 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> register(Map<String, String> map) {
-    return _netUtil
-        .post(base_url + "auth/api/register", body: map)
-        .then((res) {
+    return _netUtil.post(base_url + "auth/api/register", body: map).then((res) {
       return (res["response"]);
     });
   }
@@ -118,8 +116,8 @@ class ApiBaseHelper {
 
   Future<dynamic> getServiceProviderList(String query) {
     return _netUtil
-        .get(Uri.encodeFull(
-            base_url + "api/service-providers?serviceId=$query"))
+        .get(
+            Uri.encodeFull(base_url + "api/service-providers?serviceId=$query"))
         .then((res) {
       return res;
     });
@@ -159,14 +157,10 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> getProviderProfile(String token, String providerId) {
-    Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
-    };
+  Future<dynamic> getProviderProfile(String providerId) {
     return _netUtil
         .get(
       Uri.encodeFull(base_url + "api/patient/doctor-details?id=$providerId"),
-      headers: headers,
     )
         .then((res) {
       return res["response"];

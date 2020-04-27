@@ -3,7 +3,6 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
@@ -30,14 +29,10 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     Map _providerData = _container.providerIdMap;
     _containerMap = _container.getProjectsResponse();
 
-    SharedPref().getToken().then((token) {
-      ApiBaseHelper api = ApiBaseHelper();
+    ApiBaseHelper api = ApiBaseHelper();
 
-      setState(() {
-        _profileFuture =
-            api.getProviderProfile(token, _providerData["providerId"]);
-      });
-    });
+    _profileFuture =
+        api.getProviderProfile(_providerData["providerId"]);
 
     super.didChangeDependencies();
   }
