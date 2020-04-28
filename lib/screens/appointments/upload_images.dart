@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:async/async.dart';
@@ -197,9 +198,11 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
 
   Future getImage(int source) async {
     var image = await ImagePicker.pickImage(
+        imageQuality: 25,
         source: (source == 1) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
       croppedFile = await ImageCropper.cropImage(
+        compressQuality: 25,
         sourcePath: image.path,
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
@@ -219,6 +222,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
       );
       if (croppedFile == null) {
       } else {
+        log(image.lengthSync().toString());
         setState(() => imagesList.add(image.path));
       }
     }

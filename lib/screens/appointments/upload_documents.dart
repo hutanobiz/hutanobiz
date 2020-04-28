@@ -220,9 +220,9 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
     try {
       SharedPref().getToken().then((token) async {
         setLoading(true);
-        Uri uri = Uri.parse(
-            ApiBaseHelper.base_url+"api/patient/appointment-details/" +
-                _container.appointmentIdMap["appointmentId"]);
+        Uri uri = Uri.parse(ApiBaseHelper.base_url +
+            "api/patient/appointment-details/" +
+            _container.appointmentIdMap["appointmentId"]);
         http.MultipartRequest request = http.MultipartRequest('POST', uri);
         request.headers['authorization'] = token;
 
@@ -321,9 +321,11 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
 
   Future getImage(int source) async {
     var image = await ImagePicker.pickImage(
+        imageQuality: 25,
         source: (source == 1) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
       croppedFile = await ImageCropper.cropImage(
+        compressQuality: 25,
         sourcePath: image.path,
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
