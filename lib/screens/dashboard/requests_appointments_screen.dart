@@ -289,7 +289,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                                 : Container(),
                             Expanded(
                               child: Text(
-                                "\u2022 \$$fee",
+                                "\$$fee",
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
