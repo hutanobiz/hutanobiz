@@ -147,18 +147,20 @@ class _SelectAppointmentTimeScreenState
               _afternoonList.clear();
               _scheduleList = snapshot.data;
 
-              _scheduleList.forEach((schedule) {
+              for (Schedule schedule in _scheduleList) {
                 int prefixValue =
                     int.parse(schedule.startTime.toString().substring(0, 2));
 
-                if (prefixValue < 12) {
-                  _morningList.add(schedule);
-                } else if (12 <= prefixValue && prefixValue < 18) {
-                  _afternoonList.add(schedule);
-                } else if (prefixValue > 18) {
-                  _eveningList.add(schedule);
+                if (DateTime.now().hour < prefixValue) {
+                  if (prefixValue < 12) {
+                    _morningList.add(schedule);
+                  } else if (12 <= prefixValue && prefixValue < 18) {
+                    _afternoonList.add(schedule);
+                  } else if (prefixValue > 18) {
+                    _eveningList.add(schedule);
+                  }
                 }
-              });
+              }
 
               return Column(
                 children: <Widget>[
@@ -226,7 +228,7 @@ class _SelectAppointmentTimeScreenState
                   scrollDirection: Axis.horizontal,
                   itemCount: list.length,
                   itemBuilder: (context, index) {
-                    return _slotWidget(index, list, list[index]);
+                    return _slotWidget(list[index]);
                   })
               : Text("NO slots available"),
         )
@@ -234,36 +236,25 @@ class _SelectAppointmentTimeScreenState
     );
   }
 
-  Widget _slotWidget(
-      int index, List<Schedule> _scheduleList, Schedule schedule) {
+  Widget _slotWidget(Schedule currentSchedule) {
     String timing = TimeOfDay(
-            hour: int.parse(schedule.startTime.toString().substring(0, 2)),
-            minute: int.parse(schedule.startTime.toString().substring(2)))
+            hour: int.parse(currentSchedule.startTime.toString().substring(0, 2)),
+            minute: int.parse(currentSchedule.startTime.toString().substring(2)))
         .format(context)
         .toString()
         .toLowerCase();
 
     return InkWell(
-      onTap: schedule.isBlock
+      onTap: currentSchedule.isBlock
           ? null
           : () {
-              _morningList.forEach((f) => f.isSelected = false);
-              _eveningList.forEach((f) => f.isSelected = false);
-              _afternoonList.forEach((f) => f.isSelected = false);
+              _scheduleList.forEach((f) => f.isSelected = false);
 
-              for (int i = 0; i < _scheduleList.length; i++) {
-                if (i == index) {
-                  setState(() {
-                    _scheduleList[i].isSelected = true;
-                  });
-                } else {
-                  setState(() {
-                    _scheduleList[i].isSelected = false;
-                  });
-                }
-              }
+              setState(() {
+                currentSchedule.isSelected = true;
+              });
 
-              _selectedTiming = schedule.startTime.toString();
+              _selectedTiming = currentSchedule.startTime.toString();
             },
       child: Container(
         alignment: Alignment.center,
@@ -271,12 +262,12 @@ class _SelectAppointmentTimeScreenState
         padding: const EdgeInsets.all(12.0),
         decoration: BoxDecoration(
           color:
-              schedule.isBlock ? Colors.grey.withOpacity(0.05) : AppColors.snow,
+              currentSchedule.isBlock ? Colors.grey.withOpacity(0.05) : AppColors.snow,
           borderRadius: BorderRadius.all(Radius.circular(14.0)),
           border: Border.all(
-              color: schedule.isBlock
+              color: currentSchedule.isBlock
                   ? Colors.grey.withOpacity(0.05)
-                  : (schedule.isSelected
+                  : (currentSchedule.isSelected
                       ? AppColors.windsor
                       : Colors.grey[300]),
               width: 0.5),
@@ -284,7 +275,7 @@ class _SelectAppointmentTimeScreenState
         child: Text(
           timing,
           style: TextStyle(
-            color: schedule.isBlock
+            color: currentSchedule.isBlock
                 ? Colors.grey.withOpacity(0.6)
                 : AppColors.windsor,
           ),
