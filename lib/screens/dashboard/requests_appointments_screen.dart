@@ -271,25 +271,30 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                         Row(
                           children: <Widget>[
                             listType == 2
-                                ? Padding(
-                                    padding: const EdgeInsets.only(right: 4.0),
-                                    child: Text(
-                                      listType == 2
-                                          ? "$professionalTitle \u2022"
-                                          : "\$$fee",
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        color: Colors.black.withOpacity(0.7),
+                                ? Expanded(
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 4.0),
+                                      child: Text(
+                                        listType == 2
+                                            ? "$professionalTitle"
+                                            : "\$$fee",
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: Colors.black.withOpacity(0.7),
+                                        ),
                                       ),
                                     ),
                                   )
                                 : Container(),
-                            Text(
-                              "\$$fee",
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black.withOpacity(0.80),
+                            Expanded(
+                              child: Text(
+                                "\u2022 \$$fee",
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black.withOpacity(0.80),
+                                ),
                               ),
                             ),
                           ],
