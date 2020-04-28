@@ -41,16 +41,21 @@ class LoadingBackground extends StatelessWidget {
             children: <Widget>[
               isAddAppBar
                   ? Padding(
-                      padding: const EdgeInsets.fromLTRB(21.0, 27.0, 0.0, 27.0),
+                      padding: isAddBack
+                          ? const EdgeInsets.fromLTRB(11.0, 17.0, 0.0, 17.0)
+                          : const EdgeInsets.fromLTRB(21.0, 27.0, 0.0, 27.0),
                       child: Row(
                         children: <Widget>[
                           isAddBack
                               ? InkWell(
                                   customBorder: CircleBorder(),
-                                  child: Icon(
-                                    Icons.arrow_back_ios,
-                                    size: 15.0,
-                                    color: Colors.black,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Icon(
+                                      Icons.arrow_back_ios,
+                                      size: 15.0,
+                                      color: Colors.black,
+                                    ),
                                   ),
                                   onTap: () => Navigator.pop(context),
                                 )
