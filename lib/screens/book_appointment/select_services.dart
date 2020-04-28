@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
+import 'package:hutano/widgets/widgets.dart';
 
 class SelectServicesScreen extends StatefulWidget {
   @override
@@ -16,11 +20,19 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
   InheritedContainerState _container;
 
   int _radioValue = 0;
+  List<Services> servicesList;
 
   @override
   void didChangeDependencies() {
     _container = InheritedContainer.of(context);
     _providerData = _container.getProviderData();
+
+    if (_providerData["providerData"]["subServices"] != null ||
+        _providerData["providerData"]["subServices"].length > 0) {
+      List _serviceList = _providerData["providerData"]["subServices"];
+
+      servicesList = _serviceList.map((m) => Services.fromJson(m)).toList();
+    }
 
     super.didChangeDependencies();
   }
@@ -40,7 +52,21 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
           children: widgetList(),
         ),
         onForwardTap: () {
-          Navigator.of(context).pushNamed(Routes.selectAppointmentTimeScreen);
+          if (_radioValue == 1) {
+            int totalDuration = 0;
+            for (Services services in servicesList) {
+              if (services.isSelected) {
+                totalDuration += services.duration;
+                Navigator.of(context)
+                    .pushNamed(Routes.selectAppointmentTimeScreen);
+              } else {
+                Widgets.showToast("Please choose at least one service");
+              }
+            }
+
+            log((totalDuration / 60).toString());
+          } else
+            Navigator.of(context).pushNamed(Routes.selectAppointmentTimeScreen);
         },
       ),
     );
@@ -146,7 +172,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
 
   Widget servicesWidget() {
     return Container(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(2.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14.0),
@@ -154,57 +180,140 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
           color: Colors.grey[100],
         ),
       ),
-      child: Row(
+      child: Column(
         children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                "Services",
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              SizedBox(height: 7),
-              Text(
-                "Choose offered services",
-                style: TextStyle(
-                  fontSize: 13.0,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Radio(
-                activeColor: AppColors.persian_blue,
-                groupValue: _radioValue,
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                value: 1,
-                onChanged: _handleRadioValueChange,
-              ),
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: _radioValue == 0 ? Colors.white : Colors.grey[100],
+              borderRadius: BorderRadius.circular(14.0),
             ),
-          )
+            child: Row(
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      "Services",
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SizedBox(height: 7),
+                    Text(
+                      "Choose offered services",
+                      style: TextStyle(
+                        fontSize: 13.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Radio(
+                      activeColor: AppColors.persian_blue,
+                      groupValue: _radioValue,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      value: 1,
+                      onChanged: _handleRadioValueChange,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          _radioValue == 0
+              ? Container()
+              : ListView.separated(
+                  separatorBuilder: (BuildContext context, int index) =>
+                      Divider(),
+                  physics: ClampingScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: servicesList.length ?? 0,
+                  itemBuilder: (context, index) {
+                    if (servicesList != null && servicesList.length > 0) {
+                      Services services = servicesList[index];
+                      return serviceSlotWidget(services);
+                    }
+
+                    return Container();
+                  }),
         ],
       ),
     );
   }
 
-  void _handleRadioValueChange(int value) {
-    setState(() {
-      _radioValue = value;
+  Widget serviceSlotWidget(Services services) {
+    return CheckboxListTile(
+      dense: false,
+      controlAffinity: ListTileControlAffinity.trailing,
+      value: services.isSelected,
+      activeColor: AppColors.goldenTainoi,
+      onChanged: (value) {
+        setState(() {
+          services.isSelected = value;
+        });
+      },
+      title: Text(
+        services.serviceName ?? "---",
+        style: TextStyle(
+          fontSize: 14.0,
+          fontWeight: FontWeight.w600,
+          color: Colors.black,
+        ),
+      ),
+      subtitle: RichText(
+        text: TextSpan(
+          style: TextStyle(
+            fontSize: 13.0,
+            color: Colors.black,
+            fontWeight: FontWeight.w400,
+          ),
+          children: <TextSpan>[
+            TextSpan(
+              text: 'Amount \$ ',
+              style: TextStyle(
+                fontSize: 13.0,
+                fontWeight: FontWeight.w500,
+                color: Colors.black.withOpacity(0.85),
+              ),
+            ),
+            TextSpan(
+              text: '${services.amount} \u2022 ',
+              style: TextStyle(
+                fontSize: 13.0,
+                fontWeight: FontWeight.w600,
+                color: Colors.black.withOpacity(0.85),
+              ),
+            ),
+            TextSpan(
+              text: 'Duration ',
+              style: TextStyle(
+                fontSize: 13.0,
+                fontWeight: FontWeight.w500,
+                color: Colors.black.withOpacity(0.85),
+              ),
+            ),
+            TextSpan(
+              text: '${services.duration} min',
+              style: TextStyle(
+                fontSize: 13.0,
+                fontWeight: FontWeight.w600,
+                color: Colors.black.withOpacity(0.85),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-      switch (_radioValue) {
-        case 0:
-          break;
-        case 1:
-          break;
-      }
-    });
+  void _handleRadioValueChange(int value) {
+    setState(() => _radioValue = value);
   }
 }
