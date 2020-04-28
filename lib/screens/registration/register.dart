@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:async/async.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
@@ -134,7 +135,7 @@ class _SignUpFormState extends State<Register> {
         },
         child: LoadingView(
           isLoading: isLoading,
-          widget: ListView(
+          child: ListView(
             children: getFormWidget(),
             padding: const EdgeInsets.fromLTRB(
                 Dimens.padding, 51.0, Dimens.padding, Dimens.padding),
@@ -364,6 +365,9 @@ class _SignUpFormState extends State<Register> {
         SizedBox(width: 20.0),
         Expanded(
           child: TextFormField(
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(5),
+            ],
             controller: _zipController,
             decoration: InputDecoration(
               labelText: "Zip Code",
@@ -733,8 +737,12 @@ class _SignUpFormState extends State<Register> {
         _addressController.text.isEmpty ||
         _cityController.text.isEmpty ||
         _stateController.text.isEmpty ||
+        _genderGroup.isEmpty ||
         _zipController.text.isEmpty ||
-        _langController.text.isEmpty)
+        (_langController.text.isEmpty ||
+            _langController.text == "Select Primary Language"))
+      return false;
+    else if (_zipController.text.length != 5)
       return false;
     else if (_passwordController.text.length < 6)
       return false;
