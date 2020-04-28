@@ -157,7 +157,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                 borderRadius: BorderRadius.circular(16.0),
                 child: Image.file(
                   File(content),
-                  fit: BoxFit.fill,
+                  fit: BoxFit.cover,
                 ),
               ),
               Padding(

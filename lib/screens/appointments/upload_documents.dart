@@ -131,7 +131,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                       ? "ic_pdf".imageIcon()
                       : Image.file(
                           File(content.path),
-                          fit: BoxFit.fill,
+                          fit: BoxFit.cover,
                         ),
                 ),
                 Padding(

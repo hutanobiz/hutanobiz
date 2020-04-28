@@ -185,7 +185,7 @@ class _SignUpFormState extends State<Register> {
                     profileImage,
                     width: 100.0,
                     height: 100.0,
-                    fit: BoxFit.fill,
+                    fit: BoxFit.cover,
                   ),
                 ),
         ),
