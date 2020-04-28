@@ -1,14 +1,13 @@
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/widgets/fancy_button.dart';
-import 'package:location/location.dart' as locationn;
 
 const kGoogleApiKey = "AIzaSyAkq7DnUBTkddWXddoHAX02Srw6570ktx8";
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -23,24 +22,23 @@ class ChooseLocationScreen extends StatefulWidget {
   _ChooseLocationScreenState createState() => _ChooseLocationScreenState();
 }
 
-class _ChooseLocationScreenState extends State<ChooseLocationScreen>
-    with AutomaticKeepAliveClientMixin<ChooseLocationScreen> {
+class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
   Completer<GoogleMapController> _controller = Completer();
   TextEditingController _addressController = TextEditingController();
-  CameraPosition _myLocation = CameraPosition(
-    target: LatLng(28.0, 73.0),
-  );
+  CameraPosition _myLocation;
   GoogleMapController controller;
 
   @override
   void initState() {
     super.initState();
-    _currentLocation();
+
+    _myLocation = CameraPosition(
+      target: LatLng(widget.latLng.latitude, widget.latLng.longitude),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -171,26 +169,28 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen>
     );
   }
 
-  // getLocationAddress(aa) async {
-  //   final coordinates = new Coordinates(aa.latitude, aa.longitude);
-  //   var addresses =
-  //       await Geocoder.local.findAddressesFromCoordinates(coordinates);
-  //   var first = addresses.first;
-  //   _addressController.text =
-  //       ' ${first.locality}, ${first.adminArea},${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}';
-
-  //   return first;
-  // }
-
   getLocationAddress(latitude, longitude) async {
     try {
       var addresses =
           await Geolocator().placemarkFromCoordinates(latitude, longitude);
 
       var first = addresses.first;
+      String address;
 
-      _addressController.text =
-          '${first.name}, ${first.subLocality}, ${first.locality}, ${first.administrativeArea}';
+      if (first.name.isNotEmpty) {
+        address = "${first.name.trim()}";
+      }
+      if (first.subLocality.isNotEmpty) {
+        address += ", ${first.subLocality.trim()}";
+      }
+      if (first.locality.isNotEmpty) {
+        address += ", ${first.locality.trim()}";
+      }
+      if (first.administrativeArea.isNotEmpty) {
+        address += ", ${first.administrativeArea.trim()}";
+      }
+
+      _addressController.text = address;
     } on PlatformException catch (e) {
       print(e.message.toString() ?? e.toString());
     }
@@ -214,25 +214,6 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen>
         );
       });
     }
-  }
-
-  void _currentLocation() async {
-    controller = await _controller.future;
-    locationn.LocationData currentLocation;
-    var location = new locationn.Location();
-    try {
-      currentLocation = await location.getLocation();
-    } on Exception {
-      currentLocation = null;
-    }
-
-    controller.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(
-        bearing: 0,
-        target: LatLng(currentLocation.latitude, currentLocation.longitude),
-        zoom: 17.0,
-      ),
-    ));
   }
 
   Future<void> _handlePressButton() async {
@@ -259,7 +240,4 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen>
           _myLocation.target.latitude, _myLocation.target.longitude);
     }
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
