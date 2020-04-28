@@ -31,7 +31,6 @@ class _LoginState extends State<LoginScreen> {
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
 
   bool checked = false;
   bool _obscureText = true;
@@ -64,18 +63,13 @@ class _LoginState extends State<LoginScreen> {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       key: _scaffoldKey,
-      body: SafeArea(
-        child: Form(
-          key: _formKey,
-          child: LoadingView(
-            isLoading: isLoading,
-            widget: ListView(
-              physics: new ClampingScrollPhysics(),
-              padding: const EdgeInsets.fromLTRB(
-                  Dimens.padding, 51.0, Dimens.padding, Dimens.padding),
-              children: widgetList(),
-            ),
-          ),
+      body: LoadingView(
+        isLoading: isLoading,
+        child: ListView(
+          physics: new ClampingScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(
+              Dimens.padding, 51.0, Dimens.padding, Dimens.padding),
+          children: widgetList(),
         ),
       ),
     );
@@ -135,8 +129,6 @@ class _LoginState extends State<LoginScreen> {
       title: Strings.logIn,
       onPressed: isButtonEnable()
           ? () {
-              _formKey.currentState.save();
-
               loginData["email"] = _emailController.text.toString();
               loginData["password"] = _passwordController.text.toString();
               loginData["type"] = "1";

@@ -5,8 +5,10 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/dimens.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/app_logo.dart';
 import 'package:hutano/widgets/fancy_button.dart';
+import 'package:hutano/widgets/loading_widget.dart';
 import 'package:hutano/widgets/password_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 
@@ -27,7 +29,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   final _passwordController = TextEditingController();
   final _confirmPassController = TextEditingController();
 
-  bool _obscureText = true;
+  bool _obscureText = true, _confirmObscureText = true;
   bool isLoading = false;
 
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 14.0);
@@ -58,12 +60,15 @@ class _ResetPasswordState extends State<ResetPassword> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Form(
-          child: ListView(
-            children: getFormWidget(),
-            padding: const EdgeInsets.fromLTRB(
-                Dimens.padding, 51.0, Dimens.padding, Dimens.padding),
+      body: LoadingView(
+        isLoading: isLoading,
+        child: ListView(
+          children: getFormWidget(),
+          padding: const EdgeInsets.fromLTRB(
+            Dimens.padding,
+            51.0,
+            Dimens.padding,
+            Dimens.padding,
           ),
         ),
       ),
@@ -120,7 +125,7 @@ class _ResetPasswordState extends State<ResetPassword> {
 
     formWidget.add(PasswordTextField(
       passwordKey: _confirmPassKey,
-      obscureText: _obscureText,
+      obscureText: _confirmObscureText,
       labelText: "Confirm Password",
       passwordController: _confirmPassController,
       style: style,
@@ -129,10 +134,11 @@ class _ResetPasswordState extends State<ResetPassword> {
         dragStartBehavior: DragStartBehavior.down,
         onTap: () {
           setState(() {
-            _obscureText = !_obscureText;
+            _confirmObscureText = !_confirmObscureText;
           });
         },
-        child: Icon(_obscureText ? Icons.visibility : Icons.visibility_off,
+        child: Icon(
+            _confirmObscureText ? Icons.visibility : Icons.visibility_off,
             color: Colors.grey),
       ),
     ));
@@ -144,16 +150,23 @@ class _ResetPasswordState extends State<ResetPassword> {
         title: "Next",
         onPressed: isButtonEnable()
             ? () {
+                setLoading(true);
+
                 ApiBaseHelper api = new ApiBaseHelper();
                 Map<String, String> loginData = Map();
                 loginData["email"] = email;
                 loginData["step"] = "3";
                 loginData["password"] = _passwordController.text;
                 api.resetPassword(loginData).then((dynamic user) {
+                  setLoading(false);
+
                   Widgets.showToast("Password reset successfully!");
 
                   Navigator.of(context).pushNamedAndRemoveUntil(
                       Routes.loginRoute, (Route<dynamic> route) => false);
+                }).futureError((error) {
+                  setLoading(false);
+                  error.toString().debugLog();
                 });
               }
             : null,
@@ -174,5 +187,11 @@ class _ResetPasswordState extends State<ResetPassword> {
     } else {
       return true;
     }
+  }
+
+  void setLoading(bool value) {
+    setState(() {
+      isLoading = value;
+    });
   }
 }

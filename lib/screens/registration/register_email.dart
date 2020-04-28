@@ -3,9 +3,11 @@ import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/dimens.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/app_logo.dart';
 import 'package:hutano/widgets/email_widget.dart';
 import 'package:hutano/widgets/fancy_button.dart';
+import 'package:hutano/widgets/loading_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 
 class RegisterEmail extends StatefulWidget {
@@ -20,6 +22,7 @@ class _RegisterEmailState extends State<RegisterEmail> {
   final _emailController = TextEditingController();
 
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 14.0);
+  bool isLoading = false;
 
   @override
   void dispose() {
@@ -40,13 +43,12 @@ class _RegisterEmailState extends State<RegisterEmail> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      body: SafeArea(
-        child: Form(
-          child: ListView(
-              children: getFormWidget(),
-              padding: const EdgeInsets.fromLTRB(
-                  Dimens.padding, 51.0, Dimens.padding, Dimens.padding)),
-        ),
+      body: LoadingView(
+        isLoading: isLoading,
+        child: ListView(
+            children: getFormWidget(),
+            padding: const EdgeInsets.fromLTRB(
+                Dimens.padding, 51.0, Dimens.padding, Dimens.padding)),
       ),
     );
   }
@@ -95,6 +97,8 @@ class _RegisterEmailState extends State<RegisterEmail> {
         title: "Next",
         onPressed: isButtonEnable()
             ? () {
+                setLoading(true);
+                
                 ApiBaseHelper api = new ApiBaseHelper();
 
                 Map<String, String> loginData = Map();
@@ -103,6 +107,8 @@ class _RegisterEmailState extends State<RegisterEmail> {
                 loginData["step"] = "1";
                 loginData["fullName"] = "user";
                 api.register(loginData).then((dynamic user) {
+                  setLoading(false);
+
                   Widgets.showToast(user.toString());
 
                   Navigator.pushNamed(
@@ -110,6 +116,9 @@ class _RegisterEmailState extends State<RegisterEmail> {
                     Routes.verifyOtpRoute,
                     arguments: RegisterArguments(_emailController.text, false),
                   );
+                }).futureError((error) {
+                  setLoading(false);
+                  error.toString().debugLog();
                 });
               }
             : null,
@@ -126,5 +135,11 @@ class _RegisterEmailState extends State<RegisterEmail> {
     } else {
       return true;
     }
+  }
+
+  void setLoading(bool value) {
+    setState(() {
+      isLoading = value;
+    });
   }
 }

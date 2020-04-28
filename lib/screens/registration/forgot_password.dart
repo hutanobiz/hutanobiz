@@ -3,6 +3,7 @@ import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/dimens.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/app_logo.dart';
 import 'package:hutano/widgets/email_widget.dart';
 import 'package:hutano/widgets/fancy_button.dart';
@@ -42,17 +43,13 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Form(
-          child: LoadingView(
-            isLoading: isLoading,
-            widget: ListView(
-              physics: new ClampingScrollPhysics(),
-              padding: const EdgeInsets.fromLTRB(
-                  Dimens.padding, 51.0, Dimens.padding, Dimens.padding),
-              children: getFormWidget(),
-            ),
-          ),
+      body: LoadingView(
+        isLoading: isLoading,
+        child: ListView(
+          physics: new ClampingScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(
+              Dimens.padding, 51.0, Dimens.padding, Dimens.padding),
+          children: getFormWidget(),
         ),
       ),
     );
@@ -106,11 +103,15 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         title: "Confirm",
         onPressed: isButtonEnable()
             ? () {
+                setLoading(true);
+
                 ApiBaseHelper api = new ApiBaseHelper();
                 Map<String, String> loginData = Map();
                 loginData["email"] = _emailController.text.toString();
                 loginData["step"] = "1";
                 api.resetPassword(loginData).then((dynamic user) {
+                  setLoading(false);
+                  
                   Widgets.showToast(user.toString());
 
                   Navigator.pushNamed(
@@ -118,6 +119,9 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     Routes.verifyOtpRoute,
                     arguments: RegisterArguments(_emailController.text, true),
                   );
+                }).futureError((error) {
+                  setLoading(false);
+                  error.toString().debugLog();
                 });
               }
             : null,

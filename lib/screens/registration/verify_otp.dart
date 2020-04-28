@@ -3,8 +3,10 @@ import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/dimens.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/app_logo.dart';
 import 'package:hutano/widgets/fancy_button.dart';
+import 'package:hutano/widgets/loading_widget.dart';
 import 'package:hutano/widgets/pin_view.dart';
 import 'package:hutano/widgets/widgets.dart';
 
@@ -21,6 +23,8 @@ class _VerifyOTPState extends State<VerifyOTP> {
   String email, otp;
   bool isForgot;
 
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     email = widget.args.email;
@@ -28,13 +32,12 @@ class _VerifyOTPState extends State<VerifyOTP> {
 
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      body: SafeArea(
-        child: Form(
-          child: ListView(
-            children: getFormWidget(),
-            padding: const EdgeInsets.fromLTRB(
-                Dimens.padding, 51.0, Dimens.padding, Dimens.padding),
-          ),
+      body: LoadingView(
+        isLoading: isLoading,
+        child: ListView(
+          children: getFormWidget(),
+          padding: const EdgeInsets.fromLTRB(
+              Dimens.padding, 51.0, Dimens.padding, Dimens.padding),
         ),
       ),
     );
@@ -97,6 +100,8 @@ class _VerifyOTPState extends State<VerifyOTP> {
             title: "Verify",
             onPressed: () {
               if (otp != null) {
+                setLoading(true);
+
                 ApiBaseHelper api = new ApiBaseHelper();
                 Map<String, String> loginData = Map();
 
@@ -105,6 +110,8 @@ class _VerifyOTPState extends State<VerifyOTP> {
                   loginData["step"] = "2";
                   loginData["verificationCode"] = otp;
                   api.resetPassword(loginData).then((dynamic user) {
+                    setLoading(false);
+
                     Widgets.showToast(user.toString());
 
                     Navigator.pushNamed(
@@ -121,10 +128,14 @@ class _VerifyOTPState extends State<VerifyOTP> {
                   loginData["verificationCode"] = otp;
 
                   api.register(loginData).then((dynamic user) {
+                    setLoading(false);
                     Widgets.showToast("Verified successfully");
 
                     Navigator.pushNamed(context, Routes.registerRoute,
                         arguments: RegisterArguments(email, false));
+                  }).futureError((error) {
+                    setLoading(false);
+                    error.toString().debugLog();
                   });
                 }
               }
@@ -172,5 +183,11 @@ class _VerifyOTPState extends State<VerifyOTP> {
     );
 
     return formWidget;
+  }
+
+  void setLoading(bool value) {
+    setState(() {
+      isLoading = value;
+    });
   }
 }
