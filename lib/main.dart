@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/home.dart';
 import 'package:hutano/screens/login.dart';
@@ -15,15 +16,20 @@ void main() async {
     _defaultHome = HomeScreen();
   }
 
-  runApp(
-    InheritedContainer(
-      child: MaterialApp(
-        title: "Flutter Home",
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.theme,
-        home: _defaultHome,
-        onGenerateRoute: Routes.generateRoute,
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.portraitUp,
+  ]).whenComplete(() {
+    runApp(
+      InheritedContainer(
+        child: MaterialApp(
+          title: "Flutter Home",
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.theme,
+          home: _defaultHome,
+          onGenerateRoute: Routes.generateRoute,
+        ),
       ),
-    ),
-  );
+    );
+  });
 }
