@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
@@ -335,19 +336,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   getLocationAddress(latitude, longitude) async {
     try {
+      final coordinates = new Coordinates(latitude, longitude);
       var addresses =
-          await Geolocator().placemarkFromCoordinates(latitude, longitude);
-
+          await Geocoder.local.findAddressesFromCoordinates(coordinates);
       conatiner.setUserLocation("latLng", LatLng(latitude, longitude));
 
-      var first = addresses.first;
-
+      var first = addresses.first.subThoroughfare ??
+          addresses.first.thoroughfare ??
+          addresses.first.subAdminArea;
       setState(() {
         _isLoading = false;
-
-        _currentddress =
-            '${first.name}, ${first.subLocality}, ${first.locality}, ${first.administrativeArea}';
-
+        _currentddress = first;
         conatiner.setUserLocation("userAddress", _currentddress);
       });
     } on PlatformException catch (e) {

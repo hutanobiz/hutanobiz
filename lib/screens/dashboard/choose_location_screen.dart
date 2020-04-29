@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
@@ -120,7 +121,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
                                     child: TextFormField(
                                       textAlign: TextAlign.justify,
                                       enabled: false,
-                                      maxLines: null,
+                                      maxLines: 2,
                                       decoration: InputDecoration(
                                         border: InputBorder.none,
                                       ),
@@ -171,26 +172,12 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
 
   getLocationAddress(latitude, longitude) async {
     try {
-      var addresses =
-          await Geolocator().placemarkFromCoordinates(latitude, longitude);
-
-      var first = addresses.first;
-      String address;
-
-      if (first.name.isNotEmpty) {
-        address = "${first.name.trim()}";
-      }
-      if (first.subLocality.isNotEmpty) {
-        address += ", ${first.subLocality.trim()}";
-      }
-      if (first.locality.isNotEmpty) {
-        address += ", ${first.locality.trim()}";
-      }
-      if (first.administrativeArea.isNotEmpty) {
-        address += ", ${first.administrativeArea.trim()}";
-      }
-
-      _addressController.text = address;
+    final coordinates = new Coordinates(latitude,longitude);
+    var addresses =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var first = addresses.first.addressLine;
+    _addressController.text = first;
+    return first;
     } on PlatformException catch (e) {
       print(e.message.toString() ?? e.toString());
     }
