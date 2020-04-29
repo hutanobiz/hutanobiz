@@ -21,6 +21,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
 
   int _radioValue = 0;
   List<Services> servicesList;
+  int _totalDuration = 0;
 
   @override
   void didChangeDependencies() {
@@ -29,9 +30,11 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
 
     if (_providerData["providerData"]["subServices"] != null ||
         _providerData["providerData"]["subServices"].length > 0) {
-      List _serviceList = _providerData["providerData"]["subServices"];
+      if (_providerData["providerData"]["subServices"] is List) {
+        List _serviceList = _providerData["providerData"]["subServices"];
 
-      servicesList = _serviceList.map((m) => Services.fromJson(m)).toList();
+        servicesList = _serviceList.map((m) => Services.fromJson(m)).toList();
+      }
     }
 
     super.didChangeDependencies();
@@ -53,18 +56,12 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
         ),
         onForwardTap: () {
           if (_radioValue == 1) {
-            int totalDuration = 0;
-            for (Services services in servicesList) {
-              if (services.isSelected) {
-                totalDuration += services.duration;
-                Navigator.of(context)
-                    .pushNamed(Routes.selectAppointmentTimeScreen);
-              } else {
-                Widgets.showToast("Please choose at least one service");
-              }
+            if (_totalDuration > 0) {
+              Navigator.of(context)
+                  .pushNamed(Routes.selectAppointmentTimeScreen);
+            } else {
+              Widgets.showToast("Please choose at least one service");
             }
-
-            log((totalDuration / 60).toString());
           } else
             Navigator.of(context).pushNamed(Routes.selectAppointmentTimeScreen);
         },
@@ -229,20 +226,26 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
           ),
           _radioValue == 0
               ? Container()
-              : ListView.separated(
-                  separatorBuilder: (BuildContext context, int index) =>
-                      Divider(),
-                  physics: ClampingScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: servicesList.length ?? 0,
-                  itemBuilder: (context, index) {
-                    if (servicesList != null && servicesList.length > 0) {
-                      Services services = servicesList[index];
-                      return serviceSlotWidget(services);
-                    }
+              : servicesList != null
+                  ? ListView.separated(
+                      separatorBuilder: (BuildContext context, int index) =>
+                          Divider(),
+                      physics: ClampingScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: servicesList.length,
+                      itemBuilder: (context, index) {
+                        if (servicesList != null && servicesList.length > 0) {
+                          Services services = servicesList[index];
+                          return serviceSlotWidget(services);
+                        }
 
-                    return Container();
-                  }),
+                        return Container();
+                      })
+                  : Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.all(20),
+                      child: Text("NO services available"),
+                    ),
         ],
       ),
     );
@@ -258,6 +261,12 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
         setState(() {
           services.isSelected = value;
         });
+
+        value == true
+            ? _totalDuration += services.duration
+            : _totalDuration -= services.duration;
+
+        log((_totalDuration / 60).toString());
       },
       title: Text(
         services.serviceName ?? "---",
