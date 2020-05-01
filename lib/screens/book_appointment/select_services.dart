@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/models/services.dart';
@@ -21,7 +19,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
 
   int _radioValue = 0;
   List<Services> servicesList;
-  int _totalDuration = 0;
+  List<String> _selectedServicesList = List();
 
   @override
   void didChangeDependencies() {
@@ -36,6 +34,8 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
         servicesList = _serviceList.map((m) => Services.fromJson(m)).toList();
       }
     }
+
+    if (_selectedServicesList.length > 0) _selectedServicesList.clear();
 
     super.didChangeDependencies();
   }
@@ -56,14 +56,18 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
         ),
         onForwardTap: () {
           if (_radioValue == 1) {
-            if (_totalDuration > 0) {
+            if (_selectedServicesList.length > 0) {
+              _container.setServicesData("status", "1");
+              _container.setServicesData("services", _selectedServicesList);
               Navigator.of(context)
                   .pushNamed(Routes.selectAppointmentTimeScreen);
             } else {
               Widgets.showToast("Please choose at least one service");
             }
-          } else
+          } else {
+            _container.setServicesData("status", "0");
             Navigator.of(context).pushNamed(Routes.selectAppointmentTimeScreen);
+          }
         },
       ),
     );
@@ -263,10 +267,8 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
         });
 
         value == true
-            ? _totalDuration += services.duration
-            : _totalDuration -= services.duration;
-
-        log((_totalDuration / 60).toString());
+            ? _selectedServicesList.add(services.sId)
+            : _selectedServicesList.remove(services.sId);
       },
       title: Text(
         services.serviceName ?? "---",

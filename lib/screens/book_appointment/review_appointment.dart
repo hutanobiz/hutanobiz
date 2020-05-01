@@ -27,6 +27,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   Map _providerData, _userLocationMap;
   bool _isLoading = false;
   String _timeHours, _timeMins;
+  DateTime _bookedDate;
 
   final Set<Marker> _markers = {};
   final Set<Polyline> _polyline = {};
@@ -97,6 +98,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     _getUserLocation();
 
     String bookedTime = _appointmentData["time"];
+    _bookedDate = _appointmentData["date"];
 
     if (bookedTime.length < 4) {
       if (bookedTime[0] != "0") {
@@ -106,7 +108,9 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
       }
     }
     _timeHours = bookedTime.substring(0, 2);
-    _timeMins = bookedTime.substring(2, 4);
+    _timeMins = bookedTime.substring(3);
+
+    _container.appointmentData.clear();
   }
 
   void setSourceAndDestinationIcons() async {
@@ -182,9 +186,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
                     appointmentData["type"] =
                         _container.getProjectsResponse()["serviceType"];
-                    appointmentData["date"] = DateFormat("MM/dd/yyyy")
-                        .format(_appointmentData["date"])
-                        .toString();
+                    appointmentData["date"] =
+                        DateFormat("MM/dd/yyyy").format(_bookedDate).toString();
 
                     appointmentData["fromTime"] = startTime;
                     appointmentData["toTime"] = endTime;
@@ -232,7 +235,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
     formWidget.add(container(
         "Date & Time",
-        "${DateFormat('EEEE, dd MMMM').format(_appointmentData['date']).toString()} " +
+        "${DateFormat('EEEE, dd MMMM').format(_bookedDate).toString()} " +
             TimeOfDay(hour: int.parse(_timeHours), minute: int.parse(_timeMins))
                 .format(context),
         "ic_calendar"));

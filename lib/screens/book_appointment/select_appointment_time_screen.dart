@@ -38,7 +38,7 @@ class _SelectAppointmentTimeScreenState
   void initState() {
     super.initState();
 
-    String currentDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+    String currentDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
     _selectedDate = DateTime.now();
 
     _dayDateMap["day"] = DateTime.now().weekday.toString();
@@ -49,11 +49,26 @@ class _SelectAppointmentTimeScreenState
   void didChangeDependencies() {
     _container = InheritedContainer.of(context);
     _providerData = _container.getProviderData();
+    Map _servicesMap = _container.selectServiceMap;
 
-    _scheduleFuture = _apiBaseHelper.getScheduleList(
-      _providerData["providerData"]["userId"]["_id"].toString(),
-      _dayDateMap,
-    );
+    _dayDateMap["status"] = _servicesMap["status"];
+
+    if (_servicesMap["services"] != null) {
+      List<String> _servicesList = _servicesMap["services"];
+
+      for (int i = 0; i < _servicesList.length; i++) {
+        _dayDateMap["subService[${i.toString()}]"] = _servicesList[i];
+      }
+    }
+
+    _scheduleFuture = _apiBaseHelper
+        .getScheduleList(
+          _providerData["providerData"]["userId"]["_id"].toString(),
+          _dayDateMap,
+        )
+        .timeout(Duration(seconds: 10));
+
+    _selectedTiming = null;
     super.didChangeDependencies();
   }
 
@@ -104,14 +119,13 @@ class _SelectAppointmentTimeScreenState
         _dayDateMap["date"] =
             DateFormat("dd-MM-yyyy").format(selectedDate).toString();
 
-        _selectedTiming = null;
-        _container.appointmentData.clear();
-
         setState(() {
-          _scheduleFuture = _apiBaseHelper.getScheduleList(
-            _providerData["providerData"]["userId"]["_id"].toString(),
-            _dayDateMap,
-          );
+          _scheduleFuture = _apiBaseHelper
+              .getScheduleList(
+                _providerData["providerData"]["userId"]["_id"].toString(),
+                _dayDateMap,
+              )
+              .timeout(Duration(seconds: 10));
         });
 
         _selectedDate = selectedDate;
@@ -148,6 +162,20 @@ class _SelectAppointmentTimeScreenState
               _scheduleList = snapshot.data;
 
               for (Schedule schedule in _scheduleList) {
+                // if (schedule.isCustom == true) {
+                //   int prefixValue =
+                //       int.parse(schedule.startTime.toString().substring(0, 2));
+
+                //   if (DateTime.now().hour < prefixValue) {
+                //     if (prefixValue < 12) {
+                //       _morningList.add(schedule);
+                //     } else if (12 <= prefixValue && prefixValue < 18) {
+                //       _afternoonList.add(schedule);
+                //     } else if (prefixValue > 18) {
+                //       _eveningList.add(schedule);
+                //     }
+                //   }
+                // } else {
                 int prefixValue =
                     int.parse(schedule.startTime.toString().substring(0, 2));
 
@@ -159,6 +187,7 @@ class _SelectAppointmentTimeScreenState
                   } else if (prefixValue > 18) {
                     _eveningList.add(schedule);
                   }
+                  // }
                 }
               }
 
@@ -180,7 +209,7 @@ class _SelectAppointmentTimeScreenState
 
             break;
         }
-        return null;
+        return Container();
       },
     );
   }
@@ -238,8 +267,10 @@ class _SelectAppointmentTimeScreenState
 
   Widget _slotWidget(Schedule currentSchedule) {
     String timing = TimeOfDay(
-            hour: int.parse(currentSchedule.startTime.toString().substring(0, 2)),
-            minute: int.parse(currentSchedule.startTime.toString().substring(2)))
+            hour:
+                int.parse(currentSchedule.startTime.toString().substring(0, 2)),
+            minute:
+                int.parse(currentSchedule.startTime.toString().substring(3)))
         .format(context)
         .toString()
         .toLowerCase();
@@ -261,8 +292,9 @@ class _SelectAppointmentTimeScreenState
         margin: const EdgeInsets.only(right: 14.0),
         padding: const EdgeInsets.all(12.0),
         decoration: BoxDecoration(
-          color:
-              currentSchedule.isBlock ? Colors.grey.withOpacity(0.05) : AppColors.snow,
+          color: currentSchedule.isBlock
+              ? Colors.grey.withOpacity(0.05)
+              : AppColors.snow,
           borderRadius: BorderRadius.all(Radius.circular(14.0)),
           border: Border.all(
               color: currentSchedule.isBlock
