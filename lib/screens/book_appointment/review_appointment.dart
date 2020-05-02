@@ -42,6 +42,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   BitmapDescriptor destinationIcon;
 
   double _totalDistance = 0;
+  Map profileMap = new Map();
 
   setPolylines() async {
     List<PointLatLng> result = await polylinePoints?.getRouteBetweenCoordinates(
@@ -88,10 +89,17 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     _appointmentData = _container.appointmentData;
     _userLocationMap = _container.userLocationMap;
 
+    if (_providerData["providerData"]["data"] != null) {
+      _providerData["providerData"]["data"].map((f) {
+        profileMap.addAll(f);
+      }).toList();
+    } else {
+      profileMap = _providerData["providerData"];
+    }
+
     _initialPosition = _userLocationMap["latLng"];
-    _news = LatLng(
-        _providerData["providerData"]["businessLocation"]["coordinates"][1],
-        _providerData["providerData"]["businessLocation"]["coordinates"][0]);
+    _news = LatLng(profileMap["businessLocation"]["coordinates"][1],
+        profileMap["businessLocation"]["coordinates"][0]);
 
     _middlePoint = LatLng((_initialPosition.latitude + _news.latitude) / 2,
         (_initialPosition.longitude + _news.longitude) / 2);
@@ -172,9 +180,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                   onPressed: () {
                     _loading(true);
 
-                    String doctorId = _providerData["providerData"]["userId"]
-                            ["_id"]
-                        .toString();
+                    String doctorId = profileMap["userId"]["_id"].toString();
 
                     String startTime = _timeHours + ":" + _timeMins;
 
@@ -204,9 +210,9 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                         _loading(false);
 
                         Widgets.showToast("Booking request sent successfully!");
-                      }).catchError((error) {
+                      }).futureError((error) {
                         _loading(false);
-                        debugPrint(error.toString(), wrapWidth: 1024);
+                        error.toString().debugLog();
                       });
                     });
                   },
@@ -225,7 +231,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     formWidget.add(Padding(
       padding: const EdgeInsets.only(right: 20.0, left: 20.0),
       child: ProviderWidget(
-        data: _providerData["providerData"],
+        data: profileMap,
         degree: _providerData["degree"].toString(),
         isOptionsShow: false,
       ),
@@ -244,7 +250,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
     formWidget.add(container(
         "Office Address",
-        _providerData["providerData"]['businessLocation']['address'] ?? "---",
+        profileMap['businessLocation']['address'] ?? "---",
         "ic_office_address"));
 
     SizedBox(height: 6.0);

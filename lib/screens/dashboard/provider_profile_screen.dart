@@ -21,6 +21,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
   Map _containerMap;
   InheritedContainerState _container;
   Map profileMap = Map();
+  Map profileMapResponse = Map();
   String degree;
 
   @override
@@ -31,8 +32,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
 
     ApiBaseHelper api = ApiBaseHelper();
 
-    _profileFuture =
-        api.getProviderProfile(_providerData["providerId"]);
+    _profileFuture = api.getProviderProfile(_providerData["providerId"]);
 
     super.didChangeDependencies();
   }
@@ -69,6 +69,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                         if (snapshot.hasData) {
                           List response = snapshot.data["data"];
 
+                          profileMapResponse = snapshot.data;
+
                           if (response.isEmpty) return Container();
 
                           response.map((f) {
@@ -103,7 +105,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                   onPressed: () {
                     _container.getProviderData().clear();
 
-                    _container.setProviderData("providerData", profileMap);
+                    _container.setProviderData(
+                        "providerData", profileMapResponse);
                     _container.setProviderData("degree", degree);
 
                     if (_containerMap.containsKey("specialityId") ||

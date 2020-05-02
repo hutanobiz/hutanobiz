@@ -33,6 +33,7 @@ class _SelectAppointmentTimeScreenState
 
   String _selectedTiming;
   DateTime _selectedDate;
+  Map profileMap = new Map();
 
   @override
   void initState() {
@@ -61,9 +62,17 @@ class _SelectAppointmentTimeScreenState
       }
     }
 
+    if (_providerData["providerData"]["data"] != null) {
+      _providerData["providerData"]["data"].map((f) {
+        profileMap.addAll(f);
+      }).toList();
+    } else {
+      profileMap = _providerData["providerData"];
+    }
+
     _scheduleFuture = _apiBaseHelper
         .getScheduleList(
-          _providerData["providerData"]["userId"]["_id"].toString(),
+          profileMap["userId"]["_id"].toString(),
           _dayDateMap,
         )
         .timeout(Duration(seconds: 10));
@@ -104,7 +113,7 @@ class _SelectAppointmentTimeScreenState
     List<Widget> formWidget = new List();
 
     formWidget.add(ProviderWidget(
-      data: _providerData["providerData"],
+      data: profileMap,
       degree: _providerData["degree"].toString(),
       isOptionsShow: false,
     ));
@@ -122,7 +131,7 @@ class _SelectAppointmentTimeScreenState
         setState(() {
           _scheduleFuture = _apiBaseHelper
               .getScheduleList(
-                _providerData["providerData"]["userId"]["_id"].toString(),
+                profileMap["userId"]["_id"].toString(),
                 _dayDateMap,
               )
               .timeout(Duration(seconds: 10));

@@ -20,20 +20,25 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
   int _radioValue = 0;
   List<Services> servicesList;
   List<String> _selectedServicesList = List();
+  List _serviceList;
 
   @override
   void didChangeDependencies() {
     _container = InheritedContainer.of(context);
     _providerData = _container.getProviderData();
 
-    if (_providerData["providerData"]["subServices"] != null ||
-        _providerData["providerData"]["subServices"].length > 0) {
+    if (_providerData["providerData"]["subServices"] != null) {
       if (_providerData["providerData"]["subServices"] is List) {
-        List _serviceList = _providerData["providerData"]["subServices"];
-
-        servicesList = _serviceList.map((m) => Services.fromJson(m)).toList();
+        _serviceList = _providerData["providerData"]["subServices"];
+      }
+    } else if (_providerData["providerData"]["services"] != null) {
+      if (_providerData["providerData"]["services"] is List) {
+        _serviceList = _providerData["providerData"]["services"];
       }
     }
+
+    if (_serviceList != null)
+      servicesList = _serviceList.map((m) => Services.fromJson(m)).toList();
 
     if (_selectedServicesList.length > 0) _selectedServicesList.clear();
 
@@ -75,9 +80,14 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
 
   List<Widget> widgetList() {
     List<Widget> formWidget = new List();
+    Map profileMap = Map();
+
+    _providerData["providerData"]["data"].map((f) {
+      profileMap.addAll(f);
+    }).toList();
 
     formWidget.add(ProviderWidget(
-      data: _providerData["providerData"],
+      data: profileMap,
       degree: _providerData["degree"].toString(),
       isOptionsShow: false,
     ));
