@@ -182,6 +182,22 @@ class ApiBaseHelper {
     });
   }
 
+  Future<dynamic> postPayment(
+      String token, String appointmentId, Map paymentMap) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    return _netUtil
+        .post(
+      Uri.encodeFull(base_url + "api/patient/appointment-details/$appointmentId"),
+      body: paymentMap,
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
+
   Future<dynamic> rateDoctor(String token, Map rateDoctorData) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
@@ -223,6 +239,30 @@ class ApiBaseHelper {
         .get(
       base_url + "api/patient/last-appointment-detail",
       headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
+
+  Future<List<dynamic>> getUserDetails(String token) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    return _netUtil
+        .get(
+      base_url + "api/patient/user-details",
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
+
+  Future<List<dynamic>> getInsuranceList() {
+    return _netUtil
+        .get(
+      base_url + "api/insurance",
     )
         .then((res) {
       return res["response"];
