@@ -82,7 +82,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                   padding: const EdgeInsets.only(right: 20.0, left: 40.0),
                   child: FancyButton(
                     title: "Treatment Summary",
-                    onPressed: () {},
+                    onPressed: () => Navigator.of(context)
+                        .pushNamed(Routes.treatmentSummaryScreen),
                   ),
                 ),
               )
@@ -95,7 +96,17 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
   Widget profileWidget(Map _data) {
     Map _providerData = _data["data"];
+    _container.setAppointmentId(_providerData["_id"].toString());
 
+    int paymentType = 0;
+
+    if (_providerData["insuranceId"] != null) {
+      paymentType = 2;
+    } else if (_providerData["cashPayment"] != null) {
+      paymentType = 1;
+    } else {
+      paymentType = 0;
+    }
     _container.getProviderData().clear();
     _container.setProviderData("providerData", _data);
 
@@ -138,6 +149,14 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     }
 
     if (_providerData["doctor"] != null) {
+      List providerInsuranceList = List();
+
+      if (_providerData["doctor"]["insurance"] != null) {
+        providerInsuranceList = _providerData["doctor"]["insurance"];
+      }
+
+      _container.setProviderInsuranceMap(providerInsuranceList);
+
       name = _providerData["doctor"]["fullName"] ?? "---";
       avatar = _providerData["doctor"]["avatar"];
     }
@@ -209,39 +228,39 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                     SizedBox(
                       height: 4.0,
                     ),
-                    _providerData["consentToTreat"] == false
-                        ? Container()
-                        : RawMaterialButton(
-                            materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
-                            onPressed: () {
-                              _container.setAppointmentId(
-                                  _providerData["_id"].toString());
-                              Navigator.of(context)
-                                  .pushNamed(Routes.consentToTreatScreen);
-                            },
-                            child: Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 4.0),
-                                  child: Text(
-                                    "View consent to treat",
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      color: AppColors.windsor,
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 10.0,
-                                  color: AppColors.windsor,
-                                ),
-                              ],
+                    RawMaterialButton(
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(
+                          _providerData["consentToTreat"] == false
+                              ? Routes.consentToTreatScreen
+                              : Routes.paymentMethodScreen,
+                        );
+                      },
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(right: 4.0),
+                            child: Text(
+                              _providerData["consentToTreat"] == false
+                                  ? "View consent to treat"
+                                  : "Confirm payment",
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: AppColors.windsor,
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            size: 10.0,
+                            color: AppColors.windsor,
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -295,8 +314,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         divider(),
         feeWidget(fee, officeVisitFee, inOfficeFee),
         divider(),
-        paymentWidget("cardNumber"),
-        divider(topPadding: 10.0),
+        paymentType == 0
+            ? SizedBox(height: 1)
+            : paymentWidget("cardNumber", paymentType),
+        paymentType == 0 ? Container() : divider(topPadding: 10.0),
       ],
     );
   }
@@ -607,7 +628,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     );
   }
 
-  Widget paymentWidget(String cardNumber) {
+  Widget paymentWidget(String cardNumber, int paymentType) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
       child: Column(
@@ -624,11 +645,16 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              "ic_dummy_card".imageIcon(width: 42, height: 42),
+              Image.asset(
+                  paymentType == 1
+                      ? "images/payment_cash.png"
+                      : "images/insurancePlaceHolder.png",
+                  height: 42,
+                  width: 42),
               SizedBox(width: 14.0),
               Expanded(
                 child: Text(
-                  "Paid via Card **** 2563", //TODO: card number
+                  paymentType == 1 ? "Cash" : "Insurance",
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -638,12 +664,102 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                   ),
                 ),
               ),
+              // FlatButton(
+              //     onPressed: () {
+              //       showDialog(
+              //         context: context,
+              //         builder: (BuildContext context) {
+              //           return AlertDialog(
+              //             shape: RoundedRectangleBorder(
+              //               borderRadius: BorderRadius.circular(14.0),
+              //             ),
+              //             content: Column(
+              //               crossAxisAlignment: CrossAxisAlignment.start,
+              //               mainAxisSize: MainAxisSize.min,
+              //               children: <Widget>[
+              //                 Row(
+              //                   children: <Widget>[
+              //                     Expanded(
+              //                       child: Text(
+              //                         'Insurance Info',
+              //                         style: TextStyle(
+              //                           color: Colors.black,
+              //                           fontSize: 18.0,
+              //                           fontWeight: FontWeight.bold,
+              //                         ),
+              //                       ),
+              //                     ),
+              //                     InkWell(
+              //                       onTap: () => Navigator.of(context).pop(),
+              //                       child: Container(
+              //                           decoration: BoxDecoration(
+              //                               borderRadius: BorderRadius.all(
+              //                                   Radius.circular(16.0)),
+              //                               color: AppColors.goldenTainoi),
+              //                           child: Icon(Icons.close,
+              //                               color: Colors.white)),
+              //                     ),
+              //                   ],
+              //                 ),
+              //                 SizedBox(height: 16.0),
+              //                 Text('Front'),
+              //                 SizedBox(height: 4.0),
+              //                 Image.asset("images/driving_license.png"),
+              //                 SizedBox(height: 16.0),
+              //                 Text('Back'),
+              //                 SizedBox(height: 4.0),
+              //                 Image.asset("images/driving_license.png")
+              //               ],
+              //             ),
+              //           );
+              //         },
+              //       );
+              //     },
+              //     child: Icon(Icons.info_outline))
             ],
           ),
         ],
       ),
     );
   }
+
+  // Widget paymentWidget(String cardNumber) {
+  //   return Padding(
+  //     padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: <Widget>[
+  //         Text(
+  //           "Payment Method",
+  //           style: TextStyle(
+  //             fontWeight: FontWeight.w500,
+  //           ),
+  //         ),
+  //         SizedBox(height: 18.0),
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.start,
+  //           crossAxisAlignment: CrossAxisAlignment.center,
+  //           children: <Widget>[
+  //             "ic_dummy_card".imageIcon(width: 42, height: 42),
+  //             SizedBox(width: 14.0),
+  //             Expanded(
+  //               child: Text(
+  //                 "Paid via Card **** 2563", //TODO: card number
+  //                 maxLines: 2,
+  //                 overflow: TextOverflow.ellipsis,
+  //                 style: TextStyle(
+  //                   fontWeight: FontWeight.w500,
+  //                   color: Colors.black,
+  //                   fontSize: 14.0,
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget divider({double topPadding}) {
     return Padding(
