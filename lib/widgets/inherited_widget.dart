@@ -25,6 +25,8 @@ class InheritedContainerState extends State<InheritedContainer> {
   Map userLocationMap = Map();
   Map consentToTreatMap = Map();
   Map selectServiceMap = Map();
+  Map insuranceDataMap = Map();
+  List providerInsuranceList = List();
 
   void setProjectsResponse(String key, String data) {
     _response[key] = data;
@@ -60,6 +62,14 @@ class InheritedContainerState extends State<InheritedContainer> {
 
   void setServicesData(String key, dynamic data) {
     selectServiceMap[key] = data;
+  }
+
+  void setProviderInsuranceMap(List providerInsuranceList) {
+    this.providerInsuranceList = providerInsuranceList;
+  }
+
+  void setInsuranceData(String key, dynamic data) {
+    insuranceDataMap[key] = data;
   }
 
   Map getProviderData() {
