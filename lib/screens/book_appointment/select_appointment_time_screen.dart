@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/models/schedule.dart';
+import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
@@ -39,7 +40,7 @@ class _SelectAppointmentTimeScreenState
   void initState() {
     super.initState();
 
-    String currentDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
+    String currentDate = DateFormat('MM/dd/yyyy').format(DateTime.now());
     _selectedDate = DateTime.now();
 
     _dayDateMap["day"] = DateTime.now().weekday.toString();
@@ -55,10 +56,10 @@ class _SelectAppointmentTimeScreenState
     _dayDateMap["status"] = _servicesMap["status"];
 
     if (_servicesMap["services"] != null) {
-      List<String> _servicesList = _servicesMap["services"];
+      List<Services> _servicesList = _servicesMap["services"];
 
       for (int i = 0; i < _servicesList.length; i++) {
-        _dayDateMap["subService[${i.toString()}]"] = _servicesList[i];
+        _dayDateMap["subService[${i.toString()}]"] = _servicesList[i].sId;
       }
     }
 
@@ -171,20 +172,6 @@ class _SelectAppointmentTimeScreenState
               _scheduleList = snapshot.data;
 
               for (Schedule schedule in _scheduleList) {
-                // if (schedule.isCustom == true) {
-                //   int prefixValue =
-                //       int.parse(schedule.startTime.toString().substring(0, 2));
-
-                //   if (DateTime.now().hour < prefixValue) {
-                //     if (prefixValue < 12) {
-                //       _morningList.add(schedule);
-                //     } else if (12 <= prefixValue && prefixValue < 18) {
-                //       _afternoonList.add(schedule);
-                //     } else if (prefixValue > 18) {
-                //       _eveningList.add(schedule);
-                //     }
-                //   }
-                // } else {
                 int prefixValue =
                     int.parse(schedule.startTime.toString().substring(0, 2));
 
@@ -196,7 +183,14 @@ class _SelectAppointmentTimeScreenState
                   } else if (prefixValue > 18) {
                     _eveningList.add(schedule);
                   }
-                  // }
+                } else {
+                  if (prefixValue < 12) {
+                    _morningList.add(schedule);
+                  } else if (12 <= prefixValue && prefixValue < 18) {
+                    _afternoonList.add(schedule);
+                  } else {
+                    _eveningList.add(schedule);
+                  }
                 }
               }
 
