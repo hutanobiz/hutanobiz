@@ -6,12 +6,14 @@ import 'package:hutano/screens/appointments/consent_to_treat_screen.dart';
 import 'package:hutano/screens/appointments/medical_history.dart';
 import 'package:hutano/screens/appointments/rate_doctor_screen.dart';
 import 'package:hutano/screens/appointments/seeking_cure.dart';
+import 'package:hutano/screens/appointments/treatment_summary.dart';
 import 'package:hutano/screens/appointments/upload_documents.dart';
 import 'package:hutano/screens/appointments/upload_images.dart';
 import 'package:hutano/screens/book_appointment/review_appointment.dart';
 import 'package:hutano/screens/book_appointment/select_appointment_time_screen.dart';
 import 'package:hutano/screens/book_appointment/select_services.dart';
 import 'package:hutano/screens/dashboard/appointment_type_screen.dart';
+import 'package:hutano/screens/dashboard/appointments_screen.dart';
 import 'package:hutano/screens/dashboard/choose_location_screen.dart';
 import 'package:hutano/screens/dashboard/choose_specialities.dart';
 import 'package:hutano/screens/dashboard/dashboard_search_screen.dart';
@@ -22,8 +24,10 @@ import 'package:hutano/screens/dashboard/see_all_searches.dart';
 import 'package:hutano/screens/home.dart';
 import 'package:hutano/screens/login.dart';
 import 'package:hutano/screens/payment/add_new_card.dart';
+import 'package:hutano/screens/payment/insurance_list.dart';
 import 'package:hutano/screens/payment/payments_methods.dart';
 import 'package:hutano/screens/payment/saved_cards.dart';
+import 'package:hutano/screens/payment/upload_insurance_images.dart';
 import 'package:hutano/screens/registration/forgot_password.dart';
 import 'package:hutano/screens/registration/register.dart';
 import 'package:hutano/screens/registration/register_email.dart';
@@ -60,6 +64,11 @@ class Routes {
   static const String uploadDocumentsScreen = '/uploadDocumentsScreen';
   static const String savedCardsScreen = '/savedCardsScreen';
   static const String selectServicesScreen = '/selectServicesScreen';
+  static const String insuranceListScreen = '/insuranceListScreen';
+  static const String uploadInsuranceImagesScreen =
+      '/uploadInsuranceImagesScreen';
+  static const String treatmentSummaryScreen = '/treatmentSummaryScreen';
+  static const String appointmentsScreen = '/appointmentsScreen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -172,6 +181,18 @@ class Routes {
         break;
       case selectServicesScreen:
         return _buildRoute(settings, SelectServicesScreen());
+        break;
+      case insuranceListScreen:
+        return _buildRoute(settings, InsuranceListScreen());
+        break;
+      case uploadInsuranceImagesScreen:
+        return _buildRoute(settings, UploadInsuranceImagesScreen());
+        break;
+      case treatmentSummaryScreen:
+        return _buildRoute(settings, TreatmentSummaryScreen());
+        break;
+      case appointmentsScreen:
+        return _buildRoute(settings, AppointmentsScreen());
         break;
       default:
         return _errorRoute();
