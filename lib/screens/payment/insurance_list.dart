@@ -105,19 +105,18 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
       activeColor: AppColors.goldenTainoi,
       value: index,
       groupValue: _radioValue,
-      onChanged: 
-      // !_container.providerInsuranceList
-      //         .contains(insurance["_id"].toString())
-      //     ? null
-      //     : 
+      onChanged:
+          // !_container.providerInsuranceList
+          //         .contains(insurance["_id"].toString())
+          //     ? null
+          //     :
           (value) {
-              setState(
-                () => _radioValue = value,
-              );
+        setState(
+          () => _radioValue = value,
+        );
 
-              _container.setInsuranceData(
-                  "insuranceId", insurance["_id"].toString());
-            },
+        _container.setInsuranceData("insuranceId", insurance["_id"].toString());
+      },
       title: Row(
         children: <Widget>[
           Image.asset(

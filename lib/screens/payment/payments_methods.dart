@@ -151,16 +151,17 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
     _widgetList.add(SizedBox(height: 22.0));
 
-    _container.providerInsuranceList == null ||
-            _container.providerInsuranceList.isEmpty
-        ? Container()
-        : _widgetList
-            .add(addCard("ic_upload_insurance", "Upload Insurance Card"));
+    // _container.providerInsuranceList == null ||
+    //         _container.providerInsuranceList.isEmpty
+    //     ? Container()
+    //     :
+    _widgetList.add(addCard("ic_upload_insurance", "Upload Insurance Card"));
 
-    _container.providerInsuranceList == null ||
-            _container.providerInsuranceList.isEmpty
-        ? Container()
-        : _widgetList.add(SizedBox(height: 40.0));
+    // _container.providerInsuranceList == null ||
+    //         _container.providerInsuranceList.isEmpty
+    //     ? Container()
+    //     :
+    _widgetList.add(SizedBox(height: 40.0));
 
     _widgetList.add(paymentCard(
       "ic_cash_payment",
@@ -231,14 +232,16 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                               groupValue: _radioValue,
                               materialTapTargetSize:
                                   MaterialTapTargetSize.shrinkWrap,
-                              onChanged: _container.providerInsuranceList ==
-                                          null ||
-                                      _container.providerInsuranceList.isEmpty
-                                  ? null
-                                  : (int value) {
-                                      setState(() => _radioValue = value);
-                                      insuranceId = data[index]["insuranceId"];
-                                    },
+                              onChanged:
+                                  // _container.providerInsuranceList ==
+                                  //             null ||
+                                  //         _container.providerInsuranceList.isEmpty
+                                  //     ? null
+                                  //     :
+                                  (int value) {
+                                setState(() => _radioValue = value);
+                                insuranceId = data[index]["insuranceId"];
+                              },
                             ),
                           ),
                         )
