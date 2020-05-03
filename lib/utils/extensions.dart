@@ -4,10 +4,11 @@ import 'package:hutano/colors.dart';
 class Extensions {}
 
 extension ImageIcon on String {
-  imageIcon({double height, double width}) => Image.asset(
+  imageIcon({double height, double width, Color color}) => Image.asset(
         "images/$this.png",
         height: height ?? 14.0,
         width: width ?? 14.0,
+        color: color,
       );
 }
 
@@ -19,9 +20,11 @@ extension FutureError<T> on Future<T> {
 extension DebugLog on String {
   debugLog() {
     return debugPrint(
-        "\n******************************* DebugLog *******************************\n" +
-            " $this",
-        wrapWidth: 1024);
+      "\n******************************* DebugLog *******************************\n" +
+          " $this" +
+          "\n******************************* DebugLog *******************************\n",
+      wrapWidth: 1024,
+    );
   }
 }
 
