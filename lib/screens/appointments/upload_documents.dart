@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
@@ -250,7 +251,10 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
             responseJson["response"].toString().debugLog();
             setLoading(false);
 
-            if (message != null) Widgets.showToast(message);
+            if (message != null) {
+              Navigator.of(context).pushNamed(Routes.paymentMethodScreen);
+              Widgets.showToast(message);
+            }
           }
         } on Exception catch (error) {
           setLoading(false);

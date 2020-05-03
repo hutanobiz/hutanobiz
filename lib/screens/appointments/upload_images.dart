@@ -52,8 +52,6 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
         addBottomArrows: true,
         onForwardTap: () {
           _uploadImage(imagesList, imagesList.length > 0 ? 'Uploaded!' : null);
-
-          Navigator.of(context).pushNamed(Routes.uploadDocumentsScreen);
         },
         color: Colors.white,
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
@@ -78,34 +76,6 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                   },
                 ),
               ),
-              // child: Row(
-              //   children: <Widget>[
-              //     Expanded(
-              //       child: SizedBox(
-              //         height: 55.0,
-              //         child: FancyButton(
-              //           title: "Upload images",
-              //           buttonIcon: "ic_send_request",
-              //           buttonColor: AppColors.windsor,
-              //           onPressed: () {
-              //             imagesList.length > 0
-              //                 ? _uploadImage(imagesList, 'Uploaded!')
-              //                 : Widgets.showToast(
-              //                     "Please select image(s) to upload");
-              //           },
-              //         ),
-              //       ),
-              //     ),
-              //     SizedBox(width: 22.0),
-              //     ArrowButton(
-              //       buttonWidth: 58.0,
-              //       buttonColor: AppColors.windsor.withOpacity(0.10),
-              //       iconData: Icons.camera_alt,
-              //       iconColor: AppColors.windsor,
-              //       onTap: () => showPickerDialog(),
-              //     ),
-              //   ],
-              // ),
             ),
           ],
         ),
@@ -282,7 +252,10 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
 
           responseJson["response"].toString().debugLog();
 
-          if (message != null) Widgets.showToast(message);
+          if (message != null) {
+            Navigator.of(context).pushNamed(Routes.uploadDocumentsScreen);
+            Widgets.showToast(message);
+          }
         }
 
         setLoading(false);
