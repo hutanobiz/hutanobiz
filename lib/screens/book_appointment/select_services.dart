@@ -19,8 +19,9 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
 
   int _radioValue = 0;
   List<Services> servicesList;
-  List<String> _selectedServicesList = List();
+  List<Services> _selectedServicesList = List();
   List _serviceList;
+  Map profileMap = Map();
 
   @override
   void didChangeDependencies() {
@@ -39,8 +40,6 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
 
     if (_serviceList != null)
       servicesList = _serviceList.map((m) => Services.fromJson(m)).toList();
-
-    if (_selectedServicesList.length > 0) _selectedServicesList.clear();
 
     super.didChangeDependencies();
   }
@@ -71,6 +70,8 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
             }
           } else {
             _container.setServicesData("status", "0");
+            _container.setServicesData(
+                "consultaceFee", profileMap["consultanceFee"]);
             Navigator.of(context).pushNamed(Routes.selectAppointmentTimeScreen);
           }
         },
@@ -80,11 +81,18 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
 
   List<Widget> widgetList() {
     List<Widget> formWidget = new List();
-    Map profileMap = Map();
 
-    _providerData["providerData"]["data"].map((f) {
-      profileMap.addAll(f);
-    }).toList();
+    if (_providerData["providerData"]["data"] != null) {
+      if (_providerData["providerData"]["data"] is List) {
+        _providerData["providerData"]["data"].map((f) {
+          profileMap.addAll(f);
+        }).toList();
+      } else {
+        profileMap = _providerData["providerData"]["data"];
+      }
+    } else {
+      profileMap = _providerData["providerData"];
+    }
 
     formWidget.add(ProviderWidget(
       data: profileMap,
@@ -106,9 +114,8 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
   Widget consultancyFeeWidget() {
     String fee = "---", duration = "---";
 
-    if (_providerData["providerData"]["consultanceFee"] != null) {
-      for (dynamic consultanceFee in _providerData["providerData"]
-          ["consultanceFee"]) {
+    if (profileMap["consultanceFee"] != null) {
+      for (dynamic consultanceFee in profileMap["consultanceFee"]) {
         fee = consultanceFee["fee"].toString() ?? "---";
         duration = consultanceFee["duration"].toString() ?? "---";
       }
@@ -277,8 +284,8 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
         });
 
         value == true
-            ? _selectedServicesList.add(services.sId)
-            : _selectedServicesList.remove(services.sId);
+            ? _selectedServicesList.add(services)
+            : _selectedServicesList.remove(services);
       },
       title: Text(
         services.serviceName ?? "---",
