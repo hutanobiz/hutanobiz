@@ -6,6 +6,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/models/services.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
@@ -36,13 +38,15 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
   List<LatLng> latlng = [];
   LatLng _initialPosition, _middlePoint;
-  LatLng _news;
+  LatLng _news = LatLng(0, 0);
   Completer<GoogleMapController> _controller = Completer();
   BitmapDescriptor sourceIcon;
   BitmapDescriptor destinationIcon;
 
   double _totalDistance = 0;
   Map profileMap = new Map();
+  Map _servicesMap = new Map();
+  Map appointmentData = Map();
 
   setPolylines() async {
     List<PointLatLng> result = await polylinePoints?.getRouteBetweenCoordinates(
@@ -98,8 +102,12 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     }
 
     _initialPosition = _userLocationMap["latLng"];
-    _news = LatLng(profileMap["businessLocation"]["coordinates"][1],
-        profileMap["businessLocation"]["coordinates"][0]);
+    if (profileMap["businessLocation"] != null) {
+      if (profileMap["businessLocation"]["coordinates"].length > 0) {
+        _news = LatLng(profileMap["businessLocation"]["coordinates"][1],
+            profileMap["businessLocation"]["coordinates"][0]);
+      }
+    }
 
     _middlePoint = LatLng((_initialPosition.latitude + _news.latitude) / 2,
         (_initialPosition.longitude + _news.longitude) / 2);
@@ -118,7 +126,35 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     _timeHours = bookedTime.substring(0, 2);
     _timeMins = bookedTime.substring(3);
 
-    _container.appointmentData.clear();
+    _servicesMap = _container.selectServiceMap;
+
+    appointmentData["status"] = _servicesMap["status"];
+
+    if (_servicesMap["status"].toString() == "1") {
+      if (_servicesMap["services"] != null) {
+        List<Services> _servicesList = _servicesMap["services"];
+
+        for (int i = 0; i < _servicesList.length; i++) {
+          appointmentData["subService[${i.toString()}][serviceId]"] =
+              _servicesList[i].sId;
+          appointmentData["subService[${i.toString()}][duration]"] =
+              _servicesList[i].duration.toString();
+          appointmentData["subService[${i.toString()}][amount]"] =
+              _servicesList[i].amount.toString();
+        }
+      }
+    } else {
+      List<dynamic> _consultaceList = _servicesMap["consultaceFee"];
+
+      for (int i = 0; i < _consultaceList.length; i++) {
+        appointmentData["consultanceFee[${i.toString()}][fee]"] =
+            _consultaceList[i]["fee"].toString();
+        appointmentData["consultanceFee[${i.toString()}][duration]"] =
+            _consultaceList[i]["duration"].toString();
+        // appointmentData["consultanceFee[${i.toString()}][amount]"] =
+        //     _consultaceList[i]["amount"].toString();
+      }
+    }
   }
 
   void setSourceAndDestinationIcons() async {
@@ -188,10 +224,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                         ":" +
                         _timeMins;
 
-                    Map appointmentData = Map();
-
                     appointmentData["type"] =
-                        _container.getProjectsResponse()["serviceType"];
+                        _container.getProjectsResponse()["serviceType"] ?? "1";
                     appointmentData["date"] =
                         DateFormat("MM/dd/yyyy").format(_bookedDate).toString();
 
@@ -209,9 +243,14 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                           .then((response) {
                         _loading(false);
 
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            Routes.dashboardScreen,
+                            (Route<dynamic> route) => false);
+
                         Widgets.showToast("Booking request sent successfully!");
                       }).futureError((error) {
                         _loading(false);
+                        Widgets.showToast(error.toString());
                         error.toString().debugLog();
                       });
                     });
