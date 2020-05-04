@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
@@ -62,7 +60,7 @@ class _SelectAppointmentTimeScreenState
       List<Services> _servicesList = _servicesMap["services"];
 
       for (int i = 0; i < _servicesList.length; i++) {
-        _dayDateMap["subService[${i.toString()}]"] = _servicesList[i].sId;
+        _dayDateMap["subService[${i.toString()}]"] = _servicesList[i].subServiceId;
       }
     }
 
