@@ -180,7 +180,7 @@ class _SelectAppointmentTimeScreenState
                     _morningList.add(schedule);
                   } else if (12 <= prefixValue && prefixValue < 18) {
                     _afternoonList.add(schedule);
-                  } else if (prefixValue > 18) {
+                  } else {
                     _eveningList.add(schedule);
                   }
                 } else {
