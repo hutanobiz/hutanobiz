@@ -116,15 +116,11 @@ class _ScrollingDayCalendarState extends State<ScrollingDayCalendar> {
         ],
       ),
     ).onClick(onTap: () {
-      
       showDatePicker(
         context: context,
         initialDate: _selectedDate,
         firstDate: DateTime.now().subtract(Duration(days: 1)),
-        lastDate: _selectedDate.day == DateTime.now().day &&
-                _selectedDate.month == DateTime.now().month
-            ? _selectedDate.add(Duration(days: 30))
-            : _selectedDate.add(Duration(days: 14)),
+        lastDate: DateTime(DateTime.now().year + 2),
       ).then((date) {
         if (date != null)
           setState(() {
