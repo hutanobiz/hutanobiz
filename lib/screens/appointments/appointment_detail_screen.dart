@@ -183,9 +183,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                 height: 62.0,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage(avatar == null || avatar == "null"
-                        ? 'http://i.imgur.com/QSev0hg.jpg'
-                        : ApiBaseHelper.imageUrl + avatar),
+                    image: avatar == null
+                        ? AssetImage('images/profile_user.png')
+                        : NetworkImage(ApiBaseHelper.imageUrl + avatar),
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.all(Radius.circular(50.0)),

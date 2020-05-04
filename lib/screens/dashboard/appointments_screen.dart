@@ -169,6 +169,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
 
   Widget _requestList(Map response, int listType) {
     String name = "---",
+        avatar,
         address = "---",
         status = "---",
         averageRating = "---",
@@ -191,8 +192,12 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
         default:
       }
 
-    status = response["status"].toString() ?? "---";
-    name = response["doctor"]["fullName"].toString() ?? "---";
+    status = response["status"]?.toString() ?? "---";
+
+    if (response["doctor"] != null) {
+      name = response["doctor"]["fullName"]?.toString() ?? "---";
+      avatar = response["doctor"]["avatar"].toString();
+    }
 
     if (response["doctorData"] != null) {
       for (dynamic detail in response["doctorData"]) {
@@ -240,7 +245,9 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                       margin: const EdgeInsets.only(top: 14.0),
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: NetworkImage('http://i.imgur.com/QSev0hg.jpg'),
+                          image: avatar == null
+                              ? AssetImage('images/profile_user.png')
+                              : NetworkImage(ApiBaseHelper.imageUrl + avatar),
                           fit: BoxFit.cover,
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(50.0)),

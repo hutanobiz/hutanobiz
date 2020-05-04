@@ -135,6 +135,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
 
   Widget _requestList(Map response, int listType) {
     String name = "---",
+        avatar,
         address = "---",
         appointmentType = "---",
         degree = "---",
@@ -158,13 +159,17 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
         default:
       }
 
-    name = response["doctor"]["fullName"] ?? "--";
-    address = response["doctor"]["address"] ?? "---";
+    if (response["doctor"] != null) {
+      name = response["doctor"]["fullName"]?.toString() ?? "---";
+      avatar = response["doctor"]["avatar"].toString();
+      address = response["doctor"]["address"]?.toString() ?? "---";
+    }
 
     if (response["DoctorProfessionalDetail"] != null) {
       for (dynamic detail in response["DoctorProfessionalDetail"]) {
         if (detail["professionalTitle"] != null) {
-          professionalTitle = detail["professionalTitle"]["title"] ?? "---";
+          professionalTitle =
+              detail["professionalTitle"]["title"]?.toString() ?? "---";
         }
 
         if (detail["education"] != null) {
@@ -205,7 +210,9 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                   height: 58.0,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage('http://i.imgur.com/QSev0hg.jpg'),
+                      image: avatar == null
+                          ? AssetImage('images/profile_user.png')
+                          : NetworkImage(ApiBaseHelper.imageUrl + avatar),
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.all(Radius.circular(50.0)),
