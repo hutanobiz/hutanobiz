@@ -93,43 +93,60 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget adressBar() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         Image(
           width: 15.0,
           height: 18.0,
           image: AssetImage("images/ic_location.png"),
         ),
+        SizedBox(width: 10),
         _isLoading
             ? Expanded(
                 child: Center(
                   child: CircularProgressIndicator(),
                 ),
               )
-            : Expanded(
-                flex: 3,
-                child: InkWell(
-                  onTap: () => _navigateToMap(context),
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Text(
-                      _currentddress,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: AppColors.midnight_express,
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+            : InkWell(
+                onTap: () => _navigateToMap(context),
+                child: Row(
+                  children: <Widget>[
+                    _currentddress.length > 45
+                        ? SizedBox(
+                            width: 120,
+                            child: Text(
+                              _currentddress,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: AppColors.midnight_express,
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          )
+                        : Text(
+                            _currentddress,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: AppColors.midnight_express,
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                    _currentddress.length > 45
+                        ? Container()
+                        : SizedBox(width: 5),
+                    Image(
+                      width: 8.0,
+                      height: 4.0,
+                      image: AssetImage("images/ic_arrow_down.png"),
                     ),
-                  ),
+                  ],
                 ),
               ),
-        Image(
-          width: 8.0,
-          height: 4.0,
-          image: AssetImage("images/ic_arrow_down.png"),
-        ),
         Expanded(
           child: Align(
             alignment: Alignment.centerRight,
@@ -341,12 +358,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
           await Geocoder.local.findAddressesFromCoordinates(coordinates);
       conatiner.setUserLocation("latLng", LatLng(latitude, longitude));
 
-      var first = addresses.first.subThoroughfare ??
-          addresses.first.thoroughfare ??
-          addresses.first.subAdminArea;
+      String address = "";
+
+      if (addresses.first.subThoroughfare != null &&
+          addresses.first.subThoroughfare != "") {
+        address = addresses.first.subThoroughfare + ", ";
+      }
+
+      if (addresses.first.thoroughfare != null &&
+          addresses.first.thoroughfare != "") {
+        address = address + addresses.first.thoroughfare + ", ";
+      }
+
+      if (addresses.first.subAdminArea != null &&
+          addresses.first.subAdminArea != "") {
+        address = address + addresses.first.subAdminArea;
+      }
+
+      // var first = addresses.first.subThoroughfare ??
+      //     addresses.first.thoroughfare ??
+      //     addresses.first.subAdminArea;
+
       setState(() {
         _isLoading = false;
-        _currentddress = first;
+        _currentddress = address.endsWith(", ")
+            ? address.substring(0, address.length - 2)
+            : address;
         conatiner.setUserLocation("userAddress", _currentddress);
       });
     } on PlatformException catch (e) {
