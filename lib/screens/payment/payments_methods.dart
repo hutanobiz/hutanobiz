@@ -25,11 +25,24 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   String insuranceId;
 
   bool _isLoading = false;
+  Map appointmentData = new Map();
+  Map providerMap;
 
   @override
   void didChangeDependencies() {
     _container = InheritedContainer.of(context);
-    super.didChangeDependencies();
+
+    if (_container.getProviderData() != null) {
+      providerMap = _container.getProviderData();
+
+      if (providerMap["providerData"] != null) {
+        if (providerMap["providerData"]["data"] != null) {
+          appointmentData = providerMap["providerData"]["data"];
+        } else {
+          appointmentData = providerMap["providerData"];
+        }
+      }
+    }
 
     SharedPref().getToken().then((token) {
       setState(() {
@@ -37,6 +50,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
             _api.getUserDetails(token).timeout(Duration(seconds: 10));
       });
     });
+
+    super.didChangeDependencies();
   }
 
   @override
@@ -151,17 +166,12 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
     _widgetList.add(SizedBox(height: 22.0));
 
-    // _container.providerInsuranceList == null ||
-    //         _container.providerInsuranceList.isEmpty
-    //     ? Container()
-    //     :
     _widgetList.add(addCard("ic_upload_insurance", "Upload Insurance Card"));
 
-    // _container.providerInsuranceList == null ||
-    //         _container.providerInsuranceList.isEmpty
-    //     ? Container()
-    //     :
-    _widgetList.add(SizedBox(height: 40.0));
+    _container.providerInsuranceList == null ||
+            _container.providerInsuranceList.isEmpty
+        ? Container()
+        : _widgetList.add(SizedBox(height: 40.0));
 
     _widgetList.add(paymentCard(
       "ic_cash_payment",
@@ -232,16 +242,14 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                               groupValue: _radioValue,
                               materialTapTargetSize:
                                   MaterialTapTargetSize.shrinkWrap,
-                              onChanged:
-                                  // _container.providerInsuranceList ==
-                                  //             null ||
-                                  //         _container.providerInsuranceList.isEmpty
-                                  //     ? null
-                                  //     :
-                                  (int value) {
-                                setState(() => _radioValue = value);
-                                insuranceId = data[index]["insuranceId"];
-                              },
+                              onChanged: !_container.providerInsuranceList
+                                      .contains(
+                                          data[index]["insuranceId"].toString())
+                                  ? null
+                                  : (int value) {
+                                      setState(() => _radioValue = value);
+                                      insuranceId = data[index]["insuranceId"];
+                                    },
                             ),
                           ),
                         )
@@ -312,7 +320,11 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                 value: value,
                 groupValue: _radioValue,
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                onChanged: _handleRadioValueChange,
+                onChanged: (title.toLowerCase().contains("cash") &&
+                        appointmentData["cashPayment"] == 1)
+                    ? _handleRadioValueChange
+                    : null,
+                //TODO: check for cardPayment when it's done in API
               ),
             ),
           )

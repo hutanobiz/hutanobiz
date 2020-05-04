@@ -119,7 +119,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         inOfficeFee = "0.0", //TODO: in-office charge
         officeVisitFee = "0.0";
 
-    LatLng latLng;
+    LatLng latLng = new LatLng(0, 0);
 
     rating = _data["averageRating"] ?? "---";
 
@@ -130,6 +130,14 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           professionalTitle = detail["professionalTitle"]["title"] ?? "---";
         }
 
+        List providerInsuranceList = List();
+
+        if (detail["insuranceId"] != null) {
+          providerInsuranceList = detail["insuranceId"];
+        }
+
+        _container.setProviderInsuranceMap(providerInsuranceList);
+
         if (detail["consultanceFee"] != null) {
           for (dynamic consultanceFee in detail["consultanceFee"]) {
             fee = consultanceFee["fee"].toString() ?? "---";
@@ -139,24 +147,21 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         if (detail["businessLocation"] != null) {
           address = detail["businessLocation"]["address"] ?? "---";
 
-          if (detail["businessLocation"]["coordinates"] != null)
-            latLng = LatLng(
-              detail["businessLocation"]["coordinates"][0] ?? 28.5355,
-              detail["businessLocation"]["coordinates"][1] ?? 77.3910,
-            );
+          if (detail["businessLocation"]["coordinates"] != null) {
+            List location = detail["businessLocation"]["coordinates"];
+
+            if (location.length > 0) {
+              latLng = LatLng(
+                location[0],
+                location[1],
+              );
+            }
+          }
         }
       }
     }
 
     if (_providerData["doctor"] != null) {
-      List providerInsuranceList = List();
-
-      if (_providerData["doctor"]["insurance"] != null) {
-        providerInsuranceList = _providerData["doctor"]["insurance"];
-      }
-
-      _container.setProviderInsuranceMap(providerInsuranceList);
-
       name = _providerData["doctor"]["fullName"] ?? "---";
       avatar = _providerData["doctor"]["avatar"];
     }
@@ -647,7 +652,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             children: <Widget>[
               Image.asset(
                   paymentType == 1
-                      ? "images/payment_cash.png"
+                      ? "images/ic_cash_payment.png"
                       : "images/insurancePlaceHolder.png",
                   height: 42,
                   width: 42),

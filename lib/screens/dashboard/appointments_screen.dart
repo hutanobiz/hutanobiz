@@ -175,6 +175,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
         appointmentType = "---",
         professionalTitle = "---";
 
+    _container.setProviderData("providerData", response);
+
     if (response["type"] != null)
       switch (response["type"]) {
         case 1:
@@ -194,6 +196,14 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
 
     if (response["doctorData"] != null) {
       for (dynamic detail in response["doctorData"]) {
+        List providerInsuranceList = List();
+
+        if (detail["insuranceId"] != null) {
+          providerInsuranceList = detail["insuranceId"];
+        }
+
+        _container.setProviderInsuranceMap(providerInsuranceList);
+
         if (detail["averageRating"] != null)
           averageRating = detail["averageRating"].toString() ?? "---";
 
