@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
@@ -35,12 +37,13 @@ class _SelectAppointmentTimeScreenState
   String _selectedTiming;
   DateTime _selectedDate;
   Map profileMap = new Map();
+  String currentDate;
 
   @override
   void initState() {
     super.initState();
 
-    String currentDate = DateFormat('MM/dd/yyyy').format(DateTime.now());
+    currentDate = DateFormat('MM/dd/yyyy').format(DateTime.now());
     _selectedDate = DateTime.now();
 
     _dayDateMap["day"] = DateTime.now().weekday.toString();
@@ -127,7 +130,7 @@ class _SelectAppointmentTimeScreenState
       onDateChange: (DateTime selectedDate) {
         _dayDateMap["day"] = selectedDate.weekday.toString();
         _dayDateMap["date"] =
-            DateFormat("dd-MM-yyyy").format(selectedDate).toString();
+            DateFormat("MM/dd/yyyy").format(selectedDate).toString();
 
         setState(() {
           _scheduleFuture = _apiBaseHelper
@@ -175,13 +178,18 @@ class _SelectAppointmentTimeScreenState
                 int prefixValue =
                     int.parse(schedule.startTime.toString().substring(0, 2));
 
-                if (DateTime.now().hour < prefixValue) {
-                  if (prefixValue < 12) {
-                    _morningList.add(schedule);
-                  } else if (12 <= prefixValue && prefixValue < 18) {
-                    _afternoonList.add(schedule);
-                  } else {
-                    _eveningList.add(schedule);
+                if (currentDate == _dayDateMap["date"]) {
+                  // if (currentDate ==
+                  //     DateFormat('MM/dd/yyyy')
+                  //         .format(DateTime.parse(schedule.date))) {
+                  if (DateTime.now().hour < prefixValue) {
+                    if (prefixValue < 12) {
+                      _morningList.add(schedule);
+                    } else if (12 <= prefixValue && prefixValue < 18) {
+                      _afternoonList.add(schedule);
+                    } else {
+                      _eveningList.add(schedule);
+                    }
                   }
                 } else {
                   if (prefixValue < 12) {
