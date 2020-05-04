@@ -190,10 +190,8 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
           minimumAspectRatio: 1.0,
         ),
       );
-      if (croppedFile == null) {
-      } else {
-        log(image.lengthSync().toString());
-        setState(() => imagesList.add(image.path));
+      if (croppedFile != null) {
+        setState(() => imagesList.add(croppedFile.path));
       }
     }
   }

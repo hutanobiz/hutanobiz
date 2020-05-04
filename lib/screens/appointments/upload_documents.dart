@@ -347,9 +347,8 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
           minimumAspectRatio: 1.0,
         ),
       );
-      if (croppedFile == null) {
-      } else {
-        setState(() => docsList.add(image));
+      if (croppedFile != null) {
+        setState(() => docsList.add(croppedFile));
       }
     }
   }

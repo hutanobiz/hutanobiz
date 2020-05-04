@@ -630,8 +630,7 @@ class _SignUpFormState extends State<Register> {
           minimumAspectRatio: 1.0,
         ),
       );
-      if (croppedFile == null) {
-      } else {
+      if (croppedFile != null) {
         setState(
           () => profileImage = croppedFile,
         );

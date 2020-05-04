@@ -198,12 +198,11 @@ class _UploadInsuranceImagesScreenState
           minimumAspectRatio: 1.0,
         ),
       );
-      if (croppedFile == null) {
-      } else {
+      if (croppedFile != null) {
         setState(
           () => imageType == 0
-              ? imagesList["0"] = image.path
-              : imagesList["1"] = image.path,
+              ? imagesList["0"] = croppedFile.path
+              : imagesList["1"] = croppedFile.path,
         );
       }
     }
