@@ -129,7 +129,9 @@ class ProviderWidget extends StatelessWidget {
                             ),
                             Expanded(
                               child: Text(
-                                data['about'] ?? "---",
+                                data['specialties'] != null
+                                    ? data['specialties'][0]["title"] ?? "---"
+                                    : "---",
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -145,12 +147,25 @@ class ProviderWidget extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 5.0),
-                  child: Text(
-                    "\$$fee",
-                    style: TextStyle(
-                      fontSize: 22.0,
-                      fontWeight: FontWeight.w700,
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Text(
+                        "\$$fee",
+                        style: TextStyle(
+                          fontSize: 22.0,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(height: 3),
+                      Text(
+                        "Consultation fee",
+                        style: TextStyle(
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
