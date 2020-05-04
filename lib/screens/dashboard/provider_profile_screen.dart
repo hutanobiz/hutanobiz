@@ -209,7 +209,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
           borderRadius: BorderRadius.circular(14.0),
         ),
         child: Text(
-          _providerData["userId"]["language"] ?? "---",
+          _providerData["userId"]["language"]?.toString() ?? "---",
           style: TextStyle(
             color: AppColors.windsor,
             fontSize: 14.0,
@@ -291,7 +291,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                 children: <TextSpan>[
                   TextSpan(text: 'Overall Rating '),
                   TextSpan(
-                      text: '5.0',
+                      text: _providerData['averageRating']?.toString() ?? "---",
                       style: TextStyle(
                         color: AppColors.goldenTainoi,
                         fontWeight: FontWeight.w600,

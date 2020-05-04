@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 
 class ProviderWidget extends StatelessWidget {
@@ -19,6 +20,17 @@ class ProviderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String fee = "---";
+    String speciality = "---";
+
+    if (data['specialties'] != null) {
+      if (data['specialties'][0] != null) {
+        if (data['specialties'][0] is String) {
+          speciality = data['specialties'][0]?.toString() ?? "---";
+        } else {
+          speciality = data['specialties'][0]["title"]?.toString() ?? "---";
+        }
+      }
+    }
 
     if (data["consultanceFee"] != null) {
       for (dynamic consultanceFee in data["consultanceFee"]) {
@@ -53,7 +65,10 @@ class ProviderWidget extends StatelessWidget {
                   height: 58.0,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage('http://i.imgur.com/QSev0hg.jpg'),
+                      image: data["userId"]["avatar"] == null
+                          ? AssetImage('images/profile_user.png')
+                          : NetworkImage(ApiBaseHelper.imageUrl +
+                              data["userId"]["avatar"]),
                       fit: BoxFit.cover,
                     ),
                     borderRadius: new BorderRadius.all(Radius.circular(50.0)),
@@ -93,7 +108,8 @@ class ProviderWidget extends StatelessWidget {
                                 width: 2,
                               ),
                               Text(
-                                "--- \u2022", //TODO: rating
+                                data['averageRating']?.toString() ??
+                                    "---" + " \u2022",
                                 style: TextStyle(
                                   color: Colors.black.withOpacity(0.6),
                                 ),
@@ -101,8 +117,9 @@ class ProviderWidget extends StatelessWidget {
                               SizedBox(width: 8.0),
                               Expanded(
                                 child: Text(
-                                  data['supervising']['professionalTitle'] ??
-                                      "----", //TODO professionalTitle
+                                  data['supervising']['professionalTitle']
+                                          ?.toString() ??
+                                      "----",
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     color: Colors.black.withOpacity(0.6),
@@ -129,9 +146,7 @@ class ProviderWidget extends StatelessWidget {
                             ),
                             Expanded(
                               child: Text(
-                                data['specialties'] != null
-                                    ? data['specialties'][0]["title"] ?? "---"
-                                    : "---",
+                                speciality,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -196,7 +211,8 @@ class ProviderWidget extends StatelessWidget {
                       SizedBox(width: 3.0),
                       Expanded(
                         child: Text(
-                          data['businessLocation']['address'] ?? "---",
+                          data['businessLocation']['address']?.toString() ??
+                              "---",
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                           ),
