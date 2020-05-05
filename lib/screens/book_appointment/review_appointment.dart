@@ -31,6 +31,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   String _timeHours, _timeMins;
   DateTime _bookedDate;
   String bookedTime;
+  List<Services> _servicesList = new List();
 
   final Set<Marker> _markers = {};
   final Set<Polyline> _polyline = {};
@@ -131,12 +132,14 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
     appointmentData["status"] = _servicesMap["status"];
 
+    if (_servicesList.length > 0) _servicesList.clear();
+
     if (_servicesMap["status"].toString() == "1") {
       if (_servicesMap["services"] != null) {
-        List<Services> _servicesList = _servicesMap["services"];
+        _servicesList = _servicesMap["services"];
 
         for (int i = 0; i < _servicesList.length; i++) {
-          appointmentData["services[${i.toString()}][serviceId]"] =
+          appointmentData["services[${i.toString()}][subServiceId]"] =
               _servicesList[i].subServiceId;
           appointmentData["services[${i.toString()}][amount]"] =
               _servicesList[i].amount.toString();
@@ -265,7 +268,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
       ),
     ));
 
-    formWidget.add(SizedBox(height: 30.0));
+    formWidget.add(SizedBox(height: 26.0));
 
     formWidget.add(container(
         "Date & Time",
@@ -281,7 +284,9 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         profileMap['businessLocation']['address'] ?? "---",
         "ic_office_address"));
 
-    SizedBox(height: 6.0);
+    formWidget.add(_servicesList != null && _servicesList.length > 0
+        ? servicesWidget()
+        : Container());
 
     formWidget.add(_initialPosition == null
         ? Container()
@@ -363,7 +368,49 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             ],
           ));
 
+    formWidget.add(duePaymentWidget());
+
     return formWidget;
+  }
+
+  Widget duePaymentWidget() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.fromLTRB(20, 6, 20, 20),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.sunglow.withOpacity(0.42),
+        border: Border.all(
+          width: 1.0,
+          color: AppColors.sunglow,
+        ),
+        borderRadius: BorderRadius.circular(
+          14.0,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Note",
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(height: 5),
+          Text(
+            "Payment will be due after the request is accepted.",
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget container(String heading, String subtitle, String icon) {
@@ -436,6 +483,102 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             ],
           )
         ],
+      ),
+    );
+  }
+
+  Widget servicesWidget() {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Selected Services",
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(height: 12),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14.0),
+              border: Border.all(
+                color: Colors.grey[200],
+                width: 0.5,
+              ),
+            ),
+            child: ListView.separated(
+                separatorBuilder: (BuildContext context, int index) =>
+                    Divider(),
+                physics: ClampingScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: _servicesList.length,
+                itemBuilder: (context, index) {
+                  Services services = _servicesList[index];
+                  return serviceSlotWidget(services);
+                }),
+          ),
+          SizedBox(height: 6.0),
+        ],
+      ),
+    );
+  }
+
+  Widget serviceSlotWidget(Services services) {
+    return ListTile(
+      title: Text(
+        services.serviceName ?? "---",
+        style: TextStyle(
+          fontSize: 14.0,
+          fontWeight: FontWeight.w600,
+          color: Colors.black,
+        ),
+      ),
+      subtitle: RichText(
+        text: TextSpan(
+          style: TextStyle(
+            fontSize: 13.0,
+            color: Colors.black,
+            fontWeight: FontWeight.w400,
+          ),
+          children: <TextSpan>[
+            TextSpan(
+              text: 'Amount \$ ',
+              style: TextStyle(
+                fontSize: 13.0,
+                fontWeight: FontWeight.w500,
+                color: Colors.black.withOpacity(0.85),
+              ),
+            ),
+            TextSpan(
+              text: '${services.amount} \u2022 ',
+              style: TextStyle(
+                fontSize: 13.0,
+                fontWeight: FontWeight.w600,
+                color: Colors.black.withOpacity(0.85),
+              ),
+            ),
+            TextSpan(
+              text: 'Duration ',
+              style: TextStyle(
+                fontSize: 13.0,
+                fontWeight: FontWeight.w500,
+                color: Colors.black.withOpacity(0.85),
+              ),
+            ),
+            TextSpan(
+              text: '${services.duration} min',
+              style: TextStyle(
+                fontSize: 13.0,
+                fontWeight: FontWeight.w600,
+                color: Colors.black.withOpacity(0.85),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
