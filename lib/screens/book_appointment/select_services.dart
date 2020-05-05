@@ -63,6 +63,8 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
             if (_selectedServicesList.length > 0) {
               _container.setServicesData("status", "1");
               _container.setServicesData("services", _selectedServicesList);
+              _selectedServicesList.clear();
+              
               Navigator.of(context)
                   .pushNamed(Routes.selectAppointmentTimeScreen);
             } else {
