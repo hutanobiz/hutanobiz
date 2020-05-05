@@ -57,7 +57,7 @@ class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
     return CustomCardView(
       onTap: () {
         String type;
-        if (cardText.contains("office")) {
+        if (cardText.toLowerCase().contains("office")) {
           type = "1";
         } else if (cardText.toLowerCase().contains("video")) {
           type = "2";
