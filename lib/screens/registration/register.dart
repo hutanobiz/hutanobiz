@@ -22,6 +22,7 @@ import 'package:hutano/widgets/password_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class Register extends StatefulWidget {
@@ -65,10 +66,15 @@ class _SignUpFormState extends State<Register> {
   String email;
   File profileImage;
   bool isLoading = false;
+  DateTime _selectedDate;
+
+  final _dobController = new TextEditingController();
 
   @override
   void initState() {
     super.initState();
+
+    _selectedDate = DateTime.now();
 
     api.getStates().then((value) {
       stateList = value;
@@ -117,6 +123,7 @@ class _SignUpFormState extends State<Register> {
     _zipController.dispose();
     _phoneController.dispose();
     _passwordController.dispose();
+    _dobController.dispose();
     super.dispose();
   }
 
@@ -280,6 +287,54 @@ class _SignUpFormState extends State<Register> {
       ),
     );
 
+    formWidget.add(Widgets.sizedBox(height: 29.0));
+    formWidget.add(
+      TextFormField(
+        enabled: false,
+        controller: _dobController,
+        decoration: InputDecoration(
+          suffixIcon: Container(
+            height: 16,
+            width: 16,
+            padding: EdgeInsets.symmetric(vertical: 15),
+            child: "ic_calendar".imageIcon(
+              width: 16,
+              height: 16,
+              color: AppColors.persian_indigo,
+            ),
+          ),
+          labelText: "Date of Birth",
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+        ),
+      ).onClick(onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+        showDatePicker(
+          context: context,
+          initialDate: _selectedDate,
+          firstDate: DateTime(1880),
+          lastDate: DateTime.now(),
+        ).then((date) {
+          if (date != null)
+            setState(() {
+              _selectedDate = date;
+              var aa = DateFormat('dd').format(date) +
+                  ' ' +
+                  DateFormat('MMMM').format(date) +
+                  ' ' +
+                  date.year.toString();
+
+              if (((DateTime.now().difference(date).inDays) / 365).floor() >=
+                  18) {
+                _dobController.text = aa;
+              } else {
+                Widgets.showToast("Minimum age should be 18");
+              }
+            });
+        });
+      }),
+    );
     formWidget.add(Widgets.sizedBox(height: 29.0));
 
     formWidget.add(
@@ -505,6 +560,8 @@ class _SignUpFormState extends State<Register> {
                       _genderGroup.trim().toString() == "male" ? "1" : "2";
                   loginData["language"] = _langController.text;
                   loginData["state"] = stateId;
+                  loginData["dob"] =
+                      DateFormat("MM/dd/yyyy").format(_selectedDate).toString();
 
                   if (profileImage != null) {
                     _register(loginData);
@@ -745,7 +802,10 @@ class _SignUpFormState extends State<Register> {
       return false;
     else if (_passwordController.text.length < 6)
       return false;
-    else
+    else if (((DateTime.now().difference(_selectedDate).inDays) / 365).floor() <
+        18) {
+      return false;
+    } else
       return true;
   }
 
