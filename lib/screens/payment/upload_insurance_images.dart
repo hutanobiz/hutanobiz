@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:async/async.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:hutano/api/api_helper.dart';
@@ -9,7 +10,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
-import 'package:hutano/widgets/fancy_button.dart';
+import 'package:hutano/widgets/dashed_border.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/widgets.dart';
@@ -27,9 +28,9 @@ class _UploadInsuranceImagesScreenState
   File croppedFile;
   JsonDecoder _decoder = new JsonDecoder();
 
-  Map<String, String> imagesList = Map();
   InheritedContainerState _container;
   Map _insuranceMap;
+  String frontImagePath, backImagePath;
 
   bool _isLoading = false;
 
@@ -51,14 +52,11 @@ class _UploadInsuranceImagesScreenState
         isAddBack: false,
         addBottomArrows: true,
         onForwardTap: () {
-          if (imagesList["0"] == null) {
+          if (frontImagePath == null) {
             Widgets.showToast("Please upload front insurance card image");
           } else {
             _uploadImage(
-              imagesList,
-              imagesList.length > 0
-                  ? 'Insurance card added successfully'
-                  : null,
+              'Insurance card added successfully',
             );
           }
         },
@@ -70,20 +68,6 @@ class _UploadInsuranceImagesScreenState
               margin: const EdgeInsets.only(bottom: 65),
               child: ListView(
                 children: widgetList(),
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: SizedBox(
-                height: 55.0,
-                child: FancyButton(
-                  title: "Upload Insurance images",
-                  buttonIcon: "ic_upload",
-                  buttonColor: AppColors.windsor,
-                  onPressed: () {
-                    showImageTypeDialog();
-                  },
-                ),
               ),
             ),
           ],
@@ -105,76 +89,116 @@ class _UploadInsuranceImagesScreenState
 
     formWidget.add(SizedBox(height: 30));
 
-    formWidget.add(Wrap(
-      spacing: 16,
-      runSpacing: 20,
-      children: images(),
-    ));
+    formWidget.add(
+      Row(
+        children: <Widget>[
+          Expanded(
+            child: DashedBorder(
+              onTap: () => showPickerDialog(true),
+              child: frontImagePath == null
+                  ? uploadWidget(
+                      "Front", AssetImage("images/ic_front_image.png"))
+                  : imageWidget(frontImagePath, true),
+            ),
+          ),
+          SizedBox(width: 16.0),
+          Expanded(
+            child: InkWell(
+              splashColor: Colors.grey,
+              onTap: () => showPickerDialog(false),
+              child: DottedBorder(
+                borderType: BorderType.RRect,
+                radius: Radius.circular(14),
+                color: Colors.black26,
+                dashPattern: [6, 6],
+                strokeWidth: 0.5,
+                child: backImagePath == null
+                    ? uploadWidget(
+                        "Back", AssetImage("images/ic_back_image.png"))
+                    : imageWidget(backImagePath, false),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
 
     return formWidget;
   }
 
-  images() {
-    List<Widget> columnContent = [];
-
-    imagesList.forEach((key, value) {
-      columnContent.add(
-        Container(
-          height: 110.0,
-          width: 160.0,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16.0),
-            border: Border.all(
-              color: Colors.grey[300],
-            ),
-          ),
-          child: Stack(
-            fit: StackFit.expand,
-            children: <Widget>[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(16.0),
-                child: Image.file(
-                  File(value),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: SizedBox(
-                    height: 22,
-                    width: 22,
-                    child: RawMaterialButton(
-                      onPressed: () {
-                        setState(() => imagesList.remove(key));
-                        // _uploadImage(imagesList, null);
-                      },
-                      child: Icon(
-                        Icons.close,
-                        color: Colors.grey,
-                        size: 16.0,
-                      ),
-                      shape: CircleBorder(),
-                      elevation: 2.0,
-                      fillColor: Colors.white,
-                      constraints:
-                          const BoxConstraints(minWidth: 22.0, minHeight: 22.0),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+  uploadWidget(title, image) {
+    return Row(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image(
+            image: image,
+            height: 48.0,
+            width: 48.0,
           ),
         ),
-      );
-    });
-
-    return columnContent;
+        SizedBox(width: 6.0),
+        Text(
+          title,
+        )
+      ],
+    );
   }
 
-  Future getImage(int imageType, int source) async {
+  Widget imageWidget(String path, bool isFront) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8.0),
+        border: Border.all(
+          color: Colors.grey[300],
+        ),
+      ),
+      child: Stack(
+        fit: StackFit.passthrough,
+        children: <Widget>[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8.0),
+            child: Image.file(
+              File(path),
+              fit: BoxFit.cover,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Align(
+              alignment: Alignment.topRight,
+              child: SizedBox(
+                height: 22,
+                width: 22,
+                child: RawMaterialButton(
+                  onPressed: () {
+                    setState(
+                      () => isFront
+                          ? frontImagePath = null
+                          : backImagePath = null,
+                    );
+                  },
+                  child: Icon(
+                    Icons.close,
+                    color: Colors.grey,
+                    size: 16.0,
+                  ),
+                  shape: CircleBorder(),
+                  elevation: 2.0,
+                  fillColor: Colors.white,
+                  constraints:
+                      const BoxConstraints(minWidth: 22.0, minHeight: 22.0),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future getImage(bool isFront, int source) async {
     var image = await ImagePicker.pickImage(
         imageQuality: 25,
         source: (source == 2) ? ImageSource.camera : ImageSource.gallery);
@@ -200,15 +224,15 @@ class _UploadInsuranceImagesScreenState
       );
       if (croppedFile != null) {
         setState(
-          () => imageType == 0
-              ? imagesList["0"] = croppedFile.path
-              : imagesList["1"] = croppedFile.path,
+          () => isFront
+              ? frontImagePath = croppedFile.path
+              : backImagePath = croppedFile.path,
         );
       }
     }
   }
 
-  _uploadImage(Map<String, String> imagesList, String message) async {
+  _uploadImage(String message) async {
     try {
       SharedPref().getToken().then((token) async {
         setLoading(true);
@@ -219,8 +243,8 @@ class _UploadInsuranceImagesScreenState
         request.fields["insuranceId[]"] =
             _insuranceMap["insuranceId"].toString();
 
-        if (imagesList != null && imagesList.length > 0) {
-          File frontImage = File(imagesList["0"]);
+        if (frontImagePath != null) {
+          File frontImage = File(frontImagePath);
           var stream =
               http.ByteStream(DelegatingStream.typed(frontImage.openRead()));
           var length = await frontImage.length();
@@ -233,8 +257,8 @@ class _UploadInsuranceImagesScreenState
 
           request.files.add(frontMultipartFile);
 
-          if (imagesList["1"] != null) {
-            File backImage = File(imagesList["1"]);
+          if (backImagePath != null) {
+            File backImage = File(backImagePath);
             var stream =
                 http.ByteStream(DelegatingStream.typed(backImage.openRead()));
             var length = await backImage.length();
@@ -270,7 +294,7 @@ class _UploadInsuranceImagesScreenState
     }
   }
 
-  void showPickerDialog(int imageType) {
+  void showPickerDialog(bool isFront) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -281,43 +305,15 @@ class _UploadInsuranceImagesScreenState
             new FlatButton(
               child: new Text("Camera"),
               onPressed: () {
-                getImage(imageType, 2);
+                getImage(isFront, 2);
                 Navigator.pop(context);
               },
             ),
             new FlatButton(
               child: new Text("Gallery"),
               onPressed: () {
-                getImage(imageType, 3);
+                getImage(isFront, 3);
                 Navigator.pop(context);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void showImageTypeDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: new Text("Picker"),
-          content: new Text("Select image type."),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text("Front image"),
-              onPressed: () {
-                Navigator.pop(context);
-                showPickerDialog(0);
-              },
-            ),
-            new FlatButton(
-              child: new Text("Back image"),
-              onPressed: () {
-                Navigator.pop(context);
-                showPickerDialog(1);
               },
             ),
           ],
