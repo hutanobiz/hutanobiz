@@ -30,6 +30,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   bool _isLoading = false;
   String _timeHours, _timeMins;
   DateTime _bookedDate;
+  String bookedTime;
 
   final Set<Marker> _markers = {};
   final Set<Polyline> _polyline = {};
@@ -113,7 +114,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         (_initialPosition.longitude + _news.longitude) / 2);
     _getUserLocation();
 
-    String bookedTime = _appointmentData["time"];
+    bookedTime = _appointmentData["time"];
     _bookedDate = _appointmentData["date"];
 
     if (bookedTime.length < 4) {
@@ -137,8 +138,6 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         for (int i = 0; i < _servicesList.length; i++) {
           appointmentData["subService[${i.toString()}][serviceId]"] =
               _servicesList[i].sId;
-          appointmentData["subService[${i.toString()}][duration]"] =
-              _servicesList[i].duration.toString();
           appointmentData["subService[${i.toString()}][amount]"] =
               _servicesList[i].amount.toString();
         }
@@ -149,10 +148,6 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
       for (int i = 0; i < _consultaceList.length; i++) {
         appointmentData["consultanceFee[${i.toString()}][fee]"] =
             _consultaceList[i]["fee"].toString();
-        appointmentData["consultanceFee[${i.toString()}][duration]"] =
-            _consultaceList[i]["duration"].toString();
-        // appointmentData["consultanceFee[${i.toString()}][amount]"] =
-        //     _consultaceList[i]["amount"].toString();
       }
     }
   }
@@ -218,19 +213,14 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
                     String doctorId = profileMap["userId"]["_id"].toString();
 
-                    String startTime = _timeHours + ":" + _timeMins;
-
-                    String endTime = (int.parse(_timeHours) + 1).toString() +
-                        ":" +
-                        _timeMins;
-
-                    appointmentData["type"] =
-                        _container.getProjectsResponse()["serviceType"] ?? "1";
+                    appointmentData["type"] = _container
+                            .getProjectsResponse()["serviceType"]
+                            ?.toString() ??
+                        "1";
                     appointmentData["date"] =
                         DateFormat("MM/dd/yyyy").format(_bookedDate).toString();
 
-                    appointmentData["fromTime"] = startTime;
-                    appointmentData["toTime"] = endTime;
+                    appointmentData["fromTime"] = bookedTime;
                     appointmentData["doctor"] = doctorId;
 
                     SharedPref().getToken().then((String token) {
@@ -250,7 +240,6 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                         Widgets.showToast("Booking request sent successfully!");
                       }).futureError((error) {
                         _loading(false);
-                        Widgets.showToast(error.toString());
                         error.toString().debugLog();
                       });
                     });
