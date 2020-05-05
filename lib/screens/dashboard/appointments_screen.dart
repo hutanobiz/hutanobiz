@@ -409,11 +409,11 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                       Navigator.of(context)
                           .pushNamed(Routes.consentToTreatScreen);
                     })
-                  : listType == 2
+                  : listType == 2 && status == "4"
                       ? leftButton(
                           listType, response, "Treatment summary", () {})
                       : Container(),
-              listType == 2 && status == "1"
+              listType == 2 && status == "4"
                   ? rightButton(listType, response, "Rate Now", () {
                       _container.setProviderData("providerData", response);
                       _container.setAppointmentId(response["_id"].toString());
