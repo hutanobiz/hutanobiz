@@ -7,7 +7,6 @@ import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
-import 'package:hutano/widgets/widgets.dart';
 
 class RateDoctorScreen extends StatefulWidget {
   RateDoctorScreen({Key key}) : super(key: key);
@@ -104,6 +103,8 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                   title: "Submit",
                   onPressed: rateMap.length >= 5
                       ? () {
+                          FocusScope.of(context).requestFocus(FocusNode());
+
                           List reasonList = List();
                           if (_doctorFriendliness) {
                             reasonList.add("1");
@@ -133,9 +134,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                             api.rateDoctor(token, rateMap).then((response) {
                               setState(() => _isLoading = false);
 
-                              Widgets.showToast("Rated doctor successfully");
-
-                              Navigator.of(context).pop();
+                              showThankDialog();
                             }).futureError((onError) {
                               setState(() => _isLoading = false);
                               onError.toString().debugLog();
@@ -222,7 +221,8 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
       for (dynamic detail in _providerData["doctorData"]) {
         if (detail["averageRating"] != null) if (detail["professionalTitle"] !=
             null) {
-          professionalTitle = detail["professionalTitle"]["title"] ?? "---";
+          professionalTitle =
+              detail["professionalTitle"]["title"]?.toString() ?? "---";
         }
       }
     }
@@ -445,6 +445,79 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
         activeColor: AppColors.goldenTainoi,
         value: isChecked,
       ),
+    );
+  }
+
+  void showThankDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(14.0),
+            ),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(
+                14.0,
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                "ic_feedback_done".imageIcon(
+                  width: 80,
+                  height: 80,
+                ),
+                SizedBox(height: 15),
+                Text(
+                  "Thank You!!\nFor your feedback.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "We value your feedback.",
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black.withOpacity(0.85),
+                  ),
+                ),
+                SizedBox(height: 20),
+                FlatButton(
+                    color: AppColors.goldenTainoi,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10.0),
+                      ),
+                    ),
+                    child: Text(
+                      "Done",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    onPressed: () {
+                      FocusScope.of(context).requestFocus(FocusNode());
+
+                      int count = 0;
+                      Navigator.of(context).popUntil((_) => count++ >= 2);
+                    })
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
