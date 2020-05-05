@@ -136,9 +136,9 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         List<Services> _servicesList = _servicesMap["services"];
 
         for (int i = 0; i < _servicesList.length; i++) {
-          appointmentData["subService[${i.toString()}][serviceId]"] =
-              _servicesList[i].sId;
-          appointmentData["subService[${i.toString()}][amount]"] =
+          appointmentData["services[${i.toString()}][serviceId]"] =
+              _servicesList[i].subServiceId;
+          appointmentData["services[${i.toString()}][amount]"] =
               _servicesList[i].amount.toString();
         }
       }
