@@ -60,11 +60,17 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
         ),
         onForwardTap: () {
           if (_radioValue == 1) {
+            Map<String, Services> map = Map();
+            for (var item in _selectedServicesList) {
+              map[item.subServiceId] = item;
+            }
+
+            _selectedServicesList = map.values.toList();
+
             if (_selectedServicesList.length > 0) {
               _container.setServicesData("status", "1");
               _container.setServicesData("services", _selectedServicesList);
-              _selectedServicesList.clear();
-              
+
               Navigator.of(context)
                   .pushNamed(Routes.selectAppointmentTimeScreen);
             } else {
