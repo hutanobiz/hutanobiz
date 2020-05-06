@@ -22,6 +22,7 @@ class AppointmentDetailScreen extends StatefulWidget {
 class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   Future<dynamic> _profileFuture;
   InheritedContainerState _container;
+  List feeList = List();
 
   @override
   void didChangeDependencies() {
@@ -107,7 +108,6 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     } else {
       paymentType = 0;
     }
-    _container.getProviderData().clear();
     _container.setProviderData("providerData", _data);
 
     String name = "---",
@@ -122,6 +122,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     LatLng latLng = new LatLng(0, 0);
 
     rating = _data["averageRating"] ?? "---";
+
+    if (_data["subServices"] != null) {
+      feeList = _data["subServices"];
+    }
 
     if (_data["doctorData"] != null) {
       for (dynamic detail in _data["doctorData"]) {
@@ -558,6 +562,19 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
   Widget feeWidget(
       String generalFee, String officeVisitCharge, String inOfficeCharge) {
+    double totalFee = 0;
+
+    if (feeList.length > 0) {
+      totalFee = feeList.fold(
+          0,
+          (sum, item) =>
+              sum + double.parse(item["subService"]["amount"].toString()));
+    } else {
+      totalFee = (double.parse(generalFee) +
+          double.parse(inOfficeCharge) +
+          double.parse(officeVisitCharge));
+    }
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
       child: Column(
@@ -579,20 +596,64 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             ),
             child: Column(
               children: <Widget>[
-                subFeeWidget("General Medicine Consult", "\$$generalFee"),
-                subFeeWidget("In-office Charge", "\$$inOfficeCharge"),
-                subFeeWidget("Office Visit charge", "\$$officeVisitCharge"),
+                feeList.length > 0
+                    ? ListView.builder(
+                        physics: ClampingScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: feeList.length,
+                        itemBuilder: (context, index) {
+                          return subServicesFeeWidget(feeList[index]);
+                        })
+                    : Column(
+                        children: <Widget>[
+                          subFeeWidget(
+                              "General Medicine Consult", "\$$generalFee"),
+                          inOfficeCharge == "0.0"
+                              ? Container()
+                              : subFeeWidget(
+                                  "In-office Charge", "\$$inOfficeCharge"),
+                          officeVisitCharge == "0.0"
+                              ? Container()
+                              : subFeeWidget("Office Visit charge",
+                                  "\$$officeVisitCharge"),
+                        ],
+                      ),
                 SizedBox(height: 16),
                 Divider(),
-                subFeeWidget(
-                    "Total",
-                    "\$" +
-                        (double.parse(generalFee) +
-                                double.parse(inOfficeCharge) +
-                                double.parse(officeVisitCharge))
-                            .toString()),
+                subFeeWidget("Total", "\$" + totalFee.toString()),
                 SizedBox(height: 16),
               ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget subServicesFeeWidget(Map feeMap) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      child: Row(
+        children: <Widget>[
+          Text(
+            feeMap["subServiceName"]?.toString() ?? "---",
+            style: TextStyle(
+              fontSize: 14.0,
+              fontWeight: FontWeight.w500,
+              color: Colors.black.withOpacity(0.80),
+            ),
+          ),
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                "\$" + feeMap["subService"]["amount"]?.toString() ?? "---",
+                style: TextStyle(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black.withOpacity(0.80),
+                ),
+              ),
             ),
           ),
         ],
