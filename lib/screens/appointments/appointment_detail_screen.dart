@@ -23,6 +23,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   Future<dynamic> _profileFuture;
   InheritedContainerState _container;
   List feeList = List();
+  double totalFee = 0;
 
   @override
   void didChangeDependencies() {
@@ -117,7 +118,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         avatar,
         address = "---",
         inOfficeFee = "0.0", //TODO: in-office charge
-        officeVisitFee = "0.0";
+        officeVisitFee = "0.0",
+        insuranceName = "---",
+        insuranceImage;
 
     LatLng latLng = new LatLng(0, 0);
 
@@ -125,6 +128,11 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
     if (_data["subServices"] != null) {
       feeList = _data["subServices"];
+    }
+
+    if (_data["insuranceData"] != null) {
+      insuranceName = _data["insuranceData"]["insuranceName"];
+      insuranceImage = _data["insuranceData"]["insuranceDocumentFront"];
     }
 
     if (_data["doctorData"] != null) {
@@ -325,7 +333,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         divider(),
         paymentType == 0
             ? SizedBox(height: 1)
-            : paymentWidget("cardNumber", paymentType),
+            : paymentWidget(
+                "cardNumber", paymentType, insuranceName, insuranceImage),
         paymentType == 0 ? Container() : divider(topPadding: 10.0),
       ],
     );
@@ -562,8 +571,6 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
   Widget feeWidget(
       String generalFee, String officeVisitCharge, String inOfficeCharge) {
-    double totalFee = 0;
-
     if (feeList.length > 0) {
       totalFee = feeList.fold(
           0,
@@ -574,6 +581,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           double.parse(inOfficeCharge) +
           double.parse(officeVisitCharge));
     }
+
+    _container.setProviderData("totalFee", totalFee.toString());
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
@@ -694,7 +703,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     );
   }
 
-  Widget paymentWidget(String cardNumber, int paymentType) {
+  Widget paymentWidget(String cardNumber, int paymentType, String insuranceName,
+      String insuranceImage) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
       child: Column(
@@ -711,16 +721,25 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Image.asset(
-                  paymentType == 1
-                      ? "images/ic_cash_payment.png"
-                      : "images/insurancePlaceHolder.png",
-                  height: 42,
-                  width: 42),
+              paymentType == 1
+                  ? Image.asset("images/ic_cash_payment.png",
+                      height: 42, width: 42)
+                  : insuranceImage == null
+                      ? Image.asset("images/insurancePlaceHolder.png",
+                          height: 42, width: 42)
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.network(
+                            ApiBaseHelper.imageUrl + insuranceImage,
+                            height: 42,
+                            width: 42,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
               SizedBox(width: 14.0),
               Expanded(
                 child: Text(
-                  paymentType == 1 ? "Cash" : "Insurance",
+                  paymentType == 1 ? "Cash" : insuranceName,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -788,44 +807,6 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       ),
     );
   }
-
-  // Widget paymentWidget(String cardNumber) {
-  //   return Padding(
-  //     padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: <Widget>[
-  //         Text(
-  //           "Payment Method",
-  //           style: TextStyle(
-  //             fontWeight: FontWeight.w500,
-  //           ),
-  //         ),
-  //         SizedBox(height: 18.0),
-  //         Row(
-  //           mainAxisAlignment: MainAxisAlignment.start,
-  //           crossAxisAlignment: CrossAxisAlignment.center,
-  //           children: <Widget>[
-  //             "ic_dummy_card".imageIcon(width: 42, height: 42),
-  //             SizedBox(width: 14.0),
-  //             Expanded(
-  //               child: Text(
-  //                 "Paid via Card **** 2563", //TODO: card number
-  //                 maxLines: 2,
-  //                 overflow: TextOverflow.ellipsis,
-  //                 style: TextStyle(
-  //                   fontWeight: FontWeight.w500,
-  //                   color: Colors.black,
-  //                   fontSize: 14.0,
-  //                 ),
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   Widget divider({double topPadding}) {
     return Padding(
