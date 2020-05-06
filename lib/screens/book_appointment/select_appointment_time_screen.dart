@@ -59,8 +59,11 @@ class _SelectAppointmentTimeScreenState
     if (_servicesMap["services"] != null) {
       List<Services> _servicesList = _servicesMap["services"];
 
-      for (int i = 0; i < _servicesList.length; i++) {
-        _dayDateMap["subService[${i.toString()}]"] = _servicesList[i].subServiceId;
+      if (_servicesList.length > 0) {
+        for (int i = 0; i < _servicesList.length; i++) {
+          _dayDateMap["subService[${i.toString()}]"] =
+              _servicesList[i].subServiceId;
+        }
       }
     }
 
@@ -177,9 +180,6 @@ class _SelectAppointmentTimeScreenState
                     int.parse(schedule.startTime.toString().substring(0, 2));
 
                 if (currentDate == _dayDateMap["date"]) {
-                  // if (currentDate ==
-                  //     DateFormat('MM/dd/yyyy')
-                  //         .format(DateTime.parse(schedule.date))) {
                   if (DateTime.now().hour < prefixValue) {
                     if (prefixValue < 12) {
                       _morningList.add(schedule);
