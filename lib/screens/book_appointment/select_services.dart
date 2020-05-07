@@ -19,7 +19,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
 
   int _radioValue = 0;
   List<Services> servicesList;
-  List<Services> _selectedServicesList = List();
+  Map<String, Services> _selectedServicesMap = Map();
   List _serviceList;
   Map profileMap = Map();
 
@@ -60,16 +60,10 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
         ),
         onForwardTap: () {
           if (_radioValue == 1) {
-            Map<String, Services> map = Map();
-            for (var item in _selectedServicesList) {
-              map[item.subServiceId] = item;
-            }
-
-            _selectedServicesList = map.values.toList();
-
-            if (_selectedServicesList.length > 0) {
+            if (_selectedServicesMap.values.toList().length > 0) {
               _container.setServicesData("status", "1");
-              _container.setServicesData("services", _selectedServicesList);
+              _container.setServicesData(
+                  "services", _selectedServicesMap.values.toList());
 
               Navigator.of(context)
                   .pushNamed(Routes.selectAppointmentTimeScreen);
@@ -284,16 +278,18 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
     return CheckboxListTile(
       dense: false,
       controlAffinity: ListTileControlAffinity.trailing,
-      value: services.isSelected,
+      value: _selectedServicesMap.containsKey(services.subServiceId),
       activeColor: AppColors.goldenTainoi,
       onChanged: (value) {
         setState(() {
-          services.isSelected = value;
+          value == true
+              ? _selectedServicesMap[services.subServiceId] = services
+              : _selectedServicesMap.remove(services.subServiceId);
         });
 
         value == true
-            ? _selectedServicesList.add(services)
-            : _selectedServicesList.remove(services);
+            ? _selectedServicesMap[services.subServiceId] = services
+            : _selectedServicesMap.remove(services.subServiceId);
       },
       title: Text(
         services.serviceName ?? "---",
