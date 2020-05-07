@@ -292,7 +292,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
             : _selectedServicesMap.remove(services.subServiceId);
       },
       title: Text(
-        services.serviceName ?? "---",
+        services.subServiceName ?? "---",
         style: TextStyle(
           fontSize: 14.0,
           fontWeight: FontWeight.w600,
