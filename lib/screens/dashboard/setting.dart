@@ -3,6 +3,7 @@ import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/widgets/widgets.dart';
 import 'package:package_info/package_info.dart';
 
 import '../../colors.dart';
@@ -39,19 +40,25 @@ class _SettingsScreenState extends State<SettingScreen> {
 
   @override
   void didChangeDependencies() {
+    super.didChangeDependencies();
+
     SharedPref().getToken().then((token) {
       api.profile(token, Map()).then((dynamic response) {
-        setState(() {
-          if (response['response'] != null) {
-            name = response['response']['fullName'].toString() ?? "---";
-            email = response['response']['email'].toString() ?? "---";
-            phone = response['response']['phoneNumber'].toString() ?? "---";
-            avatar = response['response']['avatar'].toString();
-          }
-        });
+        if (mounted) {
+          setState(() {
+            if (response['response'] != null) {
+              name = response['response']['fullName'].toString() ?? "---";
+              email = response['response']['email'].toString() ?? "---";
+              phone = response['response']['phoneNumber'].toString() ?? "---";
+              avatar = response['response']['avatar'].toString();
+            }
+          });
+        }
+      }).futureError((error) {
+        Widgets.showToast(error.toString());
+        error.toString().debugLog();
       });
     });
-    super.didChangeDependencies();
   }
 
   @override

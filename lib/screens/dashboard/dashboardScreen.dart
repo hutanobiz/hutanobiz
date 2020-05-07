@@ -379,13 +379,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
       //     addresses.first.thoroughfare ??
       //     addresses.first.subAdminArea;
 
-      setState(() {
-        _isLoading = false;
-        _currentddress = address.endsWith(", ")
-            ? address.substring(0, address.length - 2)
-            : address;
-        conatiner.setUserLocation("userAddress", _currentddress);
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _currentddress = address.endsWith(", ")
+              ? address.substring(0, address.length - 2)
+              : address;
+          conatiner.setUserLocation("userAddress", _currentddress);
+        });
+      }
     } on PlatformException catch (e) {
       setState(() {
         _isLoading = false;
