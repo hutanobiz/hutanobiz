@@ -152,13 +152,21 @@ class _VerifyOTPState extends State<VerifyOTP> {
           ApiBaseHelper api = new ApiBaseHelper();
 
           Map<String, String> loginData = Map();
-          loginData["email"] = email;
-          loginData["type"] = "1";
-          loginData["step"] = "1";
-          loginData["fullName"] = "user";
-          api.register(loginData).then((dynamic user) {
-            Widgets.showToast(user.toString());
-          });
+          if (isForgot) {
+            loginData["email"] = email;
+            loginData["step"] = "1";
+            api.resetPassword(loginData).then((dynamic user) {
+              Widgets.showToast(user.toString());
+            });
+          } else {
+            loginData["email"] = email;
+            loginData["type"] = "1";
+            loginData["step"] = "4";
+            loginData["fullName"] = "user";
+            api.register(loginData).then((dynamic user) {
+              Widgets.showToast(user.toString());
+            });
+          }
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
