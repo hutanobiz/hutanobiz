@@ -114,7 +114,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   children: <Widget>[
                     _currentddress.length > 45
                         ? SizedBox(
-                            width: 120,
+                            width: 250,
                             child: Text(
                               _currentddress,
                               maxLines: 1,
@@ -358,33 +358,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           await Geocoder.local.findAddressesFromCoordinates(coordinates);
       conatiner.setUserLocation("latLng", LatLng(latitude, longitude));
 
-      String address = "";
-
-      if (addresses.first.subThoroughfare != null &&
-          addresses.first.subThoroughfare != "") {
-        address = addresses.first.subThoroughfare + ", ";
-      }
-
-      if (addresses.first.thoroughfare != null &&
-          addresses.first.thoroughfare != "") {
-        address = address + addresses.first.thoroughfare + ", ";
-      }
-
-      if (addresses.first.subAdminArea != null &&
-          addresses.first.subAdminArea != "") {
-        address = address + addresses.first.subAdminArea;
-      }
-
-      // var first = addresses.first.subThoroughfare ??
-      //     addresses.first.thoroughfare ??
-      //     addresses.first.subAdminArea;
+      var first = addresses.first.addressLine?.toString();
 
       if (mounted) {
         setState(() {
           _isLoading = false;
-          _currentddress = address.endsWith(", ")
-              ? address.substring(0, address.length - 2)
-              : address;
+          _currentddress = first;
           conatiner.setUserLocation("userAddress", _currentddress);
         });
       }
