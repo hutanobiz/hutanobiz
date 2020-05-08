@@ -176,7 +176,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
           todaysTimings =
               scheduleMap["fromTime"] + " - " + scheduleMap["toTime"] + " ; ";
         }
-        
+
         if ((DateTime.now().weekday + 1).toString() == days.toString()) {
           tomorrowsTimings =
               scheduleMap["fromTime"] + " - " + scheduleMap["toTime"] + " ; ";
@@ -329,9 +329,9 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
         child: Text(
           _providerData["userId"]["language"]?.toString() ?? "---",
           style: TextStyle(
-            color: AppColors.windsor,
-            fontSize: 14.0,
-            fontWeight: FontWeight.w600,
+            color: Colors.black,
+            fontSize: 13.0,
+            fontWeight: FontWeight.w400
           ),
         ),
       ),
@@ -399,14 +399,12 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                 ],
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 5),
             RawMaterialButton(
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               onPressed: () {
                 // Navigator.of(context).pushNamed(
-                //   _providerData["consentToTreat"] == false
-                //       ? Routes.consentToTreatScreen
-                //       : Routes.paymentMethodScreen,
+                //   Routes.availableTimingsScreen,
                 // );
               },
               child: Row(
