@@ -80,12 +80,13 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                 alignment: FractionalOffset.bottomRight,
                 child: Container(
                   height: 55.0,
-                  width: MediaQuery.of(context).size.width - 76.0,
-                  padding: const EdgeInsets.only(right: 20.0, left: 40.0),
+                  width: 185.0,
+                  padding: const EdgeInsets.only(right: 20.0),
                   child: FancyButton(
-                    title: "Treatment Summary",
+                    title: "Track",
                     onPressed: () => Navigator.of(context)
-                        .pushNamed(Routes.treatmentSummaryScreen),
+                        .pushNamed(Routes.trackTreatmentScreen),
+                    //Routes.treatmentSummaryScreen
                   ),
                 ),
               )
@@ -137,8 +138,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
     if (_data["doctorData"] != null) {
       for (dynamic detail in _data["doctorData"]) {
-        if (detail["averageRating"] != null) if (detail["professionalTitle"] !=
-            null) {
+        if (detail["professionalTitle"] != null) {
           professionalTitle = detail["professionalTitle"]["title"] ?? "---";
         }
 
