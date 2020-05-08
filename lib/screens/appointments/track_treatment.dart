@@ -37,10 +37,10 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
   Future<dynamic> _profileFuture;
 
   bool _isLoading = false;
-  // String _timeHours, _timeMins;
   InheritedContainerState _container;
   Timer timer;
   bool stopeTimer = false;
+  Map providerData = Map();
 
   final Set<Marker> _markers = {};
   final Set<Polyline> _polyline = {};
@@ -161,6 +161,9 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
 
     _container = InheritedContainer.of(context);
 
+    Map providerResponse = _container.providerResponse;
+    providerData = providerResponse["providerData"];
+
     SharedPref().getToken().then((token) {
       setState(() {
         _profileFuture = api.getAppointmentDetails(
@@ -168,12 +171,6 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
       });
     });
   }
-
-  // @override
-  // void dispose() {
-  //   timer?.cancel();
-  //   super.dispose();
-  // }
 
   void _getTotalDistance() async {
     await Geolocator()
@@ -305,7 +302,14 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
 
     _getTotalDistance();
 
-    int status = response["trackingStatus"]["status"] ?? 0;
+    int status = 0;
+    if (response["trackingStatus"] != null) {
+      if (response["trackingStatus"]["status"] != null) {
+        status = response["trackingStatus"]["status"] ?? 0;
+      } else {
+        status = response["trackingStatus"] ?? 0;
+      }
+    }
 
     return Stack(
       children: <Widget>[
@@ -329,18 +333,6 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                             showPinsOnMap(_initialPosition);
 
                             _controller.complete(controller);
-                            // _markers.add(
-                            //   Marker(
-                            //     markerId: MarkerId(currentLocation.toString()),
-                            //     position: currentLocation,
-                            //     icon: sourceIcon,
-                            //   ),
-                            // );
-                            // _markers.add(Marker(
-                            //   markerId: MarkerId(_news.toString()),
-                            //   position: _news,
-                            //   icon: destinationIcon,
-                            // ));
                           });
                         },
                       ),
@@ -468,7 +460,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                               SizedBox(height: 7.0),
                               Row(
                                 children: <Widget>[
-                                  "ic_office_address"
+                                  "ic_address_grey"
                                       .imageIcon(width: 13, height: 16),
                                   SizedBox(width: 7.0),
                                   Text(
@@ -546,15 +538,6 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                                         .appointmentIdMap["appointmentId"],
                                     "1");
 
-                                // location = new Location();
-
-                                // location
-                                //     .onLocationChanged()
-                                //     .listen((LocationData cLoc) {
-                                //   currentLocation = cLoc;
-                                //   updatePinOnMap();
-                                // });
-
                                 IsolateNameServer.registerPortWithName(
                                     port.sendPort, _isolateName);
 
@@ -602,8 +585,8 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                                 break;
                               case 5:
                                 Navigator.of(context).pushNamed(
-                                  Routes.treatmentSummaryScreen,
-                                );
+                                    Routes.treatmentSummaryScreen,
+                                    arguments: providerData);
                                 break;
                             }
                           },
@@ -711,15 +694,15 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                     ? response["trackingStatus"]["treatmentStarted"].toString()
                     : "---",
                 false),
-        response["trackingStatus"]["providerTreatmentEnded"] == null
+        response["trackingStatus"]["patientTreatmentEnded"] == null
             ? Container()
             : divider(),
-        response["trackingStatus"]["providerTreatmentEnded"] == null
+        response["trackingStatus"]["patientTreatmentEnded"] == null
             ? Container()
             : timingSubWidget(
                 "Treatment Completed",
-                response["trackingStatus"]["providerTreatmentEnded"] != null
-                    ? response["trackingStatus"]["providerTreatmentEnded"]
+                response["trackingStatus"]["patientTreatmentEnded"] != null
+                    ? response["trackingStatus"]["patientTreatmentEnded"]
                         .toString()
                     : "---",
                 true,

@@ -1,69 +1,163 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/models/services.dart';
 import 'package:hutano/utils/extensions.dart';
-import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:intl/intl.dart';
 
 class TreatmentSummaryScreen extends StatefulWidget {
-  TreatmentSummaryScreen({Key key}) : super(key: key);
+  final Map providerData;
+
+  TreatmentSummaryScreen({Key key, @required this.providerData})
+      : super(key: key);
 
   @override
   _TreatmentSummaryScreenState createState() => _TreatmentSummaryScreenState();
 }
 
 class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
-  InheritedContainerState _container;
-  Map appointmentData;
+  // InheritedContainerState _container;
+  Map appointmentData = Map();
+
   List<String> administrationRoute = new List();
   List<String> recommendFollowList = new List();
+  List followUpServicesList = new List();
   List medicalHistoryList = new List();
   String drugs = "---";
+  Map userMap = Map();
+  String name = "---", type = "---";
+
+  Map followUpMap = Map();
 
   @override
-  void didChangeDependencies() {
-    _container = InheritedContainer.of(context);
-    
-    if (_container.getProviderData() != null) {
-      Map providerData = _container.getProviderData();
+  void initState() {
+    super.initState();
 
-      if (providerData["providerData"] != null) {
-        if (providerData["providerData"]["data"] != null) {
-          appointmentData = providerData["providerData"]["data"];
+    if (widget.providerData != null) {
+      if (widget.providerData["data"] != null) {
+        appointmentData = widget.providerData["data"];
+      } else {
+        appointmentData = widget.providerData;
+      }
+    }
 
-          if (appointmentData["pharmaceuticalsAdminstration"] != null) {
-            if (appointmentData["pharmaceuticalsAdminstration"]
-                    ["administrationRoute"] !=
-                null) {
-              appointmentData["pharmaceuticalsAdminstration"]
-                      ["administrationRoute"]
-                  .toString()
-                  .split(",")
-                  .map((f) => administrationRoute.add(f))
-                  .toList();
-            }
+    if (appointmentData != null) {
+      if (appointmentData["pharmaceuticalsAdminstration"] != null) {
+        if (appointmentData["pharmaceuticalsAdminstration"]
+                ["administrationRoute"] !=
+            null) {
+          appointmentData["pharmaceuticalsAdminstration"]["administrationRoute"]
+              .toString()
+              .split(",")
+              .map((f) => administrationRoute.add(f))
+              .toList();
+        }
 
-            drugs = appointmentData["pharmaceuticalsAdminstration"]["drugs"]
-                    ?.toString() ??
-                "---";
+        drugs = appointmentData["pharmaceuticalsAdminstration"]["drugs"]
+                ?.toString() ??
+            "---";
+      }
+
+      if (appointmentData["recommendedFollowUpCare"] != null) {
+        appointmentData["recommendedFollowUpCare"]
+            .toString()
+            .split(",")
+            .map((f) => recommendFollowList.add(f))
+            .toList();
+      }
+
+      if (appointmentData["medicalHistory"] != null) {
+        medicalHistoryList = appointmentData["medicalHistory"];
+      }
+
+      if (appointmentData["followUpAppointment"] != null &&
+          appointmentData["followUpAppointment"].length > 0) {
+        followUpMap["time"] =
+            appointmentData["followUpAppointment"][0]["fromTime"];
+        followUpMap["date"] =
+            DateTime.parse(appointmentData["followUpAppointment"][0]["date"]);
+        followUpMap["service"] =
+            appointmentData["followUpAppointment"][0]["type"].toString();
+        if (appointmentData["followUpAppointment"][0]["services"] != null &&
+            appointmentData["followUpAppointment"][0]["services"].length > 0) {
+          followUpMap["status"] = "1";
+          List<Services> list = List();
+          for (dynamic subService in appointmentData["followUpAppointment"][0]
+              ["services"]) {
+            list.add(Services.fromJson(subService));
           }
+          followUpMap["services"] = list;
+        } else {
+          followUpMap["status"] = "2";
+        }
+      }
 
-          if (appointmentData["recommendedFollowUpCare"] != null) {
-            appointmentData["recommendedFollowUpCare"]
-                .toString()
-                .split(",")
-                .map((f) => recommendFollowList.add(f))
-                .toList();
-          }
+      if (appointmentData["services"] != null) {
+        followUpServicesList = appointmentData["services"];
+      }
 
-          if (appointmentData["medicalHistory"] != null) {
-            medicalHistoryList = appointmentData["medicalHistory"];
-          }
+      if (appointmentData["user"] != null) {
+        if (appointmentData["user"] is Map) {
+          userMap = appointmentData["user"];
+
+          name = userMap["fullName"]?.toString() ?? "---";
+          type = userMap["type"]?.toString() ?? "---";
         }
       }
     }
-    super.didChangeDependencies();
   }
+
+  // @override
+  // void didChangeDependencies() {
+  //   _container = InheritedContainer.of(context);
+
+  //   if (_container.getProviderData() != null) {
+  //     Map providerData = _container.getProviderData();
+
+  //     if (providerData["providerData"] != null) {
+  //       if (providerData["providerData"]["data"] != null) {
+  //         appointmentData = providerData["providerData"]["data"];
+  //       } else {
+  //         appointmentData = providerData["providerData"];
+  //       }
+  //     }
+  //   }
+
+  //   if (appointmentData != null) {
+  //     if (appointmentData["pharmaceuticalsAdminstration"] != null) {
+  //       if (appointmentData["pharmaceuticalsAdminstration"]
+  //               ["administrationRoute"] !=
+  //           null) {
+  //         appointmentData["pharmaceuticalsAdminstration"]["administrationRoute"]
+  //             .toString()
+  //             .split(",")
+  //             .map((f) => administrationRoute.add(f))
+  //             .toList();
+  //       }
+
+  //       drugs = appointmentData["pharmaceuticalsAdminstration"]["drugs"]
+  //               ?.toString() ??
+  //           "---";
+  //     }
+
+  //     if (appointmentData["recommendedFollowUpCare"] != null) {
+  //       appointmentData["recommendedFollowUpCare"]
+  //           .toString()
+  //           .split(",")
+  //           .map((f) => recommendFollowList.add(f))
+  //           .toList();
+  //     }
+
+  //     if (appointmentData["medicalHistory"] != null) {
+  //       medicalHistoryList = appointmentData["medicalHistory"];
+  //     }
+
+  //     if (appointmentData["services"] != null) {
+  //       followUpServicesList = appointmentData["services"];
+  //     }
+  //   }
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -116,8 +210,8 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                 ),
               ),
               feeWidget(
-                appointmentData["user"]["fullName"] ?? "---",
-                appointmentData["type"],
+                name ?? "---",
+                type ?? "---",
                 "---",
                 "---",
               ),
@@ -266,7 +360,6 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                     SizedBox(height: 16),
                     Container(
                       height: 40,
-                      margin: const EdgeInsets.only(top: 10),
                       child: recommendFollowList == null ||
                               recommendFollowList.isEmpty
                           ? Text("NO reccommend follow up")
@@ -301,21 +394,55 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                 ),
               ),
               followUpWidget(
-                appointmentData["followUp"]['date'] == null
+                "Follow-up Date",
+                followUpMap["date"] == null
                     ? "---"
                     : DateFormat(
                         'dd MMMM yyyy',
-                      )
-                        .format(
-                            DateTime.parse(appointmentData["followUp"]['date']))
-                        .toString(),
+                      ).format(DateTime.parse(followUpMap["date"])).toString(),
                 "ic_calendar",
               ),
               followUpWidget(
-                appointmentData["followUp"]["fromTime"]?.toString() ?? "---",
+                "Follow-up Time",
+                followUpMap["time"] ?? "---",
                 "ic_appointment_time",
               ),
-              SizedBox(height: 30),
+              SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      "Follow Up Services",
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    Container(
+                      height: 40,
+                      margin: const EdgeInsets.only(bottom: 40),
+                      child: followUpMap["services"] == null ||
+                              followUpMap["services"].isEmpty
+                          ? Text("NO follow up services")
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              physics: ClampingScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              itemCount: followUpMap["services"].length,
+                              itemBuilder: (context, index) {
+                                Services services =
+                                    followUpMap["services"][index];
+                                return chipWidget(
+                                    services.subServiceName.toString());
+                              },
+                            ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -386,7 +513,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
     );
   }
 
-  Widget feeWidget(String pateintName, int medicalCareVia,
+  Widget feeWidget(String pateintName, String medicalCareVia,
       String cheifComplaint, String hours) {
     return Container(
       margin: const EdgeInsets.all(20.0),
@@ -403,9 +530,9 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
           Divider(),
           subFeeWidget(
               "Medical Care via",
-              medicalCareVia == 1
+              medicalCareVia == "1"
                   ? "Office Appointment"
-                  : medicalCareVia == 2
+                  : medicalCareVia == "2"
                       ? "Video Appointment"
                       : "Onsite Appointment"),
           Divider(),
@@ -466,23 +593,37 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
     );
   }
 
-  Widget followUpWidget(String subtitle, String icon) {
+  Widget followUpWidget(String title, String subtitle, String icon) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 14),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          icon.imageIcon(
-            color: AppColors.persian_indigo,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              icon.imageIcon(
+                color: AppColors.persian_indigo,
+              ),
+              SizedBox(width: 8.0),
+              Text(
+                title,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                  fontSize: 14.0,
+                ),
+              ),
+            ],
           ),
-          SizedBox(width: 8.0),
+          SizedBox(height: 11),
           Text(
             subtitle,
             style: TextStyle(
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w400,
               color: Colors.black,
-              fontSize: 14.0,
+              fontSize: 15.0,
             ),
           ),
         ],

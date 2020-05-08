@@ -16,6 +16,7 @@ import 'package:hutano/screens/book_appointment/select_appointment_time_screen.d
 import 'package:hutano/screens/book_appointment/select_services.dart';
 import 'package:hutano/screens/dashboard/appointment_type_screen.dart';
 import 'package:hutano/screens/dashboard/appointments_screen.dart';
+import 'package:hutano/screens/dashboard/available_timings_screen.dart';
 import 'package:hutano/screens/dashboard/choose_location_screen.dart';
 import 'package:hutano/screens/dashboard/choose_specialities.dart';
 import 'package:hutano/screens/dashboard/dashboard_search_screen.dart';
@@ -74,6 +75,7 @@ class Routes {
   static const String trackTreatmentScreen = '/trackTreatmentScreen';
   static const String appointmentCompleteConfirmation =
       '/appointmentCompleteConfirmation';
+  static const String availableTimingsScreen = '/availableTimingsScreen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -194,7 +196,15 @@ class Routes {
         return _buildRoute(settings, UploadInsuranceImagesScreen());
         break;
       case treatmentSummaryScreen:
-        return _buildRoute(settings, TreatmentSummaryScreen());
+        if (args is Map) {
+          return _buildRoute(
+            settings,
+            TreatmentSummaryScreen(
+              providerData: args,
+            ),
+          );
+        }
+        return _errorRoute();
         break;
       case appointmentsScreen:
         return _buildRoute(settings, AppointmentsScreen());
@@ -212,6 +222,9 @@ class Routes {
           );
         }
         return _errorRoute();
+        break;
+      case availableTimingsScreen:
+        return _buildRoute(settings, AvailableTimingsScreen());
         break;
       default:
         return _errorRoute();
