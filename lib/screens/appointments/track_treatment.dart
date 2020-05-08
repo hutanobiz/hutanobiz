@@ -11,6 +11,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/pin_info.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
@@ -18,6 +19,7 @@ import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 
 const double CAMERA_ZOOM = 16;
@@ -44,10 +46,9 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
   final Set<Polyline> _polyline = {};
 
   PolylinePoints polylinePoints = PolylinePoints();
-  // Map _userLocationMap = Map();
 
   List<LatLng> latlng = [];
-  LatLng _initialPosition, _middlePoint;
+  LatLng _initialPosition;
   LatLng _news = LatLng(0, 0);
   Completer<GoogleMapController> _controller = Completer();
   BitmapDescriptor sourceIcon;
@@ -55,6 +56,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
   ApiBaseHelper api = ApiBaseHelper();
   double _totalDistance = 0;
   bool isCancelTimer = false;
+  Map<String, String> appointmentCompleteMap = Map();
 
   PinInformation currentlySelectedPin = PinInformation(
     pinPath: '',
@@ -65,7 +67,6 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
   PinInformation sourcePinInfo, destinationPinInfo;
   CameraPosition initialCameraPosition;
 
-  // LocationData currentLocation;
   LocationData destinationLocation;
   Location location = Location();
 
@@ -147,13 +148,10 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
   }
 
   void setInitialLocation() async {
-    // currentLocation =
     await location.getLocation().then((LocationData value) {
       setState(() {
         _initialPosition = LatLng(value.latitude, value.longitude);
       });
-
-      // updateAppointmentCoordinates(_initialPosition);
     });
   }
 
@@ -162,12 +160,6 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
     super.didChangeDependencies();
 
     _container = InheritedContainer.of(context);
-    // _userLocationMap = _container.userLocationMap;
-    // _initialPosition = _userLocationMap["latLng"];
-
-    // currentLocation = latLng;
-
-    // updateAppointmentCoordinates(_initialPosition);
 
     SharedPref().getToken().then((token) {
       setState(() {
@@ -224,25 +216,12 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
           child: FutureBuilder(
             future: _profileFuture,
             builder: (context, snapshot) {
-              // switch (snapshot.connectionState) {
-              //   case ConnectionState.none:
-              //     return CircularProgressIndicator();
-              //     break;
-              //   case ConnectionState.waiting:
-              //     return Center(
-              //       child: CircularProgressIndicator(),
-              //     );
-              //     break;
-              //   case ConnectionState.active:
-              //     break;
-              //   case ConnectionState.done:
               if (snapshot.hasData) {
                 return widgetList(snapshot.data);
               } else if (snapshot.hasError) {
                 return Text("${snapshot.error}");
               }
-              //     break;
-              // }
+
               return Center(
                 child: CircularProgressIndicator(),
               );
@@ -270,7 +249,8 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
         professionalTitle = "---",
         avatar,
         address = "---",
-        appointmentType = "---";
+        appointmentType = "---",
+        dateTime;
 
     appointmentType = response["type"] == 1
         ? "Office response"
@@ -291,18 +271,20 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
       }
     }
 
+    dateTime = "On " +
+        DateFormat(
+          'EEEE, dd MMMM, ',
+        ).format(DateTime.parse(response['date'])).toString() +
+        response["fromTime"].toString().timeOfDay(context);
+
     if (response["doctor"] != null) {
       name = response["doctor"]["fullName"]?.toString() ?? "---";
       avatar = response["doctor"]["avatar"];
     }
 
-    // if (response["location"] != null) {
-    //   if (response["location"]["coordinates"].length > 0) {
-    //     currentLocation = LatLng(
-    //         double.parse(response["location"]["coordinates"][1].toString()),
-    //         double.parse(response["location"]["coordinates"][0].toString()));
-    //   }
-    // }
+    appointmentCompleteMap["name"] = name;
+    appointmentCompleteMap["address"] = address;
+    appointmentCompleteMap["dateTime"] = dateTime;
 
     if (appointment["doctorData"] != null) {
       for (dynamic detail in appointment["doctorData"]) {
@@ -320,9 +302,6 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
         }
       }
     }
-
-    _middlePoint = LatLng((_initialPosition.latitude + _news.latitude) / 2,
-        (_initialPosition.longitude + _news.longitude) / 2);
 
     _getTotalDistance();
 
@@ -431,9 +410,9 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                             ? "ETA ${(((_totalDistance * 0.000621371) / 30) * 60).toStringAsFixed(1)} minutes"
                             : status == 1
                                 ? "Started driving"
-                                : status == 2 || status == 3 || status == 4
+                                : status == 2 || status == 3
                                     ? "You have Arrived."
-                                    : status == 5
+                                    : status == 4
                                         ? "Treatment Completed"
                                         : "ETA ${(((_totalDistance * 0.000621371) / 30) * 60).toStringAsFixed(1)} minutes",
                       ),
@@ -545,10 +524,16 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                               ? "Start Driving"
                               : response["trackingStatus"]["status"] == 1
                                   ? "Arrived"
-                                  : response["trackingStatus"]["status"] == 2
+                                  : response["trackingStatus"]["status"] == 2 ||
+                                          response["trackingStatus"]
+                                                  ["status"] ==
+                                              3 ||
+                                          response["trackingStatus"]
+                                                  ["status"] ==
+                                              4
                                       ? "Confirm Treatment End"
                                       : response["trackingStatus"]["status"] ==
-                                              4
+                                              5
                                           ? "Treatment Summary"
                                           : "Start Driving",
                           onPressed: () {
@@ -611,16 +596,15 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                                     _isolateName);
                                 BackgroundLocator.unRegisterLocationUpdate();
 
-                                timer?.cancel();
                                 break;
                               case 4:
                                 showConfirmTreatmentDialog();
                                 break;
-                              default:
-                                changeRequestStatus(
-                                    _container
-                                        .appointmentIdMap["appointmentId"],
-                                    "1");
+                              case 5:
+                                Navigator.of(context).pushNamed(
+                                  Routes.treatmentSummaryScreen,
+                                );
+                                break;
                             }
                           },
                           buttonHeight: 55,
@@ -653,11 +637,9 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
   }
 
   void showPinsOnMap(LatLng _initialPosition) {
-    // get a LatLng for the source location
-    // from the LocationData currentLocation object
     var pinPosition =
         LatLng(_initialPosition.latitude, _initialPosition.longitude);
-    // get a LatLng out of the LocationData object
+
     var destPosition = LatLng(_news.latitude, _news.longitude);
 
     sourcePinInfo = PinInformation(
@@ -691,21 +673,10 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
           });
         },
         icon: destinationIcon));
-    // set the route lines on the map from source to destination
-    // for more info follow this tutorial
     setPolylines();
   }
 
   Widget timingWidget(Map response) {
-    /**
-     * response["trackingStatus"]["status"] == 1
-                        ? "Start Treatment"
-                        : response["trackingStatus"]["status"] == 2
-                            ? "You have Arrived."
-                            : response["trackingStatus"]["status"] == 3
-                                ? "Treatment Started"
-                                : "Start Treatment",
-     */
     return Column(
       children: <Widget>[
         divider(),
@@ -716,7 +687,8 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                 response["trackingStatus"]["patientStartDriving"] != null
                     ? response["trackingStatus"]["patientStartDriving"]
                         .toString()
-                    : "---"),
+                    : "---",
+                false),
         response["trackingStatus"]["patientArrived"] == null
             ? Container()
             : divider(),
@@ -726,7 +698,8 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                 "Arrived",
                 response["trackingStatus"]["patientArrived"] != null
                     ? response["trackingStatus"]["patientArrived"].toString()
-                    : "---"),
+                    : "---",
+                false),
         response["trackingStatus"]["treatmentStarted"] == null
             ? Container()
             : divider(),
@@ -736,7 +709,8 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                 "Treatment Started",
                 response["trackingStatus"]["treatmentStarted"] != null
                     ? response["trackingStatus"]["treatmentStarted"].toString()
-                    : "---"),
+                    : "---",
+                false),
         response["trackingStatus"]["providerTreatmentEnded"] == null
             ? Container()
             : divider(),
@@ -748,14 +722,13 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                     ? response["trackingStatus"]["providerTreatmentEnded"]
                         .toString()
                     : "---",
-                isTreatCompleted: true,
+                true,
               ),
       ],
     );
   }
 
-  Widget timingSubWidget(String title, String timing,
-      {bool isTreatCompleted = true}) {
+  Widget timingSubWidget(String title, String timing, bool isTreatCompleted) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(
@@ -830,6 +803,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
         setState(() {
           _profileFuture = api.getAppointmentDetails(token, id);
         });
+        value.toString().debugLog();
       }).futureError((error) {
         Widgets.showToast(error.toString());
         error.toString().debugLog();
@@ -848,10 +822,6 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
               token, map, _container.appointmentIdMap["appointmentId"])
           .then((value) {
         value.toString().debugLog();
-        // setState(() {
-        //   _profileFuture = api.getAppointmentDetails(
-        //       token, _container.appointmentIdMap["appointmentId"]);
-        // });
       }).futureError((error) {
         Widgets.showToast(error.toString());
         error.toString().debugLog();
@@ -891,13 +861,13 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                 SizedBox(height: 20),
                 Text(
                   "The treatment is complete Please select confirm to complete treatment.",
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w400,
                     color: Colors.black,
                   ),
                 ),
-                SizedBox(height: 26),
                 SizedBox(height: 26),
                 Row(
                   children: <Widget>[
@@ -923,6 +893,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                         onPressed: () => Navigator.of(context).pop(),
                       ),
                     ),
+                    SizedBox(width: 20),
                     Expanded(
                       child: FlatButton(
                           materialTapTargetSize:
@@ -946,6 +917,11 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                             changeRequestStatus(
                                 _container.appointmentIdMap["appointmentId"],
                                 "5");
+
+                            Navigator.of(context).pushReplacementNamed(
+                              Routes.appointmentCompleteConfirmation,
+                              arguments: appointmentCompleteMap,
+                            );
                           }),
                     ),
                   ],
@@ -957,26 +933,4 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
       },
     );
   }
-
-  // startTimer(LatLng latLng) {
-  //   timer = Timer.periodic(const Duration(minutes: 5), (timer) {
-  //     Map map = Map();
-  //     map["location.coordinates[0]"] = latLng.longitude.toString();
-  //     map["location.coordinates[1]"] = latLng.latitude.toString();
-
-  //     SharedPref().getToken().then((token) {
-  //       api
-  //           .updateAppointmentCoordinates(
-  //               token, map, _container.appointmentIdMap["appointmentId"])
-  //           .then((value) {
-  //         value.toString().debugLog();
-  //         Widgets.showToast(
-  //             value["data"]["location"]["coordinates"]?.toString());
-  //       }).futureError((error) {
-  //         Widgets.showToast(error.toString());
-  //         error.toString().debugLog();
-  //       });
-  //     });
-  //   });
-  // }
 }
