@@ -189,7 +189,8 @@ class ApiBaseHelper {
     };
     return _netUtil
         .post(
-      Uri.encodeFull(base_url + "api/patient/appointment-details/$appointmentId"),
+      Uri.encodeFull(
+          base_url + "api/patient/appointment-details/$appointmentId"),
       body: paymentMap,
       headers: headers,
     )
@@ -264,6 +265,36 @@ class ApiBaseHelper {
         .get(
       base_url + "api/insurance",
     )
+        .then((res) {
+      return res["response"];
+    });
+  }
+
+  Future<dynamic> updateAppointmentCoordinates(
+      String token, Map locationMap, String appointmentId) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .post(
+            Uri.encodeFull(
+                base_url + "api/appointment-coordinates/$appointmentId"),
+            body: locationMap,
+            headers: headers)
+        .then((res) {
+      return res["response"];
+    });
+  }
+
+  Future<dynamic> appointmentTrackingStatus(
+      String token, Map rateDoctorData, String appointmentId) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    return _netUtil
+        .post(base_url + "api/appointment-tracking-status/" + appointmentId,
+            body: rateDoctorData, headers: headers)
         .then((res) {
       return res["response"];
     });
