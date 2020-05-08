@@ -18,32 +18,49 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
   List<String> administrationRoute = new List();
   List<String> recommendFollowList = new List();
   List medicalHistoryList = new List();
+  String drugs = "---";
 
   @override
   void didChangeDependencies() {
     _container = InheritedContainer.of(context);
-    appointmentData = _container.getProviderData()["providerData"]["data"];
+    
+    if (_container.getProviderData() != null) {
+      Map providerData = _container.getProviderData();
 
-    if (appointmentData["pharmaceuticalsAdminstration"]
-            ["administrationRoute"] !=
-        null) {
-      appointmentData["pharmaceuticalsAdminstration"]["administrationRoute"]
-          .toString()
-          .split(",")
-          .map((f) => administrationRoute.add(f))
-          .toList();
-    }
+      if (providerData["providerData"] != null) {
+        if (providerData["providerData"]["data"] != null) {
+          appointmentData = providerData["providerData"]["data"];
 
-    if (appointmentData["recommendedFollowUpCare"] != null) {
-      appointmentData["recommendedFollowUpCare"]
-          .toString()
-          .split(",")
-          .map((f) => recommendFollowList.add(f))
-          .toList();
-    }
+          if (appointmentData["pharmaceuticalsAdminstration"] != null) {
+            if (appointmentData["pharmaceuticalsAdminstration"]
+                    ["administrationRoute"] !=
+                null) {
+              appointmentData["pharmaceuticalsAdminstration"]
+                      ["administrationRoute"]
+                  .toString()
+                  .split(",")
+                  .map((f) => administrationRoute.add(f))
+                  .toList();
+            }
 
-    if (appointmentData["medicalHistory"] != null) {
-      medicalHistoryList = appointmentData["medicalHistory"];
+            drugs = appointmentData["pharmaceuticalsAdminstration"]["drugs"]
+                    ?.toString() ??
+                "---";
+          }
+
+          if (appointmentData["recommendedFollowUpCare"] != null) {
+            appointmentData["recommendedFollowUpCare"]
+                .toString()
+                .split(",")
+                .map((f) => recommendFollowList.add(f))
+                .toList();
+          }
+
+          if (appointmentData["medicalHistory"] != null) {
+            medicalHistoryList = appointmentData["medicalHistory"];
+          }
+        }
+      }
     }
     super.didChangeDependencies();
   }
@@ -74,14 +91,17 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                       timeWidget(
                           "ic_initiated",
                           "Initiated at",
-                          appointmentData["fromTime"].toString() +
-                              " on " +
-                              DateFormat(
-                                'dd MMMM yyyy',
-                              )
-                                  .format(
-                                      DateTime.parse(appointmentData['date']))
-                                  .toString()),
+                          appointmentData == null
+                              ? "---"
+                              : appointmentData["fromTime"]?.toString() ??
+                                  "---" +
+                                      " on " +
+                                      DateFormat(
+                                        'dd MMMM yyyy',
+                                      )
+                                          .format(DateTime.parse(
+                                              appointmentData['date']))
+                                          .toString()),
                       Expanded(
                         child: VerticalDivider(
                           thickness: 1,
@@ -96,7 +116,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                 ),
               ),
               feeWidget(
-                appointmentData["doctor"]["fullName"] ?? "---",
+                appointmentData["user"]["fullName"] ?? "---",
                 appointmentData["type"],
                 "---",
                 "---",
@@ -123,7 +143,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                           itemCount: medicalHistoryList.length,
                           itemBuilder: (context, index) {
                             return chipWidget(
-                                medicalHistoryList[index].toString());
+                                medicalHistoryList[index]["name"].toString());
                           }),
                     ),
               divider(),
@@ -195,8 +215,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
                 child: adverseWidget(
                   "Drugs",
-                  appointmentData["pharmaceuticalsAdminstration"]["drugs"] ??
-                      "---",
+                  drugs,
                 ),
               ),
               Padding(
