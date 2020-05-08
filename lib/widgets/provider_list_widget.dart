@@ -20,17 +20,6 @@ class ProviderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String fee = "---";
-    String speciality = "---";
-
-    if (data['specialties'] != null) {
-      if (data['specialties'][0] != null) {
-        if (data['specialties'][0] is String) {
-          speciality = data['specialties'][0]?.toString() ?? "---";
-        } else {
-          speciality = data['specialties'][0]["title"]?.toString() ?? "---";
-        }
-      }
-    }
 
     if (data["consultanceFee"] != null) {
       for (dynamic consultanceFee in data["consultanceFee"]) {
@@ -108,22 +97,9 @@ class ProviderWidget extends StatelessWidget {
                                 width: 2,
                               ),
                               Text(
-                                data['averageRating']?.toString() ??
-                                    "---" + " \u2022",
+                                data['averageRating']?.toString() ?? "---",
                                 style: TextStyle(
                                   color: Colors.black.withOpacity(0.6),
-                                ),
-                              ),
-                              SizedBox(width: 8.0),
-                              Expanded(
-                                child: Text(
-                                  data['supervising']['professionalTitle']
-                                          ?.toString() ??
-                                      "----",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: Colors.black.withOpacity(0.6),
-                                  ),
                                 ),
                               ),
                             ],
@@ -132,56 +108,39 @@ class ProviderWidget extends StatelessWidget {
                         SizedBox(
                           height: 4.0,
                         ),
-                        Row(
-                          children: <Widget>[
-                            Image(
-                              image: AssetImage(
-                                "images/ic_experience.png",
-                              ),
-                              height: 11.0,
-                              width: 11.0,
-                            ),
-                            SizedBox(
-                              width: 3.0,
-                            ),
-                            Expanded(
-                              child: Text(
-                                speciality,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Colors.black.withOpacity(0.5),
-                                ),
-                              ),
-                            ),
-                          ],
+                        Text(
+                          data['professionalTitle']['title']?.toString() ??
+                              "----",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.black.withOpacity(0.5),
+                          ),
                         ),
                       ],
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Text(
-                        "\$$fee",
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          fontWeight: FontWeight.w700,
-                        ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Text(
+                      "\$$fee",
+                      style: TextStyle(
+                        fontSize: 22.0,
+                        fontWeight: FontWeight.w700,
                       ),
-                      SizedBox(height: 3),
-                      Text(
-                        "Consultation fee",
-                        style: TextStyle(
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w400,
-                        ),
+                    ),
+                    SizedBox(height: 3),
+                    Text(
+                      "Consultation fee",
+                      style: TextStyle(
+                        fontSize: 12.0,
+                        color: Colors.black.withOpacity(0.70),
+                        fontWeight: FontWeight.w400,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -189,7 +148,8 @@ class ProviderWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(8.0, 3.0, 8.0, 3.0),
             child: Divider(
-              color: Colors.grey,
+              thickness: 0.5,
+              color: Colors.grey[300],
             ),
           ),
           Padding(
@@ -203,7 +163,7 @@ class ProviderWidget extends StatelessWidget {
                     children: <Widget>[
                       Image(
                         image: AssetImage(
-                          "images/ic_location_grey.png",
+                          "images/ic_experience.png",
                         ),
                         height: 14.0,
                         width: 11.0,
@@ -211,8 +171,7 @@ class ProviderWidget extends StatelessWidget {
                       SizedBox(width: 3.0),
                       Expanded(
                         child: Text(
-                          data['businessLocation']['address']?.toString() ??
-                              "---",
+                          "---", //TODO: add years of experience
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                           ),
@@ -220,24 +179,6 @@ class ProviderWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
-                Row(
-                  children: <Widget>[
-                    Image(
-                      image: AssetImage(
-                        "images/ic_distance.png",
-                      ),
-                      height: 14.0,
-                      width: 14.0,
-                    ),
-                    SizedBox(width: 5.0),
-                    Text(
-                      "--- miles", //TODO: distance
-                      style: TextStyle(
-                        color: Colors.black.withOpacity(0.5),
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),
