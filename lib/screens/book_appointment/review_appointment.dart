@@ -444,7 +444,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
       margin: const EdgeInsets.fromLTRB(20, 6, 20, 20),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.sunglow.withOpacity(0.42),
+        color: AppColors.sunglow.withOpacity(0.20),
         border: Border.all(
           width: 1.0,
           color: AppColors.sunglow,
