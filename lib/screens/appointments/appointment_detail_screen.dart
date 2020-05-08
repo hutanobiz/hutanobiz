@@ -25,6 +25,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   List feeList = List();
   double totalFee = 0;
 
+  Map profileMap = Map();
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -62,7 +64,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                     future: _profileFuture,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        Map profileMap = snapshot.data;
+                        profileMap = snapshot.data;
 
                         return SingleChildScrollView(
                           padding: const EdgeInsets.only(bottom: 100),
@@ -84,8 +86,13 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                   padding: const EdgeInsets.only(right: 20.0),
                   child: FancyButton(
                     title: "Track",
-                    onPressed: () => Navigator.of(context)
-                        .pushNamed(Routes.trackTreatmentScreen),
+                    onPressed: () =>
+                        // Navigator.of(context).pushNamed(
+                        //   Routes.treatmentSummaryScreen,
+                        //   arguments: profileMap,
+                        // ),
+                        Navigator.of(context)
+                            .pushNamed(Routes.trackTreatmentScreen),
                     //Routes.treatmentSummaryScreen
                   ),
                 ),
@@ -110,7 +117,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     } else {
       paymentType = 0;
     }
-    _container.setProviderData("providerData", _data);
+
+    _container.providerResponse.clear();
+    _container.setProviderData("providerData", _providerData);
 
     String name = "---",
         rating = "---",
@@ -125,7 +134,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
     LatLng latLng = new LatLng(0, 0);
 
-    rating = _data["averageRating"] ?? "---";
+    rating = _data["averageRating"]?.toString() ?? "---";
 
     if (_data["subServices"] != null) {
       feeList = _data["subServices"];
