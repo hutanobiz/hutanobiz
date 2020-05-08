@@ -14,7 +14,6 @@ import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
-import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 
 class ReviewAppointmentScreen extends StatefulWidget {
@@ -236,11 +235,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                           .then((response) {
                         _loading(false);
 
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                            Routes.dashboardScreen,
-                            (Route<dynamic> route) => false);
-
-                        Widgets.showToast("Booking request sent successfully!");
+                        showConfirmDialog();
                       }).futureError((error) {
                         _loading(false);
                         error.toString().debugLog();
@@ -253,6 +248,76 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  void showConfirmDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(14.0),
+            ),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(
+                14.0,
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  "Office Request Sent!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black.withOpacity(0.90),
+                  ),
+                ),
+                SizedBox(height: 12),
+                Text(
+                  "You'll be notified when the provider accepts your request.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black.withOpacity(0.85),
+                  ),
+                ),
+                SizedBox(height: 26),
+                FlatButton(
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    color: AppColors.goldenTainoi,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10.0),
+                      ),
+                    ),
+                    child: Text(
+                      "Done",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          Routes.dashboardScreen,
+                          (Route<dynamic> route) => false);
+                    })
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
