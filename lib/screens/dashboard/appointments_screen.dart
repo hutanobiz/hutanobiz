@@ -157,6 +157,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
   Widget _listWidget(List<dynamic> _list, int listType) {
     return ListView.builder(
       physics: ClampingScrollPhysics(),
+      reverse: true,
       shrinkWrap: true,
       itemCount: _list.length,
       itemBuilder: (context, index) {
