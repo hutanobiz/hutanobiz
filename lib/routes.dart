@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hutano/screens/appointments/appointment_complete.dart';
 import 'package:hutano/screens/appointments/appointment_detail_screen.dart';
 import 'package:hutano/screens/appointments/consent_to_treat_screen.dart';
 import 'package:hutano/screens/appointments/medical_history.dart';
@@ -71,6 +72,8 @@ class Routes {
   static const String treatmentSummaryScreen = '/treatmentSummaryScreen';
   static const String appointmentsScreen = '/appointmentsScreen';
   static const String trackTreatmentScreen = '/trackTreatmentScreen';
+  static const String appointmentCompleteConfirmation =
+      '/appointmentCompleteConfirmation';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -198,6 +201,17 @@ class Routes {
         break;
       case trackTreatmentScreen:
         return _buildRoute(settings, TrackTreatmentScreen());
+        break;
+      case appointmentCompleteConfirmation:
+        if (args is Map<String, String>) {
+          return _buildRoute(
+            settings,
+            AppointmentCompleteConfirmation(
+              appointmentCompleteMap: args,
+            ),
+          );
+        }
+        return _errorRoute();
         break;
       default:
         return _errorRoute();
