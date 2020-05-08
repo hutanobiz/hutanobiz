@@ -347,8 +347,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                         markers: _markers,
                         onMapCreated: (GoogleMapController controller) {
                           setState(() {
-                            setPolylines();
-                            showPinsOnMap();
+                            showPinsOnMap(_initialPosition);
 
                             _controller.complete(controller);
                             // _markers.add(
@@ -615,10 +614,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                                 timer?.cancel();
                                 break;
                               case 4:
-                                changeRequestStatus(
-                                    _container
-                                        .appointmentIdMap["appointmentId"],
-                                    "5");
+                                showConfirmTreatmentDialog();
                                 break;
                               default:
                                 changeRequestStatus(
@@ -656,7 +652,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
     );
   }
 
-  void showPinsOnMap() {
+  void showPinsOnMap(LatLng _initialPosition) {
     // get a LatLng for the source location
     // from the LocationData currentLocation object
     var pinPosition =
@@ -731,31 +727,80 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                 response["trackingStatus"]["patientArrived"] != null
                     ? response["trackingStatus"]["patientArrived"].toString()
                     : "---"),
+        response["trackingStatus"]["treatmentStarted"] == null
+            ? Container()
+            : divider(),
+        response["trackingStatus"]["treatmentStarted"] == null
+            ? Container()
+            : timingSubWidget(
+                "Treatment Started",
+                response["trackingStatus"]["treatmentStarted"] != null
+                    ? response["trackingStatus"]["treatmentStarted"].toString()
+                    : "---"),
+        response["trackingStatus"]["providerTreatmentEnded"] == null
+            ? Container()
+            : divider(),
+        response["trackingStatus"]["providerTreatmentEnded"] == null
+            ? Container()
+            : timingSubWidget(
+                "Treatment Completed",
+                response["trackingStatus"]["providerTreatmentEnded"] != null
+                    ? response["trackingStatus"]["providerTreatmentEnded"]
+                        .toString()
+                    : "---",
+                isTreatCompleted: true,
+              ),
       ],
     );
   }
 
-  Widget timingSubWidget(String title, String timing) {
+  Widget timingSubWidget(String title, String timing,
+      {bool isTreatCompleted = true}) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Row(
+      child: Column(
         children: <Widget>[
-          Expanded(
-            child: Text(
-              title,
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87),
-            ),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87),
+                ),
+              ),
+              Text(
+                timing,
+                style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.windsor),
+              ),
+            ],
           ),
-          Text(
-            timing,
-            style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: AppColors.windsor),
-          ),
+          isTreatCompleted ? SizedBox(height: 10) : Container(),
+          isTreatCompleted
+              ? Row(
+                  children: <Widget>[
+                    Icon(
+                      Icons.check_circle,
+                      color: Colors.green,
+                      size: 20,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      "Confirmed",
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                )
+              : Container(),
         ],
       ),
     );
@@ -812,6 +857,105 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
         error.toString().debugLog();
       });
     });
+  }
+
+  void showConfirmTreatmentDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(14.0),
+            ),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(
+                14.0,
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  "Confirm Treatment End",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 20),
+                Text(
+                  "The treatment is complete Please select confirm to complete treatment.",
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 26),
+                SizedBox(height: 26),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: FlatButton(
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10.0),
+                          ),
+                          side:
+                              BorderSide(width: 0.3, color: AppColors.windsor),
+                        ),
+                        child: Text(
+                          "Cancel",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: AppColors.windsor,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                    ),
+                    Expanded(
+                      child: FlatButton(
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          color: AppColors.windsor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10.0),
+                            ),
+                          ),
+                          child: Text(
+                            "Confirm",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            changeRequestStatus(
+                                _container.appointmentIdMap["appointmentId"],
+                                "5");
+                          }),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   // startTimer(LatLng latLng) {
