@@ -16,7 +16,6 @@ class TreatmentSummaryScreen extends StatefulWidget {
 }
 
 class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
-  // InheritedContainerState _container;
   Map appointmentData = Map();
 
   List<String> administrationRoute = new List();
@@ -25,7 +24,9 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
   List medicalHistoryList = new List();
   String drugs = "---";
   Map userMap = Map();
-  String name = "---", type = "---";
+  String name = "---", type = "---", durationOfSymtoms = "---";
+  String initiated = "---";
+  String completed = "---";
 
   Map followUpMap = Map();
 
@@ -34,14 +35,59 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
     super.initState();
 
     if (widget.providerData != null) {
-      if (widget.providerData["data"] != null) {
-        appointmentData = widget.providerData["data"];
+      Map providerData = widget.providerData;
+      if (providerData["data"] != null) {
+        appointmentData = providerData["data"];
       } else {
-        appointmentData = widget.providerData;
+        appointmentData = providerData;
+      }
+
+      if (providerData["followUpAppointment"] != null &&
+          providerData["followUpAppointment"].length > 0) {
+        followUpMap["time"] =
+            providerData["followUpAppointment"][0]["fromTime"];
+        followUpMap["date"] =
+            DateTime.parse(providerData["followUpAppointment"][0]["date"]);
+        followUpMap["service"] =
+            providerData["followUpAppointment"][0]["type"].toString();
+        if (providerData["followUpAppointment"][0]["services"] != null &&
+            providerData["followUpAppointment"][0]["services"].length > 0) {
+          followUpMap["status"] = "1";
+          List<Services> list = List();
+          for (dynamic subService in providerData["followUpAppointment"][0]
+              ["services"]) {
+            list.add(Services.fromJson(subService));
+          }
+          followUpMap["services"] = list;
+        } else {
+          followUpMap["status"] = "2";
+        }
       }
     }
 
     if (appointmentData != null) {
+      durationOfSymtoms =
+          appointmentData["problemTimeSpan"]?.toString() ?? "---";
+
+      String date = DateFormat('dd MMMM yyyy')
+          .format(DateTime.parse(appointmentData['date']))
+          .toString();
+
+      if (appointmentData["trackingStatus"] != null) {
+        if (appointmentData["trackingStatus"]["treatmentStarted"] != null) {
+          initiated = appointmentData["trackingStatus"]["treatmentStarted"] +
+              " on " +
+              date;
+        }
+        if (appointmentData["trackingStatus"]["providerTreatmentEnded"] !=
+            null) {
+          completed = appointmentData["trackingStatus"]
+                  ["providerTreatmentEnded"] +
+              " on " +
+              date;
+        }
+      }
+
       if (appointmentData["pharmaceuticalsAdminstration"] != null) {
         if (appointmentData["pharmaceuticalsAdminstration"]
                 ["administrationRoute"] !=
@@ -70,34 +116,9 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
         medicalHistoryList = appointmentData["medicalHistory"];
       }
 
-      if (appointmentData["followUpAppointment"] != null &&
-          appointmentData["followUpAppointment"].length > 0) {
-        followUpMap["time"] =
-            appointmentData["followUpAppointment"][0]["fromTime"];
-        followUpMap["date"] =
-            DateTime.parse(appointmentData["followUpAppointment"][0]["date"]);
-        followUpMap["service"] =
-            appointmentData["followUpAppointment"][0]["type"].toString();
-        if (appointmentData["followUpAppointment"][0]["services"] != null &&
-            appointmentData["followUpAppointment"][0]["services"].length > 0) {
-          followUpMap["status"] = "1";
-          List<Services> list = List();
-          for (dynamic subService in appointmentData["followUpAppointment"][0]
-              ["services"]) {
-            list.add(Services.fromJson(subService));
-          }
-          followUpMap["services"] = list;
-        } else {
-          followUpMap["status"] = "2";
-        }
-      }
-
-      if (appointmentData["services"] != null) {
-        followUpServicesList = appointmentData["services"];
-      }
-
       if (appointmentData["user"] != null) {
-        if (appointmentData["user"] is Map) {
+        if (appointmentData["user"] is String) {
+        } else {
           userMap = appointmentData["user"];
 
           name = userMap["fullName"]?.toString() ?? "---";
@@ -106,58 +127,6 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
       }
     }
   }
-
-  // @override
-  // void didChangeDependencies() {
-  //   _container = InheritedContainer.of(context);
-
-  //   if (_container.getProviderData() != null) {
-  //     Map providerData = _container.getProviderData();
-
-  //     if (providerData["providerData"] != null) {
-  //       if (providerData["providerData"]["data"] != null) {
-  //         appointmentData = providerData["providerData"]["data"];
-  //       } else {
-  //         appointmentData = providerData["providerData"];
-  //       }
-  //     }
-  //   }
-
-  //   if (appointmentData != null) {
-  //     if (appointmentData["pharmaceuticalsAdminstration"] != null) {
-  //       if (appointmentData["pharmaceuticalsAdminstration"]
-  //               ["administrationRoute"] !=
-  //           null) {
-  //         appointmentData["pharmaceuticalsAdminstration"]["administrationRoute"]
-  //             .toString()
-  //             .split(",")
-  //             .map((f) => administrationRoute.add(f))
-  //             .toList();
-  //       }
-
-  //       drugs = appointmentData["pharmaceuticalsAdminstration"]["drugs"]
-  //               ?.toString() ??
-  //           "---";
-  //     }
-
-  //     if (appointmentData["recommendedFollowUpCare"] != null) {
-  //       appointmentData["recommendedFollowUpCare"]
-  //           .toString()
-  //           .split(",")
-  //           .map((f) => recommendFollowList.add(f))
-  //           .toList();
-  //     }
-
-  //     if (appointmentData["medicalHistory"] != null) {
-  //       medicalHistoryList = appointmentData["medicalHistory"];
-  //     }
-
-  //     if (appointmentData["services"] != null) {
-  //       followUpServicesList = appointmentData["services"];
-  //     }
-  //   }
-  //   super.didChangeDependencies();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -182,20 +151,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                 child: IntrinsicHeight(
                   child: Row(
                     children: <Widget>[
-                      timeWidget(
-                          "ic_initiated",
-                          "Initiated at",
-                          appointmentData == null
-                              ? "---"
-                              : appointmentData["fromTime"]?.toString() ??
-                                  "---" +
-                                      " on " +
-                                      DateFormat(
-                                        'dd MMMM yyyy',
-                                      )
-                                          .format(DateTime.parse(
-                                              appointmentData['date']))
-                                          .toString()),
+                      timeWidget("ic_initiated", "Initiated at", initiated),
                       Expanded(
                         child: VerticalDivider(
                           thickness: 1,
@@ -204,7 +160,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                           color: Colors.grey[200],
                         ),
                       ),
-                      timeWidget("ic_completed", "Completed at", "---"),
+                      timeWidget("ic_completed", "Completed at", completed),
                     ],
                   ),
                 ),
@@ -212,7 +168,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
               feeWidget(
                 name ?? "---",
                 type ?? "---",
-                "---",
+                durationOfSymtoms,
                 "---",
               ),
               Padding(
@@ -257,7 +213,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Text(
-                  appointmentData["description"] ?? "---",
+                  appointmentData["description"]?.toString() ?? "---",
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
@@ -399,7 +355,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                     ? "---"
                     : DateFormat(
                         'dd MMMM yyyy',
-                      ).format(DateTime.parse(followUpMap["date"])).toString(),
+                      ).format(followUpMap["date"]).toString(),
                 "ic_calendar",
               ),
               followUpWidget(
@@ -413,14 +369,25 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      "Follow Up Services",
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        "ic_follow_services".imageIcon(
+                          color: AppColors.persian_indigo,
+                        ),
+                        SizedBox(width: 8.0),
+                        Text(
+                          "Follow Up Services",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 16),
+                    SizedBox(height: 20),
                     Container(
                       height: 40,
                       margin: const EdgeInsets.only(bottom: 40),
@@ -513,8 +480,8 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
     );
   }
 
-  Widget feeWidget(String pateintName, String medicalCareVia,
-      String cheifComplaint, String hours) {
+  Widget feeWidget(String pateintName, String medicalCareVia, String hours,
+      String cheifComplaint) {
     return Container(
       margin: const EdgeInsets.all(20.0),
       padding: const EdgeInsets.fromLTRB(16, 3, 16, 3),
@@ -536,7 +503,14 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                       ? "Video Appointment"
                       : "Onsite Appointment"),
           Divider(),
-          subFeeWidget("Office Visit charge", hours),
+          subFeeWidget(
+            "Duration of Symptoms",
+            hours == "1"
+                ? "Hours"
+                : hours == "2"
+                    ? "Days"
+                    : hours == "3" ? "Weeks" : hours == "4" ? "Months" : "---",
+          ),
         ],
       ),
     );

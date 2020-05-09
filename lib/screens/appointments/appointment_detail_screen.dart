@@ -119,7 +119,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     }
 
     _container.providerResponse.clear();
-    _container.setProviderData("providerData", _providerData);
+    _container.setProviderData("providerData", _data);
 
     String name = "---",
         rating = "---",
@@ -127,7 +127,6 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         fee = "0.0",
         avatar,
         address = "---",
-        inOfficeFee = "0.0", //TODO: in-office charge
         officeVisitFee = "0.0",
         insuranceName = "---",
         insuranceImage;
@@ -338,7 +337,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         divider(topPadding: 8.0),
         locationWidget(address, latLng),
         divider(),
-        feeWidget(fee, officeVisitFee, inOfficeFee),
+        feeWidget(fee, officeVisitFee),
         divider(),
         paymentType == 0
             ? SizedBox(height: 1)
@@ -578,17 +577,14 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     );
   }
 
-  Widget feeWidget(
-      String generalFee, String officeVisitCharge, String inOfficeCharge) {
+  Widget feeWidget(String generalFee, String officeVisitCharge) {
     if (feeList.length > 0) {
       totalFee = feeList.fold(
           0,
           (sum, item) =>
               sum + double.parse(item["subService"]["amount"].toString()));
     } else {
-      totalFee = (double.parse(generalFee) +
-          double.parse(inOfficeCharge) +
-          double.parse(officeVisitCharge));
+      totalFee = (double.parse(generalFee) + double.parse(officeVisitCharge));
     }
 
     _container.setProviderData("totalFee", totalFee.toString());
@@ -626,10 +622,6 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         children: <Widget>[
                           subFeeWidget(
                               "General Medicine Consult", "\$$generalFee"),
-                          inOfficeCharge == "0.0"
-                              ? Container()
-                              : subFeeWidget(
-                                  "In-office Charge", "\$$inOfficeCharge"),
                           officeVisitCharge == "0.0"
                               ? Container()
                               : subFeeWidget("Office Visit charge",
