@@ -5,7 +5,8 @@ class AppTheme {
   static ThemeData get theme {
     final themeData = ThemeData.light();
     final textTheme = themeData.textTheme;
-    final body1 = textTheme.body1.copyWith(decorationColor: Colors.transparent);
+    final body1 =
+        textTheme.bodyText2.copyWith(decorationColor: Colors.transparent);
 
     return ThemeData.light().copyWith(
       brightness: Brightness.light,
@@ -18,7 +19,7 @@ class AppTheme {
         backgroundColor: Colors.cyan[300],
       ),
       textTheme: textTheme.copyWith(
-        body1: body1,
+        bodyText2: body1,
       ),
     );
   }
