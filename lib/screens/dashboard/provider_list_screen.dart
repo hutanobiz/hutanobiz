@@ -89,7 +89,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
             filterSearch(value);
           },
           decoration: InputDecoration(
-            hasFloatingPlaceholder: false,
+            floatingLabelBehavior: FloatingLabelBehavior.never,
             filled: true,
             fillColor: Colors.white,
             labelStyle: TextStyle(fontSize: 13.0, color: Colors.grey),

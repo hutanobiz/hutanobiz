@@ -59,7 +59,7 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
             },
             keyboardType: TextInputType.text,
             decoration: InputDecoration(
-              hasFloatingPlaceholder: false,
+              floatingLabelBehavior: FloatingLabelBehavior.never,
               filled: true,
               fillColor: AppColors.snow,
               labelStyle: TextStyle(fontSize: 13.0, color: Colors.grey),
