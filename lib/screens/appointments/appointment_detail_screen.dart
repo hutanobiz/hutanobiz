@@ -173,8 +173,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
             if (location.length > 0) {
               latLng = LatLng(
-                location[0],
                 location[1],
+                location[0],
               );
             }
           }

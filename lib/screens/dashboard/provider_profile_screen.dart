@@ -195,8 +195,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
 
         if (location.length > 0) {
           latLng = LatLng(
-            location[0],
             location[1],
+            location[0],
           );
         }
       }
