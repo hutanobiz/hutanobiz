@@ -9,11 +9,12 @@ class ProviderWidget extends StatelessWidget {
     @required this.degree,
     this.bookAppointment,
     this.isOptionsShow = true,
+    this.averageRating,
   })  : assert(data != null),
         super(key: key);
 
   final data;
-  final String degree;
+  final String degree, averageRating;
   final Function bookAppointment;
   final bool isOptionsShow;
 
@@ -97,7 +98,9 @@ class ProviderWidget extends StatelessWidget {
                                 width: 2,
                               ),
                               Text(
-                                data['averageRating']?.toString() ?? "---",
+                                data['averageRating']?.toString() ??
+                                    averageRating ??
+                                    "---",
                                 style: TextStyle(
                                   color: Colors.black.withOpacity(0.6),
                                 ),

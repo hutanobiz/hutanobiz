@@ -6,12 +6,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
 import 'package:hutano/widgets/review_widget.dart';
-import 'package:hutano/utils/extensions.dart';
+import 'package:intl/intl.dart';
 
 class ProviderProfileScreen extends StatefulWidget {
   ProviderProfileScreen({Key key}) : super(key: key);
@@ -24,10 +25,10 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
   Future<dynamic> _profileFuture;
   Map _containerMap;
   InheritedContainerState _container;
-  Map profileMap = Map();
   Map profileMapResponse = Map();
   String degree;
   List speaciltyList = List();
+  List reviewsList = List();
 
   final Set<Marker> _markers = {};
   BitmapDescriptor sourceIcon;
@@ -70,7 +71,6 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
         isAddBack: false,
         addBackButton: true,
         padding: const EdgeInsets.only(bottom: 20),
-        buttonColor: AppColors.windsor,
         child: Stack(
           children: <Widget>[
             Container(
@@ -91,21 +91,15 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                         break;
                       case ConnectionState.done:
                         if (snapshot.hasData) {
-                          List response = snapshot.data["data"];
-
                           profileMapResponse = snapshot.data;
 
-                          if (response.isEmpty) return Container();
-
-                          response.map((f) {
-                            profileMap.addAll(f);
-                          }).toList();
+                          if (profileMapResponse.isEmpty) return Container();
 
                           return SingleChildScrollView(
                             padding: const EdgeInsets.only(bottom: 100),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: widgetList(profileMap),
+                              children: widgetList(profileMapResponse),
                             ),
                           );
                         } else if (snapshot.hasError) {
@@ -123,9 +117,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                 width: MediaQuery.of(context).size.width - 76.0,
                 padding: const EdgeInsets.only(right: 20.0, left: 40.0),
                 child: FancyButton(
-                  title: "Send Office Request",
-                  buttonIcon: "ic_send_request",
-                  buttonColor: AppColors.windsor,
+                  title: "Schedule Appointment",
                   onPressed: () {
                     _container.getProviderData().clear();
 
@@ -150,9 +142,23 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     );
   }
 
-  List<Widget> widgetList(Map _providerData) {
-    String institute, address, todaysTimings = "---", tomorrowsTimings = "---";
+  List<Widget> widgetList(Map profileResponse) {
+    List response = profileResponse["data"];
+    Map _providerData = Map();
+
+    response.map((f) {
+      _providerData.addAll(f);
+    }).toList();
+
+    String institute,
+        address,
+        todaysTimings = "---",
+        tomorrowsTimings = "---",
+        averageRating = "---";
+
     LatLng latLng = LatLng(0, 0);
+
+    averageRating = profileResponse['averageRating']?.toString() ?? "0";
 
     for (dynamic education in _providerData["education"]) {
       institute = education["institute"] ?? "---";
@@ -161,6 +167,10 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
 
     if (_providerData['specialties'] != null) {
       speaciltyList = _providerData['specialties'];
+    }
+
+    if (profileResponse['reviews'] != null) {
+      reviewsList = profileResponse['reviews'];
     }
 
     if (_providerData['schedules'] != null) {
@@ -195,8 +205,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
 
         if (location.length > 0) {
           latLng = LatLng(
-            location[1],
             location[0],
+            location[1],
           );
         }
       }
@@ -209,6 +219,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
       child: ProviderWidget(
         data: _providerData,
         degree: degree.toString(),
+        averageRating: averageRating,
         isOptionsShow: false,
       ),
     ));
@@ -329,10 +340,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
         child: Text(
           _providerData["userId"]["language"]?.toString() ?? "---",
           style: TextStyle(
-            color: Colors.black,
-            fontSize: 13.0,
-            fontWeight: FontWeight.w400
-          ),
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
         ),
       ),
     );
@@ -513,12 +521,14 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                 style: TextStyle(
                   fontSize: 15.0,
                   color: Colors.black,
+                  fontWeight: FontWeight.w400,
                 ),
                 children: <TextSpan>[
                   TextSpan(text: 'Overall Rating '),
                   TextSpan(
-                      text: _providerData['averageRating']?.toString() ?? "---",
+                      text: averageRating,
                       style: TextStyle(
+                        fontSize: 15,
                         color: AppColors.goldenTainoi,
                         fontWeight: FontWeight.w600,
                       )),
@@ -528,7 +538,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
             child: Align(
               alignment: Alignment.centerRight,
               child: RatingBar(
-                initialRating: 3,
+                initialRating: double.parse(averageRating),
                 itemSize: 20.0,
                 minRating: 1,
                 direction: Axis.horizontal,
@@ -548,17 +558,47 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     ));
 
     formWidget.add(
-      Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-        child: ReviewWidget(
-          reviewerName: "Chris Hemsworth",
-          reviewDate: "03 Dec 2019",
-          reviewerRating: 5.0,
-          reviewText:
-              "Ann is one of the best nurses I have ever encountered.She has a great sense of humor: but she is very compassionate and serious about her work. I will definitely seek her out next time I need care.",
-        ),
-      ),
+      reviewsList == null || reviewsList.length == 0
+          ? Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+              child: Text("NO reviews available yet!"),
+            )
+          : ListView.builder(
+              physics: ClampingScrollPhysics(),
+              padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+              reverse: true,
+              shrinkWrap: true,
+              itemCount: reviewsList.length,
+              itemBuilder: (context, index) {
+                dynamic response = reviewsList[index];
+
+                return ReviewWidget(
+                  reviewerName: response["user"]["fullName"],
+                  avatar: response["user"]["avatar"],
+                  reviewDate: DateFormat(
+                    'dd MMMM yyyy',
+                  )
+                      .format(DateTime.parse(response["user"]["updatedAt"]))
+                      .toString(),
+                  reviewerRating:
+                      double.parse(response["rating"]?.toString() ?? "0"),
+                  reviewText: response["review"],
+                );
+              },
+            ),
     );
+    // formWidget.add(
+    //   Padding(
+    //     padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+    //     child: ReviewWidget(
+    //       reviewerName: "Chris Hemsworth",
+    //       reviewDate: "03 Dec 2019",
+    //       reviewerRating: 5.0,
+    //       reviewText:
+    //           "Ann is one of the best nurses I have ever encountered.She has a great sense of humor: but she is very compassionate and serious about her work. I will definitely seek her out next time I need care.",
+    //     ),
+    //   ),
+    // );
 
     return formWidget;
   }
