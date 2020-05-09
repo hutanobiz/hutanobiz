@@ -291,8 +291,8 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
 
             if (location.length > 0) {
               _news = LatLng(
-                location[0],
                 location[1],
+                location[0],
               );
             }
           }
