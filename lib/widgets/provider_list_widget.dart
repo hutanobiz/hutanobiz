@@ -98,9 +98,7 @@ class ProviderWidget extends StatelessWidget {
                                 width: 2,
                               ),
                               Text(
-                                data['averageRating']?.toString() ??
-                                    averageRating ??
-                                    "0",
+                                averageRating ?? "0",
                                 style: TextStyle(
                                   color: Colors.black.withOpacity(0.6),
                                 ),

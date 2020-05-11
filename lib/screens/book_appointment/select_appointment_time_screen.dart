@@ -36,6 +36,7 @@ class _SelectAppointmentTimeScreenState
   DateTime _selectedDate;
   Map profileMap = new Map();
   String currentDate;
+  String averageRating = "0";
 
   @override
   void initState() {
@@ -68,11 +69,14 @@ class _SelectAppointmentTimeScreenState
     }
 
     if (_providerData["providerData"]["data"] != null) {
+      averageRating = _providerData["providerData"]["averageRating"].toString();
+
       _providerData["providerData"]["data"].map((f) {
         profileMap.addAll(f);
       }).toList();
     } else {
       profileMap = _providerData["providerData"];
+      averageRating = profileMap["averageRating"].toString();
     }
 
     _scheduleFuture = _apiBaseHelper
@@ -121,6 +125,7 @@ class _SelectAppointmentTimeScreenState
       data: profileMap,
       degree: _providerData["degree"].toString(),
       isOptionsShow: false,
+      averageRating: averageRating,
     ));
 
     formWidget.add(ScrollingDayCalendar(

@@ -177,6 +177,8 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
           child: ProviderWidget(
             data: _responseData[index],
             degree: degree,
+            averageRating:
+                _responseData[index]['averageRating']?.toString() ?? "0",
             bookAppointment: () {
               _container.getProviderData().clear();
 

@@ -83,6 +83,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
 
   List<Widget> widgetList() {
     List<Widget> formWidget = new List();
+    String averageRating = "0";
 
     if (_providerData["providerData"]["data"] != null) {
       if (_providerData["providerData"]["data"] is List) {
@@ -92,14 +93,18 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
       } else {
         profileMap = _providerData["providerData"]["data"];
       }
+
+      averageRating = _providerData["providerData"]["averageRating"].toString();
     } else {
       profileMap = _providerData["providerData"];
+      averageRating = profileMap["averageRating"].toString();
     }
 
     formWidget.add(ProviderWidget(
       data: profileMap,
       degree: _providerData["degree"].toString(),
       isOptionsShow: false,
+      averageRating: averageRating,
     ));
 
     formWidget.add(SizedBox(height: 26));
@@ -347,5 +352,9 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
 
   void _handleRadioValueChange(int value) {
     setState(() => _radioValue = value);
+
+    if (value == 0) {
+      _selectedServicesMap.clear();
+    }
   }
 }
