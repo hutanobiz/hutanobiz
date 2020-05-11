@@ -231,11 +231,10 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
 
         for (int i = 0; i < imagesList.length; i++) {
           File imageFile = File(imagesList[i].path.toString());
-          var stream =
-              http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+          var stream = http.ByteStream(DelegatingStream(imageFile.openRead()));
           var length = await imageFile.length();
           var multipartFile = http.MultipartFile(
-              "medicalDocuments", stream, length,
+              "medicalDocuments", stream.cast(), length,
               filename: imageFile.path);
           sList.add(multipartFile);
         }

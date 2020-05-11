@@ -246,11 +246,11 @@ class _UploadInsuranceImagesScreenState
         if (frontImagePath != null) {
           File frontImage = File(frontImagePath);
           var stream =
-              http.ByteStream(DelegatingStream.typed(frontImage.openRead()));
+              http.ByteStream(DelegatingStream(frontImage.openRead()));
           var length = await frontImage.length();
           var frontMultipartFile = http.MultipartFile(
             "insuranceDocumentFront",
-            stream,
+            stream.cast(),
             length,
             filename: frontImage.path,
           );
@@ -260,11 +260,11 @@ class _UploadInsuranceImagesScreenState
           if (backImagePath != null) {
             File backImage = File(backImagePath);
             var stream =
-                http.ByteStream(DelegatingStream.typed(backImage.openRead()));
+                http.ByteStream(DelegatingStream(backImage.openRead()));
             var length = await backImage.length();
             var backMultipartFile = http.MultipartFile(
               "insuranceDocumentBack",
-              stream,
+              stream.cast(),
               length,
               filename: backImage.path,
             );

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:async/async.dart';
@@ -232,9 +231,10 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
           for (int i = 0; i < imagesList.length; i++) {
             File imageFile = File(imagesList[i].toString());
             var stream =
-                http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+                http.ByteStream(DelegatingStream(imageFile.openRead()));
             var length = await imageFile.length();
-            var multipartFile = http.MultipartFile("images", stream, length,
+            var multipartFile = http.MultipartFile(
+                "images", stream.cast(), length,
                 filename: imageFile.path);
             newList.add(multipartFile);
           }
