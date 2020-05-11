@@ -75,7 +75,7 @@ class ProviderWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "${data["userId"]["fullName"]}, $degree",
+                          "${data["userId"]["fullName"]}",
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 14.0,
@@ -100,7 +100,7 @@ class ProviderWidget extends StatelessWidget {
                               Text(
                                 data['averageRating']?.toString() ??
                                     averageRating ??
-                                    "---",
+                                    "0",
                                 style: TextStyle(
                                   color: Colors.black.withOpacity(0.6),
                                 ),
@@ -174,7 +174,20 @@ class ProviderWidget extends StatelessWidget {
                       SizedBox(width: 3.0),
                       Expanded(
                         child: Text(
-                          "---", //TODO: add years of experience
+                          (data["practicingSince"] != null
+                                  ? (DateTime.now().year -
+                                          int.parse(
+                                            data["practicingSince"]
+                                                .toString()
+                                                .substring(
+                                                    data["practicingSince"]
+                                                            .toString()
+                                                            .length -
+                                                        4),
+                                          ))
+                                      .toString()
+                                  : "---") +
+                              " Years of Experience",
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                           ),
