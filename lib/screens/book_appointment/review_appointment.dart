@@ -34,6 +34,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
   final Set<Marker> _markers = {};
   final Set<Polyline> _polyline = {};
+  String averageRating = "0";
 
   PolylinePoints polylinePoints = PolylinePoints();
 
@@ -48,6 +49,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   Map profileMap = new Map();
   Map _servicesMap = new Map();
   Map appointmentData = Map();
+
+  List<dynamic> _consultaceList = List();
 
   setPolylines() async {
     List<PointLatLng> result = await polylinePoints?.getRouteBetweenCoordinates(
@@ -95,11 +98,14 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     _userLocationMap = _container.userLocationMap;
 
     if (_providerData["providerData"]["data"] != null) {
+      averageRating = _providerData["providerData"]["averageRating"].toString();
+
       _providerData["providerData"]["data"].map((f) {
         profileMap.addAll(f);
       }).toList();
     } else {
       profileMap = _providerData["providerData"];
+      averageRating = profileMap["averageRating"].toString();
     }
 
     _initialPosition = _userLocationMap["latLng"];
@@ -145,7 +151,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         }
       }
     } else {
-      List<dynamic> _consultaceList = _servicesMap["consultaceFee"];
+      _consultaceList = _servicesMap["consultaceFee"];
 
       for (int i = 0; i < _consultaceList.length; i++) {
         appointmentData["consultanceFee[${i.toString()}][fee]"] =
@@ -323,6 +329,24 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
   List<Widget> widgetList() {
     List<Widget> formWidget = new List();
+    String address;
+
+    if (profileMap["businessLocation"] != null) {
+      dynamic business = profileMap["businessLocation"];
+
+      String state = "---";
+      if (business["state"] != null) {
+        state = business["state"]["title"]?.toString() ?? "---";
+      }
+
+      address = (business["address"]?.toString() ?? "---") +
+          ", " +
+          (business["city"]?.toString() ?? "---") +
+          ", " +
+          state +
+          " - " +
+          (business["zipCode"]?.toString() ?? "---");
+    }
 
     formWidget.add(Padding(
       padding: const EdgeInsets.only(right: 20.0, left: 20.0),
@@ -330,6 +354,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         data: profileMap,
         degree: _providerData["degree"].toString(),
         isOptionsShow: false,
+        averageRating: averageRating,
       ),
     ));
 
@@ -344,14 +369,11 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
     formWidget.add(SizedBox(height: 12.0));
 
-    formWidget.add(container(
-        "Office Address",
-        profileMap['businessLocation']['address'] ?? "---",
-        "ic_office_address"));
+    formWidget.add(container("Office Address", address, "ic_office_address"));
 
-    formWidget.add(_servicesList != null && _servicesList.length > 0
-        ? servicesWidget()
-        : Container());
+    formWidget.add(
+      servicesWidget(),
+    );
 
     formWidget.add(_initialPosition == null
         ? Container()
@@ -575,16 +597,27 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                 width: 0.5,
               ),
             ),
-            child: ListView.separated(
-                separatorBuilder: (BuildContext context, int index) =>
-                    Divider(),
-                physics: ClampingScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: _servicesList.length,
-                itemBuilder: (context, index) {
-                  Services services = _servicesList[index];
-                  return serviceSlotWidget(services);
-                }),
+            child: _servicesList != null && _servicesList.length > 0
+                ? ListView.separated(
+                    separatorBuilder: (BuildContext context, int index) =>
+                        Divider(),
+                    physics: ClampingScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: _servicesList.length,
+                    itemBuilder: (context, index) {
+                      Services services = _servicesList[index];
+                      return serviceSlotWidget(services);
+                    })
+                : ListView.separated(
+                    separatorBuilder: (BuildContext context, int index) =>
+                        Divider(),
+                    physics: ClampingScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: _consultaceList.length,
+                    itemBuilder: (context, index) {
+                      dynamic consultance = _consultaceList[index];
+                      return consultationSlotWidget(consultance);
+                    }),
           ),
           SizedBox(height: 6.0),
         ],
@@ -636,6 +669,62 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             ),
             TextSpan(
               text: '${services.duration} min',
+              style: TextStyle(
+                fontSize: 13.0,
+                fontWeight: FontWeight.w600,
+                color: Colors.black.withOpacity(0.85),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget consultationSlotWidget(Map consultaion) {
+    return ListTile(
+      title: Text(
+        "Consultation Fee",
+        style: TextStyle(
+          fontSize: 14.0,
+          fontWeight: FontWeight.w600,
+          color: Colors.black,
+        ),
+      ),
+      subtitle: RichText(
+        text: TextSpan(
+          style: TextStyle(
+            fontSize: 13.0,
+            color: Colors.black,
+            fontWeight: FontWeight.w400,
+          ),
+          children: <TextSpan>[
+            TextSpan(
+              text: 'Fee \$ ',
+              style: TextStyle(
+                fontSize: 13.0,
+                fontWeight: FontWeight.w500,
+                color: Colors.black.withOpacity(0.85),
+              ),
+            ),
+            TextSpan(
+              text: (consultaion["fee"]?.toString() ?? "---") + ' \u2022 ',
+              style: TextStyle(
+                fontSize: 13.0,
+                fontWeight: FontWeight.w600,
+                color: Colors.black.withOpacity(0.85),
+              ),
+            ),
+            TextSpan(
+              text: 'Duration ',
+              style: TextStyle(
+                fontSize: 13.0,
+                fontWeight: FontWeight.w500,
+                color: Colors.black.withOpacity(0.85),
+              ),
+            ),
+            TextSpan(
+              text: consultaion["duration"]?.toString() ?? "---" + ' min',
               style: TextStyle(
                 fontSize: 13.0,
                 fontWeight: FontWeight.w600,
