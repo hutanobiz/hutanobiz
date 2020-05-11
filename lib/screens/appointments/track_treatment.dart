@@ -263,7 +263,19 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
         }
 
         if (detail["businessLocation"] != null) {
-          address = detail["businessLocation"]["address"]?.toString() ?? "---";
+          dynamic business = detail["businessLocation"];
+          String state = "---";
+          if (business["state"] != null) {
+            state = business["state"]["title"]?.toString() ?? "---";
+          }
+          
+          address = (business["address"]?.toString() ?? "---") +
+              ", " +
+              (business["city"]?.toString() ?? "---") +
+              ", " +
+              state +
+              " - " +
+              (business["zipCode"]?.toString() ?? "---");
         }
       }
     }

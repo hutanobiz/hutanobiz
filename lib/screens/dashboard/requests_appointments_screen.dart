@@ -185,7 +185,19 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
         }
 
         if (detail["businessLocation"] != null) {
-          address = detail["businessLocation"]["address"] ?? "---";
+          dynamic business = detail["businessLocation"];
+          String state = "---";
+          if (business["state"] != null) {
+            state = business["state"]["title"]?.toString() ?? "---";
+          }
+
+          address = (business["address"]?.toString() ?? "---") +
+              ", " +
+              (business["city"]?.toString() ?? "---") +
+              ", " +
+              state +
+              " - " +
+              (business["zipCode"]?.toString() ?? "---");
         }
       }
     }

@@ -218,7 +218,19 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
         }
 
         if (detail["businessLocation"] != null) {
-          address = detail["businessLocation"]["address"] ?? "---";
+          dynamic business = detail["businessLocation"];
+          String state = "---";
+          if (business["state"] != null) {
+            state = business["state"]["title"]?.toString() ?? "---";
+          }
+
+          address = (business["address"]?.toString() ?? "---") +
+              ", " +
+              (business["city"]?.toString() ?? "---") +
+              ", " +
+              state +
+              " - " +
+              (business["zipCode"]?.toString() ?? "---");
         }
       }
     }
@@ -347,6 +359,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                       Expanded(
                         child: Text(
                           "$address",
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                           ),

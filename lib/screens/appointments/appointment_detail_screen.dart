@@ -165,7 +165,20 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         }
 
         if (detail["businessLocation"] != null) {
-          address = detail["businessLocation"]["address"] ?? "---";
+          dynamic business = detail["businessLocation"];
+
+          String state = "---";
+          if (business["state"] != null) {
+            state = business["state"]["title"]?.toString() ?? "---";
+          }
+
+          address = (business["address"]?.toString() ?? "---") +
+              ", " +
+              (business["city"]?.toString() ?? "---") +
+              ", " +
+              state +
+              " - " +
+              (business["zipCode"]?.toString() ?? "---");
 
           if (detail["businessLocation"]["coordinates"] != null) {
             List location = detail["businessLocation"]["coordinates"];
@@ -514,21 +527,19 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                 children: <Widget>[
                   "ic_location_grey".imageIcon(),
                   SizedBox(width: 8.0),
-                  Column(
-                    children: <Widget>[
-                      Text(
-                        location,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
-                          fontSize: 14.0,
-                        ),
+                  Expanded(
+                    child: Text(
+                      location,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                        fontSize: 14.0,
                       ),
-                    ],
+                    ),
                   ),
-                  SizedBox(width: 30.0),
+                  SizedBox(width: 5.0),
                   Expanded(
                     child: Align(
                       alignment: Alignment.centerRight,
