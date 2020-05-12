@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:async/async.dart';
@@ -245,8 +246,7 @@ class _UploadInsuranceImagesScreenState
 
         if (frontImagePath != null) {
           File frontImage = File(frontImagePath);
-          var stream =
-              http.ByteStream(DelegatingStream(frontImage.openRead()));
+          var stream = http.ByteStream(DelegatingStream(frontImage.openRead()));
           var length = await frontImage.length();
           var frontMultipartFile = http.MultipartFile(
             "insuranceDocumentFront",
@@ -274,10 +274,28 @@ class _UploadInsuranceImagesScreenState
         }
 
         var response = await request.send();
+        final int statusCode = response.statusCode;
+        log("Status code: $statusCode");
 
-        if (response.statusCode == 200) {
-          var respStr = await response.stream.bytesToString();
-          var responseJson = _decoder.convert(respStr);
+        String respStr = await response.stream.bytesToString();
+        var responseJson = _decoder.convert(respStr);
+
+        if (statusCode < 200 || statusCode > 400 || json == null) {
+          setLoading(false);
+          if (responseJson["response"] is String)
+            Widgets.showToast(responseJson["response"]);
+          else if (responseJson["response"] is Map)
+            Widgets.showToast(responseJson);
+          else {
+            responseJson["response"]
+                .map((m) => Widgets.showToast(m.toString()))
+                .toList();
+          }
+
+          responseJson["response"].toString().debugLog();
+          throw Exception(responseJson);
+        } else {
+          setLoading(false);
 
           responseJson.toString().debugLog();
           Navigator.popUntil(
@@ -285,8 +303,6 @@ class _UploadInsuranceImagesScreenState
 
           if (message != null) Widgets.showToast(message);
         }
-
-        setLoading(false);
       });
     } on Exception catch (error) {
       setLoading(false);
