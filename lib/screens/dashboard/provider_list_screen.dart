@@ -178,7 +178,8 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
             data: _responseData[index],
             degree: degree,
             averageRating:
-                _responseData[index]['averageRating']?.toString() ?? "0",
+                _responseData[index]['averageRating']?.toStringAsFixed(2) ??
+                    "0",
             bookAppointment: () {
               _container.getProviderData().clear();
 
