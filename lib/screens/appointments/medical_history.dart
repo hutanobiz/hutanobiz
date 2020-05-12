@@ -17,11 +17,9 @@ class MedicalHistoryScreen extends StatefulWidget {
 class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
   Future<List<MedicalHistory>> _todoFuture;
   ApiBaseHelper api = ApiBaseHelper();
-  bool isSelected = false;
 
   InheritedContainerState _container;
   List<dynamic> _diseaseList = List();
-  List _medicalHistoryList = List();
 
   @override
   void initState() {
@@ -33,7 +31,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
           if (response["medicalHistory"] != null) {
             for (dynamic medical in response["medicalHistory"]) {
               if (medical["_id"].toString() != null)
-                _medicalHistoryList.add(medical["_id"].toString());
+                _diseaseList.add(medical["_id"].toString());
             }
           }
         }
@@ -79,33 +77,16 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                 itemBuilder: (context, index) {
                   MedicalHistory medicalHistory = data[index];
 
-                  if (_medicalHistoryList != null &&
-                      _medicalHistoryList.length > 0) {
-                    if (_medicalHistoryList.contains(medicalHistory.sId)) {
-                      medicalHistory.isSelected = true;
-                    }
-                  }
-
                   return CheckboxListTile(
                     title: Text(medicalHistory.name),
-                    value: medicalHistory.isSelected,
+                    value: _diseaseList.contains(medicalHistory.sId),
                     activeColor: AppColors.goldenTainoi,
                     onChanged: (value) {
-                      if (value)
-                        _diseaseList.add(medicalHistory.sId);
-                      else {
-                        _diseaseList.remove(medicalHistory.sId);
-
-                        if (_medicalHistoryList != null &&
-                            _medicalHistoryList.length > 0) {
-                          if (_medicalHistoryList
-                              .contains(medicalHistory.sId)) {
-                            _medicalHistoryList.remove(medicalHistory.sId);
-                          }
-                        }
-                      }
-
-                      setState(() => medicalHistory.isSelected = value);
+                      setState(() {
+                        value == true
+                            ? _diseaseList.add(medicalHistory.sId)
+                            : _diseaseList.remove(medicalHistory.sId);
+                      });
                     },
                   );
                 },

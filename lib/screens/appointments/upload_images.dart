@@ -1,15 +1,8 @@
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:async/async.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
-import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/utils/extensions.dart';
-import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
@@ -24,20 +17,17 @@ class UploadImagesScreen extends StatefulWidget {
 
 class _UploadImagesScreenState extends State<UploadImagesScreen> {
   File croppedFile;
-  JsonDecoder _decoder = new JsonDecoder();
 
   List<String> imagesList = List();
   InheritedContainerState _container;
-  Map _consentToTreatMap;
 
   bool _isLoading = false;
 
   @override
   void didChangeDependencies() {
-    _container = InheritedContainer.of(context);
-    _consentToTreatMap = _container.consentToTreatMap;
-
     super.didChangeDependencies();
+
+    _container = InheritedContainer.of(context);
   }
 
   @override
@@ -50,7 +40,12 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
         isAddBack: false,
         addBottomArrows: true,
         onForwardTap: () {
-          _uploadImage(imagesList, imagesList.length > 0 ? 'Uploaded!' : null);
+          if (imagesList != null && imagesList.length > 0) {
+            _container.setConsentToTreatData("imagesList", imagesList);
+            Navigator.of(context).pushNamed(Routes.uploadDocumentsScreen);
+          } else {
+            Widgets.showToast("Please upload image(s)");
+          }
         },
         color: Colors.white,
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
@@ -140,7 +135,6 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                     child: RawMaterialButton(
                       onPressed: () {
                         setState(() => imagesList.remove(content));
-                        _uploadImage(imagesList, null);
                       },
                       child: Icon(
                         Icons.close,
@@ -192,75 +186,6 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
       if (croppedFile != null) {
         setState(() => imagesList.add(croppedFile.path));
       }
-    }
-  }
-
-  _uploadImage(List<String> imagesList, String message) async {
-    try {
-      SharedPref().getToken().then((token) async {
-        setLoading(true);
-        Uri uri = Uri.parse(ApiBaseHelper.base_url +
-            "api/patient/appointment-details/" +
-            _container.appointmentIdMap["appointmentId"]);
-        http.MultipartRequest request = http.MultipartRequest('POST', uri);
-        request.headers['authorization'] = token;
-
-        request.fields['consentToTreat'] = '1';
-        request.fields['problemTimeSpan'] =
-            _consentToTreatMap["problemTimeSpan"];
-        request.fields['isProblemImproving'] =
-            _consentToTreatMap["isProblemImproving"];
-        request.fields['isTreatmentReceived'] =
-            _consentToTreatMap["isTreatmentReceived"];
-        request.fields['description'] =
-            _consentToTreatMap["description"].toString().trim();
-
-        if (_consentToTreatMap["medicalHistory"] != null &&
-            _consentToTreatMap["medicalHistory"].length > 0) {
-          for (int i = 0;
-              i < _consentToTreatMap["medicalHistory"].length;
-              i++) {
-            request.fields["medicalHistory[$i]"] =
-                _consentToTreatMap["medicalHistory"][i];
-          }
-        }
-
-        if (imagesList != null && imagesList.length > 0) {
-          List<MultipartFile> newList = List<MultipartFile>();
-
-          for (int i = 0; i < imagesList.length; i++) {
-            File imageFile = File(imagesList[i].toString());
-            var stream =
-                http.ByteStream(DelegatingStream(imageFile.openRead()));
-            var length = await imageFile.length();
-            var multipartFile = http.MultipartFile(
-                "images", stream.cast(), length,
-                filename: imageFile.path);
-            newList.add(multipartFile);
-          }
-
-          request.files.addAll(newList);
-        }
-
-        var response = await request.send();
-
-        if (response.statusCode == 200) {
-          var respStr = await response.stream.bytesToString();
-          var responseJson = _decoder.convert(respStr);
-
-          responseJson["response"].toString().debugLog();
-
-          if (message != null) {
-            Navigator.of(context).pushNamed(Routes.uploadDocumentsScreen);
-            Widgets.showToast(message);
-          }
-        }
-
-        setLoading(false);
-      });
-    } on Exception catch (error) {
-      setLoading(false);
-      error.toString().debugLog();
     }
   }
 

@@ -1,9 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
 
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/models/services.dart';
@@ -14,6 +19,7 @@ import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
+import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 
 class ReviewAppointmentScreen extends StatefulWidget {
@@ -48,7 +54,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   double _totalDistance = 0;
   Map profileMap = new Map();
   Map _servicesMap = new Map();
-  Map appointmentData = Map();
+  Map<String, String> appointmentData = Map();
+  Map _consentToTreatMap;
 
   List<dynamic> _consultaceList = List();
 
@@ -96,6 +103,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     _providerData = _container.getProviderData();
     _appointmentData = _container.appointmentData;
     _userLocationMap = _container.userLocationMap;
+    _consentToTreatMap = _container.consentToTreatMap;
 
     if (_providerData["providerData"]["data"] != null) {
       averageRating =
@@ -136,7 +144,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
     _servicesMap = _container.selectServiceMap;
 
-    appointmentData["status"] = _servicesMap["status"];
+    appointmentData["statusType"] = _servicesMap["status"].toString();
 
     if (_servicesList.length > 0) _servicesList.clear();
 
@@ -218,36 +226,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                   buttonIcon: "ic_send_request",
                   buttonColor: AppColors.windsor,
                   onPressed: () {
-                    _loading(true);
-
-                    String doctorId = profileMap["userId"]["_id"].toString();
-
-                    appointmentData["type"] = _container
-                            .getProjectsResponse()["serviceType"]
-                            ?.toString() ??
-                        "1";
-                    appointmentData["date"] =
-                        DateFormat("MM/dd/yyyy").format(_bookedDate).toString();
-
-                    appointmentData["fromTime"] = bookedTime;
-                    appointmentData["doctor"] = doctorId;
-
-                    SharedPref().getToken().then((String token) {
-                      debugPrint(token, wrapWidth: 1024);
-
-                      ApiBaseHelper api = ApiBaseHelper();
-
-                      api
-                          .bookAppointment(token, appointmentData)
-                          .then((response) {
-                        _loading(false);
-
-                        showConfirmDialog();
-                      }).futureError((error) {
-                        _loading(false);
-                        error.toString().debugLog();
-                      });
-                    });
+                    _bookAppointment();
                   },
                 ),
               ),
@@ -256,6 +235,119 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         ),
       ),
     );
+  }
+
+  _bookAppointment() async {
+    try {
+      SharedPref().getToken().then((token) async {
+        _loading(true);
+        Uri uri = Uri.parse(
+            ApiBaseHelper.base_url + "api/patient/appointment-booking");
+        http.MultipartRequest request = http.MultipartRequest('POST', uri);
+        request.headers['authorization'] = token;
+
+        String doctorId = profileMap["userId"]["_id"].toString();
+
+        appointmentData["type"] =
+            _container.getProjectsResponse()["serviceType"]?.toString() ?? "1";
+        appointmentData["date"] =
+            DateFormat("MM/dd/yyyy").format(_bookedDate).toString();
+
+        appointmentData["fromTime"] = bookedTime;
+        appointmentData["doctor"] = doctorId;
+
+        request.fields.addAll(appointmentData);
+
+        request.fields['consentToTreat'] = '1';
+        request.fields['problemTimeSpan'] =
+            _consentToTreatMap["problemTimeSpan"];
+        request.fields['isProblemImproving'] =
+            _consentToTreatMap["isProblemImproving"];
+        request.fields['isTreatmentReceived'] =
+            _consentToTreatMap["isTreatmentReceived"];
+        request.fields['description'] =
+            _consentToTreatMap["description"].toString().trim();
+
+        if (_consentToTreatMap["medicalHistory"] != null &&
+            _consentToTreatMap["medicalHistory"].length > 0) {
+          for (int i = 0;
+              i < _consentToTreatMap["medicalHistory"].length;
+              i++) {
+            request.fields["medicalHistory[$i]"] =
+                _consentToTreatMap["medicalHistory"][i];
+          }
+        }
+
+        if (_consentToTreatMap["imagesList"] != null &&
+            _consentToTreatMap["imagesList"].length > 0) {
+          List<String> imagesList = _consentToTreatMap["imagesList"];
+          if (imagesList != null && imagesList.length > 0) {
+            for (int i = 0; i < imagesList.length; i++) {
+              File imageFile = File(imagesList[i].toString());
+              var stream =
+                  http.ByteStream(DelegatingStream(imageFile.openRead()));
+              var length = await imageFile.length();
+              var multipartFile = http.MultipartFile(
+                  "images", stream.cast(), length,
+                  filename: imageFile.path);
+              request.files.add(multipartFile);
+            }
+          }
+        }
+        if (_consentToTreatMap["docsList"] != null &&
+            _consentToTreatMap["docsList"].length > 0) {
+          List<File> imagesList = _consentToTreatMap["docsList"];
+          if (imagesList != null && imagesList.length > 0) {
+            for (int i = 0; i < imagesList.length; i++) {
+              File imageFile = imagesList[i];
+              var stream =
+                  http.ByteStream(DelegatingStream(imageFile.openRead()));
+              var length = await imageFile.length();
+              var multipartFile = http.MultipartFile(
+                  "medicalDocuments", stream.cast(), length,
+                  filename: imageFile.path);
+              request.files.add(multipartFile);
+            }
+          }
+        }
+
+        var response = await request.send();
+        final int statusCode = response.statusCode;
+        log("Status code: $statusCode");
+
+        JsonDecoder _decoder = new JsonDecoder();
+
+        String respStr = await response.stream.bytesToString();
+        var responseJson = _decoder.convert(respStr);
+
+        if (statusCode < 200 || statusCode > 400 || json == null) {
+          _loading(false);
+          if (responseJson["response"] is String)
+            Widgets.showToast(responseJson["response"]);
+          else if (responseJson["response"] is Map)
+            Widgets.showToast(responseJson);
+          else {
+            responseJson["response"]
+                .map((m) => Widgets.showToast(m.toString()))
+                .toList();
+          }
+
+          responseJson["response"].toString().debugLog();
+          throw Exception(responseJson);
+        } else {
+          _loading(false);
+
+          responseJson["response"].toString().debugLog();
+
+          showConfirmDialog();
+        }
+
+        _loading(false);
+      });
+    } on Exception catch (error) {
+      _loading(false);
+      error.toString().debugLog();
+    }
   }
 
   void showConfirmDialog() {

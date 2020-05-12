@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/round_corner_checkbox.dart';
 import 'package:hutano/widgets/widgets.dart';
 
 class ConsentToTreatScreen extends StatefulWidget {
@@ -52,25 +53,10 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
     formWidget.add(SizedBox(height: 45));
 
     formWidget.add(Center(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Checkbox(
-            activeColor: AppColors.goldenTainoi,
-            value: isAgree,
-            onChanged: (value) => setState(() => isAgree = value),
-          ),
-          InkWell(
-            onTap: () => setState(() => isAgree = !isAgree),
-            child: Text(
-              "I Agree",
-              style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
+      child: RoundCornerCheckBox(
+        title: "I Agree",
+        value: isAgree,
+        onCheck: () => setState(() => isAgree = !isAgree),
       ),
     ));
 

@@ -1,16 +1,10 @@
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:async/async.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
-import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
-import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
@@ -26,7 +20,6 @@ class UploadDocumentsScreen extends StatefulWidget {
 
 class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
   File croppedFile;
-  JsonDecoder _decoder = JsonDecoder();
 
   List<File> docsList = List();
   InheritedContainerState _container;
@@ -52,8 +45,13 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
         isAddBack: false,
         addBottomArrows: true,
         onForwardTap: () {
-          if (docsList != null && docsList.length > 0)
-            _uploadImage(docsList, 'Uploaded!');
+          if (docsList != null && docsList.length > 0) {
+            _container.setConsentToTreatData("docsList", docsList);
+
+            Navigator.of(context).pushNamed(Routes.reviewAppointmentScreen);
+          } else {
+            Widgets.showToast("Please upload documents");
+          }
         },
         color: Colors.white,
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
@@ -147,7 +145,6 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                           setState(() {
                             docsList.remove(content);
                           });
-                          _uploadImage(docsList, null);
                         },
                         child: Icon(
                           Icons.close,
@@ -215,55 +212,6 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
     setState(() {
       if (file != null) docsList.add(file);
     });
-  }
-
-  _uploadImage(List<File> imagesList, String message) async {
-    try {
-      SharedPref().getToken().then((token) async {
-        setLoading(true);
-        Uri uri = Uri.parse(ApiBaseHelper.base_url +
-            "api/patient/appointment-details/" +
-            _container.appointmentIdMap["appointmentId"]);
-        http.MultipartRequest request = http.MultipartRequest('POST', uri);
-        request.headers['authorization'] = token;
-
-        List<MultipartFile> sList = List<MultipartFile>();
-
-        for (int i = 0; i < imagesList.length; i++) {
-          File imageFile = File(imagesList[i].path.toString());
-          var stream = http.ByteStream(DelegatingStream(imageFile.openRead()));
-          var length = await imageFile.length();
-          var multipartFile = http.MultipartFile(
-              "medicalDocuments", stream.cast(), length,
-              filename: imageFile.path);
-          sList.add(multipartFile);
-        }
-
-        request.files.addAll(sList);
-        try {
-          var response = await request.send();
-
-          if (response.statusCode == 200) {
-            var respStr = await response.stream.bytesToString();
-            var responseJson = _decoder.convert(respStr);
-
-            responseJson["response"].toString().debugLog();
-            setLoading(false);
-
-            if (message != null) {
-              Navigator.of(context).pushNamed(Routes.paymentMethodScreen);
-              Widgets.showToast(message);
-            }
-          }
-        } on Exception catch (error) {
-          setLoading(false);
-          error.toString().debugLog();
-        }
-      });
-    } on Exception catch (error) {
-      setLoading(false);
-      error.toString().debugLog();
-    }
   }
 
   void showPickerDialog() {
