@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
@@ -9,7 +10,8 @@ import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 
 class RateDoctorScreen extends StatefulWidget {
-  RateDoctorScreen({Key key}) : super(key: key);
+  final bool isFromAppDetail;
+  RateDoctorScreen({Key key, this.isFromAppDetail}) : super(key: key);
 
   @override
   _RateDoctorScreenState createState() => _RateDoctorScreenState();
@@ -208,19 +210,27 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
   }
 
   Widget profileWidget(Map _providerData) {
-    String name = "---", avatar = "---", professionalTitle = "---";
+    String avatar = "---", professionalTitle = "---", practisingSince = "---";
     Map _dataMap =
         _providerData['providerData']["data"] ?? _providerData['providerData'];
 
     if (_dataMap["doctor"] != null) {
-      name = _dataMap["doctor"]["fullName"] ?? "---";
       avatar = _dataMap["doctor"]["avatar"];
     }
 
-    if (_providerData["doctorData"] != null) {
-      for (dynamic detail in _providerData["doctorData"]) {
-        if (detail["averageRating"] != null) if (detail["professionalTitle"] !=
-            null) {
+    if (_dataMap["doctorData"] != null) {
+      for (dynamic detail in _dataMap["doctorData"]) {
+        practisingSince = (detail["practicingSince"] != null
+                ? (DateTime.now().year -
+                        int.parse(
+                          detail["practicingSince"].toString().substring(
+                              detail["practicingSince"].toString().length - 4),
+                        ))
+                    .toString()
+                : "---") +
+            " Years of Experience";
+
+        if (detail["professionalTitle"] != null) {
           professionalTitle =
               detail["professionalTitle"]["title"]?.toString() ?? "---";
         }
@@ -256,7 +266,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    name,
+                    _name,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 14.0,
@@ -271,7 +281,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                       "ic_experience".imageIcon(height: 11, width: 11),
                       SizedBox(width: 4.0),
                       Text(
-                        "---",
+                        practisingSince,
                         style: TextStyle(
                           fontSize: 12.0,
                           fontWeight: FontWeight.w500,
@@ -287,8 +297,8 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Container(
-                  width: 70.0,
-                  height: 25.0,
+                  width: 120,
+                  padding: const EdgeInsets.all(5),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: AppColors.goldenTainoi.withOpacity(0.13),
@@ -297,6 +307,8 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                   ),
                   child: Text(
                     professionalTitle,
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 12.0,
                       fontWeight: FontWeight.w500,
@@ -508,10 +520,15 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                       ),
                     ),
                     onPressed: () {
+                      int count = 0;
                       FocusScope.of(context).requestFocus(FocusNode());
 
-                      int count = 0;
-                      Navigator.of(context).popUntil((_) => count++ >= 2);
+                      widget.isFromAppDetail
+                          ? Navigator.of(context).popUntil(
+                              ModalRoute.withName(
+                                  Routes.appointmentDetailScreen),
+                            )
+                          : Navigator.of(context).popUntil((_) => count++ >= 2);
                     })
               ],
             ),
