@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -27,6 +29,23 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   double totalFee = 0;
 
   Map profileMap = Map();
+
+  final Set<Marker> _markers = {};
+  BitmapDescriptor sourceIcon;
+  Completer<GoogleMapController> _controller = Completer();
+
+  void setSourceAndDestinationIcons() async {
+    sourceIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5),
+        "images/ic_destination_marker.png");
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    setSourceAndDestinationIcons();
+  }
 
   @override
   void didChangeDependencies() {
@@ -570,7 +589,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                       alignment: Alignment.centerRight,
                       child: FlatButton(
                         padding: const EdgeInsets.all(0.0),
-                        onPressed: () {},
+                        onPressed: () => latLng.launchMaps(),
                         child: Text(
                           "Get Directions",
                           overflow: TextOverflow.ellipsis,
@@ -598,11 +617,24 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                     myLocationEnabled: false,
                     compassEnabled: false,
                     rotateGesturesEnabled: false,
+                    markers: _markers,
                     initialCameraPosition: CameraPosition(
                       target: latLng,
                       zoom: 9.0,
                     ),
-                    onMapCreated: (GoogleMapController controller) {},
+                    onMapCreated: (GoogleMapController controller) {
+                      _controller.complete(controller);
+
+                      setState(() {
+                        _markers.add(
+                          Marker(
+                            markerId: MarkerId(latLng.toString()),
+                            position: latLng,
+                            icon: sourceIcon,
+                          ),
+                        );
+                      });
+                    },
                   ),
                 ),
               )
