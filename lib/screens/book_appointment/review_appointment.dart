@@ -98,14 +98,15 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     _userLocationMap = _container.userLocationMap;
 
     if (_providerData["providerData"]["data"] != null) {
-      averageRating = _providerData["providerData"]["averageRating"].toString();
+      averageRating =
+          _providerData["providerData"]["averageRating"].toStringAsFixed(2);
 
       _providerData["providerData"]["data"].map((f) {
         profileMap.addAll(f);
       }).toList();
     } else {
       profileMap = _providerData["providerData"];
-      averageRating = profileMap["averageRating"].toString();
+      averageRating = profileMap["averageRating"].toStringAsFixed(2);
     }
 
     _initialPosition = _userLocationMap["latLng"];
