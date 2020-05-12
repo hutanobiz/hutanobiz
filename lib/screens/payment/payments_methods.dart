@@ -32,10 +32,12 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
   @override
   void didChangeDependencies() {
+    super.didChangeDependencies();
+
     _container = InheritedContainer.of(context);
 
-    if (_container.getProviderData() != null) {
-      providerMap = _container.getProviderData();
+    if (_container.providerResponse != null) {
+      providerMap = _container.providerResponse;
 
       if (providerMap["providerData"] != null) {
         if (providerMap["providerData"]["data"] != null) {
@@ -70,13 +72,6 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
             _api.getUserDetails(token).timeout(Duration(seconds: 10));
       });
     });
-
-    super.didChangeDependencies();
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override
@@ -359,10 +354,20 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
   Widget addCard(String icon, String title) {
     return FlatButton.icon(
-      onPressed: () => Navigator.of(context).pushNamed(
-          title.toLowerCase().contains("insurance")
+      onPressed: () => Navigator.of(context)
+          .pushNamed(title.toLowerCase().contains("insurance")
               ? Routes.insuranceListScreen
-              : Routes.addNewCardScreen),
+              : Routes.addNewCardScreen)
+          .whenComplete(
+            () => SharedPref().getToken().then(
+              (token) {
+                setState(() {
+                  _insuranceFuture =
+                      _api.getUserDetails(token).timeout(Duration(seconds: 10));
+                });
+              },
+            ),
+          ),
       icon: icon.imageIcon(
         width: 20.0,
         height: 20.0,
