@@ -1,5 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart' hide MapType;
 import 'package:hutano/colors.dart';
+import 'package:intl/intl.dart';
+import 'package:map_launcher/map_launcher.dart';
 
 class Extensions {}
 
@@ -128,5 +133,32 @@ extension StatusExt on String {
               color: statusTextColor,
             ),
           );
+  }
+}
+
+extension LaunchMaps on LatLng {
+  void launchMaps() async {
+    MapType mapType;
+    if (Platform.isAndroid) {
+      mapType = MapType.google;
+    } else {
+      mapType = MapType.apple;
+    }
+
+    await MapLauncher.launchMap(
+      mapType: mapType,
+      coords: Coords(this.latitude, this.longitude),
+      title: "",
+      description: "",
+    );
+  }
+}
+
+extension NextDay on int {
+  String nextDay() {
+    return DateFormat('EEEE')
+        .format(DateTime(DateTime.now().year, DateTime.now().month,
+            DateTime.now().day + this))
+        .toString();
   }
 }
