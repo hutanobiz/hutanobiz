@@ -160,7 +160,16 @@ class Routes {
         return _buildRoute(settings, AppointmentDetailScreen());
         break;
       case rateDoctorScreen:
-        return _buildRoute(settings, RateDoctorScreen());
+        if (args is bool) {
+          return _buildRoute(
+            settings,
+            RateDoctorScreen(
+              isFromAppDetail: args,
+            ),
+          );
+        }
+        return _errorRoute();
+
         break;
       case paymentMethodScreen:
         return _buildRoute(settings, PaymentMethodScreen());

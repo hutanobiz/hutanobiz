@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
@@ -122,7 +123,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     _container.setProviderData("providerData", _data);
 
     String name = "---",
-        rating = "---",
+        averageRating = "---",
+        userRating,
         professionalTitle = "---",
         fee = "0.0",
         avatar,
@@ -133,7 +135,11 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
     LatLng latLng = new LatLng(0, 0);
 
-    rating = _data["averageRating"]?.toString() ?? "---";
+    if (_data["reason"] != null && _data["reason"].length > 0) {
+      userRating = _data["reason"][0]["rating"]?.toString();
+    }
+
+    averageRating = _data["averageRating"]?.toStringAsFixed(2) ?? "2";
 
     if (_data["subServices"] != null) {
       feeList = _data["subServices"];
@@ -254,7 +260,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         ),
                         SizedBox(width: 4.0),
                         Text(
-                          "$rating \u2022 $professionalTitle",
+                          "$averageRating \u2022 $professionalTitle",
                           style: TextStyle(
                             fontSize: 12.0,
                             fontWeight: FontWeight.w500,
@@ -326,7 +332,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           ),
         ),
         SizedBox(height: 20.0),
-        rateWidget(),
+        rateWidget(userRating),
         Padding(
           padding: const EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 11.0),
           child: Text(
@@ -361,14 +367,16 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     );
   }
 
-  Widget rateWidget() {
+  Widget rateWidget(String userRating) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+      padding: userRating == null
+          ? const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0)
+          : const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
       color: AppColors.goldenTainoi.withOpacity(0.06),
       child: Row(
         children: <Widget>[
           Text(
-            'Not Rated Yet',
+            userRating == null ? 'Not Rated Yet' : "You Rated",
             style: TextStyle(
               fontSize: 13.0,
               fontWeight: FontWeight.w500,
@@ -377,24 +385,41 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
-              child: FlatButton.icon(
-                icon: Icon(
-                  Icons.star,
-                  color: AppColors.goldenTainoi,
-                  size: 20.0,
-                ),
-                padding: const EdgeInsets.all(5.0),
-                onPressed: () =>
-                    Navigator.of(context).pushNamed(Routes.rateDoctorScreen),
-                label: Text(
-                  "Rate Now",
-                  style: TextStyle(
-                    fontSize: 13.0,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.goldenTainoi,
-                  ),
-                ),
-              ),
+              child: userRating == null
+                  ? FlatButton.icon(
+                      icon: Icon(
+                        Icons.star,
+                        color: AppColors.goldenTainoi,
+                        size: 20.0,
+                      ),
+                      padding: const EdgeInsets.all(5.0),
+                      onPressed: () => Navigator.of(context).pushNamed(
+                        Routes.rateDoctorScreen,
+                        arguments: true,
+                      ),
+                      label: Text(
+                        "Rate Now",
+                        style: TextStyle(
+                          fontSize: 13.0,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.goldenTainoi,
+                        ),
+                      ),
+                    )
+                  : RatingBar(
+                      initialRating: double.parse(userRating),
+                      itemSize: 20.0,
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      glow: false,
+                      itemBuilder: (context, index) => Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      ),
+                      onRatingUpdate: null,
+                    ),
             ),
           )
         ],

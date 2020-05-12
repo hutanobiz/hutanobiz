@@ -123,6 +123,7 @@ class AppointmentCompleteConfirmation extends StatelessWidget {
                       Navigator.pushNamed(
                         context,
                         Routes.rateDoctorScreen,
+                        arguments: true,
                       );
                     },
                   )),
