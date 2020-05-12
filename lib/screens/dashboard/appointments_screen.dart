@@ -194,6 +194,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
       }
 
     status = response["status"]?.toString() ?? "---";
+    averageRating = response["averageRating"]?.toStringAsFixed(2) ?? "0";
 
     if (response["doctor"] != null) {
       name = response["doctor"]["fullName"]?.toString() ?? "---";
@@ -209,9 +210,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
         }
 
         _container.setProviderInsuranceMap(providerInsuranceList);
-
-        if (detail["averageRating"] != null)
-          averageRating = detail["averageRating"].toString() ?? "---";
 
         if (detail["professionalTitle"] != null) {
           professionalTitle = detail["professionalTitle"]["title"] ?? "---";
@@ -431,7 +429,10 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                   ? rightButton(listType, response, "Rate Now", () {
                       _container.setProviderData("providerData", response);
                       _container.setAppointmentId(response["_id"].toString());
-                      Navigator.of(context).pushNamed(Routes.rateDoctorScreen);
+                      Navigator.of(context).pushNamed(
+                        Routes.rateDoctorScreen,
+                        arguments: false,
+                      );
                     })
                   : Container(),
             ],

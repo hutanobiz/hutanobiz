@@ -94,10 +94,12 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
         profileMap = _providerData["providerData"]["data"];
       }
 
-      averageRating = _providerData["providerData"]["averageRating"].toString();
+      averageRating =
+          _providerData["providerData"]["averageRating"]?.toStringAsFixed(2) ??
+              "0";
     } else {
       profileMap = _providerData["providerData"];
-      averageRating = profileMap["averageRating"].toString();
+      averageRating = profileMap["averageRating"]?.toStringAsFixed(2) ?? "0";
     }
 
     formWidget.add(ProviderWidget(

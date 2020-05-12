@@ -253,7 +253,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
         ? "Office response"
         : response["type"] == 2 ? "Video response" : "Onsite response";
 
-    rating = appointment["averageRating"]?.toString() ?? "---";
+    rating = appointment["averageRating"]?.toStringAsFixed(2) ?? "---";
 
     if (appointment["doctorData"] != null) {
       for (dynamic detail in appointment["doctorData"]) {

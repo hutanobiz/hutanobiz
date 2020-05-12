@@ -69,14 +69,16 @@ class _SelectAppointmentTimeScreenState
     }
 
     if (_providerData["providerData"]["data"] != null) {
-      averageRating = _providerData["providerData"]["averageRating"].toString();
+      averageRating =
+          _providerData["providerData"]["averageRating"]?.toStringAsFixed(2) ??
+              "0";
 
       _providerData["providerData"]["data"].map((f) {
         profileMap.addAll(f);
       }).toList();
     } else {
       profileMap = _providerData["providerData"];
-      averageRating = profileMap["averageRating"].toString();
+      averageRating = profileMap["averageRating"]?.toStringAsFixed(2) ?? "0";
     }
 
     _scheduleFuture = _apiBaseHelper
@@ -109,7 +111,8 @@ class _SelectAppointmentTimeScreenState
             _container.setAppointmentData("date", _selectedDate);
             _container.setAppointmentData("time", _selectedTiming);
 
-            Navigator.of(context).pushNamed(Routes.reviewAppointmentScreen);
+            Navigator.of(context).pushNamed(Routes.consentToTreatScreen);
+            // Navigator.of(context).pushNamed(Routes.reviewAppointmentScreen);
           } else {
             Widgets.showToast("Please select a timing");
           }
