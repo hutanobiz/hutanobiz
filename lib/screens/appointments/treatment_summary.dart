@@ -27,6 +27,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
   String name = "---", type = "---", durationOfSymtoms = "---";
   String initiated = "---";
   String completed = "---";
+  String serviceType = "---";
 
   Map followUpMap = Map();
 
@@ -63,6 +64,14 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
           followUpMap["status"] = "2";
         }
       }
+    }
+
+    if (followUpMap["service"] != null) {
+      serviceType = followUpMap["service"] == "1"
+          ? "Office appointment"
+          : followUpMap["service"] == "2"
+              ? "Video Chat APpointment"
+              : followUpMap["service"] == "3" ? "Onsite Appointment" : "---";
     }
 
     if (appointmentData != null) {
@@ -181,8 +190,8 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                   ),
                 ),
               ),
-              medicalHistoryList == null
-                  ? Container()
+              medicalHistoryList == null || medicalHistoryList.isEmpty
+                  ? Text("NO medical history")
                   : Container(
                       height: 40,
                       margin: const EdgeInsets.fromLTRB(20, 0, 20, 16),
@@ -363,7 +372,6 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                 followUpMap["time"] ?? "---",
                 "ic_appointment_time",
               ),
-              SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
                 child: Column(
@@ -390,7 +398,6 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                     SizedBox(height: 20),
                     Container(
                       height: 40,
-                      margin: const EdgeInsets.only(bottom: 40),
                       child: followUpMap["services"] == null ||
                               followUpMap["services"].isEmpty
                           ? Text("NO follow up services")
@@ -409,6 +416,11 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                     ),
                   ],
                 ),
+              ),
+              followUpChipWidget(
+                "Appointment Type",
+                serviceType,
+                "experiencr_icon_blue",
               ),
             ],
           ),
@@ -600,6 +612,37 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
               fontSize: 15.0,
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget followUpChipWidget(String title, String subtitle, String icon) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 10, 20, 40),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              icon.imageIcon(
+                color: AppColors.persian_indigo,
+              ),
+              SizedBox(width: 8.0),
+              Text(
+                title,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                  fontSize: 14.0,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 11),
+          chipWidget(subtitle),
         ],
       ),
     );
