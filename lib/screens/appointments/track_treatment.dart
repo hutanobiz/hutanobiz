@@ -268,7 +268,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
           if (business["state"] != null) {
             state = business["state"]["title"]?.toString() ?? "---";
           }
-          
+
           address = (business["address"]?.toString() ?? "---") +
               ", " +
               (business["city"]?.toString() ?? "---") +
@@ -414,11 +414,13 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                             ? "ETA ${(((_totalDistance * 0.000621371) / 30) * 60).toStringAsFixed(1)} minutes"
                             : status == 1
                                 ? "Started driving"
-                                : status == 2 || status == 3
+                                : status == 2
                                     ? "You have Arrived."
-                                    : status == 4
-                                        ? "Treatment Completed"
-                                        : "ETA ${(((_totalDistance * 0.000621371) / 30) * 60).toStringAsFixed(1)} minutes",
+                                    : status == 3 || status == 4
+                                        ? "Treatment started"
+                                        : status == 5
+                                            ? "Treatment Completed"
+                                            : "ETA ${(((_totalDistance * 0.000621371) / 30) * 60).toStringAsFixed(1)} minutes",
                       ),
                     ],
                   ),
@@ -795,10 +797,12 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
     map["trackingStatus.status"] = status;
     SharedPref().getToken().then((token) {
       api.appointmentTrackingStatus(token, map, id).then((value) {
-        setState(() {
-          _profileFuture = api.getAppointmentDetails(token, id);
-        });
-        value.toString().debugLog();
+        if (mounted) {
+          setState(() {
+            _profileFuture = api.getAppointmentDetails(token, id);
+          });
+          value.toString().debugLog();
+        }
       }).futureError((error) {
         Widgets.showToast(error.toString());
         error.toString().debugLog();
