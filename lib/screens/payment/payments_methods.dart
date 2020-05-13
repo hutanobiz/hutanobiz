@@ -23,12 +23,14 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   Future<List<dynamic>> _insuranceFuture;
   ApiBaseHelper _api = ApiBaseHelper();
   InheritedContainerState _container;
-  String insuranceId, totalFee;
+  String insuranceId;
 
   bool _isLoading = false;
   Map appointmentData = new Map();
   Map providerMap;
-  String name, avatar, cashPayment = "0";
+  String name, avatar, cashPayment = "0", fee = "0.0";
+  double totalFee;
+  List feeList = List();
 
   @override
   void didChangeDependencies() {
@@ -47,10 +49,6 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         }
       }
 
-      if (providerMap["totalFee"] != null) {
-        totalFee = providerMap["totalFee"];
-      }
-
       if (appointmentData["doctor"] != null) {
         name = appointmentData["doctor"]["fullName"] ?? "---";
         avatar = appointmentData["doctor"]["avatar"];
@@ -62,6 +60,31 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         if (detail["paymentMethod"] != null) {
           cashPayment =
               detail["paymentMethod"]["cashPayment"]?.toString() ?? "0";
+        }
+
+        if (detail["consultanceFee"] != null) {
+          for (dynamic consultanceFee in detail["consultanceFee"]) {
+            fee = consultanceFee["fee"]?.toString() ?? "0.0";
+          }
+        }
+      }
+    }
+
+    if (providerMap["totalFee"] != null) {
+      totalFee = double.parse(providerMap["totalFee"]);
+    } else {
+      if (appointmentData["services"] != null) {
+        feeList = appointmentData["services"];
+      }
+
+      if (feeList.length > 0) {
+        totalFee = feeList.fold(
+            0, (sum, item) => sum + double.parse(item["amount"].toString()));
+      } else {
+        if (appointmentData["parking"] != null) {
+          totalFee = double.parse(
+                  appointmentData["parking"]["fee"]?.toString() ?? "0.0") +
+              double.parse(fee);
         }
       }
     }
