@@ -4,6 +4,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/utils/extensions.dart';
 
 class ChooseSpecialities extends StatefulWidget {
   ChooseSpecialities({Key key, @required this.professionalId})
@@ -64,7 +65,7 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 2,
+              childAspectRatio: 2.3,
               mainAxisSpacing: 18.0,
               crossAxisSpacing: 16.0,
             ),
@@ -83,16 +84,21 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
                 child: ListTile(
                   contentPadding: EdgeInsets.all(8.0),
                   leading: ClipRRect(
-                    child: Image.network(
-                      data[index]["cover"] ?? "http://i.imgur.com/QSev0hg.jpg",
-                      width: 66.0,
-                      height: 64.0,
-                      fit: BoxFit.cover,
-                    ),
+                    child: data[index]["cover"] == null
+                        ? "onsite_appointment".imageIcon(
+                            width: 66.0,
+                            height: 64.0,
+                          )
+                        : Image.network(
+                            ApiBaseHelper.imageUrl + data[index]["cover"],
+                            width: 66.0,
+                            height: 64.0,
+                            fit: BoxFit.cover,
+                          ),
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   title: Text(
-                    data[index]["title"] ?? "---",
+                    data[index]["title"]?.toString() ?? "---",
                     maxLines: 2,
                     style: TextStyle(
                       color: Colors.black87,
@@ -102,7 +108,7 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
                   ),
                   onTap: () {
                     conatiner.setProjectsResponse(
-                        "specialtyId[]", data[index]["_id"] ?? "---");
+                        "specialtyId[]", data[index]["_id"]);
 
                     Navigator.pushNamed(
                       context,
