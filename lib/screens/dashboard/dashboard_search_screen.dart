@@ -192,6 +192,7 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
   Widget _listWidget(
       List<dynamic> _list, String searchKey, bool isDoctorList, int type) {
     List<dynamic> tempList = List();
+    String professionalTitle = "---";
 
     if (_list.isNotEmpty)
       _list.forEach((f) {
@@ -210,10 +211,18 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
         itemCount: tempList.length >= 5 ? 5 : tempList.length,
         itemBuilder: (context, index) {
           if (tempList.isNotEmpty) {
+            if (tempList[index]["UserDoctorDetails"] != null) {
+              dynamic details = tempList[index]["UserDoctorDetails"];
+              if (details["professionalTitle"] != null) {
+                professionalTitle =
+                    details["professionalTitle"]["title"]?.toString() ?? "---";
+              }
+            }
+
             return isDoctorList
                 ? ProviderTileWidget(
                     name: tempList[index][searchKey],
-                    profession: tempList[index][searchKey],
+                    profession: professionalTitle,
                     onTap: () {
                       _container
                           .setProviderId(tempList[index]["_id"].toString());
