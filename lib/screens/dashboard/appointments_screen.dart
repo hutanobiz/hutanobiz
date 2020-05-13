@@ -148,8 +148,10 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         avatar,
         address = "---",
         status = "---",
+        userRating,
         averageRating = "---",
         appointmentType = "---",
+        distance = "---",
         professionalTitle = "---";
 
     int paymentType = 0;
@@ -184,6 +186,10 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     status = response["status"]?.toString() ?? "---";
     averageRating = response["averageRating"]?.toStringAsFixed(2) ?? "0";
 
+    if (response["reason"] != null && response["reason"].length > 0) {
+      userRating = response["reason"][0]["rating"]?.toString();
+    }
+
     if (response["doctor"] != null) {
       name = response["doctor"]["fullName"]?.toString() ?? "---";
       avatar = response["doctor"]["avatar"].toString();
@@ -200,7 +206,12 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         _container.setProviderInsuranceMap(providerInsuranceList);
 
         if (detail["professionalTitle"] != null) {
-          professionalTitle = detail["professionalTitle"]["title"] ?? "---";
+          professionalTitle =
+              detail["professionalTitle"]["title"]?.toString() ?? "---";
+        }
+
+        if (detail["distance"] != null) {
+          distance = detail["distance"]?.toString() ?? "0";
         }
 
         if (detail["businessLocation"] != null) {
@@ -357,12 +368,11 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                     "ic_app_distance".imageIcon(),
                     SizedBox(width: 5.0),
                     Text(
-                      "--- miles",
+                      "$distance miles",
                       style: TextStyle(
                         color: AppColors.windsor,
                       ),
                     ),
-                    //TODO: doctor distance
                   ],
                 ),
               ],
@@ -407,14 +417,15 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                           .pushNamed(Routes.paymentMethodScreen);
                     })
                   : listType == 2 && status == "4"
-                      ? leftButton(listType, response, "Treatment summary", () {
+                      ? leftButton(userRating, response, "Treatment summary",
+                          () {
                           _container.setProviderData("providerData", response);
                           Navigator.of(context).pushNamed(
                               Routes.treatmentSummaryScreen,
                               arguments: response);
                         })
                       : Container(),
-              listType == 2 && status == "4"
+              listType == 2 && status == "4" && userRating == null
                   ? rightButton(listType, response, "Rate Now", () {
                       _container.setProviderData("providerData", response);
                       _container.setAppointmentId(response["_id"].toString());
@@ -436,7 +447,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   }
 
   Widget leftButton(
-      int listType, Map response, String title, Function onPressed) {
+      String userRating, Map response, String title, Function onPressed) {
     return Expanded(
       child: FlatButton(
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -444,6 +455,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         splashColor: Colors.grey[300],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
+            bottomRight:
+                userRating != null ? Radius.circular(12.0) : Radius.zero,
             bottomLeft: Radius.circular(12.0),
           ),
           side: BorderSide(width: 0.3, color: Colors.grey[300]),
