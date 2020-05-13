@@ -141,6 +141,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
         degree = "---",
         fee = "---",
         status = "---",
+        distance = "0",
         professionalTitle = "---";
 
     status = response["status"].toString();
@@ -170,6 +171,10 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
         if (detail["professionalTitle"] != null) {
           professionalTitle =
               detail["professionalTitle"]["title"]?.toString() ?? "---";
+        }
+
+        if (detail["distance"] != null) {
+          distance = detail["distance"]?.toString() ?? "0";
         }
 
         if (detail["education"] != null) {
@@ -260,62 +265,39 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                                 ),
                               )
                             : status?.appointmentStatus(isAddBackground: false),
-                        // Row(
-                        //     children: <Widget>[
-                        //       Icon(
-                        //         status == "1"
-                        //             ? Icons.check_circle_outline
-                        //             : Icons.error_outline,
-                        //         size: 12.0,
-                        //         color: status == "1"
-                        //             ? Colors.lightGreen
-                        //             : Colors.red,
-                        //       ),
-                        //       SizedBox(width: 4.0),
-                        //       Text(
-                        //         status == "1" ? "Accepted" : "Rejected",
-                        //         style: TextStyle(
-                        //           fontSize: 12.0,
-                        //           fontWeight: FontWeight.w500,
-                        //           color: status == "1"
-                        //               ? Colors.lightGreen
-                        //               : Colors.red,
-                        //         ),
-                        //       )
-                        //     ],
-                        //   ),
                         SizedBox(
                           height: 4.0,
                         ),
                         Row(
                           children: <Widget>[
-                            listType == 2
-                                ? Expanded(
-                                    child: Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 4.0),
-                                      child: Text(
-                                        listType == 2
-                                            ? "$professionalTitle"
-                                            : "\$$fee",
-                                        overflow: TextOverflow.ellipsis,
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 4.0),
+                                child: RichText(
+                                  text: TextSpan(
+                                    style: TextStyle(
+                                      fontSize: 13.0,
+                                      color: Colors.black.withOpacity(0.7),
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                          text: listType == 2
+                                              ? "$professionalTitle "
+                                              : null),
+                                      TextSpan(
+                                        text: "\$$fee",
                                         style: TextStyle(
-                                          color: Colors.black.withOpacity(0.7),
+                                          fontSize: 13.0,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.black.withOpacity(0.80),
                                         ),
                                       ),
-                                    ),
-                                  )
-                                : Container(),
-                            Expanded(
-                              child: Text(
-                                "\$$fee",
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black.withOpacity(0.80),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
+                            )
                           ],
                         ),
                       ],
@@ -412,7 +394,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                     ),
                     SizedBox(width: 5.0),
                     Text(
-                      "--- miles", //TODO: provider distance
+                      "$distance miles",
                       style: TextStyle(
                         color: Colors.black.withOpacity(0.5),
                       ),
@@ -436,9 +418,6 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                           if (response["_id"].toString() != null)
                             appointmentIdAmp["appointmentId"] =
                                 response["_id"].toString();
-                          // appointmentIdAmp["cancelledReason"] =
-                          //     "Booked by mistake";
-                          // appointmentIdAmp["cancellationFees"] = "20";
                           _api
                               .deleteRequestAppointment(token, appointmentIdAmp)
                               .then((deleteResponse) {
