@@ -43,9 +43,7 @@ class _SignUpFormState extends State<Register> {
   final _stateController = TextEditingController();
   final _phoneController = TextEditingController();
   final _zipController = TextEditingController();
-  // final _langController =
-  //     TextEditingController(text: "Select Primary Language");
-  // List languages = ['English', 'Spanish', 'French', 'Mandarin', 'Tigalog'];
+
   String stateId = "";
 
   String _genderGroup = "";
@@ -107,9 +105,6 @@ class _SignUpFormState extends State<Register> {
     _phoneController.addListener(() {
       setState(() {});
     });
-    // _langController.addListener(() {
-    //   setState(() {});
-    // });
   }
 
   @override
@@ -528,13 +523,6 @@ class _SignUpFormState extends State<Register> {
 
     formWidget.add(Widgets.sizedBox(height: 29.0));
 
-    // formWidget.add(picker(_langController, "Primary Language", () {
-    //   FocusScope.of(context).requestFocus(FocusNode());
-    //   languageBottomDialog(languages, _langController);
-    // }));
-
-    // formWidget.add(Widgets.sizedBox(height: 48.0));
-
     formWidget.add(
       Padding(
         padding: EdgeInsets.only(top: 10, bottom: 5),
@@ -560,7 +548,6 @@ class _SignUpFormState extends State<Register> {
                       maskFormatter.getUnmaskedText().toString();
                   loginData["gender"] =
                       _genderGroup.trim().toString() == "male" ? "1" : "2";
-                  // loginData["language"] = _langController.text;
                   loginData["state"] = stateId;
                   loginData["dob"] =
                       DateFormat("MM/dd/yyyy").format(_selectedDate).toString();
@@ -754,38 +741,6 @@ class _SignUpFormState extends State<Register> {
         });
   }
 
-  // void languageBottomDialog(list, controller) {
-  //   showModalBottomSheet(
-  //       context: context,
-  //       builder: (context) {
-  //         return ListView.builder(
-  //           shrinkWrap: true,
-  //           itemCount: list.length,
-  //           itemBuilder: (context, index) {
-  //             return ListTile(
-  //               title: Center(
-  //                 child: Text(
-  //                   list[index],
-  //                   style: TextStyle(
-  //                     color: list[index] == controller.text
-  //                         ? AppColors.goldenTainoi
-  //                         : Colors.black,
-  //                     fontSize: list[index] == controller.text ? 20.0 : 16.0,
-  //                   ),
-  //                 ),
-  //               ),
-  //               onTap: () {
-  //                 setState(() {
-  //                   controller.text = list[index];
-  //                   Navigator.pop(context);
-  //                 });
-  //               },
-  //             );
-  //           },
-  //         );
-  //       });
-  // }
-
   bool isValidate() {
     if (_firstNameController.text.isEmpty ||
         _lastNameController.text.isEmpty ||
@@ -796,9 +751,6 @@ class _SignUpFormState extends State<Register> {
         _stateController.text.isEmpty ||
         _genderGroup.isEmpty ||
         _zipController.text.isEmpty)
-      // ||
-      // (_langController.text.isEmpty ||
-      //     _langController.text == "Select Primary Language")
       return false;
     else if (_zipController.text.length != 5)
       return false;
