@@ -150,7 +150,9 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
       _providerData.addAll(f);
     }).toList();
 
-    String institute,
+    List languagesList = List();
+
+    String institute = "",
         address,
         todaysTimings,
         tomorrowsTimings = "---",
@@ -162,10 +164,15 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     averageRating = profileResponse['averageRating']?.toStringAsFixed(2) ?? "0";
 
     for (dynamic education in _providerData["education"]) {
-      institute = (education["institute"]?.toString() ?? "---") +
+      institute = institute +
+          (education["institute"]?.toString() ?? "---") +
           ", " +
           (education["degree"]?.toString() ?? "---") +
-          "\n";
+          "\n\n";
+    }
+
+    if (_providerData["userId"]["language"] != null) {
+      languagesList = _providerData["userId"]["language"];
     }
 
     if (_providerData['specialties'] != null) {
@@ -324,7 +331,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
       Padding(
         padding: const EdgeInsets.only(left: 20, bottom: 16),
         child: Text(
-          institute.substring(0, institute.length - 1),
+          institute.substring(0, institute.length - 2),
           style: TextStyle(
             fontSize: 13.0,
           ),
@@ -373,18 +380,32 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     );
 
     formWidget.add(
-      Container(
-        margin: const EdgeInsets.only(left: 20, bottom: 16),
-        padding: const EdgeInsets.all(8.0),
-        decoration: BoxDecoration(
-          color: AppColors.windsor.withOpacity(0.05),
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(14.0),
-        ),
-        child: Text(
-          _providerData["userId"]["language"]?.toString() ?? "---",
-          style: TextStyle(
-              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+      SizedBox(
+        height: 50,
+        child: ListView.builder(
+          shrinkWrap: true,
+          physics: ClampingScrollPhysics(),
+          scrollDirection: Axis.horizontal,
+          itemCount: languagesList.length,
+          padding: const EdgeInsets.only(left: 20, bottom: 16),
+          itemBuilder: (context, index) {
+            return Container(
+              height: 50,
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                color: AppColors.windsor.withOpacity(0.05),
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(14.0),
+              ),
+              child: Text(
+                languagesList[index]?.toString() ?? "---",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 13.0,
+                    fontWeight: FontWeight.w400),
+              ),
+            );
+          },
         ),
       ),
     );
