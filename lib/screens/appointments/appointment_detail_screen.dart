@@ -106,14 +106,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                   padding: const EdgeInsets.only(right: 20.0),
                   child: FancyButton(
                     title: "Track",
-                    onPressed: () =>
-                        // Navigator.of(context).pushNamed(
-                        //   Routes.treatmentSummaryScreen,
-                        //   arguments: profileMap,
-                        // ),
-                        Navigator.of(context)
-                            .pushNamed(Routes.trackTreatmentScreen),
-                    //Routes.treatmentSummaryScreen
+                    onPressed: () => Navigator.of(context)
+                        .pushNamed(Routes.trackTreatmentScreen),
                   ),
                 ),
               )
@@ -134,6 +128,11 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       paymentType = 2;
     } else if (_providerData["cashPayment"] != null) {
       paymentType = 1;
+    } else if (_providerData["cardPayment"] != null) {
+      if (_providerData["cardPayment"]["cardId"] != null &&
+          _providerData["cardPayment"]["cardNumber"] != null) {
+        paymentType = 3;
+      }
     } else {
       paymentType = 0;
     }
@@ -185,7 +184,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
         if (detail["consultanceFee"] != null) {
           for (dynamic consultanceFee in detail["consultanceFee"]) {
-            fee = consultanceFee["fee"].toString() ?? "---";
+            fee = consultanceFee["fee"]?.toString() ?? "0.0";
           }
         }
 
@@ -220,12 +219,12 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     }
 
     if (_providerData["doctor"] != null) {
-      name = _providerData["doctor"]["fullName"] ?? "---";
+      name = _providerData["doctor"]["fullName"]?.toString() ?? "---";
       avatar = _providerData["doctor"]["avatar"];
     }
 
     if (_providerData["parking"] != null) {
-      officeVisitFee = _providerData["parking"]["fee"] ?? "0.0";
+      officeVisitFee = _providerData["parking"]["fee"]?.toString() ?? "0.0";
     }
 
     return Column(
@@ -288,42 +287,39 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: 4.0,
-                    ),
-                    RawMaterialButton(
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(
-                          _providerData["consentToTreat"] == false
-                              ? Routes.consentToTreatScreen
-                              : Routes.paymentMethodScreen,
-                        );
-                      },
-                      child: Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(right: 4.0),
-                            child: Text(
-                              _providerData["consentToTreat"] == false
-                                  ? "View consent to treat"
-                                  : "Confirm payment",
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: AppColors.windsor,
-                                fontSize: 12.0,
-                                fontWeight: FontWeight.w500,
-                              ),
+                    paymentType != 0 ? Container() : SizedBox(height: 4.0),
+                    paymentType != 0
+                        ? Container()
+                        : RawMaterialButton(
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                            onPressed: () {
+                              Navigator.of(context).pushNamed(
+                                Routes.paymentMethodScreen,
+                              );
+                            },
+                            child: Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 4.0),
+                                  child: Text(
+                                    "Confirm payment",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: AppColors.windsor,
+                                      fontSize: 12.0,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 10.0,
+                                  color: AppColors.windsor,
+                                ),
+                              ],
                             ),
                           ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: 10.0,
-                            color: AppColors.windsor,
-                          ),
-                        ],
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -378,9 +374,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         feeWidget(fee, officeVisitFee),
         divider(),
         paymentType == 0
-            ? SizedBox(height: 1)
-            : paymentWidget(
-                "cardNumber", paymentType, insuranceName, insuranceImage),
+            ? Container()
+            : paymentWidget(paymentType, insuranceName, insuranceImage),
         paymentType == 0 ? Container() : divider(topPadding: 10.0),
       ],
     );
@@ -772,8 +767,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     );
   }
 
-  Widget paymentWidget(String cardNumber, int paymentType, String insuranceName,
-      String insuranceImage) {
+  Widget paymentWidget(
+      int paymentType, String insuranceName, String insuranceImage) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
       child: Column(
