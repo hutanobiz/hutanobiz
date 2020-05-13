@@ -162,10 +162,17 @@ class Routes {
           );
         }
         return _errorRoute();
-
         break;
       case paymentMethodScreen:
-        return _buildRoute(settings, PaymentMethodScreen());
+        if (args is bool) {
+          return _buildRoute(
+            settings,
+            PaymentMethodScreen(
+              isPayment: args,
+            ),
+          );
+        }
+        return _errorRoute();
         break;
       case addNewCardScreen:
         return _buildRoute(settings, AddNewCardScreen());
@@ -192,7 +199,15 @@ class Routes {
         return _buildRoute(settings, SelectServicesScreen());
         break;
       case insuranceListScreen:
-        return _buildRoute(settings, InsuranceListScreen());
+        if (args is bool) {
+          return _buildRoute(
+            settings,
+            InsuranceListScreen(
+              isPayment: args,
+            ),
+          );
+        }
+        return _errorRoute();
         break;
       case uploadInsuranceImagesScreen:
         return _buildRoute(settings, UploadInsuranceImagesScreen());

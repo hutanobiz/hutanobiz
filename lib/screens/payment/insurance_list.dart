@@ -7,7 +7,8 @@ import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 
 class InsuranceListScreen extends StatefulWidget {
-  InsuranceListScreen({Key key}) : super(key: key);
+  final bool isPayment;
+  InsuranceListScreen({Key key, this.isPayment}) : super(key: key);
 
   @override
   _InsuranceListScreenState createState() => _InsuranceListScreenState();
@@ -105,9 +106,18 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
       activeColor: AppColors.goldenTainoi,
       value: index,
       groupValue: _radioValue,
-      onChanged: !_container.providerInsuranceList
-              .contains(insurance["_id"].toString())
-          ? null
+      onChanged: widget.isPayment
+          ? !_container.providerInsuranceList
+                  .contains(insurance["_id"].toString())
+              ? null
+              : (value) {
+                  setState(
+                    () => _radioValue = value,
+                  );
+
+                  _container.setInsuranceData(
+                      "insuranceId", insurance["_id"].toString());
+                }
           : (value) {
               setState(
                 () => _radioValue = value,

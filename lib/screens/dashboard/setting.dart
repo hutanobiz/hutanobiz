@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
+import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:package_info/package_info.dart';
-
-import '../../colors.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({Key key}) : super(key: key);
@@ -240,10 +239,13 @@ class _SettingsScreenState extends State<SettingScreen> {
                 ),
               ),
               customListButton(
-                  "Payment History",
-                  "images/profile_payment_history.png",
-                  () => Navigator.of(context)
-                      .pushNamed(Routes.paymentMethodScreen)),
+                "Payment History",
+                "images/profile_payment_history.png",
+                () => Navigator.of(context).pushNamed(
+                  Routes.paymentMethodScreen,
+                  arguments: false,
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.only(left: 28.0),
                 child: Divider(
@@ -336,7 +338,6 @@ class _SettingsScreenState extends State<SettingScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Row(
-                // mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Image.asset(
                     image,

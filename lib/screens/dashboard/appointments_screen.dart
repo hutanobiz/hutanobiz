@@ -413,8 +413,10 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                   ? rightButton(listType, response, "Confirm Payment", () {
                       _container.setProviderData("providerData", response);
                       _container.setProviderData("totalFee", null);
-                      Navigator.of(context)
-                          .pushNamed(Routes.paymentMethodScreen);
+                      Navigator.of(context).pushNamed(
+                        Routes.paymentMethodScreen,
+                        arguments: true,
+                      );
                     })
                   : listType == 2 && status == "4"
                       ? leftButton(userRating, response, "Treatment summary",

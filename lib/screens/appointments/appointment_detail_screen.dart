@@ -296,6 +296,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                             onPressed: () {
                               Navigator.of(context).pushNamed(
                                 Routes.paymentMethodScreen,
+                                arguments: true,
                               );
                             },
                             child: Row(

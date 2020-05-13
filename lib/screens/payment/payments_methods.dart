@@ -11,7 +11,9 @@ import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 
 class PaymentMethodScreen extends StatefulWidget {
-  PaymentMethodScreen({Key key}) : super(key: key);
+  final bool isPayment;
+
+  PaymentMethodScreen({Key key, this.isPayment}) : super(key: key);
 
   @override
   _PaymentMethodScreenState createState() => _PaymentMethodScreenState();
@@ -36,55 +38,57 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    _container = InheritedContainer.of(context);
+    if (widget.isPayment) {
+      _container = InheritedContainer.of(context);
 
-    if (_container.providerResponse != null) {
-      providerMap = _container.providerResponse;
+      if (_container.providerResponse != null) {
+        providerMap = _container.providerResponse;
 
-      if (providerMap["providerData"] != null) {
-        if (providerMap["providerData"]["data"] != null) {
-          appointmentData = providerMap["providerData"]["data"];
-        } else {
-          appointmentData = providerMap["providerData"];
+        if (providerMap["providerData"] != null) {
+          if (providerMap["providerData"]["data"] != null) {
+            appointmentData = providerMap["providerData"]["data"];
+          } else {
+            appointmentData = providerMap["providerData"];
+          }
+        }
+
+        if (appointmentData["doctor"] != null) {
+          name = appointmentData["doctor"]["fullName"] ?? "---";
+          avatar = appointmentData["doctor"]["avatar"];
         }
       }
 
-      if (appointmentData["doctor"] != null) {
-        name = appointmentData["doctor"]["fullName"] ?? "---";
-        avatar = appointmentData["doctor"]["avatar"];
-      }
-    }
+      if (appointmentData["doctorData"] != null) {
+        for (dynamic detail in appointmentData["doctorData"]) {
+          if (detail["paymentMethod"] != null) {
+            cashPayment =
+                detail["paymentMethod"]["cashPayment"]?.toString() ?? "0";
+          }
 
-    if (appointmentData["doctorData"] != null) {
-      for (dynamic detail in appointmentData["doctorData"]) {
-        if (detail["paymentMethod"] != null) {
-          cashPayment =
-              detail["paymentMethod"]["cashPayment"]?.toString() ?? "0";
-        }
-
-        if (detail["consultanceFee"] != null) {
-          for (dynamic consultanceFee in detail["consultanceFee"]) {
-            fee = consultanceFee["fee"]?.toString() ?? "0.0";
+          if (detail["consultanceFee"] != null) {
+            for (dynamic consultanceFee in detail["consultanceFee"]) {
+              fee = consultanceFee["fee"]?.toString() ?? "0.0";
+            }
           }
         }
       }
-    }
 
-    if (providerMap["totalFee"] != null) {
-      totalFee = double.parse(providerMap["totalFee"]);
-    } else {
-      if (appointmentData["services"] != null) {
-        feeList = appointmentData["services"];
-      }
-
-      if (feeList.length > 0) {
-        totalFee = feeList.fold(
-            0, (sum, item) => sum + double.parse(item["amount"].toString()));
+      if (providerMap["totalFee"] != null) {
+        totalFee = double.parse(providerMap["totalFee"]);
       } else {
-        if (appointmentData["parking"] != null) {
-          totalFee = double.parse(
-                  appointmentData["parking"]["fee"]?.toString() ?? "0.0") +
-              double.parse(fee);
+        if (appointmentData["services"] != null) {
+          feeList = appointmentData["services"];
+        }
+
+        if (feeList.length > 0) {
+          totalFee = feeList.fold(
+              0, (sum, item) => sum + double.parse(item["amount"].toString()));
+        } else {
+          if (appointmentData["parking"] != null) {
+            totalFee = double.parse(
+                    appointmentData["parking"]["fee"]?.toString() ?? "0.0") +
+                double.parse(fee);
+          }
         }
       }
     }
@@ -104,7 +108,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackground(
         isLoading: _isLoading,
-        title: "Select Payment Methods",
+        title: widget.isPayment ? "Select Payment Methods" : "Payment Methods",
         isAddBack: false,
         addBackButton: true,
         color: Colors.white,
@@ -119,48 +123,51 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                 ),
               ),
             ),
-            Align(
-              alignment: FractionalOffset.bottomRight,
-              child: Container(
-                height: 55.0,
-                width: MediaQuery.of(context).size.width - 76.0,
-                padding: const EdgeInsets.only(right: 20.0, left: 40.0),
-                child: FancyButton(
-                  title: "Pay \$$totalFee",
-                  onPressed: () {
-                    if (_radioValue != null) {
-                      _loading(true);
-                      Map map = new Map();
+            widget.isPayment == false
+                ? Container()
+                : Align(
+                    alignment: FractionalOffset.bottomRight,
+                    child: Container(
+                      height: 55.0,
+                      width: MediaQuery.of(context).size.width - 76.0,
+                      padding: const EdgeInsets.only(right: 20.0, left: 40.0),
+                      child: FancyButton(
+                        title: "Pay \$$totalFee",
+                        onPressed: () {
+                          if (_radioValue != null) {
+                            _loading(true);
+                            Map map = new Map();
 
-                      if (_radioValue == 3) {
-                        map["cashPayment"] = "1";
-                      } else if (_radioValue == 1) {
-                      } else {
-                        map["insuranceId"] = insuranceId;
-                      }
-                      SharedPref().getToken().then((token) {
-                        _api
-                            .postPayment(
-                                token,
-                                _container.appointmentIdMap["appointmentId"]
-                                    .toString(),
-                                map)
-                            .then((value) {
-                          _loading(false);
-                          showThankDialog();
-                        }).futureError((error) {
-                          _loading(false);
-                          Widgets.showToast(error.toString());
-                          error.toString().debugLog();
-                        });
-                      });
-                    } else {
-                      Widgets.showToast("Please select a payment method");
-                    }
-                  },
-                ),
-              ),
-            )
+                            if (_radioValue == 3) {
+                              map["cashPayment"] = "1";
+                            } else if (_radioValue == 1) {
+                            } else {
+                              map["insuranceId"] = insuranceId;
+                            }
+                            SharedPref().getToken().then((token) {
+                              _api
+                                  .postPayment(
+                                      token,
+                                      _container
+                                          .appointmentIdMap["appointmentId"]
+                                          .toString(),
+                                      map)
+                                  .then((value) {
+                                _loading(false);
+                                showThankDialog();
+                              }).futureError((error) {
+                                _loading(false);
+                                Widgets.showToast(error.toString());
+                                error.toString().debugLog();
+                              });
+                            });
+                          } else {
+                            Widgets.showToast("Please select a payment method");
+                          }
+                        },
+                      ),
+                    ),
+                  )
           ],
         ),
       ),
@@ -206,14 +213,11 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
     _widgetList.add(_futureWidget());
 
-    _widgetList.add(SizedBox(height: 22.0));
+    _widgetList.add(SizedBox(height: 10.0));
 
     _widgetList.add(addCard("ic_upload_insurance", "Upload Insurance Card"));
 
-    _container.providerInsuranceList == null ||
-            _container.providerInsuranceList.isEmpty
-        ? Container()
-        : _widgetList.add(SizedBox(height: 40.0));
+    _widgetList.add(SizedBox(height: 40.0));
 
     _widgetList.add(paymentCard(
       "ic_cash_payment",
@@ -275,26 +279,28 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Expanded(
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Radio(
-                              activeColor: AppColors.persian_blue,
-                              value: index,
-                              groupValue: _radioValue,
-                              materialTapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
-                              onChanged: !_container.providerInsuranceList
-                                      .contains(
-                                          data[index]["insuranceId"].toString())
-                                  ? null
-                                  : (int value) {
-                                      setState(() => _radioValue = value);
-                                      insuranceId = data[index]["_id"];
-                                    },
-                            ),
-                          ),
-                        )
+                        widget.isPayment == false
+                            ? Container()
+                            : Expanded(
+                                child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Radio(
+                                    activeColor: AppColors.persian_blue,
+                                    value: index,
+                                    groupValue: _radioValue,
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    onChanged: !_container.providerInsuranceList
+                                            .contains(data[index]["insuranceId"]
+                                                .toString())
+                                        ? null
+                                        : (int value) {
+                                            setState(() => _radioValue = value);
+                                            insuranceId = data[index]["_id"];
+                                          },
+                                  ),
+                                ),
+                              )
                       ],
                     ),
                   );
@@ -354,22 +360,24 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                     ),
                   ],
                 ),
-          Expanded(
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Radio(
-                activeColor: AppColors.persian_blue,
-                value: value,
-                groupValue: _radioValue,
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                onChanged:
-                    (title.toLowerCase().contains("cash") && cashPayment == "1")
-                        ? _handleRadioValueChange
-                        : null,
-                //TODO: check for cardPayment when it's done in API
-              ),
-            ),
-          )
+          widget.isPayment == false
+              ? Container()
+              : Expanded(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Radio(
+                      activeColor: AppColors.persian_blue,
+                      value: value,
+                      groupValue: _radioValue,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      onChanged: (title.toLowerCase().contains("cash") &&
+                              cashPayment == "1")
+                          ? _handleRadioValueChange
+                          : null,
+                      //TODO: check for cardPayment when it's done in API
+                    ),
+                  ),
+                )
         ],
       ),
     );
@@ -377,20 +385,24 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
   Widget addCard(String icon, String title) {
     return FlatButton.icon(
-      onPressed: () => Navigator.of(context)
-          .pushNamed(title.toLowerCase().contains("insurance")
-              ? Routes.insuranceListScreen
-              : Routes.addNewCardScreen)
-          .whenComplete(
-            () => SharedPref().getToken().then(
-              (token) {
-                setState(() {
-                  _insuranceFuture =
-                      _api.getUserDetails(token).timeout(Duration(seconds: 10));
-                });
-              },
-            ),
-          ),
+      onPressed: () {
+        title.toLowerCase().contains("insurance")
+            ? Navigator.of(context)
+                .pushNamed(Routes.insuranceListScreen,
+                    arguments: widget.isPayment)
+                .whenComplete(
+                  () => SharedPref().getToken().then(
+                    (token) {
+                      setState(() {
+                        _insuranceFuture = _api
+                            .getUserDetails(token)
+                            .timeout(Duration(seconds: 20));
+                      });
+                    },
+                  ),
+                )
+            : Navigator.of(context).pushNamed(Routes.addNewCardScreen);
+      },
       icon: icon.imageIcon(
         width: 20.0,
         height: 20.0,
