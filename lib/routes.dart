@@ -22,7 +22,6 @@ import 'package:hutano/screens/dashboard/choose_specialities.dart';
 import 'package:hutano/screens/dashboard/dashboard_search_screen.dart';
 import 'package:hutano/screens/dashboard/provider_list_screen.dart';
 import 'package:hutano/screens/dashboard/provider_profile_screen.dart';
-import 'package:hutano/screens/dashboard/search_info.dart';
 import 'package:hutano/screens/dashboard/see_all_searches.dart';
 import 'package:hutano/screens/home.dart';
 import 'package:hutano/screens/login.dart';
@@ -51,7 +50,6 @@ class Routes {
   static const String providerListScreen = '/providerListScreen';
   static const String dashboardSearchScreen = '/dashboardSearchScreen';
   static const String seeAllSearchScreeen = '/seeAllSearchScreeen';
-  static const String searchInfoScreen = '/searchInfoScreen';
   static const String selectAppointmentTimeScreen =
       '/selectAppointmentTimeScreen';
   static const String reviewAppointmentScreen = '/reviewAppointmentScreen';
@@ -141,12 +139,7 @@ class Routes {
           return _buildRoute(settings, SeeAllSearchScreeen(arguments: args));
         }
         return _errorRoute();
-      case searchInfoScreen:
-        if (args is Map) {
-          return _buildRoute(settings, SearchInfoScreen(map: args));
-        }
-        return _errorRoute();
-        break;
+
       case selectAppointmentTimeScreen:
         return _buildRoute(settings, SelectAppointmentTimeScreen());
         break;
