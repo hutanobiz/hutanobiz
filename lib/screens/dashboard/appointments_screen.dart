@@ -15,12 +15,7 @@ class AppointmentsScreen extends StatefulWidget {
   _AppointmentsScreenState createState() => _AppointmentsScreenState();
 }
 
-class _AppointmentsScreenState extends State<AppointmentsScreen>
-// with TickerProviderStateMixin
-{
-  // List<Widget> tabList = List();
-  // TabController _tabController;
-
+class _AppointmentsScreenState extends State<AppointmentsScreen> {
   ApiBaseHelper _api = ApiBaseHelper();
 
   List<dynamic> _pastList = List();
@@ -47,28 +42,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
     _container = InheritedContainer.of(context);
   }
 
-  // @override
-  // void dispose() {
-  //   _tabController.dispose();
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
-    // _tabController = TabController(vsync: this, length: 3);
-    // _tabController.addListener(() => setState(() {}));
-
-    // tabList.clear();
-    // tabList.add(
-    //   customTab("Office", 0),
-    // );
-    // tabList.add(
-    //   customTab("Video Chat", 1),
-    // );
-    // tabList.add(
-    //   customTab("Onsite", 2),
-    // );
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.goldenTainoi,
@@ -177,7 +152,20 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
         appointmentType = "---",
         professionalTitle = "---";
 
-    _container.setProviderData("providerData", response);
+    int paymentType = 0;
+
+    if (response["insuranceId"] != null) {
+      paymentType = 2;
+    } else if (response["cashPayment"] != null) {
+      paymentType = 1;
+    } else if (response["cardPayment"] != null) {
+      if (response["cardPayment"]["cardId"] != null &&
+          response["cardPayment"]["cardNumber"] != null) {
+        paymentType = 3;
+      }
+    } else {
+      paymentType = 0;
+    }
 
     if (response["type"] != null)
       switch (response["type"]) {
@@ -281,9 +269,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
                               fontWeight: FontWeight.w700,
                             ),
                           ),
-                          SizedBox(
-                            height: 5.0,
-                          ),
+                          SizedBox(height: 5.0),
                           Row(
                             children: <Widget>[
                               Image.asset(
@@ -413,17 +399,20 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
           ),
           Row(
             children: <Widget>[
-              listType == 1 &&
-                      (response["consentToTreat"] != null &&
-                          response["consentToTreat"] == false)
-                  ? rightButton(listType, response, "Add consent", () {
-                      _container.setAppointmentId(response["_id"].toString());
+              listType == 1 && paymentType == 0
+                  ? rightButton(listType, response, "Confirm Payment", () {
+                      _container.setProviderData("providerData", response);
+                      _container.setProviderData("totalFee", null);
                       Navigator.of(context)
-                          .pushNamed(Routes.consentToTreatScreen);
+                          .pushNamed(Routes.paymentMethodScreen);
                     })
                   : listType == 2 && status == "4"
-                      ? leftButton(
-                          listType, response, "Treatment summary", () {})
+                      ? leftButton(listType, response, "Treatment summary", () {
+                          _container.setProviderData("providerData", response);
+                          Navigator.of(context).pushNamed(
+                              Routes.treatmentSummaryScreen,
+                              arguments: response);
+                        })
                       : Container(),
               listType == 2 && status == "4"
                   ? rightButton(listType, response, "Rate Now", () {
@@ -445,56 +434,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
       ),
     );
   }
-
-  // List<Widget> widgetList() {
-  //   List<Widget> formWidget = new List();
-
-  // formWidget.add(
-  //   TabBar(
-  //     controller: _tabController,
-  //     indicatorColor: Colors.transparent,
-  //     tabs: tabList,
-  //   ),
-  // );
-
-  // formWidget.add(
-  //   Expanded(
-  //     child: TabBarView(
-  //       controller: _tabController,
-  //       children: <Widget>[
-  //         DashboardScreen(),
-  //         DashboardScreen(),
-  //         DashboardScreen(),
-  //       ],
-  //     ),
-  //   ),
-  // );
-
-  //   return formWidget;
-  // }
-
-  // Widget customTab(String title, int index) {
-  //   return Container(
-  //     width: 101.0,
-  //     height: 60.0,
-  //     alignment: Alignment.center,
-  //     decoration: BoxDecoration(
-  //       color: _tabController.index == index
-  //           ? AppColors.goldenTainoi
-  //           : Colors.white,
-  //       shape: BoxShape.rectangle,
-  //       borderRadius: BorderRadius.circular(14.0),
-  //     ),
-  //     child: Text(
-  //       title,
-  //       style: TextStyle(
-  //         color: Colors.black,
-  //         fontSize: 13.0,
-  //         fontWeight: FontWeight.w600,
-  //       ),
-  //     ),
-  //   );
-  // }
 
   Widget leftButton(
       int listType, Map response, String title, Function onPressed) {
