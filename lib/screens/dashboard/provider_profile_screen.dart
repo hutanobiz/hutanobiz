@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart' hide MapType;
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
@@ -119,7 +119,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                 child: FancyButton(
                   title: "Schedule Appointment",
                   onPressed: () {
-                    _container.getProviderData().clear();
+                    _container.providerResponse.clear();
 
                     _container.setProviderData(
                         "providerData", profileMapResponse);
@@ -152,17 +152,20 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
 
     String institute,
         address,
-        todaysTimings = "---",
+        todaysTimings,
         tomorrowsTimings = "---",
-        averageRating = "---";
+        averageRating = "---",
+        tomorrowsDay = "---";
 
     LatLng latLng = LatLng(0, 0);
 
-    averageRating = profileResponse['averageRating']?.toString() ?? "0";
+    averageRating = profileResponse['averageRating']?.toStringAsFixed(2) ?? "0";
 
     for (dynamic education in _providerData["education"]) {
-      institute = education["institute"] ?? "---";
-      degree = education["degree"] ?? "---";
+      institute = (education["institute"]?.toString() ?? "---") +
+          ", " +
+          (education["degree"]?.toString() ?? "---") +
+          "\n";
     }
 
     if (_providerData['specialties'] != null) {
@@ -173,40 +176,81 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
       reviewsList = profileResponse['reviews'];
     }
 
-    if (_providerData['schedules'] != null) {
+    if (_providerData['schedules'] != null &&
+        _providerData['schedules'].length > 0) {
       scheduleList = _providerData['schedules'];
       Map scheduleMap = Map();
 
       scheduleList.map((f) => scheduleMap.addAll(f)).toList();
 
       List dayList = scheduleMap["day"];
+      DateTime now = DateTime.now();
 
       for (dynamic days in dayList) {
-        if (DateTime.now().weekday.toString() == days.toString()) {
+        if (now.weekday.toString() == days.toString()) {
           todaysTimings =
               scheduleMap["fromTime"] + " - " + scheduleMap["toTime"] + " ; ";
         }
 
-        if ((DateTime.now().weekday + 1).toString() == days.toString()) {
+        if ((now.weekday + 1).toString() == days.toString()) {
+          tomorrowsDay = 1.nextDay();
+
           tomorrowsTimings =
               scheduleMap["fromTime"] + " - " + scheduleMap["toTime"] + " ; ";
+          break;
+        } else if ((now.weekday + 2).toString() == days.toString()) {
+          tomorrowsDay = 2.nextDay();
+          tomorrowsTimings =
+              scheduleMap["fromTime"] + " - " + scheduleMap["toTime"] + " ; ";
+          break;
+        } else if ((now.weekday + 3).toString() == days.toString()) {
+          tomorrowsDay = 3.nextDay();
+          tomorrowsTimings =
+              scheduleMap["fromTime"] + " - " + scheduleMap["toTime"] + " ; ";
+          break;
+        } else if ((now.weekday + 4).toString() == days.toString()) {
+          tomorrowsDay = 4.nextDay();
+          tomorrowsTimings =
+              scheduleMap["fromTime"] + " - " + scheduleMap["toTime"] + " ; ";
+          break;
+        } else if ((now.weekday + 5).toString() == days.toString()) {
+          tomorrowsDay = 5.nextDay();
+          tomorrowsTimings =
+              scheduleMap["fromTime"] + " - " + scheduleMap["toTime"] + " ; ";
+          break;
+        } else if ((now.weekday + 6).toString() == days.toString()) {
+          tomorrowsDay = 6.nextDay();
+          tomorrowsTimings =
+              scheduleMap["fromTime"] + " - " + scheduleMap["toTime"] + " ; ";
+          break;
         }
       }
-
-      scheduleMap["day"].toString().debugLog();
     }
+    //TODO: available timings in progress
 
     if (_providerData["businessLocation"] != null) {
-      address =
-          _providerData["businessLocation"]["address"]?.toString() ?? "---";
+      dynamic business = _providerData["businessLocation"];
+
+      String state = "---";
+      if (business["state"] != null) {
+        state = business["state"]["title"]?.toString() ?? "---";
+      }
+
+      address = (business["address"]?.toString() ?? "---") +
+          ", " +
+          (business["city"]?.toString() ?? "---") +
+          ", " +
+          state +
+          " - " +
+          (business["zipCode"]?.toString() ?? "---");
 
       if (_providerData["businessLocation"]["coordinates"] != null) {
         List location = _providerData["businessLocation"]["coordinates"];
 
         if (location.length > 0) {
           latLng = LatLng(
-            location[0],
             location[1],
+            location[0],
           );
         }
       }
@@ -280,7 +324,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
       Padding(
         padding: const EdgeInsets.only(left: 20, bottom: 16),
         child: Text(
-          "$institute, ${degree.toString()}",
+          institute.substring(0, institute.length - 1),
           style: TextStyle(
             fontSize: 13.0,
           ),
@@ -374,11 +418,12 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                   fontWeight: FontWeight.w600,
                 ),
                 children: <TextSpan>[
-                  TextSpan(text: 'Today '),
                   TextSpan(
-                    text:
-                        todaysTimings.substring(0, todaysTimings.length - 3) ??
-                            "---",
+                      text: DateFormat('EEEE').format(DateTime.now()) + " "),
+                  TextSpan(
+                    text: todaysTimings != null
+                        ? todaysTimings.substring(0, todaysTimings.length - 3)
+                        : "NO timings available for today",
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
                     ),
@@ -395,7 +440,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                   fontWeight: FontWeight.w600,
                 ),
                 children: <TextSpan>[
-                  TextSpan(text: 'Tomorrow '),
+                  TextSpan(text: tomorrowsDay + " "),
                   TextSpan(
                     text: tomorrowsTimings.substring(
                             0, tomorrowsTimings.length - 3) ??
@@ -414,7 +459,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                 // Navigator.of(context).pushNamed(
                 //   Routes.availableTimingsScreen,
                 // );
-              },
+              }, //TODO: all timings screen
               child: Row(
                 children: <Widget>[
                   Padding(
@@ -587,18 +632,6 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
               },
             ),
     );
-    // formWidget.add(
-    //   Padding(
-    //     padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-    //     child: ReviewWidget(
-    //       reviewerName: "Chris Hemsworth",
-    //       reviewDate: "03 Dec 2019",
-    //       reviewerRating: 5.0,
-    //       reviewText:
-    //           "Ann is one of the best nurses I have ever encountered.She has a great sense of humor: but she is very compassionate and serious about her work. I will definitely seek her out next time I need care.",
-    //     ),
-    //   ),
-    // );
 
     return formWidget;
   }
@@ -624,27 +657,26 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                 children: <Widget>[
                   "ic_location_grey".imageIcon(),
                   SizedBox(width: 8.0),
-                  Column(
-                    children: <Widget>[
-                      Text(
-                        location,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
-                          fontSize: 14.0,
-                        ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: Text(
+                      location,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                        fontSize: 14.0,
                       ),
-                    ],
+                    ),
                   ),
-                  SizedBox(width: 30.0),
+                  SizedBox(width: 5.0),
                   Expanded(
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: FlatButton(
                         padding: const EdgeInsets.all(0.0),
-                        onPressed: () {},
+                        onPressed: () => latLng.launchMaps(),
                         child: Text(
                           "Get Directions",
                           overflow: TextOverflow.ellipsis,
@@ -680,11 +712,15 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                     onMapCreated: (GoogleMapController controller) {
                       _controller.complete(controller);
 
-                      _markers.add(Marker(
-                        markerId: MarkerId(latLng.toString()),
-                        position: latLng,
-                        icon: sourceIcon,
-                      ));
+                      setState(() {
+                        _markers.add(
+                          Marker(
+                            markerId: MarkerId(latLng.toString()),
+                            position: latLng,
+                            icon: sourceIcon,
+                          ),
+                        );
+                      });
                     },
                   ),
                 ),
