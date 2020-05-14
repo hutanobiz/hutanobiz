@@ -7,11 +7,11 @@ import 'package:background_locator/location_dto.dart';
 import 'package:background_locator/location_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/dashboard/choose_location_screen.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/pin_info.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
@@ -47,14 +47,15 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
 
   PolylinePoints polylinePoints = PolylinePoints();
 
-  List<LatLng> latlng = [];
+  List<LatLng> _polyLineLatlngList = [];
   LatLng _initialPosition;
-  LatLng _news = LatLng(0, 0);
+  LatLng _desPosition = LatLng(0, 0);
   Completer<GoogleMapController> _controller = Completer();
   BitmapDescriptor sourceIcon;
   BitmapDescriptor destinationIcon;
   ApiBaseHelper api = ApiBaseHelper();
-  double _totalDistance = 0;
+  String _totalDistance = "";
+  String _totalDuration = "";
   bool isCancelTimer = false;
   Map<String, String> appointmentCompleteMap = Map();
 
@@ -77,35 +78,37 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
     await BackgroundLocator.initialize();
   }
 
-  setPolylines() async {
+  setPolylines(LatLng _initialPosition, LatLng _desPosition) async {
     List<PointLatLng> result = await polylinePoints
         .getRouteBetweenCoordinates(
           "AIzaSyAkq7DnUBTkddWXddoHAX02Srw6570ktx8",
           _initialPosition.latitude,
           _initialPosition.longitude,
-          _news.latitude,
-          _news.longitude,
+          _desPosition.latitude,
+          _desPosition.longitude,
         )
         .catchError((error) => error.toString().debugLog());
 
     if (result.isNotEmpty) {
       result.forEach((PointLatLng point) {
-        latlng.add(LatLng(point.latitude, point.longitude));
+        _polyLineLatlngList.add(LatLng(point.latitude, point.longitude));
       });
     }
 
-    setState(() {
-      _polyline.add(
-        Polyline(
-          polylineId: PolylineId(_initialPosition.toString()),
-          color: AppColors.windsor,
-          points: latlng,
-          width: 5,
-          startCap: Cap.roundCap,
-          endCap: Cap.roundCap,
-        ),
-      );
-    });
+    if (mounted) {
+      setState(() {
+        _polyline.add(
+          Polyline(
+            polylineId: PolylineId(_initialPosition.toString()),
+            color: AppColors.windsor,
+            points: _polyLineLatlngList,
+            width: 5,
+            startCap: Cap.roundCap,
+            endCap: Cap.roundCap,
+          ),
+        );
+      });
+    }
   }
 
   @override
@@ -117,34 +120,40 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
   }
 
   void updatePinOnMap(LatLng latLng) async {
-    CameraPosition cPosition = CameraPosition(
-      zoom: CAMERA_ZOOM,
-      tilt: CAMERA_TILT,
-      bearing: CAMERA_BEARING,
-      target: latLng,
-    );
+    if (mounted) {
+      CameraPosition cPosition = CameraPosition(
+        zoom: CAMERA_ZOOM,
+        tilt: CAMERA_TILT,
+        bearing: CAMERA_BEARING,
+        target: latLng,
+      );
 
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
+      GoogleMapController controller = await _controller.future;
+      controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
 
-    setState(() {
-      var pinPosition =
-          LatLng(_initialPosition.latitude, _initialPosition.longitude);
+      setState(() {
+        var pinPosition = LatLng(latLng.latitude, latLng.longitude);
 
-      sourcePinInfo.location = pinPosition;
+        sourcePinInfo.location = pinPosition;
 
-      _markers.removeWhere((m) => m.markerId.value == 'sourcePin');
-      _markers.add(Marker(
-        markerId: MarkerId('sourcePin'),
-        onTap: () {
-          setState(() {
-            currentlySelectedPin = sourcePinInfo;
-          });
-        },
-        position: pinPosition,
-        icon: sourceIcon,
-      ));
-    });
+        _markers.removeWhere((m) => m.markerId.value == 'sourcePin');
+        _markers.add(Marker(
+          markerId: MarkerId('sourcePin'),
+          onTap: () {
+            setState(() {
+              currentlySelectedPin = sourcePinInfo;
+            });
+          },
+          position: pinPosition,
+          icon: sourceIcon,
+        ));
+
+        _polyLineLatlngList.clear();
+        _polyline.clear();
+
+        setPolylines(latLng, _desPosition);
+      });
+    }
   }
 
   void setInitialLocation() async {
@@ -168,21 +177,6 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
       setState(() {
         _profileFuture = api.getAppointmentDetails(
             token, _container.appointmentIdMap["appointmentId"]);
-      });
-    });
-  }
-
-  void _getTotalDistance() async {
-    await Geolocator()
-        .distanceBetween(
-      _initialPosition.latitude,
-      _initialPosition.longitude,
-      _news.latitude,
-      _news.longitude,
-    )
-        .then((distance) {
-      setState(() {
-        _totalDistance = distance;
       });
     });
   }
@@ -302,7 +296,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
             List location = detail["businessLocation"]["coordinates"];
 
             if (location.length > 0) {
-              _news = LatLng(
+              _desPosition = LatLng(
                 location[1],
                 location[0],
               );
@@ -312,7 +306,25 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
       }
     }
 
-    _getTotalDistance();
+    if (_initialPosition != null) {
+      api
+          .getDistanceAndTime(_initialPosition, _desPosition, kGoogleApiKey)
+          .then((value) {
+        _totalDistance =
+            value["rows"][0]["elements"][0]["distance"]["text"].toString();
+        _totalDuration =
+            value["rows"][0]["elements"][0]["duration"]["text"].toString();
+        ("DISTANCE AND TIME: " + value["rows"][0]["elements"][0].toString())
+            .toString()
+            .debugLog();
+      }).futureError((error) {
+        setState(() {
+          _totalDuration = "NO duration available";
+          _totalDistance = "NO distance available";
+        });
+        error.toString().debugLog();
+      });
+    }
 
     int status = 0;
     if (response["trackingStatus"] != null) {
@@ -341,10 +353,10 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                         polylines: _polyline,
                         markers: _markers,
                         onMapCreated: (GoogleMapController controller) {
+                          _controller.complete(controller);
+
                           setState(() {
                             showPinsOnMap(_initialPosition);
-
-                            _controller.complete(controller);
                           });
                         },
                       ),
@@ -370,14 +382,14 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              "${(((_totalDistance * 0.000621371) / 30) * 60).toStringAsFixed(1)} mins",
+                              _totalDuration,
                               style: TextStyle(
                                 fontSize: 14.0,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
-                              "${(_totalDistance * 0.000621371).toStringAsFixed(1)} miles away",
+                              _totalDistance,
                               style: TextStyle(
                                 fontSize: 11.0,
                               ),
@@ -411,7 +423,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                       SizedBox(width: 8.0),
                       Text(
                         status == 0
-                            ? "ETA ${(((_totalDistance * 0.000621371) / 30) * 60).toStringAsFixed(1)} minutes"
+                            ? _totalDuration
                             : status == 1
                                 ? "Started driving"
                                 : status == 2
@@ -420,7 +432,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                                         ? "Treatment started"
                                         : status == 5
                                             ? "Treatment Completed"
-                                            : "ETA ${(((_totalDistance * 0.000621371) / 30) * 60).toStringAsFixed(1)} minutes",
+                                            : _totalDuration,
                       ),
                     ],
                   ),
@@ -558,14 +570,14 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                                 port.listen((dynamic data) {
                                   LocationDto lastLocation = data;
 
-                                  setState(() {
-                                    _initialPosition = LatLng(
-                                      lastLocation.latitude,
-                                      lastLocation.longitude,
-                                    );
-                                  });
-
-                                  _initialPosition.toString().debugLog();
+                                  if (mounted) {
+                                    setState(() {
+                                      _initialPosition = LatLng(
+                                        lastLocation.latitude,
+                                        lastLocation.longitude,
+                                      );
+                                    });
+                                  }
 
                                   updatePinOnMap(LatLng(
                                     lastLocation.latitude,
@@ -637,7 +649,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
     var pinPosition =
         LatLng(_initialPosition.latitude, _initialPosition.longitude);
 
-    var destPosition = LatLng(_news.latitude, _news.longitude);
+    var destPosition = LatLng(_desPosition.latitude, _desPosition.longitude);
 
     sourcePinInfo = PinInformation(
       locationName: "Start Location",
@@ -647,7 +659,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
 
     destinationPinInfo = PinInformation(
       locationName: "End Location",
-      location: _news,
+      location: _desPosition,
       pinPath: "images/ic_destination_marker.png",
     );
 
@@ -670,7 +682,8 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
           });
         },
         icon: destinationIcon));
-    setPolylines();
+
+    setPolylines(_initialPosition, _desPosition);
   }
 
   Widget timingWidget(Map response) {
@@ -775,12 +788,6 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
       ),
     );
   }
-
-  // void _loading(bool load) {
-  //   setState(() {
-  //     _isLoading = load;
-  //   });
-  // }
 
   Widget divider({double topPadding}) {
     return Padding(

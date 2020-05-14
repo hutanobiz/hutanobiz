@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:hutano/models/medicalHistory.dart';
 import 'package:hutano/models/schedule.dart';
@@ -297,6 +298,17 @@ class ApiBaseHelper {
             body: rateDoctorData, headers: headers)
         .then((res) {
       return res["response"];
+    });
+  }
+
+  Future<dynamic> getDistanceAndTime(
+      LatLng source, LatLng dest, String apiKey) {
+    return _netUtil
+        .get(Uri.encodeFull(
+            "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial" +
+                "&origins=${source.latitude},${source.longitude}&destinations=${dest.latitude}"+",${dest.longitude}&key=$apiKey"))
+        .then((res) {
+      return res;
     });
   }
 }
