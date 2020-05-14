@@ -412,6 +412,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
               listType == 1 && paymentType == 0
                   ? rightButton(listType, "Confirm Payment", () {
                       _container.setProviderData("providerData", response);
+                      _container.setAppointmentId(response["_id"].toString());
                       _container.setProviderData("totalFee", null);
                       Navigator.of(context).pushNamed(
                         Routes.paymentMethodScreen,
