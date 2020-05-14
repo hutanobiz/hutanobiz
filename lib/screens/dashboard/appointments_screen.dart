@@ -410,7 +410,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           Row(
             children: <Widget>[
               listType == 1 && paymentType == 0
-                  ? rightButton(listType, response, "Confirm Payment", () {
+                  ? rightButton(listType, "Confirm Payment", () {
                       _container.setProviderData("providerData", response);
                       _container.setProviderData("totalFee", null);
                       Navigator.of(context).pushNamed(
@@ -419,8 +419,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                       );
                     })
                   : listType == 2 && status == "4"
-                      ? leftButton(userRating, response, "Treatment summary",
-                          () {
+                      ? leftButton(userRating, "Treatment summary", () {
                           _container.setProviderData("providerData", response);
                           Navigator.of(context).pushNamed(
                               Routes.treatmentSummaryScreen,
@@ -428,7 +427,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                         })
                       : Container(),
               listType == 2 && status == "4" && userRating == null
-                  ? rightButton(listType, response, "Rate Now", () {
+                  ? rightButton(listType, "Rate Now", () {
                       _container.setProviderData("providerData", response);
                       _container.setAppointmentId(response["_id"].toString());
                       Navigator.of(context).pushNamed(
@@ -448,12 +447,11 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     );
   }
 
-  Widget leftButton(
-      String userRating, Map response, String title, Function onPressed) {
+  Widget leftButton(String userRating, String title, Function onPressed) {
     return Expanded(
       child: FlatButton(
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        color: Colors.white,
+        color: userRating != null ? AppColors.windsor : Colors.white,
         splashColor: Colors.grey[300],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -468,7 +466,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           style: TextStyle(
             fontSize: 14.0,
             fontWeight: FontWeight.w500,
-            color: AppColors.windsor,
+            color: userRating != null ? Colors.white : AppColors.windsor,
           ),
         ),
         onPressed: onPressed,
@@ -476,8 +474,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     );
   }
 
-  Widget rightButton(
-      int listType, Map response, String title, Function onPressed) {
+  Widget rightButton(int listType, String title, Function onPressed) {
     return Expanded(
       child: FlatButton(
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
