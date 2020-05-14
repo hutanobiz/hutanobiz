@@ -20,6 +20,7 @@ import 'package:hutano/screens/dashboard/available_timings_screen.dart';
 import 'package:hutano/screens/dashboard/choose_location_screen.dart';
 import 'package:hutano/screens/dashboard/choose_specialities.dart';
 import 'package:hutano/screens/dashboard/dashboard_search_screen.dart';
+import 'package:hutano/screens/dashboard/provider_filters.dart';
 import 'package:hutano/screens/dashboard/provider_list_screen.dart';
 import 'package:hutano/screens/dashboard/provider_profile_screen.dart';
 import 'package:hutano/screens/dashboard/see_all_searches.dart';
@@ -74,6 +75,7 @@ class Routes {
   static const String appointmentCompleteConfirmation =
       '/appointmentCompleteConfirmation';
   static const String availableTimingsScreen = '/availableTimingsScreen';
+  static const String providerFiltersScreen = '/providerFiltersScreen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -242,6 +244,9 @@ class Routes {
         break;
       case availableTimingsScreen:
         return _buildRoute(settings, AvailableTimingsScreen());
+        break;
+      case providerFiltersScreen:
+        return _buildRoute(settings, ProviderFiltersScreen());
         break;
       default:
         return _errorRoute();
