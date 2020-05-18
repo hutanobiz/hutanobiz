@@ -428,11 +428,13 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                                 ? "Started driving"
                                 : status == 2
                                     ? "You have Arrived."
-                                    : status == 3 || status == 4
+                                    : status == 3
                                         ? "Treatment started"
-                                        : status == 5
-                                            ? "Treatment Completed"
-                                            : _totalDuration,
+                                        : status == 4
+                                            ? "Provider Treatment Completed"
+                                            : status == 5
+                                                ? "Treatment Completed"
+                                                : _totalDuration,
                       ),
                     ],
                   ),
@@ -721,6 +723,19 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                     ? response["trackingStatus"]["treatmentStarted"].toString()
                     : "---",
                 false),
+        response["trackingStatus"]["providerTreatmentEnded"] == null
+            ? Container()
+            : divider(),
+        response["trackingStatus"]["providerTreatmentEnded"] == null
+            ? Container()
+            : timingSubWidget(
+                "Provider Treatment Completed",
+                response["trackingStatus"]["providerTreatmentEnded"] != null
+                    ? response["trackingStatus"]["providerTreatmentEnded"]
+                        .toString()
+                    : "---",
+                false,
+              ),
         response["trackingStatus"]["patientTreatmentEnded"] == null
             ? Container()
             : divider(),
