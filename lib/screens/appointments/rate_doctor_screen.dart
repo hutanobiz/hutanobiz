@@ -21,7 +21,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
   InheritedContainerState _container;
   Map _providerMap = Map();
   double _rating = 0;
-  String _ratingText, _name;
+  String _ratingText, _name, avatar;
   bool _doctorFriendliness = false,
       _responseTime = false,
       _doctorAdvise = false,
@@ -66,10 +66,12 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
       if (_providerMap['providerData']["data"]["doctor"] != null) {
         _name =
             _providerMap['providerData']["data"]["doctor"]["fullName"] ?? "---";
+        avatar = _providerMap['providerData']["data"]["doctor"]["avatar"];
       }
     } else if (_providerMap['providerData'] != null) {
       if (_providerMap['providerData']["doctor"] != null) {
         _name = _providerMap['providerData']["doctor"]["fullName"] ?? "---";
+        avatar = _providerMap['providerData']["doctor"]["avatar"];
       }
     }
     _ratingText = "How was your experience with $_name ?";
@@ -210,13 +212,8 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
   }
 
   Widget profileWidget(Map _providerData) {
-    String avatar = "---", professionalTitle = "---", practisingSince = "---";
-    Map _dataMap =
-        _providerData['providerData']["data"] ?? _providerData['providerData'];
-
-    if (_dataMap["doctor"] != null) {
-      avatar = _dataMap["doctor"]["avatar"];
-    }
+    String professionalTitle = "---", practisingSince = "---";
+    Map _dataMap = _providerData['providerData'];
 
     if (_dataMap["doctorData"] != null) {
       for (dynamic detail in _dataMap["doctorData"]) {
