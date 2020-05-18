@@ -52,7 +52,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     super.didChangeDependencies();
 
     _container = InheritedContainer.of(context);
+    appointmentDetailsFuture();
+  }
 
+  void appointmentDetailsFuture() {
     SharedPref().getToken().then((token) {
       ApiBaseHelper api = ApiBaseHelper();
       token.debugLog();
@@ -348,7 +351,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           ),
         ),
         SizedBox(height: 20.0),
-        rateWidget(userRating),
+        _providerData["status"].toString() != "4"
+            ? Container()
+            : rateWidget(userRating),
         Padding(
           padding: const EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 11.0),
           child: Text(
@@ -408,10 +413,12 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         size: 20.0,
                       ),
                       padding: const EdgeInsets.all(5.0),
-                      onPressed: () => Navigator.of(context).pushNamed(
-                        Routes.rateDoctorScreen,
-                        arguments: true,
-                      ),
+                      onPressed: () => Navigator.of(context)
+                          .pushNamed(
+                            Routes.rateDoctorScreen,
+                            arguments: true,
+                          )
+                          .whenComplete(() => appointmentDetailsFuture()),
                       label: Text(
                         "Rate Now",
                         style: TextStyle(

@@ -28,11 +28,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   void initState() {
     super.initState();
 
-    SharedPref().getToken().then((token) {
-      setState(() {
-        _requestsFuture = _api.userAppointments(token);
-      });
-    });
+    appointmentsFuture();
   }
 
   @override
@@ -40,6 +36,14 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     super.didChangeDependencies();
 
     _container = InheritedContainer.of(context);
+  }
+
+  void appointmentsFuture() {
+    SharedPref().getToken().then((token) {
+      setState(() {
+        _requestsFuture = _api.userAppointments(token);
+      });
+    });
   }
 
   @override
@@ -431,10 +435,12 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                   ? rightButton(listType, "Rate Now", () {
                       _container.setProviderData("providerData", response);
                       _container.setAppointmentId(response["_id"].toString());
-                      Navigator.of(context).pushNamed(
-                        Routes.rateDoctorScreen,
-                        arguments: false,
-                      );
+                      Navigator.of(context)
+                          .pushNamed(
+                            Routes.rateDoctorScreen,
+                            arguments: false,
+                          )
+                          .whenComplete(() => appointmentsFuture());
                     })
                   : Container(),
             ],
