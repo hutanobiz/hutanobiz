@@ -283,8 +283,9 @@ CupertinoPageRoute _buildRoute(RouteSettings settings, Widget builder) {
 class RegisterArguments {
   final String email;
   final bool isForgot;
+  final bool isProfileUpdate;
 
-  RegisterArguments(this.email, this.isForgot);
+  RegisterArguments(this.email, this.isForgot, {this.isProfileUpdate});
 }
 
 class SearchArguments {

@@ -61,16 +61,24 @@ class _SignUpFormState extends State<Register> {
 
   final GlobalKey<FormFieldState> _emailKey = GlobalKey<FormFieldState>();
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 14.0);
-  String email;
+  String email, token;
   File profileImage;
   bool isLoading = false;
   DateTime _selectedDate;
+  bool isUpdateProfile = false;
 
   final _dobController = new TextEditingController();
+
+  String avatar;
 
   @override
   void initState() {
     super.initState();
+    email = widget.args.email;
+
+    if (widget.args.isProfileUpdate != null) {
+      isUpdateProfile = widget.args.isProfileUpdate;
+    }
 
     _selectedDate = DateTime.now();
 
@@ -105,6 +113,39 @@ class _SignUpFormState extends State<Register> {
     _phoneController.addListener(() {
       setState(() {});
     });
+
+    if (isUpdateProfile) {
+      SharedPref().getToken().then((token) {
+        setState(() {
+          this.token = token;
+        });
+
+        api.profile(token, Map()).then((dynamic response) {
+          setState(() {
+            if (response['response'] != null) {
+              dynamic res = response['response'];
+
+              _firstNameController.text = res["firstName"]?.toString();
+              _lastNameController.text = res["lastName"]?.toString();
+              _phoneController.text = res['phoneNumber']?.toString();
+              _addressController.text = res['address']?.toString();
+              _cityController.text = res['city']?.toString();
+              _stateController.text = res["state"]["title"]?.toString();
+              stateId = res["state"]["_id"]?.toString();
+              _zipController.text = res["zipCode"]?.toString();
+              _dobController.text = res["dob"]?.toString();
+              avatar = res["avatar"]?.toString();
+              _genderGroup =
+                  res["gender"]?.toString() == "1" ? "male" : "female";
+            }
+          });
+        }).futureError((error) {
+          Widgets.showToast(error.toString());
+          error.toString().debugLog();
+          Navigator.of(context).pop();
+        });
+      });
+    }
   }
 
   @override
@@ -124,8 +165,6 @@ class _SignUpFormState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    email = widget.args.email;
-
     return Scaffold(
       body: GestureDetector(
         onTap: () {
@@ -153,7 +192,9 @@ class _SignUpFormState extends State<Register> {
     formWidget.add(
       Center(
           child: Text(
-        "Let's start creating your account.",
+        isUpdateProfile
+            ? "Update your account"
+            : "Let's start creating your account.",
         style: TextStyle(
           fontSize: 13.0,
           fontWeight: FontWeight.w600,
@@ -168,30 +209,38 @@ class _SignUpFormState extends State<Register> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Container(
-          width: 100.0,
-          height: 100.0,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Colors.grey[100],
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: Colors.grey[300],
+            width: 100.0,
+            height: 100.0,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.grey[300],
+              ),
             ),
-          ),
-          child: profileImage == null
-              ? "ic_profile".imageIcon(
-                  height: 27,
-                  width: 27,
-                )
-              : ClipOval(
-                  child: Image.file(
-                    profileImage,
-                    width: 100.0,
-                    height: 100.0,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-        ),
+            child: (avatar == null || avatar == "null")
+                ? profileImage == null
+                    ? "ic_profile".imageIcon(
+                        height: 27,
+                        width: 27,
+                      )
+                    : ClipOval(
+                        child: Image.file(
+                          profileImage,
+                          width: 100.0,
+                          height: 100.0,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                : ClipOval(
+                    child: Image.network(
+                      ApiBaseHelper.imageUrl + avatar,
+                      width: 100.0,
+                      height: 100.0,
+                      fit: BoxFit.cover,
+                    ),
+                  )),
         SizedBox(height: 8),
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -338,10 +387,14 @@ class _SignUpFormState extends State<Register> {
       Padding(
         padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
         child: TextFormField(
-          inputFormatters: [maskFormatter],
+          inputFormatters: [LengthLimitingTextInputFormatter(10)],
           controller: _phoneController,
           decoration: InputDecoration(
               labelText: "Phone",
+              prefix: Text(
+                "+1",
+                style: TextStyle(color: Colors.black, fontSize: 15),
+              ),
               enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey[300]),
                   borderRadius: BorderRadius.circular(5.0)),
@@ -355,25 +408,29 @@ class _SignUpFormState extends State<Register> {
     formWidget.add(Widgets.sizedBox(height: 29.0));
 
     formWidget.add(
-      PasswordTextField(
-          labelText: "Password",
-          passwordController: _passwordController,
-          passwordKey: _passwordKey,
-          obscureText: _obscureText,
-          style: style,
-          suffixIcon: GestureDetector(
-            dragStartBehavior: DragStartBehavior.down,
-            onTap: () {
-              setState(() {
-                _obscureText = !_obscureText;
-              });
-            },
-            child: Icon(_obscureText ? Icons.visibility : Icons.visibility_off,
-                color: Colors.grey),
-          )),
+      isUpdateProfile
+          ? Container()
+          : PasswordTextField(
+              labelText: "Password",
+              passwordController: _passwordController,
+              passwordKey: _passwordKey,
+              obscureText: _obscureText,
+              style: style,
+              suffixIcon: GestureDetector(
+                dragStartBehavior: DragStartBehavior.down,
+                onTap: () {
+                  setState(() {
+                    _obscureText = !_obscureText;
+                  });
+                },
+                child: Icon(
+                    _obscureText ? Icons.visibility : Icons.visibility_off,
+                    color: Colors.grey),
+              )),
     );
 
-    formWidget.add(Widgets.sizedBox(height: 29.0));
+    formWidget
+        .add(isUpdateProfile ? Container() : Widgets.sizedBox(height: 29.0));
 
     formWidget.add(
       TextFormField(
@@ -529,36 +586,19 @@ class _SignUpFormState extends State<Register> {
         child: FancyButton(
           buttonHeight: Dimens.buttonHeight,
           title: "Next",
-          onPressed: isValidate()
+          onPressed: isUpdateProfile
               ? () {
-                  Map<String, String> loginData = Map();
-                  loginData["email"] = email;
-                  loginData["type"] = "1";
-                  loginData["step"] = "3";
-                  loginData["fullName"] =
-                      "${_firstNameController.text} ${_lastNameController.text}";
-                  loginData["firstName"] = _firstNameController.text;
-                  loginData["lastName"] = _lastNameController.text;
-                  loginData["password"] = _passwordController.text;
-                  loginData["address"] = _addressController.text;
-                  loginData["city"] = _cityController.text;
-                  loginData["state"] = _stateController.text;
-                  loginData["zipCode"] = _zipController.text;
-                  loginData["phoneNumber"] =
-                      maskFormatter.getUnmaskedText().toString();
-                  loginData["gender"] =
-                      _genderGroup.trim().toString() == "male" ? "1" : "2";
-                  loginData["state"] = stateId;
-                  loginData["dob"] =
-                      DateFormat("MM/dd/yyyy").format(_selectedDate).toString();
-
-                  if (profileImage != null) {
-                    _register(loginData);
-                  } else {
-                    Widgets.showToast("Please upload your profile pic");
-                  }
+                  _register();
                 }
-              : null,
+              : isValidate()
+                  ? () {
+                      if (profileImage != null) {
+                        _register();
+                      } else {
+                        Widgets.showToast("Please upload your profile pic");
+                      }
+                    }
+                  : null,
         ),
       ),
     );
@@ -566,19 +606,58 @@ class _SignUpFormState extends State<Register> {
     return formWidget;
   }
 
-  _register(Map<String, String> loginData) async {
+  _register() async {
+    Map<String, String> loginData = Map();
+    loginData["email"] = email;
+    loginData["fullName"] =
+        "${_firstNameController.text} ${_lastNameController.text}";
+    loginData["firstName"] = _firstNameController.text;
+    loginData["lastName"] = _lastNameController.text;
+
+    if (!isUpdateProfile) {
+      loginData["type"] = "1";
+      loginData["step"] = "3";
+      loginData["password"] = _passwordController.text;
+    }
+
+    loginData["address"] = _addressController.text;
+    loginData["city"] = _cityController.text;
+    loginData["state"] = _stateController.text;
+    loginData["zipCode"] = _zipController.text;
+    loginData["phoneNumber"] = _phoneController.text;
+    loginData["gender"] = _genderGroup.trim().toString() == "male" ? "1" : "2";
+    loginData["state"] = stateId;
+
+    if (isUpdateProfile) {
+      if (loginData["dob"] != null) {
+        loginData["dob"] =
+            DateFormat("dd/MM/yyyy").format(_selectedDate).toString();
+      }
+    } else {
+      loginData["dob"] =
+          DateFormat("MM/dd/yyyy").format(_selectedDate).toString();
+    }
+
     try {
       setLoading(true);
-      Uri uri = Uri.parse(ApiBaseHelper.base_url + "auth/api/register");
+      Uri uri = Uri.parse(ApiBaseHelper.base_url +
+          (isUpdateProfile ? "api/profile/update" : "auth/api/register"));
       http.MultipartRequest request = http.MultipartRequest('POST', uri);
+      token.toString().debugLog();
+
+      if (isUpdateProfile) {
+        request.headers['authorization'] = token;
+      }
 
       request.fields.addAll(loginData);
 
-      var stream = http.ByteStream(DelegatingStream(profileImage.openRead()));
-      var length = await profileImage.length();
+      if (profileImage != null) {
+        var stream = http.ByteStream(DelegatingStream(profileImage.openRead()));
+        var length = await profileImage.length();
 
-      request.files.add(http.MultipartFile("avatar", stream.cast(), length,
-          filename: profileImage.path));
+        request.files.add(http.MultipartFile("avatar", stream.cast(), length,
+            filename: profileImage.path));
+      }
 
       http.StreamedResponse response = await request.send();
       final int statusCode = response.statusCode;
@@ -606,16 +685,21 @@ class _SignUpFormState extends State<Register> {
       } else {
         responseJson["response"].toString().debugLog();
 
-        SharedPref()
-            .saveToken(responseJson["response"][0]["tokens"][0]["token"]);
-        SharedPref()
-            .setValue("fullName", responseJson["response"][0]["fullName"]);
-        SharedPref().setValue("complete", "0");
+        if (isUpdateProfile) {
+          Widgets.showToast("Profile updated successfully");
+          Navigator.of(context).pop();
+        } else {
+          SharedPref()
+              .saveToken(responseJson["response"][0]["tokens"][0]["token"]);
+          SharedPref()
+              .setValue("fullName", responseJson["response"][0]["fullName"]);
+          SharedPref().setValue("complete", "0");
 
-        Widgets.showToast("Profile created successfully");
+          Widgets.showToast("Profile created successfully");
 
-        Navigator.of(context).pushNamedAndRemoveUntil(
-            Routes.dashboardScreen, (Route<dynamic> route) => false);
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              Routes.dashboardScreen, (Route<dynamic> route) => false);
+        }
 
         setLoading(false);
       }
@@ -677,7 +761,10 @@ class _SignUpFormState extends State<Register> {
       );
       if (croppedFile != null) {
         setState(
-          () => profileImage = croppedFile,
+          () {
+            profileImage = croppedFile;
+            avatar = null;
+          },
         );
       }
     }

@@ -28,6 +28,8 @@ class _SettingsScreenState extends State<SettingScreen> {
   void initState() {
     super.initState();
     _initPackageInfo();
+
+    getProfileData();
   }
 
   Future<void> _initPackageInfo() async {
@@ -37,10 +39,7 @@ class _SettingsScreenState extends State<SettingScreen> {
     });
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
+  void getProfileData() {
     SharedPref().getToken().then((token) {
       api.profile(token, Map()).then((dynamic response) {
         if (mounted) {
@@ -187,7 +186,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                       ], crossAxisAlignment: CrossAxisAlignment.start),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(right: 8.0, top: 8.0),
+                      padding: const EdgeInsets.all(8),
                       child: Row(
                         children: <Widget>[
                           Icon(
@@ -204,7 +203,19 @@ class _SettingsScreenState extends State<SettingScreen> {
                           )
                         ],
                       ),
-                    )
+                    ).onClick(
+                        roundCorners: false,
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            Routes.registerRoute,
+                            arguments: RegisterArguments(
+                              email,
+                              false,
+                              isProfileUpdate: true,
+                            ),
+                          ).whenComplete(() => getProfileData());
+                        })
                   ],
                 ),
               ),
