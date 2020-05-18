@@ -152,7 +152,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
 
     List languagesList = List();
 
-    String doctorEducation,
+    String doctorEducation = "",
         address,
         todaysTimings,
         tomorrowsTimings = "---",
@@ -335,8 +335,9 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
       Padding(
         padding: const EdgeInsets.only(left: 20, bottom: 16),
         child: Text(
-          doctorEducation?.substring(0, doctorEducation.length - 2) ??
-              "NO education available",
+          doctorEducation == ""
+              ? "NO education available"
+              : doctorEducation?.substring(0, doctorEducation.length - 2),
           style: TextStyle(
             fontSize: 13.0,
           ),
