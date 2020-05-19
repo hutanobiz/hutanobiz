@@ -23,7 +23,6 @@ import 'package:hutano/widgets/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class Register extends StatefulWidget {
   Register({Key key, @required this.args}) : super(key: key);
@@ -47,8 +46,6 @@ class _SignUpFormState extends State<Register> {
   String stateId = "";
 
   String _genderGroup = "";
-  var maskFormatter = new MaskTextInputFormatter(
-      mask: '+# (###) ###-####', filter: {"#": RegExp(r'[0-9]')});
 
   ApiBaseHelper api = new ApiBaseHelper();
   List stateList;
@@ -116,12 +113,13 @@ class _SignUpFormState extends State<Register> {
 
     if (isUpdateProfile) {
       SharedPref().getToken().then((token) {
-        setState(() {
-          this.token = token;
-        });
+        setLoading(true);
 
         api.profile(token, Map()).then((dynamic response) {
+          setLoading(false);
           setState(() {
+            this.token = token;
+
             if (response['response'] != null) {
               dynamic res = response['response'];
 
@@ -140,6 +138,8 @@ class _SignUpFormState extends State<Register> {
             }
           });
         }).futureError((error) {
+          setLoading(false);
+
           Widgets.showToast(error.toString());
           error.toString().debugLog();
           Navigator.of(context).pop();
@@ -150,6 +150,8 @@ class _SignUpFormState extends State<Register> {
 
   @override
   void dispose() {
+    super.dispose();
+
     _firstNameController.dispose();
     _lastNameController.dispose();
     _emailController.dispose();
@@ -160,7 +162,6 @@ class _SignUpFormState extends State<Register> {
     _phoneController.dispose();
     _passwordController.dispose();
     _dobController.dispose();
-    super.dispose();
   }
 
   @override
@@ -191,15 +192,16 @@ class _SignUpFormState extends State<Register> {
     formWidget.add(AppLogo());
     formWidget.add(
       Center(
-          child: Text(
-        isUpdateProfile
-            ? "Update your account"
-            : "Let's start creating your account.",
-        style: TextStyle(
-          fontSize: 13.0,
-          fontWeight: FontWeight.w600,
+        child: Text(
+          isUpdateProfile
+              ? "Update your account"
+              : "Let's start creating your account.",
+          style: TextStyle(
+            fontSize: 13.0,
+            fontWeight: FontWeight.w600,
+          ),
         ),
-      )),
+      ),
     );
 
     formWidget.add(Widgets.sizedBox(height: 26.0));
@@ -278,7 +280,6 @@ class _SignUpFormState extends State<Register> {
       children: <Widget>[
         Expanded(
           child: TextFormField(
-            autofocus: true,
             controller: _firstNameController,
             decoration: InputDecoration(
                 labelText: "First Name",
@@ -393,7 +394,7 @@ class _SignUpFormState extends State<Register> {
               labelText: "Phone",
               prefix: Text(
                 "+1",
-                style: TextStyle(color: Colors.black, fontSize: 15),
+                style: TextStyle(color: Colors.black, fontSize: 16),
               ),
               enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey[300]),
@@ -493,87 +494,18 @@ class _SignUpFormState extends State<Register> {
     ));
 
     formWidget.add(Widgets.sizedBox(height: 29.0));
+    log(_genderGroup);
 
     formWidget.add(
       Row(
         children: <Widget>[
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(right: 5.0, top: 5, bottom: 5),
-              child: GestureDetector(
-                onTap: () => setState(() => _genderGroup = "male"),
-                child: Container(
-                    height: 56,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.0),
-                        border: Border.all(
-                            color: _genderGroup == "male"
-                                ? AppColors.female
-                                : Colors.grey[300],
-                            width: 1.0)),
-                    child: Row(children: <Widget>[
-                      Image(
-                        image: AssetImage('images/male.png'),
-                        height: 16.0,
-                        width: 16.0,
-                        color: _genderGroup == "male"
-                            ? AppColors.female
-                            : Colors.blue,
-                      ),
-                      SizedBox(
-                        width: 5.0,
-                      ),
-                      Text(
-                        "Male",
-                        style: TextStyle(
-                          color: _genderGroup == "male"
-                              ? AppColors.female
-                              : Colors.blue,
-                        ),
-                      ),
-                    ], mainAxisAlignment: MainAxisAlignment.center)),
-              ),
-            ),
-          ),
+          genderWidget("Male", "male", () {
+            setState(() => _genderGroup = "male");
+          }),
           SizedBox(width: 20.0),
-          Expanded(
-            child: GestureDetector(
-              onTap: () => setState(() => _genderGroup = "female"),
-              child: Container(
-                height: 56,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5.0),
-                    border: Border.all(
-                      width: 1,
-                      color: _genderGroup == "female"
-                          ? AppColors.female
-                          : Colors.grey[300],
-                    )),
-                child: Center(
-                    child: Row(children: <Widget>[
-                  Image(
-                    image: AssetImage('images/female.png'),
-                    height: 16.0,
-                    width: 16.0,
-                    color: _genderGroup == "female"
-                        ? AppColors.female
-                        : Colors.blue,
-                  ),
-                  SizedBox(
-                    width: 5.0,
-                  ),
-                  Text(
-                    "Female",
-                    style: TextStyle(
-                      color: _genderGroup == "female"
-                          ? AppColors.female
-                          : Colors.blue,
-                    ),
-                  ),
-                ], mainAxisAlignment: MainAxisAlignment.center)),
-              ),
-            ),
-          ),
+          genderWidget("Female", "female", () {
+            setState(() => _genderGroup = "female");
+          }),
         ],
       ),
     );
@@ -604,6 +536,48 @@ class _SignUpFormState extends State<Register> {
     );
 
     return formWidget;
+  }
+
+  Widget genderWidget(String title, String imageIcon, Function onTap) {
+    return Expanded(
+      child: Container(
+        height: 56,
+        padding: EdgeInsets.only(right: 5.0, top: 5, bottom: 5),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5.0),
+            border: Border.all(
+                color: imageIcon == "male" && _genderGroup == "male" ||
+                        imageIcon == "female" && _genderGroup == "female"
+                    ? AppColors.female
+                    : Colors.grey[300],
+                width: 1.0)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            imageIcon.imageIcon(
+              height: 16.0,
+              width: 16.0,
+              color: imageIcon == "male" && _genderGroup == "male" ||
+                      imageIcon == "female" && _genderGroup == "female"
+                  ? AppColors.female
+                  : Colors.blue,
+            ),
+            SizedBox(
+              width: 5.0,
+            ),
+            Text(
+              title,
+              style: TextStyle(
+                color: imageIcon == "male" && _genderGroup == "male" ||
+                        imageIcon == "female" && _genderGroup == "female"
+                    ? AppColors.female
+                    : Colors.blue,
+              ),
+            ),
+          ],
+        ),
+      ).onClick(onTap: onTap),
+    );
   }
 
   _register() async {

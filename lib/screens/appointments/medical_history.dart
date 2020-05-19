@@ -15,7 +15,7 @@ class MedicalHistoryScreen extends StatefulWidget {
 }
 
 class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
-  Future<List<MedicalHistory>> _todoFuture;
+  Future<List<MedicalHistory>> _medicalFuture;
   ApiBaseHelper api = ApiBaseHelper();
 
   InheritedContainerState _container;
@@ -23,7 +23,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
 
   @override
   void initState() {
-    _todoFuture = api.getDiseases();
+    _medicalFuture = api.getDiseases();
 
     SharedPref().getToken().then((token) {
       api.getLastAppointmentDetails(token).then((response) {
@@ -65,13 +65,13 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
         color: Colors.white,
         padding: const EdgeInsets.all(5.0),
         child: FutureBuilder<List<MedicalHistory>>(
-          future: _todoFuture,
+          future: _medicalFuture,
           builder: (_, snapshot) {
             if (snapshot.hasData) {
               List<MedicalHistory> data = snapshot.data;
 
               return ListView.builder(
-                padding: const EdgeInsets.all(0.0),
+                padding: EdgeInsets.zero,
                 shrinkWrap: true,
                 itemCount: data.length,
                 itemBuilder: (context, index) {

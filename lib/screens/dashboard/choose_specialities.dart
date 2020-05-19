@@ -20,7 +20,7 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ApiBaseHelper api = new ApiBaseHelper();
 
-  Future<List<dynamic>> _todoFuture;
+  Future<List<dynamic>> _specialityFuture;
 
   Map selecteddynamic = Map();
 
@@ -29,11 +29,12 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
 
   @override
   void initState() {
+    super.initState();
+
     Map<String, String> map = Map();
 
     map["professionalTitleId"] = widget.professionalId;
-    _todoFuture = api.getProfessionalSpecility(map);
-    super.initState();
+    _specialityFuture = api.getProfessionalSpecility(map);
   }
 
   @override
@@ -54,7 +55,7 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
 
   Widget column() {
     return FutureBuilder<List<dynamic>>(
-      future: _todoFuture,
+      future: _specialityFuture,
       builder: (_, snapshot) {
         if (snapshot.hasData) {
           List<dynamic> data = snapshot.data;

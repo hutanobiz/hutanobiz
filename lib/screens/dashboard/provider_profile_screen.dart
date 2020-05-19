@@ -714,7 +714,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: FlatButton(
-                        padding: const EdgeInsets.all(0.0),
+                        padding: EdgeInsets.zero,
                         onPressed: () => latLng.launchMaps(),
                         child: Text(
                           "Get Directions",

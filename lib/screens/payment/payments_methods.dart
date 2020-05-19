@@ -188,11 +188,9 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
     _widgetList.add(SizedBox(height: 12.0));
 
-    _widgetList.add(paymentCard(
-      "ic_dummy_card",
-      "**** ***** **** 2563",
-      1,
-    ));
+    _widgetList.add(paymentCard("ic_dummy_card", "**** ***** **** 2563", 1,
+        cardExpiryDate: "Expires 10/24"));
+    //TODO: remove static card
 
     _widgetList.add(SizedBox(height: 22.0));
 
@@ -211,7 +209,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
     _widgetList.add(SizedBox(height: 12.0));
 
-    _widgetList.add(_futureWidget());
+    _widgetList.add(_insuranceFutureWidget());
 
     _widgetList.add(SizedBox(height: 10.0));
 
@@ -228,7 +226,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
     return _widgetList;
   }
 
-  Widget _futureWidget() {
+  Widget _insuranceFutureWidget() {
     return FutureBuilder<List<dynamic>>(
       future: _insuranceFuture,
       builder: (_, snapshot) {
@@ -248,7 +246,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
               List data = snapshot.data;
 
               return ListView.builder(
-                padding: const EdgeInsets.all(0.0),
+                padding: EdgeInsets.zero,
                 shrinkWrap: true,
                 itemCount: data.length,
                 itemBuilder: (context, index) {
@@ -309,7 +307,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
             } else if (snapshot.hasError) {
               snapshot.error.toString().debugLog();
               return Center(
-                child: Text("NO slots available"),
+                child: Text("NO data available"),
               );
             }
 
@@ -320,7 +318,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
     );
   }
 
-  Widget paymentCard(String imageIcon, String title, int value) {
+  Widget paymentCard(String imageIcon, String title, int value,
+      {String cardExpiryDate}) {
     return Container(
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
@@ -352,7 +351,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                     ),
                     SizedBox(height: 8.0),
                     Text(
-                      "Expires 10/24",
+                      cardExpiryDate,
                       style: TextStyle(
                         fontSize: 12.0,
                         color: Colors.black.withOpacity(0.7),
