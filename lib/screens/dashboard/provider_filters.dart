@@ -1,12 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/models/filter_radio_model.dart';
-import 'package:hutano/models/medicalHistory.dart';
-import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
-import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/widgets/round_corner_checkbox.dart';
 
 class ProviderFiltersScreen extends StatefulWidget {
   ProviderFiltersScreen({Key key}) : super(key: key);
@@ -16,45 +16,32 @@ class ProviderFiltersScreen extends StatefulWidget {
 }
 
 class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
-  Future<List<MedicalHistory>> _todoFuture;
-  ApiBaseHelper api = ApiBaseHelper();
-
   InheritedContainerState _container;
-  List<dynamic> _diseaseList = List();
+  List<dynamic> _professionalTitleList = List();
 
-  List<RadioModel> filtersList = new List<RadioModel>();
+  List<RadioModel> _filterOptionsList = new List<RadioModel>();
+  Map _filtersMap = Map();
 
   @override
   void initState() {
-    _todoFuture = api.getDiseases();
-
-    filtersList.add(RadioModel(false, "Professional Title"));
-    filtersList.add(RadioModel(false, "Speciality"));
-    filtersList.add(RadioModel(false, "Degree"));
-    filtersList.add(RadioModel(false, "Experience"));
-    filtersList.add(RadioModel(false, "Appointment Type"));
-    filtersList.add(RadioModel(false, "Distance"));
-    filtersList.add(RadioModel(false, "Language"));
-
-    SharedPref().getToken().then((token) {
-      api.getLastAppointmentDetails(token).then((response) {
-        if (response != null) {
-          if (response["medicalHistory"] != null) {
-            for (dynamic medical in response["medicalHistory"]) {
-              if (medical["_id"].toString() != null)
-                _diseaseList.add(medical["_id"].toString());
-            }
-          }
-        }
-      });
-    });
     super.initState();
+
+    _filterOptionsList.add(RadioModel(true, "Professional Title"));
+    _filterOptionsList.add(RadioModel(false, "Speciality"));
+    _filterOptionsList.add(RadioModel(false, "Degree"));
+    _filterOptionsList.add(RadioModel(false, "Experience"));
+    _filterOptionsList.add(RadioModel(false, "Appointment Type"));
+    _filterOptionsList.add(RadioModel(false, "Distance"));
+    _filterOptionsList.add(RadioModel(false, "Language"));
   }
 
   @override
   void didChangeDependencies() {
-    _container = InheritedContainer.of(context);
     super.didChangeDependencies();
+
+    _container = InheritedContainer.of(context);
+
+    _professionalTitleList = _container.filterDataMap["professionalTitleList"];
   }
 
   @override
@@ -68,6 +55,7 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
         color: Colors.white,
         padding: EdgeInsets.zero,
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Material(
               child: Container(
@@ -79,12 +67,12 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
                 ),
                 width: 140,
                 child: ListView.builder(
-                  itemCount: filtersList.length,
+                  itemCount: _filterOptionsList.length,
                   itemBuilder: (context, index) {
-                    RadioModel model = filtersList[index];
+                    RadioModel model = _filterOptionsList[index];
                     return filterWidget(model).onClick(onTap: () {
                       setState(() {
-                        filtersList
+                        _filterOptionsList
                             .forEach((element) => element.isSelected = false);
                         model.isSelected = true;
                       });
@@ -94,39 +82,37 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
               ),
             ),
             Expanded(
-              child: FutureBuilder<List<MedicalHistory>>(
-                future: _todoFuture,
-                builder: (_, snapshot) {
-                  if (snapshot.hasData) {
-                    List<MedicalHistory> data = snapshot.data;
+              child: ListView.separated(
+                separatorBuilder: (context, index) {
+                  return SizedBox(height: 20);
+                },
+                padding: const EdgeInsets.fromLTRB(10, 26, 10, 26),
+                shrinkWrap: true,
+                itemCount: _professionalTitleList.length,
+                itemBuilder: (context, index) {
+                  dynamic _professionalTitle = _professionalTitleList[index];
 
-                    return ListView.builder(
-                      padding: const EdgeInsets.all(0.0),
-                      shrinkWrap: true,
-                      itemCount: data.length,
-                      itemBuilder: (context, index) {
-                        MedicalHistory medicalHistory = data[index];
+                  return RoundCornerCheckBox(
+                      title: _professionalTitleList[index]["title"],
+                      textStyle: TextStyle(
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black.withOpacity(0.85),
+                      ),
+                      value: _filtersMap.containsKey(
+                          "professionalTitleId[${index.toString()}]"),
+                      onCheck: (value) {
+                        setState(() {
+                          value
+                              ? _filtersMap[
+                                      "professionalTitleId[${index.toString()}]"] =
+                                  _professionalTitle["_id"].toString()
+                              : _filtersMap.remove(
+                                  "professionalTitleId[${index.toString()}]");
 
-                        return CheckboxListTile(
-                          title: Text(medicalHistory.name),
-                          value: _diseaseList.contains(medicalHistory.sId),
-                          activeColor: AppColors.goldenTainoi,
-                          onChanged: (value) {
-                            setState(() {
-                              value == true
-                                  ? _diseaseList.add(medicalHistory.sId)
-                                  : _diseaseList.remove(medicalHistory.sId);
-                            });
-                          },
-                        );
-                      },
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text("${snapshot.error}");
-                  }
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
+                          log(_filtersMap.toString());
+                        });
+                      });
                 },
               ),
             ),
