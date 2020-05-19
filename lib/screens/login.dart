@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
@@ -7,6 +5,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/dimens.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/app_logo.dart';
 import 'package:hutano/widgets/email_widget.dart';
@@ -23,9 +22,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginState extends State<LoginScreen> {
-  Map<String, String> loginData = Map();
+  Map<String, String> _loginDataMap = Map();
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormFieldState> _emailKey = GlobalKey<FormFieldState>();
   final GlobalKey<FormFieldState> _passwordKey = GlobalKey<FormFieldState>();
 
@@ -40,9 +38,10 @@ class _LoginState extends State<LoginScreen> {
 
   @override
   void dispose() {
+    super.dispose();
+
     _emailController.dispose();
     _passwordController.dispose();
-    super.dispose();
   }
 
   @override
@@ -62,7 +61,6 @@ class _LoginState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
-      key: _scaffoldKey,
       body: LoadingView(
         isLoading: isLoading,
         child: ListView(
@@ -129,11 +127,11 @@ class _LoginState extends State<LoginScreen> {
       title: Strings.logIn,
       onPressed: isButtonEnable()
           ? () {
-              loginData["email"] = _emailController.text.toString();
-              loginData["password"] = _passwordController.text.toString();
-              loginData["type"] = "1";
+              _loginDataMap["email"] = _emailController.text.toString();
+              _loginDataMap["password"] = _passwordController.text.toString();
+              _loginDataMap["type"] = "1";
 
-              onClick();
+              onLoginApi();
             }
           : null,
     ));
@@ -171,31 +169,23 @@ class _LoginState extends State<LoginScreen> {
     return formWidget;
   }
 
-  void onClick() {
+  void onLoginApi() {
     ApiBaseHelper api = ApiBaseHelper();
 
     setLoading(true);
 
-    try {
-      api
-          .login(loginData)
-          .then((dynamic response) {
-            Widgets.showToast(Strings.loggedIn);
+    api.login(_loginDataMap).then((dynamic response) {
+      Widgets.showToast(Strings.loggedIn);
 
-            setLoading(false);
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                Routes.dashboardScreen, (Route<dynamic> route) => false);
+      setLoading(false);
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          Routes.dashboardScreen, (Route<dynamic> route) => false);
 
-            SharedPref().saveToken(response["tokens"][0]["token"].toString());
-          })
-          .timeout(const Duration(seconds: 10))
-          .catchError((onError) {
-            setLoading(false);
-            print(onError);
-          });
-    } on TimeoutException catch (_) {
-      Widgets.showToast("Timeout!");
-    }
+      SharedPref().saveToken(response["tokens"][0]["token"].toString());
+    }).futureError((error) {
+      setLoading(false);
+      error.toString().debugLog();
+    });
   }
 
   void setLoading(bool value) {

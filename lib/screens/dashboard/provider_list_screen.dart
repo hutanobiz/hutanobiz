@@ -57,7 +57,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
       key: _scaffoldKey,
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackground(
-        title: "General Medicine",
+        title: "Providers List",
         color: AppColors.snow,
         isAddBack: false,
         addBackButton: true,
@@ -89,7 +89,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
         filled: true,
         fillColor: Colors.white,
         labelStyle: TextStyle(fontSize: 13.0, color: Colors.grey),
-        labelText: "Search for general medicine",
+        labelText: "Search for providers",
         suffixIcon: Padding(
           padding: const EdgeInsets.all(4.0),
           child: Image(

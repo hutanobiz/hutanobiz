@@ -139,8 +139,6 @@ class _SignUpFormState extends State<Register> {
           });
         }).futureError((error) {
           setLoading(false);
-
-          Widgets.showToast(error.toString());
           error.toString().debugLog();
           Navigator.of(context).pop();
         });
@@ -281,6 +279,7 @@ class _SignUpFormState extends State<Register> {
         Expanded(
           child: TextFormField(
             controller: _firstNameController,
+            autofocus: !isUpdateProfile,
             decoration: InputDecoration(
                 labelText: "First Name",
                 enabledBorder: OutlineInputBorder(

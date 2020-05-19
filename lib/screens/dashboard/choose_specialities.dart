@@ -22,9 +22,6 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
 
   Future<List<dynamic>> _specialityFuture;
 
-  Map selecteddynamic = Map();
-
-  List<dynamic> selecteddynamicList = List();
   InheritedContainerState conatiner;
 
   @override

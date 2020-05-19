@@ -26,10 +26,15 @@ class _VerifyOTPState extends State<VerifyOTP> {
   bool isLoading = false;
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+
     email = widget.args.email;
     isForgot = widget.args.isForgot;
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       body: LoadingView(
@@ -66,7 +71,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
         ),
         Widgets.sizedBox(height: 5.0),
         Text(
-          "$email",
+          email,
           style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.normal),
         ),
       ],
@@ -119,6 +124,9 @@ class _VerifyOTPState extends State<VerifyOTP> {
                       Routes.resetPasswordRoute,
                       arguments: RegisterArguments(email, false),
                     );
+                  }).futureError((error) {
+                    setLoading(false);
+                    error.toString().debugLog();
                   });
                 } else {
                   loginData["email"] = email;
@@ -149,6 +157,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
     formWidget.add(
       FlatButton(
         onPressed: () {
+          setLoading(true);
           ApiBaseHelper api = new ApiBaseHelper();
 
           Map<String, String> loginData = Map();
@@ -156,7 +165,11 @@ class _VerifyOTPState extends State<VerifyOTP> {
             loginData["email"] = email;
             loginData["step"] = "1";
             api.resetPassword(loginData).then((dynamic user) {
+              setLoading(false);
               Widgets.showToast(user.toString());
+            }).futureError((error) {
+              setLoading(false);
+              error.toString().debugLog();
             });
           } else {
             loginData["email"] = email;
@@ -164,7 +177,11 @@ class _VerifyOTPState extends State<VerifyOTP> {
             loginData["step"] = "4";
             loginData["fullName"] = "user";
             api.register(loginData).then((dynamic user) {
+              setLoading(false);
               Widgets.showToast(user.toString());
+            }).futureError((error) {
+              setLoading(false);
+              error.toString().debugLog();
             });
           }
         },

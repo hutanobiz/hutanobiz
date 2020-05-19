@@ -71,10 +71,13 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
             break;
           case ConnectionState.done:
             if (snapshot.hasData) {
-              if (snapshot.hasData == null) return Container();
-
               _presentList = snapshot.data["presentRequest"];
               _pastList = snapshot.data["pastRequest"];
+
+              if (_presentList.length == 0 && _pastList.length == 0)
+                return Center(
+                  child: Text("NO requests yet!"),
+                );
 
               return SingleChildScrollView(
                 physics: ClampingScrollPhysics(),

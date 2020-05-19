@@ -218,12 +218,12 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
     if (_dataMap["doctorData"] != null) {
       for (dynamic detail in _dataMap["doctorData"]) {
         practisingSince = (detail["practicingSince"] != null
-                ? (DateTime.now().year -
-                        int.parse(
-                          detail["practicingSince"].toString().substring(
-                              detail["practicingSince"].toString().length - 4),
-                        ))
-                    .toString()
+                ? (DateTime.now()
+                            .difference(
+                                DateTime.parse(detail["practicingSince"]))
+                            .inDays /
+                        366)
+                    .toStringAsFixed(1)
                 : "---") +
             " Years of Experience";
 

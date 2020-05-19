@@ -30,8 +30,6 @@ class CustomVisibility extends StatelessWidget {
         ),
       );
     } else {
-      // If gone, we replace child with a custom widget (defaulting to a
-      // [Container] with no defined size).
       return removedChild;
     }
   }

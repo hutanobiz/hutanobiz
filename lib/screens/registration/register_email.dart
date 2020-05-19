@@ -26,8 +26,9 @@ class _RegisterEmailState extends State<RegisterEmail> {
 
   @override
   void dispose() {
-    _emailController.dispose();
     super.dispose();
+
+    _emailController.dispose();
   }
 
   @override
@@ -98,7 +99,7 @@ class _RegisterEmailState extends State<RegisterEmail> {
         onPressed: isButtonEnable()
             ? () {
                 setLoading(true);
-                
+
                 ApiBaseHelper api = new ApiBaseHelper();
 
                 Map<String, String> loginData = Map();

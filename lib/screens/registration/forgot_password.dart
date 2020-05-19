@@ -26,8 +26,9 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
   @override
   void dispose() {
-    _emailController.dispose();
     super.dispose();
+
+    _emailController.dispose();
   }
 
   @override
@@ -111,7 +112,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 loginData["step"] = "1";
                 api.resetPassword(loginData).then((dynamic user) {
                   setLoading(false);
-                  
+
                   Widgets.showToast(user.toString());
 
                   Navigator.pushNamed(

@@ -53,7 +53,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         }
 
         if (appointmentData["doctor"] != null) {
-          name = appointmentData["doctor"]["fullName"] ?? "---";
+          name = appointmentData["doctor"]["fullName"]?.toString() ?? "---";
           avatar = appointmentData["doctor"]["avatar"];
         }
       }
@@ -157,7 +157,6 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                 showThankDialog();
                               }).futureError((error) {
                                 _loading(false);
-                                Widgets.showToast(error.toString());
                                 error.toString().debugLog();
                               });
                             });

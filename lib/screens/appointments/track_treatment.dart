@@ -38,8 +38,6 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
 
   bool _isLoading = false;
   InheritedContainerState _container;
-  Timer timer;
-  bool stopeTimer = false;
   Map providerData = Map();
 
   final Set<Marker> _markers = {};
@@ -56,7 +54,6 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
   ApiBaseHelper api = ApiBaseHelper();
   String _totalDistance = "";
   String _totalDuration = "";
-  bool isCancelTimer = false;
   Map<String, String> appointmentCompleteMap = Map();
 
   PinInformation currentlySelectedPin = PinInformation(

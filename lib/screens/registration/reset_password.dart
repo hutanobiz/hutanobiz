@@ -36,14 +36,17 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   @override
   void dispose() {
+    super.dispose();
+
     _passwordController.dispose();
     _confirmPassController.dispose();
-    super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
+
+    email = widget.args.email;
 
     _confirmPassController.addListener(() {
       setState(() {});
@@ -56,14 +59,12 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   @override
   Widget build(BuildContext context) {
-    email = widget.args.email;
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: LoadingView(
         isLoading: isLoading,
         child: ListView(
-          children: getFormWidget(),
+          children: resetPasswordWidget(),
           padding: const EdgeInsets.fromLTRB(
             Dimens.padding,
             51.0,
@@ -75,14 +76,14 @@ class _ResetPasswordState extends State<ResetPassword> {
     );
   }
 
-  List<Widget> getFormWidget() {
-    List<Widget> formWidget = new List();
+  List<Widget> resetPasswordWidget() {
+    List<Widget> widgetList = new List();
 
-    formWidget.add(AppLogo());
+    widgetList.add(AppLogo());
 
-    formWidget.add(Widgets.sizedBox(height: 43.0));
+    widgetList.add(Widgets.sizedBox(height: 43.0));
 
-    formWidget.add(Column(
+    widgetList.add(Column(
       children: <Widget>[
         Text(
           "Reset Password",
@@ -100,9 +101,9 @@ class _ResetPasswordState extends State<ResetPassword> {
       ],
     ));
 
-    formWidget.add(Widgets.sizedBox(height: 60.0));
+    widgetList.add(Widgets.sizedBox(height: 60.0));
 
-    formWidget.add(PasswordTextField(
+    widgetList.add(PasswordTextField(
       passwordKey: _passwordKey,
       obscureText: _obscureText,
       labelText: Strings.passwordText,
@@ -121,9 +122,9 @@ class _ResetPasswordState extends State<ResetPassword> {
       ),
     ));
 
-    formWidget.add(Widgets.sizedBox(height: 30.0));
+    widgetList.add(Widgets.sizedBox(height: 30.0));
 
-    formWidget.add(PasswordTextField(
+    widgetList.add(PasswordTextField(
       passwordKey: _confirmPassKey,
       obscureText: _confirmObscureText,
       labelText: "Confirm Password",
@@ -143,9 +144,9 @@ class _ResetPasswordState extends State<ResetPassword> {
       ),
     ));
 
-    formWidget.add(Widgets.sizedBox(height: 30.0));
+    widgetList.add(Widgets.sizedBox(height: 30.0));
 
-    formWidget.add(
+    widgetList.add(
       FancyButton(
         title: "Next",
         onPressed: isButtonEnable()
@@ -174,7 +175,7 @@ class _ResetPasswordState extends State<ResetPassword> {
       ),
     );
 
-    return formWidget;
+    return widgetList;
   }
 
   bool isButtonEnable() {
