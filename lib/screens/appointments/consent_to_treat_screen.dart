@@ -56,7 +56,7 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
       child: RoundCornerCheckBox(
         title: "I Agree",
         value: isAgree,
-        onCheck: () => setState(() => isAgree = !isAgree),
+        onCheck: (value) => setState(() => isAgree = !isAgree),
       ),
     ));
 

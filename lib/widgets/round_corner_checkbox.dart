@@ -2,20 +2,22 @@ import 'package:flutter/material.dart';
 
 class RoundCornerCheckBox extends StatelessWidget {
   final bool value;
-  final Function onCheck;
+  final ValueChanged<bool> onCheck;
   final String title;
+  final TextStyle textStyle;
 
   RoundCornerCheckBox({
     Key key,
     @required this.value,
     @required this.onCheck,
     this.title,
+    this.textStyle,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onCheck,
+      onTap: () => onCheck(!value),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -34,10 +36,11 @@ class RoundCornerCheckBox extends StatelessWidget {
               ? Container()
               : Text(
                   title,
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: textStyle ??
+                      TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w600,
+                      ),
                 ),
         ],
       ),
