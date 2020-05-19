@@ -20,7 +20,11 @@ class ProviderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String fee = "---";
+    String name = "---",
+        avatar,
+        fee = "---",
+        practicingSince = "---",
+        professionalTitle = "---";
 
     if (data["consultanceFee"] != null) {
       for (dynamic consultanceFee in data["consultanceFee"]) {
@@ -28,10 +32,29 @@ class ProviderWidget extends StatelessWidget {
       }
     } else if (data["userId"] != null) {
       if (data["userId"]["consultanceFee"] != null) {
-        for (dynamic consultanceFee in data["userId"]["consultanceFee"]) {
+        for (dynamic consultanceFee in data["userId"]
+            ["consultanceFee"]) {
           fee = consultanceFee["fee"].toString() ?? "---";
         }
       }
+    }
+
+    if (data["userId"] != null) {
+      name = data["userId"]["fullName"]?.toString() ?? "---";
+      avatar = data["userId"]["avatar"]?.toString();
+    }
+
+    practicingSince = data["practicingSince"] != null
+        ? ((DateTime.now()
+                    .difference(DateTime.parse(data["practicingSince"]))
+                    .inDays /
+                366))
+            .toStringAsFixed(1)
+        : "---";
+
+    if (data['professionalTitle'] != null) {
+      professionalTitle =
+          data['professionalTitle']['title']?.toString() ?? "----";
     }
 
     return Container(
@@ -55,10 +78,9 @@ class ProviderWidget extends StatelessWidget {
                   height: 58.0,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: data["userId"]["avatar"] == null
+                      image: avatar == null
                           ? AssetImage('images/profile_user.png')
-                          : NetworkImage(ApiBaseHelper.imageUrl +
-                              data["userId"]["avatar"]),
+                          : NetworkImage(ApiBaseHelper.imageUrl + avatar),
                       fit: BoxFit.cover,
                     ),
                     borderRadius: new BorderRadius.all(Radius.circular(50.0)),
@@ -75,7 +97,7 @@ class ProviderWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "${data["userId"]["fullName"]}",
+                          name,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 14.0,
@@ -110,8 +132,7 @@ class ProviderWidget extends StatelessWidget {
                           height: 4.0,
                         ),
                         Text(
-                          data['professionalTitle']['title']?.toString() ??
-                              "----",
+                          professionalTitle,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -172,20 +193,7 @@ class ProviderWidget extends StatelessWidget {
                       SizedBox(width: 3.0),
                       Expanded(
                         child: Text(
-                          (data["practicingSince"] != null
-                                  ? (DateTime.now().year -
-                                          int.parse(
-                                            data["practicingSince"]
-                                                .toString()
-                                                .substring(
-                                                    data["practicingSince"]
-                                                            .toString()
-                                                            .length -
-                                                        4),
-                                          ))
-                                      .toString()
-                                  : "---") +
-                              " Years of Experience",
+                          practicingSince + " Years of Experience",
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                           ),
