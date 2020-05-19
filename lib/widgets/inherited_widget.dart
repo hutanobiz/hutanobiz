@@ -17,7 +17,7 @@ class InheritedContainer extends StatefulWidget {
 }
 
 class InheritedContainerState extends State<InheritedContainer> {
-  Map _response = Map();
+  Map projectsResponse = Map();
   Map providerResponse = Map();
   Map appointmentData = Map();
   Map appointmentIdMap = Map();
@@ -26,14 +26,19 @@ class InheritedContainerState extends State<InheritedContainer> {
   Map consentToTreatMap = Map();
   Map selectServiceMap = Map();
   Map insuranceDataMap = Map();
+  Map filterDataMap = Map();
   List providerInsuranceList = List();
 
   void setProjectsResponse(String key, String data) {
-    _response[key] = data;
+    projectsResponse[key] = data;
+  }
+
+  void setFilterData(String key, dynamic data) {
+    filterDataMap[key] = data;
   }
 
   Map getProjectsResponse() {
-    return _response;
+    return projectsResponse;
   }
 
   void setProviderData(String key, dynamic data) {

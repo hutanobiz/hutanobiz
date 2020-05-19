@@ -83,7 +83,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       topRight: const Radius.circular(22.0),
                     ),
                   ),
-                  child: professionalTitle()),
+                  child: professionalTitleListWidget()),
             ),
           ],
         ),
@@ -206,12 +206,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget professionalTitle() {
+  Widget professionalTitleListWidget() {
     return FutureBuilder<List<dynamic>>(
       future: _titleFuture,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<dynamic> data = snapshot.data;
+
+          conatiner.setFilterData("professionalTitleList", data);
 
           if (data == null || data.length == 0) return Container();
 
@@ -286,7 +288,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     LatLng latLng = result;
 
     if (latLng != null) {
-      _loading();
+      _loading(true);
 
       _latLng = latLng;
 
@@ -295,7 +297,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   initPlatformState() async {
-    _loading();
+    _loading(true);
 
     Location _locationService = Location();
     PermissionStatus _permission;
@@ -313,18 +315,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Widgets.showToast("Getting Location. Please wait..");
 
           try {
-            Position position = await geolocator.getLastKnownPosition();
-            if (position == null) {
-              position = await geolocator.getCurrentPosition();
-            }
+            Position position = await geolocator.getCurrentPosition();
 
             getLocationAddress(position.latitude, position.longitude);
 
             _latLng = LatLng(position.latitude, position.longitude);
           } on PlatformException catch (e) {
-            setState(() {
-              _isLoading = false;
-            });
+            _loading(false);
 
             Widgets.showToast(e.message.toString());
             print(e);
@@ -368,16 +365,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
         });
       }
     } on PlatformException catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
+      _loading(false);
       print(e.message.toString() ?? e.toString());
     }
   }
 
-  void _loading() {
+  void _loading(bool loading) {
     setState(() {
-      _isLoading = true;
+      _isLoading = loading;
     });
   }
 }
