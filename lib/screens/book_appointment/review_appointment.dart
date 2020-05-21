@@ -35,33 +35,34 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   bool _isLoading = false;
   String _timeHours, _timeMins;
   DateTime _bookedDate;
-  String bookedTime;
+  String _bookedTime;
   List<Services> _servicesList = new List();
 
   final Set<Marker> _markers = {};
   final Set<Polyline> _polyline = {};
   String averageRating = "0";
 
-  PolylinePoints polylinePoints = PolylinePoints();
+  PolylinePoints _polylinePoints = PolylinePoints();
 
   List<LatLng> latlng = [];
   LatLng _initialPosition, _middlePoint;
   LatLng _desPosition = LatLng(0, 0);
   Completer<GoogleMapController> _controller = Completer();
-  BitmapDescriptor sourceIcon;
-  BitmapDescriptor destinationIcon;
+  BitmapDescriptor _sourceIcon;
+  BitmapDescriptor _destinationIcon;
 
   String _totalDistance = "";
   String _totalDuration = "";
-  Map profileMap = new Map();
+  Map _profileMap = new Map();
   Map _servicesMap = new Map();
-  Map<String, String> appointmentData = Map();
+  Map<String, String> _reviewAppointmentData = Map();
   Map _consentToTreatMap;
 
   List<dynamic> _consultaceList = List();
 
   setPolylines() async {
-    List<PointLatLng> result = await polylinePoints?.getRouteBetweenCoordinates(
+    List<PointLatLng> result =
+        await _polylinePoints?.getRouteBetweenCoordinates(
       kGoogleApiKey,
       _initialPosition.latitude,
       _initialPosition.longitude,
@@ -108,21 +109,22 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
     if (_providerData["providerData"]["data"] != null) {
       averageRating =
-          _providerData["providerData"]["averageRating"]?.toStringAsFixed(2);
+          _providerData["providerData"]["averageRating"]?.toStringAsFixed(2) ??
+              "0";
 
       _providerData["providerData"]["data"].map((f) {
-        profileMap.addAll(f);
+        _profileMap.addAll(f);
       }).toList();
     } else {
-      profileMap = _providerData["providerData"];
-      averageRating = profileMap["averageRating"]?.toStringAsFixed(2);
+      _profileMap = _providerData["providerData"];
+      averageRating = _profileMap["averageRating"]?.toStringAsFixed(2) ?? "0";
     }
 
     _initialPosition = _userLocationMap["latLng"];
-    if (profileMap["businessLocation"] != null) {
-      if (profileMap["businessLocation"]["coordinates"].length > 0) {
-        _desPosition = LatLng(profileMap["businessLocation"]["coordinates"][1],
-            profileMap["businessLocation"]["coordinates"][0]);
+    if (_profileMap["businessLocation"] != null) {
+      if (_profileMap["businessLocation"]["coordinates"].length > 0) {
+        _desPosition = LatLng(_profileMap["businessLocation"]["coordinates"][1],
+            _profileMap["businessLocation"]["coordinates"][0]);
       }
     }
 
@@ -134,22 +136,23 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
       getDistanceAndTime(_initialPosition, _desPosition);
     }
 
-    bookedTime = _appointmentData["time"];
+    _bookedTime = _appointmentData["time"];
     _bookedDate = _appointmentData["date"];
 
-    if (bookedTime.length < 4) {
-      if (bookedTime[0] != "0") {
-        bookedTime = bookedTime.substring(0, 2) + "0" + bookedTime.substring(2);
+    if (_bookedTime.length < 4) {
+      if (_bookedTime[0] != "0") {
+        _bookedTime =
+            _bookedTime.substring(0, 2) + "0" + _bookedTime.substring(2);
       } else {
-        bookedTime = "0" + bookedTime;
+        _bookedTime = "0" + _bookedTime;
       }
     }
-    _timeHours = bookedTime.substring(0, 2);
-    _timeMins = bookedTime.substring(3);
+    _timeHours = _bookedTime.substring(0, 2);
+    _timeMins = _bookedTime.substring(3);
 
     _servicesMap = _container.selectServiceMap;
 
-    appointmentData["statusType"] = _servicesMap["status"].toString();
+    _reviewAppointmentData["statusType"] = _servicesMap["status"].toString();
 
     if (_servicesList.length > 0) _servicesList.clear();
 
@@ -158,9 +161,9 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         _servicesList = _servicesMap["services"];
 
         for (int i = 0; i < _servicesList.length; i++) {
-          appointmentData["services[${i.toString()}][subServiceId]"] =
+          _reviewAppointmentData["services[${i.toString()}][subServiceId]"] =
               _servicesList[i].subServiceId;
-          appointmentData["services[${i.toString()}][amount]"] =
+          _reviewAppointmentData["services[${i.toString()}][amount]"] =
               _servicesList[i].amount.toString();
         }
       }
@@ -168,17 +171,17 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
       _consultaceList = _servicesMap["consultaceFee"];
 
       for (int i = 0; i < _consultaceList.length; i++) {
-        appointmentData["consultanceFee[${i.toString()}][fee]"] =
+        _reviewAppointmentData["consultanceFee[${i.toString()}][fee]"] =
             _consultaceList[i]["fee"].toString();
       }
     }
   }
 
   void setSourceAndDestinationIcons() async {
-    sourceIcon = await BitmapDescriptor.fromAssetImage(
+    _sourceIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
         "images/ic_initial_marker.png");
-    destinationIcon = await BitmapDescriptor.fromAssetImage(
+    _destinationIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
         "images/ic_destination_marker.png");
   }
@@ -236,17 +239,17 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         http.MultipartRequest request = http.MultipartRequest('POST', uri);
         request.headers['authorization'] = token;
 
-        String doctorId = profileMap["userId"]["_id"].toString();
+        String doctorId = _profileMap["userId"]["_id"].toString();
 
-        appointmentData["type"] =
+        _reviewAppointmentData["type"] =
             _container.getProjectsResponse()["serviceType"]?.toString() ?? "1";
-        appointmentData["date"] =
+        _reviewAppointmentData["date"] =
             DateFormat("MM/dd/yyyy").format(_bookedDate).toString();
 
-        appointmentData["fromTime"] = bookedTime;
-        appointmentData["doctor"] = doctorId;
+        _reviewAppointmentData["fromTime"] = _bookedTime;
+        _reviewAppointmentData["doctor"] = doctorId;
 
-        request.fields.addAll(appointmentData);
+        request.fields.addAll(_reviewAppointmentData);
 
         request.fields['consentToTreat'] = '1';
         request.fields['problemTimeSpan'] =
@@ -411,11 +414,11 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   }
 
   List<Widget> widgetList() {
-    List<Widget> formWidget = new List();
+    List<Widget> _widgetList = new List();
     String address;
 
-    if (profileMap["businessLocation"] != null) {
-      dynamic business = profileMap["businessLocation"];
+    if (_profileMap["businessLocation"] != null) {
+      dynamic business = _profileMap["businessLocation"];
 
       String state = "---";
       if (business["state"] != null) {
@@ -431,34 +434,34 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           (business["zipCode"]?.toString() ?? "---");
     }
 
-    formWidget.add(Padding(
+    _widgetList.add(Padding(
       padding: const EdgeInsets.only(right: 20.0, left: 20.0),
       child: ProviderWidget(
-        data: profileMap,
+        data: _profileMap,
         degree: _providerData["degree"].toString(),
         isOptionsShow: false,
         averageRating: averageRating,
       ),
     ));
 
-    formWidget.add(SizedBox(height: 26.0));
+    _widgetList.add(SizedBox(height: 26.0));
 
-    formWidget.add(container(
+    _widgetList.add(container(
         "Date & Time",
         "${DateFormat('EEEE, dd MMMM').format(_bookedDate).toString()} " +
             TimeOfDay(hour: int.parse(_timeHours), minute: int.parse(_timeMins))
                 .format(context),
         "ic_calendar"));
 
-    formWidget.add(SizedBox(height: 12.0));
+    _widgetList.add(SizedBox(height: 12.0));
 
-    formWidget.add(container("Office Address", address, "ic_office_address"));
+    _widgetList.add(container("Office Address", address, "ic_office_address"));
 
-    formWidget.add(
+    _widgetList.add(
       servicesWidget(),
     );
 
-    formWidget.add(_initialPosition == null
+    _widgetList.add(_initialPosition == null
         ? Container()
         : Stack(
             children: <Widget>[
@@ -486,13 +489,13 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                         _markers.add(Marker(
                           markerId: MarkerId(_initialPosition.toString()),
                           position: _initialPosition,
-                          icon: sourceIcon,
+                          icon: _sourceIcon,
                         ));
 
                         _markers.add(Marker(
                           markerId: MarkerId(_desPosition.toString()),
                           position: _desPosition,
-                          icon: destinationIcon,
+                          icon: _destinationIcon,
                         ));
                       });
                     },
@@ -538,9 +541,9 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             ],
           ));
 
-    formWidget.add(duePaymentWidget());
+    _widgetList.add(duePaymentWidget());
 
-    return formWidget;
+    return _widgetList;
   }
 
   void getDistanceAndTime(LatLng initialPosition, LatLng desPosition) {
