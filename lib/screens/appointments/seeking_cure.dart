@@ -97,9 +97,9 @@ class _SeekingCureScreenState extends State<SeekingCureScreen> {
   }
 
   List<Widget> widgetList() {
-    List<Widget> formWidget = new List();
+    List<Widget> _widgetList = new List();
 
-    formWidget.add(Text(
+    _widgetList.add(Text(
       "Brief description of your symptoms",
       style: TextStyle(
         fontSize: 14.0,
@@ -107,9 +107,9 @@ class _SeekingCureScreenState extends State<SeekingCureScreen> {
       ),
     ));
 
-    formWidget.add(SizedBox(height: 14.0));
+    _widgetList.add(SizedBox(height: 14.0));
 
-    formWidget.add(Container(
+    _widgetList.add(Container(
       height: 150.0,
       child: TextField(
         controller: _descController,
@@ -139,13 +139,13 @@ class _SeekingCureScreenState extends State<SeekingCureScreen> {
       ),
     ));
 
-    formWidget.add(SizedBox(height: 30));
+    _widgetList.add(SizedBox(height: 30));
 
-    formWidget.add(Divider());
+    _widgetList.add(Divider());
 
-    formWidget.add(SizedBox(height: 30));
+    _widgetList.add(SizedBox(height: 30));
 
-    formWidget.add(Text(
+    _widgetList.add(Text(
       "How long have you had this problem.",
       style: TextStyle(
         fontSize: 14.0,
@@ -153,55 +153,64 @@ class _SeekingCureScreenState extends State<SeekingCureScreen> {
       ),
     ));
 
-    formWidget.add(SizedBox(height: 20));
+    _widgetList.add(SizedBox(height: 20));
 
-    formWidget.add(Row(
-      children: <Widget>[
-        checkWidget("Hours", isHoursSelect, () {
-          setState(() {
-            isHoursSelect ? isHoursSelect = false : isHoursSelect = true;
-            isDaysSelect = false;
-            isMonthsSelect = false;
-            isWeeksSelect = false;
-          });
-        }),
-        SizedBox(width: 30.0),
-        checkWidget("Days", isDaysSelect, () {
-          setState(() {
-            isDaysSelect ? isDaysSelect = false : isDaysSelect = true;
-            isHoursSelect = false;
-            isMonthsSelect = false;
-            isWeeksSelect = false;
-          });
-        }),
-        SizedBox(width: 30.0),
-        checkWidget("Weeks", isWeeksSelect, () {
-          setState(() {
-            isHoursSelect = false;
-            isDaysSelect = false;
-            isMonthsSelect = false;
-            isWeeksSelect ? isWeeksSelect = false : isWeeksSelect = true;
-          });
-        }),
-        SizedBox(width: 30.0),
-        checkWidget("Months", isMonthsSelect, () {
-          setState(() {
-            isHoursSelect = false;
-            isDaysSelect = false;
-            isMonthsSelect ? isMonthsSelect = false : isMonthsSelect = true;
-            isWeeksSelect = false;
-          });
-        }),
-      ],
-    ));
+    _widgetList.add(
+      Container(
+        height: 45,
+        child: ListView(
+          shrinkWrap: true,
+          padding: EdgeInsets.zero,
+          physics: ClampingScrollPhysics(),
+          scrollDirection: Axis.horizontal,
+          children: <Widget>[
+            checkWidget("Hours", isHoursSelect, () {
+              setState(() {
+                isHoursSelect ? isHoursSelect = false : isHoursSelect = true;
+                isDaysSelect = false;
+                isMonthsSelect = false;
+                isWeeksSelect = false;
+              });
+            }),
+            SizedBox(width: 30.0),
+            checkWidget("Days", isDaysSelect, () {
+              setState(() {
+                isDaysSelect ? isDaysSelect = false : isDaysSelect = true;
+                isHoursSelect = false;
+                isMonthsSelect = false;
+                isWeeksSelect = false;
+              });
+            }),
+            SizedBox(width: 30.0),
+            checkWidget("Weeks", isWeeksSelect, () {
+              setState(() {
+                isHoursSelect = false;
+                isDaysSelect = false;
+                isMonthsSelect = false;
+                isWeeksSelect ? isWeeksSelect = false : isWeeksSelect = true;
+              });
+            }),
+            SizedBox(width: 30.0),
+            checkWidget("Months", isMonthsSelect, () {
+              setState(() {
+                isHoursSelect = false;
+                isDaysSelect = false;
+                isMonthsSelect ? isMonthsSelect = false : isMonthsSelect = true;
+                isWeeksSelect = false;
+              });
+            }),
+          ],
+        ),
+      ),
+    );
 
-    formWidget.add(SizedBox(height: 30));
+    _widgetList.add(SizedBox(height: 30));
 
-    formWidget.add(Divider());
+    _widgetList.add(Divider());
 
-    formWidget.add(SizedBox(height: 30));
+    _widgetList.add(SizedBox(height: 30));
 
-    formWidget.add(YesNoCheckWidget(
+    _widgetList.add(YesNoCheckWidget(
         labelValue: "Is the problem improving.",
         value: isProblemImproving,
         onYesTap: (value) {
@@ -212,13 +221,13 @@ class _SeekingCureScreenState extends State<SeekingCureScreen> {
         },
         onNoTap: (value) => setState(() => isProblemImproving = !value)));
 
-    formWidget.add(SizedBox(height: 30));
+    _widgetList.add(SizedBox(height: 30));
 
-    formWidget.add(Divider());
+    _widgetList.add(Divider());
 
-    formWidget.add(SizedBox(height: 30));
+    _widgetList.add(SizedBox(height: 30));
 
-    formWidget.add(YesNoCheckWidget(
+    _widgetList.add(YesNoCheckWidget(
         labelValue:
             "Have you received treatment for this condition in the past 3 months.",
         value: isReceivedTreatment,
@@ -230,13 +239,14 @@ class _SeekingCureScreenState extends State<SeekingCureScreen> {
         },
         onNoTap: (value) => setState(() => isReceivedTreatment = !value)));
 
-    formWidget.add(SizedBox(height: 65));
+    _widgetList.add(SizedBox(height: 65));
 
-    return formWidget;
+    return _widgetList;
   }
 
   Widget checkWidget(String title, bool isSelected, Function onTap) {
     return Container(
+      height: 30,
       padding: const EdgeInsets.all(15.0),
       decoration: BoxDecoration(
         color: Colors.white,
