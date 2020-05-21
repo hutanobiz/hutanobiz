@@ -5,7 +5,6 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/circular_loader.dart';
-import 'package:hutano/widgets/widgets.dart';
 import 'package:package_info/package_info.dart';
 
 class SettingScreen extends StatefulWidget {
