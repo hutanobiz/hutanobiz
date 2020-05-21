@@ -6,13 +6,13 @@ import 'dart:io';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/dashboard/choose_location_screen.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
@@ -46,12 +46,13 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
   List<LatLng> latlng = [];
   LatLng _initialPosition, _middlePoint;
-  LatLng _news = LatLng(0, 0);
+  LatLng _desPosition = LatLng(0, 0);
   Completer<GoogleMapController> _controller = Completer();
   BitmapDescriptor sourceIcon;
   BitmapDescriptor destinationIcon;
 
-  double _totalDistance = 0;
+  String _totalDistance = "";
+  String _totalDuration = "";
   Map profileMap = new Map();
   Map _servicesMap = new Map();
   Map<String, String> appointmentData = Map();
@@ -61,11 +62,11 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
   setPolylines() async {
     List<PointLatLng> result = await polylinePoints?.getRouteBetweenCoordinates(
-      "AIzaSyAkq7DnUBTkddWXddoHAX02Srw6570ktx8",
+      kGoogleApiKey,
       _initialPosition.latitude,
       _initialPosition.longitude,
-      _news.latitude,
-      _news.longitude,
+      _desPosition.latitude,
+      _desPosition.longitude,
     );
 
     if (result.isNotEmpty) {
@@ -107,27 +108,31 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
     if (_providerData["providerData"]["data"] != null) {
       averageRating =
-          _providerData["providerData"]["averageRating"].toStringAsFixed(2);
+          _providerData["providerData"]["averageRating"]?.toStringAsFixed(2);
 
       _providerData["providerData"]["data"].map((f) {
         profileMap.addAll(f);
       }).toList();
     } else {
       profileMap = _providerData["providerData"];
-      averageRating = profileMap["averageRating"].toStringAsFixed(2);
+      averageRating = profileMap["averageRating"]?.toStringAsFixed(2);
     }
 
     _initialPosition = _userLocationMap["latLng"];
     if (profileMap["businessLocation"] != null) {
       if (profileMap["businessLocation"]["coordinates"].length > 0) {
-        _news = LatLng(profileMap["businessLocation"]["coordinates"][1],
+        _desPosition = LatLng(profileMap["businessLocation"]["coordinates"][1],
             profileMap["businessLocation"]["coordinates"][0]);
       }
     }
 
-    _middlePoint = LatLng((_initialPosition.latitude + _news.latitude) / 2,
-        (_initialPosition.longitude + _news.longitude) / 2);
-    _getUserLocation();
+    _middlePoint = LatLng(
+        (_initialPosition.latitude + _desPosition.latitude) / 2,
+        (_initialPosition.longitude + _desPosition.longitude) / 2);
+
+    if (_initialPosition != null) {
+      getDistanceAndTime(_initialPosition, _desPosition);
+    }
 
     bookedTime = _appointmentData["time"];
     _bookedDate = _appointmentData["date"];
@@ -176,21 +181,6 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     destinationIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
         "images/ic_destination_marker.png");
-  }
-
-  void _getUserLocation() async {
-    await Geolocator()
-        .distanceBetween(
-      _initialPosition.latitude,
-      _initialPosition.longitude,
-      _news.latitude,
-      _news.longitude,
-    )
-        .then((distance) {
-      setState(() {
-        _totalDistance = distance;
-      });
-    });
   }
 
   @override
@@ -500,8 +490,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                         ));
 
                         _markers.add(Marker(
-                          markerId: MarkerId(_news.toString()),
-                          position: _news,
+                          markerId: MarkerId(_desPosition.toString()),
+                          position: _desPosition,
                           icon: destinationIcon,
                         ));
                       });
@@ -528,14 +518,14 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "${(((_totalDistance * 0.000621371) / 30) * 60).toStringAsFixed(1)} mins",
+                          _totalDuration,
                           style: TextStyle(
                             fontSize: 14.0,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
-                          "${(_totalDistance * 0.000621371).toStringAsFixed(1)} miles away",
+                          _totalDistance,
                           style: TextStyle(
                             fontSize: 11.0,
                           ),
@@ -551,6 +541,27 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     formWidget.add(duePaymentWidget());
 
     return formWidget;
+  }
+
+  void getDistanceAndTime(LatLng initialPosition, LatLng desPosition) {
+    ApiBaseHelper _apiHelper = ApiBaseHelper();
+    _apiHelper
+        .getDistanceAndTime(initialPosition, desPosition, kGoogleApiKey)
+        .then((value) {
+      _totalDistance =
+          value["rows"][0]["elements"][0]["distance"]["text"].toString();
+      _totalDuration =
+          value["rows"][0]["elements"][0]["duration"]["text"].toString();
+      ("DISTANCE AND TIME: " + value["rows"][0]["elements"][0].toString())
+          .toString()
+          .debugLog();
+    }).futureError((error) {
+      setState(() {
+        _totalDuration = "NO duration available";
+        _totalDistance = "NO distance available";
+      });
+      error.toString().debugLog();
+    });
   }
 
   Widget duePaymentWidget() {

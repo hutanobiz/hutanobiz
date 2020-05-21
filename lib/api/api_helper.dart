@@ -306,7 +306,7 @@ class ApiBaseHelper {
     return _netUtil
         .get(Uri.encodeFull(
             "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial" +
-                "&origins=${source.latitude},${source.longitude}&destinations=${dest.latitude}"+",${dest.longitude}&key=$apiKey"))
+                "&origins=${source.latitude},${source.longitude}&destinations=${dest.latitude},${dest.longitude}&key=$apiKey"))
         .then((res) {
       return res;
     });
