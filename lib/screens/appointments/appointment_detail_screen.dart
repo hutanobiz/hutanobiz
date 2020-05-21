@@ -27,6 +27,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   InheritedContainerState _container;
   List feeList = List();
   double totalFee = 0;
+  String _appointmentStatus = "---";
 
   Map profileMap = Map();
 
@@ -101,19 +102,24 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                       );
                     }),
               ),
-              Align(
-                alignment: FractionalOffset.bottomRight,
-                child: Container(
-                  height: 55.0,
-                  width: 185.0,
-                  padding: const EdgeInsets.only(right: 20.0),
-                  child: FancyButton(
-                    title: "Track",
-                    onPressed: () => Navigator.of(context)
-                        .pushNamed(Routes.trackTreatmentScreen),
-                  ),
-                ),
-              )
+              _appointmentStatus == "2" || _appointmentStatus == "6"
+                  ? Container()
+                  : Align(
+                      alignment: FractionalOffset.bottomRight,
+                      child: Container(
+                        height: 55.0,
+                        width: 185.0,
+                        padding: const EdgeInsets.only(right: 20.0),
+                        child: FancyButton(
+                          title: "Track",
+                          onPressed: _appointmentStatus == "2" ||
+                                  _appointmentStatus == "6"
+                              ? null
+                              : () => Navigator.of(context)
+                                  .pushNamed(Routes.trackTreatmentScreen),
+                        ),
+                      ),
+                    ),
             ],
           ),
         ),
@@ -221,6 +227,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       }
     }
 
+    _appointmentStatus = _providerData["status"]?.toString() ?? "---";
+
     if (_providerData["doctor"] != null) {
       name = _providerData["doctor"]["fullName"]?.toString() ?? "---";
       avatar = _providerData["doctor"]["avatar"];
@@ -291,7 +299,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                       ],
                     ),
                     paymentType != 0 ? Container() : SizedBox(height: 4.0),
-                    paymentType != 0
+                    paymentType != 0 ||
+                            _appointmentStatus == "2" ||
+                            _appointmentStatus == "6"
                         ? Container()
                         : RawMaterialButton(
                             materialTapTargetSize:
@@ -334,7 +344,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
-                      _providerData["status"].toString()?.appointmentStatus(),
+                      _appointmentStatus?.appointmentStatus(),
                       SizedBox(height: 5.0),
                       Text(
                         "\$$fee",
@@ -351,9 +361,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           ),
         ),
         SizedBox(height: 20.0),
-        _providerData["status"].toString() != "4"
-            ? Container()
-            : rateWidget(userRating),
+        _appointmentStatus != "4" ? Container() : rateWidget(userRating),
         Padding(
           padding: const EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 11.0),
           child: Text(

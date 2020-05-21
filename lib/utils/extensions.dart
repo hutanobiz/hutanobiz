@@ -90,6 +90,7 @@ extension StatusExt on String {
         backgroundColor = AppColors.atlantis.withOpacity(0.12);
         break;
       case "2":
+      case "6":
         status = "Rejected";
         statusTextColor = AppColors.alizarin_crimson;
         backgroundColor = AppColors.alizarin_crimson.withOpacity(0.12);
@@ -104,7 +105,6 @@ extension StatusExt on String {
         statusTextColor = AppColors.emerald;
         backgroundColor = AppColors.emerald.withOpacity(0.12);
         break;
-      default:
     }
     return isAddBackground
         ? Container(
