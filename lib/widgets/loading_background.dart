@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/widgets/arrow_button.dart';
 import 'package:hutano/widgets/bottom_arrows.dart';
+import 'package:hutano/widgets/circular_loader.dart';
 
 class LoadingBackground extends StatelessWidget {
   LoadingBackground(
@@ -75,7 +76,6 @@ class LoadingBackground extends StatelessWidget {
                   : Container(),
               Expanded(
                 child: Container(
-                    // width: MediaQuery.of(context).size.width,
                     padding: padding ?? const EdgeInsets.all(20.0),
                     decoration: BoxDecoration(
                       color: color,
@@ -88,19 +88,7 @@ class LoadingBackground extends StatelessWidget {
               ),
             ],
           ),
-          isLoading
-              ? Container(
-                  alignment: Alignment.center,
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.4),
-                  ),
-                  child: CircularProgressIndicator(
-                    backgroundColor: Colors.grey[200],
-                  ),
-                )
-              : Container(),
+          isLoading ? CircularLoader() : Container(),
           addBackButton
               ? Align(
                   alignment: FractionalOffset.bottomLeft,

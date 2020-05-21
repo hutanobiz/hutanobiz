@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/widgets/circular_loader.dart';
 
 class LoadingView extends StatelessWidget {
   const LoadingView({Key key, @required this.isLoading, @required this.child})
@@ -13,19 +14,7 @@ class LoadingView extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           child,
-          isLoading
-              ? Container(
-                  alignment: Alignment.center,
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.4),
-                  ),
-                  child: CircularProgressIndicator(
-                    backgroundColor: Colors.grey[200],
-                  ),
-                )
-              : Container(),
+          isLoading ? CircularLoader() : Container(),
         ],
       ),
     );
