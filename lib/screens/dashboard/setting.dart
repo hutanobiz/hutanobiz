@@ -4,6 +4,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/widgets/circular_loader.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:package_info/package_info.dart';
 
@@ -24,6 +25,8 @@ class _SettingsScreenState extends State<SettingScreen> {
   );
   String name = "---", email = "---", phone = "---", avatar;
 
+  bool _isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -40,10 +43,13 @@ class _SettingsScreenState extends State<SettingScreen> {
   }
 
   void getProfileData() {
+    _isLoading = true;
+
     SharedPref().getToken().then((token) {
       api.profile(token, Map()).then((dynamic response) {
         if (mounted) {
           setState(() {
+            _isLoading = false;
             if (response['response'] != null) {
               name = response['response']['fullName'].toString() ?? "---";
               email = response['response']['email'].toString() ?? "---";
@@ -53,9 +59,12 @@ class _SettingsScreenState extends State<SettingScreen> {
           });
         }
       }).futureError((error) {
-        Widgets.showToast(error.toString());
+        setLoading(false);
         error.toString().debugLog();
       });
+    }).futureError((error) {
+      setLoading(false);
+      error.toString().debugLog();
     });
   }
 
@@ -64,10 +73,16 @@ class _SettingsScreenState extends State<SettingScreen> {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       body: SafeArea(
-          child: ListView(
-        children: getFormWidget(),
-        padding: EdgeInsets.only(left: 0, right: 0, top: 0),
-      )),
+        child: Stack(
+          children: <Widget>[
+            ListView(
+              children: getFormWidget(),
+              padding: EdgeInsets.only(left: 0, right: 0, top: 0),
+            ),
+            _isLoading ? CircularLoader() : Container(),
+          ],
+        ),
+      ),
     );
   }
 
@@ -377,5 +392,9 @@ class _SettingsScreenState extends State<SettingScreen> {
         ),
       ),
     );
+  }
+
+  void setLoading(bool value) {
+    setState(() => _isLoading = value);
   }
 }
