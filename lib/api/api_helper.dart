@@ -12,8 +12,8 @@ import 'package:hutano/widgets/widgets.dart';
 
 class ApiBaseHelper {
   NetworkUtil _netUtil = new NetworkUtil();
-  static const String base_url = "http://139.59.40.62:5300/";
-  static const String imageUrl = "http://139.59.40.62:5300/uploads/";
+  static const String base_url = "http://139.59.40.62:7300/";
+  static const String imageUrl = base_url + "uploads/";
 
   Future<dynamic> login(Map loginData) {
     return _netUtil
