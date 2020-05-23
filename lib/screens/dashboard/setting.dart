@@ -267,8 +267,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                 "Payment History",
                 "images/profile_payment_history.png",
                 () => Navigator.of(context).pushNamed(
-                  Routes.paymentMethodScreen,
-                  arguments: false,
+                  Routes.savedCardsScreen,
                 ),
               ),
               Padding(
@@ -288,11 +287,13 @@ class _SettingsScreenState extends State<SettingScreen> {
                 ),
               ),
               customListButton(
-                  "Payment Method",
-                  "images/profile_payment_method.png",
-                  () => Navigator.of(context).pushNamed(
-                        Routes.savedCardsScreen,
-                      )),
+                "Payment Method",
+                "images/profile_payment_method.png",
+                () => Navigator.of(context).pushNamed(
+                  Routes.paymentMethodScreen,
+                  arguments: false,
+                ),
+              ),
             ],
           )),
     ));
