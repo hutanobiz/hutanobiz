@@ -151,7 +151,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     String name = "---",
         avatar,
         address = "---",
-        appointmentStatus = "---",
+        status = "---",
         userRating,
         averageRating = "---",
         appointmentType = "---",
@@ -187,7 +187,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         default:
       }
 
-    appointmentStatus = response["status"]?.toString() ?? "---";
+    status = response["status"]?.toString() ?? "---";
     averageRating = response["averageRating"]?.toStringAsFixed(2) ?? "0";
 
     if (response["reason"] != null && response["reason"].length > 0) {
@@ -345,7 +345,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                               ? Container()
                               : Align(
                                   alignment: Alignment.centerRight,
-                                  child: appointmentStatus?.appointmentStatus(),
+                                  child: status?.appointmentStatus(),
                                 ),
                         ],
                       ),
@@ -407,7 +407,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                       child: Text(
                         (response['date'] != null
                                 ? DateFormat('EEEE, dd MMMM, ')
-                                    .format(DateTime.parse(response['date']))
+                                    .format(DateTime.parse(response['date']).toLocal())
                                     .toString()
                                 : "---") +
                             (response["fromTime"] != null
@@ -431,9 +431,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
               ),
               Row(
                 children: <Widget>[
-                  listType == 1 &&
-                          paymentType == 0 &&
-                          (appointmentStatus != "2" && appointmentStatus != "6")
+                  listType == 1 && paymentType == 0
                       ? rightButton(listType, "Confirm Payment", () {
                           _container.setProviderData("providerData", response);
                           _container
@@ -446,7 +444,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                               )
                               .whenComplete(() => appointmentsFuture());
                         })
-                      : listType == 2 && appointmentStatus == "4"
+                      : listType == 2 && status == "4"
                           ? leftButton(userRating, "Treatment summary", () {
                               _container.setProviderData(
                                   "providerData", response);
@@ -455,9 +453,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                   arguments: response);
                             })
                           : Container(),
-                  listType == 2 &&
-                          appointmentStatus == "4" &&
-                          userRating == null
+                  listType == 2 && status == "4" && userRating == null
                       ? rightButton(listType, "Rate Now", () {
                           _container.setProviderData("providerData", response);
                           _container
