@@ -45,6 +45,15 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         providerMap = _container.providerResponse;
 
         if (providerMap["providerData"] != null) {
+          if (providerMap["providerData"]["doctorData"] != null) {
+            for (dynamic detail in providerMap["providerData"]["doctorData"]) {
+              if (detail["paymentMethod"] != null) {
+                cashPayment =
+                    detail["paymentMethod"]["cashPayment"]?.toString() ?? "0";
+              }
+            }
+          }
+
           if (providerMap["providerData"]["data"] != null) {
             appointmentData = providerMap["providerData"]["data"];
           } else {
@@ -60,11 +69,6 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
       if (appointmentData["doctorData"] != null) {
         for (dynamic detail in appointmentData["doctorData"]) {
-          if (detail["paymentMethod"] != null) {
-            cashPayment =
-                detail["paymentMethod"]["cashPayment"]?.toString() ?? "0";
-          }
-
           if (detail["consultanceFee"] != null) {
             for (dynamic consultanceFee in detail["consultanceFee"]) {
               fee = consultanceFee["fee"]?.toString() ?? "0.0";
