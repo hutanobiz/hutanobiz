@@ -11,7 +11,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
-import 'package:location/location.dart';
+import 'package:location/location.dart' hide LocationAccuracy;
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key key}) : super(key: key);
@@ -301,7 +301,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     Location _locationService = Location();
     PermissionStatus _permission;
-    Geolocator geolocator = Geolocator();
+    Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
 
     _permission = await _locationService.requestPermission();
     print("Permission: $_permission");
@@ -315,7 +315,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Widgets.showToast("Getting Location. Please wait..");
 
           try {
-            Position position = await geolocator.getCurrentPosition();
+            Position position = await geolocator.getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.low);
 
             getLocationAddress(position.latitude, position.longitude);
 
