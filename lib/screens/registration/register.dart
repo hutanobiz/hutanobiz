@@ -46,6 +46,7 @@ class _SignUpFormState extends State<Register> {
   String stateId = "";
 
   String _genderGroup = "";
+  final _mobileFormatter = UsNumberTextInputFormatter();
 
   ApiBaseHelper api = new ApiBaseHelper();
   List stateList;
@@ -125,7 +126,15 @@ class _SignUpFormState extends State<Register> {
 
               _firstNameController.text = res["firstName"]?.toString();
               _lastNameController.text = res["lastName"]?.toString();
-              _phoneController.text = res['phoneNumber']?.toString();
+              String phoneNumber =
+                            res['phoneNumber']?.toString();
+               phoneNumber = "(" +
+                            phoneNumber.substring(0, 3) +
+                            ") " +
+                            phoneNumber.substring(3, 6) +
+                            "-" +
+                            phoneNumber.substring(6, phoneNumber.length);
+              _phoneController.text = phoneNumber;
               _addressController.text = res['address']?.toString();
               _cityController.text = res['city']?.toString();
               _stateController.text = res["state"]["title"]?.toString();
@@ -387,8 +396,13 @@ class _SignUpFormState extends State<Register> {
       Padding(
         padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
         child: TextFormField(
-          inputFormatters: [LengthLimitingTextInputFormatter(10)],
           controller: _phoneController,
+          inputFormatters: [
+            WhitelistingTextInputFormatter.digitsOnly,
+            _mobileFormatter,
+          ],
+          autocorrect: true,
+          maxLength: 14,
           decoration: InputDecoration(
               labelText: "Phone",
               prefix: Text(
@@ -597,7 +611,12 @@ class _SignUpFormState extends State<Register> {
     loginData["city"] = _cityController.text;
     loginData["state"] = _stateController.text;
     loginData["zipCode"] = _zipController.text;
-    loginData["phoneNumber"] = _phoneController.text;
+    String phonenumber = _phoneController.text.substring(1, 4) +
+                    "" +
+                    _phoneController.text.substring(6, 9) +
+                    "" +
+                    _phoneController.text.substring(10, 14);
+    loginData["phoneNumber"] = phonenumber;
     loginData["gender"] = _genderGroup.trim().toString() == "male" ? "1" : "2";
     loginData["state"] = stateId;
 
@@ -827,5 +846,39 @@ class _SignUpFormState extends State<Register> {
     setState(() {
       isLoading = value;
     });
+  }
+}
+
+class UsNumberTextInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    final int newTextLength = newValue.text.length;
+    int selectionIndex = newValue.selection.end;
+    int usedSubstringIndex = 0;
+    final StringBuffer newText = StringBuffer();
+    if (newTextLength >= 1) {
+      newText.write('(');
+      if (newValue.selection.end >= 1) selectionIndex++;
+    }
+    if (newTextLength >= 4) {
+      newText.write(newValue.text.substring(0, usedSubstringIndex = 3) + ') ');
+      if (newValue.selection.end >= 3) selectionIndex += 2;
+    }
+    if (newTextLength >= 7) {
+      newText.write(newValue.text.substring(3, usedSubstringIndex = 6) + '-');
+      if (newValue.selection.end >= 6) selectionIndex++;
+    }
+    if (newTextLength >= 11) {
+      newText.write(newValue.text.substring(6, usedSubstringIndex = 10) + ' ');
+      if (newValue.selection.end >= 10) selectionIndex++;
+    }
+    // Dump the rest.
+    if (newTextLength >= usedSubstringIndex)
+      newText.write(newValue.text.substring(usedSubstringIndex));
+    return TextEditingValue(
+      text: newText.toString(),
+      selection: TextSelection.collapsed(offset: selectionIndex),
+    );
   }
 }

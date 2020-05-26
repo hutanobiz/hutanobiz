@@ -52,7 +52,15 @@ class _SettingsScreenState extends State<SettingScreen> {
             if (response['response'] != null) {
               name = response['response']['fullName'].toString() ?? "---";
               email = response['response']['email'].toString() ?? "---";
-              phone = response['response']['phoneNumber'].toString() ?? "---";
+              String phoneNumber =
+                            response['response']['phoneNumber']?.toString();
+               phoneNumber = "(" +
+                            phoneNumber.substring(0, 3) +
+                            ") " +
+                            phoneNumber.substring(3, 6) +
+                            "-" +
+                            phoneNumber.substring(6, phoneNumber.length);
+              phone = phoneNumber;
               avatar = response['response']['avatar'].toString();
             }
           });

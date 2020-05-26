@@ -379,7 +379,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         dateTimeWidget(
             DateFormat(
               'EEEE, dd MMMM, ',
-            ).format(DateTime.parse(_providerData['date'])).toString(),
+            ).format(DateTime.parse(_providerData['date']).toLocal()).toString(),
             _providerData["fromTime"].toString(),
             _providerData["toTime"].toString()),
         divider(topPadding: 8.0),
