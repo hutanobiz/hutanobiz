@@ -162,3 +162,11 @@ extension NextDay on int {
         .toString();
   }
 }
+
+extension FormatDate on String {
+  String formatDate({@required String dateFormat}) {
+    return DateFormat(
+      dateFormat,
+    ).format(DateTime.parse(this).toLocal()).toString();
+  }
+}
