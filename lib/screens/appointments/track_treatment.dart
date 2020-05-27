@@ -76,15 +76,15 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
   }
 
   setPolylines(LatLng _initialPosition, LatLng _desPosition) async {
-    List<PointLatLng> result = await polylinePoints
+    PolylineResult polylineResult = await polylinePoints
         .getRouteBetweenCoordinates(
           "AIzaSyAkq7DnUBTkddWXddoHAX02Srw6570ktx8",
-          _initialPosition.latitude,
-          _initialPosition.longitude,
-          _desPosition.latitude,
-          _desPosition.longitude,
+          PointLatLng(_initialPosition.latitude, _initialPosition.longitude),
+          PointLatLng(_desPosition.latitude, _desPosition.longitude),
         )
         .catchError((error) => error.toString().debugLog());
+
+    List<PointLatLng> result = polylineResult.points;
 
     if (result.isNotEmpty) {
       result.forEach((PointLatLng point) {
