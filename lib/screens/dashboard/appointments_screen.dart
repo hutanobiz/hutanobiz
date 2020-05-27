@@ -65,42 +65,35 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
       future: _requestsFuture,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          _upcomingList.clear();
-          _pastList.clear();
-
-          DateTime now = DateTime.now();
-
           if (snapshot.data is String) {
             return Center(
               child: Text(snapshot.data),
             );
           } else {
-            List<dynamic> _scheduleList = snapshot.data["data"];
-
-            for (dynamic schedule in _scheduleList) {
-              if (now.isBefore(DateTime.parse(schedule["date"]))) {
-                _upcomingList.add(schedule);
-              } else {
-                _pastList.add(schedule);
-              }
-            }
-
-            return SingleChildScrollView(
-              physics: ClampingScrollPhysics(),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    heading("Upcoming", _upcomingList, 1),
-                    _upcomingList.isNotEmpty
-                        ? _listWidget(_upcomingList, 1)
-                        : Container(),
-                    heading("Past", _pastList, 2),
-                    _pastList.isNotEmpty
-                        ? _listWidget(_pastList, 2)
-                        : Container(),
-                  ]),
-            );
+            _upcomingList = snapshot.data["presentRequest"];
+            _pastList = snapshot.data["pastRequest"];
           }
+
+          if (_upcomingList.isEmpty && _pastList.isEmpty)
+            return Center(
+              child: Text("NO appointments yet!"),
+            );
+
+          return SingleChildScrollView(
+            physics: ClampingScrollPhysics(),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  heading("Upcoming", _upcomingList, 1),
+                  _upcomingList.isNotEmpty
+                      ? _listWidget(_upcomingList, 1)
+                      : Container(),
+                  heading("Past", _pastList, 2),
+                  _pastList.isNotEmpty
+                      ? _listWidget(_pastList, 2)
+                      : Container(),
+                ]),
+          );
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }
@@ -407,7 +400,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                       child: Text(
                         (response['date'] != null
                                 ? DateFormat('EEEE, dd MMMM, ')
-                                    .format(DateTime.parse(response['date']).toLocal())
+                                    .format(DateTime.parse(response['date'])
+                                        .toLocal())
                                     .toString()
                                 : "---") +
                             (response["fromTime"] != null
