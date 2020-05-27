@@ -341,7 +341,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                   child: Text(
                     (response['date'] != null
                             ? DateFormat('dd MMMM, ')
-                                .format(DateTime.parse(response['date']))
+                                .format(DateTime.parse(response['date']).toLocal())
                                 .toString()
                             : "---") +
                         (response["fromTime"] != null

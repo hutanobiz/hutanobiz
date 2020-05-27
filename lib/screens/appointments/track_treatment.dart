@@ -274,7 +274,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
     dateTime = "On " +
         DateFormat(
           'EEEE, dd MMMM, ',
-        ).format(DateTime.parse(response['date'])).toString() +
+        ).format(DateTime.parse(response['date']).toLocal()).toString() +
         response["fromTime"].toString().timeOfDay(context);
 
     if (response["doctor"] != null) {
