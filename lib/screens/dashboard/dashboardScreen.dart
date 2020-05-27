@@ -4,14 +4,14 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoder/geocoder.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
-import 'package:location/location.dart' hide LocationAccuracy;
+import 'package:location/location.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key key}) : super(key: key);
@@ -299,52 +299,47 @@ class _DashboardScreenState extends State<DashboardScreen> {
   initPlatformState() async {
     _loading(true);
 
-    Location _locationService = Location();
+    Location _location = Location();
     PermissionStatus _permission;
-    Geolocator geolocator = Geolocator()..forceAndroidLocationManager = true;
 
-    _permission = await _locationService.requestPermission();
+    _permission = await _location.requestPermission();
     print("Permission: $_permission");
 
     switch (_permission) {
-      case PermissionStatus.GRANTED:
-        bool serviceStatus = await _locationService.serviceEnabled();
+      case PermissionStatus.granted:
+        bool serviceStatus = await _location.serviceEnabled();
         print("Service status: $serviceStatus");
 
         if (serviceStatus) {
           Widgets.showToast("Getting Location. Please wait..");
 
           try {
-            Position position = await geolocator.getCurrentPosition(
-                desiredAccuracy: LocationAccuracy.low);
+            LocationData locationData = await _location.getLocation();
 
-            getLocationAddress(position.latitude, position.longitude);
+            getLocationAddress(locationData.latitude, locationData.longitude);
 
-            _latLng = LatLng(position.latitude, position.longitude);
+            _latLng = LatLng(locationData.latitude, locationData.longitude);
           } on PlatformException catch (e) {
             _loading(false);
 
             Widgets.showToast(e.message.toString());
-            print(e);
-            if (e.code == 'PERMISSION_DENIED') {
-              log(e.code);
-              Widgets.showToast(e.message.toString());
-            } else if (e.code == 'SERVICE_STATUS_ERROR') {
-              log(e.code);
-            }
-            _locationService = null;
+            e.toString().debugLog();
+
+            log(e.code);
+
+            _location = null;
           }
         } else {
-          bool serviceStatusResult = await _locationService.requestService();
+          bool serviceStatusResult = await _location.requestService();
           print("Service status activated after request: $serviceStatusResult");
           initPlatformState();
         }
 
         break;
-      case PermissionStatus.DENIED:
+      case PermissionStatus.denied:
         initPlatformState();
         break;
-      case PermissionStatus.DENIED_FOREVER:
+      case PermissionStatus.deniedForever:
         break;
     }
   }
