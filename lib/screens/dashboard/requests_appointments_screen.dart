@@ -20,8 +20,8 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
 
   ApiBaseHelper _api = ApiBaseHelper();
 
-  List<dynamic> _pastList = List();
-  List<dynamic> _presentList = List();
+  List<dynamic> _closedRequestsList = List();
+  List<dynamic> _activeRequestsList = List();
 
   Future<dynamic> _requestsFuture;
 
@@ -71,26 +71,53 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
             break;
           case ConnectionState.done:
             if (snapshot.hasData) {
-              _presentList = snapshot.data["presentRequest"];
-              _pastList = snapshot.data["pastRequest"];
+              _activeRequestsList = snapshot.data["activeRequest"];
+              _closedRequestsList = snapshot.data["closedRequest"];
 
-              if (_presentList.length == 0 && _pastList.length == 0)
+              if (_activeRequestsList.length == 0 &&
+                  _closedRequestsList.length == 0)
                 return Center(
                   child: Text("NO requests yet!"),
                 );
+
+              if (_activeRequestsList.length > 1) {
+                _activeRequestsList.sort((a, b) {
+                  var aDate = a['date'].toString() +
+                      a["fromTime"].toString().timeOfDay(context) +
+                      a["toTime"].toString().timeOfDay(context);
+                  var bDate = b['date'].toString() +
+                      b["fromTime"].toString().timeOfDay(context) +
+                      b["toTime"].toString().timeOfDay(context);
+
+                  return bDate.compareTo(aDate);
+                });
+              }
+
+              if (_closedRequestsList.length > 1) {
+                _closedRequestsList.sort((a, b) {
+                  var aDate = a['date'].toString() +
+                      a["fromTime"].toString().timeOfDay(context) +
+                      a["toTime"].toString().timeOfDay(context);
+                  var bDate = b['date'].toString() +
+                      b["fromTime"].toString().timeOfDay(context) +
+                      b["toTime"].toString().timeOfDay(context);
+
+                  return bDate.compareTo(aDate);
+                });
+              }
 
               return SingleChildScrollView(
                 physics: ClampingScrollPhysics(),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      heading("Pending", _presentList, 1),
-                      _presentList.isNotEmpty
-                          ? _listWidget(_presentList, 1)
+                      heading("Active", _activeRequestsList, 1),
+                      _activeRequestsList.isNotEmpty
+                          ? _listWidget(_activeRequestsList, 1)
                           : Container(),
-                      heading("Past", _pastList, 2),
-                      _pastList.isNotEmpty
-                          ? _listWidget(_pastList, 2)
+                      heading("Closed", _closedRequestsList, 2),
+                      _closedRequestsList.isNotEmpty
+                          ? _listWidget(_closedRequestsList, 2)
                           : Container(),
                     ]),
               );
@@ -141,7 +168,6 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
         avatar,
         address = "---",
         appointmentType = "---",
-        degree = "---",
         fee = "---",
         status = "---",
         distance = "0",
@@ -170,45 +196,42 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
     }
 
     if (response["DoctorProfessionalDetail"] != null) {
-      for (dynamic detail in response["DoctorProfessionalDetail"]) {
-        if (detail["professionalTitle"] != null) {
-          professionalTitle =
-              detail["professionalTitle"]["title"]?.toString() ?? "---";
+      if (response["DoctorProfessionalDetail"]["professionalTitle"] != null) {
+        professionalTitle = response["DoctorProfessionalDetail"]
+                    ["professionalTitle"]["title"]
+                ?.toString() ??
+            "---";
+      }
+
+      if (response["DoctorProfessionalDetail"]["distance"] != null) {
+        distance =
+            response["DoctorProfessionalDetail"]["distance"]?.toString() ?? "0";
+      }
+
+      if (response["DoctorProfessionalDetail"]["consultanceFee"] != null) {
+        for (dynamic consultanceFee in response["DoctorProfessionalDetail"]
+            ["consultanceFee"]) {
+          fee = consultanceFee["fee"].toString() ?? "---";
+        }
+      }
+
+      if (response["DoctorProfessionalDetail"]["businessLocation"] != null) {
+        dynamic business =
+            response["DoctorProfessionalDetail"]["businessLocation"];
+        String state = "---";
+        if (business["state"] != null) {
+          state = business["state"]["title"]?.toString() ?? "---";
         }
 
-        if (detail["distance"] != null) {
-          distance = detail["distance"]?.toString() ?? "0";
-        }
-
-        if (detail["education"] != null) {
-          for (dynamic eduResponse in detail["education"]) {
-            degree = eduResponse["degree"].toString() ?? "---";
-          }
-        }
-
-        if (detail["consultanceFee"] != null) {
-          for (dynamic consultanceFee in detail["consultanceFee"]) {
-            fee = consultanceFee["fee"].toString() ?? "---";
-          }
-        }
-
-        if (detail["businessLocation"] != null) {
-          dynamic business = detail["businessLocation"];
-          String state = "---";
-          if (business["state"] != null) {
-            state = business["state"]["title"]?.toString() ?? "---";
-          }
-
-          address = (business["address"]?.toString() ?? "---") +
-              ", " +
-              (business["street"]?.toString() ?? "---") +
-              ", " +
-              (business["city"]?.toString() ?? "---") +
-              ", " +
-              state +
-              " - " +
-              (business["zipCode"]?.toString() ?? "---");
-        }
+        address = (business["address"]?.toString() ?? "---") +
+            ", " +
+            (business["street"]?.toString() ?? "---") +
+            ", " +
+            (business["city"]?.toString() ?? "---") +
+            ", " +
+            state +
+            " - " +
+            (business["zipCode"]?.toString() ?? "---");
       }
     }
 
@@ -251,7 +274,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "$name, $degree",
+                          name,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 14.0,
