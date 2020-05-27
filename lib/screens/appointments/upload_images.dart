@@ -42,10 +42,9 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
         onForwardTap: () {
           if (imagesList != null && imagesList.length > 0) {
             _container.setConsentToTreatData("imagesList", imagesList);
-            Navigator.of(context).pushNamed(Routes.uploadDocumentsScreen);
-          } else {
-            Widgets.showToast("Please upload image(s)");
           }
+
+          Navigator.of(context).pushNamed(Routes.uploadDocumentsScreen);
         },
         color: Colors.white,
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),

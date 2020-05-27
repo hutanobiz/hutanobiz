@@ -47,11 +47,9 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
         onForwardTap: () {
           if (docsList != null && docsList.length > 0) {
             _container.setConsentToTreatData("docsList", docsList);
-
-            Navigator.of(context).pushNamed(Routes.reviewAppointmentScreen);
-          } else {
-            Widgets.showToast("Please upload documents");
           }
+          
+          Navigator.of(context).pushNamed(Routes.reviewAppointmentScreen);
         },
         color: Colors.white,
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
