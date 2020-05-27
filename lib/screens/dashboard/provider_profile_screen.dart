@@ -249,6 +249,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
 
       address = (business["address"]?.toString() ?? "---") +
           ", " +
+          (business["street"]?.toString() ?? "---") +
+          ", " +
           (business["city"]?.toString() ?? "---") +
           ", " +
           state +

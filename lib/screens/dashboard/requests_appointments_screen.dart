@@ -201,6 +201,8 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
 
           address = (business["address"]?.toString() ?? "---") +
               ", " +
+              (business["street"]?.toString() ?? "---") +
+              ", " +
               (business["city"]?.toString() ?? "---") +
               ", " +
               state +
@@ -341,7 +343,8 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                   child: Text(
                     (response['date'] != null
                             ? DateFormat('dd MMMM, ')
-                                .format(DateTime.parse(response['date']).toLocal())
+                                .format(
+                                    DateTime.parse(response['date']).toLocal())
                                 .toString()
                             : "---") +
                         (response["fromTime"] != null
@@ -378,6 +381,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                       Expanded(
                         child: Text(
                           "$address",
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                           ),

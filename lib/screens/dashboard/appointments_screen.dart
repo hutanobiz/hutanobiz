@@ -220,6 +220,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
 
           address = (business["address"]?.toString() ?? "---") +
               ", " +
+              (business["street"]?.toString() ?? "---") +
+              ", " +
               (business["city"]?.toString() ?? "---") +
               ", " +
               state +

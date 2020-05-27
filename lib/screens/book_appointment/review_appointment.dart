@@ -429,6 +429,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
       address = (business["address"]?.toString() ?? "---") +
           ", " +
+          (business["street"]?.toString() ?? "---") +
+          ", " +
           (business["city"]?.toString() ?? "---") +
           ", " +
           state +
