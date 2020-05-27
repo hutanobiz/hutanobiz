@@ -244,7 +244,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
         ? "Office response"
         : response["type"] == 2 ? "Video response" : "Onsite response";
 
-    rating = appointment["averageRating"]?.toStringAsFixed(2) ?? "---";
+    rating = appointment["averageRating"]?.toStringAsFixed(2) ?? "0";
 
     if (appointment["doctorData"] != null) {
       for (dynamic detail in appointment["doctorData"]) {
@@ -261,6 +261,8 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
           }
 
           address = (business["address"]?.toString() ?? "---") +
+              ", " +
+              (business["street"]?.toString() ?? "---") +
               ", " +
               (business["city"]?.toString() ?? "---") +
               ", " +
@@ -696,6 +698,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                 response["trackingStatus"]["patientStartDriving"] != null
                     ? response["trackingStatus"]["patientStartDriving"]
                         .toString()
+                        .formatDate(dateFormat: "dd/M/yyyy, HH:mm")
                     : "---",
                 false),
         response["trackingStatus"]["patientArrived"] == null
@@ -706,7 +709,9 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
             : timingSubWidget(
                 "Arrived",
                 response["trackingStatus"]["patientArrived"] != null
-                    ? response["trackingStatus"]["patientArrived"].toString()
+                    ? response["trackingStatus"]["patientArrived"]
+                        .toString()
+                        .formatDate(dateFormat: "dd/M/yyyy, HH:mm")
                     : "---",
                 false),
         response["trackingStatus"]["treatmentStarted"] == null
@@ -717,7 +722,9 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
             : timingSubWidget(
                 "Treatment Started",
                 response["trackingStatus"]["treatmentStarted"] != null
-                    ? response["trackingStatus"]["treatmentStarted"].toString()
+                    ? response["trackingStatus"]["treatmentStarted"]
+                        .toString()
+                        .formatDate(dateFormat: "dd/M/yyyy, HH:mm")
                     : "---",
                 false),
         response["trackingStatus"]["providerTreatmentEnded"] == null
@@ -730,6 +737,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                 response["trackingStatus"]["providerTreatmentEnded"] != null
                     ? response["trackingStatus"]["providerTreatmentEnded"]
                         .toString()
+                        .formatDate(dateFormat: "dd/M/yyyy, HH:mm")
                     : "---",
                 false,
               ),
@@ -743,6 +751,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                 response["trackingStatus"]["patientTreatmentEnded"] != null
                     ? response["trackingStatus"]["patientTreatmentEnded"]
                         .toString()
+                        .formatDate(dateFormat: "dd/M/yyyy, HH:mm")
                     : "---",
                 true,
               ),
