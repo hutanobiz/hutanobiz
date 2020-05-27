@@ -402,8 +402,10 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                     ),
                     onPressed: () {
                       Navigator.of(context).pushNamedAndRemoveUntil(
-                          Routes.dashboardScreen,
-                          (Route<dynamic> route) => false);
+                        Routes.dashboardScreen,
+                        (Route<dynamic> route) => false,
+                        arguments: true,
+                      );
                     })
               ],
             ),

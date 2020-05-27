@@ -85,7 +85,7 @@ class Routes {
         return _buildRoute(settings, LoginScreen());
         break;
       case dashboardScreen:
-        return _buildRoute(settings, HomeScreen());
+        return _buildRoute(settings, HomeScreen(isRequestAppointment: args));
         break;
       case forgotPasswordRoute:
         return _buildRoute(settings, ForgetPassword());
