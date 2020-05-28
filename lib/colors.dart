@@ -18,4 +18,5 @@ class AppColors {
   static const koromiko = Color(0xFFFFC059);
   static const atlantis = Color(0xFF8AD625);
   static const emerald = Color(0xFF44C963);
+  static const seashell = Color(0xFFF1F1F1);
 }

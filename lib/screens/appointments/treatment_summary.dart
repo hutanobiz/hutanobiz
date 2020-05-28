@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/models/services.dart';
 import 'package:hutano/utils/extensions.dart';
@@ -28,6 +29,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
   String initiated = "---";
   String completed = "---";
   String serviceType = "---";
+  String doctorName, doctorSign;
 
   Map followUpMap = Map();
 
@@ -123,6 +125,14 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
 
       if (appointmentData["medicalHistory"] != null) {
         medicalHistoryList = appointmentData["medicalHistory"];
+      }
+
+      if (appointmentData["doctorSign"] != null) {
+        doctorSign = appointmentData["doctorSign"];
+      }
+
+      if (appointmentData["doctor"] != null) {
+        doctorName = appointmentData["doctor"]["fullName"]?.toString() ?? "---";
       }
 
       if (appointmentData["user"] != null) {
@@ -347,18 +357,12 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
               divider(),
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "Follow-up Treatment",
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                  ],
+                child: Text(
+                  "Follow-up Treatment",
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
               followUpWidget(
@@ -425,9 +429,60 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                 serviceType,
                 "experiencr_icon_blue",
               ),
+              doctorSign == null ? Container() : divider(),
+              doctorSign == null
+                  ? Container()
+                  : Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                      child: Text(
+                        "Provider Signature",
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+              doctorSign == null ? Container() : signaturImage(),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget signaturImage() {
+    return Container(
+      width: 161.0,
+      margin: const EdgeInsets.only(left: 20, bottom: 40),
+      padding: const EdgeInsets.fromLTRB(11.0, 11.0, 11.0, 0.0),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: AppColors.seashell,
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(width: 1.0, color: Colors.grey[300]),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child: Image.network(
+              ApiBaseHelper.base_url + doctorSign,
+              width: 140,
+              height: 60,
+              fit: BoxFit.cover,
+            ),
+          ),
+          SizedBox(height: 6.0),
+          Text(
+            doctorName,
+            style: TextStyle(
+              fontSize: 11.0,
+              color: Colors.black,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -622,7 +677,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
 
   Widget followUpChipWidget(String title, String subtitle, String icon) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 10, 20, 40),
+      padding: EdgeInsets.fromLTRB(20, 10, 20, doctorSign == null ? 25 : 44),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
