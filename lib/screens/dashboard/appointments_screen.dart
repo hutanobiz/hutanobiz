@@ -79,6 +79,32 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
               child: Text("NO appointments yet!"),
             );
 
+          if (_upcomingList.length > 1) {
+            _upcomingList.sort((a, b) {
+              var aDate = a['date'].toString() +
+                  a["fromTime"].toString().timeOfDay(context) +
+                  a["toTime"].toString().timeOfDay(context);
+              var bDate = b['date'].toString() +
+                  b["fromTime"].toString().timeOfDay(context) +
+                  b["toTime"].toString().timeOfDay(context);
+
+              return bDate.compareTo(aDate);
+            });
+          }
+
+          if (_pastList.length > 1) {
+            _pastList.sort((a, b) {
+              var aDate = a['date'].toString() +
+                  a["fromTime"].toString().timeOfDay(context) +
+                  a["toTime"].toString().timeOfDay(context);
+              var bDate = b['date'].toString() +
+                  b["fromTime"].toString().timeOfDay(context) +
+                  b["toTime"].toString().timeOfDay(context);
+
+              return bDate.compareTo(aDate);
+            });
+          }
+
           return SingleChildScrollView(
             physics: ClampingScrollPhysics(),
             child: Column(
@@ -129,7 +155,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   Widget _listWidget(List<dynamic> _list, int listType) {
     return ListView.builder(
       physics: ClampingScrollPhysics(),
-      reverse: true,
       shrinkWrap: true,
       itemCount: _list.length,
       itemBuilder: (context, index) {
@@ -144,27 +169,12 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     String name = "---",
         avatar,
         address = "---",
-        status = "---",
+        _appointmentStatus = "---",
         userRating,
         averageRating = "---",
         appointmentType = "---",
         distance = "---",
         professionalTitle = "---";
-
-    int paymentType = 0;
-
-    if (response["insuranceId"] != null) {
-      paymentType = 2;
-    } else if (response["cashPayment"] != null) {
-      paymentType = 1;
-    } else if (response["cardPayment"] != null) {
-      if (response["cardPayment"]["cardId"] != null &&
-          response["cardPayment"]["cardNumber"] != null) {
-        paymentType = 3;
-      }
-    } else {
-      paymentType = 0;
-    }
 
     if (response["type"] != null)
       switch (response["type"]) {
@@ -180,7 +190,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         default:
       }
 
-    status = response["status"]?.toString() ?? "---";
+    _appointmentStatus = response["status"]?.toString() ?? "---";
     averageRating = response["averageRating"]?.toStringAsFixed(2) ?? "0";
 
     if (response["reason"] != null && response["reason"].length > 0) {
@@ -246,7 +256,10 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           onTap: () {
             _container.setAppointmentId(response["_id"].toString());
             Navigator.of(context)
-                .pushNamed(Routes.appointmentDetailScreen)
+                .pushNamed(
+                  Routes.appointmentDetailScreen,
+                  arguments: _appointmentStatus,
+                )
                 .whenComplete(() => appointmentsFuture());
           },
           child: Column(
@@ -340,7 +353,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                               ? Container()
                               : Align(
                                   alignment: Alignment.centerRight,
-                                  child: status?.appointmentStatus(),
+                                  child:
+                                      _appointmentStatus?.appointmentStatus(),
                                 ),
                         ],
                       ),
@@ -427,29 +441,17 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
               ),
               Row(
                 children: <Widget>[
-                  listType == 1 && paymentType == 0
-                      ? rightButton(listType, "Confirm Payment", () {
+                  listType == 2 && _appointmentStatus == "4"
+                      ? leftButton(userRating, "Treatment summary", () {
                           _container.setProviderData("providerData", response);
-                          _container
-                              .setAppointmentId(response["_id"].toString());
-                          _container.setProviderData("totalFee", null);
-                          Navigator.of(context)
-                              .pushNamed(
-                                Routes.paymentMethodScreen,
-                                arguments: true,
-                              )
-                              .whenComplete(() => appointmentsFuture());
+                          Navigator.of(context).pushNamed(
+                              Routes.treatmentSummaryScreen,
+                              arguments: response);
                         })
-                      : listType == 2 && status == "4"
-                          ? leftButton(userRating, "Treatment summary", () {
-                              _container.setProviderData(
-                                  "providerData", response);
-                              Navigator.of(context).pushNamed(
-                                  Routes.treatmentSummaryScreen,
-                                  arguments: response);
-                            })
-                          : Container(),
-                  listType == 2 && status == "4" && userRating == null
+                      : Container(),
+                  listType == 2 &&
+                          _appointmentStatus == "4" &&
+                          userRating == null
                       ? rightButton(listType, "Rate Now", () {
                           _container.setProviderData("providerData", response);
                           _container
