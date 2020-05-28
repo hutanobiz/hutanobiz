@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
@@ -21,18 +22,21 @@ class PaymentMethodScreen extends StatefulWidget {
 
 class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   int _radioValue;
+  int _listRadioValue;
 
   Future<List<dynamic>> _insuranceFuture;
   ApiBaseHelper _api = ApiBaseHelper();
   InheritedContainerState _container;
-  String insuranceId;
+  String insuranceId, insuranceImage, insuranceName;
 
   bool _isLoading = false;
-  Map appointmentData = new Map();
   Map providerMap;
-  String name, avatar, cashPayment = "0", fee = "0.0";
-  double totalFee;
-  List feeList = List();
+  String name, avatar, cashPayment = "0";
+  double totalFee = 0.0;
+
+  Map _profileMap = {};
+
+  List _providerInsuranceList = [];
 
   @override
   void didChangeDependencies() {
@@ -40,60 +44,38 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
     if (widget.isPayment) {
       _container = InheritedContainer.of(context);
+      Map _providerData = _container.getProviderData();
+      Map _servicesMap = _container.selectServiceMap;
 
-      if (_container.providerResponse != null) {
-        providerMap = _container.providerResponse;
-
-        if (providerMap["providerData"] != null) {
-          if (providerMap["providerData"]["doctorData"] != null) {
-            for (dynamic detail in providerMap["providerData"]["doctorData"]) {
-              if (detail["paymentMethod"] != null) {
-                cashPayment =
-                    detail["paymentMethod"]["cashPayment"]?.toString() ?? "0";
-              }
-            }
-          }
-
-          if (providerMap["providerData"]["data"] != null) {
-            appointmentData = providerMap["providerData"]["data"];
-          } else {
-            appointmentData = providerMap["providerData"];
-          }
-        }
-
-        if (appointmentData["doctor"] != null) {
-          name = appointmentData["doctor"]["fullName"]?.toString() ?? "---";
-          avatar = appointmentData["doctor"]["avatar"];
-        }
-      }
-
-      if (appointmentData["doctorData"] != null) {
-        for (dynamic detail in appointmentData["doctorData"]) {
-          if (detail["consultanceFee"] != null) {
-            for (dynamic consultanceFee in detail["consultanceFee"]) {
-              fee = consultanceFee["fee"]?.toString() ?? "0.0";
-            }
-          }
-        }
-      }
-
-      if (providerMap["totalFee"] != null) {
-        totalFee = double.parse(providerMap["totalFee"]);
+      if (_providerData["providerData"]["data"] != null) {
+        _providerData["providerData"]["data"].map((f) {
+          _profileMap.addAll(f);
+        }).toList();
       } else {
-        if (appointmentData["services"] != null) {
-          feeList = appointmentData["services"];
-        }
+        _profileMap = _providerData["providerData"];
+      }
 
-        if (feeList.length > 0) {
-          totalFee = feeList.fold(
-              0, (sum, item) => sum + double.parse(item["amount"].toString()));
-        } else {
-          if (appointmentData["parking"] != null) {
-            totalFee = double.parse(
-                    appointmentData["parking"]["fee"]?.toString() ?? "0.0") +
-                double.parse(fee);
-          }
+      if (_servicesMap["status"].toString() == "1") {
+        if (_servicesMap["services"] != null) {
+          List<Services> _servicesList = _servicesMap["services"];
+
+          totalFee = _servicesList.fold(
+              0, (sum, item) => sum + double.parse(item.amount.toString()));
         }
+      } else {
+        List _consultaceList = _servicesMap["consultaceFee"];
+
+        totalFee = _consultaceList[0]["fee"].toDouble();
+      }
+
+      if (_profileMap["paymentMethod"] != null) {
+        cashPayment =
+            _profileMap["paymentMethod"]["cashPayment"]?.toString() ?? "0";
+      }
+
+      if (_profileMap["insuranceId"] != null) {
+        _providerInsuranceList = _profileMap["insuranceId"];
+        _container.setProviderInsuranceMap(_providerInsuranceList);
       }
     }
 
@@ -138,39 +120,36 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                       child: FancyButton(
                         title: "Pay \$$totalFee",
                         onPressed: () {
-                          if (_radioValue != null) {
-                            _loading(true);
-                            Map map = new Map();
+                          Map _paymentMap = new Map();
 
-                            if (_radioValue == 3) {
-                              map["cashPayment"] = "1";
-                            } else if (_radioValue == 1) {
-                            } else {
-                              map["insuranceId"] = insuranceId;
-                            }
-                            SharedPref().getToken().then((token) {
-                              _api
-                                  .postPayment(
-                                      token,
-                                      _container
-                                          .appointmentIdMap["appointmentId"]
-                                          .toString(),
-                                      map)
-                                  .then((value) {
-                                _loading(false);
-                                showThankDialog();
-                              }).futureError((error) {
-                                _loading(false);
-                                error.toString().debugLog();
-                              });
-                            });
+                          if (_radioValue != null) {
+                            if (_radioValue == 2) {
+                              _paymentMap["paymentType"] = "1";
+                            } else if (_radioValue == 1) {}
+
+                            _container.setConsentToTreatData(
+                                "paymentMap", _paymentMap);
+
+                            Navigator.of(context)
+                                .pushNamed(Routes.reviewAppointmentScreen);
+                          } else if (_listRadioValue != null) {
+                            _paymentMap["paymentType"] = "2";
+                            _paymentMap["insuranceId"] = insuranceId;
+                            _paymentMap["insuranceName"] = insuranceName;
+                            _paymentMap["insuranceImage"] = insuranceImage;
+
+                            _container.setConsentToTreatData(
+                                "paymentMap", _paymentMap);
+
+                            Navigator.of(context)
+                                .pushNamed(Routes.reviewAppointmentScreen);
                           } else {
                             Widgets.showToast("Please select a payment method");
                           }
                         },
                       ),
                     ),
-                  )
+                  ),
           ],
         ),
       ),
@@ -180,14 +159,16 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   List<Widget> _widgetList() {
     List<Widget> _widgetList = List();
 
-    _widgetList.add(Text(
-      "Saved Cards",
-      style: TextStyle(
-        fontSize: 14.0,
-        fontWeight: FontWeight.w500,
-        color: Colors.black.withOpacity(0.93),
+    _widgetList.add(
+      Text(
+        "Saved Cards",
+        style: TextStyle(
+          fontSize: 14.0,
+          fontWeight: FontWeight.w500,
+          color: Colors.black.withOpacity(0.93),
+        ),
       ),
-    ));
+    );
 
     _widgetList.add(SizedBox(height: 12.0));
 
@@ -223,7 +204,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
     _widgetList.add(paymentCard(
       "ic_cash_payment",
       "Cash/Check",
-      3,
+      2,
     ));
 
     return _widgetList;
@@ -255,6 +236,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                 itemBuilder: (context, index) {
                   return Container(
                     padding: const EdgeInsets.all(8.0),
+                    margin: const EdgeInsets.only(top: 12),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(14.0)),
@@ -288,16 +270,24 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                   child: Radio(
                                     activeColor: AppColors.persian_blue,
                                     value: index,
-                                    groupValue: _radioValue,
+                                    groupValue: _listRadioValue,
                                     materialTapTargetSize:
                                         MaterialTapTargetSize.shrinkWrap,
-                                    onChanged: !_container.providerInsuranceList
-                                            .contains(data[index]["insuranceId"]
+                                    onChanged: !_providerInsuranceList.contains(
+                                            data[index]["insuranceId"]
                                                 .toString())
                                         ? null
                                         : (int value) {
-                                            setState(() => _radioValue = value);
+                                            setState(() {
+                                              _radioValue = null;
+                                              _listRadioValue = value;
+                                            });
+
                                             insuranceId = data[index]["_id"];
+                                            insuranceName =
+                                                data[index]["insuranceName"];
+                                            insuranceImage = data[index]
+                                                ["insuranceDocumentFront"];
                                           },
                                   ),
                                 ),
@@ -396,6 +386,9 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                   () => SharedPref().getToken().then(
                     (token) {
                       setState(() {
+                        _listRadioValue = null;
+                        _radioValue = null;
+
                         _insuranceFuture = _api
                             .getUserDetails(token)
                             .timeout(Duration(seconds: 20));
@@ -520,12 +513,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
     );
   }
 
-  void _loading(bool load) {
-    setState(() {
-      _isLoading = load;
-    });
-  }
-
-  void _handleRadioValueChange(int value) =>
-      setState(() => _radioValue = value);
+  void _handleRadioValueChange(int value) => setState(() {
+        _radioValue = value;
+        _listRadioValue = null;
+      });
 }
