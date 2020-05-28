@@ -57,6 +57,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   Map _servicesMap = new Map();
   Map<String, String> _reviewAppointmentData = Map();
   Map _consentToTreatMap;
+  String paymentType, insuranceName, insuranceImage, insuranceId;
 
   List<dynamic> _consultaceList = List();
 
@@ -106,6 +107,20 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     _appointmentData = _container.appointmentData;
     _userLocationMap = _container.userLocationMap;
     _consentToTreatMap = _container.consentToTreatMap;
+
+    if (_consentToTreatMap["paymentMap"] != null) {
+      paymentType = _consentToTreatMap["paymentMap"]["paymentType"];
+
+      if (_consentToTreatMap["paymentMap"]["insuranceId"] != null) {
+        insuranceId = _consentToTreatMap["paymentMap"]["insuranceId"];
+      }
+      if (_consentToTreatMap["paymentMap"]["insuranceName"] != null) {
+        insuranceName = _consentToTreatMap["paymentMap"]["insuranceName"];
+      }
+      if (_consentToTreatMap["paymentMap"]["insuranceImage"] != null) {
+        insuranceImage = _consentToTreatMap["paymentMap"]["insuranceImage"];
+      }
+    }
 
     if (_providerData["providerData"]["data"] != null) {
       averageRating =
@@ -230,6 +245,59 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     );
   }
 
+  Widget paymentWidget(
+      String paymentType, String insuranceName, String insuranceImage) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Payment Method",
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(height: 18.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              paymentType == "1"
+                  ? Image.asset("images/ic_cash_payment.png",
+                      height: 42, width: 42)
+                  : insuranceImage == null
+                      ? Image.asset("images/insurancePlaceHolder.png",
+                          height: 42, width: 42)
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.network(
+                            ApiBaseHelper.imageUrl + insuranceImage,
+                            height: 42,
+                            width: 42,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+              SizedBox(width: 14.0),
+              Expanded(
+                child: Text(
+                  paymentType == "1" ? "Cash" : insuranceName,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                    fontSize: 14.0,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   _bookAppointment() async {
     try {
       SharedPref().getToken().then((token) async {
@@ -260,6 +328,14 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             _consentToTreatMap["isTreatmentReceived"];
         request.fields['description'] =
             _consentToTreatMap["description"].toString().trim();
+
+        if (paymentType != null) {
+          if (paymentType == "1") {
+            request.fields['cashPayment'] = "1";
+          } else if (paymentType == "2") {
+            request.fields['insuranceId'] = insuranceId;
+          }
+        }
 
         if (_consentToTreatMap["medicalHistory"] != null &&
             _consentToTreatMap["medicalHistory"].length > 0) {
@@ -401,6 +477,10 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                       ),
                     ),
                     onPressed: () {
+                      _container.consentToTreatMap.clear();
+                      _container.getProviderData().clear();
+                      _container.appointmentData.clear();
+
                       Navigator.of(context).pushNamedAndRemoveUntil(
                         Routes.dashboardScreen,
                         (Route<dynamic> route) => false,
@@ -463,6 +543,10 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
     _widgetList.add(
       servicesWidget(),
+    );
+
+    _widgetList.add(
+      paymentWidget(paymentType, insuranceName, insuranceImage),
     );
 
     _widgetList.add(_initialPosition == null
@@ -545,7 +629,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             ],
           ));
 
-    _widgetList.add(duePaymentWidget());
+    _widgetList.add(paymentType == "3" ? duePaymentWidget() : Container());
 
     return _widgetList;
   }
@@ -599,7 +683,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           ),
           SizedBox(height: 5),
           Text(
-            "Payment will be due after the request is accepted.",
+            "You will only be charged when the request has been accepted.",
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w500,
@@ -739,7 +823,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   Widget serviceSlotWidget(Services services) {
     return ListTile(
       title: Text(
-        services.serviceName ?? "---",
+        services.subServiceName ?? "---",
         style: TextStyle(
           fontSize: 14.0,
           fontWeight: FontWeight.w600,
