@@ -14,7 +14,10 @@ import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/widgets.dart';
 
 class AppointmentDetailScreen extends StatefulWidget {
-  const AppointmentDetailScreen({Key key}) : super(key: key);
+  const AppointmentDetailScreen({Key key, this.appointmentStatus})
+      : super(key: key);
+
+  final String appointmentStatus;
 
   @override
   _AppointmentDetailScreenState createState() =>
@@ -45,6 +48,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     super.initState();
 
     setSourceAndDestinationIcons();
+
+    _appointmentStatus = widget.appointmentStatus ?? "---";
   }
 
   @override
@@ -231,8 +236,6 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       }
     }
 
-    _appointmentStatus = _providerData["status"]?.toString() ?? "---";
-
     if (_providerData["doctor"] != null) {
       name = _providerData["doctor"]["fullName"]?.toString() ?? "---";
       avatar = _providerData["doctor"]["avatar"];
@@ -302,42 +305,6 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         ),
                       ],
                     ),
-                    paymentType != 0 ? Container() : SizedBox(height: 4.0),
-                    paymentType != 0 ||
-                            _appointmentStatus == "2" ||
-                            _appointmentStatus == "6"
-                        ? Container()
-                        : RawMaterialButton(
-                            materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
-                            onPressed: () {
-                              Navigator.of(context).pushNamed(
-                                Routes.paymentMethodScreen,
-                                arguments: true,
-                              );
-                            },
-                            child: Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 4.0),
-                                  child: Text(
-                                    "Confirm payment",
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      color: AppColors.windsor,
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 10.0,
-                                  color: AppColors.windsor,
-                                ),
-                              ],
-                            ),
-                          ),
                   ],
                 ),
               ),
@@ -356,7 +323,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                           fontSize: 22.0,
                           fontWeight: FontWeight.w600,
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),

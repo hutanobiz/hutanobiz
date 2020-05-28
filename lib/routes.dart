@@ -152,8 +152,15 @@ class Routes {
         return _buildRoute(settings, ProviderProfileScreen());
         break;
       case appointmentDetailScreen:
-        return _buildRoute(settings, AppointmentDetailScreen());
-        break;
+        if (args is String) {
+          return _buildRoute(
+            settings,
+            AppointmentDetailScreen(
+              appointmentStatus: args,
+            ),
+          );
+        }
+        return _errorRoute();
       case rateDoctorScreen:
         if (args is bool) {
           return _buildRoute(
