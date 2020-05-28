@@ -27,6 +27,13 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
     super.didChangeDependencies();
 
     _container = InheritedContainer.of(context);
+
+    Map _consentToTreatMap = _container.consentToTreatMap;
+
+    if (_consentToTreatMap["imagesList"] != null &&
+        _consentToTreatMap["imagesList"].length > 0) {
+      imagesList = _consentToTreatMap["imagesList"];
+    }
   }
 
   @override

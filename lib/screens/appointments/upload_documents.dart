@@ -29,9 +29,15 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
 
   @override
   void didChangeDependencies() {
-    _container = InheritedContainer.of(context);
-
     super.didChangeDependencies();
+
+    _container = InheritedContainer.of(context);
+    Map _consentToTreatMap = _container.consentToTreatMap;
+
+    if (_consentToTreatMap["docsList"] != null &&
+        _consentToTreatMap["docsList"].length > 0) {
+      docsList = _consentToTreatMap["docsList"];
+    }
   }
 
   @override
@@ -47,8 +53,11 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
           if (docsList != null && docsList.length > 0) {
             _container.setConsentToTreatData("docsList", docsList);
           }
-          
-          Navigator.of(context).pushNamed(Routes.reviewAppointmentScreen);
+
+          Navigator.of(context).pushNamed(
+            Routes.paymentMethodScreen,
+            arguments: true,
+          );
         },
         color: Colors.white,
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
