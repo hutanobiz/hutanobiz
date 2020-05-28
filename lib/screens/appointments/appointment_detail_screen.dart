@@ -12,7 +12,6 @@ import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/widgets.dart';
-import 'package:intl/intl.dart';
 
 class AppointmentDetailScreen extends StatefulWidget {
   const AppointmentDetailScreen({Key key}) : super(key: key);
@@ -116,7 +115,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                   _appointmentStatus == "6"
                               ? null
                               : () => Navigator.of(context)
-                                  .pushNamed(Routes.trackTreatmentScreen),
+                                  .pushNamed(Routes.trackTreatmentScreen)
+                                  .whenComplete(
+                                    () => appointmentDetailsFuture(),
+                                  ),
                         ),
                       ),
                     ),
@@ -206,6 +208,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           }
 
           address = (business["address"]?.toString() ?? "---") +
+              ", " +
+              (business["street"]?.toString() ?? "---") +
               ", " +
               (business["city"]?.toString() ?? "---") +
               ", " +
@@ -377,9 +381,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         ),
         divider(topPadding: 18.0),
         dateTimeWidget(
-            DateFormat(
-              'EEEE, dd MMMM, ',
-            ).format(DateTime.parse(_providerData['date']).toLocal()).toString(),
+            _providerData['date'].toString().formatDate(
+                  dateFormat: "EEEE, dd MMMM, ",
+                ),
             _providerData["fromTime"].toString(),
             _providerData["toTime"].toString()),
         divider(topPadding: 8.0),
