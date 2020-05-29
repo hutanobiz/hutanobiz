@@ -105,6 +105,11 @@ extension StatusExt on String {
         statusTextColor = AppColors.emerald;
         backgroundColor = AppColors.emerald.withOpacity(0.12);
         break;
+      case "5":
+        status = "Cancelled";
+        statusTextColor = AppColors.alizarin_crimson;
+        backgroundColor = AppColors.alizarin_crimson.withOpacity(0.12);
+        break;
     }
     return isAddBackground
         ? Container(
