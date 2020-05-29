@@ -154,10 +154,9 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
 
     String doctorEducation = "",
         address,
-        todaysTimings,
-        tomorrowsTimings = "---",
-        averageRating = "---",
-        tomorrowsDay = "---";
+        todaysTimings = "",
+        tomorrowsTimings = "",
+        averageRating = "---";
 
     LatLng latLng = LatLng(0, 0);
 
@@ -190,54 +189,40 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     if (_providerData['schedules'] != null &&
         _providerData['schedules'].length > 0) {
       scheduleList = _providerData['schedules'];
-      Map scheduleMap = Map();
 
-      scheduleList.map((f) => scheduleMap.addAll(f)).toList();
-
-      List dayList = scheduleMap["day"];
       DateTime now = DateTime.now();
 
-      for (dynamic days in dayList) {
-        if (now.weekday.toString() == days.toString()) {
-          todaysTimings =
-              scheduleMap["fromTime"] + " - " + scheduleMap["toTime"] + " ; ";
-        }
+      int i = 0;
+      int j = 0;
 
-        if ((now.weekday + 1).toString() == days.toString()) {
-          tomorrowsDay = 1.nextDay();
+      while (i < scheduleList.length) {
+        List _scheduleDaysList = scheduleList[i]["day"];
+        if (j < _scheduleDaysList.length) {
+          String day = _scheduleDaysList[j].toString();
 
-          tomorrowsTimings =
-              scheduleMap["fromTime"] + " - " + scheduleMap["toTime"] + " ; ";
-          break;
-        } else if ((now.weekday + 2).toString() == days.toString()) {
-          tomorrowsDay = 2.nextDay();
-          tomorrowsTimings =
-              scheduleMap["fromTime"] + " - " + scheduleMap["toTime"] + " ; ";
-          break;
-        } else if ((now.weekday + 3).toString() == days.toString()) {
-          tomorrowsDay = 3.nextDay();
-          tomorrowsTimings =
-              scheduleMap["fromTime"] + " - " + scheduleMap["toTime"] + " ; ";
-          break;
-        } else if ((now.weekday + 4).toString() == days.toString()) {
-          tomorrowsDay = 4.nextDay();
-          tomorrowsTimings =
-              scheduleMap["fromTime"] + " - " + scheduleMap["toTime"] + " ; ";
-          break;
-        } else if ((now.weekday + 5).toString() == days.toString()) {
-          tomorrowsDay = 5.nextDay();
-          tomorrowsTimings =
-              scheduleMap["fromTime"] + " - " + scheduleMap["toTime"] + " ; ";
-          break;
-        } else if ((now.weekday + 6).toString() == days.toString()) {
-          tomorrowsDay = 6.nextDay();
-          tomorrowsTimings =
-              scheduleMap["fromTime"] + " - " + scheduleMap["toTime"] + " ; ";
-          break;
+          if (now.weekday.toString() == day) {
+            todaysTimings = todaysTimings +
+                scheduleList[i]["fromTime"] +
+                " - " +
+                scheduleList[i]["toTime"] +
+                " ; ";
+          }
+
+          if ((now.weekday + 1).toString() == day) {
+            tomorrowsTimings = tomorrowsTimings +
+                scheduleList[i]["fromTime"] +
+                " - " +
+                scheduleList[i]["toTime"] +
+                " ; ";
+          }
+
+          j++;
+        } else {
+          i++;
+          j = 0;
         }
       }
     }
-    //TODO: available timings in progress
 
     if (_providerData["businessLocation"] != null) {
       dynamic business = _providerData["businessLocation"];
@@ -462,7 +447,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                   TextSpan(
                       text: DateFormat('EEEE').format(DateTime.now()) + " "),
                   TextSpan(
-                    text: todaysTimings != null
+                    text: todaysTimings != null && todaysTimings != ""
                         ? todaysTimings.substring(0, todaysTimings.length - 3)
                         : "NO timings available for today",
                     style: TextStyle(
@@ -481,11 +466,15 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                   fontWeight: FontWeight.w600,
                 ),
                 children: <TextSpan>[
-                  TextSpan(text: tomorrowsDay + " "),
                   TextSpan(
-                    text: tomorrowsTimings.substring(
-                            0, tomorrowsTimings.length - 3) ??
-                        "---",
+                      text: DateFormat('EEEE')
+                              .format(DateTime.now().add(Duration(days: 1))) +
+                          " "),
+                  TextSpan(
+                    text: tomorrowsTimings != null && tomorrowsTimings != ""
+                        ? tomorrowsTimings.substring(
+                            0, tomorrowsTimings.length - 3)
+                        : "NO timings available",
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
                     ),
@@ -497,10 +486,11 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
             RawMaterialButton(
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               onPressed: () {
-                // Navigator.of(context).pushNamed(
-                //   Routes.availableTimingsScreen,
-                // );
-              }, //TODO: all timings screen
+                _container.setProviderData("providerData", profileMapResponse);
+                Navigator.of(context).pushNamed(
+                  Routes.availableTimingsScreen,
+                );
+              },
               child: Row(
                 children: <Widget>[
                   Padding(
