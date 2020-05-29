@@ -10,6 +10,7 @@ class ProviderWidget extends StatelessWidget {
     this.bookAppointment,
     this.isOptionsShow = true,
     this.averageRating,
+    this.margin,
   })  : assert(data != null),
         super(key: key);
 
@@ -17,6 +18,7 @@ class ProviderWidget extends StatelessWidget {
   final String degree, averageRating;
   final Function bookAppointment;
   final bool isOptionsShow;
+  final EdgeInsets margin;
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +34,7 @@ class ProviderWidget extends StatelessWidget {
       }
     } else if (data["userId"] != null) {
       if (data["userId"]["consultanceFee"] != null) {
-        for (dynamic consultanceFee in data["userId"]
-            ["consultanceFee"]) {
+        for (dynamic consultanceFee in data["userId"]["consultanceFee"]) {
           fee = consultanceFee["fee"].toString() ?? "---";
         }
       }
@@ -58,7 +59,7 @@ class ProviderWidget extends StatelessWidget {
     }
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 22.0),
+      margin:margin?? const EdgeInsets.only(bottom: 22.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(
