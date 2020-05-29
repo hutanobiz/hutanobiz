@@ -213,7 +213,7 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> deleteRequestAppointment(String token, Map rateDoctorData) {
+  Future<dynamic> cancelAppointment(String token, Map rateDoctorData) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };

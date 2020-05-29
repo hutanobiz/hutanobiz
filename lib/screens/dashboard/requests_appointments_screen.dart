@@ -445,20 +445,24 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                         SharedPref().getToken().then((token) {
                           Map appointmentIdAmp = Map();
 
-                          if (response["_id"].toString() != null)
+                          if (response["_id"].toString() != null) {
                             appointmentIdAmp["appointmentId"] =
                                 response["_id"].toString();
-                          _api
-                              .deleteRequestAppointment(token, appointmentIdAmp)
-                              .then((deleteResponse) {
-                            Widgets.showToast(
-                                "Appointment cancelled successfully");
+                            appointmentIdAmp["status"] = "5";
 
-                            setState(() {
-                              _requestsFuture = _api.appointmentRequests(token);
-                            });
-                          }).futureError(
-                                  (onError) => onError.toString().debugLog());
+                            _api
+                                .cancelAppointment(token, appointmentIdAmp)
+                                .then((deleteResponse) {
+                              Widgets.showToast(
+                                  "Appointment cancelled successfully");
+
+                              setState(() {
+                                _requestsFuture =
+                                    _api.appointmentRequests(token);
+                              });
+                            }).futureError(
+                                    (onError) => onError.toString().debugLog());
+                          }
                         });
                       },
                     );
