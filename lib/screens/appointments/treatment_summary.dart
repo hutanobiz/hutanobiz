@@ -29,6 +29,8 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
   String initiated = "---";
   String completed = "---";
   String serviceType = "---";
+  String primaryDiagnosis = "---";
+  String secondaryDiagnosis = "---";
   String doctorName, doctorSign;
 
   Map followUpMap = Map();
@@ -144,6 +146,12 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
           type = userMap["type"]?.toString() ?? "---";
         }
       }
+      if (appointmentData["medicalDiagnosis"] != null) {
+        primaryDiagnosis =
+            appointmentData["medicalDiagnosis"]["primary"] ?? "---";
+        secondaryDiagnosis =
+            appointmentData["medicalDiagnosis"]["secondary"] ?? "---";
+      }
     }
   }
 
@@ -244,6 +252,25 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                 ),
               ),
               SizedBox(height: 12),
+              divider(),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
+                child: Text(
+                  "Diagnose",
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                child: adverseWidget("Primary diagnoses", primaryDiagnosis),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+                child: adverseWidget("Secondary diagnoses", secondaryDiagnosis),
+              ),
               divider(),
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
@@ -504,7 +531,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
           subtitle,
           style: TextStyle(
             fontSize: 11,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w400,
             color: Colors.black.withOpacity(0.73),
           ),
         ),
