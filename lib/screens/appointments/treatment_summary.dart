@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
@@ -494,8 +496,8 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
         children: <Widget>[
           ClipRRect(
             borderRadius: BorderRadius.circular(6),
-            child: Image.network(
-              ApiBaseHelper.base_url + doctorSign,
+            child: Image.memory(
+              base64Decode(doctorSign),
               width: 140,
               height: 60,
               fit: BoxFit.cover,
@@ -509,6 +511,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
               color: Colors.black,
             ),
           ),
+          SizedBox(height: 6.0),
         ],
       ),
     );
