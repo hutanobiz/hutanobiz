@@ -263,6 +263,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
         degree: degree.toString(),
         averageRating: averageRating,
         isOptionsShow: false,
+        isProverPicShow: true,
       ),
     ));
 
