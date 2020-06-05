@@ -6,9 +6,7 @@ import 'package:hutano/screens/dashboard/requests_appointments_screen.dart';
 import 'package:hutano/screens/dashboard/setting.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key key, this.isRequestAppointment}) : super(key: key);
-
-  final bool isRequestAppointment;
+  HomeScreen({Key key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -16,18 +14,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
-  bool isRequestAppointment = false;
-
-  @override
-  void initState() {
-    super.initState();
-
-    if (widget.isRequestAppointment != null) {
-      isRequestAppointment = widget.isRequestAppointment;
-    }
-
-    _currentIndex = isRequestAppointment ? 2 : 0;
-  }
 
   final List<Widget> _children = [
     DashboardScreen(),
