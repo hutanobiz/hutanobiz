@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/round_corner_checkbox.dart';
 import 'package:hutano/widgets/widgets.dart';
@@ -14,6 +17,7 @@ class ConsentToTreatScreen extends StatefulWidget {
 
 class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
   bool isAgree = false;
+  String _name = "";
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +42,10 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
   }
 
   List<Widget> widgetList() {
+    SharedPref()
+        .getValue("fullName")
+        .then((value) => setState(() => _name = value ?? "---"));
+
     List<Widget> formWidget = new List();
 
     formWidget.add(Column(
@@ -54,7 +62,7 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
 
     formWidget.add(Center(
       child: RoundCornerCheckBox(
-        title: "I Agree",
+        title: "I $_name Agree",
         value: isAgree,
         onCheck: (value) => setState(() => isAgree = !isAgree),
       ),
