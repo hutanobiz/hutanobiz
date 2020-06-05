@@ -182,6 +182,8 @@ class _LoginState extends State<LoginScreen> {
           Routes.dashboardScreen, (Route<dynamic> route) => false);
 
       SharedPref().saveToken(response["tokens"][0]["token"].toString());
+      SharedPref().setValue("fullName", response["fullName"].toString());
+      
     }).futureError((error) {
       setLoading(false);
       error.toString().debugLog();
