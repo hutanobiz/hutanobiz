@@ -128,8 +128,13 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
                 ApiBaseHelper api = new ApiBaseHelper();
                 Map<String, String> loginData = Map();
+                String phonenumber = _phoneNumberController.text.substring(1, 4) +
+                    "" +
+                    _phoneNumberController.text.substring(6, 9) +
+                    "" +
+                    _phoneNumberController.text.substring(10, 14);
                 loginData["phoneNumber"] =
-                    _phoneNumberController.text.toString();
+                    phonenumber;
                 loginData["step"] = "1";
                 api.resetPassword(loginData).then((dynamic user) {
                   setLoading(false);
@@ -140,9 +145,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     context,
                     Routes.verifyOtpRoute,
                     arguments: RegisterArguments(
-                        Validations.getCleanedNumber(
-                          _phoneNumberController.text,
-                        ),
+                        phonenumber,
+                        
                         true),
                   );
                 }).futureError((error) {

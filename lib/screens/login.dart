@@ -164,12 +164,19 @@ class _LoginState extends State<LoginScreen> {
       title: Strings.logIn,
       onPressed: isButtonEnable()
           ? () {
-              _loginDataMap["phoneNumber"] =
-                  _phoneNumberController.text.toString();
-              _loginDataMap["password"] = _passwordController.text.toString();
-              _loginDataMap["type"] = "1";
+SharedPref().getValue("deviceToken").then((value) {
+                String phonenumber = _phoneNumberController.text.substring(1, 4) +
+                    "" +
+                    _phoneNumberController.text.substring(6, 9) +
+                    "" +
+                    _phoneNumberController.text.substring(10, 14);
+                _loginDataMap["phoneNumber"] = phonenumber;
+                _loginDataMap["deviceToken"] = value;
+                _loginDataMap["password"] = _passwordController.text.toString();
+                _loginDataMap["type"] = "1";
 
-              onLoginApi();
+                onLoginApi();
+              });
             }
           : null,
     ));

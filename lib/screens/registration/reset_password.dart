@@ -155,7 +155,7 @@ class _ResetPasswordState extends State<ResetPassword> {
 
                 ApiBaseHelper api = new ApiBaseHelper();
                 Map<String, String> loginData = Map();
-                loginData["email"] = email;
+                loginData["phoneNumber"] = email;
                 loginData["step"] = "3";
                 loginData["password"] = _passwordController.text;
                 api.resetPassword(loginData).then((dynamic user) {
