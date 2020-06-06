@@ -230,7 +230,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                 width: MediaQuery.of(context).size.width - 76.0,
                 padding: const EdgeInsets.only(right: 20.0, left: 20.0),
                 child: FancyButton(
-                  title: "Send Office Request",
+                  title: "Book Appointment",
                   buttonIcon: "ic_send_request",
                   buttonColor: AppColors.windsor,
                   onPressed: () {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/routes.dart';
 
 class ProviderWidget extends StatelessWidget {
   ProviderWidget({
@@ -10,6 +11,7 @@ class ProviderWidget extends StatelessWidget {
     this.bookAppointment,
     this.isOptionsShow = true,
     this.averageRating,
+    this.isProverPicShow = false,
     this.margin,
   })  : assert(data != null),
         super(key: key);
@@ -17,7 +19,7 @@ class ProviderWidget extends StatelessWidget {
   final data;
   final String degree, averageRating;
   final Function bookAppointment;
-  final bool isOptionsShow;
+  final bool isOptionsShow, isProverPicShow;
   final EdgeInsets margin;
 
   @override
@@ -59,7 +61,7 @@ class ProviderWidget extends StatelessWidget {
     }
 
     return Container(
-      margin:margin?? const EdgeInsets.only(bottom: 22.0),
+      margin: margin ?? const EdgeInsets.only(bottom: 22.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(
@@ -74,20 +76,33 @@ class ProviderWidget extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Container(
-                  width: 58.0,
-                  height: 58.0,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: avatar == null
-                          ? AssetImage('images/profile_user.png')
-                          : NetworkImage(ApiBaseHelper.imageUrl + avatar),
-                      fit: BoxFit.cover,
-                    ),
-                    borderRadius: new BorderRadius.all(Radius.circular(50.0)),
-                    border: new Border.all(
-                      color: Colors.grey[300],
-                      width: 1.0,
+                Material(
+                  type: MaterialType.transparency,
+                  child: InkWell(
+                    splashColor: Colors.grey[200],
+                    onTap: isProverPicShow
+                        ? () => Navigator.of(context).pushNamed(
+                              Routes.providerImageScreen,
+                              arguments: avatar,
+                            )
+                        : null,
+                    child: Container(
+                      width: 58.0,
+                      height: 58.0,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: avatar == null
+                              ? AssetImage('images/profile_user.png')
+                              : NetworkImage(ApiBaseHelper.imageUrl + avatar),
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius:
+                            new BorderRadius.all(Radius.circular(50.0)),
+                        border: new Border.all(
+                          color: Colors.grey[300],
+                          width: 1.0,
+                        ),
+                      ),
                     ),
                   ),
                 ),

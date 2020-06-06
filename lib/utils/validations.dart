@@ -29,4 +29,17 @@ class Validations {
     else
       return null;
   }
+
+  static String validatePhone(String value) {
+    if (value.isEmpty) {
+      return null;
+    } else if (getCleanedNumber(value).length < 10)
+      return "Please enter a valid phone number";
+    else
+      return null;
+  }
+
+  static String getCleanedNumber(String text) {
+    return text.replaceAll(RegExp('[^0-9]+'), '');
+  }
 }

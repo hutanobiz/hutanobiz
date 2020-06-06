@@ -4,21 +4,23 @@ import 'package:hutano/utils/validations.dart';
 import '../strings.dart';
 
 class EmailTextField extends StatelessWidget {
-  const EmailTextField(
-      {this.emailKey,
-      this.style,
-      this.emailController,
-      this.suffixIcon,
-      this.prefixIcon,
-      this.isEnabled,
-      this.initialValue});
+  const EmailTextField({
+    this.emailKey,
+    this.style,
+    this.emailController,
+    this.suffixIcon,
+    this.prefixIcon,
+    this.isEnabled = true,
+    this.initialValue,
+    this.autofocus = true,
+  });
 
   final TextStyle style;
   final TextEditingController emailController;
   final Widget suffixIcon;
   final Widget prefixIcon;
   final GlobalKey<FormFieldState> emailKey;
-  final bool isEnabled;
+  final bool isEnabled, autofocus;
   final String initialValue;
 
   @override
@@ -26,10 +28,10 @@ class EmailTextField extends StatelessWidget {
     return TextFormField(
       key: emailKey,
       initialValue: initialValue,
-      autofocus: true,
+      autofocus: autofocus,
       autovalidate: true,
       maxLines: 1,
-      enabled: isEnabled ?? true,
+      enabled: isEnabled,
       keyboardType: TextInputType.emailAddress,
       style: style,
       validator: Validations.validateEmail,

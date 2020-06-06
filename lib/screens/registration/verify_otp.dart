@@ -4,6 +4,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/dimens.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/utils/validations.dart';
 import 'package:hutano/widgets/app_logo.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/loading_widget.dart';
@@ -20,7 +21,7 @@ class VerifyOTP extends StatefulWidget {
 }
 
 class _VerifyOTPState extends State<VerifyOTP> {
-  String email, otp;
+  String cleanedPhoneNumber, phoneNumber, otp;
   bool isForgot;
 
   bool isLoading = false;
@@ -29,7 +30,8 @@ class _VerifyOTPState extends State<VerifyOTP> {
   void initState() {
     super.initState();
 
-    email = widget.args.email;
+    phoneNumber = widget.args.phoneNumber;
+    cleanedPhoneNumber = Validations.getCleanedNumber(widget.args.phoneNumber);
     isForgot = widget.args.isForgot;
   }
 
@@ -71,7 +73,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
         ),
         Widgets.sizedBox(height: 5.0),
         Text(
-          email,
+          "+1 $phoneNumber",
           style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.normal),
         ),
       ],
@@ -111,7 +113,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                 Map<String, String> loginData = Map();
 
                 if (isForgot) {
-                  loginData["email"] = email;
+                  loginData["phoneNumber"] = cleanedPhoneNumber;
                   loginData["step"] = "2";
                   loginData["verificationCode"] = otp;
                   api.resetPassword(loginData).then((dynamic user) {
@@ -122,14 +124,14 @@ class _VerifyOTPState extends State<VerifyOTP> {
                     Navigator.pushNamed(
                       context,
                       Routes.resetPasswordRoute,
-                      arguments: RegisterArguments(email, false),
+                      arguments: RegisterArguments(phoneNumber, false),
                     );
                   }).futureError((error) {
                     setLoading(false);
                     error.toString().debugLog();
                   });
                 } else {
-                  loginData["email"] = email;
+                  loginData["phoneNumber"] = cleanedPhoneNumber;
                   loginData["type"] = "1";
                   loginData["step"] = "2";
                   loginData["fullName"] = "user";
@@ -140,7 +142,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                     Widgets.showToast("Verified successfully");
 
                     Navigator.pushNamed(context, Routes.registerRoute,
-                        arguments: RegisterArguments(email, false));
+                        arguments: RegisterArguments(phoneNumber, false));
                   }).futureError((error) {
                     setLoading(false);
                     error.toString().debugLog();
@@ -162,7 +164,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
 
           Map<String, String> loginData = Map();
           if (isForgot) {
-            loginData["email"] = email;
+            loginData["phoneNumber"] = cleanedPhoneNumber;
             loginData["step"] = "1";
             api.resetPassword(loginData).then((dynamic user) {
               setLoading(false);
@@ -172,7 +174,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
               error.toString().debugLog();
             });
           } else {
-            loginData["email"] = email;
+            loginData["phoneNumber"] = cleanedPhoneNumber;
             loginData["type"] = "1";
             loginData["step"] = "4";
             loginData["fullName"] = "user";

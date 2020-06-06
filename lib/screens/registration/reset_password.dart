@@ -46,7 +46,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   void initState() {
     super.initState();
 
-    email = widget.args.email;
+    email = widget.args.phoneNumber;
 
     _confirmPassController.addListener(() {
       setState(() {});

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/registration/register.dart';
 import 'package:hutano/utils/dimens.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/utils/validations.dart';
 import 'package:hutano/widgets/app_logo.dart';
-import 'package:hutano/widgets/email_widget.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/loading_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
@@ -18,24 +20,26 @@ class ForgetPassword extends StatefulWidget {
 }
 
 class _ForgetPasswordState extends State<ForgetPassword> {
-  final GlobalKey<FormFieldState> _emailKey = GlobalKey<FormFieldState>();
-  final _emailController = TextEditingController();
+  final GlobalKey<FormFieldState> _phoneNumberKey = GlobalKey<FormFieldState>();
+  final _phoneNumberController = TextEditingController();
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 14.0);
 
   bool isLoading = false;
 
+  final _mobileFormatter = UsNumberTextInputFormatter();
+
   @override
   void dispose() {
-    super.dispose();
+    _phoneNumberController.dispose();
 
-    _emailController.dispose();
+    super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
 
-    _emailController.addListener(() {
+    _phoneNumberController.addListener(() {
       setState(() {});
     });
   }
@@ -75,7 +79,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         ),
         Widgets.sizedBox(height: 10.0),
         Text(
-          "Please enter your e-mail address.\nWe will send you link to reset your password.",
+          "Please enter your phone number address.\nWe will send you link to reset your password.",
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.black26,
@@ -87,15 +91,31 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
     formWidget.add(Widgets.sizedBox(height: 42.0));
 
-    formWidget.add(EmailTextField(
-      emailKey: _emailKey,
-      emailController: _emailController,
-      style: style,
-      suffixIcon: Icon(
-        Icons.check_circle,
-        color: Colors.green,
+    formWidget.add(
+      TextFormField(
+        key: _phoneNumberKey,
+        controller: _phoneNumberController,
+        keyboardType: TextInputType.phone,
+        validator: Validations.validatePhone,
+        inputFormatters: [
+          LengthLimitingTextInputFormatter(14),
+          WhitelistingTextInputFormatter.digitsOnly,
+          _mobileFormatter,
+        ],
+        autocorrect: true,
+        decoration: InputDecoration(
+            labelText: "Phone",
+            prefix: Text(
+              "+1",
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey[300]),
+                borderRadius: BorderRadius.circular(5.0)),
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
       ),
-    ));
+    );
 
     formWidget.add(Widgets.sizedBox(height: 42.0));
 
@@ -108,7 +128,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
 
                 ApiBaseHelper api = new ApiBaseHelper();
                 Map<String, String> loginData = Map();
-                loginData["email"] = _emailController.text.toString();
+                loginData["phoneNumber"] =
+                    _phoneNumberController.text.toString();
                 loginData["step"] = "1";
                 api.resetPassword(loginData).then((dynamic user) {
                   setLoading(false);
@@ -118,7 +139,11 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                   Navigator.pushNamed(
                     context,
                     Routes.verifyOtpRoute,
-                    arguments: RegisterArguments(_emailController.text, true),
+                    arguments: RegisterArguments(
+                        Validations.getCleanedNumber(
+                          _phoneNumberController.text,
+                        ),
+                        true),
                   );
                 }).futureError((error) {
                   setLoading(false);
@@ -157,7 +182,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   }
 
   bool isButtonEnable() {
-    if (_emailController.text.isEmpty || !_emailKey.currentState.validate()) {
+    if (_phoneNumberController.text.isEmpty ||
+        !_phoneNumberKey.currentState.validate()) {
       return false;
     } else {
       return true;
