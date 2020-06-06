@@ -286,22 +286,18 @@ class Routes {
 
 CupertinoPageRoute _buildRoute(RouteSettings settings, Widget builder) {
   return CupertinoPageRoute(
-      settings: settings, maintainState: true, builder: (_) => builder
-      // builder: (_) => AnnotatedRegion<SystemUiOverlayStyle>(
-      //   value: SystemUiOverlayStyle(
-      //       statusBarIconBrightness: Brightness.dark,
-      //       statusBarColor: AppColors.snow),
-      //   child: builder,
-      // ),
-      );
+    settings: settings,
+    maintainState: true,
+    builder: (_) => builder,
+  );
 }
 
 class RegisterArguments {
-  final String email;
+  final String phoneNumber;
   final bool isForgot;
   final bool isProfileUpdate;
 
-  RegisterArguments(this.email, this.isForgot, {this.isProfileUpdate});
+  RegisterArguments(this.phoneNumber, this.isForgot, {this.isProfileUpdate});
 }
 
 class SearchArguments {
