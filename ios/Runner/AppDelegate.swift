@@ -13,6 +13,10 @@ func registerPlugins(registry: FlutterPluginRegistry) -> () {
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+    if #available(iOS 10.0, *) {
+      UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+    }
+
     GMSServices.provideAPIKey("AIzaSyAkq7DnUBTkddWXddoHAX02Srw6570ktx8")
     GeneratedPluginRegistrant.register(with: self)
     BackgroundLocatorPlugin.setPluginRegistrantCallback(registerPlugins)

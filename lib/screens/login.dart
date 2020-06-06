@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
@@ -47,6 +50,21 @@ class _LoginState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+    if (Platform.isIOS) {
+      _firebaseMessaging.requestNotificationPermissions(
+          const IosNotificationSettings(
+              sound: true, badge: true, alert: true, provisional: true));
+      _firebaseMessaging.onIosSettingsRegistered
+          .listen((IosNotificationSettings settings) {
+        print("Settings registered: $settings");
+      });
+    }
+    _firebaseMessaging.getToken().then((String token) {
+      SharedPref().setValue("deviceToken", token);
+      print(token);
+    });
 
     _emailController.addListener(() {
       setState(() {});
