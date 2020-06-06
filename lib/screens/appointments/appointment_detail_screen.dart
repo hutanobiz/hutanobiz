@@ -14,10 +14,9 @@ import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/widgets.dart';
 
 class AppointmentDetailScreen extends StatefulWidget {
-  const AppointmentDetailScreen({Key key, this.appointmentStatus})
-      : super(key: key);
+  const AppointmentDetailScreen({Key key, this.args}) : super(key: key);
 
-  final String appointmentStatus;
+  final Map args;
 
   @override
   _AppointmentDetailScreenState createState() =>
@@ -49,7 +48,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
     setSourceAndDestinationIcons();
 
-    _appointmentStatus = widget.appointmentStatus ?? "---";
+    _appointmentStatus = widget.args["_appointmentStatus"] ?? "---";
   }
 
   @override
@@ -66,8 +65,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       token.debugLog();
 
       setState(() {
-        _profileFuture = api.getAppointmentDetails(
-            token, _container.appointmentIdMap["appointmentId"]);
+        _profileFuture = api.getAppointmentDetails(token, widget.args["id"]);
       });
     });
   }

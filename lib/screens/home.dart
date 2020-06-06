@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
     SettingScreen(),
   ];
 
-   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
@@ -40,7 +40,19 @@ class _HomeScreenState extends State<HomeScreen> {
         initializationSettingsAndroid, initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: (String payload) async {
-     // Navigator.of(context).pushNamed(Routes.appointmentScreen);
+      setState(() {
+        print(payload);
+        var data = jsonDecode(payload);
+        Map appointment = {};
+        appointment["_appointmentStatus"] = "1";// TODO: static status
+        appointment["id"] = Platform.isIOS
+            ? data['appointmentId']
+            : data["data"]['appointmentId'];
+        Navigator.of(context).pushNamed(
+          Routes.appointmentDetailScreen,
+          arguments: appointment,
+        );
+      });
     });
   }
 
@@ -77,15 +89,27 @@ class _HomeScreenState extends State<HomeScreen> {
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
         setState(() {
-          //Navigator.of(context).pushNamed(Routes.appointmentScreen);
+          Map appointment = {};
+          appointment["_appointmentStatus"] = "1";
+          appointment["id"] = message["data"]['appointmentId'];
+          Navigator.of(context).pushNamed(
+            Routes.appointmentDetailScreen,
+            arguments: appointment,
+          );
         });
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
         setState(() {
-          // Navigator.popUntil(
-          //     context, (Route<dynamic> route) => route is PageRoute);
-          // Navigator.of(context).pushNamed(Routes.appointmentScreen);
+          Navigator.popUntil(
+              context, (Route<dynamic> route) => route is PageRoute);
+          Map appointment = {};
+          appointment["_appointmentStatus"] = "1";
+          appointment["id"] = message["data"]['appointmentId'];
+          Navigator.of(context).pushNamed(
+            Routes.appointmentDetailScreen,
+            arguments: appointment,
+          );
         });
       },
     );
