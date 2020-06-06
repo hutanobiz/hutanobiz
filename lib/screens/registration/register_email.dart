@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hutano/api/api_helper.dart';
-import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/registration/register.dart';
 import 'package:hutano/utils/dimens.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/utils/validations.dart';
 import 'package:hutano/widgets/app_logo.dart';
-import 'package:hutano/widgets/email_widget.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/loading_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
@@ -18,24 +19,26 @@ class RegisterEmail extends StatefulWidget {
 }
 
 class _RegisterEmailState extends State<RegisterEmail> {
-  final GlobalKey<FormFieldState> _emailKey = GlobalKey<FormFieldState>();
-  final _emailController = TextEditingController();
+  final GlobalKey<FormFieldState> _phoneNumberKey = GlobalKey<FormFieldState>();
+  final _phoneNumberController = TextEditingController();
+
+  final _mobileFormatter = UsNumberTextInputFormatter();
 
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 14.0);
   bool isLoading = false;
 
   @override
   void dispose() {
-    super.dispose();
+    _phoneNumberController.dispose();
 
-    _emailController.dispose();
+    super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
 
-    _emailController.addListener(() {
+    _phoneNumberController.addListener(() {
       setState(() {});
     });
   }
@@ -68,7 +71,7 @@ class _RegisterEmailState extends State<RegisterEmail> {
         ),
         Widgets.sizedBox(height: 10.0),
         Text(
-          "Please enter your Email.\n A 6 digit OTP will be sent to verify your email!",
+          "Please enter your Phone number.\n A 6 digit OTP will be sent to verify your phone number!",
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.black26,
@@ -80,16 +83,31 @@ class _RegisterEmailState extends State<RegisterEmail> {
 
     formWidget.add(Widgets.sizedBox(height: 42.0));
 
-    formWidget.add(EmailTextField(
-      emailKey: _emailKey,
-      emailController: _emailController,
-      style: style,
-      prefixIcon: Icon(Icons.email, color: AppColors.windsor, size: 13.0),
-      suffixIcon: Icon(
-        Icons.check_circle,
-        color: Colors.green,
+    formWidget.add(
+      TextFormField(
+        key: _phoneNumberKey,
+        controller: _phoneNumberController,
+        keyboardType: TextInputType.phone,
+        validator: Validations.validatePhone,
+        inputFormatters: [
+          LengthLimitingTextInputFormatter(14),
+          WhitelistingTextInputFormatter.digitsOnly,
+          _mobileFormatter,
+        ],
+        autocorrect: true,
+        decoration: InputDecoration(
+            labelText: "Phone",
+            prefix: Text(
+              "+1",
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey[300]),
+                borderRadius: BorderRadius.circular(5.0)),
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
       ),
-    ));
+    );
 
     formWidget.add(Widgets.sizedBox(height: 42.0));
 
@@ -103,7 +121,8 @@ class _RegisterEmailState extends State<RegisterEmail> {
                 ApiBaseHelper api = new ApiBaseHelper();
 
                 Map<String, String> loginData = Map();
-                loginData["email"] = _emailController.text.toString();
+                loginData["phoneNumber"] = Validations.getCleanedNumber(
+                    _phoneNumberController.text.toString());
                 loginData["type"] = "1";
                 loginData["step"] = "1";
                 loginData["fullName"] = "user";
@@ -115,7 +134,8 @@ class _RegisterEmailState extends State<RegisterEmail> {
                   Navigator.pushNamed(
                     context,
                     Routes.verifyOtpRoute,
-                    arguments: RegisterArguments(_emailController.text, false),
+                    arguments:
+                        RegisterArguments(_phoneNumberController.text, false),
                   );
                 }).futureError((error) {
                   setLoading(false);
@@ -131,7 +151,8 @@ class _RegisterEmailState extends State<RegisterEmail> {
   }
 
   bool isButtonEnable() {
-    if (_emailController.text.isEmpty || !_emailKey.currentState.validate()) {
+    if (_phoneNumberController.text.isEmpty ||
+        !_phoneNumberKey.currentState.validate()) {
       return false;
     } else {
       return true;

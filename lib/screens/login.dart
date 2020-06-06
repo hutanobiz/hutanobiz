@@ -1,14 +1,16 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/registration/register.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/dimens.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/utils/validations.dart';
 import 'package:hutano/widgets/app_logo.dart';
-import 'package:hutano/widgets/email_widget.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/loading_widget.dart';
 import 'package:hutano/widgets/password_widget.dart';
@@ -24,11 +26,13 @@ class LoginScreen extends StatefulWidget {
 class _LoginState extends State<LoginScreen> {
   Map<String, String> _loginDataMap = Map();
 
-  final GlobalKey<FormFieldState> _emailKey = GlobalKey<FormFieldState>();
+  final GlobalKey<FormFieldState> _phoneNumberKey = GlobalKey<FormFieldState>();
   final GlobalKey<FormFieldState> _passwordKey = GlobalKey<FormFieldState>();
 
-  final _emailController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  final _mobileFormatter = UsNumberTextInputFormatter();
 
   bool checked = false;
   bool _obscureText = true;
@@ -40,7 +44,7 @@ class _LoginState extends State<LoginScreen> {
   void dispose() {
     super.dispose();
 
-    _emailController.dispose();
+    _phoneNumberController.dispose();
     _passwordController.dispose();
   }
 
@@ -48,7 +52,7 @@ class _LoginState extends State<LoginScreen> {
   void initState() {
     super.initState();
 
-    _emailController.addListener(() {
+    _phoneNumberController.addListener(() {
       setState(() {});
     });
 
@@ -78,16 +82,31 @@ class _LoginState extends State<LoginScreen> {
 
     formWidget.add(AppLogo());
     formWidget.add(Widgets.sizedBox(height: 51.0));
-    formWidget.add(EmailTextField(
-      emailKey: _emailKey,
-      emailController: _emailController,
-      style: style,
-      prefixIcon: Icon(Icons.email, color: AppColors.windsor, size: 13.0),
-      suffixIcon: Icon(
-        Icons.check_circle,
-        color: Colors.green,
+    formWidget.add(
+      TextFormField(
+        key: _phoneNumberKey,
+        controller: _phoneNumberController,
+        keyboardType: TextInputType.phone,
+        validator: Validations.validatePhone,
+        inputFormatters: [
+          LengthLimitingTextInputFormatter(14),
+          WhitelistingTextInputFormatter.digitsOnly,
+          _mobileFormatter,
+        ],
+        autocorrect: true,
+        decoration: InputDecoration(
+            labelText: "Phone",
+            prefix: Text(
+              "+1",
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey[300]),
+                borderRadius: BorderRadius.circular(5.0)),
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
       ),
-    ));
+    );
     formWidget.add(Widgets.sizedBox(height: 30.0));
     formWidget.add(PasswordTextField(
       passwordKey: _passwordKey,
@@ -127,7 +146,8 @@ class _LoginState extends State<LoginScreen> {
       title: Strings.logIn,
       onPressed: isButtonEnable()
           ? () {
-              _loginDataMap["email"] = _emailController.text.toString();
+              _loginDataMap["phoneNumber"] =
+                  _phoneNumberController.text.toString();
               _loginDataMap["password"] = _passwordController.text.toString();
               _loginDataMap["type"] = "1";
 
@@ -183,7 +203,6 @@ class _LoginState extends State<LoginScreen> {
 
       SharedPref().saveToken(response["tokens"][0]["token"].toString());
       SharedPref().setValue("fullName", response["fullName"].toString());
-      
     }).futureError((error) {
       setLoading(false);
       error.toString().debugLog();
@@ -197,7 +216,8 @@ class _LoginState extends State<LoginScreen> {
   }
 
   bool isButtonEnable() {
-    if (_emailController.text.isEmpty || !_emailKey.currentState.validate()) {
+    if (_phoneNumberController.text.isEmpty ||
+        !_phoneNumberKey.currentState.validate()) {
       return false;
     } else if (_passwordController.text.isEmpty ||
         !_passwordKey.currentState.validate()) {

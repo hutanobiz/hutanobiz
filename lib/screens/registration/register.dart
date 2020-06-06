@@ -10,12 +10,12 @@ import 'package:http/http.dart' as http;
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/strings.dart';
 import 'package:hutano/utils/dimens.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/utils/validations.dart';
 import 'package:hutano/widgets/app_logo.dart';
+import 'package:hutano/widgets/email_widget.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/loading_widget.dart';
 import 'package:hutano/widgets/password_widget.dart';
@@ -46,7 +46,6 @@ class _SignUpFormState extends State<Register> {
   String stateId = "";
 
   String _genderGroup = "";
-  final _mobileFormatter = UsNumberTextInputFormatter();
 
   ApiBaseHelper api = new ApiBaseHelper();
   List stateList;
@@ -59,7 +58,7 @@ class _SignUpFormState extends State<Register> {
 
   final GlobalKey<FormFieldState> _emailKey = GlobalKey<FormFieldState>();
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 14.0);
-  String email, token;
+  String phoneNumber, token;
   File profileImage;
   bool isLoading = false;
   DateTime _selectedDate;
@@ -72,7 +71,7 @@ class _SignUpFormState extends State<Register> {
   @override
   void initState() {
     super.initState();
-    email = widget.args.email;
+    phoneNumber = widget.args.phoneNumber;
 
     if (widget.args.isProfileUpdate != null) {
       isUpdateProfile = widget.args.isProfileUpdate;
@@ -126,15 +125,11 @@ class _SignUpFormState extends State<Register> {
 
               _firstNameController.text = res["firstName"]?.toString();
               _lastNameController.text = res["lastName"]?.toString();
-              String phoneNumber =
-                            res['phoneNumber']?.toString();
-               phoneNumber = "(" +
-                            phoneNumber.substring(0, 3) +
-                            ") " +
-                            phoneNumber.substring(3, 6) +
-                            "-" +
-                            phoneNumber.substring(6, phoneNumber.length);
-              _phoneController.text = phoneNumber;
+
+              if (res['phoneNumber'] != null) {
+                _phoneController.text = res['phoneNumber'].toString();
+              }
+
               _addressController.text = res['address']?.toString();
               _cityController.text = res['city']?.toString();
               _stateController.text = res["state"]["title"]?.toString();
@@ -322,20 +317,15 @@ class _SignUpFormState extends State<Register> {
     formWidget.add(Widgets.sizedBox(height: 29.0));
 
     formWidget.add(
-      TextFormField(
-        key: _emailKey,
-        initialValue: email,
-        autofocus: true,
-        autovalidate: true,
-        maxLines: 1,
-        enabled: false,
-        keyboardType: TextInputType.emailAddress,
+      EmailTextField(
+        emailKey: _emailKey,
+        autofocus: false,
+        emailController: _emailController,
         style: style,
-        validator: Validations.validateEmail,
-        decoration: InputDecoration(
-          labelStyle: TextStyle(color: Colors.grey),
-          labelText: Strings.emailText,
-          border: OutlineInputBorder(),
+        prefixIcon: Icon(Icons.email, color: AppColors.windsor, size: 13.0),
+        suffixIcon: Icon(
+          Icons.check_circle,
+          color: Colors.green,
         ),
       ),
     );
@@ -396,13 +386,8 @@ class _SignUpFormState extends State<Register> {
       Padding(
         padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
         child: TextFormField(
-          controller: _phoneController,
-          inputFormatters: [
-            WhitelistingTextInputFormatter.digitsOnly,
-            _mobileFormatter,
-          ],
-          autocorrect: true,
-          maxLength: 14,
+          initialValue: phoneNumber,
+          enabled: false,
           decoration: InputDecoration(
               labelText: "Phone",
               prefix: Text(
@@ -595,7 +580,7 @@ class _SignUpFormState extends State<Register> {
 
   _register() async {
     Map<String, String> loginData = Map();
-    loginData["email"] = email;
+    loginData["email"] = _emailController.text;
     loginData["fullName"] =
         "${_firstNameController.text} ${_lastNameController.text}";
     loginData["firstName"] = _firstNameController.text;
@@ -611,14 +596,10 @@ class _SignUpFormState extends State<Register> {
     loginData["city"] = _cityController.text;
     loginData["state"] = _stateController.text;
     loginData["zipCode"] = _zipController.text;
-    String phonenumber = _phoneController.text.substring(1, 4) +
-                    "" +
-                    _phoneController.text.substring(6, 9) +
-                    "" +
-                    _phoneController.text.substring(10, 14);
-    loginData["phoneNumber"] = phonenumber;
+    loginData["phoneNumber"] = Validations.getCleanedNumber(phoneNumber);
     loginData["gender"] = _genderGroup.trim().toString() == "male" ? "1" : "2";
     loginData["state"] = stateId;
+    loginData["deviceToken"] = "deviceToken1230"; //TODO: change device token
 
     if (isUpdateProfile) {
       if (loginData["dob"] != null) {
@@ -631,7 +612,7 @@ class _SignUpFormState extends State<Register> {
     }
 
     try {
-      setLoading(true);
+      // setLoading(true);
       Uri uri = Uri.parse(ApiBaseHelper.base_url +
           (isUpdateProfile ? "api/profile/update" : "auth/api/register"));
       http.MultipartRequest request = http.MultipartRequest('POST', uri);
@@ -682,9 +663,9 @@ class _SignUpFormState extends State<Register> {
           Navigator.of(context).pop();
         } else {
           SharedPref()
-              .saveToken(responseJson["response"][0]["tokens"][0]["token"]);
+              .saveToken(responseJson["response"]["tokens"][0]["token"]);
           SharedPref()
-              .setValue("fullName", responseJson["response"][0]["fullName"]);
+              .setValue("fullName", responseJson["response"]["fullName"]);
           SharedPref().setValue("complete", "0");
 
           Widgets.showToast("Profile created successfully");
@@ -823,13 +804,15 @@ class _SignUpFormState extends State<Register> {
   bool isValidate() {
     if (_firstNameController.text.isEmpty ||
         _lastNameController.text.isEmpty ||
-        _phoneController.text.isEmpty ||
+        _emailController.text.isEmpty ||
         _passwordController.text.isEmpty ||
         _addressController.text.isEmpty ||
         _cityController.text.isEmpty ||
         _stateController.text.isEmpty ||
         _genderGroup.isEmpty ||
         _zipController.text.isEmpty)
+      return false;
+    else if (!_emailKey.currentState.validate())
       return false;
     else if (_zipController.text.length != 5)
       return false;
