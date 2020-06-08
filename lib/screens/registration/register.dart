@@ -125,6 +125,7 @@ class _SignUpFormState extends State<Register> {
 
               _firstNameController.text = res["firstName"]?.toString();
               _lastNameController.text = res["lastName"]?.toString();
+              _emailController.text = res["email"]?.toString();
 
               if (res['phoneNumber'] != null) {
                 _phoneController.text = res['phoneNumber'].toString();
@@ -612,7 +613,7 @@ class _SignUpFormState extends State<Register> {
     }
 
     try {
-      // setLoading(true);
+      setLoading(true);
       Uri uri = Uri.parse(ApiBaseHelper.base_url +
           (isUpdateProfile ? "api/profile/update" : "auth/api/register"));
       http.MultipartRequest request = http.MultipartRequest('POST', uri);
