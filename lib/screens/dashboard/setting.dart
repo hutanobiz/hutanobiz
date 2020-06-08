@@ -232,7 +232,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                             context,
                             Routes.registerRoute,
                             arguments: RegisterArguments(
-                              email,
+                              phone,
                               false,
                               isProfileUpdate: true,
                             ),
