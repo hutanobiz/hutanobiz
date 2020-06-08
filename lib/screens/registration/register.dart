@@ -816,7 +816,7 @@ class _SignUpFormState extends State<Register> {
         _genderGroup.isEmpty ||
         _zipController.text.isEmpty)
       return false;
-    else if (!_emailKey.currentState.validate())
+    else if (_emailKey.currentContext== null || !_emailKey.currentState.validate())
       return false;
     else if (_zipController.text.length != 5)
       return false;

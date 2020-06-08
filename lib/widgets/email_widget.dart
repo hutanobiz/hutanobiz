@@ -40,7 +40,7 @@ class EmailTextField extends StatelessWidget {
         labelStyle: TextStyle(color: Colors.grey),
         labelText: Strings.emailText,
         suffixIcon:
-            emailController.text.isNotEmpty && emailKey.currentState.validate()
+            emailController.text.isNotEmpty && emailKey.currentState != null && emailKey.currentState.validate()
                 ? suffixIcon
                 : null,
         prefixIcon: prefixIcon != null ? prefixIcon : null,
