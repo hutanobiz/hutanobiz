@@ -58,7 +58,7 @@ class _SignUpFormState extends State<Register> {
 
   final GlobalKey<FormFieldState> _emailKey = GlobalKey<FormFieldState>();
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 14.0);
-  String phoneNumber, token;
+  String phoneNumber, token,deviceToken;
   File profileImage;
   bool isLoading = false;
   DateTime _selectedDate;
@@ -71,6 +71,9 @@ class _SignUpFormState extends State<Register> {
   @override
   void initState() {
     super.initState();
+    SharedPref().getValue("deviceToken").then((value) {
+      deviceToken = value;
+    });
     phoneNumber = widget.args.phoneNumber;
 
     if (widget.args.isProfileUpdate != null) {
@@ -591,6 +594,7 @@ class _SignUpFormState extends State<Register> {
       loginData["type"] = "1";
       loginData["step"] = "3";
       loginData["password"] = _passwordController.text;
+       loginData["deviceToken"] = deviceToken;
     }
 
     loginData["address"] = _addressController.text;
@@ -600,7 +604,6 @@ class _SignUpFormState extends State<Register> {
     loginData["phoneNumber"] = Validations.getCleanedNumber(phoneNumber);
     loginData["gender"] = _genderGroup.trim().toString() == "male" ? "1" : "2";
     loginData["state"] = stateId;
-    loginData["deviceToken"] = "deviceToken1230"; //TODO: change device token
 
     if (isUpdateProfile) {
       if (loginData["dob"] != null) {

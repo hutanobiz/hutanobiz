@@ -255,10 +255,13 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           splashColor: Colors.grey[200],
           onTap: () {
             _container.setAppointmentId(response["_id"].toString());
+            Map appointment = {};
+            appointment["_appointmentStatus"] = _appointmentStatus;
+            appointment["id"] = response["_id"];
             Navigator.of(context)
                 .pushNamed(
                   Routes.appointmentDetailScreen,
-                  arguments: _appointmentStatus,
+                  arguments: appointment,
                 )
                 .whenComplete(() => appointmentsFuture());
           },

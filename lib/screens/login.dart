@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -51,6 +54,21 @@ class _LoginState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+    if (Platform.isIOS) {
+      _firebaseMessaging.requestNotificationPermissions(
+          const IosNotificationSettings(
+              sound: true, badge: true, alert: true, provisional: true));
+      _firebaseMessaging.onIosSettingsRegistered
+          .listen((IosNotificationSettings settings) {
+        print("Settings registered: $settings");
+      });
+    }
+    _firebaseMessaging.getToken().then((String token) {
+      SharedPref().setValue("deviceToken", token);
+      print(token);
+    });
 
     _phoneNumberController.addListener(() {
       setState(() {});
@@ -146,12 +164,19 @@ class _LoginState extends State<LoginScreen> {
       title: Strings.logIn,
       onPressed: isButtonEnable()
           ? () {
-              _loginDataMap["phoneNumber"] =
-                  _phoneNumberController.text.toString();
-              _loginDataMap["password"] = _passwordController.text.toString();
-              _loginDataMap["type"] = "1";
+SharedPref().getValue("deviceToken").then((value) {
+                String phonenumber = _phoneNumberController.text.substring(1, 4) +
+                    "" +
+                    _phoneNumberController.text.substring(6, 9) +
+                    "" +
+                    _phoneNumberController.text.substring(10, 14);
+                _loginDataMap["phoneNumber"] = phonenumber;
+                _loginDataMap["deviceToken"] = value;
+                _loginDataMap["password"] = _passwordController.text.toString();
+                _loginDataMap["type"] = "1";
 
-              onLoginApi();
+                onLoginApi();
+              });
             }
           : null,
     ));
