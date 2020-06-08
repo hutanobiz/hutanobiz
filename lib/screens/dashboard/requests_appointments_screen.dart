@@ -192,7 +192,6 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
     if (response["doctor"] != null) {
       name = response["doctor"]["fullName"]?.toString() ?? "---";
       avatar = response["doctor"]["avatar"].toString();
-      address = response["doctor"]["address"]?.toString() ?? "---";
     }
 
     if (response["DoctorProfessionalDetail"] != null) {
