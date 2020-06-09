@@ -58,7 +58,7 @@ class _SignUpFormState extends State<Register> {
 
   final GlobalKey<FormFieldState> _emailKey = GlobalKey<FormFieldState>();
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 14.0);
-  String phoneNumber, token,deviceToken;
+  String phoneNumber, token, deviceToken;
   File profileImage;
   bool isLoading = false;
   DateTime _selectedDate;
@@ -71,9 +71,11 @@ class _SignUpFormState extends State<Register> {
   @override
   void initState() {
     super.initState();
+
     SharedPref().getValue("deviceToken").then((value) {
       deviceToken = value;
     });
+
     phoneNumber = widget.args.phoneNumber;
 
     if (widget.args.isProfileUpdate != null) {
@@ -156,8 +158,6 @@ class _SignUpFormState extends State<Register> {
 
   @override
   void dispose() {
-    super.dispose();
-
     _firstNameController.dispose();
     _lastNameController.dispose();
     _emailController.dispose();
@@ -168,6 +168,8 @@ class _SignUpFormState extends State<Register> {
     _phoneController.dispose();
     _passwordController.dispose();
     _dobController.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -184,6 +186,7 @@ class _SignUpFormState extends State<Register> {
         child: LoadingView(
           isLoading: isLoading,
           child: ListView(
+            shrinkWrap: true,
             children: getFormWidget(),
             padding: const EdgeInsets.fromLTRB(
                 Dimens.padding, 51.0, Dimens.padding, Dimens.padding),
@@ -594,7 +597,7 @@ class _SignUpFormState extends State<Register> {
       loginData["type"] = "1";
       loginData["step"] = "3";
       loginData["password"] = _passwordController.text;
-       loginData["deviceToken"] = deviceToken;
+      loginData["deviceToken"] = deviceToken;
     }
 
     loginData["address"] = _addressController.text;
@@ -816,7 +819,8 @@ class _SignUpFormState extends State<Register> {
         _genderGroup.isEmpty ||
         _zipController.text.isEmpty)
       return false;
-    else if (_emailKey.currentContext== null || !_emailKey.currentState.validate())
+    else if (_emailKey.currentContext == null ||
+        !_emailKey.currentState.validate())
       return false;
     else if (_zipController.text.length != 5)
       return false;

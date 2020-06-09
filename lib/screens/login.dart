@@ -45,16 +45,16 @@ class _LoginState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    super.dispose();
-
     _phoneNumberController.dispose();
     _passwordController.dispose();
+
+    super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
     if (Platform.isIOS) {
       _firebaseMessaging.requestNotificationPermissions(
@@ -164,12 +164,13 @@ class _LoginState extends State<LoginScreen> {
       title: Strings.logIn,
       onPressed: isButtonEnable()
           ? () {
-SharedPref().getValue("deviceToken").then((value) {
-                String phonenumber = _phoneNumberController.text.substring(1, 4) +
-                    "" +
-                    _phoneNumberController.text.substring(6, 9) +
-                    "" +
-                    _phoneNumberController.text.substring(10, 14);
+              SharedPref().getValue("deviceToken").then((value) {
+                String phonenumber =
+                    _phoneNumberController.text.substring(1, 4) +
+                        "" +
+                        _phoneNumberController.text.substring(6, 9) +
+                        "" +
+                        _phoneNumberController.text.substring(10, 14);
                 _loginDataMap["phoneNumber"] = phonenumber;
                 _loginDataMap["deviceToken"] = value;
                 _loginDataMap["password"] = _passwordController.text.toString();
