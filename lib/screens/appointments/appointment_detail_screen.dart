@@ -393,7 +393,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                       onPressed: () => Navigator.of(context)
                           .pushNamed(
                             Routes.rateDoctorScreen,
-                            arguments: true,
+                            arguments: "2",
                           )
                           .whenComplete(() => appointmentDetailsFuture()),
                       label: Text(

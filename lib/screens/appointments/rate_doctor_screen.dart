@@ -10,8 +10,8 @@ import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 
 class RateDoctorScreen extends StatefulWidget {
-  final bool isFromAppDetail;
-  RateDoctorScreen({Key key, this.isFromAppDetail}) : super(key: key);
+  final String rateFrom;
+  RateDoctorScreen({Key key, this.rateFrom}) : super(key: key);
 
   @override
   _RateDoctorScreenState createState() => _RateDoctorScreenState();
@@ -520,12 +520,26 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                       int count = 0;
                       FocusScope.of(context).requestFocus(FocusNode());
 
-                      widget.isFromAppDetail
-                          ? Navigator.of(context).popUntil(
+                      if (widget.rateFrom != null) {
+                        switch (widget.rateFrom) {
+                          case "1":
+                            Navigator.of(context).popUntil((_) => count++ >= 2);
+                            break;
+                          case "2":
+                            Navigator.of(context).popUntil(
                               ModalRoute.withName(
                                   Routes.appointmentDetailScreen),
-                            )
-                          : Navigator.of(context).popUntil((_) => count++ >= 2);
+                            );
+                            break;
+                          case "3":
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                              Routes.dashboardScreen,
+                              (Route<dynamic> route) => false,
+                              arguments: true,
+                            );
+                            break;
+                        }
+                      }
                     })
               ],
             ),

@@ -462,7 +462,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                           Navigator.of(context)
                               .pushNamed(
                                 Routes.rateDoctorScreen,
-                                arguments: false,
+                                arguments: "1",
                               )
                               .whenComplete(() => appointmentsFuture());
                         })
