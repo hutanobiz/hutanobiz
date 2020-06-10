@@ -32,10 +32,10 @@
               "client_type": 3
             },
             {
-              "client_id": "135216344614-crfbjn4psrurqh0gf82855rf7i7ds5rn.apps.googleusercontent.com",
+              "client_id": "135216344614-3besb539f6nlprkk033m2d7pj0ps612r.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.hutanoprovider"
+                "bundle_id": "xyz.appening.hutano"
               }
             }
           ]
@@ -68,10 +68,10 @@
               "client_type": 3
             },
             {
-              "client_id": "135216344614-crfbjn4psrurqh0gf82855rf7i7ds5rn.apps.googleusercontent.com",
+              "client_id": "135216344614-3besb539f6nlprkk033m2d7pj0ps612r.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.hutanoprovider"
+                "bundle_id": "xyz.appening.hutano"
               }
             }
           ]

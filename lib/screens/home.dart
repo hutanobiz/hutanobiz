@@ -44,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
         print(payload);
         var data = jsonDecode(payload);
         Map appointment = {};
-        appointment["_appointmentStatus"] = "1";// TODO: static status
+        appointment["_appointmentStatus"] = "1"; // TODO: static status
         appointment["id"] = Platform.isIOS
             ? data['appointmentId']
             : data["data"]['appointmentId'];
@@ -58,8 +58,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void showNotification(message) async {
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-      Platform.isAndroid ? 'com.example.hutano' : 'com.duytq.flutterchatdemo',
-      'Flutter chat demo',
+      Platform.isAndroid ? 'xyz.appening.hutano' : 'xyz.appening.hutano',
+      'Hutano Patient',
       'your channel description',
       playSound: true,
       enableVibration: true,
@@ -85,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
         print("onMessage: $message");
         showNotification(message);
       },
-      onBackgroundMessage: myBackgroundMessageHandler,
+      onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
         setState(() {
