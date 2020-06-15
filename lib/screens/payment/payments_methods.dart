@@ -95,8 +95,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
       body: LoadingBackground(
         isLoading: _isLoading,
         title: widget.isPayment ? "Select Payment Methods" : "Payment Methods",
-        isAddBack: false,
-        addBackButton: true,
+        isAddBack: !widget.isPayment,
+        addBackButton: widget.isPayment,
         color: Colors.white,
         child: Stack(
           children: <Widget>[
@@ -492,7 +492,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                       ),
                     ),
                     child: Text(
-                      "Done",
+                      'Save',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.white,
