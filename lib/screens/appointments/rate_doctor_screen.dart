@@ -105,7 +105,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                 height: 55.0,
                 child: FancyButton(
                   title: "Submit",
-                  onPressed: rateMap.length >= 5
+                  onPressed: (_rating.round() >= 1)
                       ? () {
                           FocusScope.of(context).requestFocus(FocusNode());
 
@@ -134,16 +134,22 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
 
                           setState(() => _isLoading = true);
 
-                          SharedPref().getToken().then((token) {
-                            api.rateDoctor(token, rateMap).then((response) {
-                              setState(() => _isLoading = false);
+                          SharedPref().getToken().then(
+                            (token) {
+                              api.rateDoctor(token, rateMap).then(
+                                (response) {
+                                  setState(() => _isLoading = false);
 
-                              showThankDialog();
-                            }).futureError((onError) {
-                              setState(() => _isLoading = false);
-                              onError.toString().debugLog();
-                            });
-                          });
+                                  showThankDialog();
+                                },
+                              ).futureError(
+                                (onError) {
+                                  setState(() => _isLoading = false);
+                                  onError.toString().debugLog();
+                                },
+                              );
+                            },
+                          );
                         }
                       : null,
                 ),
