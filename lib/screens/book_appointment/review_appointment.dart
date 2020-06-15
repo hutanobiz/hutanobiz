@@ -151,19 +151,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
       getDistanceAndTime(_initialPosition, _desPosition);
     }
 
-    _bookedTime = _appointmentData["time"];
+    _setBookingTime(_appointmentData["time"]);
     _bookedDate = _appointmentData["date"];
-
-    if (_bookedTime.length < 4) {
-      if (_bookedTime[0] != "0") {
-        _bookedTime =
-            _bookedTime.substring(0, 2) + "0" + _bookedTime.substring(2);
-      } else {
-        _bookedTime = "0" + _bookedTime;
-      }
-    }
-    _timeHours = _bookedTime.substring(0, 2);
-    _timeMins = _bookedTime.substring(3);
 
     _servicesMap = _container.selectServiceMap;
 
@@ -192,6 +181,21 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     }
   }
 
+  void _setBookingTime(String bookTime) {
+    _bookedTime = bookTime;
+
+    if (_bookedTime.length < 4) {
+      if (_bookedTime[0] != "0") {
+        _bookedTime =
+            _bookedTime.substring(0, 2) + "0" + _bookedTime.substring(2);
+      } else {
+        _bookedTime = "0" + _bookedTime;
+      }
+    }
+    _timeHours = _bookedTime.substring(0, 2);
+    _timeMins = _bookedTime.substring(3);
+  }
+
   void setSourceAndDestinationIcons() async {
     _sourceIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
@@ -210,7 +214,6 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         color: AppColors.snow,
         isLoading: _isLoading,
         addBackButton: true,
-        buttonColor: AppColors.windsor,
         padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
         child: Stack(
           children: <Widget>[
@@ -232,10 +235,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                 child: FancyButton(
                   title: "Book Appointment",
                   buttonIcon: "ic_send_request",
-                  buttonColor: AppColors.windsor,
-                  onPressed: () {
-                    _bookAppointment();
-                  },
+                  onPressed: _bookAppointment,
                 ),
               ),
             ),
@@ -518,24 +518,30 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           (business["zipCode"]?.toString() ?? "---");
     }
 
-    _widgetList.add(Padding(
-      padding: const EdgeInsets.only(right: 20.0, left: 20.0),
-      child: ProviderWidget(
-        data: _profileMap,
-        degree: _providerData["degree"].toString(),
-        isOptionsShow: false,
-        averageRating: averageRating,
+    _widgetList.add(
+      Padding(
+        padding: const EdgeInsets.only(
+          right: 20.0,
+          left: 20.0,
+        ),
+        child: ProviderWidget(
+          data: _profileMap,
+          degree: _providerData["degree"].toString(),
+          isOptionsShow: false,
+          averageRating: averageRating,
+        ),
       ),
-    ));
+    );
 
-    _widgetList.add(SizedBox(height: 26.0));
-
-    _widgetList.add(container(
-        "Date & Time",
-        "${DateFormat('EEEE, dd MMMM').format(_bookedDate).toString()} " +
-            TimeOfDay(hour: int.parse(_timeHours), minute: int.parse(_timeMins))
-                .format(context),
-        "ic_calendar"));
+    _widgetList.add(
+      container(
+          "Date & Time",
+          "${DateFormat('EEEE, dd MMMM').format(_bookedDate).toString()} " +
+              TimeOfDay(
+                      hour: int.parse(_timeHours), minute: int.parse(_timeMins))
+                  .format(context),
+          "ic_calendar"),
+    );
 
     _widgetList.add(SizedBox(height: 12.0));
 
@@ -739,7 +745,21 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                         ).onClick(
                           roundCorners: false,
                           onTap: () {
-                            Navigator.of(context).pop();
+                            Navigator.of(context)
+                                .pushNamed(
+                              Routes.selectAppointmentTimeScreen,
+                              arguments: true,
+                            )
+                                .then((value) {
+                              if (value != null) {
+                                Map _editDateTimeData = value;
+
+                                setState(() {
+                                  _setBookingTime(_editDateTimeData["time"]);
+                                  _bookedDate = _editDateTimeData["date"];
+                                });
+                              }
+                            });
                           },
                         ),
                       ),
