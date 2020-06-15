@@ -13,6 +13,11 @@ import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 
 class SelectAppointmentTimeScreen extends StatefulWidget {
+  final bool isEditDateTime;
+
+  const SelectAppointmentTimeScreen({Key key, this.isEditDateTime})
+      : super(key: key);
+
   @override
   _SelectAppointmentTimeScreenState createState() =>
       _SelectAppointmentTimeScreenState();
@@ -38,9 +43,15 @@ class _SelectAppointmentTimeScreenState
   String currentDate;
   String averageRating = "0";
 
+  bool isEditDateTime = false;
+
   @override
   void initState() {
     super.initState();
+
+    if (widget.isEditDateTime != null) {
+      isEditDateTime = widget.isEditDateTime;
+    }
 
     currentDate = DateFormat('MM/dd/yyyy').format(DateTime.now());
     _selectedDate = DateTime.now();
@@ -111,8 +122,11 @@ class _SelectAppointmentTimeScreenState
             _container.setAppointmentData("date", _selectedDate);
             _container.setAppointmentData("time", _selectedTiming);
 
-            Navigator.of(context).pushNamed(Routes.consentToTreatScreen);
-            // Navigator.of(context).pushNamed(Routes.reviewAppointmentScreen);
+            if (isEditDateTime) {
+              Navigator.pop(context, _container.appointmentData);
+            } else {
+              Navigator.of(context).pushNamed(Routes.consentToTreatScreen);
+            }
           } else {
             Widgets.showToast("Please select a timing");
           }
@@ -275,7 +289,8 @@ class _SelectAppointmentTimeScreenState
                   itemCount: list.length,
                   itemBuilder: (context, index) {
                     return _slotWidget(list[index]);
-                  })
+                  },
+                )
               : Text("NO slots available"),
         )
       ],
@@ -311,7 +326,7 @@ class _SelectAppointmentTimeScreenState
         decoration: BoxDecoration(
           color: currentSchedule.isBlock
               ? Colors.grey.withOpacity(0.05)
-              : AppColors.snow,
+              : currentSchedule.isSelected ? AppColors.windsor : AppColors.snow,
           borderRadius: BorderRadius.all(Radius.circular(14.0)),
           border: Border.all(
               color: currentSchedule.isBlock
@@ -326,7 +341,7 @@ class _SelectAppointmentTimeScreenState
           style: TextStyle(
             color: currentSchedule.isBlock
                 ? Colors.grey.withOpacity(0.6)
-                : AppColors.windsor,
+                : currentSchedule.isSelected ? Colors.white : AppColors.windsor,
           ),
         ),
       ),
