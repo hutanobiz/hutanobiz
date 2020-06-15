@@ -74,7 +74,10 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
             _container.setServicesData("status", "0");
             _container.setServicesData(
                 "consultaceFee", profileMap["consultanceFee"]);
-            Navigator.of(context).pushNamed(Routes.selectAppointmentTimeScreen);
+            Navigator.of(context).pushNamed(
+              Routes.selectAppointmentTimeScreen,
+              arguments: false,
+            );
           }
         },
       ),

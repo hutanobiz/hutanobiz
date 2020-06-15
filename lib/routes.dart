@@ -145,7 +145,12 @@ class Routes {
         return _errorRoute();
 
       case selectAppointmentTimeScreen:
-        return _buildRoute(settings, SelectAppointmentTimeScreen());
+        return _buildRoute(
+          settings,
+          SelectAppointmentTimeScreen(
+            isEditDateTime: args,
+          ),
+        );
         break;
       case reviewAppointmentScreen:
         return _buildRoute(settings, ReviewAppointmentScreen());
@@ -219,7 +224,12 @@ class Routes {
         return _errorRoute();
         break;
       case uploadInsuranceImagesScreen:
-        return _buildRoute(settings, UploadInsuranceImagesScreen());
+        return _buildRoute(
+          settings,
+          UploadInsuranceImagesScreen(
+            isPayment: args,
+          ),
+        );
         break;
       case treatmentSummaryScreen:
         if (args is Map) {
