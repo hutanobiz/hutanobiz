@@ -17,8 +17,14 @@ import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:hutano/widgets/fancy_button.dart';
 
 class UploadInsuranceImagesScreen extends StatefulWidget {
+  final bool isPayment;
+
+  const UploadInsuranceImagesScreen({Key key, this.isPayment})
+      : super(key: key);
+
   @override
   _UploadInsuranceImagesScreenState createState() =>
       _UploadInsuranceImagesScreenState();
@@ -50,31 +56,44 @@ class _UploadInsuranceImagesScreenState
       body: LoadingBackground(
         title: "Upload Images",
         isLoading: _isLoading,
-        isAddBack: false,
-        addBottomArrows: true,
-        onForwardTap: () {
-          if (frontImagePath == null) {
-            Widgets.showToast("Please upload front insurance card image");
-          } else {
-            _uploadImage(
-              'Insurance card added successfully',
-            );
-          }
-        },
+        isAddBack: !widget.isPayment,
+        addBackButton: widget.isPayment,
+        onForwardTap: _uploadImages,
         color: Colors.white,
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
         child: Stack(
           children: <Widget>[
-            Container(
-              margin: const EdgeInsets.only(bottom: 65),
-              child: ListView(
-                children: widgetList(),
-              ),
+            ListView(
+              children: widgetList(),
             ),
+            if (widget.isPayment)
+              Container()
+            else
+              Align(
+                alignment: FractionalOffset.bottomCenter,
+                child: Container(
+                  height: 55.0,
+                  width: MediaQuery.of(context).size.width,
+                  child: FancyButton(
+                    title: 'Save',
+                    onPressed: _uploadImages,
+                  ),
+                ),
+              ),
           ],
         ),
       ),
     );
+  }
+
+  void _uploadImages() {
+    if (frontImagePath == null) {
+      Widgets.showToast("Please upload front insurance card image");
+    } else {
+      _uploadImage(
+        'Insurance card added successfully',
+      );
+    }
   }
 
   List<Widget> widgetList() {

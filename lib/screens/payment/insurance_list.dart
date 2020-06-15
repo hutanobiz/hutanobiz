@@ -5,6 +5,7 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/widgets.dart';
 
 class InsuranceListScreen extends StatefulWidget {
   final bool isPayment;
@@ -59,10 +60,16 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
                 margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                 width: MediaQuery.of(context).size.width,
                 child: FancyButton(
-                  title: "Done",
+                  title: 'Save',
                   onPressed: () {
-                    Navigator.of(context)
-                        .pushNamed(Routes.uploadInsuranceImagesScreen);
+                    if (_radioValue == null) {
+                      Widgets.showToast('Please select an insurance');
+                    } else {
+                      Navigator.of(context).pushNamed(
+                        Routes.uploadInsuranceImagesScreen,
+                        arguments: widget.isPayment,
+                      );
+                    }
                   },
                 ),
               ),
