@@ -176,8 +176,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         SizedBox(height: 6.0),
         InkWell(
-          onTap: () =>
-              Navigator.of(context).pushNamed(Routes.dashboardSearchScreen),
+          onTap: () {
+            conatiner.projectsResponse.clear();
+            Navigator.of(context).pushNamed(Routes.dashboardSearchScreen);
+          },
           child: Container(
             width: MediaQuery.of(context).size.width,
             padding: const EdgeInsets.fromLTRB(12.0, 15.0, 14.0, 14.0),

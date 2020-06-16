@@ -130,8 +130,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                         "providerData", profileMapResponse);
                     _container.setProviderData("degree", degree);
 
-                    if (_containerMap.containsKey("specialityId") ||
-                        _containerMap.containsKey("serviceId"))
+                    if (_containerMap.length < 3)
                       Navigator.of(context)
                           .pushNamed(Routes.appointmentTypeScreen);
                     else
