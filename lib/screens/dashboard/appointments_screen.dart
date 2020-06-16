@@ -18,8 +18,8 @@ class AppointmentsScreen extends StatefulWidget {
 class _AppointmentsScreenState extends State<AppointmentsScreen> {
   ApiBaseHelper _api = ApiBaseHelper();
 
-  List<dynamic> _pastList = List();
-  List<dynamic> _upcomingList = List();
+  List<dynamic> _closedAppointmentsList = List();
+  List<dynamic> _activeAppointmentsList = List();
 
   Future<dynamic> _requestsFuture;
   InheritedContainerState _container;
@@ -70,17 +70,18 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
               child: Text(snapshot.data),
             );
           } else {
-            _upcomingList = snapshot.data["presentRequest"];
-            _pastList = snapshot.data["pastRequest"];
+            _activeAppointmentsList = snapshot.data["presentRequest"];
+            _closedAppointmentsList = snapshot.data["pastRequest"];
           }
 
-          if (_upcomingList.isEmpty && _pastList.isEmpty)
+          if (_activeAppointmentsList.isEmpty &&
+              _closedAppointmentsList.isEmpty)
             return Center(
               child: Text("NO appointments yet!"),
             );
 
-          if (_upcomingList.length > 1) {
-            _upcomingList.sort((a, b) {
+          if (_activeAppointmentsList.length > 1) {
+            _activeAppointmentsList.sort((a, b) {
               var aDate = a['date'].toString() +
                   a["fromTime"].toString().timeOfDay(context) +
                   a["toTime"].toString().timeOfDay(context);
@@ -92,8 +93,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
             });
           }
 
-          if (_pastList.length > 1) {
-            _pastList.sort((a, b) {
+          if (_closedAppointmentsList.length > 1) {
+            _closedAppointmentsList.sort((a, b) {
               var aDate = a['date'].toString() +
                   a["fromTime"].toString().timeOfDay(context) +
                   a["toTime"].toString().timeOfDay(context);
@@ -110,13 +111,13 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  heading("Upcoming", _upcomingList, 1),
-                  _upcomingList.isNotEmpty
-                      ? _listWidget(_upcomingList, 1)
+                  heading("Active", _activeAppointmentsList, 1),
+                  _activeAppointmentsList.isNotEmpty
+                      ? _listWidget(_activeAppointmentsList, 1)
                       : Container(),
-                  heading("Past", _pastList, 2),
-                  _pastList.isNotEmpty
-                      ? _listWidget(_pastList, 2)
+                  heading("Closed", _closedAppointmentsList, 2),
+                  _closedAppointmentsList.isNotEmpty
+                      ? _listWidget(_closedAppointmentsList, 2)
                       : Container(),
                 ]),
           );
@@ -241,6 +242,11 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
       }
     }
 
+    _container.setAppointmentId(response["_id"].toString());
+    Map appointment = {};
+    appointment["_appointmentStatus"] = _appointmentStatus;
+    appointment["id"] = response["_id"];
+
     return Container(
       margin: const EdgeInsets.only(bottom: 22.0),
       decoration: BoxDecoration(
@@ -254,10 +260,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           borderRadius: BorderRadius.circular(14.0),
           splashColor: Colors.grey[200],
           onTap: () {
-            _container.setAppointmentId(response["_id"].toString());
-            Map appointment = {};
-            appointment["_appointmentStatus"] = _appointmentStatus;
-            appointment["id"] = response["_id"];
             Navigator.of(context)
                 .pushNamed(
                   Routes.appointmentDetailScreen,
@@ -444,14 +446,24 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
               ),
               Row(
                 children: <Widget>[
-                  listType == 2 && _appointmentStatus == "4"
-                      ? leftButton(userRating, "Treatment summary", () {
+                  listType == 1
+                      ? leftButton(listType, userRating, "View Details", () {
                           _container.setProviderData("providerData", response);
                           Navigator.of(context).pushNamed(
-                              Routes.treatmentSummaryScreen,
-                              arguments: response);
+                            Routes.appointmentDetailScreen,
+                            arguments: appointment,
+                          );
                         })
-                      : Container(),
+                      : listType == 2 && _appointmentStatus == "4"
+                          ? leftButton(
+                              listType, userRating, "Treatment summary", () {
+                              _container.setProviderData(
+                                  "providerData", response);
+                              Navigator.of(context).pushNamed(
+                                  Routes.treatmentSummaryScreen,
+                                  arguments: response);
+                            })
+                          : Container(),
                   listType == 2 &&
                           _appointmentStatus == "4" &&
                           userRating == null
@@ -476,16 +488,20 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     );
   }
 
-  Widget leftButton(String userRating, String title, Function onPressed) {
+  Widget leftButton(
+      int listType, String userRating, String title, Function onPressed) {
     return Expanded(
       child: FlatButton(
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        color: userRating != null ? AppColors.windsor : Colors.white,
+        color: listType == 1
+            ? AppColors.windsor
+            : (userRating != null ? AppColors.windsor : Colors.white),
         splashColor: Colors.grey[300],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-            bottomRight:
-                userRating != null ? Radius.circular(12.0) : Radius.zero,
+            bottomRight: listType == 1
+                ? Radius.circular(12.0)
+                : (userRating != null ? Radius.circular(12.0) : Radius.zero),
             bottomLeft: Radius.circular(12.0),
           ),
           side: BorderSide(width: 0.3, color: Colors.grey[300]),
@@ -495,7 +511,9 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           style: TextStyle(
             fontSize: 14.0,
             fontWeight: FontWeight.w500,
-            color: userRating != null ? Colors.white : AppColors.windsor,
+            color: listType == 1
+                ? Colors.white
+                : (userRating != null ? Colors.white : AppColors.windsor),
           ),
         ),
         onPressed: onPressed,
