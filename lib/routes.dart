@@ -123,7 +123,12 @@ class Routes {
         return _errorRoute();
         break;
       case appointmentTypeScreen:
-        return _buildRoute(settings, AppointmentTypeScreen());
+        return _buildRoute(
+          settings,
+          AppointmentTypeScreen(
+            appointmentTypeMap: args,
+          ),
+        );
         break;
       case chooseLocation:
         if (args is LatLng) {

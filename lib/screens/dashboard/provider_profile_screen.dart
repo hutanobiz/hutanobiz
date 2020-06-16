@@ -95,7 +95,10 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                         if (snapshot.hasData) {
                           profileMapResponse = snapshot.data;
 
-                          if (profileMapResponse.isEmpty) return Container();
+                          if (profileMapResponse.isEmpty ||
+                              profileMapResponse["data"] == null) {
+                            return Container();
+                          }
 
                           return SingleChildScrollView(
                             controller: _scrollController,
@@ -124,6 +127,16 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                 child: FancyButton(
                   title: "Schedule Appointment",
                   onPressed: () {
+                    Map _appointentTypeMap = {};
+
+                    dynamic response = profileMapResponse["data"][0];
+
+                    _appointentTypeMap["isOfficeEnabled"] =
+                        response["isOfficeEnabled"];
+                    _appointentTypeMap["isVideoChatEnabled"] =
+                        response["isVideoChatEnabled"];
+                    _appointentTypeMap["isOnsiteEnabled"] =
+                        response["isOnsiteEnabled"];
                     _container.providerResponse.clear();
 
                     _container.setProviderData(
@@ -131,8 +144,10 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                     _container.setProviderData("degree", degree);
 
                     if (_containerMap.length < 3)
-                      Navigator.of(context)
-                          .pushNamed(Routes.appointmentTypeScreen);
+                      Navigator.of(context).pushNamed(
+                        Routes.appointmentTypeScreen,
+                        arguments: _appointentTypeMap,
+                      );
                     else
                       Navigator.of(context)
                           .pushNamed(Routes.selectServicesScreen);
@@ -147,12 +162,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
   }
 
   List<Widget> widgetList(Map profileResponse) {
-    List response = profileResponse["data"];
-    Map _providerData = Map();
-
-    response.map((f) {
-      _providerData.addAll(f);
-    }).toList();
+    Map _providerData = profileResponse["data"][0];
 
     List languagesList = List();
 

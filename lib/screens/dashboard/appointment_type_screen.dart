@@ -6,7 +6,9 @@ import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 
 class AppointmentTypeScreen extends StatefulWidget {
-  AppointmentTypeScreen({Key key}) : super(key: key);
+  final Map appointmentTypeMap;
+
+  AppointmentTypeScreen({Key key, this.appointmentTypeMap}) : super(key: key);
 
   @override
   _AppointmentTypeScreenState createState() => _AppointmentTypeScreenState();
@@ -14,6 +16,20 @@ class AppointmentTypeScreen extends StatefulWidget {
 
 class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
   InheritedContainerState conatiner;
+  Map _appointentTypeMap = {};
+
+  @override
+  void initState() {
+    super.initState();
+
+    _appointentTypeMap["isOfficeEnabled"] = true;
+    _appointentTypeMap["isVideoChatEnabled"] = true;
+    _appointentTypeMap["isOnsiteEnabled"] = true;
+
+    if (widget.appointmentTypeMap != null) {
+      _appointentTypeMap = widget.appointmentTypeMap;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,43 +54,48 @@ class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
         cardView(
           'images/office_appointment.png',
           "Office Appointment",
+          _appointentTypeMap["isOfficeEnabled"],
         ),
         SizedBox(height: 20.0),
         cardView(
           'images/video_chat_appointment.png',
           "Video Chat Appointment",
+          _appointentTypeMap["isVideoChatEnabled"],
         ),
         SizedBox(height: 20.0),
         cardView(
           'images/onsite_appointment.png',
           "Onsite Appointment",
+          _appointentTypeMap["isOnsiteEnabled"],
         ),
       ],
     );
   }
 
-  Widget cardView(String image, String cardText) {
-    return CustomCardView(
-      onTap: () {
-        String type;
-        if (cardText.toLowerCase().contains("office")) {
-          type = "1";
-        } else if (cardText.toLowerCase().contains("video")) {
-          type = "2";
-        } else {
-          type = "3";
-        }
+  Widget cardView(String image, String cardText, bool isAppointmentTypeTrue) {
+    return !isAppointmentTypeTrue
+        ? Container()
+        : CustomCardView(
+            onTap: () {
+              String type;
+              if (cardText.toLowerCase().contains("office")) {
+                type = "1";
+              } else if (cardText.toLowerCase().contains("video")) {
+                type = "2";
+              } else {
+                type = "3";
+              }
 
-        conatiner.setProjectsResponse("serviceType", type);
+              conatiner.setProjectsResponse("serviceType", type);
 
-        if (conatiner.getProjectsResponse().length < 3)
-          Navigator.of(context).pushNamed(Routes.selectServicesScreen);
-        else
-          Navigator.pushNamed(context, Routes.providerListScreen);
-      },
-      image: image,
-      cardText: cardText,
-      fontWeight: FontWeight.bold,
-    );
+              if (conatiner.getProjectsResponse().length < 3)
+                Navigator.of(context).pushNamed(Routes.selectServicesScreen);
+              else
+                Navigator.pushNamed(context, Routes.providerListScreen);
+            },
+            image: image,
+            cardText: cardText,
+            fontWeight: FontWeight.bold,
+          );
   }
 }

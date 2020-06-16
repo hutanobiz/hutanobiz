@@ -153,7 +153,16 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
       padding: const EdgeInsets.only(bottom: 50),
       itemCount: _responseData.length,
       itemBuilder: (context, index) {
-        List educatonList = _responseData[index]["education"];
+        dynamic _provider = _responseData[index];
+
+        Map _appointentTypeMap = {};
+
+        _appointentTypeMap["isOfficeEnabled"] = _provider["isOfficeEnabled"];
+        _appointentTypeMap["isVideoChatEnabled"] =
+            _provider["isVideoChatEnabled"];
+        _appointentTypeMap["isOnsiteEnabled"] = _provider["isOnsiteEnabled"];
+
+        List educatonList = _provider["education"];
         String degree = "---";
 
         if (degreeMap != null)
@@ -165,24 +174,26 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
 
         return InkWell(
           onTap: () {
-            _container.setProviderId(_responseData[index]["userId"]["_id"]);
+            _container.setProviderId(_provider["userId"]["_id"]);
             Navigator.of(context).pushNamed(Routes.providerProfileScreen);
           },
           child: ProviderWidget(
-            data: _responseData[index],
+            data: _provider,
             degree: degree,
             averageRating:
-                _responseData[index]['averageRating']?.toStringAsFixed(2) ??
-                    "0",
+                _provider['averageRating']?.toStringAsFixed(2) ?? "0",
             bookAppointment: () {
               _container.getProviderData().clear();
 
-              _container.setProviderData("providerData", _responseData[index]);
+              _container.setProviderData("providerData", _provider);
               _container.setProviderData("degree", degree);
 
               if (_containerMap.containsKey("specialityId") ||
                   _containerMap.containsKey("serviceId"))
-                Navigator.of(context).pushNamed(Routes.appointmentTypeScreen);
+                Navigator.of(context).pushNamed(
+                  Routes.appointmentTypeScreen,
+                  arguments: _appointentTypeMap,
+                );
               else
                 Navigator.of(context).pushNamed(Routes.selectServicesScreen);
             },
