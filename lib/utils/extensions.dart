@@ -51,7 +51,9 @@ extension InkWellTap on Widget {
           if (context != null && routeName != null)
             Navigator.of(context).pushNamed(routeName);
 
-          onTap();
+          if (onTap != null) {
+            onTap();
+          }
         },
         child: this,
       ),
