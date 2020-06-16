@@ -768,22 +768,24 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             ],
           ),
           SizedBox(height: 12.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              icon.imageIcon(),
-              SizedBox(width: 8.0),
-              Text(
-                subtitle,
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
-                  fontSize: 14.0,
-                ),
+          RichText(
+            text: TextSpan(
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+                fontSize: 14.0,
               ),
-            ],
-          )
+              children: [
+                WidgetSpan(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: icon.imageIcon(),
+                  ),
+                ),
+                TextSpan(text: subtitle),
+              ],
+            ),
+          ),
         ],
       ),
     );
