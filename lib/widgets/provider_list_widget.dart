@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/extensions.dart';
 
 class ProviderWidget extends StatelessWidget {
   ProviderWidget({
@@ -13,6 +14,7 @@ class ProviderWidget extends StatelessWidget {
     this.averageRating,
     this.isProverPicShow = false,
     this.margin,
+    this.onRatingClick,
   })  : assert(data != null),
         super(key: key);
 
@@ -21,6 +23,7 @@ class ProviderWidget extends StatelessWidget {
   final Function bookAppointment;
   final bool isOptionsShow, isProverPicShow;
   final EdgeInsets margin;
+  final Function onRatingClick;
 
   @override
   Widget build(BuildContext context) {
@@ -120,12 +123,14 @@ class ProviderWidget extends StatelessWidget {
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        SizedBox(
-                          height: 5.0,
-                        ),
                         Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
+                          padding: const EdgeInsets.only(
+                            top: 5.0,
+                            bottom: 5.0,
+                            right: 5.0,
+                          ),
                           child: Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               Icon(
                                 Icons.star,
@@ -138,14 +143,16 @@ class ProviderWidget extends StatelessWidget {
                               Text(
                                 averageRating ?? "0",
                                 style: TextStyle(
+                                  decoration: onRatingClick != null
+                                      ? TextDecoration.underline
+                                      : TextDecoration.none,
                                   color: Colors.black.withOpacity(0.6),
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                        SizedBox(
-                          height: 4.0,
+                        ).onClick(
+                          onTap: onRatingClick != null ? onRatingClick : null,
                         ),
                         Text(
                           professionalTitle,
