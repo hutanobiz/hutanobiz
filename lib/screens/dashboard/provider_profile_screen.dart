@@ -29,7 +29,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
   Map profileMapResponse = Map();
   String degree;
   List speaciltyList = List();
-  List reviewsList = List();
+  List reviewsList = [];
 
   final Set<Marker> _markers = {};
   BitmapDescriptor sourceIcon;
@@ -501,7 +501,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
 
     formWidget.add(Padding(
       padding: const EdgeInsets.only(left: 20, bottom: 16),
-      child: Row(
+      child: Wrap(
+        runSpacing: 20,
         children: <Widget>[
           _providerData["isOfficeEnabled"]
               ? appoCard(
@@ -509,28 +510,30 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                   "Office\nAppointment",
                 )
               : Container(),
-          SizedBox(width: 20),
+          _providerData["isOfficeEnabled"] ? SizedBox(width: 20) : Container(),
           _providerData["isVideoChatEnabled"]
               ? appoCard(
                   'images/video_chat_appointment.png',
                   "Video\nAppointment",
                 )
-              : Container()
+              : (!_providerData["isVideoChatEnabled"] &&
+                      _providerData["isOnsiteEnabled"])
+                  ? appoCard(
+                      'images/onsite_appointment.png',
+                      "Onsite\nAppointment",
+                    )
+                  : Container(),
+          SizedBox(width: 20),
+          (_providerData["isVideoChatEnabled"] &&
+                  _providerData["isOnsiteEnabled"])
+              ? appoCard(
+                  'images/onsite_appointment.png',
+                  "Onsite\nAppointment",
+                )
+              : Container(),
         ],
       ),
     ));
-
-    formWidget.add(
-      Padding(
-        padding: const EdgeInsets.only(left: 20, bottom: 16),
-        child: _providerData["isOnsiteEnabled"]
-            ? appoCard(
-                'images/onsite_appointment.png',
-                "Onsite\nAppointment",
-              )
-            : Container(),
-      ),
-    );
 
     formWidget.add(divider());
 
@@ -644,9 +647,11 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
               padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
               child: Text("NO reviews available yet!"),
             )
-          : ListView.builder(
+          : ListView.separated(
+              separatorBuilder: (BuildContext context, int index) =>
+                  SizedBox(height: 20),
               physics: ClampingScrollPhysics(),
-              padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+              padding: const EdgeInsets.only(left: 20, right: 20),
               reverse: true,
               shrinkWrap: true,
               itemCount: reviewsList.length >= 2 ? 2 : reviewsList.length,
@@ -667,6 +672,30 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                 );
               },
             ),
+    );
+
+    formWidget.add(
+      (reviewsList != null && reviewsList.length >= 2)
+          ? Padding(
+              padding: const EdgeInsets.only(top: 20, left: 20),
+              child: FlatButton(
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                padding: EdgeInsets.zero,
+                onPressed: () => Navigator.pushNamed(
+                  context,
+                  Routes.allReviewsScreen,
+                  arguments: reviewsList,
+                ),
+                child: Text(
+                  "View all reviews",
+                  style: TextStyle(
+                    color: AppColors.windsor,
+                    fontSize: 13.0,
+                  ),
+                ),
+              ),
+            )
+          : Container(),
     );
 
     return formWidget;
@@ -703,12 +732,15 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
                         fontSize: 14.0,
-                        decoration: TextDecoration.underline,
+                        decoration: latLng == LatLng(0.0, 0.0)
+                            ? TextDecoration.none
+                            : TextDecoration.underline,
                       ),
                     ),
                   ).onClick(
                     roundCorners: false,
-                    onTap: latLng.launchMaps,
+                    onTap:
+                        latLng == LatLng(0.0, 0.0) ? null : latLng.launchMaps,
                   ),
                   SizedBox(width: 5.0),
                   Expanded(
@@ -716,7 +748,9 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                       alignment: Alignment.centerRight,
                       child: FlatButton(
                         padding: EdgeInsets.zero,
-                        onPressed: latLng.launchMaps,
+                        onPressed: latLng == LatLng(0.0, 0.0)
+                            ? null
+                            : latLng.launchMaps,
                         child: Text(
                           "Get Directions",
                           overflow: TextOverflow.ellipsis,
