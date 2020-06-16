@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' hide MapType;
 import 'package:hutano/api/api_helper.dart';
@@ -34,6 +35,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
   BitmapDescriptor sourceIcon;
   Completer<GoogleMapController> _controller = Completer();
   List scheduleList = List();
+
+  ScrollController _scrollController = new ScrollController();
 
   void setSourceAndDestinationIcons() async {
     sourceIcon = await BitmapDescriptor.fromAssetImage(
@@ -71,10 +74,9 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
         isAddBack: false,
         addBackButton: true,
         padding: const EdgeInsets.only(bottom: 20),
-        child: Stack(
+        child: Column(
           children: <Widget>[
-            Container(
-              margin: const EdgeInsets.only(bottom: 60),
+            Expanded(
               child: FutureBuilder(
                   future: _profileFuture,
                   builder: (context, snapshot) {
@@ -96,7 +98,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                           if (profileMapResponse.isEmpty) return Container();
 
                           return SingleChildScrollView(
-                            padding: const EdgeInsets.only(bottom: 100),
+                            controller: _scrollController,
+                            padding: const EdgeInsets.only(bottom: 10),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: widgetList(profileMapResponse),
@@ -110,11 +113,13 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                     return null;
                   }),
             ),
+            Divider(height: 0.5),
             Align(
               alignment: FractionalOffset.bottomRight,
               child: Container(
                 height: 55.0,
                 width: MediaQuery.of(context).size.width - 76.0,
+                margin: const EdgeInsets.only(top: 10),
                 padding: const EdgeInsets.only(right: 20.0, left: 40.0),
                 child: FancyButton(
                   title: "Schedule Appointment",
@@ -256,21 +261,32 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
 
     List<Widget> formWidget = List();
 
-    formWidget.add(Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: ProviderWidget(
-        data: _providerData,
-        degree: degree.toString(),
-        averageRating: averageRating,
-        isOptionsShow: false,
-        isProverPicShow: true,
+    formWidget.add(
+      Padding(
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+        child: ProviderWidget(
+          data: _providerData,
+          degree: degree.toString(),
+          averageRating: averageRating,
+          isOptionsShow: false,
+          isProverPicShow: true,
+          onRatingClick: () {
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              _scrollController.animateTo(
+                _scrollController.position.maxScrollExtent,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOut,
+              );
+            });
+          },
+        ),
       ),
-    ));
+    );
 
     formWidget.add(Padding(
-      padding: const EdgeInsets.only(left: 20),
+      padding: const EdgeInsets.only(left: 20, top: 0, bottom: 12),
       child: Text(
-        "Specialities",
+        "About ${_providerData["userId"]["fullName"]}",
         style: TextStyle(
           fontSize: 14.0,
           fontWeight: FontWeight.w600,
@@ -278,29 +294,15 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
       ),
     ));
 
-    formWidget.add(SizedBox(height: 12.0));
-
     formWidget.add(
-      GridView.builder(
-        shrinkWrap: true,
-        physics: ClampingScrollPhysics(),
-        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 16),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 2,
-          mainAxisSpacing: 18.0,
-          crossAxisSpacing: 16.0,
+      Padding(
+        padding: const EdgeInsets.only(left: 20, bottom: 16),
+        child: Text(
+          _providerData['about'] ?? "---",
+          style: TextStyle(
+            fontSize: 13.0,
+          ),
         ),
-        itemCount: speaciltyList.length,
-        itemBuilder: (context, index) {
-          if (speaciltyList == null || speaciltyList.length == 0)
-            return Container();
-
-          return appoCard(
-            'images/office_appointment.png',
-            speaciltyList[index]["title"],
-          );
-        },
       ),
     );
 
@@ -335,31 +337,6 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
 
     formWidget.add(divider());
 
-    formWidget.add(Padding(
-      padding: const EdgeInsets.only(left: 20, top: 16, bottom: 12),
-      child: Text(
-        "About ${_providerData["userId"]["fullName"]}",
-        style: TextStyle(
-          fontSize: 14.0,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    ));
-
-    formWidget.add(
-      Padding(
-        padding: const EdgeInsets.only(left: 20, bottom: 16),
-        child: Text(
-          _providerData['about'] ?? "---",
-          style: TextStyle(
-            fontSize: 13.0,
-          ),
-        ),
-      ),
-    );
-
-    formWidget.add(divider());
-
     formWidget.add(
       Padding(
         padding: const EdgeInsets.only(left: 20, top: 16, bottom: 12),
@@ -384,23 +361,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                 itemCount: languagesList.length,
                 padding: const EdgeInsets.only(left: 20, bottom: 16),
                 itemBuilder: (context, index) {
-                  return Container(
-                    height: 50,
-                    margin: const EdgeInsets.only(right: 10.0),
-                    padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      color: AppColors.windsor.withOpacity(0.05),
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(14.0),
-                    ),
-                    child: Text(
-                      languagesList[index]?.toString() ?? "---",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 13.0,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  );
+                  return _chipWidget(languagesList[index]?.toString() ?? "---");
                 },
               ),
             )
@@ -422,7 +383,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
       Padding(
         padding: const EdgeInsets.only(left: 20, top: 16, bottom: 12),
         child: Text(
-          "Available Timings",
+          "Schedule",
           style: TextStyle(
             fontSize: 14.0,
             fontWeight: FontWeight.w600,
@@ -497,7 +458,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                   Padding(
                     padding: const EdgeInsets.only(right: 20),
                     child: Text(
-                      "View all timings",
+                      "View schedule",
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: AppColors.windsor,
@@ -529,7 +490,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
       Padding(
         padding: const EdgeInsets.only(left: 20, top: 16, bottom: 12),
         child: Text(
-          "Care by ${_providerData["userId"]["fullName"]}",
+          "Service options ${_providerData["userId"]["fullName"]}",
           style: TextStyle(
             fontSize: 14.0,
             fontWeight: FontWeight.w600,
@@ -569,6 +530,49 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
               )
             : Container(),
       ),
+    );
+
+    formWidget.add(divider());
+
+    formWidget.add(Padding(
+      padding: const EdgeInsets.only(left: 20, top: 16),
+      child: Text(
+        "Specialities",
+        style: TextStyle(
+          fontSize: 14.0,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    ));
+
+    formWidget.add(SizedBox(height: 12.0));
+
+    formWidget.add(
+      speaciltyList.length > 0
+          ? SizedBox(
+              height: 50,
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: ClampingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                itemCount: speaciltyList.length,
+                padding: const EdgeInsets.only(left: 20, bottom: 16),
+                itemBuilder: (context, index) {
+                  return _chipWidget(
+                      speaciltyList[index]["title"]?.toString() ?? "---");
+                },
+              ),
+            )
+          : Padding(
+              padding: const EdgeInsets.only(left: 20, bottom: 16),
+              child: Text(
+                "NO languages available",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 13.0,
+                    fontWeight: FontWeight.w400),
+              ),
+            ),
     );
 
     formWidget.add(divider());
@@ -645,7 +649,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
               padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
               reverse: true,
               shrinkWrap: true,
-              itemCount: reviewsList.length,
+              itemCount: reviewsList.length >= 2 ? 2 : reviewsList.length,
               itemBuilder: (context, index) {
                 dynamic response = reviewsList[index];
 
@@ -699,8 +703,12 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
                         fontSize: 14.0,
+                        decoration: TextDecoration.underline,
                       ),
                     ),
+                  ).onClick(
+                    roundCorners: false,
+                    onTap: latLng.launchMaps,
                   ),
                   SizedBox(width: 5.0),
                   Expanded(
@@ -708,7 +716,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                       alignment: Alignment.centerRight,
                       child: FlatButton(
                         padding: EdgeInsets.zero,
-                        onPressed: () => latLng.launchMaps(),
+                        onPressed: latLng.launchMaps,
                         child: Text(
                           "Get Directions",
                           overflow: TextOverflow.ellipsis,
@@ -760,6 +768,24 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _chipWidget(String title) {
+    return Container(
+      height: 50,
+      margin: const EdgeInsets.only(right: 10.0),
+      padding: const EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        color: AppColors.windsor.withOpacity(0.05),
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(14.0),
+      ),
+      child: Text(
+        title ?? "---",
+        style: TextStyle(
+            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
       ),
     );
   }
