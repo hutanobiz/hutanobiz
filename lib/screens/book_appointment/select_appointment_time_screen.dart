@@ -161,7 +161,9 @@ class _SelectAppointmentTimeScreenState
                 profileMap["userId"]["_id"].toString(),
                 _dayDateMap,
               )
-              .timeout(Duration(seconds: 10));
+              .futureError(
+                (error) => error.toString().debugLog(),
+              );
         });
 
         _selectedDate = selectedDate;
