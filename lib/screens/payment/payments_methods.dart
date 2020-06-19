@@ -44,8 +44,9 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
+    _container = InheritedContainer.of(context);
+
     if (widget.isPayment) {
-      _container = InheritedContainer.of(context);
       Map _providerData = _container.getProviderData();
       Map _servicesMap = _container.selectServiceMap;
 
@@ -244,6 +245,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                 return ListView.builder(
                   padding: EdgeInsets.zero,
                   shrinkWrap: true,
+                  physics: ClampingScrollPhysics(),
                   itemCount: _insuranceList.length,
                   itemBuilder: (context, index) {
                     return Container(
@@ -320,21 +322,24 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                             : () {
                                 _insuranceViewMap['insurance'] =
                                     _insuranceList[index];
+
+                                if (_container.insuranceDataMap != null) {
+                                  _container.insuranceDataMap.clear();
+                                }
+
                                 Navigator.of(context)
                                     .pushNamed(
                                   Routes.uploadInsuranceImagesScreen,
                                   arguments: _insuranceViewMap,
                                 )
-                                    .then((value) {
-                                  if (value != null && value) {
-                                    SharedPref().getToken().then((token) {
-                                      setState(() {
-                                        _insuranceFuture = _api
-                                            .getUserDetails(token)
-                                            .timeout(Duration(seconds: 10));
-                                      });
+                                    .whenComplete(() {
+                                  SharedPref().getToken().then((token) {
+                                    setState(() {
+                                      _insuranceFuture = _api
+                                          .getUserDetails(token)
+                                          .timeout(Duration(seconds: 10));
                                     });
-                                  }
+                                  });
                                 });
                               },
                       ),

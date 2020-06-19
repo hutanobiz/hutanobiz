@@ -42,11 +42,17 @@ class _UploadInsuranceImagesScreenState
   bool _isLoading = false;
   Map _insuranceViewMap = {};
 
-  String insuranceName = '', insuranceId = '';
+  String insuranceName = '', userInsuranceId = '', insuranceId = '';
+
+  dynamic uploadedInsurance;
+
+  String token;
 
   @override
   void initState() {
     super.initState();
+
+    SharedPref().getToken().then((token) => this.token = token);
 
     if (widget.insuranceViewMap != null) {
       _insuranceViewMap = widget.insuranceViewMap;
@@ -56,7 +62,10 @@ class _UploadInsuranceImagesScreenState
           insuranceName = _insuranceViewMap['insurance']['insuranceName'];
         }
         if (_insuranceViewMap['insurance']['_id'] != null) {
-          insuranceId = _insuranceViewMap['insurance']['_id'];
+          userInsuranceId = _insuranceViewMap['insurance']['_id'];
+        }
+        if (_insuranceViewMap['insurance']['insuranceId'] != null) {
+          insuranceId = _insuranceViewMap['insurance']['insuranceId'];
         }
         if (_insuranceViewMap['insurance']['insuranceDocumentFront'] != null) {
           frontImagePath = ApiBaseHelper.imageUrl +
@@ -72,10 +81,10 @@ class _UploadInsuranceImagesScreenState
 
   @override
   void didChangeDependencies() {
+    super.didChangeDependencies();
+
     _container = InheritedContainer.of(context);
     _insuranceMap = _container.insuranceDataMap;
-
-    super.didChangeDependencies();
   }
 
   @override
@@ -88,7 +97,6 @@ class _UploadInsuranceImagesScreenState
         isLoading: _isLoading,
         isAddBack: !_insuranceViewMap['isPayment'],
         addBackButton: _insuranceViewMap['isPayment'],
-        onForwardTap: _uploadImages,
         color: Colors.white,
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
         rightButtonText: !_insuranceViewMap['isViewDetail'] ? null : 'Delete',
@@ -105,7 +113,9 @@ class _UploadInsuranceImagesScreenState
                     ApiBaseHelper _api = ApiBaseHelper();
 
                     SharedPref().getToken().then((token) {
-                      _api.deleteinsurance(token, insuranceId).then((value) {
+                      _api
+                          .deleteinsurance(token, userInsuranceId)
+                          .then((value) {
                         _isLoading = false;
                         Widgets.showToast('Insurance deleted successfullly');
                         Navigator.pop(context, true);
@@ -150,9 +160,8 @@ class _UploadInsuranceImagesScreenState
     if (frontImagePath == null) {
       Widgets.showToast("Please upload front insurance card image");
     } else {
-      _uploadImage(
-        'Insurance card added successfully',
-      );
+      Navigator.popUntil(
+          context, ModalRoute.withName(Routes.paymentMethodScreen));
     }
   }
 
@@ -319,81 +328,175 @@ class _UploadInsuranceImagesScreenState
               ? frontImagePath = croppedFile.path
               : backImagePath = croppedFile.path,
         );
+
+        if (isFront) {
+          if (_insuranceMap != null && _insuranceMap.isNotEmpty) {
+            _uploadImage(
+              'Insurance card added successfully',
+            );
+          } else {
+            _updateInsurance('Image updated');
+          }
+        } else {
+          _updateInsurance('Image updated');
+        }
       }
     }
   }
 
   _uploadImage(String message) async {
     try {
-      SharedPref().getToken().then((token) async {
-        setLoading(true);
-        Uri uri = Uri.parse(ApiBaseHelper.base_url + "api/profile/update");
-        http.MultipartRequest request = http.MultipartRequest('POST', uri);
-        request.headers['authorization'] = token;
+      setLoading(true);
+      Uri uri = Uri.parse(ApiBaseHelper.base_url + "api/profile/update");
+      http.MultipartRequest request = http.MultipartRequest('POST', uri);
+      request.headers['authorization'] = token;
 
-        request.fields["insuranceId[]"] =
-            _insuranceMap["insuranceId"].toString();
+      request.fields["insuranceId[]"] = _insuranceMap["insuranceId"].toString();
 
-        if (frontImagePath != null) {
-          File frontImage = File(frontImagePath);
-          var stream = http.ByteStream(DelegatingStream(frontImage.openRead()));
-          var length = await frontImage.length();
-          var frontMultipartFile = http.MultipartFile(
-            "insuranceDocumentFront",
+      if (frontImagePath != null) {
+        File frontImage = File(frontImagePath);
+        var stream = http.ByteStream(DelegatingStream(frontImage.openRead()));
+        var length = await frontImage.length();
+        var frontMultipartFile = http.MultipartFile(
+          "insuranceDocumentFront",
+          stream.cast(),
+          length,
+          filename: frontImage.path,
+        );
+
+        request.files.add(frontMultipartFile);
+
+        if (backImagePath != null) {
+          File backImage = File(backImagePath);
+          var stream = http.ByteStream(DelegatingStream(backImage.openRead()));
+          var length = await backImage.length();
+          var backMultipartFile = http.MultipartFile(
+            "insuranceDocumentBack",
             stream.cast(),
             length,
-            filename: frontImage.path,
+            filename: backImage.path,
           );
 
-          request.files.add(frontMultipartFile);
+          request.files.add(backMultipartFile);
+        }
+      }
 
-          if (backImagePath != null) {
-            File backImage = File(backImagePath);
-            var stream =
-                http.ByteStream(DelegatingStream(backImage.openRead()));
-            var length = await backImage.length();
-            var backMultipartFile = http.MultipartFile(
-              "insuranceDocumentBack",
-              stream.cast(),
-              length,
-              filename: backImage.path,
-            );
+      var response = await request.send();
+      final int statusCode = response.statusCode;
+      log("Status code: $statusCode");
 
-            request.files.add(backMultipartFile);
+      String respStr = await response.stream.bytesToString();
+      var responseJson = _decoder.convert(respStr);
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        setLoading(false);
+        if (responseJson["response"] is String)
+          Widgets.showToast(responseJson["response"]);
+        else if (responseJson["response"] is Map)
+          Widgets.showToast(responseJson);
+        else {
+          responseJson["response"]
+              .map((m) => Widgets.showToast(m.toString()))
+              .toList();
+        }
+
+        responseJson["response"].toString().debugLog();
+        throw Exception(responseJson);
+      } else {
+        setLoading(false);
+
+        responseJson.toString().debugLog();
+
+        if (responseJson['response'] != null) {
+          List insuranceList = responseJson['response']['insurance'];
+
+          if (insuranceList != null) {
+            dynamic insurance = insuranceList[insuranceList.length - 1];
+
+            userInsuranceId = insurance['_id'];
+            insuranceId = insurance['insuranceId'];
           }
         }
 
-        var response = await request.send();
-        final int statusCode = response.statusCode;
-        log("Status code: $statusCode");
+        if (message != null) Widgets.showToast(message);
+      }
+    } on Exception catch (error) {
+      setLoading(false);
+      error.toString().debugLog();
+    }
+  }
 
-        String respStr = await response.stream.bytesToString();
-        var responseJson = _decoder.convert(respStr);
+  _updateInsurance(String message) async {
+    try {
+      setLoading(true);
+      Uri uri =
+          Uri.parse(ApiBaseHelper.base_url + "api/patient/update-insurance");
+      http.MultipartRequest request = http.MultipartRequest('POST', uri);
+      request.headers['authorization'] = token;
 
-        if (statusCode < 200 || statusCode > 400 || json == null) {
-          setLoading(false);
-          if (responseJson["response"] is String)
-            Widgets.showToast(responseJson["response"]);
-          else if (responseJson["response"] is Map)
-            Widgets.showToast(responseJson);
-          else {
-            responseJson["response"]
-                .map((m) => Widgets.showToast(m.toString()))
-                .toList();
-          }
+      request.fields["userInsuranceId"] = userInsuranceId;
+      request.fields["insuranceId"] = insuranceId;
 
-          responseJson["response"].toString().debugLog();
-          throw Exception(responseJson);
-        } else {
-          setLoading(false);
+      if (frontImagePath != null &&
+          !(frontImagePath.contains('http') ||
+              frontImagePath.contains('https'))) {
+        File frontImage = File(frontImagePath);
+        var stream = http.ByteStream(DelegatingStream(frontImage.openRead()));
+        var length = await frontImage.length();
+        var frontMultipartFile = http.MultipartFile(
+          "insuranceDocumentFront",
+          stream.cast(),
+          length,
+          filename: frontImage.path,
+        );
 
-          responseJson.toString().debugLog();
-          Navigator.popUntil(
-              context, ModalRoute.withName(Routes.paymentMethodScreen));
+        request.files.add(frontMultipartFile);
 
-          if (message != null) Widgets.showToast(message);
+        if (backImagePath != null &&
+            !(backImagePath.contains('http') ||
+                backImagePath.contains('https'))) {
+          File backImage = File(backImagePath);
+          var stream = http.ByteStream(DelegatingStream(backImage.openRead()));
+          var length = await backImage.length();
+          var backMultipartFile = http.MultipartFile(
+            "insuranceDocumentBack",
+            stream.cast(),
+            length,
+            filename: backImage.path,
+          );
+
+          request.files.add(backMultipartFile);
         }
-      });
+      }
+
+      var response = await request.send();
+      final int statusCode = response.statusCode;
+      log("Status code: $statusCode");
+
+      String respStr = await response.stream.bytesToString();
+      var responseJson = _decoder.convert(respStr);
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        setLoading(false);
+        if (responseJson["response"] is String)
+          Widgets.showToast(responseJson["response"]);
+        else if (responseJson["response"] is Map)
+          Widgets.showToast(responseJson);
+        else {
+          responseJson["response"]
+              .map((m) => Widgets.showToast(m.toString()))
+              .toList();
+        }
+
+        responseJson["response"].toString().debugLog();
+        throw Exception(responseJson);
+      } else {
+        setLoading(false);
+
+        responseJson.toString().debugLog();
+
+        if (message != null) Widgets.showToast(message);
+      }
     } on Exception catch (error) {
       setLoading(false);
       error.toString().debugLog();
