@@ -101,7 +101,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         child: Stack(
           children: <Widget>[
             Container(
-              margin: const EdgeInsets.only(bottom: 60.0),
+              margin: EdgeInsets.only(bottom: widget.isPayment ? 60.0 : 0),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,7 +109,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                 ),
               ),
             ),
-            widget.isPayment == false
+            !widget.isPayment
                 ? Container()
                 : Align(
                     alignment: FractionalOffset.bottomRight,
@@ -211,6 +211,10 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   }
 
   Widget _insuranceFutureWidget() {
+    Map _insuranceViewMap = {};
+    _insuranceViewMap['isPayment'] = widget.isPayment;
+    _insuranceViewMap['isViewDetail'] = true;
+
     return FutureBuilder<List<dynamic>>(
       future: _insuranceFuture,
       builder: (_, snapshot) {
@@ -229,74 +233,108 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
             if (snapshot.hasData) {
               List data = snapshot.data;
 
-              return ListView.builder(
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                itemCount: data.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    padding: const EdgeInsets.all(8.0),
-                    margin: const EdgeInsets.only(top: 12),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(14.0)),
-                      border: Border.all(color: Colors.grey[100]),
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(16.0),
-                          child: Image.network(
-                            ApiBaseHelper.imageUrl +
-                                data[index]["insuranceDocumentFront"],
-                            width: 70,
-                            height: 70,
-                            fit: BoxFit.cover,
+              if ((data == null || data.isEmpty)) {
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+                  child: Text("NO saved insurance available"),
+                );
+              } else {
+                return ListView.builder(
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      padding: const EdgeInsets.all(8.0),
+                      margin: const EdgeInsets.only(top: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                        border: Border.all(color: Colors.grey[100]),
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(16.0),
+                            child: Image.network(
+                              ApiBaseHelper.imageUrl +
+                                  data[index]["insuranceDocumentFront"],
+                              width: 70,
+                              height: 70,
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 17.0),
-                        Text(
-                          data[index]["insuranceName"],
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w600,
+                          SizedBox(width: 17.0),
+                          Text(
+                            data[index]["insuranceName"],
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
-                        widget.isPayment == false
-                            ? Container()
-                            : Expanded(
-                                child: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Radio(
-                                    activeColor: AppColors.persian_blue,
-                                    value: index,
-                                    groupValue: _listRadioValue,
-                                    materialTapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
-                                    onChanged: !_providerInsuranceList.contains(
-                                            data[index]["insuranceId"]
-                                                .toString())
-                                        ? null
-                                        : (int value) {
-                                            setState(() {
-                                              _radioValue = null;
-                                              _listRadioValue = value;
-                                            });
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: !widget.isPayment
+                                  ? Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: Colors.grey,
+                                      size: 16,
+                                    )
+                                  : Radio(
+                                      activeColor: AppColors.persian_blue,
+                                      value: index,
+                                      groupValue: _listRadioValue,
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                      onChanged: !_providerInsuranceList
+                                              .contains(data[index]
+                                                      ["insuranceId"]
+                                                  .toString())
+                                          ? null
+                                          : (int value) {
+                                              setState(() {
+                                                _radioValue = null;
+                                                _listRadioValue = value;
+                                              });
 
-                                            insuranceId = data[index]["_id"];
-                                            insuranceName =
-                                                data[index]["insuranceName"];
-                                            insuranceImage = data[index]
-                                                ["insuranceDocumentFront"];
-                                          },
-                                  ),
-                                ),
-                              )
-                      ],
-                    ),
-                  );
-                },
-              );
+                                              insuranceId = data[index]["_id"];
+                                              insuranceName =
+                                                  data[index]["insuranceName"];
+                                              insuranceImage = data[index]
+                                                  ["insuranceDocumentFront"];
+                                            },
+                                    ),
+                            ),
+                          )
+                        ],
+                      ).onClick(
+                        onTap: widget.isPayment
+                            ? null
+                            : () {
+                                _insuranceViewMap['insurance'] = data[index];
+                                Navigator.of(context)
+                                    .pushNamed(
+                                  Routes.uploadInsuranceImagesScreen,
+                                  arguments: _insuranceViewMap,
+                                )
+                                    .then((value) {
+                                  if (value != null && value) {
+                                    SharedPref().getToken().then((token) {
+                                      setState(() {
+                                        _insuranceFuture = _api
+                                            .getUserDetails(token)
+                                            .timeout(Duration(seconds: 10));
+                                      });
+                                    });
+                                  }
+                                });
+                              },
+                      ),
+                    );
+                  },
+                );
+              }
             } else if (snapshot.hasError) {
               snapshot.error.toString().debugLog();
               return Center(

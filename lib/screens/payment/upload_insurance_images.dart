@@ -12,17 +12,17 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/dashed_border.dart';
+import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:hutano/widgets/fancy_button.dart';
 
 class UploadInsuranceImagesScreen extends StatefulWidget {
-  final bool isPayment;
+  final Map insuranceViewMap;
 
-  const UploadInsuranceImagesScreen({Key key, this.isPayment})
+  const UploadInsuranceImagesScreen({Key key, this.insuranceViewMap})
       : super(key: key);
 
   @override
@@ -40,6 +40,35 @@ class _UploadInsuranceImagesScreenState
   String frontImagePath, backImagePath;
 
   bool _isLoading = false;
+  Map _insuranceViewMap = {};
+
+  String insuranceName = '', insuranceId = '';
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.insuranceViewMap != null) {
+      _insuranceViewMap = widget.insuranceViewMap;
+
+      if (_insuranceViewMap['insurance'] != null) {
+        if (_insuranceViewMap['insurance']['insuranceName'] != null) {
+          insuranceName = _insuranceViewMap['insurance']['insuranceName'];
+        }
+        if (_insuranceViewMap['insurance']['_id'] != null) {
+          insuranceId = _insuranceViewMap['insurance']['_id'];
+        }
+        if (_insuranceViewMap['insurance']['insuranceDocumentFront'] != null) {
+          frontImagePath = ApiBaseHelper.imageUrl +
+              _insuranceViewMap['insurance']['insuranceDocumentFront'];
+        }
+        if (_insuranceViewMap['insurance']['insuranceDocumentBack'] != null) {
+          backImagePath = ApiBaseHelper.imageUrl +
+              _insuranceViewMap['insurance']['insuranceDocumentBack'];
+        }
+      }
+    }
+  }
 
   @override
   void didChangeDependencies() {
@@ -54,29 +83,60 @@ class _UploadInsuranceImagesScreenState
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackground(
-        title: "Upload Images",
+        title:
+            _insuranceViewMap['isViewDetail'] ? insuranceName : "Upload Images",
         isLoading: _isLoading,
-        isAddBack: !widget.isPayment,
-        addBackButton: widget.isPayment,
+        isAddBack: !_insuranceViewMap['isPayment'],
+        addBackButton: _insuranceViewMap['isPayment'],
         onForwardTap: _uploadImages,
         color: Colors.white,
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+        rightButtonText: !_insuranceViewMap['isViewDetail'] ? null : 'Delete',
+        onRightButtonTap: !_insuranceViewMap['isViewDetail']
+            ? null
+            : () {
+                Widgets.showAlertDialog(
+                  context,
+                  "Delete Insurance",
+                  "Are you sure you want to delete the insurance?",
+                  () {
+                    _isLoading = true;
+
+                    ApiBaseHelper _api = ApiBaseHelper();
+
+                    SharedPref().getToken().then((token) {
+                      _api.deleteinsurance(token, insuranceId).then((value) {
+                        _isLoading = false;
+                        Widgets.showToast('Insurance deleted successfullly');
+                        Navigator.pop(context, true);
+                      }).futureError((error) {
+                        _isLoading = false;
+                        error.toString().debugLog();
+                      });
+                    });
+                  },
+                );
+              },
         child: Stack(
           children: <Widget>[
             ListView(
               children: widgetList(),
             ),
-            if (widget.isPayment)
+            if (_insuranceViewMap['isViewDetail'])
               Container()
             else
-              Align(
-                alignment: FractionalOffset.bottomCenter,
-                child: Container(
-                  height: 55.0,
-                  width: MediaQuery.of(context).size.width,
-                  child: FancyButton(
-                    title: 'Save',
-                    onPressed: _uploadImages,
+              Padding(
+                padding: EdgeInsets.only(
+                    left: _insuranceViewMap['isPayment'] ? 80 : 0),
+                child: Align(
+                  alignment: FractionalOffset.bottomCenter,
+                  child: Container(
+                    height: 55.0,
+                    width: MediaQuery.of(context).size.width,
+                    child: FancyButton(
+                      title: 'Save',
+                      onPressed: _uploadImages,
+                    ),
                   ),
                 ),
               ),
@@ -118,7 +178,10 @@ class _UploadInsuranceImagesScreenState
               child: frontImagePath == null
                   ? uploadWidget(
                       "Front", AssetImage("images/ic_front_image.png"))
-                  : imageWidget(frontImagePath, true),
+                  : imageWidget(
+                      frontImagePath,
+                      true,
+                    ),
             ),
           ),
           SizedBox(width: 16.0),
@@ -135,7 +198,10 @@ class _UploadInsuranceImagesScreenState
                 child: backImagePath == null
                     ? uploadWidget(
                         "Back", AssetImage("images/ic_back_image.png"))
-                    : imageWidget(backImagePath, false),
+                    : imageWidget(
+                        backImagePath,
+                        false,
+                      ),
               ),
             ),
           ),
@@ -179,10 +245,15 @@ class _UploadInsuranceImagesScreenState
         children: <Widget>[
           ClipRRect(
             borderRadius: BorderRadius.circular(8.0),
-            child: Image.file(
-              File(path),
-              fit: BoxFit.cover,
-            ),
+            child: (path.contains('http') || path.contains('https'))
+                ? Image.network(
+                    path,
+                    fit: BoxFit.cover,
+                  )
+                : Image.file(
+                    File(path),
+                    fit: BoxFit.cover,
+                  ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),

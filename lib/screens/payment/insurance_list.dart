@@ -21,10 +21,14 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
   Future<List<dynamic>> _insuranceFuture;
   ApiBaseHelper _api = ApiBaseHelper();
   InheritedContainerState _container;
+  Map _insuranceViewMap = {};
 
   @override
   void initState() {
     super.initState();
+
+    _insuranceViewMap['isPayment'] = widget.isPayment;
+    _insuranceViewMap['isViewDetail'] = false;
 
     setState(() {
       _insuranceFuture = _api.getInsuranceList().timeout(Duration(seconds: 10));
@@ -67,7 +71,7 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
                     } else {
                       Navigator.of(context).pushNamed(
                         Routes.uploadInsuranceImagesScreen,
-                        arguments: widget.isPayment,
+                        arguments: _insuranceViewMap,
                       );
                     }
                   },

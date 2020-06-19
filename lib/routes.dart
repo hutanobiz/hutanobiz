@@ -234,7 +234,7 @@ class Routes {
         return _buildRoute(
           settings,
           UploadInsuranceImagesScreen(
-            isPayment: args,
+            insuranceViewMap: args,
           ),
         );
         break;

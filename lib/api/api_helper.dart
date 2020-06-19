@@ -301,6 +301,25 @@ class ApiBaseHelper {
     });
   }
 
+  Future<dynamic> deleteinsurance(String token, String insuranceId) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    Map insuranceMap = {};
+    insuranceMap['insuranceId'] = insuranceId;
+
+    return _netUtil
+        .post(
+      base_url + "api/patient/delete-insurance",
+      body: insuranceMap,
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
+
   Future<dynamic> getDistanceAndTime(
       LatLng source, LatLng dest, String apiKey) {
     return _netUtil
