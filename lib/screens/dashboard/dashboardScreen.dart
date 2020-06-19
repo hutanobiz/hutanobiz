@@ -112,7 +112,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 onTap: () => _navigateToMap(context),
                 child: Row(
                   children: <Widget>[
-                    _currentddress.length > 45
+                    _currentddress != null && _currentddress.length > 45
                         ? SizedBox(
                             width: 250,
                             child: Text(
