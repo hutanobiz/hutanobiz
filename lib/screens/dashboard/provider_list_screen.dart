@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
@@ -74,40 +75,49 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
   }
 
   Widget searchBar() {
-    return TextFormField(
-      key: _searchKey,
-      maxLines: 1,
-      keyboardType: TextInputType.text,
-      onChanged: (value) {
-        setState(() {
-          _searchText = value;
-        });
-        filterSearch(value);
-      },
-      decoration: InputDecoration(
-        floatingLabelBehavior: FloatingLabelBehavior.never,
-        filled: true,
-        fillColor: Colors.white,
-        labelStyle: TextStyle(fontSize: 13.0, color: Colors.grey),
-        labelText: "Search for providers",
-        suffixIcon: Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Image(
-            width: 34.0,
-            height: 34.0,
-            image: AssetImage("images/ic_search.png"),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Expanded(
+          child: TextFormField(
+            key: _searchKey,
+            maxLines: 1,
+            keyboardType: TextInputType.text,
+            onChanged: (value) {
+              setState(() {
+                _searchText = value;
+              });
+              filterSearch(value);
+            },
+            decoration: InputDecoration(
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              filled: true,
+              fillColor: Colors.white,
+              labelStyle: TextStyle(fontSize: 13.0, color: Colors.grey),
+              labelText: "Search for providers",
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white),
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white),
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              contentPadding: EdgeInsets.fromLTRB(12.0, 15.0, 14.0, 14.0),
+            ),
           ),
         ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
-          borderRadius: BorderRadius.circular(8.0),
+        SizedBox(width: 12),
+        Image(
+          width: 42.0,
+          height: 42.0,
+          image: AssetImage("images/ic_filter.png"),
+        ).onClick(
+          onTap: () => Navigator.of(context).pushNamed(
+            Routes.providerFiltersScreen,
+          ),
         ),
-        border: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        contentPadding: EdgeInsets.fromLTRB(12.0, 15.0, 14.0, 14.0),
-      ),
+      ],
     );
   }
 
