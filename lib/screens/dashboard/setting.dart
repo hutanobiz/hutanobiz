@@ -5,6 +5,7 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/circular_loader.dart';
+import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:package_info/package_info.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -53,13 +54,13 @@ class _SettingsScreenState extends State<SettingScreen> {
               name = response['response']['fullName'].toString() ?? "---";
               email = response['response']['email'].toString() ?? "---";
               String phoneNumber =
-                            response['response']['phoneNumber']?.toString();
-               phoneNumber = "(" +
-                            phoneNumber.substring(0, 3) +
-                            ") " +
-                            phoneNumber.substring(3, 6) +
-                            "-" +
-                            phoneNumber.substring(6, phoneNumber.length);
+                  response['response']['phoneNumber']?.toString();
+              phoneNumber = "(" +
+                  phoneNumber.substring(0, 3) +
+                  ") " +
+                  phoneNumber.substring(3, 6) +
+                  "-" +
+                  phoneNumber.substring(6, phoneNumber.length);
               phone = phoneNumber;
               avatar = response['response']['avatar'].toString();
             }
@@ -297,10 +298,15 @@ class _SettingsScreenState extends State<SettingScreen> {
               customListButton(
                 "Payment Method",
                 "images/profile_payment_method.png",
-                () => Navigator.of(context).pushNamed(
-                  Routes.paymentMethodScreen,
-                  arguments: false,
-                ),
+                () {
+                  InheritedContainerState _container =
+                      InheritedContainer.of(context);
+                  _container.providerInsuranceList.clear();
+                  Navigator.of(context).pushNamed(
+                    Routes.paymentMethodScreen,
+                    arguments: false,
+                  );
+                },
               ),
             ],
           )),

@@ -8,8 +8,8 @@ import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/widgets.dart';
 
 class InsuranceListScreen extends StatefulWidget {
-  final bool isPayment;
-  InsuranceListScreen({Key key, this.isPayment}) : super(key: key);
+  final Map insuranceMap;
+  InsuranceListScreen({Key key, this.insuranceMap}) : super(key: key);
 
   @override
   _InsuranceListScreenState createState() => _InsuranceListScreenState();
@@ -22,13 +22,19 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
   ApiBaseHelper _api = ApiBaseHelper();
   InheritedContainerState _container;
   Map _insuranceViewMap = {};
+  List _selectedInsuranceList = [];
+  List _alreadyInsuranceList = [];
 
   @override
   void initState() {
     super.initState();
 
-    _insuranceViewMap['isPayment'] = widget.isPayment;
+    _insuranceViewMap['isPayment'] = widget.insuranceMap['isPayment'];
     _insuranceViewMap['isViewDetail'] = false;
+
+    for (dynamic insurance in widget.insuranceMap['insuranceList']) {
+      _alreadyInsuranceList.add(insurance['insuranceId'].toString());
+    }
 
     setState(() {
       _insuranceFuture = _api.getInsuranceList().timeout(Duration(seconds: 10));
@@ -37,8 +43,13 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
 
   @override
   void didChangeDependencies() {
-    _container = InheritedContainer.of(context);
     super.didChangeDependencies();
+
+    _container = InheritedContainer.of(context);
+
+    if (_insuranceViewMap['isPayment']) {
+      _selectedInsuranceList = _container.providerInsuranceList;
+    }
   }
 
   @override
@@ -117,26 +128,11 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
       activeColor: AppColors.goldenTainoi,
       value: index,
       groupValue: _radioValue,
-      onChanged: widget.isPayment
-          ? !_container.providerInsuranceList
-                  .contains(insurance["_id"].toString())
+      onChanged: _insuranceViewMap['isPayment']
+          ? !_selectedInsuranceList.contains(insurance["_id"].toString())
               ? null
-              : (value) {
-                  setState(
-                    () => _radioValue = value,
-                  );
-
-                  _container.setInsuranceData(
-                      "insuranceId", insurance["_id"].toString());
-                }
-          : (value) {
-              setState(
-                () => _radioValue = value,
-              );
-
-              _container.setInsuranceData(
-                  "insuranceId", insurance["_id"].toString());
-            },
+              : _insuranceAlreadyAdded(insurance)
+          : _insuranceAlreadyAdded(insurance),
       title: Row(
         children: <Widget>[
           Image.asset(
@@ -156,5 +152,18 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
         ],
       ),
     );
+  }
+
+  Function _insuranceAlreadyAdded(dynamic insurance) {
+    return _alreadyInsuranceList.contains(insurance["_id"].toString())
+        ? null
+        : (value) {
+            setState(
+              () => _radioValue = value,
+            );
+
+            _container.setInsuranceData(
+                "insuranceId", insurance["_id"].toString());
+          };
   }
 }

@@ -220,15 +220,12 @@ class Routes {
         return _buildRoute(settings, SelectServicesScreen());
         break;
       case insuranceListScreen:
-        if (args is bool) {
-          return _buildRoute(
-            settings,
-            InsuranceListScreen(
-              isPayment: args,
-            ),
-          );
-        }
-        return _errorRoute();
+        return _buildRoute(
+          settings,
+          InsuranceListScreen(
+            insuranceMap: args,
+          ),
+        );
         break;
       case uploadInsuranceImagesScreen:
         return _buildRoute(
