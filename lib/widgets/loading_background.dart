@@ -5,31 +5,34 @@ import 'package:hutano/widgets/bottom_arrows.dart';
 import 'package:hutano/widgets/circular_loader.dart';
 
 class LoadingBackground extends StatelessWidget {
-  LoadingBackground(
-      {Key key,
-      this.isLoading: false,
-      @required this.title,
-      this.isAddBack: true,
-      this.padding,
-      @required this.child,
-      this.isAddAppBar: true,
-      this.addBottomArrows: false,
-      this.addBackButton: false,
-      this.color: AppColors.snow,
-      this.buttonColor = AppColors.goldenTainoi,
-      this.onForwardTap})
-      : super(key: key);
+  LoadingBackground({
+    Key key,
+    this.isLoading: false,
+    @required this.title,
+    this.isAddBack: true,
+    this.padding,
+    @required this.child,
+    this.isAddAppBar: true,
+    this.addBottomArrows: false,
+    this.addBackButton: false,
+    this.color: AppColors.snow,
+    this.buttonColor = AppColors.goldenTainoi,
+    this.onForwardTap,
+    this.rightButtonText,
+    this.onRightButtonTap,
+  }) : super(key: key);
 
   final bool isLoading;
   final Widget child;
   final bool isAddBack;
-  final title;
+  final String title, rightButtonText;
   final EdgeInsets padding;
   final bool isAddAppBar, addBottomArrows;
   final color;
   final bool addBackButton;
   final Function onForwardTap;
   final Color buttonColor;
+  final Function onRightButtonTap;
 
   @override
   Widget build(BuildContext context) {
@@ -62,14 +65,33 @@ class LoadingBackground extends StatelessWidget {
                                 )
                               : Container(),
                           isAddBack ? SizedBox(width: 10.0) : Container(),
-                          Text(
-                            title,
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
+                          Expanded(
+                            child: Text(
+                              title,
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
+                          if (rightButtonText != null)
+                            InkWell(
+                              onTap: onRightButtonTap,
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Text(
+                                  rightButtonText,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14.0,
+                                  ),
+                                ),
+                              ),
+                            )
+                          else
+                            Container(),
                         ],
                       ),
                     )
