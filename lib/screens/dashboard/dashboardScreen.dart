@@ -9,6 +9,7 @@ import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:location/location.dart';
@@ -23,7 +24,7 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ApiBaseHelper _api = new ApiBaseHelper();
-
+  bool isEmailVerified = false;
   Future<List<dynamic>> _titleFuture;
 
   String _currentddress;
@@ -50,7 +51,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void didChangeDependencies() {
     conatiner = InheritedContainer.of(context);
-
+    SharedPref().getValue("isEmailVerified").then((value) {
+      if (value == null || value == false) {
+        SharedPref().getToken().then((value) {
+          _api.profile(value, Map()).then((value) {
+            setState(() {
+              isEmailVerified = value["response"]["isEmailVerified"] ?? false;
+              SharedPref().setValue("isEmailVerified",
+                  value["response"]["isEmailVerified"] ?? false);
+            });
+          });
+        });
+      } else {
+        setState(() {
+          isEmailVerified = value;
+        });
+      }
+    });
     super.didChangeDependencies();
   }
 
@@ -64,6 +81,37 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            isEmailVerified
+                ? Container()
+                : Container(
+                    width: MediaQuery.of(context).size.width,
+                    color: AppColors.windsor,
+                    padding: EdgeInsets.all(4.0),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Text(
+                            "Email not verified.",
+                            style: TextStyle(color: Colors.white, fontSize: 12),
+                          ),
+                        ),
+                        Text(
+                          "Resend Verification Link",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ).onClick(onTap: () {
+                    SharedPref().getToken().then((value) {
+                      Map map = {};
+                      map["step"] = "5";
+                      _api.emailVerfication(value, map);
+                    });
+                  }),
             Padding(
               padding: _edgeInsetsGeometry,
               child: adressBar(),

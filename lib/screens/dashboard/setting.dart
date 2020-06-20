@@ -17,6 +17,7 @@ class SettingScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingScreen> {
   ApiBaseHelper api = ApiBaseHelper();
+  bool isEmailVerified = false;
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
     packageName: 'Unknown',
@@ -51,6 +52,8 @@ class _SettingsScreenState extends State<SettingScreen> {
           setState(() {
             _isLoading = false;
             if (response['response'] != null) {
+              isEmailVerified =
+                  response["response"]["isEmailVerified"] ?? false;
               name = response['response']['fullName'].toString() ?? "---";
               email = response['response']['email'].toString() ?? "---";
               String phoneNumber =
@@ -96,6 +99,39 @@ class _SettingsScreenState extends State<SettingScreen> {
 
   List<Widget> getFormWidget() {
     List<Widget> formWidget = new List();
+    formWidget.add(
+      isEmailVerified
+          ? Container()
+          : Container(
+              width: MediaQuery.of(context).size.width,
+              color: AppColors.windsor,
+              padding: EdgeInsets.all(4.0),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      "Email not verified.",
+                      style: TextStyle(color: Colors.white, fontSize: 12),
+                    ),
+                  ),
+                  Text(
+                    "Resend Verification Link",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ],
+              ),
+            ).onClick(onTap: () {
+              SharedPref().getToken().then((value) {
+                Map map = {};
+                map["step"] = "5";
+                api.emailVerfication(value, map);
+              });
+            }),
+    );
 
     formWidget.add(
       Stack(

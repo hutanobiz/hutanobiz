@@ -51,6 +51,20 @@ class ApiBaseHelper {
     });
   }
 
+   Future<dynamic> emailVerfication(String token, Map map) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.contentTypeHeader: "application/json"
+    };
+
+    return _netUtil
+        .post(base_url + "api/email-verification",
+            headers: headers, body: json.encode(map))
+        .then((res) {
+      return res;
+    });
+  }
+
   Future<List<dynamic>> getProfessionalTitle() {
     return _netUtil.get(base_url + "api/professional-titles").then((res) {
       List responseJson = res["response"];

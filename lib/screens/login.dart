@@ -229,6 +229,7 @@ class _LoginState extends State<LoginScreen> {
 
       SharedPref().saveToken(response["tokens"][0]["token"].toString());
       SharedPref().setValue("fullName", response["fullName"].toString());
+      SharedPref().setValue("isEmailVerified", response["isEmailVerified"]);
     }).futureError((error) {
       setLoading(false);
       error.toString().debugLog();
