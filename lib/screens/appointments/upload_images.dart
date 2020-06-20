@@ -170,7 +170,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
         source: (source == 1) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
       croppedFile = await ImageCropper.cropImage(
-        compressQuality: 25,
+        compressQuality: image.lengthSync() >100000?25:100,
         sourcePath: image.path,
         aspectRatioPresets: [
           CropAspectRatioPreset.square,

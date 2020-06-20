@@ -722,6 +722,7 @@ class _SignUpFormState extends State<Register> {
         source: (source == 1) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
       File croppedFile = await ImageCropper.cropImage(
+        compressQuality: image.lengthSync() >100000?25:100,
         sourcePath: image.path,
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
