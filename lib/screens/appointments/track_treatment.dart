@@ -193,7 +193,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackground(
-        title: "Navigation",
+        title: "Appointment Status",
         isLoading: _isLoading,
         isAddBack: true,
         addBackButton: false,
