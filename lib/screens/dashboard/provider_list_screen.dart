@@ -248,6 +248,10 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
             degree: degree,
             averageRating:
                 _provider['averageRating']?.toStringAsFixed(2) ?? "0",
+            onViewProfileClick: () {
+              _container.setProviderId(_provider["userId"]["_id"]);
+              Navigator.of(context).pushNamed(Routes.providerProfileScreen);
+            },
             bookAppointment: () {
               _container.getProviderData().clear();
 
