@@ -113,7 +113,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         width: 185.0,
                         padding: const EdgeInsets.only(right: 20.0),
                         child: FancyButton(
-                          title: "Track",
+                          title: "Show status",
                           onPressed: _appointmentStatus == "2" ||
                                   _appointmentStatus == "6"
                               ? null
