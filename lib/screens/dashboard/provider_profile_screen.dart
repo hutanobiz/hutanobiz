@@ -38,6 +38,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
 
   ScrollController _scrollController = new ScrollController();
 
+  final _adddressColumnKey = GlobalKey();
+
   void setSourceAndDestinationIcons() async {
     sourceIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
@@ -279,17 +281,10 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
           averageRating: averageRating,
           isOptionsShow: false,
           isProverPicShow: true,
-          onLocationClick:
-              latLng == LatLng(0.0, 0.0) ? null : latLng.launchMaps,
-          onRatingClick: () {
-            SchedulerBinding.instance.addPostFrameCallback((_) {
-              _scrollController.animateTo(
-                _scrollController.position.maxScrollExtent,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeOut,
-              );
-            });
-          },
+          onLocationClick: () =>
+              Scrollable.ensureVisible(_adddressColumnKey.currentContext),
+          onRatingClick: () =>
+              _scrollListView(_scrollController.position.maxScrollExtent),
         ),
       ),
     );
@@ -684,16 +679,18 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                 dynamic response = reviewsList[index];
 
                 return ReviewWidget(
-                  reviewerName: response["user"]["fullName"],
+                  reviewerName:
+                      response["user"]["fullName"]?.toString() ?? '---',
                   avatar: response["user"]["avatar"],
                   reviewDate: DateFormat(
                     'dd MMMM yyyy',
                   )
-                      .format(DateTime.parse(response["user"]["updatedAt"]))
+                      .format(DateTime.parse(
+                          response["user"]["updatedAt"]?.toString() ?? "0"))
                       .toString(),
                   reviewerRating:
                       double.parse(response["rating"]?.toString() ?? "0"),
-                  reviewText: response["review"],
+                  reviewText: response["review"]?.toString() ?? "---",
                 );
               },
             ),
@@ -735,10 +732,11 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 16.0),
       child: Column(
+        key: _adddressColumnKey,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            "Location",
+            "Address",
             style: TextStyle(
               fontWeight: FontWeight.w500,
             ),
@@ -886,5 +884,15 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
         thickness: 6.0,
       ),
     );
+  }
+
+  void _scrollListView(double value) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _scrollController.animateTo(
+        value,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    });
   }
 }
