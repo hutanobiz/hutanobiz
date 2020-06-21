@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
@@ -128,11 +127,13 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
           width: 42.0,
           height: 42.0,
           image: AssetImage("images/ic_filter.png"),
-        ).onClick(
-          onTap: () => Navigator.of(context).pushNamed(
-            Routes.providerFiltersScreen,
-          ),
-        ),
+        )
+        // .onClick(
+        //   onTap: () => Navigator.of(context).pushNamed(
+        //     Routes.providerFiltersScreen,
+        //   ),
+        // ),
+        //TODO: filters screen
       ],
     );
   }
