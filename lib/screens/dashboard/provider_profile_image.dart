@@ -1,5 +1,6 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:photo_view/photo_view.dart';
@@ -22,9 +23,15 @@ class ProviderImageScreen extends StatelessWidget {
           backgroundDecoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
           ),
-          imageProvider: NetworkImage(
-            ApiBaseHelper.imageUrl + avatar,
-          ),
+          imageProvider: (avatar.contains('http') || avatar.contains('https'))
+              ? NetworkImage(
+                  avatar,
+                )
+              : FileImage(
+                  File(
+                    avatar,
+                  ),
+                ),
           loadingBuilder: (context, event) {
             if (event == null) {
               return const Center(
