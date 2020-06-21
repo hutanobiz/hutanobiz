@@ -6,6 +6,7 @@ import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/circular_loader.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
+import 'package:hutano/widgets/widgets.dart';
 import 'package:package_info/package_info.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -125,10 +126,14 @@ class _SettingsScreenState extends State<SettingScreen> {
                 ],
               ),
             ).onClick(onTap: () {
+              setLoading(true);
               SharedPref().getToken().then((value) {
                 Map map = {};
                 map["step"] = "5";
-                api.emailVerfication(value, map);
+                api.emailVerfication(value, map).whenComplete(() {
+                  setLoading(false);
+                  Widgets.showToast('Verification link sent successfully');
+                }).futureError((error) => setLoading(false));
               });
             }),
     );
