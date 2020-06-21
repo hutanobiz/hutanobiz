@@ -279,6 +279,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
           averageRating: averageRating,
           isOptionsShow: false,
           isProverPicShow: true,
+          onLocationClick:
+              latLng == LatLng(0.0, 0.0) ? null : latLng.launchMaps,
           onRatingClick: () {
             SchedulerBinding.instance.addPostFrameCallback((_) {
               _scrollController.animateTo(
@@ -499,7 +501,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
       Padding(
         padding: const EdgeInsets.only(left: 20, top: 16, bottom: 12),
         child: Text(
-          "Service options ${_providerData["userId"]["fullName"]}",
+          "Service options",
           style: TextStyle(
             fontSize: 14.0,
             fontWeight: FontWeight.w600,
@@ -509,9 +511,20 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     );
 
     formWidget.add(Padding(
-      padding: const EdgeInsets.only(left: 20, bottom: 16),
+      padding: EdgeInsets.only(
+        left: 20,
+        bottom: _providerData["isOfficeEnabled"] ||
+                _providerData["isVideoChatEnabled"] ||
+                _providerData["isOnsiteEnabled"]
+            ? 16
+            : 0,
+      ),
       child: Wrap(
-        runSpacing: 20,
+        runSpacing: _providerData["isOfficeEnabled"] &&
+                _providerData["isVideoChatEnabled"] &&
+                _providerData["isOnsiteEnabled"]
+            ? 20
+            : 5,
         children: <Widget>[
           _providerData["isOfficeEnabled"]
               ? appoCard(
@@ -532,7 +545,10 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                       "Onsite\nAppointment",
                     )
                   : Container(),
-          SizedBox(width: 20),
+          (_providerData["isVideoChatEnabled"] &&
+                  _providerData["isOnsiteEnabled"])
+              ? SizedBox(width: 20)
+              : Container(),
           (_providerData["isVideoChatEnabled"] &&
                   _providerData["isOnsiteEnabled"])
               ? appoCard(
@@ -741,15 +757,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
                         fontSize: 14.0,
-                        decoration: latLng == LatLng(0.0, 0.0)
-                            ? TextDecoration.none
-                            : TextDecoration.underline,
                       ),
                     ),
-                  ).onClick(
-                    roundCorners: false,
-                    onTap:
-                        latLng == LatLng(0.0, 0.0) ? null : latLng.launchMaps,
                   ),
                   SizedBox(width: 5.0),
                   Expanded(
