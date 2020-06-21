@@ -280,7 +280,7 @@ class Routes {
         return _buildRoute(
           settings,
           AllReviewsScreen(
-            reviewsList: args,
+            reviewMap: args,
           ),
         );
         break;

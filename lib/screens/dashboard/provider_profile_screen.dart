@@ -699,6 +699,11 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
             ),
     );
 
+    Map _reviewMap = {};
+
+    _reviewMap["averageRating"] = averageRating;
+    _reviewMap["reviewsList"] = reviewsList;
+
     formWidget.add(
       (reviewsList != null && reviewsList.length >= 2)
           ? Padding(
@@ -709,7 +714,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                 onPressed: () => Navigator.pushNamed(
                   context,
                   Routes.allReviewsScreen,
-                  arguments: reviewsList,
+                  arguments: _reviewMap,
                 ),
                 child: Text(
                   "View all reviews",
