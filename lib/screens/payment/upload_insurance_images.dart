@@ -183,7 +183,12 @@ class _UploadInsuranceImagesScreenState
         children: <Widget>[
           Expanded(
             child: DashedBorder(
-              onTap: () => showPickerDialog(true),
+              onTap: () => frontImagePath != null
+                  ? Navigator.of(context).pushNamed(
+                      Routes.providerImageScreen,
+                      arguments: frontImagePath,
+                    )
+                  : showPickerDialog(true),
               child: frontImagePath == null
                   ? uploadWidget(
                       "Front", AssetImage("images/ic_front_image.png"))
@@ -197,7 +202,12 @@ class _UploadInsuranceImagesScreenState
           Expanded(
             child: InkWell(
               splashColor: Colors.grey,
-              onTap: () => showPickerDialog(false),
+              onTap: () => backImagePath != null
+                  ? Navigator.of(context).pushNamed(
+                      Routes.providerImageScreen,
+                      arguments: backImagePath,
+                    )
+                  : showPickerDialog(false),
               child: DottedBorder(
                 borderType: BorderType.RRect,
                 radius: Radius.circular(14),
@@ -221,7 +231,7 @@ class _UploadInsuranceImagesScreenState
     return formWidget;
   }
 
-  uploadWidget(title, image) {
+  Widget uploadWidget(title, image) {
     return Row(
       children: <Widget>[
         Padding(
@@ -257,10 +267,14 @@ class _UploadInsuranceImagesScreenState
             child: (path.contains('http') || path.contains('https'))
                 ? Image.network(
                     path,
+                    height: 74,
+                    width: double.maxFinite,
                     fit: BoxFit.cover,
                   )
                 : Image.file(
                     File(path),
+                    height: 74,
+                    width: double.maxFinite,
                     fit: BoxFit.cover,
                   ),
           ),
@@ -304,7 +318,7 @@ class _UploadInsuranceImagesScreenState
         source: (source == 2) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
       croppedFile = await ImageCropper.cropImage(
-        compressQuality: image.lengthSync() >100000?25:100,
+        compressQuality: image.lengthSync() > 100000 ? 25 : 100,
         sourcePath: image.path,
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
