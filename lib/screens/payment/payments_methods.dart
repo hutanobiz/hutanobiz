@@ -121,7 +121,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                       width: MediaQuery.of(context).size.width - 76.0,
                       padding: const EdgeInsets.only(right: 20.0, left: 40.0),
                       child: FancyButton(
-                        title: "Continue \$$totalFee",
+                        title: "Continue",
                         onPressed: () {
                           Map _paymentMap = new Map();
 
