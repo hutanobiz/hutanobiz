@@ -85,16 +85,18 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
                   dynamic response = widget.reviewMap['reviewsList'][index];
 
                   return ReviewWidget(
-                    reviewerName: response["user"]["fullName"],
+                    reviewerName:
+                        response["user"]["fullName"]?.toString() ?? '---',
                     avatar: response["user"]["avatar"],
                     reviewDate: DateFormat(
                       'dd MMMM yyyy',
                     )
-                        .format(DateTime.parse(response["user"]["updatedAt"]))
+                        .format(DateTime.parse(
+                            response["user"]["updatedAt"]?.toString() ?? '0'))
                         .toString(),
                     reviewerRating:
                         double.parse(response["rating"]?.toString() ?? "0"),
-                    reviewText: response["review"],
+                    reviewText: response["review"]?.toString() ?? '---',
                   );
                 },
               ),
