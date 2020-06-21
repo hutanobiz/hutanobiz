@@ -51,7 +51,7 @@ class ApiBaseHelper {
     });
   }
 
-   Future<dynamic> emailVerfication(String token, Map map) {
+  Future<dynamic> emailVerfication(String token, Map map) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
       HttpHeaders.contentTypeHeader: "application/json"
@@ -333,6 +333,23 @@ class ApiBaseHelper {
       return res["response"];
     });
   }
+
+  Future<List<dynamic>> providerFilter(String token, Map filterMap) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .post(
+      base_url + "/api/search",
+      body: filterMap,
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
+  //TODO: filter api
 
   Future<dynamic> getDistanceAndTime(
       LatLng source, LatLng dest, String apiKey) {
