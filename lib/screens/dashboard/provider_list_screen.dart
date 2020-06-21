@@ -6,6 +6,7 @@ import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
+import 'package:hutano/widgets/round_corner_checkbox.dart';
 
 class ProviderListScreen extends StatefulWidget {
   ProviderListScreen({Key key}) : super(key: key);
@@ -28,6 +29,15 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
 
   List<dynamic> _dummySearchList = List();
 
+  List<String> _appointmentTypeFilterList = [
+    'All',
+    'Office',
+    'Video',
+    'Onsite'
+  ];
+
+  Map _appointmentTypeFilterMap = {};
+
   Map _containerMap;
   InheritedContainerState _container;
 
@@ -38,8 +48,13 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
     _container = InheritedContainer.of(context);
 
     final _projectResponse = _container.getProjectsResponse();
-    if (this._containerMap != _projectResponse)
+    if (this._containerMap != _projectResponse) {
       this._containerMap = _projectResponse;
+
+      _appointmentTypeFilterMap['appointmentType'] =
+          _projectResponse['serviceType'];
+      //TODO: appointment type filter map
+    }
 
     if (_projectResponse.containsKey("specialityId"))
       _providerFuture = api.getSpecialityProviderList(
@@ -66,6 +81,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             searchBar(),
+            appointmentTypeFilter(),
             SizedBox(height: 23.0),
             listWidget(),
           ],
@@ -118,6 +134,46 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget appointmentTypeFilter() {
+    return Container(
+      height: 50,
+      padding: const EdgeInsets.only(top: 14),
+      child: ListView.separated(
+        separatorBuilder: (BuildContext context, int index) =>
+            SizedBox(width: 16),
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        physics: ClampingScrollPhysics(),
+        itemCount: _appointmentTypeFilterList.length,
+        itemBuilder: (context, index) {
+          String _appointmentType = _appointmentTypeFilterList[index];
+
+          return RoundCornerCheckBox(
+            title: _appointmentType,
+            textPadding: 1.0,
+            value: _appointmentTypeFilterMap.containsValue(index.toString()),
+            textStyle: TextStyle(
+              color: AppColors.midnight_express.withOpacity(0.84),
+              fontSize: 13,
+              fontWeight: FontWeight.w400,
+            ),
+            onCheck: null,
+            // (value) {
+            //   setState(() {
+            //     value
+            //         ? _appointmentTypeFilterMap[_appointmentType] = '1'
+            //         : _appointmentTypeFilterMap.remove(
+            //             _appointmentTypeFilterMap,
+            //           );
+            //   });
+            // },
+            //TODO: appintment type filter
+          );
+        },
+      ),
     );
   }
 
