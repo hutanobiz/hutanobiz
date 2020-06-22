@@ -263,7 +263,7 @@ class ApiBaseHelper {
     });
   }
 
-  Future<List<dynamic>> getUserDetails(String token) {
+  Future<dynamic> getUserDetails(String token) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
