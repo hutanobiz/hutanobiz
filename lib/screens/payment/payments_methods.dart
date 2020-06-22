@@ -24,7 +24,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   int _radioValue;
   int _listRadioValue;
 
-  Future<List<dynamic>> _insuranceFuture;
+  Future<dynamic> _insuranceFuture;
   ApiBaseHelper _api = ApiBaseHelper();
   InheritedContainerState _container;
   String insuranceId, insuranceImage, insuranceName;
@@ -84,8 +84,9 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
     SharedPref().getToken().then((token) {
       setState(() {
-        _insuranceFuture =
-            _api.getUserDetails(token).timeout(Duration(seconds: 10));
+        _insuranceFuture = _api.getUserDetails(token).futureError(
+              (error) => error.toString().debugLog(),
+            );
       });
     });
   }
@@ -218,7 +219,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
     _insuranceViewMap['isPayment'] = widget.isPayment;
     _insuranceViewMap['isViewDetail'] = true;
 
-    return FutureBuilder<List<dynamic>>(
+    return FutureBuilder<dynamic>(
       future: _insuranceFuture,
       builder: (_, snapshot) {
         switch (snapshot.connectionState) {
@@ -234,7 +235,13 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
             break;
           case ConnectionState.done:
             if (snapshot.hasData) {
-              _insuranceList = snapshot.data;
+              if (snapshot.data == null) {
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+                  child: Text("NO saved insurance available"),
+                );
+              }
+              _insuranceList = snapshot.data['insuranceData'];
 
               if (_insuranceList == null || _insuranceList.isEmpty) {
                 return Padding(
