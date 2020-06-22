@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:async/async.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:hutano/models/medicalHistory.dart';
 import 'package:hutano/models/schedule.dart';
 import 'package:hutano/strings.dart';
@@ -361,6 +363,20 @@ class ApiBaseHelper {
       return res;
     });
   }
+
+  Future<dynamic> multipartPost(
+      String url, String token, String key, File imageFile) {
+    return _netUtil
+        .multipartPost(
+      url,
+      token: token,
+      imageFile: imageFile,
+      key: key,
+    )
+        .then((res) {
+      return res;
+    });
+  }
 }
 
 class NetworkUtil {
@@ -428,6 +444,56 @@ class NetworkUtil {
       }
 
       responseJson = _decoder.convert(response.body);
+
+      debugPrint(responseJson.toString(), wrapWidth: 1024);
+    } on SocketException {
+      Widgets.showToast(Strings.noInternet);
+      throw Exception(Strings.noInternet);
+    }
+
+    return responseJson;
+  }
+
+  Future<dynamic> multipartPost(String url,
+      {String token, File imageFile, String key}) async {
+    var responseJson;
+    try {
+      Uri uri = Uri.parse(url);
+      http.MultipartRequest request = http.MultipartRequest('POST', uri);
+
+      if (token != null) {
+        request.headers['authorization'] = token;
+      }
+
+      var stream = ByteStream(DelegatingStream(imageFile.openRead()));
+      var length = await imageFile.length();
+      var multipartFile =
+          MultipartFile(key, stream.cast(), length, filename: imageFile.path);
+      request.files.add(multipartFile);
+
+      var response = await request.send();
+      final int statusCode = response.statusCode;
+      log("Status code: $statusCode");
+
+      JsonDecoder _decoder = new JsonDecoder();
+
+      String respStr = await response.stream.bytesToString();
+      var responseJson = _decoder.convert(respStr);
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        if (responseJson["response"] is String)
+          Widgets.showToast(responseJson["response"]);
+        else if (responseJson["response"] is Map)
+          Widgets.showToast(responseJson);
+        else {
+          responseJson["response"]
+              .map((m) => Widgets.showToast(m["msg"]))
+              .toList();
+        }
+
+        debugPrint(responseJson["response"].toString(), wrapWidth: 1024);
+        throw Exception(responseJson);
+      }
 
       debugPrint(responseJson.toString(), wrapWidth: 1024);
     } on SocketException {
