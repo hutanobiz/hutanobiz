@@ -23,6 +23,35 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
   bool _isLoading = false;
 
   @override
+  void initState() {
+    super.initState();
+
+    setLoading(true);
+    imagesList.clear();
+
+    SharedPref().getToken().then((token) {
+      ApiBaseHelper _api = ApiBaseHelper();
+
+      _api.getUserDetails(token).then((value) {
+        if (value != null) {
+          setLoading(false);
+
+          setState(() {
+            if (value['images'] != null && value['images'].isNotEmpty) {
+              for (dynamic images in value['images']) {
+                imagesList.add(ApiBaseHelper.imageUrl + images);
+              }
+            }
+          });
+        }
+      }).futureError((error) {
+        error.toString().debugLog();
+        setLoading(false);
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
@@ -31,15 +60,10 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
         isLoading: _isLoading,
         isAddBack: false,
         addBottomArrows: true,
-        onForwardTap: () {
-          // if (imagesList != null && imagesList.length > 0) {
-          //   _container.setConsentToTreatData("imagesList", imagesList);
-          // }
-
-          Navigator.of(context).pushNamed(Routes.uploadDocumentsScreen);
-        },
+        onForwardTap: () =>
+            Navigator.of(context).pushNamed(Routes.uploadDocumentsScreen),
         color: Colors.white,
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 90),
         child: Stack(
           children: <Widget>[
             Container(
@@ -82,23 +106,25 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
 
     formWidget.add(SizedBox(height: 30));
 
-    formWidget.add(Wrap(
-      spacing: 16,
-      runSpacing: 20,
-      children: images(),
-    ));
+    formWidget.add(
+      Wrap(
+        spacing: 10,
+        runSpacing: 20,
+        children: images(),
+      ),
+    );
 
     return formWidget;
   }
 
-  images() {
+  List<Widget> images() {
     List<Widget> columnContent = [];
 
     for (String content in imagesList) {
       columnContent.add(
         Container(
-          height: 110.0,
-          width: 160.0,
+          height: 100.0,
+          width: 180.0,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16.0),
@@ -111,10 +137,15 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
             children: <Widget>[
               ClipRRect(
                 borderRadius: BorderRadius.circular(16.0),
-                child: Image.file(
-                  File(content),
-                  fit: BoxFit.cover,
-                ),
+                child: content.contains('http') || content.contains('https')
+                    ? Image.network(
+                        content,
+                        fit: BoxFit.cover,
+                      )
+                    : Image.file(
+                        File(content),
+                        fit: BoxFit.cover,
+                      ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),

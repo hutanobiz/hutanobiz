@@ -19,10 +19,40 @@ class UploadDocumentsScreen extends StatefulWidget {
 }
 
 class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
-  List<File> docsList = List();
+  List<String> docsList = List();
 
   bool _isLoading = false;
   Map<String, String> filesPaths;
+
+  @override
+  void initState() {
+    super.initState();
+
+    setLoading(true);
+    docsList.clear();
+
+    SharedPref().getToken().then((token) {
+      ApiBaseHelper _api = ApiBaseHelper();
+
+      _api.getUserDetails(token).then((value) {
+        if (value != null) {
+          setLoading(false);
+
+          setState(() {
+            if (value['medicalDocuments'] != null &&
+                value['medicalDocuments'].isNotEmpty) {
+              for (dynamic docs in value['medicalDocuments']) {
+                docsList.add(ApiBaseHelper.imageUrl + docs);
+              }
+            }
+          });
+        }
+      }).futureError((error) {
+        error.toString().debugLog();
+        setLoading(false);
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +70,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
           );
         },
         color: Colors.white,
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 90),
         child: Stack(
           children: <Widget>[
             Container(
@@ -82,7 +112,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
     formWidget.add(SizedBox(height: 30));
 
     formWidget.add(Wrap(
-      spacing: 16,
+      spacing: 10,
       runSpacing: 20,
       children: images(),
     ));
@@ -93,94 +123,96 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
   images() {
     List<Widget> columnContent = [];
 
-    for (File content in docsList) {
+    for (String content in docsList) {
       columnContent.add(
-        InkWell(
-          onTap: () {},
-          child: Container(
-            height: 125.0,
-            width: 160.0,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16.0),
-              border: Border.all(
-                color: Colors.grey[300],
+        Container(
+          height: 125.0,
+          width: 180.0,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.0),
+            border: Border.all(
+              color: Colors.grey[300],
+            ),
+          ),
+          child: Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              ClipRRect(
+                borderRadius: BorderRadius.circular(16.0),
+                child: content.toLowerCase().endsWith("pdf")
+                    ? "ic_pdf".imageIcon()
+                    : (content.contains('http') || content.contains('https')
+                        ? Image.network(
+                            content,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.file(
+                            File(content),
+                            fit: BoxFit.cover,
+                          )),
               ),
-            ),
-            child: Stack(
-              fit: StackFit.expand,
-              children: <Widget>[
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(16.0),
-                  child: content.path.toLowerCase().endsWith("pdf")
-                      ? "ic_pdf".imageIcon()
-                      : Image.file(
-                          File(content.path),
-                          fit: BoxFit.cover,
-                        ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: SizedBox(
-                      height: 22,
-                      width: 22,
-                      child: RawMaterialButton(
-                        onPressed: () {
-                          setState(() {
-                            docsList.remove(content);
-                          });
-                        },
-                        child: Icon(
-                          Icons.close,
-                          color: Colors.grey,
-                          size: 16.0,
-                        ),
-                        shape: CircleBorder(),
-                        elevation: 2.0,
-                        fillColor: Colors.white,
-                        constraints: const BoxConstraints(
-                          minWidth: 22.0,
-                          minHeight: 22.0,
-                        ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: SizedBox(
+                    height: 22,
+                    width: 22,
+                    child: RawMaterialButton(
+                      onPressed: () {
+                        setState(() {
+                          docsList.remove(content);
+                        });
+                      },
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.grey,
+                        size: 16.0,
+                      ),
+                      shape: CircleBorder(),
+                      elevation: 2.0,
+                      fillColor: Colors.white,
+                      constraints: const BoxConstraints(
+                        minWidth: 22.0,
+                        minHeight: 22.0,
                       ),
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    height: 46,
-                    padding: const EdgeInsets.all(10.0),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(14.0),
-                      border: Border.all(
-                        color: Colors.grey[100],
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        content.path.toLowerCase().endsWith("pdf")
-                            ? "ic_pdf".imageIcon()
-                            : "ic_image".imageIcon(),
-                        SizedBox(width: 5.0),
-                        Expanded(
-                          child: Text(
-                            basename(content.path),
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height: 46,
+                  padding: const EdgeInsets.all(10.0),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(14.0),
+                    border: Border.all(
+                      color: Colors.grey[100],
                     ),
                   ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      content.toLowerCase().endsWith("pdf")
+                          ? "ic_pdf".imageIcon()
+                          : "ic_image".imageIcon(),
+                      SizedBox(width: 5.0),
+                      Expanded(
+                        child: Text(
+                          basename(content),
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       );
@@ -197,7 +229,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
 
     setState(() {
       if (file != null) {
-        docsList.add(file);
+        docsList.add(file.path);
 
         setLoading(true);
         SharedPref().getToken().then((token) {
@@ -304,7 +336,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
       );
 
       if (croppedFile != null) {
-        setState(() => docsList.add(croppedFile));
+        setState(() => docsList.add(croppedFile.path));
 
         setLoading(true);
         SharedPref().getToken().then((token) {
