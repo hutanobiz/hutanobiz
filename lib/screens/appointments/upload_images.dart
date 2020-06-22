@@ -1,10 +1,13 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
-import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,26 +18,9 @@ class UploadImagesScreen extends StatefulWidget {
 }
 
 class _UploadImagesScreenState extends State<UploadImagesScreen> {
-  File croppedFile;
-
   List<String> imagesList = List();
-  InheritedContainerState _container;
 
   bool _isLoading = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    _container = InheritedContainer.of(context);
-
-    Map _consentToTreatMap = _container.consentToTreatMap;
-
-    if (_consentToTreatMap["imagesList"] != null &&
-        _consentToTreatMap["imagesList"].length > 0) {
-      imagesList = _consentToTreatMap["imagesList"];
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +32,9 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
         isAddBack: false,
         addBottomArrows: true,
         onForwardTap: () {
-          if (imagesList != null && imagesList.length > 0) {
-            _container.setConsentToTreatData("imagesList", imagesList);
-          }
+          // if (imagesList != null && imagesList.length > 0) {
+          //   _container.setConsentToTreatData("imagesList", imagesList);
+          // }
 
           Navigator.of(context).pushNamed(Routes.uploadDocumentsScreen);
         },
@@ -165,12 +151,16 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
   }
 
   Future getImage(int source) async {
-    var image = await ImagePicker.pickImage(
+    ImagePicker _picker = ImagePicker();
+
+    PickedFile image = await _picker.getImage(
         imageQuality: 25,
         source: (source == 1) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
-      croppedFile = await ImageCropper.cropImage(
-        compressQuality: image.lengthSync() >100000?25:100,
+      File imageFile = File(image.path);
+
+      File croppedFile = await ImageCropper.cropImage(
+        compressQuality: imageFile.lengthSync() > 100000 ? 25 : 100,
         sourcePath: image.path,
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
@@ -190,6 +180,22 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
       );
       if (croppedFile != null) {
         setState(() => imagesList.add(croppedFile.path));
+
+        setLoading(true);
+        SharedPref().getToken().then((token) {
+          ApiBaseHelper api = ApiBaseHelper();
+
+          api
+              .multipartPost(
+            ApiBaseHelper.base_url + 'api/patient/images',
+            token,
+            'images',
+            croppedFile,
+          )
+              .then((value) {
+            setLoading(false);
+          }).futureError((error) => setLoading(false));
+        });
       }
     }
   }
