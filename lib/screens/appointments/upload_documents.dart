@@ -2,11 +2,12 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
-import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,27 +19,10 @@ class UploadDocumentsScreen extends StatefulWidget {
 }
 
 class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
-  File croppedFile;
-
   List<File> docsList = List();
-  InheritedContainerState _container;
 
   bool _isLoading = false;
   Map<String, String> filesPaths;
-  var document;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    _container = InheritedContainer.of(context);
-    Map _consentToTreatMap = _container.consentToTreatMap;
-
-    if (_consentToTreatMap["docsList"] != null &&
-        _consentToTreatMap["docsList"].length > 0) {
-      docsList = _consentToTreatMap["docsList"];
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,10 +34,6 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
         isAddBack: false,
         addBottomArrows: true,
         onForwardTap: () {
-          if (docsList != null && docsList.length > 0) {
-            _container.setConsentToTreatData("docsList", docsList);
-          }
-
           Navigator.of(context).pushNamed(
             Routes.paymentMethodScreen,
             arguments: true,
@@ -216,7 +196,25 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
     );
 
     setState(() {
-      if (file != null) docsList.add(file);
+      if (file != null) {
+        docsList.add(file);
+
+        setLoading(true);
+        SharedPref().getToken().then((token) {
+          ApiBaseHelper api = ApiBaseHelper();
+
+          api
+              .multipartPost(
+            ApiBaseHelper.base_url + 'api/patient/medical-documents',
+            token,
+            'medicalDocuments',
+            file,
+          )
+              .then((value) {
+            setLoading(false);
+          }).futureError((error) => setLoading(false));
+        });
+      }
     });
   }
 
@@ -277,12 +275,16 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
   }
 
   Future getImage(int source) async {
-    var image = await ImagePicker.pickImage(
+    ImagePicker _picker = ImagePicker();
+
+    PickedFile image = await _picker.getImage(
         imageQuality: 25,
         source: (source == 1) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
-      croppedFile = await ImageCropper.cropImage(
-        compressQuality: image.lengthSync() >100000?25:100,
+      File imageFile = File(image.path);
+
+      File croppedFile = await ImageCropper.cropImage(
+        compressQuality: imageFile.lengthSync() > 100000 ? 25 : 100,
         sourcePath: image.path,
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
@@ -300,8 +302,25 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
           minimumAspectRatio: 1.0,
         ),
       );
+
       if (croppedFile != null) {
         setState(() => docsList.add(croppedFile));
+
+        setLoading(true);
+        SharedPref().getToken().then((token) {
+          ApiBaseHelper api = ApiBaseHelper();
+
+          api
+              .multipartPost(
+            ApiBaseHelper.base_url + 'api/patient/medical-documents',
+            token,
+            'medicalDocuments',
+            croppedFile,
+          )
+              .then((value) {
+            setLoading(false);
+          }).futureError((error) => setLoading(false));
+        });
       }
     }
   }
