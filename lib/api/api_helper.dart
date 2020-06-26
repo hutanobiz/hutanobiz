@@ -343,7 +343,7 @@ class ApiBaseHelper {
 
     return _netUtil
         .post(
-      base_url + "/api/search",
+      base_url + "api/search",
       body: filterMap,
       headers: headers,
     )
@@ -375,6 +375,45 @@ class ApiBaseHelper {
     )
         .then((res) {
       return res;
+    });
+  }
+
+  Future<String> deletePatientImage(String token, String imageName) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    Map imageNameMap = {};
+    imageNameMap['image'] = imageName;
+
+    return _netUtil
+        .post(
+      base_url + "api/patient/delete-image",
+      body: imageNameMap,
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
+
+  Future<String> deletePatientMedicalDocs(
+      String token, String medicalDocsName) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    Map medicalDocumentMap = {};
+    medicalDocumentMap['medicalDocument'] = medicalDocsName;
+
+    return _netUtil
+        .post(
+      base_url + "api/patient/delete-medical-documents",
+      body: medicalDocumentMap,
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
     });
   }
 }
