@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:async/async.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:hutano/api/api_helper.dart';
@@ -200,28 +199,19 @@ class _UploadInsuranceImagesScreenState
           ),
           SizedBox(width: 16.0),
           Expanded(
-            child: InkWell(
-              splashColor: Colors.grey,
+            child: DashedBorder(
               onTap: () => backImagePath != null
                   ? Navigator.of(context).pushNamed(
                       Routes.providerImageScreen,
                       arguments: backImagePath,
                     )
-                  : showPickerDialog(false),
-              child: DottedBorder(
-                borderType: BorderType.RRect,
-                radius: Radius.circular(14),
-                color: Colors.black26,
-                dashPattern: [6, 6],
-                strokeWidth: 0.5,
-                child: backImagePath == null
-                    ? uploadWidget(
-                        "Back", AssetImage("images/ic_back_image.png"))
-                    : imageWidget(
-                        backImagePath,
-                        false,
-                      ),
-              ),
+                  : showPickerDialog(true),
+              child: backImagePath == null
+                  ? uploadWidget("Back", AssetImage("images/ic_back_image.png"))
+                  : imageWidget(
+                      backImagePath,
+                      false,
+                    ),
             ),
           ),
         ],
@@ -232,21 +222,30 @@ class _UploadInsuranceImagesScreenState
   }
 
   Widget uploadWidget(title, image) {
-    return Row(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Image(
-            image: image,
-            height: 48.0,
-            width: 48.0,
+    return SizedBox(
+      height: 100.0,
+      width: 180.0,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 8, 8, 8),
+            child: Image(
+              image: image,
+              height: 48.0,
+              width: 48.0,
+            ),
           ),
-        ),
-        SizedBox(width: 6.0),
-        Text(
-          title,
-        )
-      ],
+          SizedBox(width: 3.0),
+          Text(
+            title,
+            style: TextStyle(
+              color: AppColors.midnight_express,
+              fontSize: 15,
+            ),
+          )
+        ],
+      ),
     );
   }
 
