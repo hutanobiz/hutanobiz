@@ -24,6 +24,10 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
   bool _isLoading = false;
   Map<String, String> filesPaths;
 
+  String token;
+
+  ApiBaseHelper _api = ApiBaseHelper();
+
   @override
   void initState() {
     super.initState();
@@ -32,7 +36,9 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
     docsList.clear();
 
     SharedPref().getToken().then((token) {
-      ApiBaseHelper _api = ApiBaseHelper();
+      setState(() {
+        this.token = token;
+      });
 
       _api.getUserDetails(token).then((value) {
         if (value != null) {
@@ -161,8 +167,23 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                     width: 22,
                     child: RawMaterialButton(
                       onPressed: () {
-                        setState(() {
-                          docsList.remove(content);
+                        setLoading(true);
+
+                        int urlIndex = content.lastIndexOf('/');
+                        String docName =
+                            content.substring(urlIndex + 1, content.length);
+
+                        _api
+                            .deletePatientMedicalDocs(
+                          token,
+                          docName,
+                        )
+                            .whenComplete(() {
+                          setLoading(false);
+                          setState(() => docsList.remove(content));
+                        }).futureError((error) {
+                          setLoading(false);
+                          error.toString().debugLog();
                         });
                       },
                       child: Icon(
@@ -339,20 +360,17 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
         setState(() => docsList.add(croppedFile.path));
 
         setLoading(true);
-        SharedPref().getToken().then((token) {
-          ApiBaseHelper api = ApiBaseHelper();
 
-          api
-              .multipartPost(
-            ApiBaseHelper.base_url + 'api/patient/medical-documents',
-            token,
-            'medicalDocuments',
-            croppedFile,
-          )
-              .then((value) {
-            setLoading(false);
-          }).futureError((error) => setLoading(false));
-        });
+        _api
+            .multipartPost(
+          ApiBaseHelper.base_url + 'api/patient/medical-documents',
+          token,
+          'medicalDocuments',
+          croppedFile,
+        )
+            .then((value) {
+          setLoading(false);
+        }).futureError((error) => setLoading(false));
       }
     }
   }
