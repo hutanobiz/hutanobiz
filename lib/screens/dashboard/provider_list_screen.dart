@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
-import 'package:hutano/widgets/round_corner_checkbox.dart';
 
 class ProviderListScreen extends StatefulWidget {
   ProviderListScreen({Key key}) : super(key: key);
@@ -144,7 +144,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
       padding: const EdgeInsets.only(top: 14),
       child: ListView.separated(
         separatorBuilder: (BuildContext context, int index) =>
-            SizedBox(width: 16),
+            SizedBox(width: 10),
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         physics: ClampingScrollPhysics(),
@@ -152,27 +152,34 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
         itemBuilder: (context, index) {
           String _appointmentType = _appointmentTypeFilterList[index];
 
-          return RoundCornerCheckBox(
-            title: _appointmentType,
-            textPadding: 1.0,
-            value: _appointmentTypeFilterMap.containsValue(index.toString()),
-            textStyle: TextStyle(
-              color: AppColors.midnight_express.withOpacity(0.84),
-              fontSize: 13,
-              fontWeight: FontWeight.w400,
+          return _appointmentTypeWidget(
+            _appointmentType,
+            _appointmentTypeFilterMap.containsValue(
+              index.toString(),
             ),
-            onCheck: null,
-            // (value) {
-            //   setState(() {
-            //     value
-            //         ? _appointmentTypeFilterMap[_appointmentType] = '1'
-            //         : _appointmentTypeFilterMap.remove(
-            //             _appointmentTypeFilterMap,
-            //           );
-            //   });
-            // },
-            //TODO: appintment type filter
           );
+
+          // return RoundCornerCheckBox(
+          //   title: _appointmentType,
+          //   textPadding: 1.0,
+          //   value: _appointmentTypeFilterMap.containsValue(index.toString()),
+          //   textStyle: TextStyle(
+          //     color: AppColors.midnight_express.withOpacity(0.84),
+          //     fontSize: 13,
+          //     fontWeight: FontWeight.w400,
+          //   ),
+          //   onCheck: null,
+          //   // (value) {
+          //   //   setState(() {
+          //   //     value
+          //   //         ? _appointmentTypeFilterMap[_appointmentType] = '1'
+          //   //         : _appointmentTypeFilterMap.remove(
+          //   //             _appointmentTypeFilterMap,
+          //   //           );
+          //   //   });
+          //   // },
+          //   //TODO: appintment type filter
+          // );
         },
       ),
     );
@@ -249,10 +256,6 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
             degree: degree,
             averageRating:
                 _provider['averageRating']?.toStringAsFixed(2) ?? "0",
-            onViewProfileClick: () {
-              _container.setProviderId(_provider["userId"]["_id"]);
-              Navigator.of(context).pushNamed(Routes.providerProfileScreen);
-            },
             bookAppointment: () {
               _container.getProviderData().clear();
 
@@ -271,6 +274,55 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
           ),
         );
       },
+    );
+  }
+
+  Widget _appointmentTypeWidget(String title, bool isSelected) {
+    String icon = title.toLowerCase().contains('office')
+        ? (isSelected ? 'ic_office_app' : 'ic_office_app_unselected')
+        : title.toLowerCase().contains('video')
+            ? (isSelected ? 'ic_video_app' : 'ic_video_app_unselected')
+            : title.toLowerCase().contains('onsite')
+                ? (isSelected ? 'ic_onsite_app' : 'ic_onsite_app_unselected')
+                : '';
+
+    return Container(
+      height: 42,
+      width: title.toLowerCase().contains('all') ? 64 : 96,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: isSelected
+            ? AppColors.windsor.withOpacity(0.10)
+            : Colors.transparent,
+        borderRadius: BorderRadius.circular(28),
+        border: isSelected
+            ? null
+            : Border.all(
+                color: AppColors.windsor.withOpacity(0.16),
+              ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          title.toLowerCase().contains('all')
+              ? Container()
+              : icon.imageIcon(
+                  width: 21,
+                  height: 21,
+                ),
+          title.toLowerCase().contains('all')
+              ? Container()
+              : SizedBox(width: 5),
+          Text(
+            title,
+            style: TextStyle(
+              color: AppColors.windsor.withOpacity(0.85),
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+            ),
+          )
+        ],
+      ),
     );
   }
 
