@@ -16,13 +16,12 @@ class ProviderWidget extends StatelessWidget {
     this.margin,
     this.onRatingClick,
     this.onLocationClick,
-    this.onViewProfileClick,
   })  : assert(data != null),
         super(key: key);
 
   final data;
   final String degree, averageRating;
-  final Function bookAppointment, onViewProfileClick;
+  final Function bookAppointment;
   final bool isOptionsShow, isProverPicShow;
   final EdgeInsets margin;
   final Function onRatingClick, onLocationClick;
@@ -69,20 +68,25 @@ class ProviderWidget extends StatelessWidget {
     if (data["businessLocation"] != null) {
       dynamic business = data["businessLocation"];
 
-      String state = "---";
+      String state = "---", addressName = '---';
       if (business["state"] != null) {
         state = business["state"]["title"]?.toString() ?? "---";
       }
 
-      address = (business["address"]?.toString() ?? "---") +
-          ", " +
-          (business["street"]?.toString() ?? "---") +
-          ", " +
-          (business["city"]?.toString() ?? "---") +
-          ", " +
-          '$state, ' +
-          " - " +
-          (business["zipCode"]?.toString() ?? "---");
+      if (business["address"] != null) {
+        addressName =
+            business["address"].toString().toLowerCase().contains('suite')
+                ? "Ste."
+                : business["address"].toString();
+      }
+
+      address = Extensions.addressFormat(
+        addressName,
+        business["street"]?.toString(),
+        business["city"]?.toString(),
+        state,
+        business["zipCode"]?.toString(),
+      );
     }
 
     return Container(
@@ -165,21 +169,98 @@ class ProviderWidget extends StatelessWidget {
                                 child: Text(
                                   practicingSince + " Years of Experience",
                                   style: TextStyle(
-                                    color: Colors.black.withOpacity(0.5),
+                                    color: Colors.black.withOpacity(0.7),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
                                   ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        Text(
-                          professionalTitle,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: Colors.black.withOpacity(0.5),
-                          ),
+                        Row(
+                          children: <Widget>[
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                "ic_rating_golden"
+                                    .imageIcon(width: 12, height: 12),
+                                SizedBox(
+                                  width: 2,
+                                ),
+                                Text(
+                                  averageRating ?? "0",
+                                  style: TextStyle(
+                                    decoration: onRatingClick != null
+                                        ? TextDecoration.underline
+                                        : TextDecoration.none,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12,
+                                    color: Colors.black.withOpacity(0.7),
+                                  ),
+                                ),
+                              ],
+                            ).onClick(
+                              onTap:
+                                  onRatingClick != null ? onRatingClick : null,
+                            ),
+                            SizedBox(width: 3),
+                            Text(
+                              '\u2022 ' + professionalTitle,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Colors.black.withOpacity(0.7),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
                         ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: 5.0,
+                            bottom: 5.0,
+                            right: 5.0,
+                          ),
+                          child: Row(
+                            children: <Widget>[
+                              data['isOfficeEnabled']
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(right: 8),
+                                      child: 'ic_provider_office'.imageIcon(
+                                        width: 20,
+                                        height: 20,
+                                      ),
+                                    )
+                                  : Container(),
+                              data['isVideoChatEnabled']
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(right: 8),
+                                      child: 'ic_provider_office'.imageIcon(
+                                        width: 20,
+                                        height: 20,
+                                      ),
+                                    )
+                                  : Container(),
+                              data['isOnsiteEnabled']
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(right: 8),
+                                      child: 'ic_provider_onsite'.imageIcon(
+                                        width: 20,
+                                        height: 20,
+                                      ),
+                                    )
+                                  : Container(),
+                              // Expanded(
+                              //   child: 'ic_forward'.imageIcon(
+                              //     width: 9,
+                              //     height: 15,
+                              //   ),
+                              // )
+                            ],
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -203,29 +284,16 @@ class ProviderWidget extends StatelessWidget {
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                    SizedBox(height: 7),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        "ic_rating_golden".imageIcon(width: 12, height: 12),
-                        SizedBox(
-                          width: 2,
+                    SizedBox(height: 25),
+                    Positioned(
+                      child: Align(
+                        alignment: FractionalOffset.bottomRight,
+                        child: 'ic_forward'.imageIcon(
+                          width: 9,
+                          height: 15,
                         ),
-                        Text(
-                          averageRating ?? "0",
-                          style: TextStyle(
-                            decoration: onRatingClick != null
-                                ? TextDecoration.underline
-                                : TextDecoration.none,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12,
-                            color: Colors.black.withOpacity(0.6),
-                          ),
-                        ),
-                      ],
-                    ).onClick(
-                      onTap: onRatingClick != null ? onRatingClick : null,
-                    ),
+                      ),
+                    )
                   ],
                 ),
               ],
@@ -266,77 +334,40 @@ class ProviderWidget extends StatelessWidget {
                         ),
                       ),
                     ],
-                  ), //TODO: address
+                  ),
                 ),
               ],
             ),
           ),
           isOptionsShow
-              ? Row(
-                  children: <Widget>[
-                    rowButton(
-                      context: context,
-                      title: "View Profile",
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(13.0),
-                      ),
-                      onPressed: onViewProfileClick,
-                    ),
-                    rowButton(
-                      context: context,
-                      title: "Book Appointment",
+              ? Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.only(top: 12.0),
+                  child: FlatButton(
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    color: AppColors.persian_indigo,
+                    splashColor: Colors.grey[300],
+                    shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
                         bottomRight: Radius.circular(13.0),
+                        bottomLeft: Radius.circular(13.0),
                       ),
-                      onPressed: bookAppointment,
+                      side: BorderSide(
+                          width: 0.5, color: AppColors.persian_indigo),
                     ),
-                  ],
+                    child: Text(
+                      "Book Appointment",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 12.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: bookAppointment,
+                  ),
                 )
               : Container(),
         ],
-      ),
-    );
-  }
-
-  Widget rowButton({
-    BuildContext context,
-    String title,
-    BorderRadiusGeometry borderRadius,
-    Function onPressed,
-  }) {
-    return Expanded(
-      child: Padding(
-        padding: EdgeInsets.only(top: 12.0),
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          child: FlatButton(
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            color: title.toLowerCase().contains('appointment')
-                ? AppColors.persian_indigo
-                : Colors.white,
-            splashColor: Colors.grey[300],
-            shape: RoundedRectangleBorder(
-              borderRadius: borderRadius,
-              side: BorderSide(
-                width: 0.5,
-                color: title.toLowerCase().contains('appointment')
-                    ? AppColors.persian_indigo
-                    : Colors.grey[300],
-              ),
-            ),
-            child: Text(
-              title,
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 12.0,
-                color: title.toLowerCase().contains('appointment')
-                    ? Colors.white
-                    : AppColors.persian_indigo,
-              ),
-            ),
-            onPressed: onPressed,
-          ),
-        ),
       ),
     );
   }
