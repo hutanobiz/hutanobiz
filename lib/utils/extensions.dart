@@ -6,7 +6,25 @@ import 'package:hutano/colors.dart';
 import 'package:intl/intl.dart';
 import 'package:map_launcher/map_launcher.dart';
 
-class Extensions {}
+class Extensions {
+  static String addressFormat(
+    String name,
+    String street,
+    String city,
+    String stateCode,
+    String zipCode,
+  ) {
+    return (name ?? "---") +
+        " " +
+        (street ?? "---") +
+        ", " +
+        (city ?? "---") +
+        ", " +
+        stateCode +
+        " " +
+        (zipCode ?? "---");
+  }
+}
 
 extension ImageIcon on String {
   imageIcon({double height, double width, Color color}) => Image.asset(
