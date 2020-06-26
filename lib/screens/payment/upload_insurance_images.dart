@@ -252,6 +252,8 @@ class _UploadInsuranceImagesScreenState
 
   Widget imageWidget(String path, bool isFront) {
     return Container(
+      height: 100.0,
+      width: 180.0,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8.0),
@@ -267,13 +269,11 @@ class _UploadInsuranceImagesScreenState
             child: (path.contains('http') || path.contains('https'))
                 ? Image.network(
                     path,
-                    height: 74,
                     width: double.maxFinite,
                     fit: BoxFit.cover,
                   )
                 : Image.file(
                     File(path),
-                    height: 74,
                     width: double.maxFinite,
                     fit: BoxFit.cover,
                   ),
@@ -301,8 +301,10 @@ class _UploadInsuranceImagesScreenState
                   shape: CircleBorder(),
                   elevation: 2.0,
                   fillColor: Colors.white,
-                  constraints:
-                      const BoxConstraints(minWidth: 22.0, minHeight: 22.0),
+                  constraints: const BoxConstraints(
+                    minWidth: 22.0,
+                    minHeight: 22.0,
+                  ),
                 ),
               ),
             ),
