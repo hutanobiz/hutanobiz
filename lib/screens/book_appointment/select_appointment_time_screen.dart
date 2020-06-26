@@ -45,6 +45,8 @@ class _SelectAppointmentTimeScreenState
 
   bool isEditDateTime = false;
 
+  List<int> _scheduleDaysList = [];
+
   @override
   void initState() {
     super.initState();
@@ -62,6 +64,8 @@ class _SelectAppointmentTimeScreenState
 
   @override
   void didChangeDependencies() {
+    super.didChangeDependencies();
+
     _container = InheritedContainer.of(context);
     _providerData = _container.getProviderData();
     Map _servicesMap = _container.selectServiceMap;
@@ -100,7 +104,6 @@ class _SelectAppointmentTimeScreenState
         .timeout(Duration(seconds: 10));
 
     _selectedTiming = null;
-    super.didChangeDependencies();
   }
 
   @override
@@ -135,8 +138,30 @@ class _SelectAppointmentTimeScreenState
     );
   }
 
+  void _getScheduleDaysList() {
+    if (profileMap['schedules'] != null && profileMap['schedules'].isNotEmpty) {
+      List scheduleList = profileMap['schedules'];
+
+      for (dynamic schedule in scheduleList) {
+        if (schedule['scheduleType'].toString() == '1') {
+          if (schedule['day'] != null) {
+            List _daysList = schedule["day"];
+
+            for (dynamic days in _daysList) {
+              if (!_scheduleDaysList.contains(int.parse(days.toString()))) {
+                _scheduleDaysList.add(int.parse(days.toString()));
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   List<Widget> widgetList() {
     List<Widget> formWidget = new List();
+
+    _getScheduleDaysList();
 
     formWidget.add(ProviderWidget(
       data: profileMap,
@@ -147,9 +172,11 @@ class _SelectAppointmentTimeScreenState
 
     formWidget.add(ScrollingDayCalendar(
       startDate: DateTime.now(),
-      endDate: DateTime.now().add(Duration(days: 14)),
+      endDate: DateTime(DateTime.now().year + 2),
+      // endDate: DateTime.now().add(Duration(days: 14)),
       selectedDate: DateTime.now(),
       displayDateFormat: "EEEE, dd MMMM",
+      scheduleDaysList: _scheduleDaysList,
       onDateChange: (DateTime selectedDate) {
         _dayDateMap["day"] = selectedDate.weekday.toString();
         _dayDateMap["date"] =
