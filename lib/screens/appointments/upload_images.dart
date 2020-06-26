@@ -21,6 +21,9 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
   List<String> imagesList = List();
 
   bool _isLoading = false;
+  ApiBaseHelper _api = ApiBaseHelper();
+
+  String token;
 
   @override
   void initState() {
@@ -30,7 +33,9 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
     imagesList.clear();
 
     SharedPref().getToken().then((token) {
-      ApiBaseHelper _api = ApiBaseHelper();
+      setState(() {
+        this.token = token;
+      });
 
       _api.getUserDetails(token).then((value) {
         if (value != null) {
@@ -156,7 +161,24 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                     width: 22,
                     child: RawMaterialButton(
                       onPressed: () {
-                        setState(() => imagesList.remove(content));
+                        setLoading(true);
+
+                        int urlIndex = content.lastIndexOf('/');
+                        String imageName =
+                            content.substring(urlIndex + 1, content.length);
+
+                        _api
+                            .deletePatientImage(
+                          token,
+                          imageName,
+                        )
+                            .whenComplete(() {
+                          setLoading(false);
+                          setState(() => imagesList.remove(content));
+                        }).futureError((error) {
+                          setLoading(false);
+                          error.toString().debugLog();
+                        });
                       },
                       child: Icon(
                         Icons.close,
@@ -213,20 +235,17 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
         setState(() => imagesList.add(croppedFile.path));
 
         setLoading(true);
-        SharedPref().getToken().then((token) {
-          ApiBaseHelper api = ApiBaseHelper();
 
-          api
-              .multipartPost(
-            ApiBaseHelper.base_url + 'api/patient/images',
-            token,
-            'images',
-            croppedFile,
-          )
-              .then((value) {
-            setLoading(false);
-          }).futureError((error) => setLoading(false));
-        });
+        _api
+            .multipartPost(
+          ApiBaseHelper.base_url + 'api/patient/images',
+          token,
+          'images',
+          croppedFile,
+        )
+            .then((value) {
+          setLoading(false);
+        }).futureError((error) => setLoading(false));
       }
     }
   }
