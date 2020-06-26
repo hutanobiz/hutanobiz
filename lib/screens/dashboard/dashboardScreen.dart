@@ -10,6 +10,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/widgets/circular_loader.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:location/location.dart';
@@ -34,9 +35,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   LatLng _latLng;
 
-  bool _isLoading = false;
+  bool _isLocLoading = false;
 
   InheritedContainerState conatiner;
+
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -78,61 +81,72 @@ class _DashboardScreenState extends State<DashboardScreen> {
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.white_smoke,
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: <Widget>[
-            isEmailVerified
-                ? Container()
-                : Container(
-                    width: MediaQuery.of(context).size.width,
-                    color: AppColors.windsor,
-                    padding: EdgeInsets.all(4.0),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Text(
-                            "Email not verified.",
-                            style: TextStyle(color: Colors.white, fontSize: 12),
-                          ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                isEmailVerified
+                    ? Container()
+                    : Container(
+                        width: MediaQuery.of(context).size.width,
+                        color: AppColors.windsor,
+                        padding: EdgeInsets.all(4.0),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Text(
+                                "Email not verified.",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 12),
+                              ),
+                            ),
+                            Text(
+                              "Resend Verification Link",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          "Resend Verification Link",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            decoration: TextDecoration.underline,
-                          ),
+                      ).onClick(onTap: () {
+                        _loading(true);
+                        SharedPref().getToken().then((value) {
+                          Map map = {};
+                          map["step"] = "5";
+                          _api.emailVerfication(value, map).whenComplete(() {
+                            _loading(false);
+                            Widgets.showToast(
+                                'Verification link sent successfully');
+                          }).futureError((error) => _loading(false));
+                        });
+                      }),
+                Padding(
+                  padding: _edgeInsetsGeometry,
+                  child: adressBar(),
+                ),
+                Padding(
+                  padding: _edgeInsetsGeometry,
+                  child: searchBar(),
+                ),
+                Expanded(
+                  child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(top: 16.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: const Radius.circular(22.0),
+                          topRight: const Radius.circular(22.0),
                         ),
-                      ],
-                    ),
-                  ).onClick(onTap: () {
-                    SharedPref().getToken().then((value) {
-                      Map map = {};
-                      map["step"] = "5";
-                      _api.emailVerfication(value, map);
-                    });
-                  }),
-            Padding(
-              padding: _edgeInsetsGeometry,
-              child: adressBar(),
+                      ),
+                      child: professionalTitleListWidget()),
+                ),
+              ],
             ),
-            Padding(
-              padding: _edgeInsetsGeometry,
-              child: searchBar(),
-            ),
-            Expanded(
-              child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin: const EdgeInsets.only(top: 16.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: const Radius.circular(22.0),
-                      topRight: const Radius.circular(22.0),
-                    ),
-                  ),
-                  child: professionalTitleListWidget()),
-            ),
+            _isLoading ? CircularLoader() : Container(),
           ],
         ),
       ),
@@ -150,7 +164,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           image: AssetImage("images/ic_location.png"),
         ),
         SizedBox(width: 10),
-        _isLoading
+        _isLocLoading
             ? Expanded(
                 child: Center(
                   child: CircularProgressIndicator(),
@@ -338,7 +352,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     LatLng latLng = result;
 
     if (latLng != null) {
-      _loading(true);
+      _locationLoading(true);
 
       _latLng = latLng;
 
@@ -347,7 +361,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   initPlatformState() async {
-    _loading(true);
+    _locationLoading(true);
 
     Location _location = Location();
     PermissionStatus _permission;
@@ -370,7 +384,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
             _latLng = LatLng(locationData.latitude, locationData.longitude);
           } on PlatformException catch (e) {
-            _loading(false);
+            _locationLoading(false);
 
             Widgets.showToast(e.message.toString());
             e.toString().debugLog();
@@ -405,15 +419,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       if (mounted) {
         setState(() {
-          _isLoading = false;
+          _isLocLoading = false;
           _currentddress = first;
           conatiner.setUserLocation("userAddress", _currentddress);
         });
       }
     } on PlatformException catch (e) {
-      _loading(false);
+      _locationLoading(false);
       print(e.message.toString() ?? e.toString());
     }
+  }
+
+  void _locationLoading(bool loading) {
+    setState(() {
+      _isLocLoading = loading;
+    });
   }
 
   void _loading(bool loading) {

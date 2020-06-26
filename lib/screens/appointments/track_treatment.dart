@@ -487,15 +487,17 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                               SizedBox(height: 7.0),
                               Row(
                                 children: <Widget>[
-                                  "ic_address_grey"
-                                      .imageIcon(width: 13, height: 16),
-                                  SizedBox(width: 7.0),
-                                  Text(
-                                    address,
-                                    style: TextStyle(
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black.withOpacity(0.7),
+                                  // "ic_address_grey"
+                                  //     .imageIcon(width: 13, height: 16),
+                                  // SizedBox(width: 7.0),
+                                  Expanded(
+                                    child: Text(
+                                      address,
+                                      style: TextStyle(
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black.withOpacity(0.7),
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -507,27 +509,27 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                           ),
                         ),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Icon(
-                                Icons.star,
-                                color: AppColors.goldenTainoi,
-                                size: 16,
-                              ),
-                              Text(
-                                rating,
-                                style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.goldenTainoi),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
+                      // Column(
+                      //   crossAxisAlignment: CrossAxisAlignment.end,
+                      //   children: <Widget>[
+                      //     Row(
+                      //       children: <Widget>[
+                      //         Icon(
+                      //           Icons.star,
+                      //           color: AppColors.goldenTainoi,
+                      //           size: 16,
+                      //         ),
+                      //         Text(
+                      //           rating,
+                      //           style: TextStyle(
+                      //               fontSize: 12.0,
+                      //               fontWeight: FontWeight.w600,
+                      //               color: AppColors.goldenTainoi),
+                      //         ),
+                      //       ],
+                      //     )
+                      //   ],
+                      // ),
                     ],
                   ),
                 ),

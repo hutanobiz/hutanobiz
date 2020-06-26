@@ -1,10 +1,13 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
-import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,25 +18,37 @@ class UploadImagesScreen extends StatefulWidget {
 }
 
 class _UploadImagesScreenState extends State<UploadImagesScreen> {
-  File croppedFile;
-
   List<String> imagesList = List();
-  InheritedContainerState _container;
 
   bool _isLoading = false;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
 
-    _container = InheritedContainer.of(context);
+    setLoading(true);
+    imagesList.clear();
 
-    Map _consentToTreatMap = _container.consentToTreatMap;
+    SharedPref().getToken().then((token) {
+      ApiBaseHelper _api = ApiBaseHelper();
 
-    if (_consentToTreatMap["imagesList"] != null &&
-        _consentToTreatMap["imagesList"].length > 0) {
-      imagesList = _consentToTreatMap["imagesList"];
-    }
+      _api.getUserDetails(token).then((value) {
+        if (value != null) {
+          setLoading(false);
+
+          setState(() {
+            if (value['images'] != null && value['images'].isNotEmpty) {
+              for (dynamic images in value['images']) {
+                imagesList.add(ApiBaseHelper.imageUrl + images);
+              }
+            }
+          });
+        }
+      }).futureError((error) {
+        error.toString().debugLog();
+        setLoading(false);
+      });
+    });
   }
 
   @override
@@ -45,15 +60,10 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
         isLoading: _isLoading,
         isAddBack: false,
         addBottomArrows: true,
-        onForwardTap: () {
-          if (imagesList != null && imagesList.length > 0) {
-            _container.setConsentToTreatData("imagesList", imagesList);
-          }
-
-          Navigator.of(context).pushNamed(Routes.uploadDocumentsScreen);
-        },
+        onForwardTap: () =>
+            Navigator.of(context).pushNamed(Routes.uploadDocumentsScreen),
         color: Colors.white,
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 90),
         child: Stack(
           children: <Widget>[
             Container(
@@ -96,23 +106,25 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
 
     formWidget.add(SizedBox(height: 30));
 
-    formWidget.add(Wrap(
-      spacing: 16,
-      runSpacing: 20,
-      children: images(),
-    ));
+    formWidget.add(
+      Wrap(
+        spacing: 10,
+        runSpacing: 20,
+        children: images(),
+      ),
+    );
 
     return formWidget;
   }
 
-  images() {
+  List<Widget> images() {
     List<Widget> columnContent = [];
 
     for (String content in imagesList) {
       columnContent.add(
         Container(
-          height: 110.0,
-          width: 160.0,
+          height: 100.0,
+          width: 180.0,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16.0),
@@ -125,10 +137,15 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
             children: <Widget>[
               ClipRRect(
                 borderRadius: BorderRadius.circular(16.0),
-                child: Image.file(
-                  File(content),
-                  fit: BoxFit.cover,
-                ),
+                child: content.contains('http') || content.contains('https')
+                    ? Image.network(
+                        content,
+                        fit: BoxFit.cover,
+                      )
+                    : Image.file(
+                        File(content),
+                        fit: BoxFit.cover,
+                      ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -165,12 +182,16 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
   }
 
   Future getImage(int source) async {
-    var image = await ImagePicker.pickImage(
+    ImagePicker _picker = ImagePicker();
+
+    PickedFile image = await _picker.getImage(
         imageQuality: 25,
         source: (source == 1) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
-      croppedFile = await ImageCropper.cropImage(
-        compressQuality: image.lengthSync() >100000?25:100,
+      File imageFile = File(image.path);
+
+      File croppedFile = await ImageCropper.cropImage(
+        compressQuality: imageFile.lengthSync() > 100000 ? 25 : 100,
         sourcePath: image.path,
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
@@ -190,6 +211,22 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
       );
       if (croppedFile != null) {
         setState(() => imagesList.add(croppedFile.path));
+
+        setLoading(true);
+        SharedPref().getToken().then((token) {
+          ApiBaseHelper api = ApiBaseHelper();
+
+          api
+              .multipartPost(
+            ApiBaseHelper.base_url + 'api/patient/images',
+            token,
+            'images',
+            croppedFile,
+          )
+              .then((value) {
+            setLoading(false);
+          }).futureError((error) => setLoading(false));
+        });
       }
     }
   }

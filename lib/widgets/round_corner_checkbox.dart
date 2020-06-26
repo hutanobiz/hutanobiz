@@ -5,6 +5,7 @@ class RoundCornerCheckBox extends StatelessWidget {
   final ValueChanged<bool> onCheck;
   final String title;
   final TextStyle textStyle;
+  final double textPadding;
 
   RoundCornerCheckBox({
     Key key,
@@ -12,6 +13,7 @@ class RoundCornerCheckBox extends StatelessWidget {
     @required this.onCheck,
     this.title,
     this.textStyle,
+    this.textPadding = 10,
   }) : super(key: key);
 
   @override
@@ -31,7 +33,7 @@ class RoundCornerCheckBox extends StatelessWidget {
                   : Image.asset("images/uncheckedCheck.png"),
             ),
           ),
-          title == null ? Container() : SizedBox(width: 10),
+          title == null ? Container() : SizedBox(width: textPadding),
           title == null
               ? Container()
               : Text(

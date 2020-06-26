@@ -175,6 +175,20 @@ class _SignUpFormState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: isUpdateProfile
+          ? AppBar(
+              elevation: 0,
+              backgroundColor: AppColors.white_smoke,
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                  size: 15.0,
+                  color: Colors.black,
+                ),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            )
+          : null,
       body: GestureDetector(
         onTap: () {
           FocusScopeNode currentFocus = FocusScope.of(context);
@@ -188,8 +202,12 @@ class _SignUpFormState extends State<Register> {
           child: ListView(
             shrinkWrap: true,
             children: getFormWidget(),
-            padding: const EdgeInsets.fromLTRB(
-                Dimens.padding, 51.0, Dimens.padding, Dimens.padding),
+            padding: EdgeInsets.fromLTRB(
+              Dimens.padding,
+              isUpdateProfile ? 20 : 51.0,
+              Dimens.padding,
+              Dimens.padding,
+            ),
           ),
         ),
       ),
@@ -522,7 +540,7 @@ class _SignUpFormState extends State<Register> {
         padding: EdgeInsets.only(top: 10, bottom: 5),
         child: FancyButton(
           buttonHeight: Dimens.buttonHeight,
-          title: "Next",
+          title: "Save",
           onPressed: isUpdateProfile
               ? () {
                   _register();
@@ -722,7 +740,7 @@ class _SignUpFormState extends State<Register> {
         source: (source == 1) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
       File croppedFile = await ImageCropper.cropImage(
-        compressQuality: image.lengthSync() >100000?25:100,
+        compressQuality: image.lengthSync() > 100000 ? 25 : 100,
         sourcePath: image.path,
         aspectRatioPresets: [
           CropAspectRatioPreset.square,

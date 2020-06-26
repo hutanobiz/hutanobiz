@@ -15,15 +15,17 @@ class ProviderWidget extends StatelessWidget {
     this.isProverPicShow = false,
     this.margin,
     this.onRatingClick,
+    this.onLocationClick,
+    this.onViewProfileClick,
   })  : assert(data != null),
         super(key: key);
 
   final data;
   final String degree, averageRating;
-  final Function bookAppointment;
+  final Function bookAppointment, onViewProfileClick;
   final bool isOptionsShow, isProverPicShow;
   final EdgeInsets margin;
-  final Function onRatingClick;
+  final Function onRatingClick, onLocationClick;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,8 @@ class ProviderWidget extends StatelessWidget {
         avatar,
         fee = "---",
         practicingSince = "---",
-        professionalTitle = "---";
+        professionalTitle = "---",
+        address = '---';
 
     if (data["consultanceFee"] != null) {
       for (dynamic consultanceFee in data["consultanceFee"]) {
@@ -63,6 +66,25 @@ class ProviderWidget extends StatelessWidget {
           data['professionalTitle']['title']?.toString() ?? "----";
     }
 
+    if (data["businessLocation"] != null) {
+      dynamic business = data["businessLocation"];
+
+      String state = "---";
+      if (business["state"] != null) {
+        state = business["state"]["title"]?.toString() ?? "---";
+      }
+
+      address = (business["address"]?.toString() ?? "---") +
+          ", " +
+          (business["street"]?.toString() ?? "---") +
+          ", " +
+          (business["city"]?.toString() ?? "---") +
+          ", " +
+          '$state, ' +
+          " - " +
+          (business["zipCode"]?.toString() ?? "---");
+    }
+
     return Container(
       margin: margin ?? const EdgeInsets.only(bottom: 22.0),
       decoration: BoxDecoration(
@@ -86,7 +108,7 @@ class ProviderWidget extends StatelessWidget {
                     onTap: isProverPicShow
                         ? () => Navigator.of(context).pushNamed(
                               Routes.providerImageScreen,
-                              arguments: avatar,
+                              arguments: (ApiBaseHelper.imageUrl + avatar),
                             )
                         : null,
                     child: Container(
@@ -120,7 +142,7 @@ class ProviderWidget extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 14.0,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         Padding(
@@ -130,29 +152,25 @@ class ProviderWidget extends StatelessWidget {
                             right: 5.0,
                           ),
                           child: Row(
-                            mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              Icon(
-                                Icons.star,
-                                color: AppColors.goldenTainoi,
-                                size: 12.0,
+                              Image(
+                                image: AssetImage(
+                                  "images/ic_experience.png",
+                                ),
+                                height: 14.0,
+                                width: 11.0,
                               ),
-                              SizedBox(
-                                width: 2,
-                              ),
-                              Text(
-                                averageRating ?? "0",
-                                style: TextStyle(
-                                  decoration: onRatingClick != null
-                                      ? TextDecoration.underline
-                                      : TextDecoration.none,
-                                  color: Colors.black.withOpacity(0.6),
+                              SizedBox(width: 3.0),
+                              Expanded(
+                                child: Text(
+                                  practicingSince + " Years of Experience",
+                                  style: TextStyle(
+                                    color: Colors.black.withOpacity(0.5),
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                        ).onClick(
-                          onTap: onRatingClick != null ? onRatingClick : null,
                         ),
                         Text(
                           professionalTitle,
@@ -172,11 +190,11 @@ class ProviderWidget extends StatelessWidget {
                     Text(
                       "\$$fee",
                       style: TextStyle(
-                        fontSize: 22.0,
-                        fontWeight: FontWeight.w700,
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(height: 3),
+                    SizedBox(height: 5),
                     Text(
                       "Consultation fee",
                       style: TextStyle(
@@ -184,6 +202,29 @@ class ProviderWidget extends StatelessWidget {
                         color: Colors.black.withOpacity(0.70),
                         fontWeight: FontWeight.w400,
                       ),
+                    ),
+                    SizedBox(height: 7),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        "ic_rating_golden".imageIcon(width: 12, height: 12),
+                        SizedBox(
+                          width: 2,
+                        ),
+                        Text(
+                          averageRating ?? "0",
+                          style: TextStyle(
+                            decoration: onRatingClick != null
+                                ? TextDecoration.underline
+                                : TextDecoration.none,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                            color: Colors.black.withOpacity(0.6),
+                          ),
+                        ),
+                      ],
+                    ).onClick(
+                      onTap: onRatingClick != null ? onRatingClick : null,
                     ),
                   ],
                 ),
@@ -206,59 +247,96 @@ class ProviderWidget extends StatelessWidget {
                 Expanded(
                   child: Row(
                     children: <Widget>[
-                      Image(
-                        image: AssetImage(
-                          "images/ic_experience.png",
-                        ),
-                        height: 14.0,
-                        width: 11.0,
-                      ),
+                      'ic_location_grey'.imageIcon(height: 14.0, width: 11.0),
                       SizedBox(width: 3.0),
                       Expanded(
                         child: Text(
-                          practicingSince + " Years of Experience",
+                          address,
                           style: TextStyle(
-                            color: Colors.black.withOpacity(0.5),
+                            decoration: onLocationClick != null
+                                ? TextDecoration.underline
+                                : TextDecoration.none,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12,
+                            color: Colors.black.withOpacity(0.6),
                           ),
+                        ).onClick(
+                          onTap:
+                              onLocationClick != null ? onLocationClick : null,
                         ),
                       ),
                     ],
-                  ),
+                  ), //TODO: address
                 ),
               ],
             ),
           ),
           isOptionsShow
-              ? Padding(
-                  padding: EdgeInsets.only(top: 12.0),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: FlatButton(
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      color: AppColors.persian_indigo,
-                      splashColor: Colors.grey[300],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          bottomRight: Radius.circular(13.0),
-                          bottomLeft: Radius.circular(13.0),
-                        ),
-                        side: BorderSide(
-                            width: 0.5, color: AppColors.persian_indigo),
+              ? Row(
+                  children: <Widget>[
+                    rowButton(
+                      context: context,
+                      title: "View Profile",
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(13.0),
                       ),
-                      child: Text(
-                        "Request Appointment",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 12.0,
-                          color: Colors.white,
-                        ),
+                      onPressed: onViewProfileClick,
+                    ),
+                    rowButton(
+                      context: context,
+                      title: "Book Appointment",
+                      borderRadius: BorderRadius.only(
+                        bottomRight: Radius.circular(13.0),
                       ),
                       onPressed: bookAppointment,
                     ),
-                  ),
+                  ],
                 )
               : Container(),
         ],
+      ),
+    );
+  }
+
+  Widget rowButton({
+    BuildContext context,
+    String title,
+    BorderRadiusGeometry borderRadius,
+    Function onPressed,
+  }) {
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.only(top: 12.0),
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          child: FlatButton(
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            color: title.toLowerCase().contains('appointment')
+                ? AppColors.persian_indigo
+                : Colors.white,
+            splashColor: Colors.grey[300],
+            shape: RoundedRectangleBorder(
+              borderRadius: borderRadius,
+              side: BorderSide(
+                width: 0.5,
+                color: title.toLowerCase().contains('appointment')
+                    ? AppColors.persian_indigo
+                    : Colors.grey[300],
+              ),
+            ),
+            child: Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 12.0,
+                color: title.toLowerCase().contains('appointment')
+                    ? Colors.white
+                    : AppColors.persian_indigo,
+              ),
+            ),
+            onPressed: onPressed,
+          ),
+        ),
       ),
     );
   }
