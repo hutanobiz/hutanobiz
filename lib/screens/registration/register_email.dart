@@ -129,14 +129,34 @@ class _RegisterEmailState extends State<RegisterEmail> {
                 api.register(loginData).then((dynamic user) {
                   setLoading(false);
 
-                  Widgets.showToast(user.toString());
-
-                  Navigator.pushNamed(
-                    context,
-                    Routes.verifyOtpRoute,
-                    arguments:
-                        RegisterArguments(_phoneNumberController.text, false),
-                  );
+                  if (user is String) {
+                    Widgets.showToast(user.toString());
+                    if (user != "User Already exist") {
+                      Navigator.pushNamed(
+                        context,
+                        Routes.verifyOtpRoute,
+                        arguments: RegisterArguments(
+                            _phoneNumberController.text, false),
+                      );
+                    }
+                  } else {
+                    if (user['isContactInformationVerified']) {
+                      Navigator.pushNamed(
+                        context,
+                        Routes.registerRoute,
+                        arguments: RegisterArguments(
+                            _phoneNumberController.text, false),
+                      );
+                    } else {
+                      Widgets.showToast(user['verificationCode']);
+                      Navigator.pushNamed(
+                        context,
+                        Routes.verifyOtpRoute,
+                        arguments: RegisterArguments(
+                            _phoneNumberController.text, false),
+                      );
+                    }
+                  }
                 }).futureError((error) {
                   setLoading(false);
                   error.toString().debugLog();

@@ -141,7 +141,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                     setLoading(false);
                     Widgets.showToast("Verified successfully");
 
-                    Navigator.pushNamed(context, Routes.registerRoute,
+                    Navigator.pushReplacementNamed(context, Routes.registerRoute,
                         arguments: RegisterArguments(phoneNumber, false));
                   }).futureError((error) {
                     setLoading(false);
