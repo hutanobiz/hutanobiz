@@ -1,5 +1,6 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:hutano/colors.dart';
 
 class DashedBorder extends StatelessWidget {
   DashedBorder({Key key, @required this.onTap, @required this.child})
@@ -18,7 +19,7 @@ class DashedBorder extends StatelessWidget {
         child: DottedBorder(
           borderType: BorderType.RRect,
           radius: Radius.circular(8),
-          color: Colors.black26,
+          color: AppColors.goldenTainoi,
           dashPattern: [6, 6],
           strokeWidth: 0.5,
           child: child,
