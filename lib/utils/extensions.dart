@@ -17,10 +17,12 @@ class Extensions {
     String addresName = '---';
 
     if (name != null) {
-      addresName = name.toString().toLowerCase().contains('suite')
+      addresName = name.toString().toLowerCase().contains('suite') ||
+              name.toString().toLowerCase().contains('ste')
           ? "Ste."
-          : (!(name.toString().toLowerCase().contains('suite'))
-              ? ("Ste." + name.toString())
+          : (!(name.toString().toLowerCase().contains('suite') ||
+                  name.toString().toLowerCase().contains('ste'))
+              ? ("Ste. " + name.toString())
               : name.toString());
     }
 
