@@ -60,21 +60,34 @@ class AppointmentCompleteConfirmation extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Image.asset(
-                  "images/ic_address_grey.png",
-                  height: 20,
-                  width: 20,
-                ),
-                SizedBox(width: 8),
-                Text(appointmentCompleteMap["address"],
-                    style: TextStyle(
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Align(
+                      alignment: FractionalOffset.centerRight,
+                      child: Image.asset(
+                        "images/ic_address_grey.png",
+                        height: 20,
+                        width: 20,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  Expanded(
+                    flex: 5,
+                    child: Text(
+                      appointmentCompleteMap["address"],
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w400,
-                        color: Colors.black87))
-              ],
+                        color: Colors.black87,
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
             Center(
               child: Padding(
@@ -128,7 +141,7 @@ class AppointmentCompleteConfirmation extends StatelessWidget {
                     },
                   )),
             ),
-            SizedBox(height: 70),
+            SizedBox(height: 45),
             Center(
               child: ButtonTheme(
                   height: 50,
