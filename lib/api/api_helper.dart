@@ -379,13 +379,13 @@ class ApiBaseHelper {
     });
   }
 
-  Future<String> deletePatientImage(String token, String imageName) {
+  Future<String> deletePatientImage(String token, String imageId) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
 
     Map imageNameMap = {};
-    imageNameMap['image'] = imageName;
+    imageNameMap['id'] = imageId;
 
     return _netUtil
         .post(
@@ -398,14 +398,13 @@ class ApiBaseHelper {
     });
   }
 
-  Future<String> deletePatientMedicalDocs(
-      String token, String medicalDocsName) {
+  Future<String> deletePatientMedicalDocs(String token, String medicalDocId) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
 
     Map medicalDocumentMap = {};
-    medicalDocumentMap['medicalDocument'] = medicalDocsName;
+    medicalDocumentMap['id'] = medicalDocId;
 
     return _netUtil
         .post(
