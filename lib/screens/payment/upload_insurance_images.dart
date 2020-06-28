@@ -205,7 +205,7 @@ class _UploadInsuranceImagesScreenState
                       Routes.providerImageScreen,
                       arguments: backImagePath,
                     )
-                  : showPickerDialog(true),
+                  : showPickerDialog(false),
               child: backImagePath == null
                   ? uploadWidget("Back", AssetImage("images/ic_back_image.png"))
                   : imageWidget(
