@@ -364,13 +364,14 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> multipartPost(
-      String url, String token, String key, File imageFile) {
+  Future<dynamic> multipartPost(String url, String token, String key,
+      Map<String, String> fileMap, File file) {
     return _netUtil
         .multipartPost(
       url,
       token: token,
-      imageFile: imageFile,
+      fileMap: fileMap,
+      file: file,
       key: key,
     )
         .then((res) {
@@ -410,6 +411,20 @@ class ApiBaseHelper {
         .post(
       base_url + "api/patient/delete-medical-documents",
       body: medicalDocumentMap,
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
+
+  Future<dynamic> getPatientDocuments(String token) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    return _netUtil
+        .get(
+      base_url + "api/patient/medical-images-documents",
       headers: headers,
     )
         .then((res) {
@@ -494,7 +509,10 @@ class NetworkUtil {
   }
 
   Future<dynamic> multipartPost(String url,
-      {String token, File imageFile, String key}) async {
+      {String token,
+      Map<String, String> fileMap,
+      File file,
+      String key}) async {
     var responseJson;
     try {
       Uri uri = Uri.parse(url);
@@ -504,10 +522,12 @@ class NetworkUtil {
         request.headers['authorization'] = token;
       }
 
-      var stream = ByteStream(DelegatingStream(imageFile.openRead()));
-      var length = await imageFile.length();
+      request.fields.addAll(fileMap);
+
+      var stream = ByteStream(DelegatingStream(file.openRead()));
+      var length = await file.length();
       var multipartFile =
-          MultipartFile(key, stream.cast(), length, filename: imageFile.path);
+          MultipartFile(key, stream.cast(), length, filename: file.path);
       request.files.add(multipartFile);
 
       var response = await request.send();
