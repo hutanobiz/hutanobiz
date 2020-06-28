@@ -9,6 +9,7 @@ import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -18,12 +19,14 @@ class UploadImagesScreen extends StatefulWidget {
 }
 
 class _UploadImagesScreenState extends State<UploadImagesScreen> {
-  List<String> imagesList = List();
+  List<Map> imagesList = List();
 
   bool _isLoading = false;
   ApiBaseHelper _api = ApiBaseHelper();
 
   String token;
+
+  String imageName = '';
 
   @override
   void initState() {
@@ -37,14 +40,15 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
         this.token = token;
       });
 
-      _api.getUserDetails(token).then((value) {
+      _api.getPatientDocuments(token).then((value) {
         if (value != null) {
           setLoading(false);
 
           setState(() {
-            if (value['images'] != null && value['images'].isNotEmpty) {
-              for (dynamic images in value['images']) {
-                imagesList.add(ApiBaseHelper.imageUrl + images);
+            if (value['medicalImages'] != null &&
+                value['medicalImages'].isNotEmpty) {
+              for (dynamic images in value['medicalImages']) {
+                imagesList.add(images);
               }
             }
           });
@@ -85,9 +89,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                   title: "Upload images",
                   buttonIcon: "ic_upload",
                   buttonColor: AppColors.windsor,
-                  onPressed: () {
-                    showPickerDialog();
-                  },
+                  onPressed: showPickerDialog,
                 ),
               ),
             ),
@@ -125,10 +127,16 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
   List<Widget> images() {
     List<Widget> columnContent = [];
 
-    for (String content in imagesList) {
+    for (dynamic content in imagesList) {
+      String imageFile = content['images'];
+
+      if (!content['images'].toString().contains('image_cropper')) {
+        imageFile = ApiBaseHelper.imageUrl + content['images'];
+      }
+
       columnContent.add(
         Container(
-          height: 100.0,
+          height: 120.0,
           width: 180.0,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -142,13 +150,13 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
             children: <Widget>[
               ClipRRect(
                 borderRadius: BorderRadius.circular(16.0),
-                child: content.contains('http') || content.contains('https')
+                child: imageFile.contains('http') || imageFile.contains('https')
                     ? Image.network(
-                        content,
+                        imageFile,
                         fit: BoxFit.cover,
                       )
                     : Image.file(
-                        File(content),
+                        File(imageFile),
                         fit: BoxFit.cover,
                       ),
               ),
@@ -163,9 +171,9 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                       onPressed: () {
                         setLoading(true);
 
-                        int urlIndex = content.lastIndexOf('/');
+                        int urlIndex = imageFile.lastIndexOf('/');
                         String imageName =
-                            content.substring(urlIndex + 1, content.length);
+                            imageFile.substring(urlIndex + 1, content.length);
 
                         _api
                             .deletePatientImage(
@@ -191,6 +199,34 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                       constraints:
                           const BoxConstraints(minWidth: 22.0, minHeight: 22.0),
                     ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height: 46,
+                  padding: const EdgeInsets.all(10.0),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(14.0),
+                    border: Border.all(
+                      color: Colors.grey[100],
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      "ic_image".imageIcon(width: 20, height: 15),
+                      SizedBox(width: 5.0),
+                      Expanded(
+                        child: Text(
+                          content['name'],
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -232,22 +268,124 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
         ),
       );
       if (croppedFile != null) {
-        setState(() => imagesList.add(croppedFile.path));
-
-        setLoading(true);
-
-        _api
-            .multipartPost(
-          ApiBaseHelper.base_url + 'api/patient/images',
-          token,
-          'images',
-          croppedFile,
-        )
-            .then((value) {
-          setLoading(false);
-        }).futureError((error) => setLoading(false));
+        uploadImageBottomSheet(croppedFile);
       }
     }
+  }
+
+  void uploadImageBottomSheet(File imageFile) {
+    Widgets.uploadBottomSheet(
+      context,
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Image',
+            style: TextStyle(
+              color: AppColors.midnight_express,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(height: 16),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(14),
+            child: Image.file(
+              imageFile,
+              height: 170,
+              width: MediaQuery.of(context).size.width,
+              fit: BoxFit.cover,
+            ),
+          ),
+          SizedBox(height: 39),
+          TextField(
+            onChanged: (value) {
+              imageName = value;
+            },
+            decoration: InputDecoration(
+              labelStyle: TextStyle(color: Colors.grey),
+              labelText: "Name",
+              alignLabelWithHint: true,
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14.0),
+                borderSide: BorderSide(
+                  color: Colors.grey[300],
+                  width: 0.5,
+                ),
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14.0),
+                borderSide: BorderSide(
+                  color: Colors.grey[300],
+                  width: 0.5,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 39),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: ButtonTheme(
+                  height: 55,
+                  child: OutlineButton(
+                    shape: new RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(14.0),
+                    ),
+                    highlightedBorderColor: AppColors.windsor,
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(
+                        color: AppColors.windsor,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+              ),
+              SizedBox(width: 16),
+              Expanded(
+                child: FancyButton(
+                  title: 'Upload',
+                  buttonColor: AppColors.windsor,
+                  onPressed: () {
+                    if (imageName == null || imageName.isEmpty) {
+                      Widgets.showToast("Image name can't be empty");
+                    } else {
+                      Map<String, String> fileMap = {};
+                      fileMap['name'] = imageName;
+                      Navigator.pop(context);
+
+                      setLoading(true);
+
+                      _api
+                          .multipartPost(
+                        ApiBaseHelper.base_url + 'api/patient/images',
+                        token,
+                        'images',
+                        fileMap,
+                        imageFile,
+                      )
+                          .then((value) {
+                        setState(() {
+                          Map imageMap = {};
+                          imageMap['name'] = imageName;
+                          imageMap['images'] = imageFile.path;
+
+                          imagesList.add(imageMap);
+                        });
+                        setLoading(false);
+                      }).futureError((error) => setLoading(false));
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   void showPickerDialog() {
