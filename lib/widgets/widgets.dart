@@ -44,6 +44,25 @@ class Widgets {
     );
   }
 
+  static Future uploadBottomSheet(BuildContext context, Widget child) {
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      builder: (context) {
+        return SingleChildScrollView(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 28, 20, 20),
+            child: child,
+          ),
+        );
+      },
+    );
+  }
+
   static SizedBox sizedBox({@required double height}) {
     return SizedBox(height: height);
   }
