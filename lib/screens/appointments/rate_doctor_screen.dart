@@ -241,7 +241,6 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Row(
           children: <Widget>[
@@ -276,9 +275,18 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  SizedBox(
-                    height: 5.0,
+                  SizedBox(height: 5.0),
+                  Text(
+                    professionalTitle,
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                    ),
                   ),
+                  SizedBox(height: 5.0),
                   Row(
                     children: <Widget>[
                       "ic_experience".imageIcon(height: 11, width: 11),
@@ -294,31 +302,6 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                     ],
                   ),
                 ],
-              ),
-            ),
-            Expanded(
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Container(
-                  width: 120,
-                  padding: const EdgeInsets.all(5),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: AppColors.goldenTainoi.withOpacity(0.13),
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(9.0),
-                  ),
-                  child: Text(
-                    professionalTitle,
-                    maxLines: 2,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.goldenTainoi.withOpacity(0.7),
-                    ),
-                  ),
-                ),
               ),
             ),
           ],
@@ -368,7 +351,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
             initialRating: _rating,
             itemSize: 35.0,
             minRating: 1,
-            itemPadding: const EdgeInsets.only(right: 24.0),
+            itemPadding: const EdgeInsets.only(right: 17.0),
             itemCount: 5,
             glow: false,
             itemBuilder: (context, index) => Image(
