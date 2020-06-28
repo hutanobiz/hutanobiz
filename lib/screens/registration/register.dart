@@ -736,12 +736,17 @@ class _SignUpFormState extends State<Register> {
   }
 
   Future getImage(int source) async {
-    var image = await ImagePicker.pickImage(
+    ImagePicker _picker = ImagePicker();
+
+    PickedFile image = await _picker.getImage(
         source: (source == 1) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
+      File imageFile = File(image.path);
+
       File croppedFile = await ImageCropper.cropImage(
-        compressQuality: image.lengthSync() > 100000 ? 25 : 100,
+        compressQuality: imageFile.lengthSync() > 100000 ? 25 : 100,
         sourcePath: image.path,
+        aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
           CropAspectRatioPreset.ratio3x2,
@@ -756,6 +761,7 @@ class _SignUpFormState extends State<Register> {
             lockAspectRatio: false),
         iosUiSettings: IOSUiSettings(
           minimumAspectRatio: 1.0,
+          aspectRatioLockDimensionSwapEnabled: true,
         ),
       );
       if (croppedFile != null) {

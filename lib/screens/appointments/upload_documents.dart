@@ -584,6 +584,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
       File croppedFile = await ImageCropper.cropImage(
         compressQuality: imageFile.lengthSync() > 100000 ? 25 : 100,
         sourcePath: image.path,
+        aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
           CropAspectRatioPreset.ratio3x2,
@@ -598,6 +599,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
             lockAspectRatio: false),
         iosUiSettings: IOSUiSettings(
           minimumAspectRatio: 1.0,
+          aspectRatioLockDimensionSwapEnabled: true,
         ),
       );
 
