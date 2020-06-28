@@ -167,7 +167,7 @@ class ProviderWidget extends StatelessWidget {
                               SizedBox(width: 3.0),
                               Expanded(
                                 child: Text(
-                                  practicingSince + " Years of Experience",
+                                  practicingSince + " Years",
                                   style: TextStyle(
                                     color: Colors.black.withOpacity(0.7),
                                     fontSize: 12,
@@ -205,14 +205,16 @@ class ProviderWidget extends StatelessWidget {
                                   onRatingClick != null ? onRatingClick : null,
                             ),
                             SizedBox(width: 3),
-                            Text(
-                              '\u2022 ' + professionalTitle,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: Colors.black.withOpacity(0.7),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
+                            Expanded(
+                              child: Text(
+                                '\u2022 ' + professionalTitle,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: Colors.black.withOpacity(0.7),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
                             ),
                           ],
@@ -237,7 +239,7 @@ class ProviderWidget extends StatelessWidget {
                               data['isVideoChatEnabled']
                                   ? Padding(
                                       padding: const EdgeInsets.only(right: 8),
-                                      child: 'ic_provider_office'.imageIcon(
+                                      child: 'ic_provider_video'.imageIcon(
                                         width: 20,
                                         height: 20,
                                       ),
@@ -252,12 +254,6 @@ class ProviderWidget extends StatelessWidget {
                                       ),
                                     )
                                   : Container(),
-                              // Expanded(
-                              //   child: 'ic_forward'.imageIcon(
-                              //     width: 9,
-                              //     height: 15,
-                              //   ),
-                              // )
                             ],
                           ),
                         )
@@ -285,15 +281,12 @@ class ProviderWidget extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 25),
-                    Positioned(
-                      child: Align(
-                        alignment: FractionalOffset.bottomRight,
-                        child: 'ic_forward'.imageIcon(
-                          width: 9,
-                          height: 15,
-                        ),
-                      ),
-                    )
+                    isOptionsShow
+                        ? 'ic_forward'.imageIcon(
+                            width: 9,
+                            height: 15,
+                          )
+                        : Container(),
                   ],
                 ),
               ],
@@ -312,28 +305,21 @@ class ProviderWidget extends StatelessWidget {
                 : const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 18.0),
             child: Row(
               children: <Widget>[
+                'ic_location_grey'.imageIcon(height: 14.0, width: 11.0),
+                SizedBox(width: 3.0),
                 Expanded(
-                  child: Row(
-                    children: <Widget>[
-                      'ic_location_grey'.imageIcon(height: 14.0, width: 11.0),
-                      SizedBox(width: 3.0),
-                      Expanded(
-                        child: Text(
-                          address,
-                          style: TextStyle(
-                            decoration: onLocationClick != null
-                                ? TextDecoration.underline
-                                : TextDecoration.none,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 12,
-                            color: Colors.black.withOpacity(0.6),
-                          ),
-                        ).onClick(
-                          onTap:
-                              onLocationClick != null ? onLocationClick : null,
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    address,
+                    style: TextStyle(
+                      decoration: onLocationClick != null
+                          ? TextDecoration.underline
+                          : TextDecoration.none,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 12,
+                      color: Colors.black.withOpacity(0.6),
+                    ),
+                  ).onClick(
+                    onTap: onLocationClick != null ? onLocationClick : null,
                   ),
                 ),
               ],
