@@ -171,14 +171,10 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                       onPressed: () {
                         setLoading(true);
 
-                        int urlIndex = imageFile.lastIndexOf('/');
-                        String imageName =
-                            imageFile.substring(urlIndex + 1, content.length);
-
                         _api
                             .deletePatientImage(
                           token,
-                          imageName,
+                          content['_id'],
                         )
                             .whenComplete(() {
                           setLoading(false);
