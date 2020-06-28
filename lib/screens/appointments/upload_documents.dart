@@ -9,9 +9,10 @@ import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart' hide context;
+import 'package:intl/intl.dart';
 
 class UploadDocumentsScreen extends StatefulWidget {
   @override
@@ -19,7 +20,8 @@ class UploadDocumentsScreen extends StatefulWidget {
 }
 
 class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
-  List<String> docsList = List();
+  List<Map> docsList = List();
+  List<String> _documentTypeList = ['X-Ray', 'MRI', 'Other'];
 
   bool _isLoading = false;
   Map<String, String> filesPaths;
@@ -28,6 +30,11 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
 
   ApiBaseHelper _api = ApiBaseHelper();
 
+  final documentTypeController = TextEditingController();
+  final documentDateController = TextEditingController();
+
+  String documentName = '';
+
   @override
   void initState() {
     super.initState();
@@ -35,12 +42,20 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
     setLoading(true);
     docsList.clear();
 
+    documentTypeController.addListener(() {
+      setState(() {});
+    });
+
+    documentDateController.addListener(() {
+      setState(() {});
+    });
+
     SharedPref().getToken().then((token) {
       setState(() {
         this.token = token;
       });
 
-      _api.getUserDetails(token).then((value) {
+      _api.getPatientDocuments(token).then((value) {
         if (value != null) {
           setLoading(false);
 
@@ -48,7 +63,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
             if (value['medicalDocuments'] != null &&
                 value['medicalDocuments'].isNotEmpty) {
               for (dynamic docs in value['medicalDocuments']) {
-                docsList.add(ApiBaseHelper.imageUrl + docs);
+                docsList.add(docs);
               }
             }
           });
@@ -58,6 +73,13 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
         setLoading(false);
       });
     });
+  }
+
+  @override
+  void dispose() {
+    documentTypeController.dispose();
+    documentDateController.dispose();
+    super.dispose();
   }
 
   @override
@@ -93,9 +115,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                   title: "Upload Docs",
                   buttonIcon: "ic_upload",
                   buttonColor: AppColors.windsor,
-                  onPressed: () {
-                    showPickerDialog();
-                  },
+                  onPressed: showPickerDialog,
                 ),
               ),
             ),
@@ -129,10 +149,16 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
   images() {
     List<Widget> columnContent = [];
 
-    for (String content in docsList) {
+    for (Map content in docsList) {
+      String document = content['medicalDocuments'];
+
+      if (!document.contains('data/')) {
+        document = ApiBaseHelper.imageUrl + content['medicalDocuments'];
+      }
+
       columnContent.add(
         Container(
-          height: 125.0,
+          height: 150.0,
           width: 180.0,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -146,15 +172,19 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
             children: <Widget>[
               ClipRRect(
                 borderRadius: BorderRadius.circular(16.0),
-                child: content.toLowerCase().endsWith("pdf")
+                child: document.toLowerCase().endsWith("pdf")
                     ? "ic_pdf".imageIcon()
-                    : (content.contains('http') || content.contains('https')
+                    : (document.contains('http') || document.contains('https')
                         ? Image.network(
-                            content,
+                            document,
+                            height: 125.0,
+                            width: 180.0,
                             fit: BoxFit.cover,
                           )
                         : Image.file(
-                            File(content),
+                            File(document),
+                            height: 125.0,
+                            width: 180.0,
                             fit: BoxFit.cover,
                           )),
               ),
@@ -169,9 +199,9 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                       onPressed: () {
                         setLoading(true);
 
-                        int urlIndex = content.lastIndexOf('/');
+                        int urlIndex = document.lastIndexOf('/');
                         String docName =
-                            content.substring(urlIndex + 1, content.length);
+                            document.substring(urlIndex + 1, content.length);
 
                         _api
                             .deletePatientMedicalDocs(
@@ -205,9 +235,10 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  height: 46,
+                  height: 72,
+                  width: 180,
                   padding: const EdgeInsets.all(10.0),
-                  alignment: Alignment.center,
+                  alignment: Alignment.centerLeft,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(14.0),
@@ -215,20 +246,40 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                       color: Colors.grey[100],
                     ),
                   ),
-                  child: Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      content.toLowerCase().endsWith("pdf")
-                          ? "ic_pdf".imageIcon()
-                          : "ic_image".imageIcon(),
-                      SizedBox(width: 5.0),
-                      Expanded(
-                        child: Text(
-                          basename(content),
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
+                      Text(
+                        content['name'],
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                          color: Colors.black.withOpacity(0.85),
                         ),
                       ),
+                      SizedBox(width: 5.0),
+                      Text(
+                        'Type - ' + content['type'],
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                          color: Colors.black.withOpacity(0.60),
+                        ),
+                      ),
+                      SizedBox(width: 5.0),
+                      Text(
+                        'Date - ' + content['date'],
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                          color: Colors.black.withOpacity(0.60),
+                        ),
+                      ),
+                      SizedBox(width: 5.0),
                     ],
                   ),
                 ),
@@ -248,27 +299,225 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
       allowedExtensions: ['pdf'],
     );
 
-    setState(() {
-      if (file != null) {
-        docsList.add(file.path);
+    if (file != null) {
+      uploadDocsBottomSheet(file);
+    }
+  }
 
-        setLoading(true);
-        SharedPref().getToken().then((token) {
-          ApiBaseHelper api = ApiBaseHelper();
+  void uploadDocsBottomSheet(File file) {
+    Widgets.uploadBottomSheet(
+      context,
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Document',
+            style: TextStyle(
+              color: AppColors.midnight_express,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(height: 16),
+          file == null
+              ? Container()
+              : file.path.toLowerCase().endsWith("pdf")
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(14),
+                      child: "ic_pdf".imageIcon(
+                        width: MediaQuery.of(context).size.width,
+                        height: 170,
+                      ),
+                    )
+                  : ClipRRect(
+                      borderRadius: BorderRadius.circular(14),
+                      child: Image.file(
+                        file,
+                        height: 170,
+                        width: MediaQuery.of(context).size.width,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+          SizedBox(height: 39),
+          TextField(
+            enabled: false,
+            controller: documentTypeController,
+            decoration: getInputDecoration('Type'),
+          ).onClick(onTap: _documentTypeBottomDialog),
+          SizedBox(height: 25),
+          textField(
+            'Name',
+            (value) {
+              documentName = value;
+            },
+          ),
+          SizedBox(height: 25),
+          TextField(
+            enabled: false,
+            controller: documentDateController,
+            decoration: getInputDecoration('Date'),
+          ).onClick(onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+            showDatePicker(
+              context: context,
+              initialDate: DateTime.now(),
+              firstDate: DateTime(1880),
+              lastDate: DateTime.now().add(Duration(days: 0)),
+            ).then((date) {
+              if (date != null)
+                documentDateController.text = DateFormat('dd').format(date) +
+                    ' ' +
+                    DateFormat('MMMM').format(date) +
+                    ' ' +
+                    date.year.toString();
+            });
+          }),
+          SizedBox(height: 39),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: ButtonTheme(
+                  height: 55,
+                  child: OutlineButton(
+                    shape: new RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(14.0),
+                    ),
+                    highlightedBorderColor: AppColors.windsor,
+                    child: Text(
+                      'Cancel',
+                      style:
+                          TextStyle(color: AppColors.windsor, fontSize: 16.0),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+              ),
+              SizedBox(width: 16),
+              Expanded(
+                child: FancyButton(
+                  title: 'Upload',
+                  buttonColor: AppColors.windsor,
+                  onPressed: () {
+                    if (documentTypeController.text == null ||
+                        documentTypeController.text.isEmpty) {
+                      Widgets.showToast("Document type can't be empty");
+                      return;
+                    } else if (documentName == null || documentName.isEmpty) {
+                      Widgets.showToast("Document name can't be empty");
+                      return;
+                    } else if (documentDateController.text == null ||
+                        documentDateController.text.isEmpty) {
+                      Widgets.showToast("Document date can't be empty");
+                      return;
+                    } else {
+                      setLoading(true);
+                      Navigator.pop(context);
 
-          api
-              .multipartPost(
-            ApiBaseHelper.base_url + 'api/patient/medical-documents',
-            token,
-            'medicalDocuments',
-            file,
-          )
-              .then((value) {
-            setLoading(false);
-          }).futureError((error) => setLoading(false));
+                      Map<String, String> fileMap = {};
+                      fileMap['name'] = documentName;
+                      fileMap['type'] = documentTypeController.text;
+                      fileMap['date'] = documentDateController.text;
+
+                      _api
+                          .multipartPost(
+                        ApiBaseHelper.base_url +
+                            'api/patient/medical-documents',
+                        token,
+                        'medicalDocuments',
+                        fileMap,
+                        file,
+                      )
+                          .then((value) {
+                        setState(() {
+                          Map docsMap = {};
+                          docsMap['name'] = documentName;
+                          docsMap['medicalDocuments'] = file.path;
+                          docsMap['type'] = documentTypeController.text;
+                          docsMap['date'] = documentDateController.text;
+
+                          docsList.add(docsMap);
+                        });
+                        setLoading(false);
+                      }).futureError((error) => setLoading(false));
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _documentTypeBottomDialog() {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: _documentTypeList.length,
+            itemBuilder: (context, index) {
+              String docType = _documentTypeList[index];
+              return ListTile(
+                title: Center(
+                  child: Text(
+                    docType,
+                    style: TextStyle(
+                      color: docType == documentTypeController.text
+                          ? AppColors.goldenTainoi
+                          : Colors.black,
+                      fontSize:
+                          docType == documentTypeController.text ? 20.0 : 16.0,
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  setState(() {
+                    documentTypeController.text = docType;
+                  });
+                  Navigator.pop(context);
+                },
+              );
+            },
+          );
         });
-      }
-    });
+  }
+
+  Widget textField(String label, Function onChanged) {
+    return TextField(
+      onChanged: onChanged,
+      decoration: getInputDecoration(label),
+    );
+  }
+
+  InputDecoration getInputDecoration(String label) {
+    return InputDecoration(
+      labelStyle: TextStyle(color: Colors.grey),
+      labelText: label,
+      alignLabelWithHint: true,
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14.0),
+        borderSide: BorderSide(
+          color: Colors.grey[300],
+          width: 0.5,
+        ),
+      ),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14.0),
+        borderSide: BorderSide(
+          color: Colors.grey[300],
+          width: 0.5,
+        ),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14.0),
+        borderSide: BorderSide(
+          color: Colors.grey[300],
+          width: 0.5,
+        ),
+      ),
+    );
   }
 
   void showPickerDialog() {
@@ -357,20 +606,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
       );
 
       if (croppedFile != null) {
-        setState(() => docsList.add(croppedFile.path));
-
-        setLoading(true);
-
-        _api
-            .multipartPost(
-          ApiBaseHelper.base_url + 'api/patient/medical-documents',
-          token,
-          'medicalDocuments',
-          croppedFile,
-        )
-            .then((value) {
-          setLoading(false);
-        }).futureError((error) => setLoading(false));
+        uploadDocsBottomSheet(croppedFile);
       }
     }
   }
