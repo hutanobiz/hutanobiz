@@ -8,27 +8,27 @@ import 'package:map_launcher/map_launcher.dart';
 
 class Extensions {
   static String addressFormat(
-    String name,
+    String address,
     String street,
     String city,
     String stateCode,
     String zipCode,
   ) {
-    String addresName = '---';
+    String addressName = '---';
 
-    if (name != null) {
-      addresName = name.toString().toLowerCase().contains('suite') ||
-              name.toString().toLowerCase().contains('ste')
+    if (address != null) {
+      addressName = address.toString().toLowerCase().contains('suite') ||
+              address.toString().toLowerCase().contains('ste')
           ? "Ste."
-          : (!(name.toString().toLowerCase().contains('suite') ||
-                  name.toString().toLowerCase().contains('ste'))
-              ? ("Ste. " + name.toString())
-              : name.toString());
+          : (!(address.toString().toLowerCase().contains('suite') ||
+                  address.toString().toLowerCase().contains('ste'))
+              ? ("Ste. " + address.toString())
+              : address.toString());
     }
 
     return (street ?? "---") +
         ", " +
-        (addresName ?? "---") +
+        (addressName ?? "---") +
         ", " +
         (city ?? "---") +
         ", " +
