@@ -110,7 +110,7 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
 
                     Navigator.pushNamed(
                       context,
-                      Routes.appointmentTypeScreen,
+                      Routes.providerListScreen,
                     );
                   },
                 ),

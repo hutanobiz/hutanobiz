@@ -145,14 +145,10 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                         "providerData", profileMapResponse);
                     _container.setProviderData("degree", degree);
 
-                    if (_containerMap.length < 3)
-                      Navigator.of(context).pushNamed(
-                        Routes.appointmentTypeScreen,
-                        arguments: _appointentTypeMap,
-                      );
-                    else
-                      Navigator.of(context)
-                          .pushNamed(Routes.selectServicesScreen);
+                    Navigator.of(context).pushNamed(
+                      Routes.appointmentTypeScreen,
+                      arguments: _appointentTypeMap,
+                    );
                   },
                 ),
               ),

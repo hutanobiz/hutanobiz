@@ -50,8 +50,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
     if (this._containerMap != _projectResponse) {
       this._containerMap = _projectResponse;
 
-      _appointmentTypeFilterMap['appointmentType'] =
-          _projectResponse['serviceType'];
+      _appointmentTypeFilterMap['appointmentType'] = '0';
       //TODO: appointment type filter map
     }
 
@@ -262,14 +261,10 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
               _container.setProviderData("providerData", _provider);
               _container.setProviderData("degree", degree);
 
-              if (_containerMap.containsKey("specialityId") ||
-                  _containerMap.containsKey("serviceId"))
-                Navigator.of(context).pushNamed(
-                  Routes.appointmentTypeScreen,
-                  arguments: _appointentTypeMap,
-                );
-              else
-                Navigator.of(context).pushNamed(Routes.selectServicesScreen);
+              Navigator.of(context).pushNamed(
+                Routes.appointmentTypeScreen,
+                arguments: _appointentTypeMap,
+              );
             },
           ),
         );
