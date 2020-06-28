@@ -328,8 +328,13 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                   ),
                                 ],
                               ),
-                              SizedBox(
-                                height: 4.0,
+                              SizedBox(height: 2.0),
+                              Text(
+                                appointmentType,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 12.0,
+                                ),
                               ),
                             ],
                           ),
@@ -338,17 +343,14 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                     ),
                     Padding(
                       padding:
-                          EdgeInsets.only(top: listType == 1 ? 25.0 : 20.0),
+                          EdgeInsets.only(top: listType == 1 ? 35.0 : 20.0),
                       child: Column(
                         children: <Widget>[
                           Align(
                             alignment: Alignment.centerRight,
-                            child: Text(
-                              appointmentType,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 12.0,
-                              ),
+                            child: 'ic_forward'.imageIcon(
+                              width: 8,
+                              height: 14,
                             ),
                           ),
                           SizedBox(height: 13.0),
@@ -444,24 +446,15 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
               ),
               Row(
                 children: <Widget>[
-                  listType == 1
-                      ? leftButton(listType, userRating, "View Details", () {
+                  listType == 2 && _appointmentStatus == "4"
+                      ? leftButton(listType, userRating, "Treatment summary",
+                          () {
                           _container.setProviderData("providerData", response);
                           Navigator.of(context).pushNamed(
-                            Routes.appointmentDetailScreen,
-                            arguments: appointment,
-                          );
+                              Routes.treatmentSummaryScreen,
+                              arguments: response);
                         })
-                      : listType == 2 && _appointmentStatus == "4"
-                          ? leftButton(
-                              listType, userRating, "Treatment summary", () {
-                              _container.setProviderData(
-                                  "providerData", response);
-                              Navigator.of(context).pushNamed(
-                                  Routes.treatmentSummaryScreen,
-                                  arguments: response);
-                            })
-                          : Container(),
+                      : Container(),
                   listType == 2 &&
                           _appointmentStatus == "4" &&
                           userRating == null
