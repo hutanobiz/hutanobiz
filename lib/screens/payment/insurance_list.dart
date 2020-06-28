@@ -141,12 +141,14 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
             height: 60,
           ),
           SizedBox(width: 14),
-          Text(
-            insurance["title"].toString(),
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 14.0,
-              fontWeight: FontWeight.w500,
+          Expanded(
+            child: Text(
+              insurance["title"].toString(),
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 14.0,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ],
