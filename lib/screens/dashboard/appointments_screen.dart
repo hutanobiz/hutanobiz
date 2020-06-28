@@ -229,15 +229,13 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
             state = business["state"]["title"]?.toString() ?? "---";
           }
 
-          address = (business["address"]?.toString() ?? "---") +
-              ", " +
-              (business["street"]?.toString() ?? "---") +
-              ", " +
-              (business["city"]?.toString() ?? "---") +
-              ", " +
-              state +
-              " - " +
-              (business["zipCode"]?.toString() ?? "---");
+          address = Extensions.addressFormat(
+            business["address"]?.toString(),
+            business["street"]?.toString(),
+            business["city"]?.toString(),
+            state,
+            business["zipCode"]?.toString(),
+          );
         }
       }
     }

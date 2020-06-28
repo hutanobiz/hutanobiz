@@ -244,15 +244,13 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
         state = business["state"]["title"]?.toString() ?? "---";
       }
 
-      address = (business["address"]?.toString() ?? "---") +
-          ", " +
-          (business["street"]?.toString() ?? "---") +
-          ", " +
-          (business["city"]?.toString() ?? "---") +
-          ", " +
-          state +
-          " - " +
-          (business["zipCode"]?.toString() ?? "---");
+      address = Extensions.addressFormat(
+        business["address"]?.toString(),
+        business["street"]?.toString(),
+        business["city"]?.toString(),
+        state,
+        business["zipCode"]?.toString(),
+      );
 
       if (_providerData["businessLocation"]["coordinates"] != null) {
         List location = _providerData["businessLocation"]["coordinates"];
