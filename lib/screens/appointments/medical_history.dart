@@ -71,7 +71,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
               List<MedicalHistory> data = snapshot.data;
 
               return ListView.builder(
-                padding: EdgeInsets.zero,
+                padding: const EdgeInsets.only(bottom: 65),
                 shrinkWrap: true,
                 itemCount: data.length,
                 itemBuilder: (context, index) {
