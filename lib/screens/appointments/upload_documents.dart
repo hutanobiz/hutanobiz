@@ -199,14 +199,10 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                       onPressed: () {
                         setLoading(true);
 
-                        int urlIndex = document.lastIndexOf('/');
-                        String docName =
-                            document.substring(urlIndex + 1, content.length);
-
                         _api
                             .deletePatientMedicalDocs(
                           token,
-                          docName,
+                          content['_id'],
                         )
                             .whenComplete(() {
                           setLoading(false);
