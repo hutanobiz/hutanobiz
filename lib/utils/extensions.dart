@@ -14,9 +14,19 @@ class Extensions {
     String stateCode,
     String zipCode,
   ) {
-    return (name ?? "---") +
-        " " +
-        (street ?? "---") +
+    String addresName = '---';
+
+    if (name != null) {
+      addresName = name.toString().toLowerCase().contains('suite')
+          ? "Ste."
+          : (!(name.toString().toLowerCase().contains('suite'))
+              ? ("Ste." + name.toString())
+              : name.toString());
+    }
+
+    return (street ?? "---") +
+        ", " +
+        (addresName ?? "---") +
         ", " +
         (city ?? "---") +
         ", " +

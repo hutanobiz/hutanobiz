@@ -68,20 +68,13 @@ class ProviderWidget extends StatelessWidget {
     if (data["businessLocation"] != null) {
       dynamic business = data["businessLocation"];
 
-      String state = "---", addressName = '---';
+      String state = "---";
       if (business["state"] != null) {
         state = business["state"]["title"]?.toString() ?? "---";
       }
 
-      if (business["address"] != null) {
-        addressName =
-            business["address"].toString().toLowerCase().contains('suite')
-                ? "Ste."
-                : business["address"].toString();
-      }
-
       address = Extensions.addressFormat(
-        addressName,
+        business["address"]?.toString(),
         business["street"]?.toString(),
         business["city"]?.toString(),
         state,
