@@ -43,17 +43,29 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         print(payload);
         var data = jsonDecode(payload);
-        Map appointment = {};
-        appointment["_appointmentStatus"] = "1"; // TODO: static status
-        appointment["id"] = Platform.isIOS
-            ? data['appointmentId']
-            : data["data"]['appointmentId'];
-        Navigator.of(context).pushNamed(
-          Routes.appointmentDetailScreen,
-          arguments: appointment,
-        );
+        navigateUser(data);
       });
     });
+  }
+
+  navigateUser(message) {
+    String isTrack = Platform.isIOS
+        ? message['isTrack'] ?? "false"
+        : message["data"]['isTrack'] ?? "false";
+
+    if (isTrack == "true") {
+      //TODO: Navigate to TrackTreatmentScreen
+    } else {
+      Map appointment = {};
+      appointment["_appointmentStatus"] = "1";
+      appointment["id"] = Platform.isIOS
+          ? message['appointmentId']
+          : message["data"]['appointmentId'];
+      Navigator.of(context).pushNamed(
+        Routes.appointmentDetailScreen,
+        arguments: appointment,
+      );
+    }
   }
 
   void showNotification(message) async {
@@ -89,13 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
         setState(() {
-          Map appointment = {};
-          appointment["_appointmentStatus"] = "1";
-          appointment["id"] = message["data"]['appointmentId'];
-          Navigator.of(context).pushNamed(
-            Routes.appointmentDetailScreen,
-            arguments: appointment,
-          );
+          navigateUser(message);
         });
       },
       onResume: (Map<String, dynamic> message) async {
@@ -103,13 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           Navigator.popUntil(
               context, (Route<dynamic> route) => route is PageRoute);
-          Map appointment = {};
-          appointment["_appointmentStatus"] = "1";
-          appointment["id"] = message["data"]['appointmentId'];
-          Navigator.of(context).pushNamed(
-            Routes.appointmentDetailScreen,
-            arguments: appointment,
-          );
+          navigateUser(message);
         });
       },
     );
