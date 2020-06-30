@@ -430,6 +430,25 @@ class ApiBaseHelper {
       return res["response"];
     });
   }
+
+  Future<String> sendPatientMedicalHistory(String token, String disease) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    Map diseaseMap = {};
+    diseaseMap['medicalHistory'] = disease;
+
+    return _netUtil
+        .post(
+      base_url + "api/patient/medical-history",
+      body: diseaseMap,
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
 }
 
 class NetworkUtil {
