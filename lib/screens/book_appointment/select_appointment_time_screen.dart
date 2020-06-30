@@ -38,7 +38,7 @@ class _SelectAppointmentTimeScreenState
   InheritedContainerState _container;
 
   String _selectedTiming;
-  DateTime _selectedDate;
+  DateTime _selectedDate, startDate;
   Map profileMap = new Map();
   String currentDate;
   String averageRating = "0";
@@ -94,6 +94,27 @@ class _SelectAppointmentTimeScreenState
     } else {
       profileMap = _providerData["providerData"];
       averageRating = profileMap["averageRating"]?.toStringAsFixed(2) ?? "0";
+    }
+
+    _getScheduleDaysList();
+    _scheduleDaysList.sort();
+
+    if (_scheduleDaysList.contains(DateTime.now().weekday)) {
+      _dayDateMap["day"] = DateTime.now().weekday.toString();
+      _dayDateMap["date"] = currentDate;
+      startDate = DateTime.now();
+    } else {
+      for (int i = 0; i < 7; i++) {
+        if (_scheduleDaysList
+            .contains(DateTime.now().add(Duration(days: i + 1)).weekday)) {
+          _dayDateMap["day"] =
+              DateTime.now().add(Duration(days: i + 1)).weekday.toString();
+          _dayDateMap["date"] = DateFormat('MM/dd/yyyy')
+              .format(DateTime.now().add(Duration(days: i + 1)));
+          startDate = DateTime.now().add(Duration(days: i + 1));
+          break;
+        }
+      }
     }
 
     _scheduleFuture = _apiBaseHelper
@@ -161,8 +182,6 @@ class _SelectAppointmentTimeScreenState
   List<Widget> widgetList() {
     List<Widget> formWidget = new List();
 
-    _getScheduleDaysList();
-
     formWidget.add(ProviderWidget(
       data: profileMap,
       degree: _providerData["degree"].toString(),
@@ -171,7 +190,7 @@ class _SelectAppointmentTimeScreenState
     ));
 
     formWidget.add(ScrollingDayCalendar(
-      startDate: DateTime.now(),
+      startDate: startDate,
       endDate: DateTime(DateTime.now().year + 2),
       // endDate: DateTime.now().add(Duration(days: 14)),
       selectedDate: DateTime.now(),
