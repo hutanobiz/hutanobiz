@@ -15,6 +15,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class UploadDocumentsScreen extends StatefulWidget {
+  UploadDocumentsScreen({Key key, this.isBottomButtonsShow}) : super(key: key);
+
+  final bool isBottomButtonsShow;
+
   @override
   _UploadDocumentsScreenState createState() => _UploadDocumentsScreenState();
 }
@@ -34,10 +38,15 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
   final documentDateController = TextEditingController();
 
   String documentName = '';
+  bool isBottomButtonsShow = true;
 
   @override
   void initState() {
     super.initState();
+
+    if (widget.isBottomButtonsShow != null) {
+      isBottomButtonsShow = widget.isBottomButtonsShow;
+    }
 
     setLoading(true);
     docsList.clear();
@@ -85,12 +94,14 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.goldenTainoi,
+      backgroundColor:
+          isBottomButtonsShow ? AppColors.goldenTainoi : Colors.white,
       body: LoadingBackground(
         title: "Upload Documents",
+        isAddAppBar: isBottomButtonsShow,
         isLoading: _isLoading,
         isAddBack: false,
-        addBottomArrows: true,
+        addBottomArrows: isBottomButtonsShow,
         onForwardTap: () {
           Navigator.of(context).pushNamed(
             Routes.paymentMethodScreen,
@@ -98,7 +109,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
           );
         },
         color: Colors.white,
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 90),
+        padding: EdgeInsets.fromLTRB(20, 20, 20, isBottomButtonsShow ? 90 : 20),
         child: Stack(
           children: <Widget>[
             Container(

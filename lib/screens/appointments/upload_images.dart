@@ -14,6 +14,10 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UploadImagesScreen extends StatefulWidget {
+  UploadImagesScreen({Key key, this.isBottomButtonsShow}) : super(key: key);
+
+  final bool isBottomButtonsShow;
+
   @override
   _UploadImagesScreenState createState() => _UploadImagesScreenState();
 }
@@ -27,10 +31,15 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
   String token;
 
   String imageName = '';
+  bool isBottomButtonsShow = true;
 
   @override
   void initState() {
     super.initState();
+
+    if (widget.isBottomButtonsShow != null) {
+      isBottomButtonsShow = widget.isBottomButtonsShow;
+    }
 
     setLoading(true);
     imagesList.clear();
@@ -63,16 +72,18 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.goldenTainoi,
+      backgroundColor:
+          isBottomButtonsShow ? AppColors.goldenTainoi : Colors.white,
       body: LoadingBackground(
         title: "Upload Images",
         isLoading: _isLoading,
+        isAddAppBar: isBottomButtonsShow,
         isAddBack: false,
-        addBottomArrows: true,
+        addBottomArrows: isBottomButtonsShow,
         onForwardTap: () =>
             Navigator.of(context).pushNamed(Routes.uploadDocumentsScreen),
         color: Colors.white,
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 90),
+        padding: EdgeInsets.fromLTRB(20, 20, 20, isBottomButtonsShow ? 90 : 20),
         child: Stack(
           children: <Widget>[
             Container(

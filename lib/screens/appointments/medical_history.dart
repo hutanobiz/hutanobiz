@@ -8,7 +8,9 @@ import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 
 class MedicalHistoryScreen extends StatefulWidget {
-  MedicalHistoryScreen({Key key}) : super(key: key);
+  MedicalHistoryScreen({Key key, this.isBottomButtonsShow}) : super(key: key);
+
+  final bool isBottomButtonsShow;
 
   @override
   _MedicalHistoryScreenState createState() => _MedicalHistoryScreenState();
@@ -21,17 +23,32 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
   InheritedContainerState _container;
   List<dynamic> _diseaseList = List();
 
+  bool isBottomButtonsShow = true;
+
+  String token = '';
+
+  bool _isLoading = false;
+
   @override
   void initState() {
+    if (widget.isBottomButtonsShow != null) {
+      isBottomButtonsShow = widget.isBottomButtonsShow;
+    }
+
     _medicalFuture = api.getDiseases();
 
     SharedPref().getToken().then((token) {
-      api.getLastAppointmentDetails(token).then((response) {
+      setState(() {
+        this.token = token;
+      });
+
+      api.getPatientDocuments(token).then((response) {
         if (response != null) {
+          setLoading(false);
+
           if (response["medicalHistory"] != null) {
             for (dynamic medical in response["medicalHistory"]) {
-              if (medical["_id"].toString() != null)
-                _diseaseList.add(medical["_id"].toString());
+              _diseaseList.add(medical["_id"].toString());
             }
           }
         }
@@ -50,11 +67,14 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: AppColors.goldenTainoi,
+      backgroundColor:
+          isBottomButtonsShow ? AppColors.goldenTainoi : Colors.white,
       body: LoadingBackground(
         title: "Medical History",
-        isAddBack: false,
-        addBottomArrows: true,
+        isLoading: _isLoading,
+        isAddAppBar: isBottomButtonsShow,
+        isAddBack: !isBottomButtonsShow,
+        addBottomArrows: isBottomButtonsShow,
         onForwardTap: () {
           if (_diseaseList.length > 0) {
             _container.setConsentToTreatData("medicalHistory", _diseaseList);
@@ -101,5 +121,9 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
         ),
       ),
     );
+  }
+
+  void setLoading(bool value) {
+    setState(() => _isLoading = value);
   }
 }
