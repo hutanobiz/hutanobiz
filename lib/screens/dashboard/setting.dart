@@ -327,8 +327,13 @@ class _SettingsScreenState extends State<SettingScreen> {
                   height: 0,
                 ),
               ),
-              customListButton("Update Medical History",
-                  "images/profile_update_medical.png", () {}),
+              customListButton(
+                "Update Medical History",
+                "images/profile_update_medical.png",
+                () => Navigator.of(context).pushNamed(
+                  Routes.updateMedicalHistory,
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.only(left: 28.0),
                 child: Divider(

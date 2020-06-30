@@ -14,6 +14,7 @@ import 'package:hutano/screens/appointments/upload_images.dart';
 import 'package:hutano/screens/book_appointment/review_appointment.dart';
 import 'package:hutano/screens/book_appointment/select_appointment_time_screen.dart';
 import 'package:hutano/screens/book_appointment/select_services.dart';
+import 'package:hutano/screens/dashboard/all_reviews_screen.dart';
 import 'package:hutano/screens/dashboard/appointment_type_screen.dart';
 import 'package:hutano/screens/dashboard/appointments_screen.dart';
 import 'package:hutano/screens/dashboard/available_timings_screen.dart';
@@ -25,7 +26,7 @@ import 'package:hutano/screens/dashboard/provider_list_screen.dart';
 import 'package:hutano/screens/dashboard/provider_profile_image.dart';
 import 'package:hutano/screens/dashboard/provider_profile_screen.dart';
 import 'package:hutano/screens/dashboard/see_all_searches.dart';
-import 'package:hutano/screens/dashboard/all_reviews_screen.dart';
+import 'package:hutano/screens/dashboard/update_medical_history.dart';
 import 'package:hutano/screens/home.dart';
 import 'package:hutano/screens/login.dart';
 import 'package:hutano/screens/payment/add_new_card.dart';
@@ -80,6 +81,7 @@ class Routes {
   static const String providerFiltersScreen = '/providerFiltersScreen';
   static const String providerImageScreen = '/providerImageScreen';
   static const String allReviewsScreen = '/allReviewsScreen';
+  static const String updateMedicalHistory = '/updateMedicalHistory';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -282,6 +284,12 @@ class Routes {
           AllReviewsScreen(
             reviewMap: args,
           ),
+        );
+        break;
+      case updateMedicalHistory:
+        return _buildRoute(
+          settings,
+          UpdateMedicalHistory(),
         );
         break;
       default:
