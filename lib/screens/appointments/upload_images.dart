@@ -45,22 +45,26 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
     imagesList.clear();
 
     SharedPref().getToken().then((token) {
-      setState(() {
-        this.token = token;
-      });
+      if (mounted) {
+        setState(() {
+          this.token = token;
+        });
+      }
 
       _api.getPatientDocuments(token).then((value) {
         if (value != null) {
           setLoading(false);
 
-          setState(() {
-            if (value['medicalImages'] != null &&
-                value['medicalImages'].isNotEmpty) {
-              for (dynamic images in value['medicalImages']) {
-                imagesList.add(images);
+          if (mounted) {
+            setState(() {
+              if (value['medicalImages'] != null &&
+                  value['medicalImages'].isNotEmpty) {
+                for (dynamic images in value['medicalImages']) {
+                  imagesList.add(images);
+                }
               }
-            }
-          });
+            });
+          }
         }
       }).futureError((error) {
         error.toString().debugLog();
@@ -426,6 +430,8 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
   }
 
   void setLoading(bool value) {
-    setState(() => _isLoading = value);
+    if (mounted) {
+      setState(() => _isLoading = value);
+    }
   }
 }
