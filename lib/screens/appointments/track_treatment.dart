@@ -38,7 +38,6 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
 
   bool _isLoading = false;
   InheritedContainerState _container;
-  Map providerData = Map();
 
   final Set<Marker> _markers = {};
   final Set<Polyline> _polyline = {};
@@ -166,9 +165,6 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
     super.didChangeDependencies();
 
     _container = InheritedContainer.of(context);
-
-    Map providerResponse = _container.providerResponse;
-    providerData = providerResponse["providerData"];
 
     SharedPref().getToken().then((token) {
       setState(() {
@@ -612,8 +608,10 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                                 break;
                               case 5:
                                 Navigator.of(context).pushNamed(
-                                    Routes.treatmentSummaryScreen,
-                                    arguments: providerData);
+                                  Routes.treatmentSummaryScreen,
+                                  arguments: _container
+                                      .appointmentIdMap["appointmentId"],
+                                );
                                 break;
                             }
                           },

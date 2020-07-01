@@ -238,11 +238,11 @@ class Routes {
         );
         break;
       case treatmentSummaryScreen:
-        if (args is Map) {
+        if (args is String) {
           return _buildRoute(
             settings,
             TreatmentSummaryScreen(
-              providerData: args,
+              appointmentId: args,
             ),
           );
         }
