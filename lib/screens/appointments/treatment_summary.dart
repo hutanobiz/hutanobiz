@@ -1,16 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/models/services.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:intl/intl.dart';
 
 class TreatmentSummaryScreen extends StatefulWidget {
-  final Map providerData;
+  final String appointmentId;
 
-  TreatmentSummaryScreen({Key key, @required this.providerData})
+  TreatmentSummaryScreen({Key key, @required this.appointmentId})
       : super(key: key);
 
   @override
@@ -36,124 +38,148 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
 
   Map followUpMap = Map();
 
+  bool _isLoading = false;
+
   @override
   void initState() {
     super.initState();
 
-    if (widget.providerData != null) {
-      Map providerData = widget.providerData;
-      if (providerData["data"] != null) {
-        appointmentData = providerData["data"];
-      } else {
-        appointmentData = providerData;
-      }
+    setLoading(true);
 
-      if (providerData["followUpAppointment"] != null &&
-          providerData["followUpAppointment"].length > 0) {
-        followUpMap["time"] =
-            providerData["followUpAppointment"][0]["fromTime"];
-        followUpMap["date"] =
-            DateTime.parse(providerData["followUpAppointment"][0]["date"]);
-        followUpMap["service"] =
-            providerData["followUpAppointment"][0]["type"].toString();
-        if (providerData["followUpAppointment"][0]["services"] != null &&
-            providerData["followUpAppointment"][0]["services"].length > 0) {
-          followUpMap["status"] = "1";
-          List<Services> list = List();
-          for (dynamic subService in providerData["followUpAppointment"][0]
-              ["services"]) {
-            list.add(Services.fromJson(subService));
+    SharedPref().getToken().then((token) {
+      ApiBaseHelper api = ApiBaseHelper();
+
+      api.getAppointmentDetails(token, widget.appointmentId).then((response) {
+        setLoading(false);
+
+        setState(() {
+          if (response != null && response.isNotEmpty) {
+            Map providerData = response;
+            if (providerData["data"] != null) {
+              appointmentData = providerData["data"];
+            } else {
+              appointmentData = providerData;
+            }
+
+            if (providerData["followUpAppointment"] != null &&
+                providerData["followUpAppointment"].length > 0) {
+              followUpMap["time"] =
+                  providerData["followUpAppointment"][0]["fromTime"];
+              followUpMap["date"] = DateTime.parse(
+                  providerData["followUpAppointment"][0]["date"]);
+              followUpMap["service"] =
+                  providerData["followUpAppointment"][0]["type"].toString();
+              if (providerData["followUpAppointment"][0]["services"] != null &&
+                  providerData["followUpAppointment"][0]["services"].length >
+                      0) {
+                followUpMap["status"] = "1";
+                List<Services> list = List();
+                for (dynamic subService in providerData["followUpAppointment"]
+                    [0]["services"]) {
+                  list.add(Services.fromJson(subService));
+                }
+                followUpMap["services"] = list;
+              } else {
+                followUpMap["status"] = "2";
+              }
+            }
           }
-          followUpMap["services"] = list;
-        } else {
-          followUpMap["status"] = "2";
-        }
-      }
-    }
 
-    if (followUpMap["service"] != null) {
-      serviceType = followUpMap["service"] == "1"
-          ? "Office appointment"
-          : followUpMap["service"] == "2"
-              ? "Video Chat APpointment"
-              : followUpMap["service"] == "3" ? "Onsite Appointment" : "---";
-    }
+          if (followUpMap["service"] != null) {
+            serviceType = followUpMap["service"] == "1"
+                ? "Office appointment"
+                : followUpMap["service"] == "2"
+                    ? "Video Chat APpointment"
+                    : followUpMap["service"] == "3"
+                        ? "Onsite Appointment"
+                        : "---";
+          }
 
-    if (appointmentData != null) {
-      durationOfSymtoms =
-          appointmentData["problemTimeSpan"]?.toString() ?? "---";
+          if (appointmentData != null) {
+            durationOfSymtoms =
+                appointmentData["problemTimeSpan"]?.toString() ?? "---";
 
-      String date = DateFormat('dd MMMM yyyy')
-          .format(DateTime.parse(appointmentData['date']).toLocal())
-          .toString();
+            String date = DateFormat('dd MMMM yyyy')
+                .format(DateTime.parse(appointmentData['date']).toLocal())
+                .toString();
 
-      if (appointmentData["trackingStatus"] != null) {
-        if (appointmentData["trackingStatus"]["treatmentStarted"] != null) {
-          initiated = appointmentData["trackingStatus"]["treatmentStarted"] +
-              " on " +
-              date;
-        }
-        if (appointmentData["trackingStatus"]["providerTreatmentEnded"] !=
-            null) {
-          completed = appointmentData["trackingStatus"]
-                  ["providerTreatmentEnded"] +
-              " on " +
-              date;
-        }
-      }
+            if (appointmentData["trackingStatus"] != null) {
+              if (appointmentData["trackingStatus"]["treatmentStarted"] !=
+                  null) {
+                initiated = appointmentData["trackingStatus"]
+                        ["treatmentStarted"] +
+                    " on " +
+                    date;
+              }
+              if (appointmentData["trackingStatus"]["providerTreatmentEnded"] !=
+                  null) {
+                completed = appointmentData["trackingStatus"]
+                        ["providerTreatmentEnded"] +
+                    " on " +
+                    date;
+              }
+            }
 
-      if (appointmentData["pharmaceuticalsAdminstration"] != null) {
-        if (appointmentData["pharmaceuticalsAdminstration"]
-                ["administrationRoute"] !=
-            null) {
-          appointmentData["pharmaceuticalsAdminstration"]["administrationRoute"]
-              .toString()
-              .split(",")
-              .map((f) => administrationRoute.add(f))
-              .toList();
-        }
+            if (appointmentData["pharmaceuticalsAdminstration"] != null) {
+              if (appointmentData["pharmaceuticalsAdminstration"]
+                      ["administrationRoute"] !=
+                  null) {
+                appointmentData["pharmaceuticalsAdminstration"]
+                        ["administrationRoute"]
+                    .toString()
+                    .split(",")
+                    .map((f) => administrationRoute.add(f))
+                    .toList();
+              }
 
-        drugs = appointmentData["pharmaceuticalsAdminstration"]["drugs"]
-                ?.toString() ??
-            "---";
-      }
+              drugs = appointmentData["pharmaceuticalsAdminstration"]["drugs"]
+                      ?.toString() ??
+                  "---";
+            }
 
-      if (appointmentData["recommendedFollowUpCare"] != null) {
-        appointmentData["recommendedFollowUpCare"]
-            .toString()
-            .split(",")
-            .map((f) => recommendFollowList.add(f))
-            .toList();
-      }
+            if (appointmentData["recommendedFollowUpCare"] != null) {
+              appointmentData["recommendedFollowUpCare"]
+                  .toString()
+                  .split(",")
+                  .map((f) => recommendFollowList.add(f))
+                  .toList();
+            }
 
-      if (appointmentData["medicalHistory"] != null) {
-        medicalHistoryList = appointmentData["medicalHistory"];
-      }
+            if (appointmentData["medicalHistory"] != null) {
+              medicalHistoryList = appointmentData["medicalHistory"];
+            }
 
-      if (appointmentData["doctorSign"] != null) {
-        doctorSign = appointmentData["doctorSign"];
-      }
+            if (appointmentData["doctorSign"] != null) {
+              doctorSign = appointmentData["doctorSign"];
+            }
 
-      if (appointmentData["doctor"] != null) {
-        doctorName = appointmentData["doctor"]["fullName"]?.toString() ?? "---";
-      }
+            if (appointmentData["doctor"] != null) {
+              doctorName =
+                  appointmentData["doctor"]["fullName"]?.toString() ?? "---";
+            }
 
-      if (appointmentData["user"] != null) {
-        if (appointmentData["user"] is String) {
-        } else {
-          userMap = appointmentData["user"];
+            if (appointmentData["user"] != null) {
+              if (appointmentData["user"] is String) {
+              } else {
+                userMap = appointmentData["user"];
 
-          name = userMap["fullName"]?.toString() ?? "---";
-          type = userMap["type"]?.toString() ?? "---";
-        }
-      }
-      if (appointmentData["medicalDiagnosis"] != null) {
-        primaryDiagnosis =
-            appointmentData["medicalDiagnosis"]["primary"] ?? "---";
-        secondaryDiagnosis =
-            appointmentData["medicalDiagnosis"]["secondary"] ?? "---";
-      }
-    }
+                name = userMap["fullName"]?.toString() ?? "---";
+                type = userMap["type"]?.toString() ?? "---";
+              }
+            }
+            if (appointmentData["medicalDiagnosis"] != null) {
+              primaryDiagnosis =
+                  appointmentData["medicalDiagnosis"]["primary"] ?? "---";
+              secondaryDiagnosis =
+                  appointmentData["medicalDiagnosis"]["secondary"] ?? "---";
+            }
+          }
+        });
+      }).futureError((error) {
+        setLoading(false);
+        error.toString().debugLog();
+      });
+    });
   }
 
   @override
@@ -163,6 +189,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackground(
         title: "Treatment Summary",
+        isLoading: _isLoading,
         color: Colors.white,
         padding: EdgeInsets.zero,
         child: SingleChildScrollView(
@@ -287,17 +314,24 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
                 child: adverseWidget(
                   "Adverse effects",
-                  appointmentData["adverseEffectsOfTreatment"]
-                          ["adverseEffects"] ??
-                      "---",
+                  appointmentData["adverseEffectsOfTreatment"] != null
+                      ? (appointmentData["adverseEffectsOfTreatment"]
+                                  ["adverseEffects"]
+                              ?.toString() ??
+                          "---")
+                      : '---',
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
                 child: adverseWidget(
                   "Action Taken",
-                  appointmentData["adverseEffectsOfTreatment"]["actionTaken"] ??
-                      "---",
+                  appointmentData["adverseEffectsOfTreatment"] != null
+                      ? (appointmentData["adverseEffectsOfTreatment"]
+                                  ["actionTaken"]
+                              ?.toString() ??
+                          "---")
+                      : '---',
                 ),
               ),
               divider(),
@@ -743,5 +777,11 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
         thickness: 6.0,
       ),
     );
+  }
+
+  void setLoading(bool loading) {
+    setState(() {
+      _isLoading = loading;
+    });
   }
 }
