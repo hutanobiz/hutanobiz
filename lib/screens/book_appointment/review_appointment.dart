@@ -335,16 +335,6 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           }
         }
 
-        if (_consentToTreatMap["medicalHistory"] != null &&
-            _consentToTreatMap["medicalHistory"].length > 0) {
-          for (int i = 0;
-              i < _consentToTreatMap["medicalHistory"].length;
-              i++) {
-            request.fields["medicalHistory[$i]"] =
-                _consentToTreatMap["medicalHistory"][i];
-          }
-        }
-
         var response = await request.send();
         final int statusCode = response.statusCode;
         log("Status code: $statusCode");
