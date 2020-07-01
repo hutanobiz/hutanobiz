@@ -53,14 +53,15 @@ class _HomeScreenState extends State<HomeScreen> {
         ? message['isTrack'] ?? "false"
         : message["data"]['isTrack'] ?? "false";
 
+    Map appointment = {};
+    appointment["_appointmentStatus"] = "1";
+    appointment["id"] = Platform.isIOS
+        ? message['appointmentId']
+        : message["data"]['appointmentId'];
+
     if (isTrack == "true") {
-      //TODO: Navigate to TrackTreatmentScreen
+      Navigator.of(context).pushNamed(Routes.trackTreatmentScreen);
     } else {
-      Map appointment = {};
-      appointment["_appointmentStatus"] = "1";
-      appointment["id"] = Platform.isIOS
-          ? message['appointmentId']
-          : message["data"]['appointmentId'];
       Navigator.of(context).pushNamed(
         Routes.appointmentDetailScreen,
         arguments: appointment,
