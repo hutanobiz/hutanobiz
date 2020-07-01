@@ -431,13 +431,10 @@ class ApiBaseHelper {
     });
   }
 
-  Future<String> sendPatientMedicalHistory(String token, String disease) {
+  Future<String> sendPatientMedicalHistory(String token, Map diseaseMap) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
-
-    Map diseaseMap = {};
-    diseaseMap['medicalHistory'] = disease;
 
     return _netUtil
         .post(
