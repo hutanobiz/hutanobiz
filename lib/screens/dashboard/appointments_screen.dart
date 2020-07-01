@@ -449,10 +449,10 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                   listType == 2 && _appointmentStatus == "4"
                       ? leftButton(listType, userRating, "Treatment summary",
                           () {
-                          _container.setProviderData("providerData", response);
                           Navigator.of(context).pushNamed(
-                              Routes.treatmentSummaryScreen,
-                              arguments: response);
+                            Routes.treatmentSummaryScreen,
+                            arguments: response["_id"].toString(),
+                          );
                         })
                       : Container(),
                   listType == 2 &&
