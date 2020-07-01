@@ -266,7 +266,7 @@ class ProviderWidget extends StatelessWidget {
                     ),
                     SizedBox(height: 5),
                     Text(
-                      "Consultation fee",
+                      "Consultation",
                       style: TextStyle(
                         fontSize: 12.0,
                         color: Colors.black.withOpacity(0.70),
