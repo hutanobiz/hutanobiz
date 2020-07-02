@@ -269,7 +269,12 @@ class Routes {
         return _buildRoute(settings, AvailableTimingsScreen());
         break;
       case providerFiltersScreen:
-        return _buildRoute(settings, ProviderFiltersScreen());
+        return _buildRoute(
+          settings,
+          ProviderFiltersScreen(
+            filterMap: args,
+          ),
+        );
         break;
       case providerImageScreen:
         return _buildRoute(

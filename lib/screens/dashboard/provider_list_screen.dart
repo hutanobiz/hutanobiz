@@ -3,6 +3,7 @@ import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
@@ -35,10 +36,16 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
     'Onsite'
   ];
 
-  Map _appointmentTypeFilterMap = {};
+  String _appointmentType;
 
   Map _containerMap;
   InheritedContainerState _container;
+
+  Map filterMap = {};
+
+  Map _projectResponse;
+
+  Map _appointmentFilterMap = {};
 
   @override
   void didChangeDependencies() {
@@ -46,12 +53,9 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
 
     _container = InheritedContainer.of(context);
 
-    final _projectResponse = _container.getProjectsResponse();
+    _projectResponse = _container.getProjectsResponse();
     if (this._containerMap != _projectResponse) {
       this._containerMap = _projectResponse;
-
-      _appointmentTypeFilterMap['appointmentType'] = '0';
-      //TODO: appointment type filter map
     }
 
     if (_projectResponse.containsKey("specialityId"))
@@ -63,6 +67,8 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
     else {
       _providerFuture = api.getProviderList(_projectResponse);
     }
+
+    _appointmentType = 'all';
   }
 
   @override
@@ -126,13 +132,27 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
           width: 42.0,
           height: 42.0,
           image: AssetImage("images/ic_filter.png"),
-        )
-        // .onClick(
-        //   onTap: () => Navigator.of(context).pushNamed(
-        //     Routes.providerFiltersScreen,
-        //   ),
-        // ),
-        //TODO: filters screen
+        ).onClick(onTap: () {
+          filterMap['specialtyId[0]'] = _projectResponse['specialtyId[]'];
+          Navigator.of(context)
+              .pushNamed(
+            Routes.providerFiltersScreen,
+            arguments: filterMap,
+          )
+              .then((value) {
+            if (value != null) {
+              filterMap = value;
+
+              if (filterMap.length > 0) {
+                SharedPref().getToken().then((token) {
+                  setState(() {
+                    _providerFuture = api.providerFilter(token, filterMap);
+                  });
+                });
+              }
+            }
+          });
+        }),
       ],
     );
   }
@@ -153,32 +173,45 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
 
           return _appointmentTypeWidget(
             _appointmentType,
-            _appointmentTypeFilterMap.containsValue(
-              index.toString(),
-            ),
-          );
+            this._appointmentType == _appointmentType.toLowerCase(),
+            onClick: () {
+              if (this._appointmentType == _appointmentType.toLowerCase())
+                return;
 
-          // return RoundCornerCheckBox(
-          //   title: _appointmentType,
-          //   textPadding: 1.0,
-          //   value: _appointmentTypeFilterMap.containsValue(index.toString()),
-          //   textStyle: TextStyle(
-          //     color: AppColors.midnight_express.withOpacity(0.84),
-          //     fontSize: 13,
-          //     fontWeight: FontWeight.w400,
-          //   ),
-          //   onCheck: null,
-          //   // (value) {
-          //   //   setState(() {
-          //   //     value
-          //   //         ? _appointmentTypeFilterMap[_appointmentType] = '1'
-          //   //         : _appointmentTypeFilterMap.remove(
-          //   //             _appointmentTypeFilterMap,
-          //   //           );
-          //   //   });
-          //   // },
-          //   //TODO: appintment type filter
-          // );
+              setState(() {
+                this._appointmentType = _appointmentType.toLowerCase();
+                _appointmentFilterMap.clear();
+              });
+
+              switch (index) {
+                case 0:
+                  setState(() {
+                    _providerFuture = api.getProviderList(_projectResponse);
+                  });
+                  break;
+                case 1:
+                  _appointmentFilterMap['isOfficeEnabled'] = '1';
+                  break;
+                case 2:
+                  _appointmentFilterMap['isVideoChatEnabled'] = '1';
+                  break;
+                case 3:
+                  _appointmentFilterMap['isOnsiteEnabled'] = '1';
+                  break;
+              }
+
+              if (index != 0) {
+                _appointmentFilterMap['specialtyId[]'] =
+                    _projectResponse['specialtyId[]'];
+                SharedPref().getToken().then((token) {
+                  setState(() {
+                    _providerFuture =
+                        api.providerFilter(token, _appointmentFilterMap);
+                  });
+                });
+              }
+            },
+          );
         },
       ),
     );
@@ -202,7 +235,13 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
               break;
             case ConnectionState.done:
               if (snapshot.hasData) {
-                _responseData = snapshot.data["response"];
+                if ((filterMap != null && filterMap.length > 0) ||
+                    (_appointmentFilterMap != null &&
+                        _appointmentFilterMap.length > 0)) {
+                  _responseData = snapshot.data["response"]['providerData'];
+                } else {
+                  _responseData = snapshot.data["response"];
+                }
 
                 if (snapshot.data["degree"] != null)
                   _degreeMap = snapshot.data["degree"];
@@ -272,7 +311,8 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
     );
   }
 
-  Widget _appointmentTypeWidget(String title, bool isSelected) {
+  Widget _appointmentTypeWidget(String title, bool isSelected,
+      {Function onClick}) {
     String icon = title.toLowerCase().contains('office')
         ? (isSelected ? 'ic_office_app' : 'ic_office_app_unselected')
         : title.toLowerCase().contains('video')
@@ -281,42 +321,45 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                 ? (isSelected ? 'ic_onsite_app' : 'ic_onsite_app_unselected')
                 : '';
 
-    return Container(
-      height: 42,
-      width: title.toLowerCase().contains('all') ? 64 : 96,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: isSelected
-            ? AppColors.windsor.withOpacity(0.10)
-            : Colors.transparent,
-        borderRadius: BorderRadius.circular(28),
-        border: isSelected
-            ? null
-            : Border.all(
-                color: AppColors.windsor.withOpacity(0.16),
-              ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          title.toLowerCase().contains('all')
-              ? Container()
-              : icon.imageIcon(
-                  width: 21,
-                  height: 21,
+    return InkWell(
+      onTap: onClick,
+      child: Container(
+        height: 42,
+        width: title.toLowerCase().contains('all') ? 64 : 96,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: isSelected
+              ? AppColors.windsor.withOpacity(0.10)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(28),
+          border: isSelected
+              ? null
+              : Border.all(
+                  color: AppColors.windsor.withOpacity(0.16),
                 ),
-          title.toLowerCase().contains('all')
-              ? Container()
-              : SizedBox(width: 5),
-          Text(
-            title,
-            style: TextStyle(
-              color: AppColors.windsor.withOpacity(0.85),
-              fontWeight: FontWeight.w600,
-              fontSize: 13,
-            ),
-          )
-        ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            title.toLowerCase().contains('all')
+                ? Container()
+                : icon.imageIcon(
+                    width: 21,
+                    height: 21,
+                  ),
+            title.toLowerCase().contains('all')
+                ? Container()
+                : SizedBox(width: 5),
+            Text(
+              title,
+              style: TextStyle(
+                color: AppColors.windsor.withOpacity(0.85),
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
