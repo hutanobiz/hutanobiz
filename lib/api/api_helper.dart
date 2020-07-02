@@ -336,7 +336,7 @@ class ApiBaseHelper {
     });
   }
 
-  Future<List<dynamic>> providerFilter(String token, Map filterMap) {
+  Future<dynamic> providerFilter(String token, Map filterMap) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
@@ -348,10 +348,9 @@ class ApiBaseHelper {
       headers: headers,
     )
         .then((res) {
-      return res["response"];
+      return res;
     });
   }
-  //TODO: filter api
 
   Future<dynamic> getDistanceAndTime(
       LatLng source, LatLng dest, String apiKey) {
@@ -427,6 +426,12 @@ class ApiBaseHelper {
       headers: headers,
     )
         .then((res) {
+      return res["response"];
+    });
+  }
+
+  Future<List<dynamic>> getDegrees() {
+    return _netUtil.get(base_url + "api/education-qualification").then((res) {
       return res["response"];
     });
   }
