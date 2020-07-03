@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
-import 'package:hutano/utils/extensions.dart';
 
 class ChooseSpecialities extends StatefulWidget {
   ChooseSpecialities({Key key, @required this.professionalId})
@@ -28,10 +28,7 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
   void initState() {
     super.initState();
 
-    Map<String, String> map = Map();
-
-    map["professionalTitleId"] = widget.professionalId;
-    _specialityFuture = api.getProfessionalSpecility(map);
+    _specialityFuture = api.getSpecialties();
   }
 
   @override
@@ -105,8 +102,9 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
                     ),
                   ),
                   onTap: () {
+                    conatiner.projectsResponse.clear();
                     conatiner.setProjectsResponse(
-                        "specialtyId[]", data[index]["_id"]);
+                        "specialtyId[${index.toString()}]", data[index]["_id"]);
 
                     Navigator.pushNamed(
                       context,
