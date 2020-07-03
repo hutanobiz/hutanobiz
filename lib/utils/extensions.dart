@@ -11,10 +11,10 @@ class Extensions {
     String address,
     String street,
     String city,
-    String stateCode,
+    dynamic state,
     String zipCode,
   ) {
-    String addressName = '---';
+    String addressName = '---', stateCode = '---';
 
     if (address != null) {
       addressName = address.toString().toLowerCase().contains('suite') ||
@@ -26,13 +26,17 @@ class Extensions {
               : address.toString());
     }
 
+    if (state != null) {
+      stateCode = state["stateCode"]?.toString() ?? "---";
+    }
+
     return (street ?? "---") +
         ", " +
         (addressName ?? "---") +
         ", " +
         (city ?? "---") +
         ", " +
-        stateCode +
+        (stateCode ?? '---') +
         " " +
         (zipCode ?? "---");
   }

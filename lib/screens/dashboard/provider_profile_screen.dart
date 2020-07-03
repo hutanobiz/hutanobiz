@@ -235,16 +235,11 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     if (_providerData["businessLocation"] != null) {
       dynamic business = _providerData["businessLocation"];
 
-      String state = "---";
-      if (business["state"] != null) {
-        state = business["state"]["title"]?.toString() ?? "---";
-      }
-
       address = Extensions.addressFormat(
         business["address"]?.toString(),
         business["street"]?.toString(),
         business["city"]?.toString(),
-        state,
+        business["state"],
         business["zipCode"]?.toString(),
       );
 

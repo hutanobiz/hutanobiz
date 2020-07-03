@@ -217,16 +217,12 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
       if (response["DoctorProfessionalDetail"]["businessLocation"] != null) {
         dynamic business =
             response["DoctorProfessionalDetail"]["businessLocation"];
-        String state = "---";
-        if (business["state"] != null) {
-          state = business["state"]["title"]?.toString() ?? "---";
-        }
 
         address = Extensions.addressFormat(
           business["address"]?.toString(),
           business["street"]?.toString(),
           business["city"]?.toString(),
-          state,
+          business["state"],
           business["zipCode"]?.toString(),
         );
       }
