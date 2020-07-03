@@ -476,6 +476,12 @@ class ApiBaseHelper {
       return res["response"];
     });
   }
+
+  Future<List<dynamic>> getSpecialties() {
+    return _netUtil.get(base_url + "api/specialties").then((res) {
+      return res["response"];
+    });
+  }
 }
 
 class NetworkUtil {
