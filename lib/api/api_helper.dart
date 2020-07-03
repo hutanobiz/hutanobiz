@@ -482,6 +482,21 @@ class ApiBaseHelper {
       return res["response"];
     });
   }
+
+  Future<List<dynamic>> getMyDoctors(String token) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .get(
+      base_url + "api/patient/my-doctors",
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
 }
 
 class NetworkUtil {
