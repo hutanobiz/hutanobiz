@@ -45,6 +45,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   ];
 
   List _myDoctorsList = [];
+  List _topSpecialtiesList = [];
 
   @override
   void initState() {
@@ -61,6 +62,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
         });
       }).futureError((error) => error.toString().debugLog());
     });
+
+    _topSpecialtiesList.clear();
+
+    _api.getSpecialties().then((value) {
+      setState(() {
+        if (value != null) {
+          for (dynamic specialty in value) {
+            if (specialty['isFeatured'] != null) {
+              if (specialty['isFeatured']) {
+                _topSpecialtiesList.add(specialty);
+              }
+            }
+          }
+        }
+      });
+    }).futureError((error) => error.toString().debugLog());
   }
 
   @override
@@ -155,8 +172,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         topRight: const Radius.circular(22.0),
                       ),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: ListView(
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(left: 20),
@@ -182,6 +198,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ),
                         myDoctorsWidget(),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: Text(
+                            'Top Specialities',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        specialtiesWidget(),
                       ],
                     ),
                   ),
@@ -510,6 +538,78 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       conatiner.setProviderId(doctorData["_id"]);
                       Navigator.of(context)
                           .pushNamed(Routes.providerProfileScreen);
+                    },
+                  ),
+                );
+              },
+            ),
+    );
+  }
+
+  Widget specialtiesWidget() {
+    return Container(
+      height: 137,
+      margin: const EdgeInsets.only(top: 20, bottom: 30),
+      child: _topSpecialtiesList == null || _myDoctorsList.isEmpty
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : ListView.separated(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              separatorBuilder: (BuildContext context, int index) =>
+                  SizedBox(width: 13),
+              scrollDirection: Axis.horizontal,
+              itemCount: _topSpecialtiesList.length,
+              itemBuilder: (context, index) {
+                dynamic specialty = _topSpecialtiesList[index];
+
+                return Container(
+                  height: 100,
+                  width: 132,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: Colors.grey[100]),
+                  ),
+                  child: ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Column(
+                      children: <Widget>[
+                        ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(14),
+                            topRight: Radius.circular(14),
+                          ),
+                          child: Image(
+                            image: specialty['image'] == null
+                                ? AssetImage('images/dummy_title_image.png')
+                                : NetworkImage(
+                                    ApiBaseHelper.imageUrl + specialty['image'],
+                                  ),
+                            width: 132,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        SizedBox(height: 10.0),
+                        Text(
+                          specialty['title']?.toString() ?? '---',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(height: 10.0),
+                      ],
+                    ),
+                    onTap: () {
+                      conatiner.projectsResponse.clear();
+                      conatiner.setProjectsResponse(
+                          "specialtyId[]", specialty["_id"]);
+                      Navigator.pushNamed(
+                        context,
+                        Routes.providerListScreen,
+                      );
                     },
                   ),
                 );
