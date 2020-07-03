@@ -235,9 +235,10 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
               break;
             case ConnectionState.done:
               if (snapshot.hasData) {
-                if ((filterMap != null && filterMap.length > 0) ||
-                    (_appointmentFilterMap != null &&
-                        _appointmentFilterMap.length > 0)) {
+                if (((filterMap != null && filterMap.length > 0) ||
+                        (_appointmentFilterMap != null &&
+                            _appointmentFilterMap.length > 0)) &&
+                    _appointmentType != 'all') {
                   _responseData = snapshot.data["response"]['providerData'];
                 } else {
                   _responseData = snapshot.data["response"];
