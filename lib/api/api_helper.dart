@@ -451,6 +451,24 @@ class ApiBaseHelper {
       return res["response"];
     });
   }
+  Future<String> deletePatientMedicalHistory(String token,String diseaseId) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    Map diseaseMap={};
+    diseaseMap['medicalHistory']=diseaseId;
+
+    return _netUtil
+        .post(
+      base_url + "api/patient/delete-medical-history",
+      body: diseaseMap,
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
 }
 
 class NetworkUtil {
