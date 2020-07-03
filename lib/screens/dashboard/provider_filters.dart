@@ -34,6 +34,8 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
   RangeValues _experienceRangeValues = RangeValues(0, 50);
   RangeValues _distanceRangeValues = RangeValues(0, 100);
 
+  Map<String, String> professionalTitleMap = {};
+
   @override
   void initState() {
     super.initState();
@@ -56,6 +58,12 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
 
     _filtersList = _container.filterDataMap["professionalTitleList"];
     setFilterMapKey('professionalTitleId');
+
+    if (_container.projectsResponse.isNotEmpty &&
+        _container.projectsResponse['professionalTitleId'] != null) {
+      professionalTitleMap["professionalTitleId"] =
+          _container.projectsResponse['professionalTitleId'];
+    }
   }
 
   @override
@@ -184,6 +192,18 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
                                                 _filterTitle["_id"].toString()
                                             : _filtersMap.remove(
                                                 "$filterMapKey[${index.toString()}]");
+
+                                        if (filterListIndex == 0) {
+                                          setState(() {
+                                            value
+                                                ? professionalTitleMap[
+                                                        "professionalTitleId"] =
+                                                    _filterTitle["_id"]
+                                                        .toString()
+                                                : professionalTitleMap.remove(
+                                                    'professionalTitleId');
+                                          });
+                                        }
                                       });
 
                                       _filtersMap.toString().debugLog();
@@ -344,22 +364,31 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
     setFilterMapKey('specialtyId');
     setLoading(true);
 
-    Map<String, String> map = Map();
-
-    map["professionalTitleId"] =
-        _container.projectsResponse['professionalTitleId'];
-
-    _api.getProfessionalSpecility(map).then((value) {
-      if (value != null) {
-        setState(() {
-          _isLoading = false;
-          _filtersList = value;
-        });
-      }
-    }).futureError((error) {
-      setLoading(false);
-      error.toString().debugLog();
-    });
+    if (professionalTitleMap.isEmpty) {
+      _api.getSpecialties().then((value) {
+        if (value != null) {
+          setState(() {
+            _isLoading = false;
+            _filtersList = value;
+          });
+        }
+      }).futureError((error) {
+        setLoading(false);
+        error.toString().debugLog();
+      });
+    } else {
+      _api.getProfessionalSpecility(professionalTitleMap).then((value) {
+        if (value != null) {
+          setState(() {
+            _isLoading = false;
+            _filtersList = value;
+          });
+        }
+      }).futureError((error) {
+        setLoading(false);
+        error.toString().debugLog();
+      });
+    }
   }
 
   void getDegrees() {
