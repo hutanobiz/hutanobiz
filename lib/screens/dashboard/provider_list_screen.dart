@@ -36,7 +36,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
     'Onsite'
   ];
 
-  String _appointmentType;
+  String _selectedAppointmentType;
 
   Map _containerMap;
   InheritedContainerState _container;
@@ -68,7 +68,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
       _providerFuture = api.getProviderList(_projectResponse);
     }
 
-    _appointmentType = 'all';
+    _selectedAppointmentType = _projectResponse['serviceType'].toString();
   }
 
   @override
@@ -173,13 +173,12 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
 
           return _appointmentTypeWidget(
             _appointmentType,
-            this._appointmentType == _appointmentType.toLowerCase(),
+            _selectedAppointmentType == index.toString(),
             onClick: () {
-              if (this._appointmentType == _appointmentType.toLowerCase())
-                return;
+              if (this._selectedAppointmentType == index.toString()) return;
 
               setState(() {
-                this._appointmentType = _appointmentType.toLowerCase();
+                this._selectedAppointmentType = index.toString();
                 _appointmentFilterMap.clear();
               });
 
@@ -238,7 +237,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                 if (((filterMap != null && filterMap.length > 0) ||
                         (_appointmentFilterMap != null &&
                             _appointmentFilterMap.length > 0)) &&
-                    _appointmentType != 'all') {
+                    _selectedAppointmentType != '0') {
                   _responseData = snapshot.data["response"]['providerData'];
                 } else {
                   _responseData = snapshot.data["response"];
@@ -275,16 +274,6 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
             _provider["isVideoChatEnabled"];
         _appointentTypeMap["isOnsiteEnabled"] = _provider["isOnsiteEnabled"];
 
-        List educatonList = _provider["education"];
-        String degree = "---";
-
-        if (degreeMap != null)
-          educatonList.map((f) {
-            if (degreeMap.containsKey(f["degree"])) {
-              degree = degreeMap[f["degree"]];
-            }
-          }).toList();
-
         return InkWell(
           onTap: () {
             _container.setProviderId(_provider["userId"]["_id"]);
@@ -292,14 +281,12 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
           },
           child: ProviderWidget(
             data: _provider,
-            degree: degree,
             averageRating:
                 _provider['averageRating']?.toStringAsFixed(2) ?? "0",
             bookAppointment: () {
               _container.getProviderData().clear();
 
               _container.setProviderData("providerData", _provider);
-              _container.setProviderData("degree", degree);
 
               Navigator.of(context).pushNamed(
                 Routes.appointmentTypeScreen,
