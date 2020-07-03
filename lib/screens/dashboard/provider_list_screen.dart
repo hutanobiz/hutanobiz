@@ -133,7 +133,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
           height: 42.0,
           image: AssetImage("images/ic_filter.png"),
         ).onClick(onTap: () {
-          filterMap['specialtyId[0]'] = _projectResponse['specialtyId[]'];
+          filterMap = _projectResponse;
           Navigator.of(context)
               .pushNamed(
             Routes.providerFiltersScreen,
