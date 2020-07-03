@@ -118,11 +118,7 @@ class Routes {
         return _errorRoute();
         break;
       case chooseSpecialities:
-        if (args is String) {
-          return _buildRoute(
-              settings, ChooseSpecialities(professionalId: args));
-        }
-        return _errorRoute();
+        return _buildRoute(settings, ChooseSpecialities());
         break;
       case appointmentTypeScreen:
         return _buildRoute(
