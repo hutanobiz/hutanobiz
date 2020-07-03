@@ -45,8 +45,6 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
     _filterOptionsList.add(RadioModel(false, "Distance"));
     _filterOptionsList.add(RadioModel(false, "Language"));
 
-    //TODO: languages list
-
     _filtersMap = widget.filterMap;
   }
 
@@ -100,15 +98,13 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
 
                               break;
                             case 1:
-                              setFilterMapKey('specialtyId');
                               getSpecialities();
                               break;
                             case 2:
-                              setFilterMapKey('degree');
                               getDegrees();
                               break;
-                            case 6:
-                              setFilterMapKey('language');
+                            case 5:
+                              getLanguages();
                               break;
                             default:
                               setFilterMapKey('professionalTitleId');
@@ -169,7 +165,10 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
                                 dynamic _filterTitle = _filtersList[index];
 
                                 return RoundCornerCheckBox(
-                                    title: _filtersList[index]["title"],
+                                    title: _filtersList[index][
+                                        filterListIndex == 5
+                                            ? 'name'
+                                            : "title"],
                                     textStyle: TextStyle(
                                       fontSize: 14.0,
                                       fontWeight: FontWeight.w400,
@@ -342,6 +341,7 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
   }
 
   void getSpecialities() {
+    setFilterMapKey('specialtyId');
     setLoading(true);
 
     Map<String, String> map = Map();
@@ -363,9 +363,27 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
   }
 
   void getDegrees() {
+    setFilterMapKey('degree');
     setLoading(true);
 
     _api.getDegrees().then((value) {
+      if (value != null) {
+        setState(() {
+          _isLoading = false;
+          _filtersList = value;
+        });
+      }
+    }).futureError((error) {
+      setLoading(false);
+      error.toString().debugLog();
+    });
+  }
+
+  void getLanguages() {
+    setFilterMapKey('language');
+    setLoading(true);
+
+    _api.getLanguages().then((value) {
       if (value != null) {
         setState(() {
           _isLoading = false;
