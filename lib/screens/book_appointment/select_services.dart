@@ -107,7 +107,6 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
 
     formWidget.add(ProviderWidget(
       data: profileMap,
-      degree: _providerData["degree"].toString(),
       isOptionsShow: false,
       averageRating: averageRating,
     ));

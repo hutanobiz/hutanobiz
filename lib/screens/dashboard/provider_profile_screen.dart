@@ -24,10 +24,8 @@ class ProviderProfileScreen extends StatefulWidget {
 
 class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
   Future<dynamic> _profileFuture;
-  Map _containerMap;
   InheritedContainerState _container;
   Map profileMapResponse = Map();
-  String degree;
   List speaciltyList = List();
   List reviewsList = [];
 
@@ -57,7 +55,6 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
   void didChangeDependencies() {
     _container = InheritedContainer.of(context);
     Map _providerData = _container.providerIdMap;
-    _containerMap = _container.getProjectsResponse();
 
     ApiBaseHelper api = ApiBaseHelper();
 
@@ -143,7 +140,6 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
 
                     _container.setProviderData(
                         "providerData", profileMapResponse);
-                    _container.setProviderData("degree", degree);
 
                     Navigator.of(context).pushNamed(
                       Routes.appointmentTypeScreen,
@@ -271,7 +267,6 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
         child: ProviderWidget(
           data: _providerData,
-          degree: degree.toString(),
           averageRating: averageRating,
           isOptionsShow: false,
           isProverPicShow: true,

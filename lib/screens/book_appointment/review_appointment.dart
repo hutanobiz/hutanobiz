@@ -479,7 +479,6 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         ),
         child: ProviderWidget(
           data: _profileMap,
-          degree: _providerData["degree"].toString(),
           isOptionsShow: false,
           averageRating: averageRating,
         ),

@@ -8,7 +8,6 @@ class ProviderWidget extends StatelessWidget {
   ProviderWidget({
     Key key,
     @required this.data,
-    @required this.degree,
     this.bookAppointment,
     this.isOptionsShow = true,
     this.averageRating,
@@ -20,7 +19,7 @@ class ProviderWidget extends StatelessWidget {
         super(key: key);
 
   final data;
-  final String degree, averageRating;
+  final String averageRating;
   final Function bookAppointment;
   final bool isOptionsShow, isProverPicShow;
   final EdgeInsets margin;

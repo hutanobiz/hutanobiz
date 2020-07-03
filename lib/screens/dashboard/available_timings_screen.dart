@@ -75,7 +75,6 @@ class _AvailableTimingsScreenState extends State<AvailableTimingsScreen> {
 
     formWidget.add(ProviderWidget(
       data: profileMap,
-      degree: _providerData["degree"].toString(),
       averageRating: averageRating,
       margin: const EdgeInsets.only(left: 20, right: 20, bottom: 12),
       isOptionsShow: false,

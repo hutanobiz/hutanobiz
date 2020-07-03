@@ -184,7 +184,6 @@ class _SelectAppointmentTimeScreenState
 
     formWidget.add(ProviderWidget(
       data: profileMap,
-      degree: _providerData["degree"].toString(),
       isOptionsShow: false,
       averageRating: averageRating,
     ));
