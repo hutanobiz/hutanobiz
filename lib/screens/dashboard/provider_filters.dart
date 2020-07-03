@@ -5,7 +5,6 @@ import 'package:hutano/models/filter_radio_model.dart';
 import 'package:hutano/utils/dimens.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/fancy_button.dart';
-import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/round_corner_checkbox.dart';
 
@@ -19,7 +18,6 @@ class ProviderFiltersScreen extends StatefulWidget {
 }
 
 class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
-  InheritedContainerState _container;
   List<dynamic> _filtersList = List();
 
   List<RadioModel> _filterOptionsList = new List<RadioModel>();
@@ -48,21 +46,11 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
     _filterOptionsList.add(RadioModel(false, "Language"));
 
     _filtersMap = widget.filterMap;
-  }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+    getProfessionalTitle();
 
-    _container = InheritedContainer.of(context);
-
-    _filtersList = _container.filterDataMap["professionalTitleList"];
-    setFilterMapKey('professionalTitleId');
-
-    if (_container.projectsResponse.isNotEmpty &&
-        _container.projectsResponse['professionalTitleId'] != null) {
-      professionalTitleMap["professionalTitleId"] =
-          _container.projectsResponse['professionalTitleId'];
+    if (_filtersMap.containsKey('serviceType')) {
+      _filtersMap.remove('serviceType');
     }
   }
 
@@ -100,10 +88,7 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
 
                           switch (index) {
                             case 0:
-                              setFilterMapKey('professionalTitleId');
-                              _filtersList = _container
-                                  .filterDataMap["professionalTitleList"];
-
+                              getProfessionalTitle();
                               break;
                             case 1:
                               getSpecialities();
@@ -114,10 +99,6 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
                             case 5:
                               getLanguages();
                               break;
-                            default:
-                              setFilterMapKey('professionalTitleId');
-                              _filtersList = _container
-                                  .filterDataMap["professionalTitleList"];
                           }
 
                           setState(() {
@@ -357,6 +338,23 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
   void setFilterMapKey(String key) {
     setState(() {
       filterMapKey = key;
+    });
+  }
+
+  void getProfessionalTitle() {
+    setFilterMapKey('professionalTitleId');
+    setLoading(true);
+
+    _api.getProfessionalTitle().then((value) {
+      if (value != null) {
+        setState(() {
+          _isLoading = false;
+          _filtersList = value;
+        });
+      }
+    }).futureError((error) {
+      setLoading(false);
+      error.toString().debugLog();
     });
   }
 
