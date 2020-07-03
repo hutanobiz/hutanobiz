@@ -451,13 +451,14 @@ class ApiBaseHelper {
       return res["response"];
     });
   }
-  Future<String> deletePatientMedicalHistory(String token,String diseaseId) {
+
+  Future<String> deletePatientMedicalHistory(String token, String diseaseId) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
 
-    Map diseaseMap={};
-    diseaseMap['medicalHistory']=diseaseId;
+    Map diseaseMap = {};
+    diseaseMap['medicalHistory'] = diseaseId;
 
     return _netUtil
         .post(
@@ -466,6 +467,12 @@ class ApiBaseHelper {
       headers: headers,
     )
         .then((res) {
+      return res["response"];
+    });
+  }
+
+  Future<List<dynamic>> getLanguages() {
+    return _netUtil.get(base_url + "api/languages").then((res) {
       return res["response"];
     });
   }
