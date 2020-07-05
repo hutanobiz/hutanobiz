@@ -152,7 +152,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                   ),
                   _diseaseList.contains('Others')
                       ? Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 65),
                           child: TextField(
                             controller: _otherDiseaseController,
                             keyboardType: TextInputType.text,
