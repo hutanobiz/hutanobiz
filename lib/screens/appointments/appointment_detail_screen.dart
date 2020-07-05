@@ -93,7 +93,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         profileMap = snapshot.data;
 
                         return SingleChildScrollView(
-                          padding: const EdgeInsets.only(bottom: 100),
+                          padding: const EdgeInsets.only(bottom: 20),
                           child: profileWidget(profileMap),
                         );
                       } else if (snapshot.hasError) {
