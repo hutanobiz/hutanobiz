@@ -44,8 +44,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     'Onsite Appointment'
   ];
 
-  List _myDoctorsList = [];
-  List _topSpecialtiesList = [];
+  Future<List<dynamic>> _myDoctorsFuture;
+  Future<List<dynamic>> _specialtiesFuture;
 
   @override
   void initState() {
@@ -56,28 +56,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     });
 
     SharedPref().getToken().then((token) {
-      _api.getMyDoctors(token).then((value) {
-        setState(() {
-          _myDoctorsList = value;
-        });
-      }).futureError((error) => error.toString().debugLog());
+      setState(() {
+        _myDoctorsFuture = _api.getMyDoctors(token);
+      });
     });
 
-    _topSpecialtiesList.clear();
-
-    _api.getSpecialties().then((value) {
-      setState(() {
-        if (value != null) {
-          for (dynamic specialty in value) {
-            if (specialty['isFeatured'] != null) {
-              if (specialty['isFeatured']) {
-                _topSpecialtiesList.add(specialty);
-              }
-            }
-          }
-        }
-      });
-    }).futureError((error) => error.toString().debugLog());
+    _specialtiesFuture = _api.getSpecialties();
   }
 
   @override
@@ -343,6 +327,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget topProviderWidget() {
     return Container(
       height: 150,
+      width: 143,
       margin: const EdgeInsets.only(top: 20, bottom: 30),
       child: ListView.separated(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -409,20 +394,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget myDoctorsWidget() {
-    return Container(
-      height: 172,
-      margin: const EdgeInsets.only(top: 20, bottom: 30),
-      child: _myDoctorsList == null || _myDoctorsList.isEmpty
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : ListView.separated(
+    return FutureBuilder<List<dynamic>>(
+      future: _myDoctorsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          List _myDoctorsList = snapshot.data;
+          return Container(
+            height: 173,
+            margin: const EdgeInsets.only(top: 20, bottom: 30),
+            child: ListView.separated(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
               separatorBuilder: (BuildContext context, int index) =>
                   SizedBox(width: 13),
               scrollDirection: Axis.horizontal,
               itemCount: _myDoctorsList.length,
               itemBuilder: (context, index) {
+                if (_myDoctorsList == null || _myDoctorsList.isEmpty) {
+                  return Text('No my doctors available');
+                }
+
                 String professionalTitle = '---';
 
                 dynamic doctor = _myDoctorsList[index]['doctorData'];
@@ -445,7 +435,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 }
 
                 return Container(
-                  height: 172,
+                  height: 173,
                   width: 160,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(14),
@@ -543,24 +533,54 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 );
               },
             ),
+          );
+        } else if (snapshot.hasError) {
+          return Padding(
+            padding: const EdgeInsets.all(20),
+            child: Text('NO doctors available yet'),
+          );
+        }
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
   }
 
   Widget specialtiesWidget() {
-    return Container(
-      height: 137,
-      margin: const EdgeInsets.only(top: 20, bottom: 30),
-      child: _topSpecialtiesList == null || _myDoctorsList.isEmpty
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : ListView.separated(
+    return FutureBuilder<List<dynamic>>(
+      future: _specialtiesFuture,
+      builder: (context, snapshot) {
+        List _topSpecialtiesList = [];
+
+        _topSpecialtiesList.clear();
+
+        if (snapshot.hasData) {
+          if (snapshot.data != null && snapshot.data.length > 0) {
+            for (dynamic specialty in snapshot.data) {
+              if (specialty['isFeatured'] != null) {
+                if (specialty['isFeatured']) {
+                  _topSpecialtiesList.add(specialty);
+                }
+              }
+            }
+          }
+
+          return Container(
+            height: 137,
+            margin: const EdgeInsets.only(top: 20, bottom: 30),
+            child: ListView.separated(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
               separatorBuilder: (BuildContext context, int index) =>
                   SizedBox(width: 13),
               scrollDirection: Axis.horizontal,
               itemCount: _topSpecialtiesList.length,
               itemBuilder: (context, index) {
+                if (_topSpecialtiesList == null ||
+                    _topSpecialtiesList.isEmpty) {
+                  return Text('No Specialities available');
+                }
+
                 dynamic specialty = _topSpecialtiesList[index];
 
                 return Container(
@@ -570,51 +590,60 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(color: Colors.grey[100]),
                   ),
-                  child: ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: Column(
-                      children: <Widget>[
-                        ClipRRect(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(14),
-                            topRight: Radius.circular(14),
-                          ),
-                          child: Image(
-                            image: specialty['image'] == null
-                                ? AssetImage('images/dummy_title_image.png')
-                                : NetworkImage(
-                                    ApiBaseHelper.imageUrl + specialty['image'],
-                                  ),
-                            width: 132,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
+                  child: Column(
+                    children: <Widget>[
+                      ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(14),
+                          topRight: Radius.circular(14),
                         ),
-                        SizedBox(height: 10.0),
-                        Text(
-                          specialty['title']?.toString() ?? '---',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                          ),
+                        child: Image(
+                          image: specialty['image'] == null
+                              ? AssetImage('images/dummy_title_image.png')
+                              : NetworkImage(
+                                  ApiBaseHelper.imageUrl + specialty['image'],
+                                ),
+                          width: 132,
+                          height: 100,
+                          fit: BoxFit.cover,
                         ),
-                        SizedBox(height: 10.0),
-                      ],
-                    ),
-                    onTap: () {
-                      conatiner.projectsResponse.clear();
-                      conatiner.setProjectsResponse(
-                          "specialtyId[]", specialty["_id"]);
-                      Navigator.pushNamed(
-                        context,
-                        Routes.providerListScreen,
-                      );
-                    },
+                      ),
+                      SizedBox(height: 10.0),
+                      Text(
+                        specialty['title']?.toString() ?? '---',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(height: 10.0),
+                    ],
                   ),
+                ).onClick(
+                  onTap: () {
+                    conatiner.projectsResponse.clear();
+                    conatiner.setProjectsResponse(
+                        "specialtyId[]", specialty["_id"]);
+                    Navigator.pushNamed(
+                      context,
+                      Routes.providerListScreen,
+                    );
+                  },
                 );
               },
             ),
+          );
+        } else if (snapshot.hasError) {
+          return Padding(
+            padding: const EdgeInsets.all(20),
+            child: Text('NO specialties available yet'),
+          );
+        }
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
   }
 
