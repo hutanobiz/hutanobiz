@@ -170,29 +170,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ),
                         topProviderWidget(),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20),
-                          child: Text(
-                            'My Doctors',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
                         myDoctorsWidget(),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20),
-                          child: Text(
-                            'Top Specialities',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
                         specialtiesWidget(),
                       ],
                     ),
@@ -399,149 +377,177 @@ class _DashboardScreenState extends State<DashboardScreen> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List _myDoctorsList = snapshot.data;
-          return Container(
-            height: 173,
-            margin: const EdgeInsets.only(top: 20, bottom: 30),
-            child: ListView.separated(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-              separatorBuilder: (BuildContext context, int index) =>
-                  SizedBox(width: 13),
-              scrollDirection: Axis.horizontal,
-              itemCount: _myDoctorsList.length,
-              itemBuilder: (context, index) {
-                if (_myDoctorsList == null || _myDoctorsList.isEmpty) {
-                  return Text('No my doctors available');
-                }
 
-                String professionalTitle = '---';
+          if (_myDoctorsList == null || _myDoctorsList.isEmpty) {
+            return Container();
+          }
 
-                dynamic doctor = _myDoctorsList[index]['doctorData'];
-                dynamic doctorData = doctor['userId'];
-
-                String avatar = doctorData['avatar']?.toString();
-
-                Map _appointentTypeMap = {};
-
-                _appointentTypeMap["isOfficeEnabled"] =
-                    doctor["isOfficeEnabled"];
-                _appointentTypeMap["isVideoChatEnabled"] =
-                    doctor["isVideoChatEnabled"];
-                _appointentTypeMap["isOnsiteEnabled"] =
-                    doctor["isOnsiteEnabled"];
-
-                if (doctor['professionalTitle'] != null) {
-                  professionalTitle =
-                      doctor['professionalTitle']['title']?.toString() ?? '---';
-                }
-
-                return Container(
-                  height: 173,
-                  width: 160,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: Colors.grey[100]),
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Text(
+                  'My Doctors',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
                   ),
-                  child: ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: Column(
-                      children: <Widget>[
-                        Container(
-                          margin: const EdgeInsets.all(12),
-                          width: 72.0,
-                          height: 72.0,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.grey),
-                          ),
-                          child: avatar == null || avatar == "null"
-                              ? Image(
-                                  image: AssetImage('images/profile_user.png'),
-                                  height: 72.0,
-                                  width: 72.0,
-                                )
-                              : ClipOval(
-                                  child: Image.network(
-                                    ApiBaseHelper.imageUrl + avatar,
-                                    width: 72.0,
-                                    height: 72.0,
-                                    fit: BoxFit.cover,
+                ),
+              ),
+              Container(
+                height: 173,
+                margin: const EdgeInsets.only(top: 20, bottom: 30),
+                child: ListView.separated(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  separatorBuilder: (BuildContext context, int index) =>
+                      SizedBox(width: 13),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _myDoctorsList.length,
+                  itemBuilder: (context, index) {
+                    if (_myDoctorsList == null || _myDoctorsList.isEmpty) {
+                      return Text('No my doctors available');
+                    }
+
+                    String professionalTitle = '---';
+
+                    dynamic doctor = _myDoctorsList[index]['doctorData'];
+                    dynamic doctorData = doctor['userId'];
+
+                    String avatar = doctorData['avatar']?.toString();
+
+                    Map _appointentTypeMap = {};
+
+                    _appointentTypeMap["isOfficeEnabled"] =
+                        doctor["isOfficeEnabled"];
+                    _appointentTypeMap["isVideoChatEnabled"] =
+                        doctor["isVideoChatEnabled"];
+                    _appointentTypeMap["isOnsiteEnabled"] =
+                        doctor["isOnsiteEnabled"];
+
+                    if (doctor['professionalTitle'] != null) {
+                      professionalTitle =
+                          doctor['professionalTitle']['title']?.toString() ??
+                              '---';
+                    }
+
+                    return Container(
+                      height: 173,
+                      width: 160,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: Colors.grey[100]),
+                      ),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: Column(
+                          children: <Widget>[
+                            Container(
+                              margin: const EdgeInsets.all(12),
+                              width: 72.0,
+                              height: 72.0,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.grey),
+                              ),
+                              child: avatar == null || avatar == "null"
+                                  ? Image(
+                                      image:
+                                          AssetImage('images/profile_user.png'),
+                                      height: 72.0,
+                                      width: 72.0,
+                                    )
+                                  : ClipOval(
+                                      child: Image.network(
+                                        ApiBaseHelper.imageUrl + avatar,
+                                        width: 72.0,
+                                        height: 72.0,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                            ),
+                            Text(
+                              doctorData['fullName']?.toString() ?? '---',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 3, bottom: 6),
+                              child: Text(
+                                professionalTitle ?? '---',
+                                style: TextStyle(
+                                  color: Colors.black.withOpacity(0.6),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: 160,
+                              height: 36,
+                              padding: const EdgeInsets.only(top: 9.0),
+                              child: FlatButton(
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
+                                color: AppColors.persian_indigo,
+                                splashColor: Colors.grey[100],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    bottomRight: Radius.circular(13.0),
+                                    bottomLeft: Radius.circular(13.0),
                                   ),
                                 ),
-                        ),
-                        Text(
-                          doctorData['fullName']?.toString() ?? '---',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 3, bottom: 6),
-                          child: Text(
-                            professionalTitle ?? '---',
-                            style: TextStyle(
-                              color: Colors.black.withOpacity(0.6),
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: 160,
-                          height: 36,
-                          padding: const EdgeInsets.only(top: 9.0),
-                          child: FlatButton(
-                            materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
-                            color: AppColors.persian_indigo,
-                            splashColor: Colors.grey[100],
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(13.0),
-                                bottomLeft: Radius.circular(13.0),
-                              ),
-                            ),
-                            child: Text(
-                              "Book Appointment",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12.0,
-                                color: Colors.white,
-                              ),
-                            ),
-                            onPressed: () {
-                              conatiner.getProviderData().clear();
-                              conatiner.setProviderData("providerData", doctor);
+                                child: Text(
+                                  "Book Appointment",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  conatiner.getProviderData().clear();
+                                  conatiner.setProviderData(
+                                      "providerData", doctor);
 
-                              Navigator.of(context).pushNamed(
-                                Routes.appointmentTypeScreen,
-                                arguments: _appointentTypeMap,
-                              );
-                            },
-                          ),
-                        )
-                      ],
-                    ),
-                    onTap: () {
-                      conatiner.setProviderId(doctorData["_id"]);
-                      Navigator.of(context)
-                          .pushNamed(Routes.providerProfileScreen);
-                    },
-                  ),
-                );
-              },
-            ),
+                                  Navigator.of(context).pushNamed(
+                                    Routes.appointmentTypeScreen,
+                                    arguments: _appointentTypeMap,
+                                  );
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                        onTap: () {
+                          conatiner.setProviderId(doctorData["_id"]);
+                          Navigator.of(context)
+                              .pushNamed(Routes.providerProfileScreen);
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           );
         } else if (snapshot.hasError) {
-          return Padding(
-            padding: const EdgeInsets.all(20),
-            child: Text('NO doctors available yet'),
-          );
+          return Container();
+          // return Padding(
+          //   padding: const EdgeInsets.all(20),
+          //   child: Text('NO doctors available yet'),
+          // );
         }
-        return Center(
-          child: CircularProgressIndicator(),
+        return Padding(
+          padding: const EdgeInsets.all(20),
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
         );
       },
     );
@@ -566,82 +572,107 @@ class _DashboardScreenState extends State<DashboardScreen> {
             }
           }
 
-          return Container(
-            height: 137,
-            margin: const EdgeInsets.only(top: 20, bottom: 30),
-            child: ListView.separated(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-              separatorBuilder: (BuildContext context, int index) =>
-                  SizedBox(width: 13),
-              scrollDirection: Axis.horizontal,
-              itemCount: _topSpecialtiesList.length,
-              itemBuilder: (context, index) {
-                if (_topSpecialtiesList == null ||
-                    _topSpecialtiesList.isEmpty) {
-                  return Text('No Specialities available');
-                }
+          if (_topSpecialtiesList == null || _topSpecialtiesList.isEmpty) {
+            return Container();
+          }
 
-                dynamic specialty = _topSpecialtiesList[index];
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Text(
+                  'Top Specialities',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              Container(
+                height: 137,
+                margin: const EdgeInsets.only(top: 20, bottom: 30),
+                child: ListView.separated(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  separatorBuilder: (BuildContext context, int index) =>
+                      SizedBox(width: 13),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _topSpecialtiesList.length,
+                  itemBuilder: (context, index) {
+                    if (_topSpecialtiesList == null ||
+                        _topSpecialtiesList.isEmpty) {
+                      return Text('No Specialities available');
+                    }
 
-                return Container(
-                  height: 100,
-                  width: 132,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: Colors.grey[100]),
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      ClipRRect(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(14),
-                          topRight: Radius.circular(14),
-                        ),
-                        child: Image(
-                          image: specialty['image'] == null
-                              ? AssetImage('images/dummy_title_image.png')
-                              : NetworkImage(
-                                  ApiBaseHelper.imageUrl + specialty['image'],
-                                ),
-                          width: 132,
-                          height: 100,
-                          fit: BoxFit.cover,
-                        ),
+                    dynamic specialty = _topSpecialtiesList[index];
+
+                    return Container(
+                      height: 100,
+                      width: 132,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: Colors.grey[100]),
                       ),
-                      SizedBox(height: 10.0),
-                      Text(
-                        specialty['title']?.toString() ?? '---',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      child: Column(
+                        children: <Widget>[
+                          ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(14),
+                              topRight: Radius.circular(14),
+                            ),
+                            child: Image(
+                              image: specialty['image'] == null
+                                  ? AssetImage('images/dummy_title_image.png')
+                                  : NetworkImage(
+                                      ApiBaseHelper.imageUrl +
+                                          specialty['image'],
+                                    ),
+                              width: 132,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          SizedBox(height: 10.0),
+                          Text(
+                            specialty['title']?.toString() ?? '---',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(height: 10.0),
+                        ],
                       ),
-                      SizedBox(height: 10.0),
-                    ],
-                  ),
-                ).onClick(
-                  onTap: () {
-                    conatiner.projectsResponse.clear();
-                    conatiner.setProjectsResponse(
-                        "specialtyId[]", specialty["_id"]);
-                    Navigator.pushNamed(
-                      context,
-                      Routes.providerListScreen,
+                    ).onClick(
+                      onTap: () {
+                        conatiner.projectsResponse.clear();
+                        conatiner.setProjectsResponse(
+                            "specialtyId[]", specialty["_id"]);
+                        Navigator.pushNamed(
+                          context,
+                          Routes.providerListScreen,
+                        );
+                      },
                     );
                   },
-                );
-              },
-            ),
+                ),
+              ),
+            ],
           );
         } else if (snapshot.hasError) {
-          return Padding(
-            padding: const EdgeInsets.all(20),
-            child: Text('NO specialties available yet'),
-          );
+          return Container();
+          // return Padding(
+          //   padding: const EdgeInsets.all(20),
+          //   child: Text('NO specialties available yet'),
+          // );
         }
-        return Center(
-          child: CircularProgressIndicator(),
+        return Padding(
+          padding: const EdgeInsets.all(20),
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
         );
       },
     );
