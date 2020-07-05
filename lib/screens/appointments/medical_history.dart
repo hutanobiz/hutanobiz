@@ -152,7 +152,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                   ),
                   _diseaseList.contains('Others')
                       ? Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 65),
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 75),
                           child: TextField(
                             controller: _otherDiseaseController,
                             keyboardType: TextInputType.text,
@@ -194,7 +194,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
 
   void saveMedicalHistory() {
     //TODO: send medical history code
-    
+
     // Map<String, String> diseaseMap = {};
 
     if (_otherDiseaseController.text.isNotEmpty) {
