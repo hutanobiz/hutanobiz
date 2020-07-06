@@ -650,6 +650,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         conatiner.projectsResponse.clear();
                         conatiner.setProjectsResponse(
                             "specialtyId[]", specialty["_id"]);
+                        conatiner.setProjectsResponse("serviceType", '0');
+
                         Navigator.pushNamed(
                           context,
                           Routes.providerListScreen,
