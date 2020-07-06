@@ -281,7 +281,7 @@ class _SelectAppointmentTimeScreenState
             } else if (snapshot.hasError) {
               snapshot.error.toString().debugLog();
               return Center(
-                child: Text("NO slots available"),
+                child: Text("Unavailable"),
               );
             }
 
@@ -338,7 +338,7 @@ class _SelectAppointmentTimeScreenState
                     return _slotWidget(list[index]);
                   },
                 )
-              : Text("NO slots available"),
+              : Text("Unavailable"),
         )
       ],
     );

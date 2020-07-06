@@ -60,7 +60,7 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
 
     formWidget.add(Center(
       child: RoundCornerCheckBox(
-        title: "I Agree",
+        title: "I consent to treatment",
         value: isAgree,
         onCheck: (value) => setState(() => isAgree = !isAgree),
       ),
