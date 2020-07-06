@@ -497,6 +497,16 @@ class ApiBaseHelper {
       return res["response"];
     });
   }
+
+  Future<List<dynamic>> getServices({String specialityId}) {
+    return _netUtil
+        .get(
+      base_url + "api/services?id=$specialityId",
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
 }
 
 class NetworkUtil {
