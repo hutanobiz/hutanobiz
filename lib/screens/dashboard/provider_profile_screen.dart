@@ -331,7 +331,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
       Padding(
         padding: const EdgeInsets.only(left: 20, top: 16, bottom: 12),
         child: Text(
-          "Language Known",
+          "Languages",
           style: TextStyle(
             fontSize: 14.0,
             fontWeight: FontWeight.w600,
@@ -358,7 +358,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
           : Padding(
               padding: const EdgeInsets.only(left: 20, bottom: 16),
               child: Text(
-                "NO languages available",
+                "No languages.",
                 style: TextStyle(
                     color: Colors.black,
                     fontSize: 13.0,

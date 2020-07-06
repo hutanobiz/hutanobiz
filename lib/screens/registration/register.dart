@@ -295,11 +295,11 @@ class _SignUpFormState extends State<Register> {
         )
       ],
     ).onClick(
-          onTap: () {
-            FocusScope.of(context).requestFocus(FocusNode());
-            showPickerDialog();
-          },
-        ));
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+        showPickerDialog();
+      },
+    ));
 
     formWidget.add(Widgets.sizedBox(height: 35.0));
 

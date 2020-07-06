@@ -67,7 +67,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         if (snapshot.hasData) {
           if (snapshot.data is String) {
             return Center(
-              child: Text(snapshot.data),
+              child: Text('No appointments.'),
             );
           } else {
             _activeAppointmentsList = snapshot.data["presentRequest"];
@@ -77,7 +77,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           if (_activeAppointmentsList.isEmpty &&
               _closedAppointmentsList.isEmpty)
             return Center(
-              child: Text("NO appointments yet!"),
+              child: Text("No appointments."),
             );
 
           if (_activeAppointmentsList.length > 1) {
@@ -122,7 +122,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                 ]),
           );
         } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
+          return Text('No appointments.');
         }
         return Center(
           child: CircularProgressIndicator(),

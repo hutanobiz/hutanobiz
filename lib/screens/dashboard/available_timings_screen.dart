@@ -37,7 +37,7 @@ class _AvailableTimingsScreenState extends State<AvailableTimingsScreen> {
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackground(
-        title: "Available Schedule",
+        title: "Schedule",
         color: Colors.white,
         padding: const EdgeInsets.only(top: 20, bottom: 20),
         isAddBack: false,

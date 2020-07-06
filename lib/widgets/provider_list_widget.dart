@@ -154,7 +154,7 @@ class ProviderWidget extends StatelessWidget {
                               SizedBox(width: 3.0),
                               Expanded(
                                 child: Text(
-                                  practicingSince + " Years Exp.",
+                                  practicingSince + " yrs experience",
                                   style: TextStyle(
                                     color: Colors.black.withOpacity(0.7),
                                     fontSize: 12,

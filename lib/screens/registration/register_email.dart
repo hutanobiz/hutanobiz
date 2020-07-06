@@ -148,7 +148,7 @@ class _RegisterEmailState extends State<RegisterEmail> {
                             _phoneNumberController.text, false),
                       );
                     } else {
-                      Widgets.showToast(user['verificationCode']);
+                      Widgets.showToast('A 6-digit verification number has been sent to your phone.');
                       Navigator.pushNamed(
                         context,
                         Routes.verifyOtpRoute,

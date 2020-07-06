@@ -290,7 +290,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ),
             child: Text(
-              "Search for doctors or by specialty...",
+              "Search for providers by name or specialty.",
               style: TextStyle(
                 fontSize: 13.0,
                 color: Colors.grey,

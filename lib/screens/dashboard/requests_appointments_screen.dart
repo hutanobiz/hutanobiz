@@ -59,7 +59,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
             return Center(
-              child: Text("NO data available"),
+              child: Text("No Requests."),
             );
             break;
           case ConnectionState.waiting:
@@ -77,7 +77,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
               if (_activeRequestsList.length == 0 &&
                   _closedRequestsList.length == 0)
                 return Center(
-                  child: Text("NO requests yet!"),
+                  child: Text("No Requests."),
                 );
 
               if (_activeRequestsList.length > 1) {
@@ -122,7 +122,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                     ]),
               );
             } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
+              return Text('No Requests.');
             }
         }
         return null;

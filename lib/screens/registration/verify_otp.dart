@@ -64,7 +64,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
         ),
         Widgets.sizedBox(height: 10.0),
         Text(
-          "Enter the OTP you received to",
+          "Enter the OTP sent to",
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.black26,
@@ -141,7 +141,8 @@ class _VerifyOTPState extends State<VerifyOTP> {
                     setLoading(false);
                     Widgets.showToast("Verified successfully");
 
-                    Navigator.pushReplacementNamed(context, Routes.registerRoute,
+                    Navigator.pushReplacementNamed(
+                        context, Routes.registerRoute,
                         arguments: RegisterArguments(phoneNumber, false));
                   }).futureError((error) {
                     setLoading(false);
