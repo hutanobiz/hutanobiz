@@ -133,7 +133,10 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
           height: 42.0,
           image: AssetImage("images/ic_filter.png"),
         ).onClick(onTap: () {
-          filterMap = _projectResponse;
+          if (filterMap == null || filterMap.isEmpty) {
+            filterMap = _projectResponse;
+          }
+
           Navigator.of(context)
               .pushNamed(
             Routes.providerFiltersScreen,
@@ -141,7 +144,9 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
           )
               .then((value) {
             if (value != null) {
-              filterMap = value;
+              setState(() {
+                filterMap = value;
+              });
 
               if (filterMap.length > 0) {
                 SharedPref().getToken().then((token) {
@@ -184,9 +189,13 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
 
               switch (index) {
                 case 0:
-                  setState(() {
-                    _providerFuture = api.getProviderList(_projectResponse);
-                  });
+                  _appointmentFilterMap['isOfficeEnabled'] = '1';
+                  _appointmentFilterMap['isVideoChatEnabled'] = '1';
+                  _appointmentFilterMap['isOnsiteEnabled'] = '1';
+
+                  // setState(() {
+                  //   _providerFuture = api.getProviderList(_projectResponse);
+                  // });
                   break;
                 case 1:
                   _appointmentFilterMap['isOfficeEnabled'] = '1';
@@ -199,16 +208,16 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                   break;
               }
 
-              if (index != 0) {
-                _appointmentFilterMap['specialtyId[]'] =
-                    _projectResponse['specialtyId[]'];
-                SharedPref().getToken().then((token) {
-                  setState(() {
-                    _providerFuture =
-                        api.providerFilter(token, _appointmentFilterMap);
-                  });
+              // if (index != 0) {
+              _appointmentFilterMap['specialtyId[]'] =
+                  _projectResponse['specialtyId[]'];
+              SharedPref().getToken().then((token) {
+                setState(() {
+                  _providerFuture =
+                      api.providerFilter(token, _appointmentFilterMap);
                 });
-              }
+              });
+              // }
             },
           );
         },
@@ -234,10 +243,13 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
               break;
             case ConnectionState.done:
               if (snapshot.hasData) {
-                if (((filterMap != null && filterMap.length > 0) ||
-                        (_appointmentFilterMap != null &&
-                            _appointmentFilterMap.length > 0)) &&
-                    _selectedAppointmentType != '0') {
+                if ((filterMap != null && filterMap.length > 0) ||
+                    (_appointmentFilterMap != null &&
+                        _appointmentFilterMap.length > 0)) {
+                  // if (((filterMap != null && filterMap.length > 0) ||
+                  //         (_appointmentFilterMap != null &&
+                  //             _appointmentFilterMap.length > 0)) &&
+                  //     _selectedAppointmentType != '0') {
                   _responseData = snapshot.data["response"]['providerData'];
                 } else {
                   _responseData = snapshot.data["response"];
