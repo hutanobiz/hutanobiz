@@ -101,9 +101,8 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
                   onTap: () {
                     conatiner.setProjectsResponse(
                         "specialtyId[]", data[index]["_id"]);
-                    // conatiner.projectsResponse.clear();
-                    // conatiner.setProjectsResponse(
-                    //     "specialtyId[${index.toString()}]", data[index]["_id"]);
+                    conatiner.setProjectsResponse(
+                        "index", index.toString());
 
                     Navigator.pushNamed(
                       context,
