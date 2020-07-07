@@ -472,21 +472,12 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                 ),
                 SizedBox(height: 15),
                 Text(
-                  "Thank You!!\nFor your feedback.",
+                  "Thank You.\nWe value your feedback.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                     color: Colors.black,
-                  ),
-                ),
-                SizedBox(height: 12),
-                Text(
-                  "We value your feedback.",
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black.withOpacity(0.85),
                   ),
                 ),
                 SizedBox(height: 20),

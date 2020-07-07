@@ -497,7 +497,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                   : Padding(
                       padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
                       child: Text(
-                        "Provider Signature",
+                        "Provider's Signature",
                         style: TextStyle(
                           fontSize: 16.0,
                           fontWeight: FontWeight.w600,
@@ -629,7 +629,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
           subFeeWidget("Patient Name", pateintName),
           Divider(),
           subFeeWidget(
-              "Medical Care via",
+              "Type of appointment",
               medicalCareVia == "1"
                   ? "Office Appointment"
                   : medicalCareVia == "2"

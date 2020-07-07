@@ -371,7 +371,8 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              _totalDuration,
+                              'You provider’s office is $_totalDuration minutes away. '
+                              'Let us know when you are on your way.',
                               style: TextStyle(
                                 fontSize: 14.0,
                                 fontWeight: FontWeight.bold,

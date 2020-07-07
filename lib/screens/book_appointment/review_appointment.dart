@@ -406,7 +406,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                 ),
                 SizedBox(height: 12),
                 Text(
-                  "You'll be notified when the provider accepts your request.",
+                  "Your request has been sent. You will be notified when the "
+                  "provider accepts your appointment request.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
