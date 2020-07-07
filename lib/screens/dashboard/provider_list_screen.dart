@@ -54,6 +54,8 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
     _container = InheritedContainer.of(context);
 
     _projectResponse = _container.getProjectsResponse();
+    _selectedAppointmentType = _projectResponse['serviceType'].toString();
+
     if (this._containerMap != _projectResponse) {
       this._containerMap = _projectResponse;
     }
@@ -65,10 +67,14 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
       _providerFuture =
           api.getServiceProviderList(_projectResponse["serviceId"].toString());
     else {
-      _providerFuture = api.getProviderList(_projectResponse);
-    }
+      Map _providerMap = _projectResponse;
 
-    _selectedAppointmentType = _projectResponse['serviceType'].toString();
+      if (_providerMap['serviceType'] == '0') {
+        _providerMap.remove('serviceType');
+      }
+
+      _providerFuture = api.getProviderList(_providerMap);
+    }
   }
 
   @override
@@ -192,10 +198,6 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                   _appointmentFilterMap['isOfficeEnabled'] = '1';
                   _appointmentFilterMap['isVideoChatEnabled'] = '1';
                   _appointmentFilterMap['isOnsiteEnabled'] = '1';
-
-                  // setState(() {
-                  //   _providerFuture = api.getProviderList(_projectResponse);
-                  // });
                   break;
                 case 1:
                   _appointmentFilterMap['isOfficeEnabled'] = '1';
@@ -208,7 +210,6 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                   break;
               }
 
-              // if (index != 0) {
               _appointmentFilterMap['specialtyId[]'] =
                   _projectResponse['specialtyId[]'];
               SharedPref().getToken().then((token) {
@@ -217,7 +218,6 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                       api.providerFilter(token, _appointmentFilterMap);
                 });
               });
-              // }
             },
           );
         },
@@ -246,10 +246,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                 if ((filterMap != null && filterMap.length > 0) ||
                     (_appointmentFilterMap != null &&
                         _appointmentFilterMap.length > 0)) {
-                  // if (((filterMap != null && filterMap.length > 0) ||
-                  //         (_appointmentFilterMap != null &&
-                  //             _appointmentFilterMap.length > 0)) &&
-                  //     _selectedAppointmentType != '0') {
+                          
                   _responseData = snapshot.data["response"]['providerData'];
                 } else {
                   _responseData = snapshot.data["response"];
