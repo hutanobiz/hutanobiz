@@ -25,7 +25,15 @@ class UploadDocumentsScreen extends StatefulWidget {
 
 class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
   List<Map> docsList = List();
-  List<String> _documentTypeList = ['X-Ray', 'MRI', 'Other'];
+  List<String> _documentTypeList = [
+    'X-Ray',
+    'MRI',
+    'CAT Scan',
+    'Labs',
+    'Ultrasound',
+    'EKG',
+    'Other',
+  ];
 
   bool _isLoading = false;
   Map<String, String> filesPaths;
@@ -123,7 +131,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
               child: SizedBox(
                 height: 55.0,
                 child: FancyButton(
-                  title: "Upload Docs",
+                  title: "Please Upload Docs",
                   buttonIcon: "ic_upload",
                   buttonColor: AppColors.windsor,
                   onPressed: showPickerDialog,
