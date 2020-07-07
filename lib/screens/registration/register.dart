@@ -6,6 +6,7 @@ import 'package:async/async.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
@@ -82,7 +83,8 @@ class _SignUpFormState extends State<Register> {
       isUpdateProfile = widget.args.isProfileUpdate;
     }
 
-    _selectedDate = DateTime.now();
+    _selectedDate = DateTime(
+        DateTime.now().year - 18, DateTime.now().month, DateTime.now().day);
 
     api.getStates().then((value) {
       stateList = value;
@@ -138,10 +140,25 @@ class _SignUpFormState extends State<Register> {
 
               _addressController.text = res['address']?.toString();
               _cityController.text = res['city']?.toString();
-              _stateController.text = res["state"]["title"]?.toString();
-              stateId = res["state"]["_id"]?.toString();
+
+              if (res["state"] != null) {
+                _stateController.text = res["state"]["title"]?.toString();
+                stateId = res["state"]["_id"]?.toString();
+              }
+
               _zipController.text = res["zipCode"]?.toString();
               _dobController.text = res["dob"]?.toString();
+
+              setState(() {
+                if (res["dob"] != null) {
+                  _selectedDate =
+                      DateFormat("dd/MM/yyyy").parse(res["dob"].toString());
+                } else {
+                  _selectedDate = DateTime(DateTime.now().year - 18,
+                      DateTime.now().month, DateTime.now().day);
+                }
+              });
+
               avatar = res["avatar"]?.toString();
               _genderGroup =
                   res["gender"]?.toString() == "1" ? "male" : "female";
@@ -378,31 +395,34 @@ class _SignUpFormState extends State<Register> {
         ),
       ).onClick(onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
-        showDatePicker(
-          context: context,
-          initialDate: DateTime(DateTime.now().year - 18, DateTime.now().month,
-              DateTime.now().day),
-          firstDate: DateTime(1880),
-          lastDate: DateTime(DateTime.now().year - 18, DateTime.now().month,
-              DateTime.now().day),
-        ).then((date) {
-          if (date != null)
-            setState(() {
-              _selectedDate = date;
-              var aa = DateFormat('dd').format(date) +
-                  ' ' +
-                  DateFormat('MMMM').format(date) +
-                  ' ' +
-                  date.year.toString();
+        DatePicker.showDatePicker(
+          context,
+          showTitleActions: true,
+          onConfirm: (date) {
+            if (date != null) {
+              setState(() {
+                _selectedDate = date;
+                var aa = DateFormat('dd').format(date) +
+                    '/' +
+                    DateFormat('MM').format(date) +
+                    '/' +
+                    date.year.toString();
 
-              if (((DateTime.now().difference(date).inDays) / 365).floor() >=
-                  18) {
-                _dobController.text = aa;
-              } else {
-                Widgets.showToast("Minimum age should be 18");
-              }
-            });
-        });
+                if (((DateTime.now().difference(date).inDays) / 365).floor() >=
+                    18) {
+                  _dobController.text = aa;
+                } else {
+                  Widgets.showToast("Minimum age should be 18");
+                }
+              });
+            }
+          },
+          currentTime: _selectedDate,
+          minTime: DateTime(1880),
+          maxTime: DateTime(DateTime.now().year - 18, DateTime.now().month,
+              DateTime.now().day),
+          locale: LocaleType.en,
+        );
       }),
     );
     formWidget.add(Widgets.sizedBox(height: 29.0));
@@ -542,10 +562,8 @@ class _SignUpFormState extends State<Register> {
           buttonHeight: Dimens.buttonHeight,
           title: "Save",
           onPressed: isUpdateProfile
-              ? () {
-                  _register();
-                }
-              : isValidate()
+              ? _register
+              : (isValidate()
                   ? () {
                       if (profileImage != null) {
                         _register();
@@ -553,7 +571,7 @@ class _SignUpFormState extends State<Register> {
                         Widgets.showToast("Please upload your profile pic");
                       }
                     }
-                  : null,
+                  : null),
         ),
       ),
     );
@@ -627,10 +645,8 @@ class _SignUpFormState extends State<Register> {
     loginData["state"] = stateId;
 
     if (isUpdateProfile) {
-      if (loginData["dob"] != null) {
-        loginData["dob"] =
-            DateFormat("dd/MM/yyyy").format(_selectedDate).toString();
-      }
+      loginData["dob"] =
+          DateFormat("dd/MM/yyyy").format(_selectedDate).toString();
     } else {
       loginData["dob"] =
           DateFormat("MM/dd/yyyy").format(_selectedDate).toString();
