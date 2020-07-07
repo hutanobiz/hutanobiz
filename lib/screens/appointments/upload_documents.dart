@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
@@ -373,19 +374,21 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
             decoration: getInputDecoration('Date'),
           ).onClick(onTap: () {
             FocusScope.of(context).requestFocus(FocusNode());
-            showDatePicker(
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime(1880),
-              lastDate: DateTime.now().add(Duration(days: 0)),
-            ).then((date) {
-              if (date != null)
-                documentDateController.text = DateFormat('dd').format(date) +
-                    ' ' +
-                    DateFormat('MMMM').format(date) +
-                    ' ' +
-                    date.year.toString();
-            });
+            DatePicker.showDatePicker(
+              context,
+              showTitleActions: true,
+              onConfirm: (date) {
+                if (date != null)
+                  documentDateController.text = DateFormat('dd').format(date) +
+                      ' ' +
+                      DateFormat('MMMM').format(date) +
+                      ' ' +
+                      date.year.toString();
+              },
+              currentTime: DateTime.now(),
+              maxTime: DateTime.now(),
+              locale: LocaleType.en,
+            );
           }),
           SizedBox(height: 39),
           Row(
