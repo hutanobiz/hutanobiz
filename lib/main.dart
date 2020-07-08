@@ -7,6 +7,8 @@ import 'package:hutano/theme.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 
+final navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Widget _defaultHome = LoginScreen();
@@ -28,6 +30,7 @@ void main() async {
           theme: AppTheme.theme,
           home: _defaultHome,
           onGenerateRoute: Routes.generateRoute,
+          navigatorKey: navigatorKey,
         ),
       ),
     );
