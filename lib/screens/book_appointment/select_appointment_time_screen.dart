@@ -117,9 +117,17 @@ class _SelectAppointmentTimeScreenState
       }
     }
 
+    String providerId = '';
+
+    if (profileMap["userId"] != null && profileMap["userId"] is Map) {
+      providerId = profileMap["userId"]["_id"].toString();
+    } else if (profileMap["User"] != null is Map) {
+      providerId = profileMap["User"][0]["_id"].toString();
+    }
+
     _scheduleFuture = _apiBaseHelper
         .getScheduleList(
-          profileMap["userId"]["_id"].toString(),
+          providerId,
           _dayDateMap,
         )
         .timeout(Duration(seconds: 10));
@@ -180,6 +188,14 @@ class _SelectAppointmentTimeScreenState
   }
 
   List<Widget> widgetList() {
+    String providerId = '';
+
+    if (profileMap["userId"] != null && profileMap["userId"] is Map) {
+      providerId = profileMap["userId"]["_id"].toString();
+    } else if (profileMap["User"] != null is Map) {
+      providerId = profileMap["User"][0]["_id"].toString();
+    }
+
     List<Widget> formWidget = new List();
 
     formWidget.add(ProviderWidget(
@@ -203,7 +219,7 @@ class _SelectAppointmentTimeScreenState
         setState(() {
           _scheduleFuture = _apiBaseHelper
               .getScheduleList(
-                profileMap["userId"]["_id"].toString(),
+                providerId,
                 _dayDateMap,
               )
               .futureError(

@@ -305,7 +305,13 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         http.MultipartRequest request = http.MultipartRequest('POST', uri);
         request.headers['authorization'] = token;
 
-        String doctorId = _profileMap["userId"]["_id"].toString();
+        String doctorId = '';
+
+        if (_profileMap["userId"] != null && _profileMap["userId"] is Map) {
+          doctorId = _profileMap["userId"]["_id"].toString();
+        } else if (_profileMap["User"] != null is Map) {
+          doctorId = _profileMap["User"][0]["_id"].toString();
+        }
 
         _reviewAppointmentData["type"] =
             _container.getProjectsResponse()["serviceType"]?.toString() ?? "1";
@@ -458,11 +464,20 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     if (_profileMap["businessLocation"] != null) {
       dynamic business = _profileMap["businessLocation"];
 
+      dynamic _state;
+
+      if (business["state"] is Map && business["state"].length > 0) {
+        _state = business["state"];
+      } else if (_profileMap['State'] != null &&
+          _profileMap["State"].length > 0) {
+        _state = _profileMap['State'][0];
+      }
+
       address = Extensions.addressFormat(
         business["address"]?.toString(),
         business["street"]?.toString(),
         business["city"]?.toString(),
-        business["state"],
+        _state,
         business["zipCode"]?.toString(),
       );
     }
