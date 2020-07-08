@@ -39,16 +39,23 @@ class ProviderWidget extends StatelessWidget {
         fee = consultanceFee["fee"].toString() ?? "---";
       }
     } else if (data["userId"] != null) {
-      if (data["userId"]["consultanceFee"] != null) {
-        for (dynamic consultanceFee in data["userId"]["consultanceFee"]) {
-          fee = consultanceFee["fee"].toString() ?? "---";
+      if (data['userId'] is Map) {
+        if (data["userId"]["consultanceFee"] != null) {
+          for (dynamic consultanceFee in data["userId"]["consultanceFee"]) {
+            fee = consultanceFee["fee"].toString() ?? "---";
+          }
         }
       }
     }
 
-    if (data["userId"] != null) {
-      name = data["userId"]["fullName"]?.toString() ?? "---";
-      avatar = data["userId"]["avatar"]?.toString();
+    if (data['userId'] is Map) {
+      if (data["userId"] != null) {
+        name = data["userId"]["fullName"]?.toString() ?? "---";
+        avatar = data["userId"]["avatar"]?.toString();
+      }
+    } else if (data["User"] != null && data["User"].length > 0) {
+      name = data["User"][0]["fullName"]?.toString() ?? "---";
+      avatar = data["User"][0]["avatar"]?.toString();
     }
 
     practicingSince = data["practicingSince"] != null
@@ -59,9 +66,15 @@ class ProviderWidget extends StatelessWidget {
             .toStringAsFixed(1)
         : "---";
 
-    if (data['professionalTitle'] != null) {
+    if (data['professionalTitle'] is Map) {
+      if (data['professionalTitle'] != null) {
+        professionalTitle =
+            data['professionalTitle']['title']?.toString() ?? "----";
+      }
+    } else if (data['ProfessionalTitle'] != null &&
+        data["ProfessionalTitle"].length > 0) {
       professionalTitle =
-          data['professionalTitle']['title']?.toString() ?? "----";
+          data['ProfessionalTitle'][0]['title']?.toString() ?? "----";
     }
 
     if (data["businessLocation"] != null) {
