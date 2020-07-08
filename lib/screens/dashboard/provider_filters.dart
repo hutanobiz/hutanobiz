@@ -48,21 +48,7 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
 
     _filtersMap = widget.filterMap;
 
-    if (widget.filterMap.containsKey('specialtyId[]')) {
-      _filtersMap.remove('specialtyId[]');
-      _filtersMap['specialtyId[${widget.filterMap['index']}]'] =
-          widget.filterMap['specialtyId[]'];
-    }
-
     getProfessionalTitle();
-
-    if (_filtersMap.containsKey('serviceType')) {
-      _filtersMap.remove('serviceType');
-    }
-
-    if (_filtersMap.containsKey('index')) {
-      _filtersMap.remove('index');
-    }
 
     _filtersMap.toString().debugLog();
   }

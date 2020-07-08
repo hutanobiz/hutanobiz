@@ -140,7 +140,8 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
           image: AssetImage("images/ic_filter.png"),
         ).onClick(onTap: () {
           if (filterMap == null || filterMap.isEmpty) {
-            filterMap = _projectResponse;
+            filterMap['specialtyId[${_projectResponse['index']}]'] =
+                _projectResponse['specialtyId[]'];
           }
 
           Navigator.of(context)
@@ -246,7 +247,6 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                 if ((filterMap != null && filterMap.length > 0) ||
                     (_appointmentFilterMap != null &&
                         _appointmentFilterMap.length > 0)) {
-                          
                   _responseData = snapshot.data["response"]['providerData'];
                 } else {
                   _responseData = snapshot.data["response"];
