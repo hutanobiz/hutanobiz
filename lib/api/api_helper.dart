@@ -92,23 +92,6 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> getProviderList(Map map) {
-    return _netUtil
-        .post(base_url + "api/patient/provider-search", body: map)
-        .then((res) {
-      return res;
-    });
-  }
-
-  Future<dynamic> getSpecialityProviderList(String query) {
-    return _netUtil
-        .get(Uri.encodeFull(
-            base_url + "api/specialty-providers?specialtyId=$query"))
-        .then((res) {
-      return res;
-    });
-  }
-
   Future<List<Schedule>> getScheduleList(String providerId, Map doctorData) {
     return _netUtil
         .post(Uri.encodeFull(base_url + "api/provider/schedule/$providerId"),
@@ -127,15 +110,6 @@ class ApiBaseHelper {
     return _netUtil
         .post(base_url + "api/patient/appointment-booking",
             body: appointmentData, headers: headers)
-        .then((res) {
-      return res;
-    });
-  }
-
-  Future<dynamic> getServiceProviderList(String query) {
-    return _netUtil
-        .get(
-            Uri.encodeFull(base_url + "api/service-providers?serviceId=$query"))
         .then((res) {
       return res;
     });
