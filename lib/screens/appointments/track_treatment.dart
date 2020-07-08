@@ -371,8 +371,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              'You provider’s office is $_totalDuration minutes away. '
-                              'Let us know when you are on your way.',
+                              _totalDuration,
                               style: TextStyle(
                                 fontSize: 14.0,
                                 fontWeight: FontWeight.bold,
@@ -411,20 +410,24 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                           ? "ic_map_clock".imageIcon(width: 16.0, height: 16.0)
                           : "ic_completed".imageIcon(width: 16.0, height: 16.0),
                       SizedBox(width: 8.0),
-                      Text(
-                        status == 0
-                            ? _totalDuration
-                            : status == 1
-                                ? "Started driving"
-                                : status == 2
-                                    ? "You have Arrived."
-                                    : status == 3
-                                        ? "Treatment started"
-                                        : status == 4
-                                            ? "Provider Treatment Completed"
-                                            : status == 5
-                                                ? "Treatment Completed"
-                                                : _totalDuration,
+                      Expanded(
+                        child: Text(
+                          status == 0
+                              ? 'You provider’s office is $_totalDuration minutes away. '
+                                  'Let us know when you are on your way.'
+                              : status == 1
+                                  ? "Started driving"
+                                  : status == 2
+                                      ? "You have Arrived."
+                                      : status == 3
+                                          ? "Treatment started"
+                                          : status == 4
+                                              ? "Provider Treatment Completed"
+                                              : status == 5
+                                                  ? "Treatment Completed"
+                                                  : 'You provider’s office is $_totalDuration minutes away. '
+                                                      'Let us know when you are on your way.',
+                        ),
                       ),
                     ],
                   ),
