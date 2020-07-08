@@ -181,7 +181,9 @@ class _VerifyOTPState extends State<VerifyOTP> {
             loginData["fullName"] = "user";
             api.register(loginData).then((dynamic user) {
               setLoading(false);
-              Widgets.showToast(user.toString());
+
+              Widgets.showToast(
+                  'A 6-digit verification number has been re-sent to your phone.');
             }).futureError((error) {
               setLoading(false);
               error.toString().debugLog();
