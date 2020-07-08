@@ -62,15 +62,30 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
       this._containerMap = _projectResponse;
     }
 
-    Map _providerMap = _projectResponse;
+    Map _providerMap = {};
 
-    if (_providerMap['serviceType'] == '0') {
-      _providerMap.remove('serviceType');
+    _providerMap.clear();
+    _providerMap.addAll(_projectResponse);
 
-      _providerMap['isOfficeEnabled'] = '1';
-      _providerMap['isVideoChatEnabled'] = '1';
-      _providerMap['isOnsiteEnabled'] = '1';
+    switch (_providerMap['serviceType']) {
+      case '0':
+        _providerMap['isOfficeEnabled'] = '1';
+        _providerMap['isVideoChatEnabled'] = '1';
+        _providerMap['isOnsiteEnabled'] = '1';
+        break;
+      case '1':
+        _providerMap['isOfficeEnabled'] = '1';
+        break;
+      case '2':
+        _providerMap['isVideoChatEnabled'] = '1';
+        break;
+      case '3':
+        _providerMap['isOnsiteEnabled'] = '1';
+        break;
     }
+
+    _providerMap.remove('serviceType');
+    _providerMap.remove('index');
 
     SharedPref().getToken().then((token) {
       setState(() {
