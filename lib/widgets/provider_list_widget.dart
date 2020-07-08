@@ -80,11 +80,19 @@ class ProviderWidget extends StatelessWidget {
     if (data["businessLocation"] != null) {
       dynamic business = data["businessLocation"];
 
+      dynamic _state;
+
+      if (business["state"] is Map && business["state"].length > 0) {
+        _state = business["state"];
+      } else if (data['State'] != null && data["State"].length > 0) {
+        _state = data['State'][0];
+      }
+
       address = Extensions.addressFormat(
         business["address"]?.toString(),
         business["street"]?.toString(),
         business["city"]?.toString(),
-        business["state"],
+        _state,
         business["zipCode"]?.toString(),
       );
     }
