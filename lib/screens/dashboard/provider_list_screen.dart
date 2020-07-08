@@ -43,9 +43,11 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
 
   Map filterMap = {};
 
-  Map _projectResponse;
+  Map _projectResponse = {};
 
   Map _appointmentFilterMap = {};
+
+  String token = '';
 
   @override
   void didChangeDependencies() {
@@ -60,21 +62,24 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
       this._containerMap = _projectResponse;
     }
 
-    if (_projectResponse.containsKey("specialityId"))
-      _providerFuture = api.getSpecialityProviderList(
-          _projectResponse["specialityId"].toString());
-    else if (_projectResponse.containsKey("serviceId"))
-      _providerFuture =
-          api.getServiceProviderList(_projectResponse["serviceId"].toString());
-    else {
-      Map _providerMap = _projectResponse;
+    Map _providerMap = _projectResponse;
 
-      if (_providerMap['serviceType'] == '0') {
-        _providerMap.remove('serviceType');
-      }
+    if (_providerMap['serviceType'] == '0') {
+      _providerMap.remove('serviceType');
 
-      _providerFuture = api.getProviderList(_providerMap);
+      _providerMap['isOfficeEnabled'] = '1';
+      _providerMap['isVideoChatEnabled'] = '1';
+      _providerMap['isOnsiteEnabled'] = '1';
     }
+
+    SharedPref().getToken().then((token) {
+      setState(() {
+        this.token = token;
+        _providerFuture = api.providerFilter(token, _providerMap);
+      });
+    });
+
+    _projectResponse.toString().debugLog();
   }
 
   @override
@@ -140,8 +145,14 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
           image: AssetImage("images/ic_filter.png"),
         ).onClick(onTap: () {
           if (filterMap == null || filterMap.isEmpty) {
-            filterMap['specialtyId[${_projectResponse['index']}]'] =
-                _projectResponse['specialtyId[]'];
+            if (_projectResponse.containsKey('specialtyId[]')) {
+              filterMap['specialtyId[${_projectResponse['index']}]'] =
+                  _projectResponse['specialtyId[]'];
+            }
+            if (_projectResponse.containsKey('subServices[]')) {
+              filterMap['subServices[${_projectResponse['index']}]'] =
+                  _projectResponse['subServices[]'];
+            }
           }
 
           Navigator.of(context)
@@ -156,10 +167,8 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
               });
 
               if (filterMap.length > 0) {
-                SharedPref().getToken().then((token) {
-                  setState(() {
-                    _providerFuture = api.providerFilter(token, filterMap);
-                  });
+                setState(() {
+                  _providerFuture = api.providerFilter(token, filterMap);
                 });
               }
             }
@@ -194,6 +203,21 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                 _appointmentFilterMap.clear();
               });
 
+              if (filterMap != null && filterMap.length > 0) {
+                _appointmentFilterMap.addAll(filterMap);
+              } else {
+                if (_projectResponse.containsKey('specialtyId[]')) {
+                  _appointmentFilterMap[
+                          'specialtyId[${_projectResponse['index']}]'] =
+                      _projectResponse['specialtyId[]'];
+                }
+                if (_projectResponse.containsKey('subServices[]')) {
+                  _appointmentFilterMap[
+                          'subServices[${_projectResponse['index']}]'] =
+                      _projectResponse['subServices[]'];
+                }
+              }
+
               switch (index) {
                 case 0:
                   _appointmentFilterMap['isOfficeEnabled'] = '1';
@@ -211,8 +235,6 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                   break;
               }
 
-              _appointmentFilterMap['specialtyId[]'] =
-                  _projectResponse['specialtyId[]'];
               SharedPref().getToken().then((token) {
                 setState(() {
                   _providerFuture =
@@ -244,13 +266,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
               break;
             case ConnectionState.done:
               if (snapshot.hasData) {
-                if ((filterMap != null && filterMap.length > 0) ||
-                    (_appointmentFilterMap != null &&
-                        _appointmentFilterMap.length > 0)) {
-                  _responseData = snapshot.data["response"]['providerData'];
-                } else {
-                  _responseData = snapshot.data["response"];
-                }
+                _responseData = snapshot.data["response"]['providerData'];
 
                 if (snapshot.data["degree"] != null)
                   _degreeMap = snapshot.data["degree"];
@@ -285,7 +301,13 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
 
         return InkWell(
           onTap: () {
-            _container.setProviderId(_provider["userId"]["_id"]);
+            if (_provider["userId"] != null && _provider["userId"] is Map) {
+              _container.setProviderId(_provider["userId"]["_id"]);
+            } else if (_provider["User"] != null &&
+                _provider["User"].length > 0) {
+              _container.setProviderId(_provider["User"][0]["_id"]);
+            }
+
             Navigator.of(context).pushNamed(Routes.providerProfileScreen);
           },
           child: ProviderWidget(
