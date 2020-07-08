@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:hutano/main.dart';
 import 'package:hutano/models/medicalHistory.dart';
 import 'package:hutano/models/schedule.dart';
 import 'package:hutano/strings.dart';
@@ -526,12 +527,12 @@ class NetworkUtil {
       if (statusCode < 200 || statusCode > 400 || json == null) {
         final en = json.decode(response.body);
 
-        if (en["response"] is String)
-          Widgets.showToast(en["response"]);
-        else if (en["response"] is Map)
-          Widgets.showToast(en);
-        else {
-          en["response"].map((m) => Widgets.showToast(m["msg"])).toList();
+        if (en["response"] is String) {
+          showError(en["response"].toString());
+        } else if (en["response"] is Map) {
+          showError(en);
+        } else {
+          en["response"].map((m) => showError(m["msg"])).toList();
         }
 
         debugPrint(en["response"].toString(), wrapWidth: 1024);
@@ -543,7 +544,7 @@ class NetworkUtil {
 
       debugPrint(responseJson.toString(), wrapWidth: 1024);
     } on SocketException {
-      Widgets.showToast(Strings.noInternet);
+      showError(Strings.noInternet);
       throw Exception(Strings.noInternet);
     }
 
@@ -561,12 +562,12 @@ class NetworkUtil {
       if (statusCode < 200 || statusCode > 400 || json == null) {
         final en = json.decode(response.body);
 
-        if (en["response"] is String)
-          Widgets.showToast(en["response"]);
-        else if (en["response"] is Map)
-          Widgets.showToast(en);
-        else {
-          en["response"].map((m) => Widgets.showToast(m["msg"])).toList();
+        if (en["response"] is String) {
+          showError(en["response"].toString());
+        } else if (en["response"] is Map) {
+          showError(en);
+        } else {
+          en["response"].map((m) => showError(m["msg"])).toList();
         }
 
         debugPrint(en["response"].toString(), wrapWidth: 1024);
@@ -577,7 +578,7 @@ class NetworkUtil {
 
       debugPrint(responseJson.toString(), wrapWidth: 1024);
     } on SocketException {
-      Widgets.showToast(Strings.noInternet);
+      showError(Strings.noInternet);
       throw Exception(Strings.noInternet);
     }
 
@@ -616,14 +617,12 @@ class NetworkUtil {
       var responseJson = _decoder.convert(respStr);
 
       if (statusCode < 200 || statusCode > 400 || json == null) {
-        if (responseJson["response"] is String)
-          Widgets.showToast(responseJson["response"]);
-        else if (responseJson["response"] is Map)
-          Widgets.showToast(responseJson);
+        if (responseJson["response"] is String) {
+          showError(responseJson["response"].toString());
+        } else if (responseJson["response"] is Map)
+          showError(responseJson);
         else {
-          responseJson["response"]
-              .map((m) => Widgets.showToast(m["msg"]))
-              .toList();
+          responseJson["response"].map((m) => showError(m["msg"])).toList();
         }
 
         debugPrint(responseJson["response"].toString(), wrapWidth: 1024);
@@ -632,10 +631,17 @@ class NetworkUtil {
 
       debugPrint(responseJson.toString(), wrapWidth: 1024);
     } on SocketException {
-      Widgets.showToast(Strings.noInternet);
+      showError(Strings.noInternet);
       throw Exception(Strings.noInternet);
     }
 
     return responseJson;
+  }
+
+  void showError(String message) {
+    Widgets.showErrorDialog(
+      context: navigatorKey.currentState.overlay.context,
+      description: message,
+    );
   }
 }
