@@ -97,7 +97,13 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
           _specialityList.clear();
 
           if (snapshot.data["services"].length > 0) {
-            _servicesList.addAll(snapshot.data["services"]);
+            for (dynamic services in snapshot.data["services"]) {
+              if (services['subServices'] != null) {
+                for (dynamic subServices in services['subServices']) {
+                  _servicesList.add(subServices);
+                }
+              }
+            }
           }
           if (snapshot.data["doctorName"].length > 0) {
             _doctorList.addAll(snapshot.data["doctorName"]);
@@ -121,7 +127,7 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
                       : Container(),
                   heading("Services", _servicesList, 3),
                   _servicesList.isNotEmpty
-                      ? _listWidget(_servicesList, "title", false, 3)
+                      ? _listWidget(_servicesList, "name", false, 3)
                       : Container(),
                 ]),
           );
@@ -204,55 +210,57 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
       });
 
     return ListView.separated(
-        separatorBuilder: (BuildContext context, int index) => Divider(),
-        physics: ClampingScrollPhysics(),
-        shrinkWrap: true,
-        padding: const EdgeInsets.fromLTRB(20.0, 4.0, 20.0, 0.0),
-        itemCount: tempList.length >= 5 ? 5 : tempList.length,
-        itemBuilder: (context, index) {
-          if (tempList.isNotEmpty) {
-            if (tempList[index]["UserDoctorDetails"] != null) {
-              dynamic details = tempList[index]["UserDoctorDetails"];
-              if (details["professionalTitle"] != null) {
-                professionalTitle =
-                    details["professionalTitle"]["title"]?.toString() ?? "---";
-              }
+      separatorBuilder: (BuildContext context, int index) => Divider(),
+      physics: ClampingScrollPhysics(),
+      shrinkWrap: true,
+      padding: const EdgeInsets.fromLTRB(20.0, 4.0, 20.0, 0.0),
+      itemCount: tempList.length >= 5 ? 5 : tempList.length,
+      itemBuilder: (context, index) {
+        if (tempList.isNotEmpty) {
+          if (tempList[index]["UserDoctorDetails"] != null) {
+            dynamic details = tempList[index]["UserDoctorDetails"];
+            if (details["professionalTitle"] != null) {
+              professionalTitle =
+                  details["professionalTitle"]["title"]?.toString() ?? "---";
             }
-
-            return isDoctorList
-                ? ProviderTileWidget(
-                    name: tempList[index][searchKey],
-                    profession: professionalTitle,
-                    onTap: () {
-                      _container
-                          .setProviderId(tempList[index]["_id"].toString());
-                      Navigator.of(context)
-                          .pushNamed(Routes.providerProfileScreen);
-                    },
-                  )
-                : ListTile(
-                    title: Text(tempList[index][searchKey]),
-                    onTap: () {
-                      log(type.toString());
-                      final container = InheritedContainer.of(context);
-
-                      container.getProjectsResponse().clear();
-
-                      if (type == 1) {
-                        container.setProjectsResponse(
-                            "specialityId", tempList[index]["_id"]);
-                      } else if (type == 3) {
-                        InheritedContainer.of(context).setProjectsResponse(
-                            "serviceId", tempList[index]["_id"]);
-                      }
-
-                      Navigator.of(context)
-                          .pushNamed(Routes.providerListScreen);
-                    },
-                  );
           }
 
-          return Container();
-        });
+          return isDoctorList
+              ? ProviderTileWidget(
+                  name: tempList[index][searchKey],
+                  profession: professionalTitle,
+                  onTap: () {
+                    _container.setProviderId(tempList[index]["_id"].toString());
+                    Navigator.of(context)
+                        .pushNamed(Routes.providerProfileScreen);
+                  },
+                )
+              : ListTile(
+                  title: Text(tempList[index][searchKey]),
+                  onTap: () {
+                    log(type.toString());
+                    final container = InheritedContainer.of(context);
+
+                    container.projectsResponse.clear();
+
+                    if (type == 1) {
+                      container.setProjectsResponse(
+                          "specialtyId[]", tempList[index]["_id"]);
+                    } else if (type == 3) {
+                      container.setProjectsResponse(
+                          "subServices[]", tempList[index]["_id"]);
+                    }
+
+                    container.setProjectsResponse("serviceType", '0');
+                    container.setProjectsResponse("index", index.toString());
+
+                    Navigator.of(context).pushNamed(Routes.providerListScreen);
+                  },
+                );
+        }
+
+        return Container();
+      },
+    );
   }
 }
