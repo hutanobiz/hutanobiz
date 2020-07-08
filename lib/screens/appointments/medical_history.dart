@@ -193,40 +193,36 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
   }
 
   void saveMedicalHistory() {
-    //TODO: send medical history code
-
-    // Map<String, String> diseaseMap = {};
+    Map<String, String> diseaseMap = {};
 
     if (_otherDiseaseController.text.isNotEmpty) {
       _diseaseList.add(_otherDiseaseController.text);
     }
 
-    // if (_diseaseList.length > 0) {
-    // setLoading(true);
+    if (_diseaseList.length > 0) {
+      setLoading(true);
 
-    // for (int i = 0; i < _diseaseList.length; i++) {
-    //   if (!diseaseMap.containsValue(_diseaseList[i])) {
-    //     diseaseMap['medicalHistory[${i.toString()}]'] = _diseaseList[i];
-    //   }
-    // }
+      for (int i = 0; i < _diseaseList.length; i++) {
+        if (!diseaseMap.containsValue(_diseaseList[i])) {
+          diseaseMap['medicalHistory[${i.toString()}]'] = _diseaseList[i];
+        }
+      }
 
-    // api.sendPatientMedicalHistory(token, diseaseMap).then((response) {
-    //   if (response != null) {
-    //     setLoading(false);
+      api.sendPatientMedicalHistory(token, diseaseMap).then((response) {
+        if (response != null) {
+          setLoading(false);
 
-    if (isBottomButtonsShow) {
-      Navigator.of(context).pushNamed(Routes.seekingCureScreen);
+          if (isBottomButtonsShow) {
+            Navigator.of(context).pushNamed(Routes.seekingCureScreen);
+          }
+        }
+      }).futureError((error) {
+        setLoading(false);
+        error.toString().debugLog();
+      });
+    } else {
+      Widgets.showToast('Please select a disease');
     }
-    //   }
-    // }).futureError((error) {
-    //   setLoading(false);
-    //   error.toString().debugLog();
-    // });
-    // } else {
-    //   Widgets.showToast('Please select a disease');
-    // }
-
-    //TODO: send medical history code
   }
 
   void setLoading(bool value) {
