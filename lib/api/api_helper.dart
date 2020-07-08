@@ -469,7 +469,7 @@ class ApiBaseHelper {
       headers: headers,
     )
         .then((res) {
-      return res["response"];
+      return res["response"]['patientData'];
     });
   }
 
