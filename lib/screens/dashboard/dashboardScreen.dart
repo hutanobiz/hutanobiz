@@ -356,6 +356,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ],
               ),
               onTap: () {
+                conatiner.projectsResponse.clear();
                 conatiner.setProjectsResponse(
                     "serviceType", (index + 1).toString());
 
@@ -651,6 +652,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         conatiner.setProjectsResponse(
                             "specialtyId[]", specialty["_id"]);
                         conatiner.setProjectsResponse("serviceType", '0');
+                        conatiner.setProjectsResponse(
+                            "index", index.toString());
 
                         Navigator.pushNamed(
                           context,
