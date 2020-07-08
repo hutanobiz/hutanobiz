@@ -413,8 +413,10 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                       Expanded(
                         child: Text(
                           status == 0
-                              ? 'You provider’s office is $_totalDuration minutes away. '
-                                  'Let us know when you are on your way.'
+                              ? (_totalDuration.contains('no')
+                                  ? _totalDuration
+                                  : 'You provider’s office is $_totalDuration minutes away. '
+                                      'Let us know when you are on your way.')
                               : status == 1
                                   ? "Started driving"
                                   : status == 2
@@ -425,8 +427,11 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                                               ? "Provider Treatment Completed"
                                               : status == 5
                                                   ? "Treatment Completed"
-                                                  : 'You provider’s office is $_totalDuration minutes away. '
-                                                      'Let us know when you are on your way.',
+                                                  : (_totalDuration
+                                                          .contains('no')
+                                                      ? _totalDuration
+                                                      : 'You provider’s office is $_totalDuration minutes away. '
+                                                          'Let us know when you are on your way.'),
                         ),
                       ),
                     ],
