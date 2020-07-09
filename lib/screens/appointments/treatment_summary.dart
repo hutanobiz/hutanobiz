@@ -293,11 +293,11 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
-                child: adverseWidget("Primary diagnoses", primaryDiagnosis),
+                child: adverseWidget("Primary diagnosis", primaryDiagnosis),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-                child: adverseWidget("Secondary diagnoses", secondaryDiagnosis),
+                child: adverseWidget("Secondary diagnosis", secondaryDiagnosis),
               ),
               divider(),
               Padding(
