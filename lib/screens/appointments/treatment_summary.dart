@@ -83,6 +83,13 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                 followUpMap["status"] = "2";
               }
             }
+
+            if (providerData["medicalHistory"] != null) {
+              if (providerData["medicalHistory"]['medicalHistory'] != null) {
+                medicalHistoryList =
+                    providerData["medicalHistory"]['medicalHistory'];
+              }
+            }
           }
 
           if (followUpMap["service"] != null) {
@@ -143,10 +150,6 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                   .split(",")
                   .map((f) => recommendFollowList.add(f))
                   .toList();
-            }
-
-            if (appointmentData["medicalHistory"] != null) {
-              medicalHistoryList = appointmentData["medicalHistory"];
             }
 
             if (appointmentData["doctorSign"] != null) {
@@ -251,7 +254,8 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                           itemCount: medicalHistoryList.length,
                           itemBuilder: (context, index) {
                             return chipWidget(
-                                medicalHistoryList[index]["name"].toString());
+                              medicalHistoryList[index].toString(),
+                            );
                           }),
                     ),
               divider(),
