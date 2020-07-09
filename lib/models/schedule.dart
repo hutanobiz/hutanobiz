@@ -1,9 +1,8 @@
 class Schedule {
-  List day;
+  int day;
   dynamic date;
   dynamic startTime;
   dynamic endTime;
-  dynamic isCustom;
   bool isBlock;
   dynamic isSelected = false;
 
@@ -12,15 +11,13 @@ class Schedule {
       this.date,
       this.startTime,
       this.endTime,
-      this.isCustom,
       this.isBlock});
 
   Schedule.fromJson(Map<String, dynamic> json) {
-    day = json['day'].cast<int>();
+    day = json['day'];
     date = json['date'];
     startTime = json['startTime'];
     endTime = json['endTime'];
-    isCustom = json['is_custom'];
     isBlock = json['is_block'];
   }
 
@@ -30,7 +27,6 @@ class Schedule {
     data['date'] = this.date;
     data['startTime'] = this.startTime;
     data['endTime'] = this.endTime;
-    data['is_custom'] = this.isCustom;
     data['is_block'] = this.isBlock;
     return data;
   }
