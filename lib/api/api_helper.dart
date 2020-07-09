@@ -15,7 +15,7 @@ import 'package:hutano/widgets/widgets.dart';
 
 class ApiBaseHelper {
   NetworkUtil _netUtil = new NetworkUtil();
-  static const String base_url = "http://139.59.40.62:7300/";
+  static const String base_url = "http://139.59.40.62:5300/";
   static const String imageUrl = base_url + "uploads/";
 
   Future<dynamic> login(Map loginData) {
@@ -94,7 +94,7 @@ class ApiBaseHelper {
 
   Future<List<Schedule>> getScheduleList(String providerId, Map doctorData) {
     return _netUtil
-        .post(Uri.encodeFull(base_url + "api/provider/schedule/$providerId"),
+        .post(Uri.encodeFull(base_url + "api/schedule/$providerId"),
             body: doctorData)
         .then((res) {
       List responseJson = res["response"];
