@@ -128,11 +128,11 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
   }
 
   Widget consultancyFeeWidget() {
-    String fee = "---", duration = "---";
+    String fee = "0.00", duration = "---";
 
     if (profileMap["consultanceFee"] != null) {
       for (dynamic consultanceFee in profileMap["consultanceFee"]) {
-        fee = consultanceFee["fee"].toString() ?? "---";
+        fee = consultanceFee["fee"].toStringAsFixed(2) ?? "0.00";
         duration = consultanceFee["duration"].toString() ?? "---";
       }
     }
@@ -334,7 +334,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
               ),
             ),
             TextSpan(
-              text: '${services.amount} \u2022 ',
+              text: '${services.amount.toStringAsFixed(2)} \u2022 ',
               style: TextStyle(
                 fontSize: 13.0,
                 fontWeight: FontWeight.w600,

@@ -832,7 +832,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
               ),
             ),
             TextSpan(
-              text: '${services.amount} \u2022 ',
+              text: '${services.amount.toStringAsFixed(2)} \u2022 ',
               style: TextStyle(
                 fontSize: 13.0,
                 fontWeight: FontWeight.w600,
@@ -888,7 +888,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
               ),
             ),
             TextSpan(
-              text: (consultaion["fee"]?.toString() ?? "---") + ' \u2022 ',
+              text: (consultaion["fee"]?.toStringAsFixed(2) ?? '0.00') +
+                  ' \u2022 ',
               style: TextStyle(
                 fontSize: 13.0,
                 fontWeight: FontWeight.w600,

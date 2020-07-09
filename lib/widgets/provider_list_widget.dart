@@ -36,13 +36,13 @@ class ProviderWidget extends StatelessWidget {
 
     if (data["consultanceFee"] != null) {
       for (dynamic consultanceFee in data["consultanceFee"]) {
-        fee = consultanceFee["fee"].toString() ?? "---";
+        fee = consultanceFee["fee"].toStringAsFixed(2) ?? '0.00';
       }
     } else if (data["userId"] != null) {
       if (data['userId'] is Map) {
         if (data["userId"]["consultanceFee"] != null) {
           for (dynamic consultanceFee in data["userId"]["consultanceFee"]) {
-            fee = consultanceFee["fee"].toString() ?? "---";
+            fee = consultanceFee["fee"].toStringAsFixed(2) ?? "0.00";
           }
         }
       }

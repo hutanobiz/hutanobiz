@@ -158,10 +158,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         averageRating = "---",
         userRating,
         professionalTitle = "---",
-        fee = "0.0",
+        fee = "0.00",
         avatar,
         address = "---",
-        officeVisitFee = "0.0",
+        officeVisitFee = "0.00",
         insuranceName = "---",
         insuranceImage;
 
@@ -198,7 +198,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
         if (detail["consultanceFee"] != null) {
           for (dynamic consultanceFee in detail["consultanceFee"]) {
-            fee = consultanceFee["fee"]?.toString() ?? "0.0";
+            fee = consultanceFee["fee"]?.toStringAsFixed(2) ?? "0.00";
           }
         }
 
@@ -233,7 +233,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     }
 
     if (_providerData["parking"] != null) {
-      officeVisitFee = _providerData["parking"]["fee"]?.toString() ?? "0.0";
+      officeVisitFee =
+          _providerData["parking"]["fee"]?.toStringAsFixed(2) ?? "0.00";
     }
 
     return Column(
@@ -628,7 +629,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       totalFee = (double.parse(generalFee) + double.parse(officeVisitCharge));
     }
 
-    _container.setProviderData("totalFee", totalFee.toString());
+    _container.setProviderData("totalFee", totalFee.toStringAsFixed(2));
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
@@ -663,7 +664,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         children: <Widget>[
                           subFeeWidget(
                               "General Medicine Consult", "\$$generalFee"),
-                          officeVisitCharge == "0.0"
+                          officeVisitCharge == "0.00"
                               ? Container()
                               : subFeeWidget("Office Visit charge",
                                   "\$$officeVisitCharge"),
@@ -671,7 +672,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                       ),
                 SizedBox(height: 16),
                 Divider(),
-                subFeeWidget("Total", "\$" + totalFee.toString()),
+                subFeeWidget("Total", "\$" + totalFee.toStringAsFixed(2)),
                 SizedBox(height: 16),
               ],
             ),
@@ -698,7 +699,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             child: Align(
               alignment: Alignment.centerRight,
               child: Text(
-                "\$" + feeMap["subService"]["amount"]?.toString() ?? "---",
+                "\$" + feeMap["subService"]["amount"]?.toStringAsFixed(2) ??
+                    "0.00",
                 style: TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.w700,

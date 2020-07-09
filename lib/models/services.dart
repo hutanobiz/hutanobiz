@@ -3,7 +3,7 @@ class Services {
   String serviceId;
   String subServiceId;
   int duration;
-  int amount;
+  dynamic amount;
   String sId;
   int iV;
   String serviceName;
