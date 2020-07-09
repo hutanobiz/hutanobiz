@@ -305,7 +305,8 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
       padding: const EdgeInsets.only(bottom: 50),
       itemCount: _responseData.length,
       itemBuilder: (context, index) {
-        dynamic _provider = _responseData[index];
+        dynamic _provider = _responseData[index]['provider'];
+        dynamic subServices = _responseData[index]['subServices'];
 
         Map _appointentTypeMap = {};
 
@@ -330,9 +331,10 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
             averageRating:
                 _provider['averageRating']?.toStringAsFixed(2) ?? "0",
             bookAppointment: () {
-              _container.getProviderData().clear();
+              _container.providerResponse.clear();
 
               _container.setProviderData("providerData", _provider);
+              _container.setProviderData("subServices", subServices);
 
               Navigator.of(context).pushNamed(
                 Routes.appointmentTypeScreen,

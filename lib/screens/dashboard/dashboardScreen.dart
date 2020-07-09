@@ -414,6 +414,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     String professionalTitle = '---';
 
                     dynamic doctor = _myDoctorsList[index]['doctorData'];
+                    dynamic subServices = _myDoctorsList[index]['subServices'];
                     dynamic doctorData = doctor['userId'];
 
                     String avatar = doctorData['avatar']?.toString();
@@ -512,9 +513,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                 ),
                                 onPressed: () {
-                                  conatiner.getProviderData().clear();
+                                  conatiner.providerResponse.clear();
                                   conatiner.setProviderData(
                                       "providerData", doctor);
+
+                                  conatiner.setProviderData(
+                                      "subServices", subServices);
 
                                   Navigator.of(context).pushNamed(
                                     Routes.appointmentTypeScreen,
