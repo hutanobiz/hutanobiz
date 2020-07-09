@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
@@ -35,6 +36,10 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
     } else if (_providerData["providerData"]["services"] != null) {
       if (_providerData["providerData"]["services"] is List) {
         _serviceList = _providerData["providerData"]["services"];
+      }
+    } else if (_providerData["subServices"] != null) {
+      if (_providerData["subServices"] is List) {
+        _serviceList = _providerData["subServices"];
       }
     }
 
@@ -196,6 +201,8 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
           )
         ],
       ),
+    ).onClick(
+      onTap: () => _handleRadioValueChange(0),
     );
   }
 
@@ -255,6 +262,8 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
                 ),
               ],
             ),
+          ).onClick(
+            onTap: () => _handleRadioValueChange(1),
           ),
           _radioValue == 0
               ? Container()
