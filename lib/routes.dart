@@ -141,7 +141,8 @@ class Routes {
         return _buildRoute(settings, ProviderListScreen());
         break;
       case dashboardSearchScreen:
-        return _buildRoute(settings, DashboardSearchScreen());
+        return _buildRoute(
+            settings, DashboardSearchScreen(topSpecialtiesList: args));
         break;
       case seeAllSearchScreeen:
         if (args is SearchArguments) {

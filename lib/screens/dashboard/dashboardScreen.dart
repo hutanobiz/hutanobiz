@@ -36,6 +36,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   bool _isLocLoading = false;
 
   InheritedContainerState conatiner;
+  List _topSpecialtiesList = [];
 
   bool _isLoading = false;
   List<String> _topProvidersList = [
@@ -272,7 +273,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         InkWell(
           onTap: () {
             conatiner.projectsResponse.clear();
-            Navigator.of(context).pushNamed(Routes.dashboardSearchScreen);
+            Navigator.of(context).pushNamed(
+              Routes.dashboardSearchScreen,
+              arguments: _topSpecialtiesList,
+            );
           },
           child: Container(
             width: MediaQuery.of(context).size.width,
@@ -562,8 +566,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return FutureBuilder<List<dynamic>>(
       future: _specialtiesFuture,
       builder: (context, snapshot) {
-        List _topSpecialtiesList = [];
-
         _topSpecialtiesList.clear();
 
         if (snapshot.hasData) {

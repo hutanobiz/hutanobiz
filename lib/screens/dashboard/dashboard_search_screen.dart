@@ -4,11 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_tile_widget.dart';
 
 class DashboardSearchScreen extends StatefulWidget {
+  final List topSpecialtiesList;
+
+  const DashboardSearchScreen({Key key, this.topSpecialtiesList})
+      : super(key: key);
+
   @override
   _DashboardSearchScreenState createState() => _DashboardSearchScreenState();
 }
@@ -18,11 +24,63 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
   List<dynamic> _servicesList = List();
   List<dynamic> _doctorList = List();
   List<dynamic> _specialityList = List();
+  List<dynamic> _professionalTitleList = List();
 
   ApiBaseHelper _api = ApiBaseHelper();
 
   Future<dynamic> _searchFuture;
   InheritedContainerState _container;
+
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _isLoading = true;
+
+    _api.getProfessionalTitle().then((value) {
+      if (value != null) {
+        setState(() {
+          _isLoading = false;
+          _professionalTitleList = value;
+        });
+      }
+    }).futureError((error) {
+      setState(() {
+        _isLoading = false;
+      });
+      error.toString().debugLog();
+    });
+
+    if (widget.topSpecialtiesList != null) {
+      _specialityList = widget.topSpecialtiesList;
+    } else {
+      _specialityList.clear();
+      _api.getSpecialties().then((value) {
+        if (value != null) {
+          if (value != null && value.length > 0) {
+            for (dynamic specialty in value) {
+              if (specialty['isFeatured'] != null) {
+                if (specialty['isFeatured']) {
+                  _specialityList.add(specialty);
+                }
+              }
+            }
+          }
+
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      }).futureError((error) {
+        setState(() {
+          _isLoading = false;
+        });
+        error.toString().debugLog();
+      });
+    }
+  }
 
   @override
   void didChangeDependencies() {
@@ -36,6 +94,7 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackground(
         title: "Search",
+        isLoading: _isLoading,
         color: Colors.white,
         padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
         child: column(),
@@ -44,6 +103,10 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
   }
 
   Widget column() {
+    if (widget.topSpecialtiesList != null) {
+      _specialityList = widget.topSpecialtiesList;
+    }
+
     return Column(
       children: <Widget>[
         Padding(
@@ -80,9 +143,27 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
             ),
           ),
         ),
-        _searchText.length < 0 || _searchText == ""
-            ? Container()
-            : Expanded(child: _buildList()),
+        Expanded(
+          child: _searchText.length < 0 || _searchText == ""
+              ? SingleChildScrollView(
+                  physics: ClampingScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      heading("Professional Title", _professionalTitleList, 1),
+                      _specialityList.isNotEmpty
+                          ? _listWidget(
+                              _professionalTitleList, "title", false, 0)
+                          : Container(),
+                      heading("Specialities", _specialityList, 1),
+                      _specialityList.isNotEmpty
+                          ? _listWidget(_specialityList, "title", false, 1)
+                          : Container(),
+                    ],
+                  ),
+                )
+              : _buildList(),
+        ),
       ],
     );
   }
@@ -108,6 +189,7 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
           if (snapshot.data["doctorName"].length > 0) {
             _doctorList.addAll(snapshot.data["doctorName"]);
           }
+
           if (snapshot.data["specialty"].length > 0) {
             _specialityList.addAll(snapshot.data["specialty"]);
           }
@@ -165,14 +247,16 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
                           alignment: Alignment.centerRight,
                           child: InkWell(
                             customBorder: CircleBorder(),
-                            onTap: () => Navigator.of(context).pushNamed(
-                              Routes.seeAllSearchScreeen,
-                              arguments: SearchArguments(
-                                list: list,
-                                title: heading,
-                                type: type,
-                              ),
-                            ),
+                            onTap: type == 0
+                                ? null
+                                : () => Navigator.of(context).pushNamed(
+                                      Routes.seeAllSearchScreeen,
+                                      arguments: SearchArguments(
+                                        list: list,
+                                        title: heading,
+                                        type: type,
+                                      ),
+                                    ),
                             child: Padding(
                               padding:
                                   const EdgeInsets.only(left: 8.0, right: 8.0),
@@ -237,25 +321,29 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
                 )
               : ListTile(
                   title: Text(tempList[index][searchKey]),
-                  onTap: () {
-                    log(type.toString());
-                    final container = InheritedContainer.of(context);
+                  onTap: type == 0
+                      ? null
+                      : () {
+                          log(type.toString());
+                          final container = InheritedContainer.of(context);
 
-                    container.projectsResponse.clear();
+                          container.projectsResponse.clear();
 
-                    if (type == 1) {
-                      container.setProjectsResponse(
-                          "specialtyId[]", tempList[index]["_id"]);
-                    } else if (type == 3) {
-                      container.setProjectsResponse(
-                          "subServices[]", tempList[index]["_id"]);
-                    }
+                          if (type == 1) {
+                            container.setProjectsResponse(
+                                "specialtyId[]", tempList[index]["_id"]);
+                          } else if (type == 3) {
+                            container.setProjectsResponse(
+                                "subServices[]", tempList[index]["_id"]);
+                          }
 
-                    container.setProjectsResponse("serviceType", '0');
-                    container.setProjectsResponse("index", index.toString());
+                          container.setProjectsResponse("serviceType", '0');
+                          container.setProjectsResponse(
+                              "index", index.toString());
 
-                    Navigator.of(context).pushNamed(Routes.providerListScreen);
-                  },
+                          Navigator.of(context)
+                              .pushNamed(Routes.providerListScreen);
+                        },
                 );
         }
 
