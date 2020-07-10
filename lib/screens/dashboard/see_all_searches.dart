@@ -61,6 +61,7 @@ class _SeeAllSearchScreeenState extends State<SeeAllSearchScreeen> {
                       name: _list[index]["fullName"],
                       profession: professionalTitle,
                       onTap: () {
+                        _container.providerIdMap.clear();
                         _container
                             .setProviderId(_list[index]["_id"].toString());
                         Navigator.of(context)
@@ -68,17 +69,21 @@ class _SeeAllSearchScreeenState extends State<SeeAllSearchScreeen> {
                       },
                     )
                   : ListTile(
-                      title: Text(_list[index]["title"]),
+                      title: Text(_list[index][type == 3 ? 'name' : "title"]),
                       onTap: () {
-                        _container.getProjectsResponse().clear();
+                        _container.projectsResponse.clear();
 
                         if (type == 1) {
                           _container.setProjectsResponse(
-                              "specialityId", _list[index]["_id"]);
+                              "specialtyId[]", _list[index]["_id"]);
                         } else if (type == 3) {
                           _container.setProjectsResponse(
-                              "serviceId", _list[index]["_id"]);
+                              "subServices[]", _list[index]["_id"]);
                         }
+
+                        _container.setProjectsResponse("serviceType", '0');
+                        _container.setProjectsResponse(
+                            "index", index.toString());
 
                         Navigator.of(context)
                             .pushNamed(Routes.providerListScreen);

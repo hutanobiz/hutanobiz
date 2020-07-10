@@ -324,21 +324,18 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
                   onTap: type == 0
                       ? null
                       : () {
-                          log(type.toString());
-                          final container = InheritedContainer.of(context);
-
-                          container.projectsResponse.clear();
+                          _container.projectsResponse.clear();
 
                           if (type == 1) {
-                            container.setProjectsResponse(
+                            _container.setProjectsResponse(
                                 "specialtyId[]", tempList[index]["_id"]);
                           } else if (type == 3) {
-                            container.setProjectsResponse(
+                            _container.setProjectsResponse(
                                 "subServices[]", tempList[index]["_id"]);
                           }
 
-                          container.setProjectsResponse("serviceType", '0');
-                          container.setProjectsResponse(
+                          _container.setProjectsResponse("serviceType", '0');
+                          _container.setProjectsResponse(
                               "index", index.toString());
 
                           Navigator.of(context)
