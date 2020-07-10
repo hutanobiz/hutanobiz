@@ -70,9 +70,7 @@ class ApiBaseHelper {
 
   Future<List<dynamic>> getProfessionalTitle() {
     return _netUtil.get(base_url + "api/professional-titles").then((res) {
-      List responseJson = res["response"];
-
-      return responseJson.map((m) => m).toList();
+      return res["response"];
     });
   }
 
