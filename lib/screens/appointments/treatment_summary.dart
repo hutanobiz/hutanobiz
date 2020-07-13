@@ -65,10 +65,8 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                 providerData["followUpAppointment"].length > 0) {
               followUpMap["time"] =
                   providerData["followUpAppointment"][0]["fromTime"];
-              followUpMap["date"] =
-                  DateTime.parse(providerData["followUpAppointment"][0]["date"])
-                      .toLocal()
-                      .toString();
+              followUpMap["date"] = DateTime.parse(
+                  providerData["followUpAppointment"][0]["date"]);
               followUpMap["service"] =
                   providerData["followUpAppointment"][0]["type"].toString();
               if (providerData["followUpAppointment"][0]["services"] != null &&
