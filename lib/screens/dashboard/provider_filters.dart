@@ -27,6 +27,11 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
   int filterListIndex = 0;
   String filterMapKey;
 
+  double experienceMinValue = 0,
+      experienceMaxValue = 50,
+      distanceMinValue = 0,
+      distanceMaxValue = 100;
+
   bool _isLoading = false;
 
   RangeValues _experienceRangeValues = RangeValues(0, 50);
@@ -47,6 +52,22 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
     _filterOptionsList.add(RadioModel(false, "Language"));
 
     _filtersMap = widget.filterMap;
+
+    if (_filtersMap['experience'] != null) {
+      int index = _filtersMap['experience'].toString().indexOf('-');
+
+      setState(() {
+        _experienceRangeValues = RangeValues(
+          double.parse(
+            _filtersMap['experience'].toString().substring(0, index),
+          ),
+          double.parse(
+            _filtersMap['experience'].toString().substring(
+                index + 1, _filtersMap['experience'].toString().length),
+          ),
+        );
+      });
+    }
 
     getProfessionalTitle();
 
@@ -120,15 +141,17 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
                         'Set Experience range',
                         _experienceRangeValues,
                         (RangeValues newValues) {
-                          setState(() {
-                            _experienceRangeValues = newValues;
+                          if (newValues.end > newValues.start) {
+                            setState(() {
+                              _experienceRangeValues = newValues;
 
-                            _filtersMap['experience'] = _experienceRangeValues
-                                    .start
-                                    .toStringAsFixed(0) +
-                                "-" +
-                                _experienceRangeValues.end.toStringAsFixed(0);
-                          });
+                              _filtersMap['experience'] = _experienceRangeValues
+                                      .start
+                                      .toStringAsFixed(0) +
+                                  "-" +
+                                  _experienceRangeValues.end.toStringAsFixed(0);
+                            });
+                          }
 
                           _filtersMap.toString().debugLog();
                         },
@@ -138,9 +161,11 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
                             'Set Distance range',
                             _distanceRangeValues,
                             (RangeValues newValues) {
-                              setState(() {
-                                _distanceRangeValues = newValues;
-                              });
+                              if (newValues.end > newValues.start) {
+                                setState(() {
+                                  _distanceRangeValues = newValues;
+                                });
+                              }
                             },
                           )
                         : Expanded(
@@ -311,8 +336,12 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
               ),
             ),
             child: RangeSlider(
-              min: 0,
-              max: title.toLowerCase().contains('distance') ? 100 : 50,
+              min: title.toLowerCase().contains('distance')
+                  ? distanceMinValue
+                  : experienceMinValue,
+              max: title.toLowerCase().contains('distance')
+                  ? distanceMaxValue
+                  : experienceMaxValue,
               activeColor: AppColors.goldenTainoi,
               values: rangeValues,
               onChanged: onChanged,
