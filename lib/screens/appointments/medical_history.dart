@@ -166,6 +166,9 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                       ? Padding(
                           padding: const EdgeInsets.fromLTRB(10, 0, 10, 75),
                           child: TextField(
+                            scrollPadding: EdgeInsets.only(
+                              bottom: isBottomButtonsShow ? 100 : 0,
+                            ),
                             controller: _otherDiseaseController,
                             keyboardType: TextInputType.text,
                             maxLines: 1,
