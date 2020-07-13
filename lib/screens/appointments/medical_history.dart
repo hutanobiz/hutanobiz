@@ -221,7 +221,10 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
           _diseaseList.remove('Others');
         }
 
-        _diseaseList.add(_otherDiseaseController.text);
+        if (_otherDiseaseController.text.isNotEmpty) {
+          _diseaseList.add(_otherDiseaseController.text);
+        }
+        
         setLoading(true);
 
         for (int i = 0; i < _diseaseList.length; i++) {
