@@ -8,7 +8,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:hutano/main.dart';
-import 'package:hutano/models/medicalHistory.dart';
 import 'package:hutano/models/schedule.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/widgets/widgets.dart';
@@ -74,7 +73,7 @@ class ApiBaseHelper {
     });
   }
 
-  Future<List<dynamic>> getProfessionalSpecility(Map<String, String> map) {
+  Future<List<dynamic>> getProfessionalSpecility(Map map) {
     return _netUtil
         .post(base_url + "api/provider/specialties", body: map)
         .then((res) {
@@ -214,10 +213,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<List<MedicalHistory>> getDiseases() {
+  Future<List<dynamic>> getDiseases() {
     return _netUtil.get(base_url + "api/disease").then((res) {
-      List responseJson = res["response"];
-      return responseJson.map((m) => MedicalHistory.fromJson(m)).toList();
+      return res["response"];
     });
   }
 
@@ -474,6 +472,17 @@ class ApiBaseHelper {
     return _netUtil
         .get(
       base_url + "api/services?id=$specialityId",
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
+
+  Future<List<dynamic>> getSpecialityServices(Map map) {
+    return _netUtil
+        .post(
+      base_url + "api/services",
+      body: map,
     )
         .then((res) {
       return res["response"];
