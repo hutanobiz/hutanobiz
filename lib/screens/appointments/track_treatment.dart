@@ -200,6 +200,30 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
           child: FutureBuilder(
             future: _profileFuture,
             builder: (context, snapshot) {
+              if (_initialPosition != null) {
+                api
+                    .getDistanceAndTime(
+                        _initialPosition, _desPosition, kGoogleApiKey)
+                    .then((value) {
+                  _totalDistance = value["rows"][0]["elements"][0]["distance"]
+                          ["text"]
+                      .toString();
+                  _totalDuration = value["rows"][0]["elements"][0]["duration"]
+                          ["text"]
+                      .toString();
+                  ("DISTANCE AND TIME: " +
+                          value["rows"][0]["elements"][0].toString())
+                      .toString()
+                      .debugLog();
+                }).futureError((error) {
+                  setState(() {
+                    _totalDuration = "NO duration available";
+                    _totalDistance = "NO distance available";
+                  });
+                  error.toString().debugLog();
+                });
+              }
+
               if (snapshot.hasData) {
                 return widgetList(snapshot.data);
               } else if (snapshot.hasError) {
@@ -293,26 +317,6 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
           }
         }
       }
-    }
-
-    if (_initialPosition != null) {
-      api
-          .getDistanceAndTime(_initialPosition, _desPosition, kGoogleApiKey)
-          .then((value) {
-        _totalDistance =
-            value["rows"][0]["elements"][0]["distance"]["text"].toString();
-        _totalDuration =
-            value["rows"][0]["elements"][0]["duration"]["text"].toString();
-        ("DISTANCE AND TIME: " + value["rows"][0]["elements"][0].toString())
-            .toString()
-            .debugLog();
-      }).futureError((error) {
-        setState(() {
-          _totalDuration = "NO duration available";
-          _totalDistance = "NO distance available";
-        });
-        error.toString().debugLog();
-      });
     }
 
     int status = 0;
@@ -591,6 +595,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                                     lastLocation.longitude,
                                   ));
                                 });
+
                                 initPlatformState();
                                 startLocationService();
 
@@ -948,7 +953,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                                 _container.appointmentIdMap["appointmentId"],
                                 "5");
 
-                            Navigator.of(context).pushReplacementNamed(
+                            Navigator.of(context).pushNamed(
                               Routes.appointmentCompleteConfirmation,
                               arguments: appointmentCompleteMap,
                             );
