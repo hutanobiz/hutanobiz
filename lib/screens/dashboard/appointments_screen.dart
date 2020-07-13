@@ -266,7 +266,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
             children: <Widget>[
               Padding(
                 padding: EdgeInsets.only(left: 14, right: 14.0),
-                child: Stack(
+                child: Row(
                   children: <Widget>[
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -337,27 +337,29 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                         ),
                       ],
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsets.only(top: listType == 1 ? 35.0 : 20.0),
-                      child: Column(
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: 'ic_forward'.imageIcon(
-                              width: 8,
-                              height: 14,
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            top: listType == 1 ? 35.0 : 20.0, left: 15.0),
+                        child: Column(
+                          children: <Widget>[
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: 'ic_forward'.imageIcon(
+                                width: 8,
+                                height: 14,
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 13.0),
-                          listType == 1
-                              ? Container()
-                              : Align(
-                                  alignment: Alignment.centerRight,
-                                  child:
-                                      _appointmentStatus?.appointmentStatus(),
-                                ),
-                        ],
+                            SizedBox(height: 13.0),
+                            listType == 1
+                                ? Container()
+                                : Align(
+                                    alignment: Alignment.centerRight,
+                                    child:
+                                        _appointmentStatus?.appointmentStatus(),
+                                  ),
+                          ],
+                        ),
                       ),
                     ),
                   ],

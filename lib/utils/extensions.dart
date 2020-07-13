@@ -148,22 +148,16 @@ extension StatusExt on String {
         break;
     }
     return isAddBackground
-        ? Container(
-            width: 62.0,
-            height: 23.0,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: backgroundColor,
-              shape: BoxShape.rectangle,
-            ),
-            child: Text(
-              status,
-              softWrap: true,
-              style: TextStyle(
-                fontSize: 12.0,
-                fontWeight: FontWeight.w500,
-                color: statusTextColor,
-              ),
+        ? Text(
+            status,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            softWrap: true,
+            style: TextStyle(
+              fontSize: 12.0,
+              fontWeight: FontWeight.w500,
+              color: statusTextColor,
+              backgroundColor: backgroundColor,
             ),
           )
         : Text(
