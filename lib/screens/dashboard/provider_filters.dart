@@ -37,7 +37,9 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
   RangeValues _experienceRangeValues = RangeValues(0, 50);
   RangeValues _distanceRangeValues = RangeValues(0, 100);
 
-  Map<String, String> professionalTitleMap = {};
+  Map professionalTitleMap = {};
+
+  Map specialitiesMap = {};
 
   @override
   void initState() {
@@ -52,6 +54,17 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
     _filterOptionsList.add(RadioModel(false, "Language"));
 
     _filtersMap = widget.filterMap;
+
+    professionalTitleMap.clear();
+    specialitiesMap.clear();
+
+    professionalTitleMap.addAll(widget.filterMap);
+    specialitiesMap.addAll(widget.filterMap);
+
+    professionalTitleMap
+        .removeWhere((key, value) => !key.contains('professionalTitleId'));
+
+    specialitiesMap.removeWhere((key, value) => !key.contains('specialtyId'));
 
     if (_filtersMap['experience'] != null) {
       int index = _filtersMap['experience'].toString().indexOf('-');
@@ -216,11 +229,23 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
                                           setState(() {
                                             value
                                                 ? professionalTitleMap[
-                                                        "professionalTitleId"] =
+                                                        "$filterMapKey[${index.toString()}]"] =
                                                     _filterTitle["_id"]
                                                         .toString()
                                                 : professionalTitleMap.remove(
-                                                    'professionalTitleId');
+                                                    '$filterMapKey[${index.toString()}]');
+                                          });
+                                        }
+
+                                        if (filterListIndex == 1) {
+                                          setState(() {
+                                            value
+                                                ? specialitiesMap[
+                                                        "$filterMapKey[${index.toString()}]"] =
+                                                    _filterTitle["_id"]
+                                                        .toString()
+                                                : specialitiesMap.remove(
+                                                    '$filterMapKey[${index.toString()}]');
                                           });
                                         }
                                       });
@@ -469,29 +494,13 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
     setFilterMapKey('subServices');
     setLoading(true);
 
-    _api
-        .getServices(
-            specialityId: (widget.filterMap != null &&
-                    widget.filterMap.containsKey('specialtyId[]'))
-                ? widget.filterMap['specialtyId[]']
-                : '')
-        .then((value) {
+    _api.getSpecialityServices(specialitiesMap).then((value) {
       if (value != null) {
         _filtersList.clear();
-        List specialityList = value;
 
-        if (specialityList.length > 0) {
-          for (dynamic speciality in specialityList) {
-            if (speciality['subServices'] != null) {
-              for (dynamic services in speciality['subServices']) {
-                setState(() {
-                  _filtersList.add(services);
-                });
-              }
-
-              setLoading(false);
-            }
-          }
+        if (value != null) {
+          setLoading(false);
+          _filtersList = value;
         }
       }
     }).futureError((error) {
