@@ -302,6 +302,11 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
               ),
             ],
           ),
+        ).onClick(
+          onTap: () => Navigator.of(context).pushNamed(
+            Routes.providerImageScreen,
+            arguments: document,
+          ),
         ),
       );
     }
