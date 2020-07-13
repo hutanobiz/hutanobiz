@@ -78,8 +78,7 @@ class ApiBaseHelper {
     return _netUtil
         .post(base_url + "api/provider/specialties", body: map)
         .then((res) {
-      List responseJson = res["response"];
-      return responseJson.map((m) => m).toList();
+      return res["response"];
     });
   }
 
