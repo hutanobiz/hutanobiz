@@ -65,8 +65,10 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                 providerData["followUpAppointment"].length > 0) {
               followUpMap["time"] =
                   providerData["followUpAppointment"][0]["fromTime"];
-              followUpMap["date"] = DateTime.parse(
-                  providerData["followUpAppointment"][0]["date"]);
+              followUpMap["date"] =
+                  DateTime.parse(providerData["followUpAppointment"][0]["date"])
+                      .toLocal()
+                      .toString();
               followUpMap["service"] =
                   providerData["followUpAppointment"][0]["type"].toString();
               if (providerData["followUpAppointment"][0]["services"] != null &&
@@ -113,17 +115,23 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
             if (appointmentData["trackingStatus"] != null) {
               if (appointmentData["trackingStatus"]["treatmentStarted"] !=
                   null) {
-                initiated = appointmentData["trackingStatus"]
-                        ["treatmentStarted"] +
+                initiated = date +
                     " on " +
-                    date;
+                    DateFormat('HH:mm')
+                        .format(DateTime.parse(appointmentData["trackingStatus"]
+                                ["treatmentStarted"])
+                            .toLocal())
+                        .toString();
               }
               if (appointmentData["trackingStatus"]["providerTreatmentEnded"] !=
                   null) {
-                completed = appointmentData["trackingStatus"]
-                        ["providerTreatmentEnded"] +
+                completed = date +
                     " on " +
-                    date;
+                    DateFormat('HH:mm')
+                        .format(DateTime.parse(appointmentData["trackingStatus"]
+                                ["providerTreatmentEnded"])
+                            .toLocal())
+                        .toString();
               }
             }
 
@@ -437,7 +445,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                     ? "---"
                     : DateFormat(
                         'dd MMMM yyyy',
-                      ).format(followUpMap["date"]).toString(),
+                      ).format(followUpMap["date"].toLocal()).toString(),
                 "ic_calendar",
               ),
               followUpWidget(
