@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
-import 'package:hutano/models/medicalHistory.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
@@ -19,7 +18,7 @@ class MedicalHistoryScreen extends StatefulWidget {
 }
 
 class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
-  Future<List<MedicalHistory>> _medicalFuture;
+  Future<List<dynamic>> _medicalFuture;
   ApiBaseHelper api = ApiBaseHelper();
 
   List<dynamic> _diseaseList = [];
@@ -97,11 +96,24 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                     bottom: MediaQuery.of(context).viewInsets.bottom),
                 physics: ClampingScrollPhysics(),
                 children: <Widget>[
-                  FutureBuilder<List<MedicalHistory>>(
+                  FutureBuilder<List<dynamic>>(
                     future: _medicalFuture,
                     builder: (_, snapshot) {
                       if (snapshot.hasData) {
-                        List<MedicalHistory> data = snapshot.data;
+                        if (snapshot.data == null) return Container();
+
+                        List<dynamic> data = [];
+                        data.clear();
+
+                        for (dynamic medicalHistory in snapshot.data) {
+                          data.add(medicalHistory['name']);
+                        }
+
+                        for (dynamic medicalHistory in _diseaseList) {
+                          if (!data.contains(medicalHistory)) {
+                            data.insert(0, medicalHistory);
+                          }
+                        }
 
                         return ListView.builder(
                           padding: EdgeInsets.only(
@@ -111,27 +123,27 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                           physics: ClampingScrollPhysics(),
                           itemCount: data.length,
                           itemBuilder: (context, index) {
-                            MedicalHistory medicalHistory = data[index];
+                            dynamic medicalHistory = data[index];
 
                             return CheckboxListTile(
-                              title: Text(medicalHistory.name),
-                              value: _diseaseList.contains(medicalHistory.name),
+                              title: Text(medicalHistory),
+                              value: _diseaseList.contains(medicalHistory),
                               activeColor: AppColors.goldenTainoi,
                               onChanged: (value) {
                                 setState(() {
                                   if (value) {
                                     if (!_diseaseList
-                                        .contains(medicalHistory.name)) {
-                                      _diseaseList.add(medicalHistory.name);
+                                        .contains(medicalHistory)) {
+                                      _diseaseList.add(medicalHistory);
                                     }
                                   } else {
                                     setLoading(true);
                                     api
                                         .deletePatientMedicalHistory(
-                                            token, medicalHistory.name)
+                                            token, medicalHistory)
                                         .then((value) {
                                       setLoading(false);
-                                      _diseaseList.remove(medicalHistory.name);
+                                      _diseaseList.remove(medicalHistory);
                                     }).futureError((error) {
                                       setLoading(false);
                                       error.toString().debugLog();
@@ -193,33 +205,41 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
   }
 
   void saveMedicalHistory() {
-    Map<String, String> diseaseMap = {};
-
-    if (_otherDiseaseController.text.isNotEmpty) {
-      _diseaseList.add(_otherDiseaseController.text);
-    }
-
     if (_diseaseList.length > 0) {
-      setLoading(true);
+      Map<String, String> diseaseMap = {};
 
-      for (int i = 0; i < _diseaseList.length; i++) {
-        if (!diseaseMap.containsValue(_diseaseList[i])) {
-          diseaseMap['medicalHistory[${i.toString()}]'] = _diseaseList[i];
+      if (_diseaseList.contains('Others') &&
+          _otherDiseaseController.text.isEmpty) {
+        Widgets.showToast('Please enter a disease');
+      } else {
+        FocusScope.of(context).requestFocus(FocusNode());
+
+        if (_diseaseList.contains('Others')) {
+          _diseaseList.remove('Others');
         }
-      }
 
-      api.sendPatientMedicalHistory(token, diseaseMap).then((response) {
-        if (response != null) {
-          setLoading(false);
+        _diseaseList.add(_otherDiseaseController.text);
+        setLoading(true);
 
-          if (isBottomButtonsShow) {
-            Navigator.of(context).pushNamed(Routes.seekingCureScreen);
+        for (int i = 0; i < _diseaseList.length; i++) {
+          if (!diseaseMap.containsValue(_diseaseList[i])) {
+            diseaseMap['medicalHistory[${i.toString()}]'] = _diseaseList[i];
           }
         }
-      }).futureError((error) {
-        setLoading(false);
-        error.toString().debugLog();
-      });
+
+        api.sendPatientMedicalHistory(token, diseaseMap).then((response) {
+          if (response != null) {
+            setLoading(false);
+
+            if (isBottomButtonsShow) {
+              Navigator.of(context).pushNamed(Routes.seekingCureScreen);
+            }
+          }
+        }).futureError((error) {
+          setLoading(false);
+          error.toString().debugLog();
+        });
+      }
     } else {
       Widgets.showToast('Please select a disease');
     }
