@@ -68,11 +68,6 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
     _providerMap.addAll(_projectResponse);
 
     switch (_providerMap['serviceType']) {
-      case '0':
-        _providerMap['isOfficeEnabled'] = '1';
-        _providerMap['isVideoChatEnabled'] = '1';
-        _providerMap['isOnsiteEnabled'] = '1';
-        break;
       case '1':
         _providerMap['isOfficeEnabled'] = '1';
         break;
@@ -85,7 +80,6 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
     }
 
     _providerMap.remove('serviceType');
-    _providerMap.remove('index');
 
     SharedPref().getToken().then((token) {
       setState(() {
@@ -160,14 +154,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
           image: AssetImage("images/ic_filter.png"),
         ).onClick(onTap: () {
           if (filterMap == null || filterMap.isEmpty) {
-            if (_projectResponse.containsKey('specialtyId[]')) {
-              filterMap['specialtyId[${_projectResponse['index']}]'] =
-                  _projectResponse['specialtyId[]'];
-            }
-            if (_projectResponse.containsKey('subServices[]')) {
-              filterMap['subServices[${_projectResponse['index']}]'] =
-                  _projectResponse['subServices[]'];
-            }
+            filterMap = _projectResponse;
           }
 
           Navigator.of(context)
@@ -221,16 +208,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
               if (filterMap != null && filterMap.length > 0) {
                 _appointmentFilterMap.addAll(filterMap);
               } else {
-                if (_projectResponse.containsKey('specialtyId[]')) {
-                  _appointmentFilterMap[
-                          'specialtyId[${_projectResponse['index']}]'] =
-                      _projectResponse['specialtyId[]'];
-                }
-                if (_projectResponse.containsKey('subServices[]')) {
-                  _appointmentFilterMap[
-                          'subServices[${_projectResponse['index']}]'] =
-                      _projectResponse['subServices[]'];
-                }
+                _appointmentFilterMap.addAll(_projectResponse);
               }
 
               switch (index) {

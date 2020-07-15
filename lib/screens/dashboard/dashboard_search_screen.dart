@@ -328,15 +328,15 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
 
                           if (type == 1) {
                             _container.setProjectsResponse(
-                                "specialtyId[]", tempList[index]["_id"]);
+                                "specialtyId[${tempList[index].toString()}]",
+                                tempList[index]["_id"]);
                           } else if (type == 3) {
                             _container.setProjectsResponse(
-                                "subServices[]", tempList[index]["_id"]);
+                                "subServices[${tempList[index].toString()}]",
+                                tempList[index]["_id"]);
                           }
 
                           _container.setProjectsResponse("serviceType", '0');
-                          _container.setProjectsResponse(
-                              "index", index.toString());
 
                           Navigator.of(context)
                               .pushNamed(Routes.providerListScreen);

@@ -75,15 +75,15 @@ class _SeeAllSearchScreeenState extends State<SeeAllSearchScreeen> {
 
                         if (type == 1) {
                           _container.setProjectsResponse(
-                              "specialtyId[]", _list[index]["_id"]);
+                              "specialtyId[${_list[index].toString()}]",
+                              _list[index]["_id"]);
                         } else if (type == 3) {
                           _container.setProjectsResponse(
-                              "subServices[]", _list[index]["_id"]);
+                              "subServices[${_list[index].toString()}]",
+                              _list[index]["_id"]);
                         }
 
                         _container.setProjectsResponse("serviceType", '0');
-                        _container.setProjectsResponse(
-                            "index", index.toString());
 
                         Navigator.of(context)
                             .pushNamed(Routes.providerListScreen);
