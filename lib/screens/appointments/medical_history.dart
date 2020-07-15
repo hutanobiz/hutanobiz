@@ -224,7 +224,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
         if (_otherDiseaseController.text.isNotEmpty) {
           _diseaseList.add(_otherDiseaseController.text);
         }
-        
+
         setLoading(true);
 
         for (int i = 0; i < _diseaseList.length; i++) {
@@ -236,6 +236,10 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
         api.sendPatientMedicalHistory(token, diseaseMap).then((response) {
           if (response != null) {
             setLoading(false);
+
+            if (_otherDiseaseController.text.isNotEmpty) {
+              _otherDiseaseController.text = '';
+            }
 
             if (isBottomButtonsShow) {
               Navigator.of(context).pushNamed(Routes.seekingCureScreen);
