@@ -7,7 +7,9 @@ import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 
 class ChooseSpecialities extends StatefulWidget {
-  ChooseSpecialities({Key key}) : super(key: key);
+  ChooseSpecialities({Key key, this.professionaltitleId}) : super(key: key);
+
+  final String professionaltitleId;
 
   @override
   _ChooseSpecialitiesState createState() => _ChooseSpecialitiesState();
@@ -25,7 +27,13 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
   void initState() {
     super.initState();
 
-    _specialityFuture = api.getSpecialties();
+    if (widget.professionaltitleId != null) {
+      Map _professionalTitleIdMap = {};
+
+      _professionalTitleIdMap['professionalTitleId'] =
+          widget.professionaltitleId;
+      _specialityFuture = api.getProfessionalSpecility(_professionalTitleIdMap);
+    }
   }
 
   @override
@@ -100,9 +108,7 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
                   ),
                   onTap: () {
                     conatiner.setProjectsResponse(
-                        "specialtyId[]", data[index]["_id"]);
-                    conatiner.setProjectsResponse(
-                        "index", index.toString());
+                        "specialtyId[${index.toString()}]", data[index]["_id"]);
 
                     Navigator.pushNamed(
                       context,

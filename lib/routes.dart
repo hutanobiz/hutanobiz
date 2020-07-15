@@ -118,7 +118,10 @@ class Routes {
         return _errorRoute();
         break;
       case chooseSpecialities:
-        return _buildRoute(settings, ChooseSpecialities());
+        return _buildRoute(
+          settings,
+          ChooseSpecialities(professionaltitleId: args),
+        );
         break;
       case appointmentTypeScreen:
         return _buildRoute(
