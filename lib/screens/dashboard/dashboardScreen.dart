@@ -151,7 +151,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     margin: const EdgeInsets.only(top: 16.0),
-                    padding: const EdgeInsets.only(top: 20, bottom: 20),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
@@ -160,6 +159,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ),
                     child: ListView(
+                      padding: const EdgeInsets.only(top: 20, bottom: 20),
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(left: 20),
@@ -362,16 +362,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ],
               ),
-              onTap: () {
-                conatiner.projectsResponse.clear();
-                conatiner.setProjectsResponse(
-                    "serviceType", (index + 1).toString());
-
-                Navigator.pushNamed(
-                  context,
-                  Routes.chooseSpecialities,
-                );
-              },
+              onTap: () {},
             ),
           );
         },
@@ -640,17 +631,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ).onClick(
                       onTap: () {
-                        // conatiner.projectsResponse.clear();
-                        // conatiner.setProjectsResponse(
-                        //     "specialtyId[]", specialty["_id"]);
-                        // conatiner.setProjectsResponse("serviceType", '0');
-                        // conatiner.setProjectsResponse(
-                        //     "index", index.toString());
+                        conatiner.projectsResponse.clear();
+                        conatiner.setProjectsResponse("serviceType", '0');
+                        conatiner.setProjectsResponse(
+                            "professionalTitleId[${index.toString()}]",
+                            professionalTitle['_id']);
 
-                        // Navigator.pushNamed(
-                        //   context,
-                        //   Routes.providerListScreen,
-                        // );
+                        Navigator.pushNamed(
+                          context,
+                          Routes.chooseSpecialities,
+                          arguments: professionalTitle['_id'].toString(),
+                        );
                       },
                     );
                   },
@@ -769,10 +760,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       onTap: () {
                         conatiner.projectsResponse.clear();
                         conatiner.setProjectsResponse(
-                            "specialtyId[]", specialty["_id"]);
+                            "specialtyId[${index.toString()}]",
+                            specialty["_id"]);
                         conatiner.setProjectsResponse("serviceType", '0');
-                        conatiner.setProjectsResponse(
-                            "index", index.toString());
 
                         Navigator.pushNamed(
                           context,
