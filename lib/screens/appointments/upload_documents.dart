@@ -58,7 +58,6 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
     }
 
     setLoading(true);
-    docsList.clear();
 
     documentTypeController.addListener(() {
       setState(() {});
@@ -67,6 +66,19 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
     documentDateController.addListener(() {
       setState(() {});
     });
+
+    getMedicalDocuments();
+  }
+
+  @override
+  void dispose() {
+    documentTypeController.dispose();
+    documentDateController.dispose();
+    super.dispose();
+  }
+
+  void getMedicalDocuments() {
+    docsList.clear();
 
     SharedPref().getToken().then((token) {
       setState(() {
@@ -91,13 +103,6 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
         setLoading(false);
       });
     });
-  }
-
-  @override
-  void dispose() {
-    documentTypeController.dispose();
-    documentDateController.dispose();
-    super.dispose();
   }
 
   @override
@@ -451,16 +456,10 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                         file,
                       )
                           .then((value) {
-                        setState(() {
-                          Map docsMap = {};
-                          docsMap['name'] = documentName;
-                          docsMap['medicalDocuments'] = file.path;
-                          docsMap['type'] = documentTypeController.text;
-                          docsMap['date'] = documentDateController.text;
+                        documentTypeController.text = '';
+                        documentDateController.text = '';
 
-                          docsList.add(docsMap);
-                        });
-                        setLoading(false);
+                        getMedicalDocuments();
                       }).futureError((error) => setLoading(false));
                     }
                   },
