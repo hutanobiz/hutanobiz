@@ -47,6 +47,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Future<List<dynamic>> _myDoctorsFuture;
   Future<List<dynamic>> _specialtiesFuture;
+  Future<List<dynamic>> _professionalTitleFuture;
 
   @override
   void initState() {
@@ -62,6 +63,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       });
     });
 
+    _professionalTitleFuture = _api.getProfessionalTitle();
     _specialtiesFuture = _api.getSpecialties();
   }
 
@@ -172,6 +174,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                         topProviderWidget(),
                         myDoctorsWidget(),
+                        professionalTitleWidget(),
                         specialtiesWidget(),
                       ],
                     ),
@@ -539,6 +542,116 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               .pushNamed(Routes.providerProfileScreen);
                         },
                       ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        } else if (snapshot.hasError) {
+          return Container();
+          // return Padding(
+          //   padding: const EdgeInsets.all(20),
+          //   child: Text('NO doctors available yet'),
+          // );
+        }
+        return Padding(
+          padding: const EdgeInsets.all(20),
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget professionalTitleWidget() {
+    return FutureBuilder<List<dynamic>>(
+      future: _professionalTitleFuture,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          List _professionalTitleList = snapshot.data;
+
+          if (_professionalTitleList == null ||
+              _professionalTitleList.isEmpty) {
+            return Container();
+          }
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Text(
+                  'Professional titles',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              Container(
+                height: 130,
+                margin: const EdgeInsets.only(top: 20, bottom: 25),
+                child: ListView.separated(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  separatorBuilder: (BuildContext context, int index) =>
+                      SizedBox(width: 13),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _professionalTitleList.length,
+                  itemBuilder: (context, index) {
+                    if (_professionalTitleList == null ||
+                        _professionalTitleList.isEmpty) {
+                      return Text('No professional titles available');
+                    }
+
+                    dynamic professionalTitle = _professionalTitleList[index];
+
+                    return SizedBox(
+                      height: 94,
+                      width: 132,
+                      child: Column(
+                        children: <Widget>[
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(14),
+                            child: Image(
+                              image: professionalTitle['image'] == null
+                                  ? AssetImage('images/dummy_title_image.png')
+                                  : NetworkImage(
+                                      ApiBaseHelper.imageUrl +
+                                          professionalTitle['image'],
+                                    ),
+                              width: 132,
+                              height: 94,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          SizedBox(height: 10.0),
+                          Text(
+                            professionalTitle['title']?.toString() ?? '---',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ).onClick(
+                      onTap: () {
+                        // conatiner.projectsResponse.clear();
+                        // conatiner.setProjectsResponse(
+                        //     "specialtyId[]", specialty["_id"]);
+                        // conatiner.setProjectsResponse("serviceType", '0');
+                        // conatiner.setProjectsResponse(
+                        //     "index", index.toString());
+
+                        // Navigator.pushNamed(
+                        //   context,
+                        //   Routes.providerListScreen,
+                        // );
+                      },
                     );
                   },
                 ),
