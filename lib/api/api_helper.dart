@@ -488,6 +488,12 @@ class ApiBaseHelper {
       return res["response"];
     });
   }
+
+  Future<List<dynamic>> getAllTitleSpecilities() {
+    return _netUtil.get(base_url + "api/title-specialties").then((res) {
+      return res["response"];
+    });
+  }
 }
 
 class NetworkUtil {
