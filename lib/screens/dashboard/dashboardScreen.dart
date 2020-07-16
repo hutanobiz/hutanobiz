@@ -362,7 +362,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ],
               ),
-              onTap: () {},
+              onTap: () {
+                conatiner.projectsResponse.clear();
+                conatiner.setProjectsResponse(
+                    "serviceType", (index + 1).toString());
+
+                Navigator.pushNamed(context, Routes.allTitlesSpecialtesScreen);
+              },
             ),
           );
         },

@@ -15,6 +15,7 @@ import 'package:hutano/screens/book_appointment/review_appointment.dart';
 import 'package:hutano/screens/book_appointment/select_appointment_time_screen.dart';
 import 'package:hutano/screens/book_appointment/select_services.dart';
 import 'package:hutano/screens/dashboard/all_reviews_screen.dart';
+import 'package:hutano/screens/dashboard/all_tiltes_specialties_screen.dart';
 import 'package:hutano/screens/dashboard/appointment_type_screen.dart';
 import 'package:hutano/screens/dashboard/appointments_screen.dart';
 import 'package:hutano/screens/dashboard/available_timings_screen.dart';
@@ -82,6 +83,7 @@ class Routes {
   static const String providerImageScreen = '/providerImageScreen';
   static const String allReviewsScreen = '/allReviewsScreen';
   static const String updateMedicalHistory = '/updateMedicalHistory';
+  static const String allTitlesSpecialtesScreen = '/allTitlesSpecialtesScreen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -296,6 +298,9 @@ class Routes {
           settings,
           UpdateMedicalHistory(),
         );
+        break;
+      case allTitlesSpecialtesScreen:
+        return _buildRoute(settings, AllTitlesSpecialtesScreen());
         break;
       default:
         return _errorRoute();
