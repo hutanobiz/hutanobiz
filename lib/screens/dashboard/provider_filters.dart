@@ -204,8 +204,10 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
                                       fontWeight: FontWeight.w400,
                                       color: Colors.black.withOpacity(0.85),
                                     ),
-                                    value: _filtersMap.containsKey(
-                                        "$filterMapKey[${index.toString()}]"),
+                                    value: _filtersMap.containsValue(
+                                        _filterTitle[filterListIndex == 3
+                                            ? 'title'
+                                            : '_id']),
                                     onCheck: (value) {
                                       setState(() {
                                         if (filterListIndex == 3) {
