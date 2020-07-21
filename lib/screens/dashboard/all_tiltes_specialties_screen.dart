@@ -36,7 +36,8 @@ class _AllTitlesSpecialtesScreenState extends State<AllTitlesSpecialtesScreen> {
       key: _scaffoldKey,
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackground(
-        title: "",
+        title: "Choose Speciality",
+        padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
         color: AppColors.snow,
         isAddBack: false,
         addBackButton: true,
@@ -86,12 +87,15 @@ class _AllTitlesSpecialtesScreenState extends State<AllTitlesSpecialtesScreen> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    title['title'],
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Text(
+                      title['title'],
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                   Container(
@@ -100,6 +104,7 @@ class _AllTitlesSpecialtesScreenState extends State<AllTitlesSpecialtesScreen> {
                     child: ListView.separated(
                       separatorBuilder: (BuildContext context, int index) =>
                           SizedBox(width: 13),
+                      padding: EdgeInsets.fromLTRB(20, 7, 20, 7),
                       scrollDirection: Axis.horizontal,
                       itemCount: titleSpecialtyList.length,
                       itemBuilder: (context, index) {
@@ -113,7 +118,6 @@ class _AllTitlesSpecialtesScreenState extends State<AllTitlesSpecialtesScreen> {
                         return Container(
                           height: 72,
                           width: 145,
-                          padding: EdgeInsets.all(7),
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             color: Colors.white,
