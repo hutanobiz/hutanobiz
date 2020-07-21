@@ -886,7 +886,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Text(
-                  "Confirm Treatment End",
+                  "The treatment is complete",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 18,
@@ -896,7 +896,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                 ),
                 SizedBox(height: 20),
                 Text(
-                  "The treatment is complete Please select confirm to complete treatment.",
+                  "Please select confirm to complete treatment.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 13,
