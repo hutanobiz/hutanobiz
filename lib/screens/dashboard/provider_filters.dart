@@ -154,7 +154,7 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
                         'Set Experience range',
                         _experienceRangeValues,
                         (RangeValues newValues) {
-                          if (newValues.end > newValues.start) {
+                          if (newValues.end - newValues.start >= 3) {
                             setState(() {
                               _experienceRangeValues = newValues;
 
