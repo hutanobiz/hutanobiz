@@ -497,8 +497,11 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         ),
         child: Text(
           title,
+          maxLines: 1,
+          overflow: TextOverflow.fade,
+          softWrap: false,
           style: TextStyle(
-            fontSize: 14.0,
+            fontSize: 13.0,
             fontWeight: FontWeight.w500,
             color: listType == 1
                 ? Colors.white
@@ -525,8 +528,11 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         ),
         child: Text(
           title,
+          maxLines: 1,
+          overflow: TextOverflow.fade,
+          softWrap: false,
           style: TextStyle(
-            fontSize: 14.0,
+            fontSize: 13.0,
             fontWeight: FontWeight.w500,
             color: Colors.white,
           ),
