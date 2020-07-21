@@ -86,43 +86,43 @@ class _AvailableTimingsScreenState extends State<AvailableTimingsScreen> {
         "Monday",
         mondayTimings != null && mondayTimings != ""
             ? mondayTimings.substring(0, mondayTimings.length - 1)
-            : "No timings available"));
+            : "Unavailable"));
 
     formWidget.add(_timingWidget(
         "Tuesday",
         tuesdayTimings != null && tuesdayTimings != ""
             ? tuesdayTimings.substring(0, tuesdayTimings.length - 1)
-            : "No timings available"));
+            : "Unavailable"));
 
     formWidget.add(_timingWidget(
         "Wednesday",
         wednesdayTimings != null && wednesdayTimings != ""
             ? wednesdayTimings.substring(0, wednesdayTimings.length - 1)
-            : "No timings available"));
+            : "Unavailable"));
 
     formWidget.add(_timingWidget(
         "Thursday",
         thursdayTimings != null && thursdayTimings != ""
             ? thursdayTimings.substring(0, thursdayTimings.length - 1)
-            : "No timings available"));
+            : "Unavailable"));
 
     formWidget.add(_timingWidget(
         "Friday",
         fridayTimings != null && fridayTimings != ""
             ? fridayTimings.substring(0, fridayTimings.length - 1)
-            : "No timings available"));
+            : "Unavailable"));
 
     formWidget.add(_timingWidget(
         "Saturday",
         saturdayTimings != null && saturdayTimings != ""
             ? saturdayTimings.substring(0, saturdayTimings.length - 1)
-            : "No timings available"));
+            : "Unavailable"));
 
     formWidget.add(_timingWidget(
         "Sunday",
         sundayTimings != null && sundayTimings != ""
             ? sundayTimings.substring(0, sundayTimings.length - 1)
-            : "No timings available"));
+            : "Unavailable"));
 
     return formWidget;
   }

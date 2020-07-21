@@ -401,7 +401,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                   TextSpan(
                     text: todaysTimings != null && todaysTimings != ""
                         ? todaysTimings.substring(0, todaysTimings.length - 3)
-                        : "NO timings available for today",
+                        : "Unavailable for today",
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
                     ),
@@ -426,7 +426,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                     text: tomorrowsTimings != null && tomorrowsTimings != ""
                         ? tomorrowsTimings.substring(
                             0, tomorrowsTimings.length - 3)
-                        : "NO timings available",
+                        : "Unavailable",
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
                     ),
