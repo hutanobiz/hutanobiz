@@ -379,8 +379,10 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                       height: 40,
                       margin: const EdgeInsets.only(top: 10),
                       child: administrationRoute == null ||
-                              administrationRoute.isEmpty
-                          ? Text("NO administration route available")
+                              administrationRoute.isEmpty ||
+                              (administrationRoute.isNotEmpty &&
+                                  administrationRoute[0] == '')
+                          ? Text("None")
                           : ListView.builder(
                               shrinkWrap: true,
                               physics: ClampingScrollPhysics(),
@@ -411,8 +413,10 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                     Container(
                       height: 40,
                       child: recommendFollowList == null ||
-                              recommendFollowList.isEmpty
-                          ? Text("NO reccommend follow up")
+                              recommendFollowList.isEmpty ||
+                              (recommendFollowList.isNotEmpty &&
+                                  recommendFollowList[0] == '')
+                          ? Text("None")
                           : ListView.builder(
                               shrinkWrap: true,
                               physics: ClampingScrollPhysics(),
@@ -574,7 +578,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
         ),
         SizedBox(height: 12),
         Text(
-          subtitle,
+          subtitle.isEmpty || subtitle == '---' ? 'None' : subtitle,
           style: TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.w400,
