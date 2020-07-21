@@ -88,7 +88,7 @@ class _AllTitlesSpecialtesScreenState extends State<AllTitlesSpecialtesScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(left: 20),
+                    padding: const EdgeInsets.only(left: 20, right: 20),
                     child: Text(
                       title['title'],
                       style: TextStyle(
@@ -104,7 +104,7 @@ class _AllTitlesSpecialtesScreenState extends State<AllTitlesSpecialtesScreen> {
                     child: ListView.separated(
                       separatorBuilder: (BuildContext context, int index) =>
                           SizedBox(width: 13),
-                      padding: EdgeInsets.fromLTRB(20, 7, 20, 7),
+                      padding: const EdgeInsets.only(left: 20, right: 20),
                       scrollDirection: Axis.horizontal,
                       itemCount: titleSpecialtyList.length,
                       itemBuilder: (context, index) {
@@ -118,6 +118,7 @@ class _AllTitlesSpecialtesScreenState extends State<AllTitlesSpecialtesScreen> {
                         return Container(
                           height: 72,
                           width: 145,
+                          padding: EdgeInsets.all(7),
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             color: Colors.white,
