@@ -152,7 +152,7 @@ class _SignUpFormState extends State<Register> {
               setState(() {
                 if (res["dob"] != null) {
                   _selectedDate =
-                      DateFormat("dd/MM/yyyy").parse(res["dob"].toString());
+                      DateFormat("MM/dd/yyyy").parse(res["dob"].toString());
                 } else {
                   _selectedDate = DateTime(DateTime.now().year - 18,
                       DateTime.now().month, DateTime.now().day);
@@ -402,9 +402,9 @@ class _SignUpFormState extends State<Register> {
             if (date != null) {
               setState(() {
                 _selectedDate = date;
-                var aa = DateFormat('dd').format(date) +
+                var aa = DateFormat('MM').format(date) +
                     '/' +
-                    DateFormat('MM').format(date) +
+                    DateFormat('dd').format(date) +
                     '/' +
                     date.year.toString();
 
@@ -646,7 +646,7 @@ class _SignUpFormState extends State<Register> {
 
     if (isUpdateProfile) {
       loginData["dob"] =
-          DateFormat("dd/MM/yyyy").format(_selectedDate).toString();
+          DateFormat("MM/dd/yyyy").format(_selectedDate).toString();
     } else {
       loginData["dob"] =
           DateFormat("MM/dd/yyyy").format(_selectedDate).toString();
