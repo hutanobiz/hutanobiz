@@ -402,7 +402,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
               Container(
-                height: 173,
+                height: 175,
                 margin: const EdgeInsets.only(top: 20, bottom: 30),
                 child: ListView.separated(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
