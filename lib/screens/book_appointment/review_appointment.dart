@@ -531,6 +531,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                     myLocationEnabled: false,
                     compassEnabled: false,
                     rotateGesturesEnabled: false,
+                    zoomControlsEnabled: false,
                     initialCameraPosition: CameraPosition(
                       target: _middlePoint,
                       zoom: 8,
@@ -538,6 +539,32 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                     polylines: _polyline,
                     markers: _markers,
                     onMapCreated: (GoogleMapController controller) {
+                      LatLngBounds bound;
+                      if (_initialPosition.latitude > _desPosition.latitude &&
+                          _initialPosition.longitude > _desPosition.longitude) {
+                        bound = LatLngBounds(
+                            southwest: _desPosition,
+                            northeast: _initialPosition);
+                      } else if (_initialPosition.longitude >
+                          _desPosition.longitude) {
+                        bound = LatLngBounds(
+                            southwest: LatLng(_initialPosition.latitude,
+                                _desPosition.longitude),
+                            northeast: LatLng(_desPosition.latitude,
+                                _initialPosition.longitude));
+                      } else if (_initialPosition.latitude >
+                          _desPosition.latitude) {
+                        bound = LatLngBounds(
+                            southwest: LatLng(_desPosition.latitude,
+                                _initialPosition.longitude),
+                            northeast: LatLng(_initialPosition.latitude,
+                                _desPosition.longitude));
+                      } else {
+                        bound = LatLngBounds(
+                            southwest: _initialPosition,
+                            northeast: _desPosition);
+                      }
+
                       setState(() {
                         setPolylines();
 
@@ -554,6 +581,11 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                           position: _desPosition,
                           icon: _destinationIcon,
                         ));
+                      });
+
+                      CameraUpdate u2 = CameraUpdate.newLatLngBounds(bound, 50);
+                      controller.animateCamera(u2).then((void v) {
+                        check(u2, controller);
                       });
                     },
                   ),
@@ -601,6 +633,17 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     _widgetList.add(paymentType == "3" ? duePaymentWidget() : Container());
 
     return _widgetList;
+  }
+
+  void check(CameraUpdate u, GoogleMapController c) async {
+    c.animateCamera(u);
+    c.animateCamera(u);
+    LatLngBounds l1 = await c.getVisibleRegion();
+    LatLngBounds l2 = await c.getVisibleRegion();
+    print(l1.toString());
+    print(l2.toString());
+    if (l1.southwest.latitude == -90 || l2.southwest.latitude == -90)
+      check(u, c);
   }
 
   void getDistanceAndTime(LatLng initialPosition, LatLng desPosition) {
