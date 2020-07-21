@@ -19,24 +19,25 @@ class CustomCardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(14.0)),
-        border: Border.all(color: Colors.grey[100]),
+        border: Border.all(color: Colors.grey[200]),
       ),
       child: InkWell(
         splashColor: Colors.grey,
         onTap: onTap,
         child: Row(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(14.0)),
               child: Image(
                 image: AssetImage(image),
                 height: 64.0,
                 width: 64.0,
               ),
             ),
-            SizedBox(width: 12.0),
+            SizedBox(width: 23.0),
             Text(
               cardText,
               style: TextStyle(
