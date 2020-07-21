@@ -294,7 +294,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
                 child: Text(
-                  "Diagnose",
+                  "Diagnosis",
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.w600,
