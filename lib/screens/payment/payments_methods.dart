@@ -277,11 +277,18 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                             ),
                           ),
                           SizedBox(width: 17.0),
-                          Text(
-                            _insuranceList[index]["insuranceName"],
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w600,
+                          Expanded(
+                            flex: 3,
+                            child: Text(
+                              _insuranceList[index]["insuranceName"]
+                                      ?.toString() ??
+                                  '---',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                           Expanded(
