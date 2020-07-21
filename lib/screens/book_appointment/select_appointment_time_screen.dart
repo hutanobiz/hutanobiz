@@ -46,6 +46,8 @@ class _SelectAppointmentTimeScreenState
   bool isEditDateTime = false;
 
   List<int> _scheduleDaysList = [];
+  int _initialDay = 1;
+  DateTime newDate;
 
   @override
   void initState() {
@@ -60,6 +62,8 @@ class _SelectAppointmentTimeScreenState
 
     _dayDateMap["day"] = DateTime.now().weekday.toString();
     _dayDateMap["date"] = currentDate;
+
+    newDate = DateTime.now();
   }
 
   @override
@@ -116,6 +120,25 @@ class _SelectAppointmentTimeScreenState
         }
       }
     }
+
+    while (true) {
+      if (_scheduleDaysList.contains(newDate.weekday)) {
+        setState(() {
+          _selectedDate = newDate;
+        });
+
+        break;
+      } else {
+        setState(() {
+          newDate = _selectedDate.add(
+            Duration(days: _initialDay),
+          );
+        });
+        _initialDay++;
+      }
+    }
+
+    _selectedDate.toString().debugLog();
 
     String providerId = '';
 
