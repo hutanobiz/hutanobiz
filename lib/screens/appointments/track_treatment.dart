@@ -418,9 +418,9 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                       Expanded(
                         child: Text(
                           status == 0
-                              ? (_totalDuration.contains('no')
+                              ? (_totalDuration.toLowerCase().contains('no')
                                   ? _totalDuration
-                                  : 'You provider’s office is $_totalDuration minutes away. '
+                                  : 'Your provider’s office is $_totalDuration minutes away. '
                                       'Let us know when you are on your way.')
                               : status == 1
                                   ? "Started driving"
