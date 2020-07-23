@@ -255,108 +255,138 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                   physics: ClampingScrollPhysics(),
                   itemCount: _insuranceList.length,
                   itemBuilder: (context, index) {
-                    return Container(
-                      padding: const EdgeInsets.all(8.0),
-                      margin: const EdgeInsets.only(top: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(14.0)),
-                        border: Border.all(color: Colors.grey[100]),
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(16.0),
-                            child: Image.network(
-                              ApiBaseHelper.imageUrl +
-                                  _insuranceList[index]
-                                      ["insuranceDocumentFront"],
-                              width: 70,
-                              height: 70,
-                              fit: BoxFit.cover,
-                            ),
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          padding: const EdgeInsets.all(8.0),
+                          margin: const EdgeInsets.only(top: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(14.0)),
+                            border: Border.all(color: Colors.grey[100]),
                           ),
-                          SizedBox(width: 17.0),
-                          Expanded(
-                            flex: 3,
-                            child: Text(
-                              _insuranceList[index]["insuranceName"]
-                                      ?.toString() ??
-                                  '---',
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w600,
+                          child: Row(
+                            children: <Widget>[
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(16.0),
+                                child: Image.network(
+                                  ApiBaseHelper.imageUrl +
+                                      _insuranceList[index]
+                                          ["insuranceDocumentFront"],
+                                  width: 70,
+                                  height: 70,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: !widget.isPayment
-                                  ? Icon(
-                                      Icons.arrow_forward_ios,
-                                      color: Colors.grey,
-                                      size: 16,
-                                    )
-                                  : Radio(
-                                      activeColor: AppColors.persian_blue,
-                                      value: index,
-                                      groupValue: _listRadioValue,
-                                      materialTapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                      onChanged: !_providerInsuranceList
-                                              .contains(_insuranceList[index]
+                              SizedBox(width: 17.0),
+                              Expanded(
+                                flex: 3,
+                                child: Text(
+                                  _insuranceList[index]["insuranceName"]
+                                          ?.toString() ??
+                                      '---',
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: !widget.isPayment
+                                      ? Icon(
+                                          Icons.arrow_forward_ios,
+                                          color: Colors.grey,
+                                          size: 16,
+                                        )
+                                      : (!_providerInsuranceList.contains(
+                                              _insuranceList[index]
                                                       ["insuranceId"]
                                                   .toString())
-                                          ? null
-                                          : (int value) {
-                                              setState(() {
-                                                _radioValue = null;
-                                                _listRadioValue = value;
-                                              });
+                                          ? Container()
+                                          : Radio(
+                                              activeColor:
+                                                  AppColors.persian_blue,
+                                              value: index,
+                                              groupValue: _listRadioValue,
+                                              materialTapTargetSize:
+                                                  MaterialTapTargetSize
+                                                      .shrinkWrap,
+                                              onChanged: (int value) {
+                                                setState(() {
+                                                  _radioValue = null;
+                                                  _listRadioValue = value;
+                                                });
 
-                                              insuranceId =
-                                                  _insuranceList[index]["_id"];
-                                              insuranceName =
-                                                  _insuranceList[index]
-                                                      ["insuranceName"];
-                                              insuranceImage = _insuranceList[
-                                                      index]
-                                                  ["insuranceDocumentFront"];
-                                            },
-                                    ),
-                            ),
-                          )
-                        ],
-                      ).onClick(
-                        onTap: widget.isPayment
-                            ? null
-                            : () {
-                                _insuranceViewMap['insurance'] =
-                                    _insuranceList[index];
+                                                insuranceId =
+                                                    _insuranceList[index]
+                                                        ["_id"];
+                                                insuranceName =
+                                                    _insuranceList[index]
+                                                        ["insuranceName"];
+                                                insuranceImage = _insuranceList[
+                                                        index]
+                                                    ["insuranceDocumentFront"];
+                                              },
+                                            )),
+                                ),
+                              )
+                            ],
+                          ).onClick(
+                            onTap: widget.isPayment
+                                ? null
+                                : () {
+                                    _insuranceViewMap['insurance'] =
+                                        _insuranceList[index];
 
-                                if (_container.insuranceDataMap != null) {
-                                  _container.insuranceDataMap.clear();
-                                }
+                                    if (_container.insuranceDataMap != null) {
+                                      _container.insuranceDataMap.clear();
+                                    }
 
-                                Navigator.of(context)
-                                    .pushNamed(
-                                  Routes.uploadInsuranceImagesScreen,
-                                  arguments: _insuranceViewMap,
-                                )
-                                    .whenComplete(() {
-                                  SharedPref().getToken().then((token) {
-                                    setState(() {
-                                      _insuranceFuture = _api
-                                          .getUserDetails(token)
-                                          .timeout(Duration(seconds: 10));
+                                    Navigator.of(context)
+                                        .pushNamed(
+                                      Routes.uploadInsuranceImagesScreen,
+                                      arguments: _insuranceViewMap,
+                                    )
+                                        .whenComplete(() {
+                                      SharedPref().getToken().then((token) {
+                                        setState(() {
+                                          _insuranceFuture = _api
+                                              .getUserDetails(token)
+                                              .timeout(Duration(seconds: 10));
+                                        });
+                                      });
                                     });
-                                  });
-                                });
-                              },
-                      ),
+                                  },
+                          ),
+                        ),
+                        (widget.isPayment &&
+                                _providerInsuranceList.contains(
+                                    _insuranceList[index]["insuranceId"]
+                                        .toString()))
+                            ? Container()
+                            : SizedBox(height: 10),
+                        (widget.isPayment &&
+                                _providerInsuranceList.contains(
+                                    _insuranceList[index]["insuranceId"]
+                                        .toString()))
+                            ? Container()
+                            : Text(
+                                "Insurance not accepted by the provider",
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 12.0,
+                                  color: Colors.grey[500],
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                      ],
                     );
                   },
                 );
