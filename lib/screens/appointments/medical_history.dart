@@ -117,8 +117,10 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
 
                         return ListView.builder(
                           padding: EdgeInsets.only(
-                              bottom:
-                                  _diseaseList.contains('Others') ? 10 : 65),
+                              bottom: (_diseaseList.contains('Others') ||
+                                      _diseaseList.contains('Other'))
+                                  ? 10
+                                  : 65),
                           shrinkWrap: true,
                           physics: ClampingScrollPhysics(),
                           itemCount: data.length,
@@ -126,7 +128,11 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                             dynamic medicalHistory = data[index];
 
                             return CheckboxListTile(
-                              title: Text(medicalHistory),
+                              title: Text(
+                                medicalHistory,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                               value: _diseaseList.contains(medicalHistory),
                               activeColor: AppColors.goldenTainoi,
                               onChanged: (value) {
@@ -162,7 +168,8 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                       );
                     },
                   ),
-                  _diseaseList.contains('Others')
+                  (_diseaseList.contains('Others') ||
+                          _diseaseList.contains('Other'))
                       ? Padding(
                           padding: const EdgeInsets.fromLTRB(10, 0, 10, 75),
                           child: TextField(
@@ -175,7 +182,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                             textInputAction: TextInputAction.done,
                             decoration: InputDecoration(
                               labelStyle: TextStyle(color: Colors.grey),
-                              labelText: "Type your disease...",
+                              labelText: "Other Medical Conditions",
                               alignLabelWithHint: true,
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.grey[300]),
@@ -211,14 +218,16 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
     if (_diseaseList.length > 0) {
       Map<String, String> diseaseMap = {};
 
-      if (_diseaseList.contains('Others') &&
+      if ((_diseaseList.contains('Others') || _diseaseList.contains('Other')) &&
           _otherDiseaseController.text.isEmpty) {
-        Widgets.showToast('Please enter a disease');
+        Widgets.showToast('Please enter the disease');
       } else {
         FocusScope.of(context).requestFocus(FocusNode());
 
-        if (_diseaseList.contains('Others')) {
+        if ((_diseaseList.contains('Others') ||
+            _diseaseList.contains('Other'))) {
           _diseaseList.remove('Others');
+          _diseaseList.remove('Other');
         }
 
         if (_otherDiseaseController.text.isNotEmpty) {
