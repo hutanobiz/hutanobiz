@@ -532,6 +532,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                     compassEnabled: false,
                     rotateGesturesEnabled: false,
                     zoomControlsEnabled: false,
+                    myLocationButtonEnabled: false,
                     initialCameraPosition: CameraPosition(
                       target: _middlePoint,
                       zoom: 8,
@@ -610,7 +611,10 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          _totalDuration,
+                          _totalDuration.toLowerCase().contains('mins')
+                              ? _totalDuration.replaceRange(
+                                  1, _totalDuration.length, ' minutes')
+                              : _totalDuration,
                           style: TextStyle(
                             fontSize: 14.0,
                             fontWeight: FontWeight.bold,
