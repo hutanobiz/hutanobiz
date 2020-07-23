@@ -292,6 +292,8 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
   }
 
   void uploadImageBottomSheet(File imageFile) {
+    imageName = null;
+
     Widgets.uploadBottomSheet(
       context,
       Column(
@@ -387,13 +389,30 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                       )
                           .then((value) {
                         setState(() {
-                          Map imageMap = {};
-                          imageMap['name'] = imageName;
-                          imageMap['images'] = imageFile.path;
+                          _api.getPatientDocuments(token).then((value) {
+                            if (value != null) {
+                              setLoading(false);
 
-                          imagesList.add(imageMap);
+                              imagesList.clear();
+
+                              if (mounted) {
+                                setState(() {
+                                  if (value['medicalImages'] != null &&
+                                      value['medicalImages'].isNotEmpty) {
+                                    for (dynamic images
+                                        in value['medicalImages']) {
+                                      imagesList.add(images);
+                                    }
+                                  }
+                                });
+                              }
+                            }
+                          }).futureError((error) {
+                            error.toString().debugLog();
+                            setLoading(false);
+                          });
                         });
-                        setLoading(false);
+                        
                       }).futureError((error) => setLoading(false));
                     }
                   },
