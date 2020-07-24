@@ -249,7 +249,9 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                   child: Text("NO saved insurance available"),
                 );
               } else {
-                return ListView.builder(
+                return ListView.separated(
+                  separatorBuilder: (BuildContext context, int index) =>
+                      SizedBox(height: 17),
                   padding: EdgeInsets.zero,
                   shrinkWrap: true,
                   physics: ClampingScrollPhysics(),
@@ -260,7 +262,6 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                       children: <Widget>[
                         Container(
                           padding: const EdgeInsets.all(8.0),
-                          margin: const EdgeInsets.only(top: 12),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius:
@@ -370,13 +371,12 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                     _insuranceList[index]["insuranceId"]
                                         .toString()))
                             ? Container()
-                            : SizedBox(height: 10),
+                            : SizedBox(height: 3),
                         (widget.isPayment &&
-                                _providerInsuranceList.contains(
+                                !_providerInsuranceList.contains(
                                     _insuranceList[index]["insuranceId"]
                                         .toString()))
-                            ? Container()
-                            : Text(
+                            ? Text(
                                 "Insurance not accepted by the provider",
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
@@ -385,7 +385,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                   color: Colors.grey[500],
                                   fontWeight: FontWeight.w600,
                                 ),
-                              ),
+                              )
+                            : Container(),
                       ],
                     );
                   },
