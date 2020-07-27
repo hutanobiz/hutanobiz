@@ -84,8 +84,13 @@ class _HomeScreenState extends State<HomeScreen> {
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
         0,
-        message['notification']['title'].toString(),
-        message['notification']['body'].toString(),
+          Platform.isAndroid
+            ? message['notification']['title'].toString()
+            : message['aps']['alert']['title'].toString(),
+        Platform.isAndroid
+            ? message['notification']['body'].toString()
+            : message['aps']['alert']['title'].toString(),
+
         platformChannelSpecifics,
         payload: json.encode(message));
   }
