@@ -80,18 +80,18 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
               child: Text("No appointments."),
             );
 
-          if (_activeAppointmentsList.length > 1) {
-            _activeAppointmentsList.sort((a, b) {
-              var aDate = a['date'].toString() +
-                  a["fromTime"].toString().timeOfDay(context) +
-                  a["toTime"].toString().timeOfDay(context);
-              var bDate = b['date'].toString() +
-                  b["fromTime"].toString().timeOfDay(context) +
-                  b["toTime"].toString().timeOfDay(context);
+          // if (_activeAppointmentsList.length > 1) {
+          //   _activeAppointmentsList.sort((a, b) {
+          //     var aDate = a['date'].toString() +
+          //         a["fromTime"].toString().timeOfDay(context) +
+          //         a["toTime"].toString().timeOfDay(context);
+          //     var bDate = b['date'].toString() +
+          //         b["fromTime"].toString().timeOfDay(context) +
+          //         b["toTime"].toString().timeOfDay(context);
 
-              return bDate.compareTo(aDate);
-            });
-          }
+          //     return bDate.compareTo(aDate);
+          //   });
+          // }
 
           if (_closedAppointmentsList.length > 1) {
             _closedAppointmentsList.sort((a, b) {
