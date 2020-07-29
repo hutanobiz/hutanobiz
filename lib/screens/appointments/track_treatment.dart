@@ -19,7 +19,6 @@ import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/widgets.dart';
-import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 
 const double CAMERA_ZOOM = 16;
@@ -290,14 +289,9 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
     if (response["trackingStatus"] != null &&
         response["trackingStatus"]["treatmentStarted"] != null) {
       dateTime = "On " +
-          DateFormat(
-            'EEEE, dd MMMM, HH:mm',
-          )
-              .format(DateTime.parse(
-                  response["trackingStatus"]["treatmentStarted"]))
-              .toString();
-
-      dateTime.debugLog();
+          response["trackingStatus"]["treatmentStarted"]
+              .toString()
+              .formatDate(dateFormat: "EEEE, dd MMMM, HH:mm");
     }
 
     if (response["doctor"] != null) {
