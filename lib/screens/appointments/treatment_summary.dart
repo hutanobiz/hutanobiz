@@ -106,10 +106,6 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
             durationOfSymtoms =
                 appointmentData["problemTimeSpan"]?.toString() ?? "---";
 
-            String date = DateFormat('dd MMMM yyyy')
-                .format(DateTime.parse(appointmentData['date']).toLocal())
-                .toString();
-
             if (appointmentData["trackingStatus"] != null) {
               if (appointmentData["trackingStatus"]["treatmentStarted"] !=
                       null ||
