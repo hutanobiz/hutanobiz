@@ -14,10 +14,10 @@ class Extensions {
     dynamic state,
     String zipCode,
   ) {
-    String addressName = '---', stateCode = '---';
+    String addressName = ', ', stateCode = ', ';
 
     if (address != null) {
-      addressName = address.toString().toLowerCase().contains('suite') ||
+      addressName += address.toString().toLowerCase().contains('suite') ||
               address.toString().toLowerCase().contains('ste')
           ? "Ste."
           : (!(address.toString().toLowerCase().contains('suite') ||
@@ -27,18 +27,16 @@ class Extensions {
     }
 
     if (state != null) {
-      stateCode = state["stateCode"]?.toString() ?? "---";
+      stateCode += state["stateCode"]?.toString() ?? "";
     }
 
     return (street ?? "---") +
+        ((addressName == null || addressName == ', ') ? "" : addressName) +
         ", " +
-        (addressName ?? "---") +
-        ", " +
-        (city ?? "---") +
-        ", " +
-        (stateCode ?? '---') +
+        (city ?? "") +
+        (stateCode ?? '') +
         " " +
-        (zipCode ?? "---");
+        (zipCode ?? "");
   }
 }
 
