@@ -112,24 +112,29 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
 
             if (appointmentData["trackingStatus"] != null) {
               if (appointmentData["trackingStatus"]["treatmentStarted"] !=
-                  null) {
-                initiated = date +
-                    " on " +
-                    DateFormat('hh:mm aa')
-                        .format(DateTime.parse(appointmentData["trackingStatus"]
-                                ["treatmentStarted"])
-                            .toLocal())
-                        .toString();
+                      null ||
+                  appointmentData["trackingStatus"]["treatmentStarted"] != '') {
+                initiated = appointmentData["trackingStatus"]
+                            ["treatmentStarted"]
+                        .toString()
+                        .formatDate(dateFormat: 'dd MMMM yyyy') +
+                    ' on ' +
+                    appointmentData["trackingStatus"]["treatmentStarted"]
+                        .toString()
+                        .formatDate(dateFormat: 'hh:mm aa');
               }
-              if (appointmentData["trackingStatus"]["providerTreatmentEnded"] !=
-                  null) {
-                completed = date +
-                    " on " +
-                    DateFormat('hh:mm aa')
-                        .format(DateTime.parse(appointmentData["trackingStatus"]
-                                ["providerTreatmentEnded"])
-                            .toLocal())
-                        .toString();
+              if (appointmentData["trackingStatus"]["patientTreatmentEnded"] !=
+                      null ||
+                  appointmentData["trackingStatus"]["patientTreatmentEnded"] !=
+                      '') {
+                completed = appointmentData["trackingStatus"]
+                            ["patientTreatmentEnded"]
+                        .toString()
+                        .formatDate(dateFormat: 'dd MMMM yyyy') +
+                    ' on ' +
+                    appointmentData["trackingStatus"]["patientTreatmentEnded"]
+                        .toString()
+                        .formatDate(dateFormat: 'hh:mm aa');
               }
             }
 

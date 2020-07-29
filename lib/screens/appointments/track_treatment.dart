@@ -287,12 +287,18 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
       }
     }
 
-    dateTime = "On " +
-        DateFormat(
-          'EEEE, dd MMMM, HH:mm',
-        ).format(DateTime.parse(response['date'])).toString();
+    if (response["trackingStatus"] != null &&
+        response["trackingStatus"]["treatmentStarted"] != null) {
+      dateTime = "On " +
+          DateFormat(
+            'EEEE, dd MMMM, HH:mm',
+          )
+              .format(DateTime.parse(
+                  response["trackingStatus"]["treatmentStarted"]))
+              .toString();
 
-    dateTime.debugLog();
+      dateTime.debugLog();
+    }
 
     if (response["doctor"] != null) {
       name = response["doctor"]["fullName"]?.toString() ?? "---";
