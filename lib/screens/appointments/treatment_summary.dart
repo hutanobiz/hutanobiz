@@ -115,7 +115,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                   null) {
                 initiated = date +
                     " on " +
-                    DateFormat('HH:mm')
+                    DateFormat('hh:mm aa')
                         .format(DateTime.parse(appointmentData["trackingStatus"]
                                 ["treatmentStarted"])
                             .toLocal())
@@ -125,7 +125,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                   null) {
                 completed = date +
                     " on " +
-                    DateFormat('HH:mm')
+                    DateFormat('hh:mm aa')
                         .format(DateTime.parse(appointmentData["trackingStatus"]
                                 ["providerTreatmentEnded"])
                             .toLocal())
@@ -591,7 +591,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
 
   Widget timeWidget(String icon, String title, String dateTime) {
     return Expanded(
-      flex: 2,
+      flex: 4,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
