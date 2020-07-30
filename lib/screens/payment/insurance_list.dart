@@ -102,7 +102,9 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
         if (snapshot.hasData) {
           List insuranceList = snapshot.data;
 
-          return ListView.builder(
+          return ListView.separated(
+            separatorBuilder: (BuildContext context, int index) =>
+                SizedBox(height: 15),
             padding: const EdgeInsets.only(bottom: 50),
             itemCount: insuranceList.length,
             itemBuilder: (context, index) {
@@ -123,38 +125,77 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
   }
 
   Widget insuranceWidget(dynamic insurance, int index) {
-    return RadioListTile(
-      controlAffinity: ListTileControlAffinity.trailing,
-      activeColor: AppColors.goldenTainoi,
-      value: index,
-      groupValue: _radioValue,
-      onChanged: _insuranceViewMap['isPayment']
-          ? !_selectedInsuranceList.contains(insurance["_id"].toString())
-              ? null
-              : _insuranceAlreadyAdded(insurance)
-          : _insuranceAlreadyAdded(insurance),
-      title: Row(
-        children: <Widget>[
-          Image.asset(
-            "images/insurancePlaceHolder.png",
-            width: 60,
-            height: 60,
-          ),
-          SizedBox(width: 14),
-          Expanded(
-            child: Text(
-              insurance["title"].toString(),
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 14.0,
-                fontWeight: FontWeight.w500,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Image.asset(
+              "images/insurancePlaceHolder.png",
+              width: 60,
+              height: 60,
+            ),
+            SizedBox(width: 14),
+            Expanded(
+              flex: 4,
+              child: Text(
+                insurance["title"].toString(),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
-          ),
-        ],
-      ),
+            SizedBox(width: 10),
+            _insuranceViewMap['isPayment']
+                ? !_selectedInsuranceList.contains(insurance["_id"].toString())
+                    ? Container()
+                    : checkBox(index, insurance)
+                : checkBox(index, insurance),
+          ],
+        ),
+        _insuranceViewMap['isPayment']
+            ? _selectedInsuranceList.contains(insurance["_id"].toString()) &&
+                    !_alreadyInsuranceList.contains(insurance["_id"].toString())
+                ? Container()
+                : insuranceTextWidget(insurance)
+            : !_selectedInsuranceList.contains(insurance["_id"].toString()) &&
+                    !_alreadyInsuranceList.contains(insurance["_id"].toString())
+                ? Container()
+                : insuranceTextWidget(insurance)
+      ],
     );
   }
+
+  Widget insuranceTextWidget(dynamic insurance) => Padding(
+        padding: const EdgeInsets.only(top: 5),
+        child: Text(
+          _alreadyInsuranceList.contains(insurance["_id"].toString())
+              ? 'Insurance already added'
+              : "Insurance not accepted by the provider",
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontSize: 12.0,
+            color: Colors.grey[500],
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      );
+
+  Widget checkBox(int index, dynamic insurance) =>
+      _alreadyInsuranceList.contains(insurance["_id"].toString())
+          ? Container()
+          : Expanded(
+              child: Radio(
+                activeColor: AppColors.persian_blue,
+                value: index,
+                groupValue: _radioValue,
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                onChanged: _insuranceAlreadyAdded(insurance),
+              ),
+            );
 
   Function _insuranceAlreadyAdded(dynamic insurance) {
     return _alreadyInsuranceList.contains(insurance["_id"].toString())
