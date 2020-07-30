@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' hide MapType;
 import 'package:hutano/colors.dart';
+import 'package:hutano/strings.dart';
 import 'package:intl/intl.dart';
 import 'package:map_launcher/map_launcher.dart';
 
@@ -197,9 +198,9 @@ extension NextDay on int {
 }
 
 extension FormatDate on String {
-  String formatDate({@required String dateFormat}) {
+  String formatDate({String dateFormat}) {
     return DateFormat(
-      dateFormat,
+      dateFormat ?? Strings.datePattern,
     ).format(DateTime.parse(this).toLocal()).toString();
   }
 }
