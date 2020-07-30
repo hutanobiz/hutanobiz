@@ -8,4 +8,6 @@ class Strings {
   static const String enterValidPassword = "Password should not be less than 6";
   static const String noInternet = "No Internet connection. Please try again";
   static const String loggedIn = "Logged in successfully";
+  static const String datePattern = 'MMMM dd, yyyy';
+  static const String dateTimePattern = 'MMMM dd, yyyy, HH:mm';
 }
