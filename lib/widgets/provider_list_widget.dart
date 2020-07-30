@@ -118,10 +118,13 @@ class ProviderWidget extends StatelessWidget {
                   child: InkWell(
                     splashColor: Colors.grey[200],
                     onTap: isProverPicShow
-                        ? () => Navigator.of(context).pushNamed(
+                        ? () {
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            Navigator.of(context).pushNamed(
                               Routes.providerImageScreen,
                               arguments: (ApiBaseHelper.imageUrl + avatar),
-                            )
+                            );
+                          }
                         : null,
                     child: Container(
                       width: 58.0,

@@ -153,6 +153,8 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
           height: 42.0,
           image: AssetImage("images/ic_filter.png"),
         ).onClick(onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+
           if (filterMap == null || filterMap.isEmpty) {
             filterMap = _projectResponse;
           }
@@ -290,6 +292,8 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
 
         return InkWell(
           onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+
             if (_provider["userId"] != null && _provider["userId"] is Map) {
               _container.setProviderId(_provider["userId"]["_id"]);
             } else if (_provider["User"] != null &&
@@ -304,6 +308,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
             averageRating:
                 _provider['averageRating']?.toStringAsFixed(2) ?? "0",
             bookAppointment: () {
+              FocusScope.of(context).requestFocus(FocusNode());
               _container.providerResponse.clear();
 
               _container.setProviderData("providerData", _provider);
@@ -377,15 +382,24 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
     _dummySearchList.clear();
 
     if (searchKey.isNotEmpty) {
-      _responseData.forEach((f) {
-        if (f["userId"]["fullName"] != null) {
-          if (f["userId"]["fullName"]
-              .toLowerCase()
-              .contains(searchKey.toLowerCase())) {
-            _dummySearchList.add(f);
-          }
+      _dummySearchList = _responseData.where((f) {
+        if (f['provider']["userId"] != null &&
+            f['provider']["userId"] is Map &&
+            f['provider']["userId"]["fullName"]
+                .toLowerCase()
+                .contains(searchKey.toLowerCase())) {
+          return true;
+        } else if (f['provider']["User"] != null &&
+            f['provider']["User"].length > 0 &&
+            f['provider']["User"][0]["fullName"] != null &&
+            f['provider']["User"][0]["fullName"]
+                .toLowerCase()
+                .contains(searchKey.toLowerCase())) {
+          return true;
         }
-      });
+
+        return false;
+      }).toList();
     }
   }
 }
