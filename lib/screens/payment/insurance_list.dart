@@ -33,8 +33,11 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
     _insuranceViewMap['isPayment'] = widget.insuranceMap['isPayment'];
     _insuranceViewMap['isViewDetail'] = false;
 
-    for (dynamic insurance in widget.insuranceMap['insuranceList']) {
-      _alreadyAddedInsuranceList.add(insurance['insuranceId'].toString());
+    if (widget.insuranceMap['insuranceList'] != null &&
+        widget.insuranceMap['insuranceList'].isNotEmpty) {
+      for (dynamic insurance in widget.insuranceMap['insuranceList']) {
+        _alreadyAddedInsuranceList.add(insurance['insuranceId'].toString());
+      }
     }
 
     setState(() {
@@ -119,8 +122,9 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
               insuranceList.add(insurance);
             }
 
-            if (_alreadyAddedInsuranceList
-                .contains(insurance['_id'].toString())) {
+            if (_alreadyAddedInsuranceList.isNotEmpty &&
+                _alreadyAddedInsuranceList
+                    .contains(insurance['_id'].toString())) {
               insuranceList.remove(insurance);
             }
           }
@@ -132,7 +136,7 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  !_insuranceViewMap['isPayment']
+                  !_insuranceViewMap['isPayment'] || insuranceList.isEmpty
                       ? Container()
                       : Padding(
                           padding: const EdgeInsets.fromLTRB(4, 4, 4, 20),
@@ -145,27 +149,30 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
                             ),
                           ),
                         ),
-                  ListView.separated(
-                    physics: ClampingScrollPhysics(),
-                    separatorBuilder: (BuildContext context, int index) =>
-                        SizedBox(height: 15),
-                    shrinkWrap: true,
-                    itemCount: insuranceList.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.fromLTRB(4, 0, 4, 4),
-                        child: insuranceWidget(
-                          insuranceList[index],
-                          index,
-                          isAcceptedByProvider: true,
+                  insuranceList.isEmpty
+                      ? Container()
+                      : ListView.separated(
+                          physics: ClampingScrollPhysics(),
+                          separatorBuilder: (BuildContext context, int index) =>
+                              SizedBox(height: 15),
+                          shrinkWrap: true,
+                          itemCount: insuranceList.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.fromLTRB(4, 0, 4, 4),
+                              child: insuranceWidget(
+                                insuranceList[index],
+                                index,
+                                isAcceptedByProvider: true,
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
                   !_insuranceViewMap['isPayment']
                       ? Container()
                       : Padding(
-                          padding: const EdgeInsets.fromLTRB(4, 30, 4, 4),
+                          padding: EdgeInsets.fromLTRB(
+                              4, insuranceList.isEmpty ? 4 : 30, 4, 4),
                           child: Text(
                             'Insurance not accepted by Provider',
                             style: TextStyle(
