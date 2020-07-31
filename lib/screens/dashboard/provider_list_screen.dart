@@ -33,7 +33,8 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
     'All',
     'Office',
     'Video',
-    'Onsite'
+    'Onsite',
+    'Filter'
   ];
 
   String _selectedAppointmentType;
@@ -115,70 +116,32 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
   }
 
   Widget searchBar() {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Expanded(
-          child: TextFormField(
-            key: _searchKey,
-            maxLines: 1,
-            keyboardType: TextInputType.text,
-            onChanged: (value) {
-              setState(() {
-                _searchText = value;
-              });
-              filterSearch(value);
-            },
-            decoration: InputDecoration(
-              floatingLabelBehavior: FloatingLabelBehavior.never,
-              filled: true,
-              fillColor: Colors.white,
-              labelStyle: TextStyle(fontSize: 13.0, color: Colors.grey),
-              labelText: "Search for providers",
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              contentPadding: EdgeInsets.fromLTRB(12.0, 15.0, 14.0, 14.0),
-            ),
-          ),
+    return TextFormField(
+      key: _searchKey,
+      maxLines: 1,
+      keyboardType: TextInputType.text,
+      onChanged: (value) {
+        setState(() {
+          _searchText = value;
+        });
+        filterSearch(value);
+      },
+      decoration: InputDecoration(
+        floatingLabelBehavior: FloatingLabelBehavior.never,
+        filled: true,
+        fillColor: Colors.white,
+        labelStyle: TextStyle(fontSize: 13.0, color: Colors.grey),
+        labelText: "Search for providers",
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+          borderRadius: BorderRadius.circular(8.0),
         ),
-        SizedBox(width: 12),
-        Image(
-          width: 42.0,
-          height: 42.0,
-          image: AssetImage("images/ic_filter.png"),
-        ).onClick(onTap: () {
-          FocusScope.of(context).requestFocus(FocusNode());
-
-          if (filterMap == null || filterMap.isEmpty) {
-            filterMap = _projectResponse;
-          }
-
-          Navigator.of(context)
-              .pushNamed(
-            Routes.providerFiltersScreen,
-            arguments: filterMap,
-          )
-              .then((value) {
-            if (value != null) {
-              setState(() {
-                filterMap = value;
-              });
-
-              if (filterMap.length > 0) {
-                setState(() {
-                  _providerFuture = api.providerFilter(token, filterMap);
-                });
-              }
-            }
-          });
-        }),
-      ],
+        border: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        contentPadding: EdgeInsets.fromLTRB(12.0, 15.0, 14.0, 14.0),
+      ),
     );
   }
 
@@ -196,43 +159,98 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
         itemBuilder: (context, index) {
           String _appointmentType = _appointmentTypeFilterList[index];
 
-          return _appointmentTypeWidget(
-            _appointmentType,
-            _selectedAppointmentType == index.toString(),
-            onClick: () {
-              if (this._selectedAppointmentType == index.toString()) return;
+          return _appointmentType.toLowerCase().contains('filter')
+              ? InkWell(
+                  onTap: () {
+                    FocusScope.of(context).requestFocus(FocusNode());
 
-              setState(() {
-                this._selectedAppointmentType = index.toString();
-                _appointmentFilterMap.clear();
-              });
+                    if (filterMap == null || filterMap.isEmpty) {
+                      filterMap = _projectResponse;
+                    }
 
-              if (filterMap != null && filterMap.length > 0) {
-                _appointmentFilterMap.addAll(filterMap);
-              } else {
-                _appointmentFilterMap.addAll(_projectResponse);
-              }
+                    Navigator.of(context)
+                        .pushNamed(
+                      Routes.providerFiltersScreen,
+                      arguments: filterMap,
+                    )
+                        .then((value) {
+                      if (value != null) {
+                        setState(() {
+                          filterMap = value;
+                        });
 
-              switch (index) {
-                case 1:
-                  _appointmentFilterMap['isOfficeEnabled'] = '1';
-                  break;
-                case 2:
-                  _appointmentFilterMap['isVideoChatEnabled'] = '1';
-                  break;
-                case 3:
-                  _appointmentFilterMap['isOnsiteEnabled'] = '1';
-                  break;
-              }
+                        if (filterMap.length > 0) {
+                          setState(() {
+                            _providerFuture =
+                                api.providerFilter(token, filterMap);
+                          });
+                        }
+                      }
+                    });
+                  },
+                  child: Container(
+                    height: 42,
+                    width: 96,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: AppColors.windsor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        'filter_icon'.imageIcon(),
+                        SizedBox(width: 5),
+                        Text(
+                          _appointmentType,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              : _appointmentTypeWidget(
+                  _appointmentType,
+                  _selectedAppointmentType == index.toString(),
+                  onClick: () {
+                    if (this._selectedAppointmentType == index.toString())
+                      return;
 
-              SharedPref().getToken().then((token) {
-                setState(() {
-                  _providerFuture =
-                      api.providerFilter(token, _appointmentFilterMap);
-                });
-              });
-            },
-          );
+                    setState(() {
+                      this._selectedAppointmentType = index.toString();
+                      _appointmentFilterMap.clear();
+                    });
+
+                    if (filterMap != null && filterMap.length > 0) {
+                      _appointmentFilterMap.addAll(filterMap);
+                    } else {
+                      _appointmentFilterMap.addAll(_projectResponse);
+                    }
+
+                    switch (index) {
+                      case 1:
+                        _appointmentFilterMap['isOfficeEnabled'] = '1';
+                        break;
+                      case 2:
+                        _appointmentFilterMap['isVideoChatEnabled'] = '1';
+                        break;
+                      case 3:
+                        _appointmentFilterMap['isOnsiteEnabled'] = '1';
+                        break;
+                    }
+
+                    SharedPref().getToken().then((token) {
+                      setState(() {
+                        _providerFuture =
+                            api.providerFilter(token, _appointmentFilterMap);
+                      });
+                    });
+                  },
+                );
         },
       ),
     );
