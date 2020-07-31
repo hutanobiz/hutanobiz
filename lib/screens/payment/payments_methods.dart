@@ -40,13 +40,19 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
   List _insuranceList = [];
 
+  bool isPayment = false;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
     _container = InheritedContainer.of(context);
 
-    if (widget.isPayment) {
+    if (widget.isPayment != null) {
+      isPayment = widget.isPayment;
+    }
+
+    if (isPayment) {
       Map _providerData = _container.getProviderData();
       Map _servicesMap = _container.selectServiceMap;
 
@@ -98,14 +104,14 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackground(
         isLoading: _isLoading,
-        title: widget.isPayment ? "Select Payment Methods" : "Payment Methods",
-        isAddBack: !widget.isPayment,
-        addBackButton: widget.isPayment,
+        title: isPayment ? "Select Payment Methods" : "Payment Methods",
+        isAddBack: !isPayment,
+        addBackButton: isPayment,
         color: Colors.white,
         child: Stack(
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(bottom: widget.isPayment ? 60.0 : 0),
+              margin: EdgeInsets.only(bottom: isPayment ? 60.0 : 0),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,7 +119,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                 ),
               ),
             ),
-            !widget.isPayment
+            !isPayment
                 ? Container()
                 : Align(
                     alignment: FractionalOffset.bottomRight,
@@ -187,7 +193,10 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
     _widgetList.add(SizedBox(height: 40.0));
 
     _widgetList.add(Text(
-      "Your Insurance",
+      isPayment &&
+              (_providerInsuranceList == null || _providerInsuranceList.isEmpty)
+          ? 'Insurance'
+          : "Your Insurance",
       style: TextStyle(
         fontSize: 14.0,
         fontWeight: FontWeight.w500,
@@ -197,11 +206,32 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
     _widgetList.add(SizedBox(height: 12.0));
 
-    _widgetList.add(_insuranceFutureWidget());
+    _widgetList.add(isPayment &&
+            (_providerInsuranceList == null || _providerInsuranceList.isEmpty)
+        ? Container()
+        : _insuranceFutureWidget());
 
-    _widgetList.add(SizedBox(height: 10.0));
+    _widgetList.add(isPayment &&
+            (_providerInsuranceList == null || _providerInsuranceList.isEmpty)
+        ? Container()
+        : SizedBox(height: 10.0));
 
-    _widgetList.add(addCard("ic_upload_insurance", "Upload Insurance Card"));
+    _widgetList.add(isPayment &&
+            (_providerInsuranceList == null || _providerInsuranceList.isEmpty)
+        ? Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: Text(
+              "This doctor does not accept any insurance.",
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 14.0,
+                color: Colors.grey[500],
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          )
+        : addCard("ic_upload_insurance", "Upload Insurance Card"));
 
     _widgetList.add(SizedBox(height: 40.0));
 
@@ -216,7 +246,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
   Widget _insuranceFutureWidget() {
     Map _insuranceViewMap = {};
-    _insuranceViewMap['isPayment'] = widget.isPayment;
+    _insuranceViewMap['isPayment'] = isPayment;
     _insuranceViewMap['isViewDetail'] = true;
 
     return FutureBuilder<dynamic>(
@@ -299,7 +329,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                               Expanded(
                                 child: Align(
                                   alignment: Alignment.centerRight,
-                                  child: !widget.isPayment
+                                  child: !isPayment
                                       ? Icon(
                                           Icons.arrow_forward_ios,
                                           color: Colors.grey,
@@ -339,7 +369,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                               )
                             ],
                           ).onClick(
-                            onTap: widget.isPayment
+                            onTap: isPayment
                                 ? null
                                 : () {
                                     _insuranceViewMap['insurance'] =
@@ -366,13 +396,13 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                   },
                           ),
                         ),
-                        (widget.isPayment &&
+                        (isPayment &&
                                 _providerInsuranceList.contains(
                                     _insuranceList[index]["insuranceId"]
                                         .toString()))
                             ? Container()
                             : SizedBox(height: 3),
-                        (widget.isPayment &&
+                        (isPayment &&
                                 !_providerInsuranceList.contains(
                                     _insuranceList[index]["insuranceId"]
                                         .toString()))
@@ -447,7 +477,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                     ),
                   ],
                 ),
-          widget.isPayment == false
+          isPayment == false
               ? Container()
               : Expanded(
                   child: Align(
@@ -474,7 +504,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
     return FlatButton.icon(
       onPressed: () {
         Map _insuranceMap = {};
-        _insuranceMap['isPayment'] = widget.isPayment;
+        _insuranceMap['isPayment'] = isPayment;
         _insuranceMap['insuranceList'] = _insuranceList;
 
         title.toLowerCase().contains("insurance")
