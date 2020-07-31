@@ -6,6 +6,7 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/strings.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
@@ -389,11 +390,8 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
               showTitleActions: true,
               onConfirm: (date) {
                 if (date != null)
-                  documentDateController.text = DateFormat('dd').format(date) +
-                      ' ' +
-                      DateFormat('MMMM').format(date) +
-                      ' ' +
-                      date.year.toString();
+                  documentDateController.text =
+                      DateFormat(Strings.datePattern).format(date);
               },
               currentTime: DateTime.now(),
               maxTime: DateTime.now(),

@@ -12,6 +12,7 @@ import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/dashboard/choose_location_screen.dart';
+import 'package:hutano/strings.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/pin_info.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
@@ -289,9 +290,9 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
     if (response["trackingStatus"] != null &&
         response["trackingStatus"]["treatmentStarted"] != null) {
       dateTime = "On " +
-          response["trackingStatus"]["treatmentStarted"]
-              .toString()
-              .formatDate(dateFormat: "EEEE, dd MMMM, HH:mm");
+          response["trackingStatus"]["treatmentStarted"].toString().formatDate(
+                dateFormat: Strings.dateTimePattern,
+              );
     }
 
     if (response["doctor"] != null) {
@@ -707,7 +708,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                 response["trackingStatus"]["patientStartDriving"] != null
                     ? response["trackingStatus"]["patientStartDriving"]
                         .toString()
-                        .formatDate(dateFormat: "dd/M/yyyy, HH:mm")
+                        .formatDate(dateFormat: Strings.dateTimePattern)
                     : "---",
                 false),
         response["trackingStatus"]["patientArrived"] == null
@@ -720,7 +721,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                 response["trackingStatus"]["patientArrived"] != null
                     ? response["trackingStatus"]["patientArrived"]
                         .toString()
-                        .formatDate(dateFormat: "dd/M/yyyy, HH:mm")
+                        .formatDate(dateFormat: Strings.dateTimePattern)
                     : "---",
                 false),
         response["trackingStatus"]["treatmentStarted"] == null
@@ -733,7 +734,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                 response["trackingStatus"]["treatmentStarted"] != null
                     ? response["trackingStatus"]["treatmentStarted"]
                         .toString()
-                        .formatDate(dateFormat: "dd/M/yyyy, HH:mm")
+                        .formatDate(dateFormat: Strings.dateTimePattern)
                     : "---",
                 false),
         response["trackingStatus"]["providerTreatmentEnded"] == null
@@ -746,7 +747,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                 response["trackingStatus"]["providerTreatmentEnded"] != null
                     ? response["trackingStatus"]["providerTreatmentEnded"]
                         .toString()
-                        .formatDate(dateFormat: "dd/M/yyyy, HH:mm")
+                        .formatDate(dateFormat: Strings.dateTimePattern)
                     : "---",
                 false,
               ),
@@ -760,7 +761,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                 response["trackingStatus"]["patientTreatmentEnded"] != null
                     ? response["trackingStatus"]["patientTreatmentEnded"]
                         .toString()
-                        .formatDate(dateFormat: "dd/M/yyyy, HH:mm")
+                        .formatDate(dateFormat: Strings.dateTimePattern)
                     : "---",
                 true,
               ),

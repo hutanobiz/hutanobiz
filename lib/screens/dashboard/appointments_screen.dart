@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/strings.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
@@ -418,10 +419,9 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                     Expanded(
                       child: Text(
                         (response['date'] != null
-                                ? DateFormat('EEEE, dd MMMM, ')
-                                    .format(DateTime.parse(response['date'])
-                                        .toLocal())
-                                    .toString()
+                                ? response['date'].toString().formatDate(
+                                      dateFormat: "${Strings.datePattern}, ",
+                                    )
                                 : "---") +
                             (response["fromTime"] != null
                                 ? response["fromTime"]

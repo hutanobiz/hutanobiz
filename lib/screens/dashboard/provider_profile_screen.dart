@@ -666,12 +666,9 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                   reviewerName:
                       response["user"]["fullName"]?.toString() ?? '---',
                   avatar: response["user"]["avatar"],
-                  reviewDate: DateFormat(
-                    'dd MMMM yyyy',
-                  )
-                      .format(DateTime.parse(
-                          response["user"]["updatedAt"]?.toString() ?? "0"))
-                      .toString(),
+                  reviewDate: response["user"]["updatedAt"] == null
+                      ? '---'
+                      : response["user"]["updatedAt"].toString().formatDate(),
                   reviewerRating:
                       double.parse(response["rating"]?.toString() ?? "0"),
                   reviewText: response["review"]?.toString() ?? "---",

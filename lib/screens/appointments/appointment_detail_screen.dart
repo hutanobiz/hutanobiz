@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/strings.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
@@ -341,7 +342,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         divider(topPadding: 18.0),
         dateTimeWidget(
             _providerData['date'].toString().formatDate(
-                  dateFormat: "EEEE, dd MMMM, ",
+                  dateFormat: "${Strings.datePattern}, ",
                 ),
             _providerData["fromTime"].toString(),
             _providerData["toTime"].toString()),

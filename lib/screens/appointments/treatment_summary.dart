@@ -113,7 +113,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                 initiated = appointmentData["trackingStatus"]
                             ["treatmentStarted"]
                         .toString()
-                        .formatDate(dateFormat: 'dd MMMM yyyy') +
+                        .formatDate() +
                     ' on ' +
                     appointmentData["trackingStatus"]["treatmentStarted"]
                         .toString()
@@ -126,7 +126,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                 completed = appointmentData["trackingStatus"]
                             ["patientTreatmentEnded"]
                         .toString()
-                        .formatDate(dateFormat: 'dd MMMM yyyy') +
+                        .formatDate() +
                     ' on ' +
                     appointmentData["trackingStatus"]["patientTreatmentEnded"]
                         .toString()
@@ -446,9 +446,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                 "Follow-up Date",
                 followUpMap["date"] == null
                     ? "---"
-                    : DateFormat(
-                        'dd MMMM yyyy',
-                      ).format(followUpMap["date"].toLocal()).toString(),
+                    : followUpMap["date"].toString().formatDate(),
                 "ic_calendar",
               ),
               followUpWidget(
