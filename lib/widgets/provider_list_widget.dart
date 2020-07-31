@@ -27,7 +27,8 @@ class ProviderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String name = "---",
+    String nameTitle = "Dr. ",
+        name = "---",
         avatar,
         fee = "---",
         practicingSince = "---",
@@ -50,12 +51,18 @@ class ProviderWidget extends StatelessWidget {
 
     if (data['userId'] is Map) {
       if (data["userId"] != null) {
-        name = data["userId"]["fullName"]?.toString() ?? "---";
+        nameTitle = data["userId"]["title"]?.toString() ?? 'Dr. ';
+        name = nameTitle + data["userId"]["fullName"]?.toString() ?? "---";
         avatar = data["userId"]["avatar"]?.toString();
       }
     } else if (data["User"] != null && data["User"].length > 0) {
-      name = data["User"][0]["fullName"]?.toString() ?? "---";
+      nameTitle = data["User"][0]["title"]?.toString() ?? 'Dr. ';
+      name = nameTitle + data["User"][0]["fullName"]?.toString() ?? "---";
       avatar = data["User"][0]["avatar"]?.toString();
+    }
+
+    if (data["education"] != null && data["education"].isNotEmpty) {
+      name += ', ' + data["education"][0]["degree"]?.toString() ?? '---̥';
     }
 
     practicingSince = data["practicingSince"] != null
