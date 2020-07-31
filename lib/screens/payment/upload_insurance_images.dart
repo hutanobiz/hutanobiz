@@ -46,6 +46,7 @@ class _UploadInsuranceImagesScreenState
   dynamic uploadedInsurance;
 
   String token;
+  bool isFromRegister = false;
 
   @override
   void initState() {
@@ -55,6 +56,10 @@ class _UploadInsuranceImagesScreenState
 
     if (widget.insuranceViewMap != null) {
       _insuranceViewMap = widget.insuranceViewMap;
+
+      if (_insuranceViewMap['isFromRegister'] != null) {
+        isFromRegister = _insuranceViewMap['isFromRegister'];
+      }
 
       if (_insuranceViewMap['insurance'] != null) {
         if (_insuranceViewMap['insurance']['insuranceName'] != null) {
@@ -159,8 +164,13 @@ class _UploadInsuranceImagesScreenState
     if (frontImagePath == null) {
       Widgets.showToast("Please upload front insurance card image");
     } else {
-      Navigator.popUntil(
-          context, ModalRoute.withName(Routes.paymentMethodScreen));
+      if (isFromRegister) {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            Routes.dashboardScreen, (Route<dynamic> route) => false);
+      } else {
+        Navigator.popUntil(
+            context, ModalRoute.withName(Routes.paymentMethodScreen));
+      }
     }
   }
 

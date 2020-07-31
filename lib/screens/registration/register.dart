@@ -711,8 +711,15 @@ class _SignUpFormState extends State<Register> {
 
           Widgets.showToast("Profile created successfully");
 
+          Map _insuranceMap = {};
+          _insuranceMap['isPayment'] = false;
+          _insuranceMap['isFromRegister'] = true;
+
           Navigator.of(context).pushNamedAndRemoveUntil(
-              Routes.dashboardScreen, (Route<dynamic> route) => false);
+            Routes.insuranceListScreen,
+            (Route<dynamic> route) => false,
+            arguments: _insuranceMap,
+          );
         }
 
         setLoading(false);

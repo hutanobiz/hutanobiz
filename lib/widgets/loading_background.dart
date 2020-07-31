@@ -75,7 +75,8 @@ class LoadingBackground extends StatelessWidget {
                               ),
                             ),
                           ),
-                          if (rightButtonText != null)
+                          if (rightButtonText != null &&
+                              onRightButtonTap != null)
                             InkWell(
                               onTap: onRightButtonTap,
                               child: Padding(

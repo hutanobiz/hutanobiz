@@ -26,9 +26,17 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
   List _alreadyAddedInsuranceList = [];
   List _notAcceptednsuranceList = [];
 
+  bool isFromRegister = false;
+
   @override
   void initState() {
     super.initState();
+
+    if (widget.insuranceMap['isFromRegister'] != null) {
+      isFromRegister = widget.insuranceMap['isFromRegister'];
+    }
+
+    _insuranceViewMap['isFromRegister'] = isFromRegister;
 
     _insuranceViewMap['isPayment'] = widget.insuranceMap['isPayment'];
     _insuranceViewMap['isViewDetail'] = false;
@@ -62,9 +70,18 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
       resizeToAvoidBottomInset: true,
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackground(
-        title: "Insurances",
+        title: !_insuranceViewMap['isPayment'] && isFromRegister
+            ? 'Add Insurance'
+            : "Insurances",
         color: Colors.white,
         padding: EdgeInsets.zero,
+        rightButtonText: 'Skip',
+        onRightButtonTap: !_insuranceViewMap['isPayment'] && isFromRegister
+            ? () {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    Routes.dashboardScreen, (Route<dynamic> route) => false);
+              }
+            : null,
         child: Stack(
           children: <Widget>[
             Padding(
@@ -79,7 +96,7 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
                 margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                 width: MediaQuery.of(context).size.width,
                 child: FancyButton(
-                  title: 'Save',
+                  title: 'Next',
                   onPressed: () {
                     if (_radioValue == null) {
                       Widgets.showToast('Please select an insurance');
