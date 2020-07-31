@@ -22,8 +22,9 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
   ApiBaseHelper _api = ApiBaseHelper();
   InheritedContainerState _container;
   Map _insuranceViewMap = {};
-  List _selectedInsuranceList = [];
-  List _alreadyInsuranceList = [];
+  List _providerInsuranceList = [];
+  List _alreadyAddedInsuranceList = [];
+  List _notAcceptednsuranceList = [];
 
   @override
   void initState() {
@@ -33,11 +34,11 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
     _insuranceViewMap['isViewDetail'] = false;
 
     for (dynamic insurance in widget.insuranceMap['insuranceList']) {
-      _alreadyInsuranceList.add(insurance['insuranceId'].toString());
+      _alreadyAddedInsuranceList.add(insurance['insuranceId'].toString());
     }
 
     setState(() {
-      _insuranceFuture = _api.getInsuranceList().timeout(Duration(seconds: 10));
+      _insuranceFuture = _api.getInsuranceList();
     });
   }
 
@@ -48,7 +49,7 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
     _container = InheritedContainer.of(context);
 
     if (_insuranceViewMap['isPayment']) {
-      _selectedInsuranceList = _container.providerInsuranceList;
+      _providerInsuranceList = _container.providerInsuranceList;
     }
   }
 
@@ -100,19 +101,102 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
       future: _insuranceFuture,
       builder: (_, snapshot) {
         if (snapshot.hasData) {
-          List insuranceList = snapshot.data;
+          List insuranceList = [];
 
-          return ListView.separated(
-            separatorBuilder: (BuildContext context, int index) =>
-                SizedBox(height: 15),
+          if (insuranceList.isNotEmpty) insuranceList.clear();
+          if (_notAcceptednsuranceList.isNotEmpty)
+            _notAcceptednsuranceList.clear();
+
+          for (dynamic insurance in snapshot.data) {
+            if (_insuranceViewMap['isPayment']) {
+              if (_providerInsuranceList
+                  .contains(insurance['_id'].toString())) {
+                insuranceList.add(insurance);
+              } else {
+                _notAcceptednsuranceList.add(insurance);
+              }
+            } else {
+              insuranceList.add(insurance);
+            }
+
+            if (_alreadyAddedInsuranceList
+                .contains(insurance['_id'].toString())) {
+              insuranceList.remove(insurance);
+            }
+          }
+
+          return Padding(
             padding: const EdgeInsets.only(bottom: 50),
-            itemCount: insuranceList.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: insuranceWidget(insuranceList[index], index),
-              );
-            },
+            child: SingleChildScrollView(
+              physics: ClampingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  !_insuranceViewMap['isPayment']
+                      ? Container()
+                      : Padding(
+                          padding: const EdgeInsets.fromLTRB(4, 4, 4, 20),
+                          child: Text(
+                            'Insurance accepted by Provider',
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                  ListView.separated(
+                    physics: ClampingScrollPhysics(),
+                    separatorBuilder: (BuildContext context, int index) =>
+                        SizedBox(height: 15),
+                    shrinkWrap: true,
+                    itemCount: insuranceList.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(4, 0, 4, 4),
+                        child: insuranceWidget(
+                          insuranceList[index],
+                          index,
+                          isAcceptedByProvider: true,
+                        ),
+                      );
+                    },
+                  ),
+                  !_insuranceViewMap['isPayment']
+                      ? Container()
+                      : Padding(
+                          padding: const EdgeInsets.fromLTRB(4, 30, 4, 4),
+                          child: Text(
+                            'Insurance not accepted by Provider',
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                  !_insuranceViewMap['isPayment']
+                      ? Container()
+                      : ListView.separated(
+                          physics: ClampingScrollPhysics(),
+                          separatorBuilder: (BuildContext context, int index) =>
+                              SizedBox(height: 10),
+                          shrinkWrap: true,
+                          itemCount: _notAcceptednsuranceList.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.fromLTRB(4, 6, 4, 4),
+                              child: insuranceWidget(
+                                _notAcceptednsuranceList[index],
+                                index,
+                                isAcceptedByProvider: false,
+                              ),
+                            );
+                          },
+                        ),
+                ],
+              ),
+            ),
           );
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
@@ -124,7 +208,8 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
     );
   }
 
-  Widget insuranceWidget(dynamic insurance, int index) {
+  Widget insuranceWidget(dynamic insurance, int index,
+      {bool isAcceptedByProvider}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -148,65 +233,70 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
               ),
             ),
             SizedBox(width: 10),
-            _insuranceViewMap['isPayment']
-                ? !_selectedInsuranceList.contains(insurance["_id"].toString())
-                    ? Container()
-                    : checkBox(index, insurance)
-                : checkBox(index, insurance),
+            // _insuranceViewMap['isPayment']
+            //     ? !_providerInsuranceList.contains(insurance["_id"].toString())
+            //         ? Container()
+            //         : checkBox(index, insurance)
+            //     :
+            !isAcceptedByProvider ? Container() : checkBox(index, insurance),
           ],
         ),
-        _insuranceViewMap['isPayment']
-            ? _selectedInsuranceList.contains(insurance["_id"].toString()) &&
-                    !_alreadyInsuranceList.contains(insurance["_id"].toString())
-                ? Container()
-                : insuranceTextWidget(insurance)
-            : !_selectedInsuranceList.contains(insurance["_id"].toString()) &&
-                    !_alreadyInsuranceList.contains(insurance["_id"].toString())
-                ? Container()
-                : insuranceTextWidget(insurance)
+        // _insuranceViewMap['isPayment']
+        //     ? _providerInsuranceList.contains(insurance["_id"].toString()) &&
+        //             !_alreadyAddedInsuranceList
+        //                 .contains(insurance["_id"].toString())
+        //         ? Container()
+        //         : insuranceTextWidget(insurance)
+        //     : !_providerInsuranceList.contains(insurance["_id"].toString()) &&
+        //             !_alreadyAddedInsuranceList
+        //                 .contains(insurance["_id"].toString())
+        //         ? Container()
+        //         : insuranceTextWidget(insurance)
       ],
     );
   }
 
-  Widget insuranceTextWidget(dynamic insurance) => Padding(
-        padding: const EdgeInsets.only(top: 5),
-        child: Text(
-          _alreadyInsuranceList.contains(insurance["_id"].toString())
-              ? 'Insurance already added'
-              : "Insurance not accepted by the provider",
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontSize: 12.0,
-            color: Colors.grey[500],
-            fontWeight: FontWeight.w600,
-          ),
+  // Widget insuranceTextWidget(dynamic insurance) => Padding(
+  //       padding: const EdgeInsets.only(top: 5),
+  //       child: Text(
+  //         _alreadyAddedInsuranceList.contains(insurance["_id"].toString())
+  //             ? 'Insurance already added'
+  //             : "Insurance not accepted by the provider",
+  //         maxLines: 2,
+  //         overflow: TextOverflow.ellipsis,
+  //         style: TextStyle(
+  //           fontSize: 12.0,
+  //           color: Colors.grey[500],
+  //           fontWeight: FontWeight.w600,
+  //         ),
+  //       ),
+  //     );
+
+  Widget checkBox(int index, dynamic insurance) =>
+      // _alreadyAddedInsuranceList.contains(insurance["_id"].toString())
+      //     ? Container()
+      //     :
+      Expanded(
+        child: Radio(
+          activeColor: AppColors.persian_blue,
+          value: index,
+          groupValue: _radioValue,
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          onChanged: _insuranceAlreadyAdded(insurance),
         ),
       );
 
-  Widget checkBox(int index, dynamic insurance) =>
-      _alreadyInsuranceList.contains(insurance["_id"].toString())
-          ? Container()
-          : Expanded(
-              child: Radio(
-                activeColor: AppColors.persian_blue,
-                value: index,
-                groupValue: _radioValue,
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                onChanged: _insuranceAlreadyAdded(insurance),
-              ),
-            );
-
   Function _insuranceAlreadyAdded(dynamic insurance) {
-    return _alreadyInsuranceList.contains(insurance["_id"].toString())
-        ? null
-        : (value) {
-            setState(
-              () => _radioValue = value,
-            );
+    return
+        // _alreadyAddedInsuranceList.contains(insurance["_id"].toString())
+        //     ? null
+        //     :
+        (value) {
+      setState(
+        () => _radioValue = value,
+      );
 
-            _container.setInsuranceData(
-                "insuranceId", insurance["_id"].toString());
-          };
+      _container.setInsuranceData("insuranceId", insurance["_id"].toString());
+    };
   }
 }
