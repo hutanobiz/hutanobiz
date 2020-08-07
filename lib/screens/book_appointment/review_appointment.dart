@@ -341,6 +341,43 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           }
         }
 
+        if (_consentToTreatMap["imagesList"] != null &&
+            _consentToTreatMap["imagesList"].length > 0) {
+          List<Map> imagesList = _consentToTreatMap["imagesList"];
+          if (imagesList != null && imagesList.length > 0) {
+            for (int i = 0; i < imagesList.length; i++) {
+              request.fields["medicalImages[$i][images]"] =
+                  imagesList[i]["images"];
+              request.fields["medicalImages[$i][name]"] = imagesList[i]["name"];
+            }
+          }
+        }
+
+        if (_consentToTreatMap["docsList"] != null &&
+            _consentToTreatMap["docsList"].length > 0) {
+          List<Map> imagesList = _consentToTreatMap["docsList"];
+          if (imagesList != null && imagesList.length > 0) {
+            for (int i = 0; i < imagesList.length; i++) {
+              request.fields["medicalDocuments[$i][type]"] =
+                  imagesList[i]["type"];
+              request.fields["medicalDocuments[$i][name]"] =
+                  imagesList[i]["name"];
+              request.fields["medicalDocuments[$i][medicalDocuments]"] =
+                  imagesList[i]["medicalDocuments"];
+            }
+          }
+        }
+
+        if (_consentToTreatMap["medicalHistory"] != null &&
+            _consentToTreatMap["medicalHistory"].length > 0) {
+          for (int i = 0;
+              i < _consentToTreatMap["medicalHistory"].length;
+              i++) {
+            request.fields["medicalHistory[$i]"] =
+                _consentToTreatMap["medicalHistory"][i];
+          }
+        }
+
         var response = await request.send();
         final int statusCode = response.statusCode;
         log("Status code: $statusCode");

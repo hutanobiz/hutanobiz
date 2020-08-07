@@ -8,6 +8,7 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
+import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -32,6 +33,10 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
 
   String imageName = '';
   bool isBottomButtonsShow = true;
+
+  List<Map> _selectedImagesList = [];
+
+  InheritedContainerState _container;
 
   @override
   void initState() {
@@ -74,6 +79,13 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _container = InheritedContainer.of(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor:
@@ -84,8 +96,13 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
         isAddAppBar: isBottomButtonsShow,
         isAddBack: false,
         addBottomArrows: isBottomButtonsShow,
-        onForwardTap: () =>
-            Navigator.of(context).pushNamed(Routes.uploadDocumentsScreen),
+        onForwardTap: () {
+          if (_selectedImagesList != null && _selectedImagesList.length > 0) {
+            _container.setConsentToTreatData("imagesList", _selectedImagesList);
+          }
+
+          Navigator.of(context).pushNamed(Routes.uploadDocumentsScreen);
+        },
         color: Colors.white,
         padding: EdgeInsets.fromLTRB(20, 20, 20, isBottomButtonsShow ? 90 : 20),
         child: Stack(
@@ -175,44 +192,73 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                         fit: BoxFit.cover,
                       ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: SizedBox(
-                    height: 22,
-                    width: 22,
-                    child: RawMaterialButton(
-                      onPressed: () {
-                        setLoading(true);
-
-                        _api
-                            .deletePatientImage(
-                          token,
-                          content['_id'],
-                        )
-                            .whenComplete(() {
-                          setLoading(false);
-                          setState(() => imagesList.remove(content));
-                        }).futureError((error) {
-                          setLoading(false);
-                          error.toString().debugLog();
-                        });
-                      },
-                      child: Icon(
-                        Icons.close,
-                        color: Colors.grey,
-                        size: 16.0,
+              isBottomButtonsShow
+                  ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: SizedBox(
+                          height: 22,
+                          width: 22,
+                          child: Checkbox(
+                            value: _selectedImagesList.contains(content),
+                            activeColor: AppColors.persian_blue,
+                            onChanged: (value) {
+                              if (value) {
+                                if (!_selectedImagesList.contains(content)) {
+                                  setState(() {
+                                    _selectedImagesList.add(content);
+                                  });
+                                }
+                              } else {
+                                setState(() {
+                                  _selectedImagesList
+                                      .remove(content['_id'].toString());
+                                });
+                              }
+                            },
+                          ),
+                        ),
                       ),
-                      shape: CircleBorder(),
-                      elevation: 2.0,
-                      fillColor: Colors.white,
-                      constraints:
-                          const BoxConstraints(minWidth: 22.0, minHeight: 22.0),
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: SizedBox(
+                          height: 22,
+                          width: 22,
+                          child: RawMaterialButton(
+                            onPressed: () {
+                              setLoading(true);
+
+                              _api
+                                  .deletePatientImage(
+                                token,
+                                content['_id'],
+                              )
+                                  .whenComplete(() {
+                                setLoading(false);
+                                setState(() => imagesList.remove(content));
+                              }).futureError((error) {
+                                setLoading(false);
+                                error.toString().debugLog();
+                              });
+                            },
+                            child: Icon(
+                              Icons.close,
+                              color: Colors.grey,
+                              size: 16.0,
+                            ),
+                            shape: CircleBorder(),
+                            elevation: 2.0,
+                            fillColor: Colors.white,
+                            constraints: const BoxConstraints(
+                                minWidth: 22.0, minHeight: 22.0),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
@@ -239,7 +285,17 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                       ),
                     ],
                   ),
-                ),
+                ).onClick(onTap: () {
+                  if (!_selectedImagesList.contains(content)) {
+                    setState(() {
+                      _selectedImagesList.add(content);
+                    });
+                  } else {
+                    setState(() {
+                      _selectedImagesList.remove(content);
+                    });
+                  }
+                }),
               ),
             ],
           ),
@@ -412,7 +468,6 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                             setLoading(false);
                           });
                         });
-                        
                       }).futureError((error) => setLoading(false));
                     }
                   },

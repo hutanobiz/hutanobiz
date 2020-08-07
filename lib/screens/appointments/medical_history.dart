@@ -5,6 +5,7 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
+import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/widgets.dart';
 
@@ -30,6 +31,8 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
   bool _isLoading = false;
 
   TextEditingController _otherDiseaseController = TextEditingController();
+
+  InheritedContainerState _container;
 
   @override
   void initState() {
@@ -65,6 +68,13 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
         error.toString().debugLog();
       });
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _container = InheritedContainer.of(context);
   }
 
   @override
@@ -251,6 +261,11 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
             }
 
             if (isBottomButtonsShow) {
+              if (_diseaseList != null && _diseaseList.length > 0) {
+                _container.setConsentToTreatData(
+                    "medicalHistory", _diseaseList);
+              }
+
               Navigator.of(context).pushNamed(Routes.seekingCureScreen);
             }
           }

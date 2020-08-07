@@ -10,6 +10,7 @@ import 'package:hutano/strings.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
+import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -50,6 +51,10 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
   String documentName = '';
   bool isBottomButtonsShow = true;
 
+  InheritedContainerState _container;
+
+  List<Map> _selectedDocsList = [];
+
   @override
   void initState() {
     super.initState();
@@ -69,6 +74,13 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
     });
 
     getMedicalDocuments();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _container = InheritedContainer.of(context);
   }
 
   @override
@@ -118,6 +130,10 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
         isAddBack: false,
         addBottomArrows: isBottomButtonsShow,
         onForwardTap: () {
+          if (_selectedDocsList != null && _selectedDocsList.length > 0) {
+            _container.setConsentToTreatData("docsList", _selectedDocsList);
+          }
+
           Navigator.of(context).pushNamed(
             Routes.paymentMethodScreen,
             arguments: true,
@@ -214,46 +230,75 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                             fit: BoxFit.cover,
                           )),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: SizedBox(
-                    height: 22,
-                    width: 22,
-                    child: RawMaterialButton(
-                      onPressed: () {
-                        setLoading(true);
-
-                        _api
-                            .deletePatientMedicalDocs(
-                          token,
-                          content['_id'],
-                        )
-                            .whenComplete(() {
-                          setLoading(false);
-                          setState(() => docsList.remove(content));
-                        }).futureError((error) {
-                          setLoading(false);
-                          error.toString().debugLog();
-                        });
-                      },
-                      child: Icon(
-                        Icons.close,
-                        color: Colors.grey,
-                        size: 16.0,
+              isBottomButtonsShow
+                  ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: SizedBox(
+                          height: 22,
+                          width: 22,
+                          child: Checkbox(
+                            value: _selectedDocsList.contains(content),
+                            activeColor: AppColors.persian_blue,
+                            onChanged: (value) {
+                              if (value) {
+                                if (!_selectedDocsList.contains(content)) {
+                                  setState(() {
+                                    _selectedDocsList.add(content);
+                                  });
+                                }
+                              } else {
+                                setState(() {
+                                  _selectedDocsList
+                                      .remove(content['_id'].toString());
+                                });
+                              }
+                            },
+                          ),
+                        ),
                       ),
-                      shape: CircleBorder(),
-                      elevation: 2.0,
-                      fillColor: Colors.white,
-                      constraints: const BoxConstraints(
-                        minWidth: 22.0,
-                        minHeight: 22.0,
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: SizedBox(
+                          height: 22,
+                          width: 22,
+                          child: RawMaterialButton(
+                            onPressed: () {
+                              setLoading(true);
+
+                              _api
+                                  .deletePatientMedicalDocs(
+                                token,
+                                content['_id'],
+                              )
+                                  .whenComplete(() {
+                                setLoading(false);
+                                setState(() => docsList.remove(content));
+                              }).futureError((error) {
+                                setLoading(false);
+                                error.toString().debugLog();
+                              });
+                            },
+                            child: Icon(
+                              Icons.close,
+                              color: Colors.grey,
+                              size: 16.0,
+                            ),
+                            shape: CircleBorder(),
+                            elevation: 2.0,
+                            fillColor: Colors.white,
+                            constraints: const BoxConstraints(
+                              minWidth: 22.0,
+                              minHeight: 22.0,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
@@ -304,6 +349,20 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                       SizedBox(width: 5.0),
                     ],
                   ),
+                ).onClick(
+                  onTap: () {
+                    _selectedDocsList.toString().debugLog();
+
+                    if (!_selectedDocsList.contains(content)) {
+                      setState(() {
+                        _selectedDocsList.add(content);
+                      });
+                    } else {
+                      setState(() {
+                        _selectedDocsList.remove(content);
+                      });
+                    }
+                  },
                 ),
               ),
             ],
