@@ -20,7 +20,7 @@ import 'package:intl/intl.dart';
 class UploadDocumentsScreen extends StatefulWidget {
   UploadDocumentsScreen({Key key, this.isBottomButtonsShow}) : super(key: key);
 
-  final bool isBottomButtonsShow;
+  final Map isBottomButtonsShow;
 
   @override
   _UploadDocumentsScreenState createState() => _UploadDocumentsScreenState();
@@ -50,6 +50,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
 
   String documentName = '';
   bool isBottomButtonsShow = true;
+  bool isFromAppointment = false;
 
   InheritedContainerState _container;
 
@@ -60,10 +61,26 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
     super.initState();
 
     if (widget.isBottomButtonsShow != null) {
-      isBottomButtonsShow = widget.isBottomButtonsShow;
-    }
+      if (widget.isBottomButtonsShow['isBottomButtonsShow'] != null) {
+        isBottomButtonsShow = widget.isBottomButtonsShow['isBottomButtonsShow'];
+      }
+      if (widget.isBottomButtonsShow['isFromAppointment'] != null) {
+        isFromAppointment = widget.isBottomButtonsShow['isFromAppointment'];
+      }
 
-    setLoading(true);
+      if (isFromAppointment) {
+        if (widget.isBottomButtonsShow['medicalDocuments'] != null &&
+            widget.isBottomButtonsShow['medicalDocuments'].length > 0) {
+          for (dynamic docs in widget.isBottomButtonsShow['medicalDocuments']) {
+            docsList.add(docs);
+          }
+        }
+      }
+    }
+    if (!isFromAppointment) {
+      setLoading(true);
+      getMedicalDocuments();
+    }
 
     documentTypeController.addListener(() {
       setState(() {});
@@ -72,8 +89,6 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
     documentDateController.addListener(() {
       setState(() {});
     });
-
-    getMedicalDocuments();
   }
 
   @override
@@ -149,18 +164,20 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                 children: widgetList(),
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: SizedBox(
-                height: 55.0,
-                child: FancyButton(
-                  title: "Please Upload Docs",
-                  buttonIcon: "ic_upload",
-                  buttonColor: AppColors.windsor,
-                  onPressed: showPickerDialog,
-                ),
-              ),
-            ),
+            isFromAppointment
+                ? Container()
+                : Align(
+                    alignment: Alignment.bottomCenter,
+                    child: SizedBox(
+                      height: 55.0,
+                      child: FancyButton(
+                        title: "Please Upload Docs",
+                        buttonIcon: "ic_upload",
+                        buttonColor: AppColors.windsor,
+                        onPressed: showPickerDialog,
+                      ),
+                    ),
+                  ),
           ],
         ),
       ),
@@ -259,46 +276,48 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                         ),
                       ),
                     )
-                  : Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Align(
-                        alignment: Alignment.topRight,
-                        child: SizedBox(
-                          height: 22,
-                          width: 22,
-                          child: RawMaterialButton(
-                            onPressed: () {
-                              setLoading(true);
+                  : isFromAppointment
+                      ? Container()
+                      : Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Align(
+                            alignment: Alignment.topRight,
+                            child: SizedBox(
+                              height: 22,
+                              width: 22,
+                              child: RawMaterialButton(
+                                onPressed: () {
+                                  setLoading(true);
 
-                              _api
-                                  .deletePatientMedicalDocs(
-                                token,
-                                content['_id'],
-                              )
-                                  .whenComplete(() {
-                                setLoading(false);
-                                setState(() => docsList.remove(content));
-                              }).futureError((error) {
-                                setLoading(false);
-                                error.toString().debugLog();
-                              });
-                            },
-                            child: Icon(
-                              Icons.close,
-                              color: Colors.grey,
-                              size: 16.0,
-                            ),
-                            shape: CircleBorder(),
-                            elevation: 2.0,
-                            fillColor: Colors.white,
-                            constraints: const BoxConstraints(
-                              minWidth: 22.0,
-                              minHeight: 22.0,
+                                  _api
+                                      .deletePatientMedicalDocs(
+                                    token,
+                                    content['_id'],
+                                  )
+                                      .whenComplete(() {
+                                    setLoading(false);
+                                    setState(() => docsList.remove(content));
+                                  }).futureError((error) {
+                                    setLoading(false);
+                                    error.toString().debugLog();
+                                  });
+                                },
+                                child: Icon(
+                                  Icons.close,
+                                  color: Colors.grey,
+                                  size: 16.0,
+                                ),
+                                shape: CircleBorder(),
+                                elevation: 2.0,
+                                fillColor: Colors.white,
+                                constraints: const BoxConstraints(
+                                  minWidth: 22.0,
+                                  minHeight: 22.0,
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(

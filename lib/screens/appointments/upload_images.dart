@@ -17,7 +17,7 @@ import 'package:image_picker/image_picker.dart';
 class UploadImagesScreen extends StatefulWidget {
   UploadImagesScreen({Key key, this.isBottomButtonsShow}) : super(key: key);
 
-  final bool isBottomButtonsShow;
+  final Map isBottomButtonsShow;
 
   @override
   _UploadImagesScreenState createState() => _UploadImagesScreenState();
@@ -33,6 +33,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
 
   String imageName = '';
   bool isBottomButtonsShow = true;
+  bool isFromAppointment = false;
 
   List<Map> _selectedImagesList = [];
 
@@ -43,39 +44,55 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
     super.initState();
 
     if (widget.isBottomButtonsShow != null) {
-      isBottomButtonsShow = widget.isBottomButtonsShow;
-    }
-
-    setLoading(true);
-    imagesList.clear();
-
-    SharedPref().getToken().then((token) {
-      if (mounted) {
-        setState(() {
-          this.token = token;
-        });
+      if (widget.isBottomButtonsShow['isBottomButtonsShow'] != null) {
+        isBottomButtonsShow = widget.isBottomButtonsShow['isBottomButtonsShow'];
+      }
+      if (widget.isBottomButtonsShow['isFromAppointment'] != null) {
+        isFromAppointment = widget.isBottomButtonsShow['isFromAppointment'];
       }
 
-      _api.getPatientDocuments(token).then((value) {
-        if (value != null) {
-          setLoading(false);
-
-          if (mounted) {
-            setState(() {
-              if (value['medicalImages'] != null &&
-                  value['medicalImages'].isNotEmpty) {
-                for (dynamic images in value['medicalImages']) {
-                  imagesList.add(images);
-                }
-              }
-            });
+      if (isFromAppointment) {
+        if (widget.isBottomButtonsShow['medicalImages'] != null &&
+            widget.isBottomButtonsShow['medicalImages'].length > 0) {
+          for (dynamic images in widget.isBottomButtonsShow['medicalImages']) {
+            imagesList.add(images);
           }
         }
-      }).futureError((error) {
-        error.toString().debugLog();
-        setLoading(false);
+      }
+    }
+
+    if (!isFromAppointment) {
+      setLoading(true);
+      imagesList.clear();
+
+      SharedPref().getToken().then((token) {
+        if (mounted) {
+          setState(() {
+            this.token = token;
+          });
+        }
+
+        _api.getPatientDocuments(token).then((value) {
+          if (value != null) {
+            setLoading(false);
+
+            if (mounted) {
+              setState(() {
+                if (value['medicalImages'] != null &&
+                    value['medicalImages'].isNotEmpty) {
+                  for (dynamic images in value['medicalImages']) {
+                    imagesList.add(images);
+                  }
+                }
+              });
+            }
+          }
+        }).futureError((error) {
+          error.toString().debugLog();
+          setLoading(false);
+        });
       });
-    });
+    }
   }
 
   @override
@@ -113,18 +130,20 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                 children: widgetList(),
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: SizedBox(
-                height: 55.0,
-                child: FancyButton(
-                  title: "Please Upload images",
-                  buttonIcon: "ic_upload",
-                  buttonColor: AppColors.windsor,
-                  onPressed: showPickerDialog,
-                ),
-              ),
-            ),
+            isFromAppointment
+                ? Container()
+                : Align(
+                    alignment: Alignment.bottomCenter,
+                    child: SizedBox(
+                      height: 55.0,
+                      child: FancyButton(
+                        title: "Please Upload images",
+                        buttonIcon: "ic_upload",
+                        buttonColor: AppColors.windsor,
+                        onPressed: showPickerDialog,
+                      ),
+                    ),
+                  ),
           ],
         ),
       ),
@@ -221,44 +240,46 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                         ),
                       ),
                     )
-                  : Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Align(
-                        alignment: Alignment.topRight,
-                        child: SizedBox(
-                          height: 22,
-                          width: 22,
-                          child: RawMaterialButton(
-                            onPressed: () {
-                              setLoading(true);
+                  : isFromAppointment
+                      ? Container()
+                      : Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Align(
+                            alignment: Alignment.topRight,
+                            child: SizedBox(
+                              height: 22,
+                              width: 22,
+                              child: RawMaterialButton(
+                                onPressed: () {
+                                  setLoading(true);
 
-                              _api
-                                  .deletePatientImage(
-                                token,
-                                content['_id'],
-                              )
-                                  .whenComplete(() {
-                                setLoading(false);
-                                setState(() => imagesList.remove(content));
-                              }).futureError((error) {
-                                setLoading(false);
-                                error.toString().debugLog();
-                              });
-                            },
-                            child: Icon(
-                              Icons.close,
-                              color: Colors.grey,
-                              size: 16.0,
+                                  _api
+                                      .deletePatientImage(
+                                    token,
+                                    content['_id'],
+                                  )
+                                      .whenComplete(() {
+                                    setLoading(false);
+                                    setState(() => imagesList.remove(content));
+                                  }).futureError((error) {
+                                    setLoading(false);
+                                    error.toString().debugLog();
+                                  });
+                                },
+                                child: Icon(
+                                  Icons.close,
+                                  color: Colors.grey,
+                                  size: 16.0,
+                                ),
+                                shape: CircleBorder(),
+                                elevation: 2.0,
+                                fillColor: Colors.white,
+                                constraints: const BoxConstraints(
+                                    minWidth: 22.0, minHeight: 22.0),
+                              ),
                             ),
-                            shape: CircleBorder(),
-                            elevation: 2.0,
-                            fillColor: Colors.white,
-                            constraints: const BoxConstraints(
-                                minWidth: 22.0, minHeight: 22.0),
                           ),
                         ),
-                      ),
-                    ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(

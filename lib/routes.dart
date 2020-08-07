@@ -296,7 +296,7 @@ class Routes {
       case updateMedicalHistory:
         return _buildRoute(
           settings,
-          UpdateMedicalHistory(),
+          UpdateMedicalHistory(isBottomButtonsShow: args),
         );
         break;
       case allTitlesSpecialtesScreen:

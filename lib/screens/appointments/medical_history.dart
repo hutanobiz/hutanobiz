@@ -12,7 +12,7 @@ import 'package:hutano/widgets/widgets.dart';
 class MedicalHistoryScreen extends StatefulWidget {
   MedicalHistoryScreen({Key key, this.isBottomButtonsShow}) : super(key: key);
 
-  final bool isBottomButtonsShow;
+  final Map isBottomButtonsShow;
 
   @override
   _MedicalHistoryScreenState createState() => _MedicalHistoryScreenState();
@@ -25,6 +25,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
   List<dynamic> _diseaseList = [];
 
   bool isBottomButtonsShow = true;
+  bool isFromAppointment = false;
 
   String token = '';
 
@@ -43,31 +44,45 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
     });
 
     if (widget.isBottomButtonsShow != null) {
-      isBottomButtonsShow = widget.isBottomButtonsShow;
+      if (widget.isBottomButtonsShow['isBottomButtonsShow'] != null) {
+        isBottomButtonsShow = widget.isBottomButtonsShow['isBottomButtonsShow'];
+      }
+      if (widget.isBottomButtonsShow['isFromAppointment'] != null) {
+        isFromAppointment = widget.isBottomButtonsShow['isFromAppointment'];
+      }
+
+      if (isFromAppointment) {
+        if (widget.isBottomButtonsShow['medicalHistory'] != null &&
+            widget.isBottomButtonsShow['medicalHistory'].length > 0) {
+          _diseaseList = widget.isBottomButtonsShow['medicalHistory'];
+        }
+      }
     }
 
     _medicalFuture = api.getDiseases();
 
-    SharedPref().getToken().then((token) {
-      setState(() {
-        this.token = token;
-      });
+    if (!isFromAppointment) {
+      SharedPref().getToken().then((token) {
+        setState(() {
+          this.token = token;
+        });
 
-      api.getPatientDocuments(token).then((response) {
-        if (response != null) {
-          setLoading(false);
+        api.getPatientDocuments(token).then((response) {
+          if (response != null) {
+            setLoading(false);
 
-          if (response["medicalHistory"] != null) {
-            setState(() {
-              _diseaseList = response["medicalHistory"];
-            });
+            if (response["medicalHistory"] != null) {
+              setState(() {
+                _diseaseList = response["medicalHistory"];
+              });
+            }
           }
-        }
-      }).futureError((error) {
-        setLoading(false);
-        error.toString().debugLog();
+        }).futureError((error) {
+          setLoading(false);
+          error.toString().debugLog();
+        });
       });
-    });
+    }
   }
 
   @override
@@ -145,28 +160,30 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                               ),
                               value: _diseaseList.contains(medicalHistory),
                               activeColor: AppColors.goldenTainoi,
-                              onChanged: (value) {
-                                setState(() {
-                                  if (value) {
-                                    if (!_diseaseList
-                                        .contains(medicalHistory)) {
-                                      _diseaseList.add(medicalHistory);
-                                    }
-                                  } else {
-                                    setLoading(true);
-                                    api
-                                        .deletePatientMedicalHistory(
-                                            token, medicalHistory)
-                                        .then((value) {
-                                      setLoading(false);
-                                      _diseaseList.remove(medicalHistory);
-                                    }).futureError((error) {
-                                      setLoading(false);
-                                      error.toString().debugLog();
-                                    });
-                                  }
-                                });
-                              },
+                              onChanged: isFromAppointment
+                                  ? (value) {}
+                                  : (value) {
+                                      setState(() {
+                                        if (value) {
+                                          if (!_diseaseList
+                                              .contains(medicalHistory)) {
+                                            _diseaseList.add(medicalHistory);
+                                          }
+                                        } else {
+                                          setLoading(true);
+                                          api
+                                              .deletePatientMedicalHistory(
+                                                  token, medicalHistory)
+                                              .then((value) {
+                                            setLoading(false);
+                                            _diseaseList.remove(medicalHistory);
+                                          }).futureError((error) {
+                                            setLoading(false);
+                                            error.toString().debugLog();
+                                          });
+                                        }
+                                      });
+                                    },
                             );
                           },
                         );
@@ -210,14 +227,16 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
             ),
             isBottomButtonsShow
                 ? Container()
-                : Container(
-                    height: 55,
-                    margin: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-                    child: FancyButton(
-                      title: 'Save',
-                      onPressed: saveMedicalHistory,
-                    ),
-                  ),
+                : isFromAppointment
+                    ? Container()
+                    : Container(
+                        height: 55,
+                        margin: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                        child: FancyButton(
+                          title: 'Save',
+                          onPressed: saveMedicalHistory,
+                        ),
+                      ),
           ],
         ),
       ),

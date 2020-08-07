@@ -33,6 +33,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
   Map profileMap = Map();
 
+  Map _medicalHistoryMap = {};
+
   final Set<Marker> _markers = {};
   BitmapDescriptor sourceIcon;
   Completer<GoogleMapController> _controller = Completer();
@@ -82,6 +84,16 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           isAddBack: false,
           addBackButton: true,
           color: Colors.white,
+          rightButtonText: "Medical History",
+          onRightButtonTap: () {
+            _medicalHistoryMap['isBottomButtonsShow'] = false;
+            _medicalHistoryMap['isFromAppointment'] = true;
+
+            Navigator.of(context).pushNamed(
+              Routes.updateMedicalHistory,
+              arguments: _medicalHistoryMap,
+            );
+          },
           padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
           child: Stack(
             children: <Widget>[
@@ -173,6 +185,21 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     }
 
     averageRating = _data["averageRating"]?.toStringAsFixed(2) ?? "2";
+
+    if (_providerData['medicalHistory'] != null &&
+        _providerData['medicalHistory'].length > 0) {
+      this._medicalHistoryMap['medicalHistory'] =
+          _providerData['medicalHistory'];
+    }
+    if (_providerData['medicalImages'] != null &&
+        _providerData['medicalImages'].length > 0) {
+      this._medicalHistoryMap['medicalImages'] = _providerData['medicalImages'];
+    }
+    if (_providerData['medicalDocuments'] != null &&
+        _providerData['medicalDocuments'].length > 0) {
+      this._medicalHistoryMap['medicalDocuments'] =
+          _providerData['medicalDocuments'];
+    }
 
     if (_data["subServices"] != null) {
       feeList = _data["subServices"];
