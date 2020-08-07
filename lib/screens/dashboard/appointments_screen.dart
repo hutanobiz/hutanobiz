@@ -7,7 +7,6 @@ import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
-import 'package:intl/intl.dart';
 
 class AppointmentsScreen extends StatefulWidget {
   AppointmentsScreen({Key key}) : super(key: key);
@@ -199,8 +198,21 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
       userRating = response["reason"][0]["rating"]?.toString();
     }
 
+    if (response["doctorAddress"] != null) {
+      dynamic business = response["doctorAddress"];
+
+      address = Extensions.addressFormat(
+        business["address"]?.toString(),
+        business["street"]?.toString(),
+        business["city"]?.toString(),
+        business["state"],
+        business["zipCode"]?.toString(),
+      );
+    }
+
+    name = response["doctorName"]?.toString() ?? "---";
+
     if (response["doctor"] != null) {
-      name = response["doctor"]["fullName"]?.toString() ?? "---";
       avatar = response["doctor"]["avatar"].toString();
     }
 
@@ -221,18 +233,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
 
         if (detail["distance"] != null) {
           distance = detail["distance"]?.toString() ?? "0";
-        }
-
-        if (detail["businessLocation"] != null) {
-          dynamic business = detail["businessLocation"];
-
-          address = Extensions.addressFormat(
-            business["address"]?.toString(),
-            business["street"]?.toString(),
-            business["city"]?.toString(),
-            business["state"],
-            business["zipCode"]?.toString(),
-          );
         }
       }
     }
