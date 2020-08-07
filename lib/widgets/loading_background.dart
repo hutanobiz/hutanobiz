@@ -47,7 +47,11 @@ class LoadingBackground extends StatelessWidget {
                   ? Padding(
                       padding: isAddBack
                           ? const EdgeInsets.fromLTRB(11.0, 17.0, 0.0, 17.0)
-                          : const EdgeInsets.fromLTRB(21.0, 27.0, 0.0, 27.0),
+                          : (rightButtonText != null &&
+                                  onRightButtonTap != null)
+                              ? const EdgeInsets.fromLTRB(21.0, 17.0, 0.0, 17.0)
+                              : const EdgeInsets.fromLTRB(
+                                  21.0, 27.0, 0.0, 27.0),
                       child: Row(
                         children: <Widget>[
                           isAddBack
