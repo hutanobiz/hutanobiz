@@ -35,7 +35,7 @@ dependencies:
   geocoder: ^0.2.1
   dotted_border: ^1.0.5
   background_locator: ^1.1.3+1
-  map_launcher: ^0.4.5
+  map_launcher: ^0.10.0
   pedantic: ^1.8.0
   firebase_messaging: ^6.0.16
   flutter_local_notifications: ^1.4.4
