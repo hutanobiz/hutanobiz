@@ -364,6 +364,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                   imagesList[i]["name"];
               request.fields["medicalDocuments[$i][medicalDocuments]"] =
                   imagesList[i]["medicalDocuments"];
+              request.fields["medicalDocuments[$i][date]"] =
+                  imagesList[i]["date"];
             }
           }
         }
