@@ -376,6 +376,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         divider(topPadding: 8.0),
         locationWidget(address, latLng),
         divider(),
+        seekingCareWidget(_providerData),
+        divider(),
         feeWidget(fee, officeVisitFee),
         divider(),
         paymentType == 0
@@ -702,6 +704,124 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                 Divider(),
                 subFeeWidget("Total", "\$" + totalFee.toStringAsFixed(2)),
                 SizedBox(height: 16),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget seekingCareWidget(dynamic _providerData) {
+    String timeSpan = "---";
+    if (_providerData["problemTimeSpan"] != null) {
+      timeSpan = _providerData["problemTimeSpan"].toString();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Description of problem",
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(height: 18.0),
+          Text(
+            _providerData['description']?.toString() ?? '---',
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+              fontSize: 14.0,
+            ),
+          ),
+          SizedBox(height: 20),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14.0),
+                border: Border.all(color: Colors.grey[200])),
+            padding: EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Container(
+                      height: 5.0,
+                      width: 5.0,
+                      decoration: new BoxDecoration(
+                        color: Colors.black,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      "Problem duration: ",
+                      style: TextStyle(fontSize: 13),
+                    ),
+                    Text(
+                      timeSpan == "1"
+                          ? "Hours"
+                          : timeSpan == "2"
+                              ? "Days"
+                              : timeSpan == "3"
+                                  ? "Weeks"
+                                  : timeSpan == "4" ? "Months" : "---",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12),
+                Row(
+                  children: <Widget>[
+                    Container(
+                      height: 5.0,
+                      width: 5.0,
+                      decoration: new BoxDecoration(
+                        color: Colors.black,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        _providerData["isTreatmentReceived"]
+                            ? "Treatment for this complaint is taken in the past 3 months."
+                            : "No treatment for this complaint in the past 3 months.",
+                        style: TextStyle(fontSize: 13),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12),
+                Row(
+                  children: <Widget>[
+                    Container(
+                      height: 5.0,
+                      width: 5.0,
+                      decoration: new BoxDecoration(
+                        color: Colors.black,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      _providerData["isProblemImproving"]
+                          ? "The problem is NOT improving."
+                          : "The problem is NOT improving.",
+                      style: TextStyle(fontSize: 13),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
