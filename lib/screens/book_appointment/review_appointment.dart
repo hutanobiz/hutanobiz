@@ -11,6 +11,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/dashboard/choose_location_screen.dart';
+import 'package:hutano/screens/home.dart';
 import 'package:hutano/screens/stripe/payment_intent.dart';
 import 'package:hutano/screens/stripe/stripe_payment.dart';
 import 'package:hutano/utils/extensions.dart';
@@ -93,7 +94,11 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   @override
   void initState() {
     super.initState();
-
+StripePayment.setOptions(
+      StripeOptions(
+        publishableKey: kstripePublishKey,
+      ),
+    );
     setSourceAndDestinationIcons();
   }
 
