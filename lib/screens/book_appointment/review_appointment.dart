@@ -420,7 +420,14 @@ StripePayment.setOptions(
           responseJson["response"].toString().debugLog();
           throw Exception(responseJson);
         } else {
-          if (responseJson["response"]['paymentIntent'] != null) {
+          if(responseJson["response"] is String){
+             _loading(false);
+             Widgets.showErrorialog(
+                context: context,
+                description: responseJson["response"],
+              );
+          }
+          else if (responseJson["response"]['paymentIntent'] != null) {
             String _clientSecret =
                 responseJson["response"]['paymentIntent']['client_secret'];
 
