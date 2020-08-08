@@ -11,6 +11,8 @@ import 'package:hutano/screens/dashboard/dashboardScreen.dart';
 import 'package:hutano/screens/dashboard/requests_appointments_screen.dart';
 import 'package:hutano/screens/dashboard/setting.dart';
 
+const kstripePublishKey =
+    'pk_test_LlxS6SLz0PrOm9IY9mxM0LHo006tjnSqWX';
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
 
