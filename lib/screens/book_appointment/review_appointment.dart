@@ -433,7 +433,7 @@ StripePayment.setOptions(
 
             PaymentIntent _paymentIntent = PaymentIntent(
               paymentMethodId: _consentToTreatMap["paymentMap"]["selectedCard"]
-                  ['paymentMethodId'],
+                  ['id'],
               clientSecret: _clientSecret,
             );
 
