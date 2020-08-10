@@ -275,7 +275,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                   child: Text("NO saved insurance available"),
                 );
               }
-              List _cardList = snapshot.data;
+              List _cardList = snapshot.data['data'];
 
               if (_cardList == null || _cardList.isEmpty) {
                 return Padding(
@@ -307,7 +307,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  "**** ***** **** ${_cardList[index]['cardNumber']}",
+                                  "**** ***** **** ${_cardList[index]['card']['last4']}",
                                   style: TextStyle(
                                     fontSize: 14.0,
                                     fontWeight: FontWeight.w600,
@@ -315,7 +315,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                 ),
                                 SizedBox(height: 8.0),
                                 Text(
-                                  "Expires ${_cardList[index]['expiryMonth']}/${_cardList[index]['expirYear']}",
+                                  "Expires ${_cardList[index]['card']['exp_month']}/${_cardList[index]['card']['exp_year']}",
                                   style: TextStyle(
                                     fontSize: 12.0,
                                     color: Colors.black.withOpacity(0.7),
@@ -641,14 +641,28 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                         _insuranceFuture = _api
                             .getUserDetails(token)
                             .timeout(Duration(seconds: 20));
+                      });
+                    },
+                  ),
+                )
+            : Navigator.of(context)
+                .pushNamed(Routes.addNewCardScreen)
+                .whenComplete(
+                () {
+                  SharedPref().getToken().then(
+                    (token) {
+                      setState(() {
+                        _listRadioValue = null;
+                        _radioValue = null;
+                        _cardListRadioValue = null;
                         _cardFuture = _api
                             .getPatientCard(token)
                             .timeout(Duration(seconds: 20));
                       });
                     },
-                  ),
-                )
-            : Navigator.of(context).pushNamed(Routes.addNewCardScreen);
+                  );
+                },
+              );
       },
       icon: icon.imageIcon(
         width: 20.0,

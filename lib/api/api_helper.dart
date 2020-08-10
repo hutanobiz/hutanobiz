@@ -61,7 +61,7 @@ class ApiBaseHelper {
     };
     return _netUtil
         .get(
-      Uri.encodeFull(base_url + "api/patient/card"),
+      Uri.encodeFull(base_url + "api/stripe-card"),
       headers: headers,
     )
         .then((res) {
