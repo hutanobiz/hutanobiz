@@ -53,6 +53,36 @@ class ApiBaseHelper {
     });
   }
 
+  
+
+  Future<dynamic> getPatientCard(String token) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    return _netUtil
+        .get(
+      Uri.encodeFull(base_url + "api/stripe-card"),
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
+
+  Future<dynamic> getSetupIntent(BuildContext context, String token) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    return _netUtil
+        .get(
+      Uri.encodeFull(base_url + "api/stripe-setUp-intent"),
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
+
   Future<dynamic> emailVerfication(String token, Map map) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,

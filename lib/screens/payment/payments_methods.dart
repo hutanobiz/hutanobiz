@@ -23,8 +23,9 @@ class PaymentMethodScreen extends StatefulWidget {
 class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   int _radioValue;
   int _listRadioValue;
-
-  Future<dynamic> _insuranceFuture;
+  int _cardListRadioValue;
+  dynamic selectedCard;
+  Future<dynamic> _insuranceFuture, _cardFuture;
   ApiBaseHelper _api = ApiBaseHelper();
   InheritedContainerState _container;
   String insuranceId, insuranceImage, insuranceName;
@@ -93,6 +94,9 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         _insuranceFuture = _api.getUserDetails(token).futureError(
               (error) => error.toString().debugLog(),
             );
+        _cardFuture = _api.getPatientCard(token).futureError(
+              (error) => error.toString().debugLog(),
+            );
       });
     });
   }
@@ -133,13 +137,19 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                           Map _paymentMap = new Map();
 
                           if (_radioValue != null) {
-                            if (_radioValue == 2) {
-                              _paymentMap["paymentType"] = "1";
-                            } else if (_radioValue == 1) {}
+                            _paymentMap["paymentType"] = "3";
 
                             _container.setConsentToTreatData(
                                 "paymentMap", _paymentMap);
 
+                            Navigator.of(context)
+                                .pushNamed(Routes.reviewAppointmentScreen);
+                          } else if (_cardListRadioValue != null) {
+                            _paymentMap["paymentType"] = "1";
+                            _paymentMap["selectedCard"] = selectedCard;
+
+                            _container.setConsentToTreatData(
+                                "paymentMap", _paymentMap);
                             Navigator.of(context)
                                 .pushNamed(Routes.reviewAppointmentScreen);
                           } else if (_listRadioValue != null) {
@@ -182,9 +192,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
     _widgetList.add(SizedBox(height: 12.0));
 
-    _widgetList.add(paymentCard("ic_dummy_card", "**** ***** **** 2563", 1,
-        cardExpiryDate: "Expires 10/24"));
-    //TODO: remove static card
+    _widgetList.add(_cardFutureWidget());
 
     _widgetList.add(SizedBox(height: 22.0));
 
@@ -242,6 +250,116 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
     ));
 
     return _widgetList;
+  }
+
+  Widget _cardFutureWidget() {
+    return FutureBuilder<dynamic>(
+      future: _cardFuture,
+      builder: (_, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return Text("NO data available");
+            break;
+          case ConnectionState.waiting:
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+            break;
+          case ConnectionState.active:
+            break;
+          case ConnectionState.done:
+            if (snapshot.hasData) {
+              if (snapshot.data == null) {
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+                  child: Text("NO saved insurance available"),
+                );
+              }
+              List _cardList = snapshot.data['data'];
+
+              if (_cardList == null || _cardList.isEmpty) {
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+                  child: Text("NO saved Card available"),
+                );
+              } else {
+                return ListView.separated(
+                  separatorBuilder: (BuildContext context, int index) =>
+                      SizedBox(height: 17),
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  physics: ClampingScrollPhysics(),
+                  itemCount: _cardList.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                        border: Border.all(color: Colors.grey[100]),
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          'ic_dummy_card'.imageIcon(width: 70, height: 70),
+                          SizedBox(width: 17.0),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  "**** ***** **** ${_cardList[index]['card']['last4']}",
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                SizedBox(height: 8.0),
+                                Text(
+                                  "Expires ${_cardList[index]['card']['exp_month']}/${_cardList[index]['card']['exp_year']}",
+                                  style: TextStyle(
+                                    fontSize: 12.0,
+                                    color: Colors.black.withOpacity(0.7),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          isPayment == false
+                              ? Container()
+                              : Radio(
+                                  activeColor: AppColors.persian_blue,
+                                  value: index,
+                                  groupValue: _cardListRadioValue,
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  onChanged: (int value) {
+                                    setState(() {
+                                      _radioValue = null;
+                                      _listRadioValue = null;
+                                      _cardListRadioValue = value;
+                                    });
+
+                                    selectedCard = _cardList[index];
+                                  },
+                                )
+                        ],
+                      ),
+                    );
+                  },
+                );
+              }
+            } else if (snapshot.hasError) {
+              snapshot.error.toString().debugLog();
+              return Center(
+                child: Text("NO data available"),
+              );
+            }
+
+            break;
+        }
+        return Container();
+      },
+    );
   }
 
   Widget _insuranceFutureWidget() {
@@ -351,6 +469,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                               onChanged: (int value) {
                                                 setState(() {
                                                   _radioValue = null;
+                                                  _cardListRadioValue = null;
                                                   _listRadioValue = value;
                                                 });
 
@@ -483,16 +602,14 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: Radio(
-                      activeColor: AppColors.persian_blue,
-                      value: value,
-                      groupValue: _radioValue,
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      onChanged: (title.toLowerCase().contains("cash") &&
-                              cashPayment == "1")
-                          ? _handleRadioValueChange
-                          : null,
-                      //TODO: check for cardPayment when it's done in API
-                    ),
+                        activeColor: AppColors.persian_blue,
+                        value: value,
+                        groupValue: _radioValue,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        onChanged: (title.toLowerCase().contains("cash") &&
+                                cashPayment == "1")
+                            ? _handleRadioValueChange
+                            : null),
                   ),
                 )
         ],
@@ -519,6 +636,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                       setState(() {
                         _listRadioValue = null;
                         _radioValue = null;
+                        _cardListRadioValue = null;
 
                         _insuranceFuture = _api
                             .getUserDetails(token)
@@ -527,7 +645,24 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                     },
                   ),
                 )
-            : Navigator.of(context).pushNamed(Routes.addNewCardScreen);
+            : Navigator.of(context)
+                .pushNamed(Routes.addNewCardScreen)
+                .whenComplete(
+                () {
+                  SharedPref().getToken().then(
+                    (token) {
+                      setState(() {
+                        _listRadioValue = null;
+                        _radioValue = null;
+                        _cardListRadioValue = null;
+                        _cardFuture = _api
+                            .getPatientCard(token)
+                            .timeout(Duration(seconds: 20));
+                      });
+                    },
+                  );
+                },
+              );
       },
       icon: icon.imageIcon(
         width: 20.0,
@@ -647,5 +782,6 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   void _handleRadioValueChange(int value) => setState(() {
         _radioValue = value;
         _listRadioValue = null;
+        _cardListRadioValue = null;
       });
 }

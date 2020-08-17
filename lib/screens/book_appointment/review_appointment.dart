@@ -11,6 +11,9 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/dashboard/choose_location_screen.dart';
+import 'package:hutano/screens/home.dart';
+import 'package:hutano/screens/stripe/payment_intent.dart';
+import 'package:hutano/screens/stripe/stripe_payment.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
@@ -91,7 +94,11 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   @override
   void initState() {
     super.initState();
-
+StripePayment.setOptions(
+      StripeOptions(
+        publishableKey: kstripePublishKey,
+      ),
+    );
     setSourceAndDestinationIcons();
   }
 
@@ -261,25 +268,30 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              paymentType == "1"
+              paymentType == "3"
                   ? Image.asset("images/ic_cash_payment.png",
                       height: 42, width: 42)
-                  : insuranceImage == null
-                      ? Image.asset("images/insurancePlaceHolder.png",
+                  : paymentType == "1"
+                      ? Image.asset("images/ic_cash_payment.png",
                           height: 42, width: 42)
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            ApiBaseHelper.imageUrl + insuranceImage,
-                            height: 42,
-                            width: 42,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                      : insuranceImage == null
+                          ? Image.asset("images/insurancePlaceHolder.png",
+                              height: 42, width: 42)
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Image.network(
+                                ApiBaseHelper.imageUrl + insuranceImage,
+                                height: 42,
+                                width: 42,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
               SizedBox(width: 14.0),
               Expanded(
                 child: Text(
-                  paymentType == "1" ? "Cash" : insuranceName,
+                  paymentType == "3"
+                      ? "Cash"
+                      : paymentType == "1" ? "Card" : insuranceName,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -334,10 +346,14 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             _consentToTreatMap["description"].toString().trim();
 
         if (paymentType != null) {
-          if (paymentType == "1") {
-            request.fields['cashPayment'] = "1";
+          if (paymentType == "3") {
+            request.fields['cashPayment'] = "3";
+            request.fields['paymentMethod'] = "3";
           } else if (paymentType == "2") {
+            request.fields['paymentMethod'] = "2";
             request.fields['insuranceId'] = insuranceId;
+          } else {
+            request.fields['paymentMethod'] = "1";
           }
         }
 
@@ -404,14 +420,45 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           responseJson["response"].toString().debugLog();
           throw Exception(responseJson);
         } else {
+          if(responseJson["response"] is String){
+             _loading(false);
+             Widgets.showErrorialog(
+                context: context,
+                description: responseJson["response"],
+              );
+          }
+          else if (responseJson["response"]['paymentIntent'] != null) {
+            String _clientSecret =
+                responseJson["response"]['paymentIntent']['client_secret'];
+
+            PaymentIntent _paymentIntent = PaymentIntent(
+              paymentMethodId: _consentToTreatMap["paymentMap"]["selectedCard"]
+                  ['id'],
+              clientSecret: _clientSecret,
+            );
+
+            StripePayment.confirmPaymentIntent(
+              _paymentIntent,
+            ).then((PaymentIntentResult value) {
+              _loading(false);
+              showConfirmDialog();
+            }).futureError((error) {
+              _loading(false);
+
+              Widgets.showErrorialog(
+                context: context,
+                description: error.toString(),
+              );
+            });
+          } else {
+            _loading(false);
+
+            responseJson["response"].toString().debugLog();
+
+            showConfirmDialog();
+          }
           _loading(false);
-
-          responseJson["response"].toString().debugLog();
-
-          showConfirmDialog();
         }
-
-        _loading(false);
       });
     } on Exception catch (error) {
       _loading(false);
@@ -683,8 +730,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     c.animateCamera(u);
     LatLngBounds l1 = await c.getVisibleRegion();
     LatLngBounds l2 = await c.getVisibleRegion();
-    print(l1.toString());
-    print(l2.toString());
+    // print(l1.toString());
+    // print(l2.toString());
     if (l1.southwest.latitude == -90 || l2.southwest.latitude == -90)
       check(u, c);
   }

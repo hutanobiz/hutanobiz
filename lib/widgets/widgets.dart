@@ -23,6 +23,57 @@ class Widgets {
     );
   }
 
+
+static void showErrorialog({
+    @required BuildContext context,
+    String title,
+    @required String description,
+    String buttonText,
+    Function onPressed,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) => Platform.isIOS
+          ? CupertinoAlertDialog(
+              title: Text(title ?? "Alert"),
+              content: Text(description),
+              actions: <Widget>[
+                CupertinoDialogAction(
+                  onPressed: onPressed ??
+                      () {
+                        Navigator.of(context).pop();
+                      },
+                  isDefaultAction: true,
+                  child: Text(
+                    buttonText ?? "Ok",
+                    style: TextStyle(
+                      color: AppColors.windsor,
+                    ),
+                  ),
+                ),
+              ],
+            )
+          : AlertDialog(
+              title: Text(title ?? "Error"),
+              content: Text(description),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: onPressed ??
+                      () {
+                        Navigator.of(context).pop();
+                      },
+                  child: Text(
+                    buttonText ?? "Ok",
+                    style: TextStyle(
+                      color: AppColors.windsor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+    );
+  }
+
   static void showErrorDialog({
     @required BuildContext context,
     String title,
