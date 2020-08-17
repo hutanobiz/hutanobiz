@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
@@ -50,6 +51,8 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
 
   String token = '';
 
+  LatLng _userLocation = LatLng(0, 0);
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -80,6 +83,13 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
         break;
     }
 
+    if (_container.userLocationMap.isNotEmpty) {
+      _userLocation = _container.userLocationMap['latLng'];
+
+      _providerMap['lattitude'] = _userLocation.latitude.toStringAsFixed(2);
+      _providerMap['longitude'] = _userLocation.longitude.toStringAsFixed(2);
+    }
+
     _providerMap.remove('serviceType');
 
     SharedPref().getToken().then((token) {
@@ -88,8 +98,6 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
         _providerFuture = api.providerFilter(token, _providerMap);
       });
     });
-
-    _projectResponse.toString().debugLog();
   }
 
   @override
@@ -175,6 +183,11 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                     )
                         .then((value) {
                       if (value != null) {
+                        filterMap['lattitude'] =
+                            _userLocation.latitude.toStringAsFixed(2);
+                        filterMap['longitude'] =
+                            _userLocation.longitude.toStringAsFixed(2);
+
                         setState(() {
                           filterMap = value;
                         });

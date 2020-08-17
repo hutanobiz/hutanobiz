@@ -35,7 +35,7 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
   bool _isLoading = false;
 
   RangeValues _experienceRangeValues = RangeValues(0, 50);
-  RangeValues _distanceRangeValues = RangeValues(0, 100);
+  RangeValues _distanceRangeValues = RangeValues(0, 10);
 
   Map professionalTitleMap = {};
 
@@ -77,6 +77,20 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
           double.parse(
             _filtersMap['experience'].toString().substring(
                 index + 1, _filtersMap['experience'].toString().length),
+          ),
+        );
+      });
+    }
+
+    if (_filtersMap['minimumDistance'] != null &&
+        _filtersMap['maximumDistance'] != null) {
+      setState(() {
+        _distanceRangeValues = RangeValues(
+          double.parse(
+            _filtersMap['minimumDistance'].toString(),
+          ),
+          double.parse(
+            _filtersMap['maximumDistance'].toString(),
           ),
         );
       });
@@ -177,6 +191,14 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
                               if (newValues.end > newValues.start) {
                                 setState(() {
                                   _distanceRangeValues = newValues;
+
+                                  _filtersMap['minimumDistance'] =
+                                      _distanceRangeValues.start
+                                          .toStringAsFixed(0);
+
+                                  _filtersMap['maximumDistance'] =
+                                      _distanceRangeValues.end
+                                          .toStringAsFixed(0);
                                 });
                               }
                             },

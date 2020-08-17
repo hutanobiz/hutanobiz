@@ -879,8 +879,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         setState(() {
           _isLocLoading = false;
           _currentddress = first;
-          conatiner.setUserLocation("userAddress", _currentddress);
         });
+
+        conatiner.setUserLocation("userAddress", _currentddress);
       }
     } on PlatformException catch (e) {
       _locationLoading(false);
