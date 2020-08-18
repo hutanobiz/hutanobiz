@@ -231,8 +231,17 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
               detail["professionalTitle"]["title"]?.toString() ?? "---";
         }
 
-        if (detail["distance"] != null) {
-          distance = detail["distance"]?.toString() ?? "0";
+        if (detail['distance'] != null && detail['distance'] != '0') {
+          distance =
+              ((double.parse(detail['distance']?.toString() ?? 0) * 0.000621371)
+                      .toStringAsFixed(0)) +
+                  ' mi';
+
+          if (distance == '0 mi') {
+            distance = (detail['distance']?.toStringAsFixed(0) ?? '0') + ' m';
+          }
+        } else {
+          distance = '0 mi';
         }
       }
     }
@@ -394,12 +403,13 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                         ],
                       ),
                     ),
+                    SizedBox(width: 15),
                     Row(
                       children: <Widget>[
                         "ic_app_distance".imageIcon(),
                         SizedBox(width: 5.0),
                         Text(
-                          "$distance miles",
+                          distance,
                           style: TextStyle(
                             color: AppColors.windsor,
                           ),

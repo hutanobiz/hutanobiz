@@ -33,7 +33,19 @@ class ProviderWidget extends StatelessWidget {
         fee = "---",
         practicingSince = "---",
         professionalTitle = "---",
+        distance = "0",
         address = '---';
+
+    if (data['distance'] != null) {
+      distance =
+          ((double.parse(data['distance']?.toString() ?? 0) * 0.000621371)
+                  .toStringAsFixed(0)) +
+              ' mi';
+
+      if (distance == '0 mi') {
+        distance = (data['distance']?.toStringAsFixed(0) ?? '0') + ' m';
+      }
+    }
 
     if (data["consultanceFee"] != null) {
       for (dynamic consultanceFee in data["consultanceFee"]) {
@@ -328,6 +340,8 @@ class ProviderWidget extends StatelessWidget {
                 Expanded(
                   child: Text(
                     address,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       decoration: onLocationClick != null
                           ? TextDecoration.underline
@@ -338,6 +352,22 @@ class ProviderWidget extends StatelessWidget {
                     ),
                   ).onClick(
                     onTap: onLocationClick != null ? onLocationClick : null,
+                  ),
+                ),
+                SizedBox(width: 15),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Row(
+                    children: <Widget>[
+                      "ic_app_distance".imageIcon(),
+                      SizedBox(width: 5.0),
+                      Text(
+                        distance,
+                        style: TextStyle(
+                          color: AppColors.windsor,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
