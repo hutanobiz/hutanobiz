@@ -107,6 +107,9 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
                     ),
                   ),
                   onTap: () {
+                    conatiner.projectsResponse.removeWhere(
+                        (key, value) => key.toString().contains('specialtyId'));
+                        
                     conatiner.setProjectsResponse(
                         "specialtyId[${index.toString()}]", data[index]["_id"]);
 
