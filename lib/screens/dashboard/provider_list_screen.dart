@@ -86,11 +86,13 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
     if (_container.userLocationMap.isNotEmpty) {
       _userLocation = _container.userLocationMap['latLng'];
 
-      _providerMap['lattitude'] = _userLocation.longitude.toStringAsFixed(2);
-      _providerMap['longitude'] = _userLocation.latitude.toStringAsFixed(2);
+      _providerMap['lattitude'] = _userLocation.latitude.toStringAsFixed(2);
+      _providerMap['longitude'] = _userLocation.longitude.toStringAsFixed(2);
     }
 
     _providerMap.remove('serviceType');
+
+    filterMap = _providerMap;
 
     SharedPref().getToken().then((token) {
       setState(() {
@@ -110,6 +112,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
         color: AppColors.snow,
         isAddBack: false,
         addBackButton: true,
+        padding: EdgeInsets.zero,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -124,31 +127,34 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
   }
 
   Widget searchBar() {
-    return TextFormField(
-      key: _searchKey,
-      maxLines: 1,
-      keyboardType: TextInputType.text,
-      onChanged: (value) {
-        setState(() {
-          _searchText = value;
-        });
-        filterSearch(value);
-      },
-      decoration: InputDecoration(
-        floatingLabelBehavior: FloatingLabelBehavior.never,
-        filled: true,
-        fillColor: Colors.white,
-        labelStyle: TextStyle(fontSize: 13.0, color: Colors.grey),
-        labelText: "Search for providers",
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
-          borderRadius: BorderRadius.circular(8.0),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+      child: TextFormField(
+        key: _searchKey,
+        maxLines: 1,
+        keyboardType: TextInputType.text,
+        onChanged: (value) {
+          setState(() {
+            _searchText = value;
+          });
+          filterSearch(value);
+        },
+        decoration: InputDecoration(
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          filled: true,
+          fillColor: Colors.white,
+          labelStyle: TextStyle(fontSize: 13.0, color: Colors.grey),
+          labelText: "Search for providers",
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.white),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          border: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.white),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          contentPadding: EdgeInsets.fromLTRB(12.0, 15.0, 14.0, 14.0),
         ),
-        border: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        contentPadding: EdgeInsets.fromLTRB(12.0, 15.0, 14.0, 14.0),
       ),
     );
   }
@@ -161,6 +167,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
         separatorBuilder: (BuildContext context, int index) =>
             SizedBox(width: 10),
         shrinkWrap: true,
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
         scrollDirection: Axis.horizontal,
         physics: ClampingScrollPhysics(),
         itemCount: _appointmentTypeFilterList.length,
@@ -183,11 +190,6 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                     )
                         .then((value) {
                       if (value != null) {
-                        filterMap['lattitude'] =
-                            _userLocation.latitude.toStringAsFixed(2);
-                        filterMap['longitude'] =
-                            _userLocation.longitude.toStringAsFixed(2);
-
                         setState(() {
                           filterMap = value;
                         });
@@ -308,7 +310,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
 
   Widget _listWidget(Map degreeMap, List _responseData) {
     return ListView.builder(
-      padding: const EdgeInsets.only(bottom: 50),
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 70),
       itemCount: _responseData.length,
       itemBuilder: (context, index) {
         dynamic _provider = _responseData[index]['provider'];
