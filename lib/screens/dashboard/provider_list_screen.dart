@@ -86,8 +86,8 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
     if (_container.userLocationMap.isNotEmpty) {
       _userLocation = _container.userLocationMap['latLng'];
 
-      _providerMap['lattitude'] = _userLocation.latitude.toStringAsFixed(2);
-      _providerMap['longitude'] = _userLocation.longitude.toStringAsFixed(2);
+      _providerMap['lattitude'] = _userLocation.longitude.toStringAsFixed(2);
+      _providerMap['longitude'] = _userLocation.latitude.toStringAsFixed(2);
     }
 
     _providerMap.remove('serviceType');
