@@ -35,7 +35,7 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
   bool _isLoading = false;
 
   RangeValues _experienceRangeValues = RangeValues(0, 50);
-  RangeValues _distanceRangeValues = RangeValues(0, 10);
+  RangeValues _distanceRangeValues = RangeValues(0, 25);
 
   Map professionalTitleMap = {};
 
