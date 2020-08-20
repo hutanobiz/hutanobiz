@@ -238,7 +238,10 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                   ' mi';
 
           if (distance == '0 mi') {
-            distance = (detail['distance']?.toStringAsFixed(0) ?? '0') + ' m';
+            distance = ((detail['distance'] is double)
+                    ? detail['distance'].toStringAsFixed(0)
+                    : detail['distance'].toString()) +
+                ' m';
           }
         } else {
           distance = '0 mi';

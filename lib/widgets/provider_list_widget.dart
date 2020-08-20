@@ -43,7 +43,10 @@ class ProviderWidget extends StatelessWidget {
               ' mi';
 
       if (distance == '0 mi') {
-        distance = (data['distance']?.toStringAsFixed(0) ?? '0') + ' m';
+        distance = ((data['distance'] is double)
+                ? data['distance'].toStringAsFixed(0)
+                : data['distance'].toString()) +
+            ' m';
       }
     }
 
