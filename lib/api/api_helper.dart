@@ -53,8 +53,6 @@ class ApiBaseHelper {
     });
   }
 
-  
-
   Future<dynamic> getPatientCard(String token) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
@@ -522,6 +520,20 @@ class ApiBaseHelper {
   Future<List<dynamic>> getAllTitleSpecilities() {
     return _netUtil.get(base_url + "api/title-specialties").then((res) {
       return res["response"];
+    });
+  }
+
+  Future<List<dynamic>> getAddress(String token) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    return _netUtil
+        .get(
+      base_url + "api/patient/address",
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"]['userAddress'];
     });
   }
 }
