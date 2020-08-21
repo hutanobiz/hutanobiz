@@ -569,6 +569,21 @@ class ApiBaseHelper {
       return res["response"];
     });
   }
+
+  Future<dynamic> editAddress(String token, Map addressMap) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    return _netUtil
+        .post(
+      base_url + "api/patient/edit-address",
+      body: addressMap,
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
 }
 
 class NetworkUtil {

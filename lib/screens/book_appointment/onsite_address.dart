@@ -23,6 +23,7 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
 
   String _token;
   List addressList = [];
+  String state = '---';
 
   @override
   void initState() {
@@ -107,16 +108,16 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
   }
 
   Widget addressWidget(dynamic address, int index) {
-    String state = '---';
-
     TextStyle style = TextStyle(
       color: Colors.black.withOpacity(0.6),
       fontSize: 12,
       fontWeight: FontWeight.w500,
     );
 
-    if (address['state'] != null && address['state']['title'] != null) {
-      state = address['state']['title'];
+    if (address['state'] is Map &&
+        address['state'] != null &&
+        address['state']['title'] != null) {
+      state = address['state']['title'].toString();
     } else {
       state = '---';
     }
@@ -149,7 +150,11 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
               ),
               SizedBox(height: 10),
               Text(
-                "$state, ${address['city']?.toString() ?? '---'}, ${address['zipCode']?.toString() ?? '---'}",
+                state +
+                    ', ' +
+                    (address['city']?.toString() ?? '---') +
+                    ', ' +
+                    (address['zipCode']?.toString() ?? '---'),
                 style: style,
               ),
               SizedBox(height: 20),
@@ -198,10 +203,15 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
                         context,
                         Routes.onsiteEditAddress,
                         arguments: address,
-                      )
+                      ).then((value) {
+                        if (value != null && value) {
+                          setState(() {
+                            _addressesFuture = api.getAddress(_token);
+                          });
+                        }
+                      })
                     : _deleteAddress(address['_id'].toString());
               },
-              //TODO: edit  address
             ),
           ),
         )

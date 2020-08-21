@@ -15,8 +15,8 @@ import 'package:hutano/widgets/textform_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 
 class OnsiteEditAddress extends StatefulWidget {
-  OnsiteEditAddress({Key key, this.addressObject = false}) : super(key: key);
-  final dynamic addressObject;
+  OnsiteEditAddress({Key key, this.addressObject}) : super(key: key);
+  final Map addressObject;
 
   @override
   _OnsiteEditAddressState createState() => _OnsiteEditAddressState();
@@ -78,6 +78,18 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
     if (widget.addressObject != null) {
       _addressMap = widget.addressObject;
 
+      if (widget.addressObject['state'] is Map &&
+          widget.addressObject['state'] != null) {
+        _businessstateController.text =
+            widget.addressObject['state']['title'].toString();
+
+        _addressMap['stateCode'] =
+            widget.addressObject['state']['stateCode']?.toString();
+        _addressMap['state'] = widget.addressObject['state']['_id'].toString();
+      }
+
+      _zipController.text = widget.addressObject['zipCode'].toString();
+
       if (_addressMap['coordinates'] != null &&
           _addressMap['coordinates'].toString().length > 0) {
         List coordinatesList = _addressMap['coordinates'];
@@ -89,12 +101,6 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
 
         getLocationAddress(_latLng);
       }
-      // _addressController.text = _addressMap['address'];
-      // _streetController.text = _addressMap['street'];
-      // _cityController.text = _addressMap['city'];
-      // _businessstateController.text = _addressMap['state'];
-      // _zipController.text = _addressMap['zipCode'];
-      //TODO: edit address
     }
   }
 
@@ -162,8 +168,8 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
       _latLng = result;
       getLocationAddress(_latLng);
 
-      _addressMap['coordinates[0]'] = _latLng.longitude;
-      _addressMap['coordinates[1]'] = _latLng.latitude;
+      _addressMap['coordinates[0]'] = _latLng.longitude.toString();
+      _addressMap['coordinates[1]'] = _latLng.latitude.toString();
     } else {
       PlacesDetailsResponse aa = result;
       print(aa);
@@ -242,8 +248,12 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
 
     _addressMap['city'] = first.locality;
     _cityController.text = first.locality;
-    _addressMap['zipCode'] = first.postalCode;
-    _zipController.text = first.postalCode;
+
+    if (first.postalCode != null) {
+      _addressMap['zipCode'] = first.postalCode;
+      _zipController.text = first.postalCode;
+    }
+    
     _addressMap['street'] = (first.featureName ?? "") +
         (first.featureName != null && first.thoroughfare != null ? " " : "") +
         (first.thoroughfare ?? "");
@@ -252,6 +262,7 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
         (first.thoroughfare ?? "");
 
     _addressController.text = first.addressLine;
+    _titleController.text = _addressMap['title'].toString();
 
     for (dynamic state in stateList) {
       if (state['title'] == first.adminArea ||
@@ -365,21 +376,35 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
     map['userAddress[state]'] = _addressMap['state'];
     map['userAddress[stateCode]'] = _addressMap['stateCode'];
     map['userAddress[zipCode]'] = _addressMap['zipCode'];
-    map['userAddress[coordinates[0]]'] = _latLng.longitude.toString();
-    map['userAddress[coordinates[1]]'] = _latLng.latitude.toString();
+    map['userAddress[coordinates][0]'] = _latLng.longitude.toString();
+    map['userAddress[coordinates][1]'] = _latLng.latitude.toString();
 
     if (isFormFilled()) {
+      setLoading(true);
+
       map.toString().debugLog();
 
-      setLoading(true);
-      api.addAddress(_token, map).then((dynamic response) {
-        Widgets.showToast("Address added successfully");
-        Navigator.of(context).pop(true);
-        setLoading(false);
-      }).futureError((e) {
-        setLoading(false);
-        e.toString().debugLog();
-      });
+      if (widget.addressObject != null) {
+        map['id'] = _addressMap['_id'];
+
+        api.editAddress(_token, map).then((dynamic response) {
+          Widgets.showToast("Address updated successfully");
+          Navigator.of(context).pop(true);
+          setLoading(false);
+        }).futureError((e) {
+          setLoading(false);
+          e.toString().debugLog();
+        });
+      } else {
+        api.addAddress(_token, map).then((dynamic response) {
+          Widgets.showToast("Address added successfully");
+          Navigator.of(context).pop(true);
+          setLoading(false);
+        }).futureError((e) {
+          setLoading(false);
+          e.toString().debugLog();
+        });
+      }
     }
   }
 
