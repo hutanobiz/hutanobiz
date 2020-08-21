@@ -21,11 +21,15 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
 
   Future<List<dynamic>> _addressesFuture;
 
+  String _token;
+  List addressList = [];
+
   @override
   void initState() {
     super.initState();
 
     SharedPref().getToken().then((token) {
+      _token = token;
       token.debugLog();
       setState(() {
         _addressesFuture = api.getAddress(token);
@@ -40,8 +44,20 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
       resizeToAvoidBottomInset: true,
       body: LoadingBackground(
         title: "Addresses",
+        padding: const EdgeInsets.fromLTRB(20, 20, 5, 20),
         isAddBack: true,
         isAddAppBar: true,
+        rightButtonText: 'Add Address',
+        onRightButtonTap: () => Navigator.pushNamed(
+          context,
+          Routes.onsiteEditAddress,
+        ).then((value) {
+          if (value != null && value) {
+            setState(() {
+              _addressesFuture = api.getAddress(_token);
+            });
+          }
+        }),
         isLoading: isLoading,
         child: _buildList(),
       ),
@@ -53,12 +69,20 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
       future: _addressesFuture,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          List addressList = snapshot.data;
-
-          if (addressList == null || addressList.isEmpty) {
+          if (snapshot.data == null ||
+              snapshot.data.isEmpty ||
+              snapshot.data is String) {
             return Center(
               child: Text('No address.'),
             );
+          }
+
+          addressList.clear();
+
+          for (var aa in snapshot.data) {
+            if (aa != null) {
+              addressList.add(aa);
+            }
           }
 
           return ListView.separated(
@@ -83,11 +107,20 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
   }
 
   Widget addressWidget(dynamic address, int index) {
+    String state = '---';
+
     TextStyle style = TextStyle(
       color: Colors.black.withOpacity(0.6),
       fontSize: 12,
       fontWeight: FontWeight.w500,
     );
+
+    if (address['state'] != null && address['state']['title'] != null) {
+      state = address['state']['title'];
+    } else {
+      state = '---';
+    }
+
     return Row(
       children: [
         Expanded(
@@ -116,7 +149,7 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
               ),
               SizedBox(height: 10),
               Text(
-                "${address['city']?.toString() ?? '---'}, ${address['zipCode']?.toString() ?? '---'}",
+                "$state, ${address['city']?.toString() ?? '---'}, ${address['zipCode']?.toString() ?? '---'}",
                 style: style,
               ),
               SizedBox(height: 20),
@@ -166,13 +199,27 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
                         Routes.onsiteEditAddress,
                         arguments: address,
                       )
-                    : null;
+                    : _deleteAddress(address['_id'].toString());
               },
+              //TODO: edit  address
             ),
           ),
         )
       ],
     );
+  }
+
+  void _deleteAddress(String id) {
+    setLoading(true);
+    api.deleteAddress(_token, id).whenComplete(() {
+      setLoading(false);
+      setState(() {
+        _addressesFuture = api.getAddress(_token);
+      });
+    }).futureError((e) {
+      setLoading(false);
+      e.toString().debugLog();
+    });
   }
 
   void setLoading(bool value) {
