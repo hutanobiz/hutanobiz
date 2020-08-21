@@ -11,6 +11,8 @@ import 'package:hutano/screens/appointments/track_treatment.dart';
 import 'package:hutano/screens/appointments/treatment_summary.dart';
 import 'package:hutano/screens/appointments/upload_documents.dart';
 import 'package:hutano/screens/appointments/upload_images.dart';
+import 'package:hutano/screens/book_appointment/onsite_address.dart';
+import 'package:hutano/screens/book_appointment/onsite_edit_address.dart';
 import 'package:hutano/screens/book_appointment/review_appointment.dart';
 import 'package:hutano/screens/book_appointment/select_appointment_time_screen.dart';
 import 'package:hutano/screens/book_appointment/select_services.dart';
@@ -84,6 +86,8 @@ class Routes {
   static const String allReviewsScreen = '/allReviewsScreen';
   static const String updateMedicalHistory = '/updateMedicalHistory';
   static const String allTitlesSpecialtesScreen = '/allTitlesSpecialtesScreen';
+  static const String onsiteAddresses = '/onsiteAddresses';
+  static const String onsiteEditAddress = '/onsiteEditAddress';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -301,6 +305,17 @@ class Routes {
         break;
       case allTitlesSpecialtesScreen:
         return _buildRoute(settings, AllTitlesSpecialtesScreen());
+        break;
+      case onsiteAddresses:
+        return _buildRoute(settings, OnsiteAddresses());
+        break;
+      case onsiteEditAddress:
+        return _buildRoute(
+          settings,
+          OnsiteEditAddress(
+            addressObject: args,
+          ),
+        );
         break;
       default:
         return _errorRoute();

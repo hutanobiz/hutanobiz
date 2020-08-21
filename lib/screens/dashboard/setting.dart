@@ -354,6 +354,15 @@ class _SettingsScreenState extends State<SettingScreen> {
                   );
                 },
               ),
+              customListButton(
+                "Address",
+                "images/profile_payment_method.png",
+                () {
+                  Navigator.of(context).pushNamed(
+                    Routes.onsiteAddresses,
+                  );
+                },
+              ),
             ],
           )),
     ));
