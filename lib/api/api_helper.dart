@@ -536,6 +536,39 @@ class ApiBaseHelper {
       return res["response"]['userAddress'];
     });
   }
+
+  Future<dynamic> deleteAddress(String token, String id) {
+    Map _map = {};
+    _map['id'] = id;
+
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    return _netUtil
+        .post(
+      base_url + "api/patient/delete-address",
+      body: _map,
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
+
+  Future<dynamic> addAddress(String token, Map addressMap) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    return _netUtil
+        .post(
+      base_url + "api/patient/address",
+      body: addressMap,
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
 }
 
 class NetworkUtil {
