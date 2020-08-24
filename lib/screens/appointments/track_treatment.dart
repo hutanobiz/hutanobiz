@@ -448,8 +448,10 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                           status == 0
                               ? (_totalDuration.toLowerCase().contains('no')
                                   ? _totalDuration
-                                  : 'Your provider’s office is $_totalDuration minutes away. '
-                                      'Let us know when you are on your way.')
+                                  : _appointmentType == 3
+                                      ? 'Your provider is $_totalDuration'
+                                      : 'Your provider’s office is $_totalDuration minutes away. '
+                                          'Let us know when you are on your way.')
                               : status == 1
                                   ? "Started driving"
                                   : status == 2
@@ -463,8 +465,10 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                                                   : (_totalDuration
                                                           .contains('no')
                                                       ? _totalDuration
-                                                      : 'You provider’s office is $_totalDuration minutes away. '
-                                                          'Let us know when you are on your way.'),
+                                                      : _appointmentType == 3
+                                                          ? 'Your provider is $_totalDuration'
+                                                          : 'Your provider’s office is $_totalDuration minutes away. '
+                                                              'Let us know when you are on your way.'),
                         ),
                       ),
                     ],
