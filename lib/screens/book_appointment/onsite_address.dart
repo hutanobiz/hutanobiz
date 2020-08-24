@@ -4,11 +4,13 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/widgets.dart';
 
 class OnsiteAddresses extends StatefulWidget {
-  OnsiteAddresses({Key key, this.addressObject = false}) : super(key: key);
-  final dynamic addressObject;
+  OnsiteAddresses({Key key, this.isBookAppointment = false}) : super(key: key);
+  final dynamic isBookAppointment;
 
   @override
   _OnsiteAddressesState createState() => _OnsiteAddressesState();
@@ -25,6 +27,11 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
   List addressList = [];
   String state = '---';
 
+  int _radioValue;
+
+  InheritedContainerState _container;
+  dynamic _selectedAddress;
+
   @override
   void initState() {
     super.initState();
@@ -39,6 +46,13 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _container = InheritedContainer.of(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
@@ -46,9 +60,26 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
       body: LoadingBackground(
         title: "Addresses",
         padding: const EdgeInsets.fromLTRB(20, 20, 5, 20),
-        isAddBack: true,
+        isAddBack: !widget.isBookAppointment,
         isAddAppBar: true,
         rightButtonText: 'Add Address',
+        addBottomArrows: widget.isBookAppointment,
+        onForwardTap: !widget.isBookAppointment
+            ? null
+            : () {
+                if (_selectedAddress == null) {
+                  Widgets.showErrorDialog(
+                      context: context,
+                      description: 'Please select an address');
+                } else {
+                  _container.setConsentToTreatData(
+                      "userAddress", _selectedAddress["_id"].toString());
+                  Navigator.of(context).pushNamed(
+                    Routes.paymentMethodScreen,
+                    arguments: true,
+                  );
+                }
+              },
         onRightButtonTap: () => Navigator.pushNamed(
           context,
           Routes.onsiteEditAddress,
@@ -164,59 +195,83 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
         Expanded(
           child: Align(
             alignment: Alignment.centerRight,
-            child: PopupMenuButton(
-              icon: Icon(
-                Icons.more_vert,
-                color: Colors.grey[600],
-                size: 20,
-              ),
-              elevation: 3.2,
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                PopupMenuItem<String>(
-                  value: '1',
-                  height: 40,
-                  child: Text(
-                    'Edit',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
+            child: Column(
+              children: [
+                widget.isBookAppointment
+                    ? Radio(
+                        activeColor: AppColors.persian_blue,
+                        value: index,
+                        groupValue: _radioValue,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        onChanged: _selectAddress(address),
+                      )
+                    : Container(),
+                PopupMenuButton(
+                  icon: Icon(
+                    Icons.more_vert,
+                    color: Colors.grey[600],
+                    size: 20,
                   ),
-                ),
-                PopupMenuItem<String>(
-                  value: '2',
-                  height: 40,
-                  child: Text(
-                    'Delete',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
+                  elevation: 3.2,
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuEntry<String>>[
+                    PopupMenuItem<String>(
+                      value: '1',
+                      height: 40,
+                      child: Text(
+                        'Edit',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
-                  ),
+                    PopupMenuItem<String>(
+                      value: '2',
+                      height: 40,
+                      child: Text(
+                        'Delete',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                  onSelected: (val) {
+                    val == '1'
+                        ? Navigator.pushNamed(
+                            context,
+                            Routes.onsiteEditAddress,
+                            arguments: address,
+                          ).then((value) {
+                            if (value != null && value) {
+                              setState(() {
+                                _addressesFuture = api.getAddress(_token);
+                              });
+                            }
+                          })
+                        : _deleteAddress(address['_id'].toString());
+                  },
                 ),
               ],
-              onSelected: (val) {
-                val == '1'
-                    ? Navigator.pushNamed(
-                        context,
-                        Routes.onsiteEditAddress,
-                        arguments: address,
-                      ).then((value) {
-                        if (value != null && value) {
-                          setState(() {
-                            _addressesFuture = api.getAddress(_token);
-                          });
-                        }
-                      })
-                    : _deleteAddress(address['_id'].toString());
-              },
             ),
           ),
         )
       ],
     );
+  }
+
+  Function _selectAddress(dynamic address) {
+    return (value) {
+      setState(
+        () => _radioValue = value,
+      );
+
+      _selectedAddress = address;
+    };
   }
 
   void _deleteAddress(String id) {
