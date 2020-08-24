@@ -475,9 +475,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     ),
                             ),
                             Text(
-                              doctorData['title']?.toString() ??
-                                  'Dr. ' + doctorData['fullName']?.toString() ??
-                                  '---',
+                              (doctorData['title']?.toString() ?? 'Dr.') +
+                                  ' ' +
+                                  (doctorData['fullName']?.toString() ?? '---'),
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 13,
