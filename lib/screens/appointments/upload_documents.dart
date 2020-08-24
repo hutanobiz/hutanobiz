@@ -150,7 +150,9 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
           }
 
           Navigator.of(context).pushNamed(
-            Routes.paymentMethodScreen,
+            _container.projectsResponse['serviceType'].toString() == '3'
+                ? Routes.onsiteAddresses
+                : Routes.paymentMethodScreen,
             arguments: true,
           );
         },

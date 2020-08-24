@@ -307,7 +307,11 @@ class Routes {
         return _buildRoute(settings, AllTitlesSpecialtesScreen());
         break;
       case onsiteAddresses:
-        return _buildRoute(settings, OnsiteAddresses());
+        return _buildRoute(
+            settings,
+            OnsiteAddresses(
+              isBookAppointment: args,
+            ));
         break;
       case onsiteEditAddress:
         return _buildRoute(
