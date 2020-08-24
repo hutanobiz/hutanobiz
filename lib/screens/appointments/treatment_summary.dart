@@ -7,12 +7,11 @@ import 'package:hutano/models/services.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/loading_background.dart';
-import 'package:intl/intl.dart';
 
 class TreatmentSummaryScreen extends StatefulWidget {
-  final String appointmentId;
+  final Map appointmentMap;
 
-  TreatmentSummaryScreen({Key key, @required this.appointmentId})
+  TreatmentSummaryScreen({Key key, @required this.appointmentMap})
       : super(key: key);
 
   @override
@@ -39,6 +38,9 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
   Map followUpMap = Map();
 
   bool _isLoading = false;
+  int _appointmentType = 1;
+
+  String _trackingStatusKey = 'trackingStatus';
 
   @override
   void initState() {
@@ -46,10 +48,20 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
 
     setLoading(true);
 
+    _appointmentType = widget.appointmentMap['appointmentType'];
+
+    if (_appointmentType == 3) {
+      _trackingStatusKey = 'trackingStatusProvider';
+    } else {
+      _trackingStatusKey = 'trackingStatus';
+    }
+
     SharedPref().getToken().then((token) {
       ApiBaseHelper api = ApiBaseHelper();
 
-      api.getAppointmentDetails(token, widget.appointmentId).then((response) {
+      api
+          .getAppointmentDetails(token, widget.appointmentMap['id'])
+          .then((response) {
         setLoading(false);
 
         setState(() {
@@ -106,29 +118,32 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
             durationOfSymtoms =
                 appointmentData["problemTimeSpan"]?.toString() ?? "---";
 
-            if (appointmentData["trackingStatus"] != null) {
-              if (appointmentData["trackingStatus"]["treatmentStarted"] !=
+            if (appointmentData[_trackingStatusKey] != null) {
+              if (appointmentData[_trackingStatusKey]["treatmentStarted"] !=
                       null ||
-                  appointmentData["trackingStatus"]["treatmentStarted"] != '') {
-                initiated = appointmentData["trackingStatus"]
+                  appointmentData[_trackingStatusKey]["treatmentStarted"] !=
+                      '') {
+                initiated = appointmentData[_trackingStatusKey]
                             ["treatmentStarted"]
                         .toString()
                         .formatDate() +
                     ' on ' +
-                    appointmentData["trackingStatus"]["treatmentStarted"]
+                    appointmentData[_trackingStatusKey]["treatmentStarted"]
                         .toString()
                         .formatDate(dateFormat: 'hh:mm aa');
               }
-              if (appointmentData["trackingStatus"]["patientTreatmentEnded"] !=
+              if (appointmentData[_trackingStatusKey]
+                          ["patientTreatmentEnded"] !=
                       null ||
-                  appointmentData["trackingStatus"]["patientTreatmentEnded"] !=
+                  appointmentData[_trackingStatusKey]
+                          ["patientTreatmentEnded"] !=
                       '') {
-                completed = appointmentData["trackingStatus"]
+                completed = appointmentData[_trackingStatusKey]
                             ["patientTreatmentEnded"]
                         .toString()
                         .formatDate() +
                     ' on ' +
-                    appointmentData["trackingStatus"]["patientTreatmentEnded"]
+                    appointmentData[_trackingStatusKey]["patientTreatmentEnded"]
                         .toString()
                         .formatDate(dateFormat: 'hh:mm aa');
               }
@@ -643,9 +658,9 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
           Divider(),
           subFeeWidget(
               "Type of appointment",
-              medicalCareVia == "1"
+              _appointmentType == 1
                   ? "Office Appointment"
-                  : medicalCareVia == "2"
+                  : _appointmentType == 2
                       ? "Video Appointment"
                       : "Onsite Appointment"),
           Divider(),

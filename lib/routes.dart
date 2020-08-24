@@ -244,15 +244,12 @@ class Routes {
         );
         break;
       case treatmentSummaryScreen:
-        if (args is String) {
-          return _buildRoute(
-            settings,
-            TreatmentSummaryScreen(
-              appointmentId: args,
-            ),
-          );
-        }
-        return _errorRoute();
+        return _buildRoute(
+          settings,
+          TreatmentSummaryScreen(
+            appointmentMap: args,
+          ),
+        );
         break;
       case appointmentsScreen:
         return _buildRoute(settings, AppointmentsScreen());

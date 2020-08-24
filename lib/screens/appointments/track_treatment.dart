@@ -653,9 +653,13 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
               showConfirmTreatmentDialog();
               break;
             case 5:
+              Map _map = {};
+              _map['id'] = _container.appointmentIdMap["appointmentId"];
+              _map['appointmentType'] = _appointmentType;
+
               Navigator.of(context).pushNamed(
                 Routes.treatmentSummaryScreen,
-                arguments: _container.appointmentIdMap["appointmentId"],
+                arguments: _map,
               );
               break;
           }
@@ -683,9 +687,13 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                     showConfirmTreatmentDialog();
                     break;
                   case 5:
+                    Map _map = {};
+                    _map['id'] = _container.appointmentIdMap["appointmentId"];
+                    _map['appointmentType'] = _appointmentType;
+
                     Navigator.of(context).pushNamed(
                       Routes.treatmentSummaryScreen,
-                      arguments: _container.appointmentIdMap["appointmentId"],
+                      arguments: _map,
                     );
                     break;
                 }

@@ -460,9 +460,13 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                   listType == 2 && _appointmentStatus == "4"
                       ? leftButton(listType, userRating, "Treatment summary",
                           () {
+                          Map _map = {};
+                          _map['id'] = response["_id"].toString();
+                          _map['appointmentType'] = response["type"];
+
                           Navigator.of(context).pushNamed(
                             Routes.treatmentSummaryScreen,
-                            arguments: response["_id"].toString(),
+                            arguments: _map,
                           );
                         })
                       : Container(),
