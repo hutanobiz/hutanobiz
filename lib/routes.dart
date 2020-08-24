@@ -258,7 +258,12 @@ class Routes {
         return _buildRoute(settings, AppointmentsScreen());
         break;
       case trackTreatmentScreen:
-        return _buildRoute(settings, TrackTreatmentScreen());
+        return _buildRoute(
+          settings,
+          TrackTreatmentScreen(
+            appointmentType: args,
+          ),
+        );
         break;
       case appointmentCompleteConfirmation:
         if (args is Map<String, String>) {

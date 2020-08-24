@@ -95,35 +95,26 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             );
           },
           padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
-          child: Stack(
-            children: <Widget>[
-              Container(
-                margin: const EdgeInsets.only(bottom: 60),
-                child: FutureBuilder(
-                    future: _profileFuture,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        profileMap = snapshot.data;
+          child: FutureBuilder(
+            future: _profileFuture,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                profileMap = snapshot.data;
 
-                        return SingleChildScrollView(
-                          padding: const EdgeInsets.only(bottom: 20),
-                          child: profileWidget(profileMap),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text("${snapshot.error}");
-                      }
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }),
-              ),
-              _appointmentStatus == "2" || _appointmentStatus == "6"
-                  ? Container()
-                  : Align(
+                return Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: profileWidget(profileMap),
+                      ),
+                    ),
+                    Align(
                       alignment: FractionalOffset.bottomRight,
                       child: Container(
                         height: 55.0,
                         width: 185.0,
+                        margin: const EdgeInsets.only(top: 10),
                         padding: const EdgeInsets.only(right: 20.0),
                         child: FancyButton(
                           title: "Show status",
@@ -131,14 +122,25 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                   _appointmentStatus == "6"
                               ? null
                               : () => Navigator.of(context)
-                                  .pushNamed(Routes.trackTreatmentScreen)
+                                  .pushNamed(
+                                    Routes.trackTreatmentScreen,
+                                    arguments: profileMap["data"]["type"],
+                                  )
                                   .whenComplete(
                                     () => appointmentDetailsFuture(),
                                   ),
                         ),
                       ),
-                    ),
-            ],
+                    )
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            },
           ),
         ),
       ),
