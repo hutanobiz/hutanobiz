@@ -902,7 +902,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
 
   onsiteChangeRequestStatus(String id, String status) {
     Map map = Map();
-    map["trackingStatus.status"] = status;
+    map["trackingStatusProvider.status"] = status;
     SharedPref().getToken().then((token) {
       api.onsiteAppointmentTrackingStatus(token, map, id).then((value) {
         if (mounted) {
