@@ -339,7 +339,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
         if (_reviewAppointmentData["type"] == '3') {
           request.fields['userAddressId'] =
-              _consentToTreatMap["userAddress"].toString();
+              _consentToTreatMap["userAddress"]["_id"].toString();
         }
 
         request.fields['consentToTreat'] = '1';
@@ -570,13 +570,23 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         _state = _profileMap['State'][0];
       }
 
-      address = Extensions.addressFormat(
-        business["address"]?.toString(),
-        business["street"]?.toString(),
-        business["city"]?.toString(),
-        _state,
-        business["zipCode"]?.toString(),
-      );
+      if (_container.projectsResponse["serviceType"].toString() == '3') {
+        address = Extensions.addressFormat(
+          _consentToTreatMap["userAddress"]["address"]?.toString(),
+          _consentToTreatMap["userAddress"]["street"]?.toString(),
+          _consentToTreatMap["userAddress"]["city"]?.toString(),
+          _state,
+          _consentToTreatMap["userAddress"]["zipCode"]?.toString(),
+        );
+      } else {
+        address = Extensions.addressFormat(
+          business["address"]?.toString(),
+          business["street"]?.toString(),
+          business["city"]?.toString(),
+          _state,
+          business["zipCode"]?.toString(),
+        );
+      }
     }
 
     _widgetList.add(
@@ -601,18 +611,6 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                       hour: int.parse(_timeHours), minute: int.parse(_timeMins))
                   .format(context),
           "ic_calendar"),
-    );
-
-    _widgetList.add(SizedBox(height: 12.0));
-
-    _widgetList.add(container("Office Address", address, "ic_office_address"));
-
-    _widgetList.add(
-      servicesWidget(),
-    );
-
-    _widgetList.add(
-      paymentWidget(paymentType, insuranceName, insuranceImage),
     );
 
     _widgetList.add(_initialPosition == null
@@ -674,6 +672,16 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                           icon: _sourceIcon,
                         ));
 
+                        if (_container.projectsResponse["serviceType"]
+                                .toString() ==
+                            '3') {
+                          _desPosition = LatLng(
+                              _consentToTreatMap["userAddress"]['coordinates']
+                                  [1],
+                              _consentToTreatMap["userAddress"]['coordinates']
+                                  [0]);
+                        }
+                        
                         _markers.add(Marker(
                           markerId: MarkerId(_desPosition.toString()),
                           position: _desPosition,
@@ -730,6 +738,21 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
               ),
             ],
           ));
+
+    _widgetList.add(container(
+        _container.projectsResponse["serviceType"].toString() == '3'
+            ? 'Site Address'
+            : "Office Address",
+        address,
+        "ic_office_address"));
+
+    _widgetList.add(
+      servicesWidget(),
+    );
+
+    _widgetList.add(
+      paymentWidget(paymentType, insuranceName, insuranceImage),
+    );
 
     _widgetList.add(paymentType == "3" ? duePaymentWidget() : Container());
 

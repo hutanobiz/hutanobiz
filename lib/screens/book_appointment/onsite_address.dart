@@ -73,7 +73,7 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
                       description: 'Please select an address');
                 } else {
                   _container.setConsentToTreatData(
-                      "userAddress", _selectedAddress["_id"].toString());
+                      "userAddress", _selectedAddress);
                   Navigator.of(context).pushNamed(
                     Routes.paymentMethodScreen,
                     arguments: true,
