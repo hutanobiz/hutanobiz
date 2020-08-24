@@ -315,6 +315,22 @@ class ApiBaseHelper {
     });
   }
 
+  Future<dynamic> onsiteAppointmentTrackingStatus(
+      String token, Map rateDoctorData, String appointmentId) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    return _netUtil
+        .post(
+      base_url + "api/onsite/appointment-tracking-status/" + appointmentId,
+      body: rateDoctorData,
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
+
   Future<dynamic> deleteinsurance(String token, String insuranceId) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
