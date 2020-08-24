@@ -756,7 +756,9 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
         response[_trackStatusKey][_startDrivingStatusKey] == null
             ? Container()
             : timingSubWidget(
-                "Started Driving",
+                _appointmentType == 3
+                    ? 'Provider Started Driving'
+                    : "Started Driving",
                 response[_trackStatusKey][_startDrivingStatusKey] != null
                     ? response[_trackStatusKey][_startDrivingStatusKey]
                         .toString()
@@ -769,7 +771,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
         response[_trackStatusKey][_arrivedStatusKey] == null
             ? Container()
             : timingSubWidget(
-                "Arrived",
+                _appointmentType == 3 ? 'Provider Arrived' : "Arrived",
                 response[_trackStatusKey][_arrivedStatusKey] != null
                     ? response[_trackStatusKey][_arrivedStatusKey]
                         .toString()
