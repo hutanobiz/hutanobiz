@@ -25,9 +25,18 @@ import 'package:location/location.dart';
 const double CAMERA_ZOOM = 16;
 const double CAMERA_TILT = 80;
 const double CAMERA_BEARING = 30;
+const TRACK_STATUS_PROVIDER = 'trackingStatusProvider';
+const TRACK_STATUS = 'trackingStatus';
+const PATIENT_START_DRIVING = 'patientStartDriving';
+const PROVIDER_START_DRIVING = 'providerStartDriving';
+const PATIENT_ARRIVED = 'patientArrived';
+const PROVIDER_ARRIVED = 'providerArrived';
 
 class TrackTreatmentScreen extends StatefulWidget {
-  const TrackTreatmentScreen({Key key}) : super(key: key);
+  const TrackTreatmentScreen({Key key, this.appointmentType = 0})
+      : super(key: key);
+
+  final int appointmentType;
 
   @override
   _TrackTreatmentScreenState createState() => _TrackTreatmentScreenState();
@@ -70,6 +79,12 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
   static const String _isolateName = "LocatorIsolate";
   ReceivePort port = ReceivePort();
 
+  int _appointmentType = 0;
+
+  String _trackStatusKey = TRACK_STATUS;
+  String _startDrivingStatusKey = PATIENT_START_DRIVING;
+  String _arrivedStatusKey = PATIENT_ARRIVED;
+
   Future<void> initPlatformState() async {
     await BackgroundLocator.initialize();
   }
@@ -110,6 +125,18 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
   @override
   void initState() {
     super.initState();
+
+    _appointmentType = widget.appointmentType;
+
+    if (_appointmentType == 3) {
+      _trackStatusKey = TRACK_STATUS_PROVIDER;
+      _startDrivingStatusKey = PROVIDER_START_DRIVING;
+      _arrivedStatusKey = PROVIDER_ARRIVED;
+    } else {
+      _trackStatusKey = TRACK_STATUS;
+      _startDrivingStatusKey = PATIENT_START_DRIVING;
+      _arrivedStatusKey = PATIENT_ARRIVED;
+    }
 
     setSourceAndDestinationIcons();
     setInitialLocation();
@@ -287,10 +314,10 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
       }
     }
 
-    if (response["trackingStatus"] != null &&
-        response["trackingStatus"]["treatmentStarted"] != null) {
+    if (response[_trackStatusKey] != null &&
+        response[_trackStatusKey]["treatmentStarted"] != null) {
       dateTime = "On " +
-          response["trackingStatus"]["treatmentStarted"].toString().formatDate(
+          response[_trackStatusKey]["treatmentStarted"].toString().formatDate(
                 dateFormat: Strings.dateTimePattern,
               );
     }
@@ -322,11 +349,11 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
     }
 
     int status = 0;
-    if (response["trackingStatus"] != null) {
-      if (response["trackingStatus"]["status"] != null) {
-        status = response["trackingStatus"]["status"] ?? 0;
+    if (response[_trackStatusKey] != null) {
+      if (response[_trackStatusKey]["status"] != null) {
+        status = response[_trackStatusKey]["status"] ?? 0;
       } else {
-        status = response["trackingStatus"] ?? 0;
+        status = response[_trackStatusKey] ?? 0;
       }
     }
 
@@ -539,103 +566,128 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                   ),
                 ),
                 timingWidget(response),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: response["trackingStatus"]["status"] == 2 ||
-                          response["trackingStatus"]["status"] == 3
-                      ? Container()
-                      : FancyButton(
-                          title: response["trackingStatus"]["status"] == 0 ||
-                                  response["trackingStatus"]["status"] == null
-                              ? "Start Driving"
-                              : response["trackingStatus"]["status"] == 1
-                                  ? "Arrived"
-                                  : response["trackingStatus"]["status"] == 2 ||
-                                          response["trackingStatus"]
-                                                  ["status"] ==
-                                              3 ||
-                                          response["trackingStatus"]
-                                                  ["status"] ==
-                                              4
-                                      ? "Confirm Treatment End"
-                                      : response["trackingStatus"]["status"] ==
-                                              5
-                                          ? "Treatment Summary"
-                                          : "Start Driving",
-                          onPressed: () {
-                            int status =
-                                response["trackingStatus"]["status"] ?? 0;
-                            switch (status) {
-                              case 0:
-                                changeRequestStatus(
-                                    _container
-                                        .appointmentIdMap["appointmentId"],
-                                    "1");
-
-                                IsolateNameServer.registerPortWithName(
-                                    port.sendPort, _isolateName);
-
-                                port.listen((dynamic data) {
-                                  LocationDto lastLocation = data;
-
-                                  if (mounted) {
-                                    setState(() {
-                                      _initialPosition = LatLng(
-                                        lastLocation.latitude,
-                                        lastLocation.longitude,
-                                      );
-                                    });
-                                  }
-
-                                  updatePinOnMap(LatLng(
-                                    lastLocation.latitude,
-                                    lastLocation.longitude,
-                                  ));
-
-                                  updateAppointmentCoordinates(LatLng(
-                                    lastLocation.latitude,
-                                    lastLocation.longitude,
-                                  ));
-                                });
-
-                                initPlatformState();
-                                startLocationService();
-
-                                Widgets.showToast("You started driving");
-
-                                break;
-                              case 1:
-                                changeRequestStatus(
-                                    _container
-                                        .appointmentIdMap["appointmentId"],
-                                    "2");
-
-                                IsolateNameServer.removePortNameMapping(
-                                    _isolateName);
-                                BackgroundLocator.unRegisterLocationUpdate();
-
-                                break;
-                              case 4:
-                                showConfirmTreatmentDialog();
-                                break;
-                              case 5:
-                                Navigator.of(context).pushNamed(
-                                  Routes.treatmentSummaryScreen,
-                                  arguments: _container
-                                      .appointmentIdMap["appointmentId"],
-                                );
-                                break;
-                            }
-                          },
-                          buttonHeight: 55,
-                        ),
-                ),
+                _appointmentType == 3
+                    ? _onsiteButton(response)
+                    : (response[_trackStatusKey]["status"] == 2 ||
+                            response[_trackStatusKey]["status"] == 3
+                        ? Container()
+                        : _button(
+                            response,
+                          )),
               ],
             ),
           ),
         )
       ],
     );
+  }
+
+  Widget _button(dynamic response) {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: FancyButton(
+        title: response[_trackStatusKey]["status"] == 0 ||
+                response[_trackStatusKey]["status"] == null
+            ? "Start Driving"
+            : response[_trackStatusKey]["status"] == 1
+                ? "Arrived"
+                : response[_trackStatusKey]["status"] == 2 ||
+                        response[_trackStatusKey]["status"] == 3 ||
+                        response[_trackStatusKey]["status"] == 4
+                    ? "Confirm Treatment End"
+                    : response[_trackStatusKey]["status"] == 5
+                        ? "Treatment Summary"
+                        : "Start Driving",
+        onPressed: () {
+          int status = response[_trackStatusKey]["status"] ?? 0;
+          switch (status) {
+            case 0:
+              changeRequestStatus(
+                  _container.appointmentIdMap["appointmentId"], "1");
+
+              IsolateNameServer.registerPortWithName(
+                  port.sendPort, _isolateName);
+
+              port.listen((dynamic data) {
+                LocationDto lastLocation = data;
+
+                if (mounted) {
+                  setState(() {
+                    _initialPosition = LatLng(
+                      lastLocation.latitude,
+                      lastLocation.longitude,
+                    );
+                  });
+                }
+
+                updatePinOnMap(LatLng(
+                  lastLocation.latitude,
+                  lastLocation.longitude,
+                ));
+
+                updateAppointmentCoordinates(LatLng(
+                  lastLocation.latitude,
+                  lastLocation.longitude,
+                ));
+              });
+
+              initPlatformState();
+              startLocationService();
+
+              Widgets.showToast("You started driving");
+
+              break;
+            case 1:
+              changeRequestStatus(
+                  _container.appointmentIdMap["appointmentId"], "2");
+
+              IsolateNameServer.removePortNameMapping(_isolateName);
+              BackgroundLocator.unRegisterLocationUpdate();
+
+              break;
+            case 4:
+              showConfirmTreatmentDialog();
+              break;
+            case 5:
+              Navigator.of(context).pushNamed(
+                Routes.treatmentSummaryScreen,
+                arguments: _container.appointmentIdMap["appointmentId"],
+              );
+              break;
+          }
+        },
+        buttonHeight: 55,
+      ),
+    );
+  }
+
+  Widget _onsiteButton(dynamic response) {
+    return response[TRACK_STATUS_PROVIDER]["status"] == null ||
+            response[TRACK_STATUS_PROVIDER]["status"] != 4
+        ? Container()
+        : Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: FancyButton(
+              buttonHeight: 55,
+              title: response[TRACK_STATUS_PROVIDER]["status"] == 5
+                  ? "Treatment Summary"
+                  : "Confirm Treatment End",
+              onPressed: () {
+                int status = response[TRACK_STATUS_PROVIDER]["status"] ?? 0;
+                switch (status) {
+                  case 4:
+                    showConfirmTreatmentDialog();
+                    break;
+                  case 5:
+                    Navigator.of(context).pushNamed(
+                      Routes.treatmentSummaryScreen,
+                      arguments: _container.appointmentIdMap["appointmentId"],
+                    );
+                    break;
+                }
+              },
+            ),
+          );
   }
 
   static void callback(LocationDto locationDto) async {
@@ -701,65 +753,65 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
     return Column(
       children: <Widget>[
         divider(),
-        response["trackingStatus"]["patientStartDriving"] == null
+        response[_trackStatusKey][_startDrivingStatusKey] == null
             ? Container()
             : timingSubWidget(
                 "Started Driving",
-                response["trackingStatus"]["patientStartDriving"] != null
-                    ? response["trackingStatus"]["patientStartDriving"]
+                response[_trackStatusKey][_startDrivingStatusKey] != null
+                    ? response[_trackStatusKey][_startDrivingStatusKey]
                         .toString()
                         .formatDate(dateFormat: Strings.dateTimePattern)
                     : "---",
                 false),
-        response["trackingStatus"]["patientArrived"] == null
+        response[_trackStatusKey][_arrivedStatusKey] == null
             ? Container()
             : divider(),
-        response["trackingStatus"]["patientArrived"] == null
+        response[_trackStatusKey][_arrivedStatusKey] == null
             ? Container()
             : timingSubWidget(
                 "Arrived",
-                response["trackingStatus"]["patientArrived"] != null
-                    ? response["trackingStatus"]["patientArrived"]
+                response[_trackStatusKey][_arrivedStatusKey] != null
+                    ? response[_trackStatusKey][_arrivedStatusKey]
                         .toString()
                         .formatDate(dateFormat: Strings.dateTimePattern)
                     : "---",
                 false),
-        response["trackingStatus"]["treatmentStarted"] == null
+        response[_trackStatusKey]["treatmentStarted"] == null
             ? Container()
             : divider(),
-        response["trackingStatus"]["treatmentStarted"] == null
+        response[_trackStatusKey]["treatmentStarted"] == null
             ? Container()
             : timingSubWidget(
                 "Treatment Started",
-                response["trackingStatus"]["treatmentStarted"] != null
-                    ? response["trackingStatus"]["treatmentStarted"]
+                response[_trackStatusKey]["treatmentStarted"] != null
+                    ? response[_trackStatusKey]["treatmentStarted"]
                         .toString()
                         .formatDate(dateFormat: Strings.dateTimePattern)
                     : "---",
                 false),
-        response["trackingStatus"]["providerTreatmentEnded"] == null
+        response[_trackStatusKey]["providerTreatmentEnded"] == null
             ? Container()
             : divider(),
-        response["trackingStatus"]["providerTreatmentEnded"] == null
+        response[_trackStatusKey]["providerTreatmentEnded"] == null
             ? Container()
             : timingSubWidget(
                 "Provider Treatment Completed",
-                response["trackingStatus"]["providerTreatmentEnded"] != null
-                    ? response["trackingStatus"]["providerTreatmentEnded"]
+                response[_trackStatusKey]["providerTreatmentEnded"] != null
+                    ? response[_trackStatusKey]["providerTreatmentEnded"]
                         .toString()
                         .formatDate(dateFormat: Strings.dateTimePattern)
                     : "---",
                 false,
               ),
-        response["trackingStatus"]["patientTreatmentEnded"] == null
+        response[_trackStatusKey]["patientTreatmentEnded"] == null
             ? Container()
             : divider(),
-        response["trackingStatus"]["patientTreatmentEnded"] == null
+        response[_trackStatusKey]["patientTreatmentEnded"] == null
             ? Container()
             : timingSubWidget(
                 "Treatment Completed",
-                response["trackingStatus"]["patientTreatmentEnded"] != null
-                    ? response["trackingStatus"]["patientTreatmentEnded"]
+                response[_trackStatusKey]["patientTreatmentEnded"] != null
+                    ? response[_trackStatusKey]["patientTreatmentEnded"]
                         .toString()
                         .formatDate(dateFormat: Strings.dateTimePattern)
                     : "---",
@@ -835,6 +887,24 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
     map["trackingStatus.status"] = status;
     SharedPref().getToken().then((token) {
       api.appointmentTrackingStatus(token, map, id).then((value) {
+        if (mounted) {
+          setState(() {
+            _profileFuture = api.getAppointmentDetails(token, id);
+          });
+          value.toString().debugLog();
+        }
+      }).futureError((error) {
+        Widgets.showToast(error.toString());
+        error.toString().debugLog();
+      });
+    });
+  }
+
+  onsiteChangeRequestStatus(String id, String status) {
+    Map map = Map();
+    map["trackingStatus.status"] = status;
+    SharedPref().getToken().then((token) {
+      api.onsiteAppointmentTrackingStatus(token, map, id).then((value) {
         if (mounted) {
           setState(() {
             _profileFuture = api.getAppointmentDetails(token, id);
@@ -951,9 +1021,16 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                           ),
                           onPressed: () {
                             Navigator.of(context).pop();
-                            changeRequestStatus(
-                                _container.appointmentIdMap["appointmentId"],
-                                "5");
+
+                            if (_appointmentType == 3) {
+                              onsiteChangeRequestStatus(
+                                  _container.appointmentIdMap["appointmentId"],
+                                  "5");
+                            } else {
+                              changeRequestStatus(
+                                  _container.appointmentIdMap["appointmentId"],
+                                  "5");
+                            }
 
                             Navigator.of(context).pushNamed(
                               Routes.appointmentCompleteConfirmation,
