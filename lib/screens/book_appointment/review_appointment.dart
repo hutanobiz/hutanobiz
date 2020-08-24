@@ -94,7 +94,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   @override
   void initState() {
     super.initState();
-StripePayment.setOptions(
+    StripePayment.setOptions(
       StripeOptions(
         publishableKey: kstripePublishKey,
       ),
@@ -317,6 +317,8 @@ StripePayment.setOptions(
         http.MultipartRequest request = http.MultipartRequest('POST', uri);
         request.headers['authorization'] = token;
 
+        token.toString().debugLog();
+
         String doctorId = '';
 
         if (_profileMap["userId"] != null && _profileMap["userId"] is Map) {
@@ -334,6 +336,11 @@ StripePayment.setOptions(
         _reviewAppointmentData["doctor"] = doctorId;
 
         request.fields.addAll(_reviewAppointmentData);
+
+        if (_reviewAppointmentData["type"] == '3') {
+          request.fields['userAddressId'] =
+              _consentToTreatMap["userAddress"].toString();
+        }
 
         request.fields['consentToTreat'] = '1';
         request.fields['problemTimeSpan'] =
@@ -396,7 +403,12 @@ StripePayment.setOptions(
           }
         }
 
-        var response = await request.send();
+        request.fields.toString().debugLog();
+
+        var response = await request.send().futureError((e) {
+          _loading(false);
+          e.toString().debugLog();
+        });
         final int statusCode = response.statusCode;
         log("Status code: $statusCode");
 
@@ -420,14 +432,13 @@ StripePayment.setOptions(
           responseJson["response"].toString().debugLog();
           throw Exception(responseJson);
         } else {
-          if(responseJson["response"] is String){
-             _loading(false);
-             Widgets.showErrorialog(
-                context: context,
-                description: responseJson["response"],
-              );
-          }
-          else if (responseJson["response"]['paymentIntent'] != null) {
+          if (responseJson["response"] is String) {
+            _loading(false);
+            Widgets.showErrorialog(
+              context: context,
+              description: responseJson["response"],
+            );
+          } else if (responseJson["response"]['paymentIntent'] != null) {
             String _clientSecret =
                 responseJson["response"]['paymentIntent']['client_secret'];
 
