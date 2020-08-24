@@ -360,6 +360,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                 () {
                   Navigator.of(context).pushNamed(
                     Routes.onsiteAddresses,
+                    arguments: false,
                   );
                 },
               ),
