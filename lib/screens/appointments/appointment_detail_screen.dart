@@ -232,25 +232,46 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           }
         }
 
-        if (detail["businessLocation"] != null) {
-          dynamic business = detail["businessLocation"];
-
+        if (_providerData["type"].toString() == '3') {
           address = Extensions.addressFormat(
-            business["address"]?.toString(),
-            business["street"]?.toString(),
-            business["city"]?.toString(),
-            business["state"],
-            business["zipCode"]?.toString(),
+            _providerData["userAddress"]["address"]?.toString(),
+            _providerData["userAddress"]["street"]?.toString(),
+            _providerData["userAddress"]["city"]?.toString(),
+            _providerData["userAddress"]["state"],
+            _providerData["userAddress"]["zipCode"]?.toString(),
           );
 
-          if (detail["businessLocation"]["coordinates"] != null) {
-            List location = detail["businessLocation"]["coordinates"];
+          if (_providerData["userAddress"]["coordinates"] != null) {
+            List location = _providerData["userAddress"]["coordinates"];
 
             if (location.length > 0) {
               latLng = LatLng(
                 location[1],
                 location[0],
               );
+            }
+          }
+        } else {
+          if (detail["businessLocation"] != null) {
+            dynamic business = detail["businessLocation"];
+
+            address = Extensions.addressFormat(
+              business["address"]?.toString(),
+              business["street"]?.toString(),
+              business["city"]?.toString(),
+              business["state"],
+              business["zipCode"]?.toString(),
+            );
+
+            if (detail["businessLocation"]["coordinates"] != null) {
+              List location = detail["businessLocation"]["coordinates"];
+
+              if (location.length > 0) {
+                latLng = LatLng(
+                  location[1],
+                  location[0],
+                );
+              }
             }
           }
         }

@@ -575,7 +575,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           _consentToTreatMap["userAddress"]["address"]?.toString(),
           _consentToTreatMap["userAddress"]["street"]?.toString(),
           _consentToTreatMap["userAddress"]["city"]?.toString(),
-          _state,
+          _consentToTreatMap["userAddress"]['state'],
           _consentToTreatMap["userAddress"]["zipCode"]?.toString(),
         );
       } else {
@@ -681,7 +681,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                               _consentToTreatMap["userAddress"]['coordinates']
                                   [0]);
                         }
-                        
+
                         _markers.add(Marker(
                           markerId: MarkerId(_desPosition.toString()),
                           position: _desPosition,
