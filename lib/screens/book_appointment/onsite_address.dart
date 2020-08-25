@@ -253,7 +253,7 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
                               });
                             }
                           })
-                        : _deleteAddress(address['_id'].toString());
+                        : showConfirmationDialog(address);
                   },
                 ),
               ],
@@ -261,6 +261,16 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
           ),
         )
       ],
+    );
+  }
+
+  showConfirmationDialog(dynamic address) {
+    Widgets.showConfirmationDialog(
+      context: context,
+      description: "Are you sure to delete this address?",
+      onLeftPressed: () => _deleteAddress(
+        address['_id'].toString(),
+      ),
     );
   }
 
