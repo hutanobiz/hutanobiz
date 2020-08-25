@@ -19,7 +19,8 @@ class Extensions {
 
     if (address != null) {
       addressName += address.toString().toLowerCase().contains('suite') ||
-              address.toString().toLowerCase().contains('ste')
+              address.toString().toLowerCase().contains('ste') ||
+              address.toString().toLowerCase().contains('st')
           ? "Ste."
           : (!(address.toString().toLowerCase().contains('suite') ||
                   address.toString().toLowerCase().contains('ste'))
