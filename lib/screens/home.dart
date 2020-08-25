@@ -11,8 +11,8 @@ import 'package:hutano/screens/dashboard/dashboardScreen.dart';
 import 'package:hutano/screens/dashboard/requests_appointments_screen.dart';
 import 'package:hutano/screens/dashboard/setting.dart';
 
-const kstripePublishKey =
-    'pk_test_LlxS6SLz0PrOm9IY9mxM0LHo006tjnSqWX';
+const kstripePublishKey = 'pk_test_LlxS6SLz0PrOm9IY9mxM0LHo006tjnSqWX';
+
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
 
@@ -62,7 +62,12 @@ class _HomeScreenState extends State<HomeScreen> {
         : message["data"]['appointmentId'];
 
     if (isTrack == "true") {
-      Navigator.of(context).pushNamed(Routes.trackTreatmentScreen);
+      Navigator.of(context).pushNamed(
+        Routes.trackTreatmentScreen,
+        arguments: Platform.isIOS
+            ? message['appointmentType']
+            : message["data"]['appointmentType'],
+      );
     } else {
       Navigator.of(context).pushNamed(
         Routes.appointmentDetailScreen,
@@ -86,13 +91,12 @@ class _HomeScreenState extends State<HomeScreen> {
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
         0,
-          Platform.isAndroid
+        Platform.isAndroid
             ? message['notification']['title'].toString()
             : message['aps']['alert']['title'].toString(),
         Platform.isAndroid
             ? message['notification']['body'].toString()
             : message['aps']['alert']['title'].toString(),
-
         platformChannelSpecifics,
         payload: json.encode(message));
   }
