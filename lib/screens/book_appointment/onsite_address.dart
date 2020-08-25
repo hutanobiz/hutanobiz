@@ -285,6 +285,8 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
   }
 
   void _deleteAddress(String id) {
+    Navigator.pop(context);
+
     setLoading(true);
     api.deleteAddress(_token, id).whenComplete(() {
       setLoading(false);
