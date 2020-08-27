@@ -38,11 +38,15 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
   TextEditingController _cityController = TextEditingController();
   TextEditingController _zipController = TextEditingController();
   TextEditingController _streetController = TextEditingController();
+  TextEditingController _residenceTypeController = TextEditingController();
+  TextEditingController _roomNoController = TextEditingController();
 
   Map _addressMap = {};
 
   String _token;
   LatLng _latLng = LatLng(0, 0);
+
+  List<String> typeList = ['Home', 'Appartment', 'Condo', 'Hotel'];
 
   @override
   void initState() {
@@ -72,6 +76,9 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
       setState(() {});
     });
     _streetController.addListener(() {
+      setState(() {});
+    });
+    _roomNoController.addListener(() {
       setState(() {});
     });
 
@@ -112,6 +119,8 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
     _cityController.dispose();
     _zipController.dispose();
     _streetController.dispose();
+    _residenceTypeController.dispose();
+    _roomNoController.dispose();
     super.dispose();
   }
 
@@ -137,10 +146,9 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         primaryLocationExpandedWidget(),
+        SizedBox(height: 20),
         nextButton(),
-        SizedBox(
-          height: 20,
-        )
+        SizedBox(height: 20),
       ],
     );
   }
@@ -253,7 +261,7 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
       _addressMap['zipCode'] = first.postalCode;
       _zipController.text = first.postalCode;
     }
-    
+
     _addressMap['street'] = (first.featureName ?? "") +
         (first.featureName != null && first.thoroughfare != null ? " " : "") +
         (first.thoroughfare ?? "");
@@ -288,6 +296,30 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
                   _addressMap['title'] = v;
                 }),
             Widgets.sizedBox(height: 29.0),
+            picker(
+              _residenceTypeController,
+              "Residence Type",
+              () => residenceTypeBottomDialog(
+                typeList,
+                _residenceTypeController,
+              ),
+            ),
+            Widgets.sizedBox(height: 29.0),
+            _addressMap['addresstype'] == '1'
+                ? Container()
+                : CustomTextField(
+                    initialValue: _addressMap['number'],
+                    labelText: _addressMap['addresstype'] == '2'
+                        ? "Apartment Number"
+                        : (_addressMap['addresstype'] == '3'
+                            ? 'Unit number'
+                            : 'Room Number'),
+                    onChanged: (value) {
+                      _addressMap['number'] = value;
+                    }),
+            _addressMap['addresstype'] == '1'
+                ? Container()
+                : Widgets.sizedBox(height: 29.0),
             Material(
               color: AppColors.snow,
               child: InkWell(
@@ -361,6 +393,13 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
                 ),
               ],
             ),
+            Widgets.sizedBox(height: 29.0),
+            CustomTextField(
+                initialValue: _addressMap['securityGate'],
+                labelText: "Security Gate",
+                onChanged: (v) {
+                  _addressMap['securityGate'] = v;
+                }),
           ],
         ),
       ),
@@ -376,6 +415,13 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
     map['userAddress[state]'] = _addressMap['state'];
     map['userAddress[stateCode]'] = _addressMap['stateCode'];
     map['userAddress[zipCode]'] = _addressMap['zipCode'];
+    map['userAddress[useraddresstype]'] = _addressMap['addresstype'].toString();
+
+    if (_addressMap['number'] != null) {
+      map['userAddress[number]'] = _addressMap['number'].toString();
+    }
+
+    map['userAddress[securityGate]'] = _addressMap['securityGate'].toString();
     map['userAddress[coordinates][0]'] = _latLng.longitude.toString();
     map['userAddress[coordinates][1]'] = _latLng.latitude.toString();
 
@@ -471,6 +517,97 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
           ),
         ),
       ),
+    );
+  }
+
+  void residenceTypeBottomDialog(
+      List<String> list, TextEditingController controller) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Select Residence Type",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: list.length,
+                  itemBuilder: (context, index) {
+                    String _icon = 'ic_onsite_app';
+
+                    switch (index) {
+                      case 0:
+                        _icon = 'ic_onsite_app';
+                        break;
+                      case 1:
+                        _icon = 'ic_apartment';
+                        break;
+                      case 2:
+                        _icon = 'ic_condo';
+                        break;
+                      case 3:
+                        _icon = 'ic_hotel';
+                        break;
+                      default:
+                    }
+
+                    return ListTile(
+                      title: Row(
+                        children: [
+                          Image.asset(
+                            "images/$_icon.png",
+                            height: 19,
+                            width: 19,
+                          ),
+                          SizedBox(width: 18),
+                          Text(
+                            list[index],
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                      trailing: Padding(
+                        padding: EdgeInsets.only(right: 12),
+                        child: typeList[index] == controller.text
+                            ? Image.asset("images/checkedCheck.png",
+                                height: 24, width: 24)
+                            : Image.asset("images/uncheckedCheck.png",
+                                height: 24, width: 24),
+                      ),
+                      onTap: () {
+                        setState(
+                          () {
+                            controller.text = list[index];
+                            _addressMap['addresstype'] = (index + 1).toString();
+                            Navigator.pop(context);
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 
