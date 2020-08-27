@@ -74,10 +74,7 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
                 } else {
                   _container.setConsentToTreatData(
                       "userAddress", _selectedAddress);
-                  Navigator.of(context).pushNamed(
-                    Routes.paymentMethodScreen,
-                    arguments: true,
-                  );
+                  Navigator.of(context).pushNamed(Routes.parkingScreen);
                 }
               },
         onRightButtonTap: () => Navigator.pushNamed(

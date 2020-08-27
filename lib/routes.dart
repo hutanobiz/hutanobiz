@@ -15,6 +15,7 @@ import 'package:hutano/screens/book_appointment/onsite_address.dart';
 import 'package:hutano/screens/book_appointment/onsite_edit_address.dart';
 import 'package:hutano/screens/book_appointment/review_appointment.dart';
 import 'package:hutano/screens/book_appointment/select_appointment_time_screen.dart';
+import 'package:hutano/screens/book_appointment/select_parking_screen.dart';
 import 'package:hutano/screens/book_appointment/select_services.dart';
 import 'package:hutano/screens/dashboard/all_reviews_screen.dart';
 import 'package:hutano/screens/dashboard/all_tiltes_specialties_screen.dart';
@@ -88,6 +89,7 @@ class Routes {
   static const String allTitlesSpecialtesScreen = '/allTitlesSpecialtesScreen';
   static const String onsiteAddresses = '/onsiteAddresses';
   static const String onsiteEditAddress = '/onsiteEditAddress';
+  static const String parkingScreen = '/parkingScreen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -321,6 +323,12 @@ class Routes {
           OnsiteEditAddress(
             addressObject: args,
           ),
+        );
+        break;
+      case parkingScreen:
+        return _buildRoute(
+          settings,
+          SelectParkingScreen(),
         );
         break;
       default:
