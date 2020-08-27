@@ -340,6 +340,16 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         if (_reviewAppointmentData["type"] == '3') {
           request.fields['userAddressId'] =
               _consentToTreatMap["userAddress"]["_id"].toString();
+          request.fields['parkingType'] =
+              _consentToTreatMap["parkingMap"]["parkingType"].toString();
+          request.fields['parkingFee'] =
+              _consentToTreatMap["parkingMap"]["parkingFee"].toString();
+
+          if (_consentToTreatMap["parkingMap"]["instructions"].toString() !=
+              null) {
+            request.fields['instructions'] =
+                _consentToTreatMap["parkingMap"]["instructions"].toString();
+          }
         }
 
         request.fields['consentToTreat'] = '1';
