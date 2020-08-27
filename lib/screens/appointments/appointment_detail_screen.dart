@@ -174,6 +174,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         userRating,
         professionalTitle = "---",
         fee = "0.00",
+        parkingFee = "0.00",
         avatar,
         address = "---",
         officeVisitFee = "0.00",
@@ -233,6 +234,11 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         }
 
         if (_providerData["type"].toString() == '3') {
+          if (_providerData['parking'] != null &&
+              _providerData['parking']['fee'] != null) {
+            parkingFee = _providerData['parking']['fee'].toStringAsFixed(2);
+          }
+
           address = Extensions.addressFormat(
             _providerData["userAddress"]["address"]?.toString(),
             _providerData["userAddress"]["street"]?.toString(),
@@ -401,7 +407,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         divider(),
         seekingCareWidget(_providerData),
         divider(),
-        feeWidget(fee, officeVisitFee),
+        feeWidget(
+            fee, officeVisitFee, parkingFee, _providerData["type"].toString()),
         divider(),
         paymentType == 0
             ? Container()
@@ -672,7 +679,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     );
   }
 
-  Widget feeWidget(String generalFee, String officeVisitCharge) {
+  Widget feeWidget(String generalFee, String officeVisitCharge,
+      String parkingFee, String appType) {
     if (feeList.length > 0) {
       totalFee = feeList.fold(
           0,
@@ -680,6 +688,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               sum + double.parse(item["subService"]["amount"].toString()));
     } else {
       totalFee = (double.parse(generalFee) + double.parse(officeVisitCharge));
+    }
+
+    if (appType == '3') {
+      totalFee += double.parse(officeVisitCharge);
     }
 
     _container.setProviderData("totalFee", totalFee.toStringAsFixed(2));
@@ -723,6 +735,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                   "\$$officeVisitCharge"),
                         ],
                       ),
+                appType != '3'
+                    ? Container()
+                    : subFeeWidget("Parking charge", "\$$parkingFee"),
                 SizedBox(height: 16),
                 Divider(),
                 subFeeWidget("Total", "\$" + totalFee.toStringAsFixed(2)),
