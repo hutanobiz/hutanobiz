@@ -164,7 +164,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
         address,
         todaysTimings = "",
         tomorrowsTimings = "",
-        averageRating = "---";
+        averageRating = "---",
+        boardCerficationText = '---';
 
     LatLng latLng = LatLng(0, 0);
 
@@ -172,11 +173,24 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
 
     if (_providerData["education"] != null) {
       for (dynamic education in _providerData["education"]) {
-        doctorEducation = doctorEducation +
-            (education["institute"]?.toString() ?? "---") +
+        doctorEducation += (education["institute"]?.toString() ?? "---") +
             ", " +
             (education["degree"]?.toString() ?? "---") +
             "\n\n";
+      }
+    }
+
+    if (_providerData["legalDocuments"] != null &&
+        _providerData["legalDocuments"]["boardCertification"] != null) {
+      List boardCerfication =
+          _providerData["legalDocuments"]["boardCertification"];
+
+      if (boardCerfication.length > 0) {
+        for (dynamic b in boardCerfication) {
+          if (b != null && b is String) {
+            boardCerficationText += (b?.toString() ?? "---") + "\n\n";
+          }
+        }
       }
     }
 
@@ -316,8 +330,38 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
         padding: const EdgeInsets.only(left: 20, bottom: 16),
         child: Text(
           doctorEducation == ""
-              ? "NO education available"
+              ? "No education available"
               : doctorEducation?.substring(0, doctorEducation.length - 2),
+          style: TextStyle(
+            fontSize: 13.0,
+          ),
+        ),
+      ),
+    );
+
+    formWidget.add(divider());
+
+    formWidget.add(
+      Padding(
+        padding: const EdgeInsets.only(left: 20, top: 16, bottom: 12),
+        child: Text(
+          "Board Certifications",
+          style: TextStyle(
+            fontSize: 14.0,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+
+    formWidget.add(
+      Padding(
+        padding: const EdgeInsets.only(left: 20, bottom: 16),
+        child: Text(
+          boardCerficationText == null || boardCerficationText == '---'
+              ? "No board certifications available"
+              : boardCerficationText?.substring(
+                  0, boardCerficationText.length - 2),
           style: TextStyle(
             fontSize: 13.0,
           ),
