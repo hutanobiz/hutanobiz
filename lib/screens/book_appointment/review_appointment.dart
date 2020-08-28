@@ -344,6 +344,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
               _consentToTreatMap["parkingMap"]["parkingType"].toString();
           request.fields['parkingFee'] =
               _consentToTreatMap["parkingMap"]["parkingFee"].toString();
+          request.fields['parkingBay'] =
+              _consentToTreatMap["parkingMap"]["parkingBay"].toString();
 
           if (_consentToTreatMap["parkingMap"]["instructions"].toString() !=
               null) {
