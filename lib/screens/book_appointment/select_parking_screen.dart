@@ -21,11 +21,15 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
 
   List _parkingList = ['Driveway', 'Street', 'Designated', 'Parking Garage'];
   final TextEditingController _instructionsController = TextEditingController();
+  final TextEditingController _bayNumberController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _instructionsController.addListener(() {
+      setState(() {});
+    });
+    _bayNumberController.addListener(() {
       setState(() {});
     });
   }
@@ -40,6 +44,7 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
   @override
   void dispose() {
     _instructionsController.dispose();
+    _bayNumberController.dispose();
     super.dispose();
   }
 
@@ -86,13 +91,23 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
                       );
                       return;
                     }
+                    if (_selectedParking == '3' &&
+                        _bayNumberController.text.isEmpty) {
+                      Widgets.showErrorDialog(
+                        context: context,
+                        description: 'Please enter the bay number',
+                      );
+                      return;
+                    }
 
                     Map _paymentMap = new Map();
 
                     _paymentMap["parkingType"] = _selectedParking;
                     _paymentMap["parkingFee"] = _parkingFee;
+                    _paymentMap["parkingBay"] = _bayNumberController.text;
 
-                    if (_instructionsController.text != null) {
+                    if (_instructionsController.text != null ||
+                        _instructionsController.text.isNotEmpty) {
                       _paymentMap["instructions"] =
                           _instructionsController.text;
                     }
@@ -295,6 +310,8 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
 
   Widget parkingWidget() {
     return ListView.separated(
+      physics: ClampingScrollPhysics(),
+      padding: EdgeInsets.zero,
       separatorBuilder: (context, index) => Divider(),
       shrinkWrap: true,
       itemCount: _parkingList.length,
@@ -317,40 +334,101 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
           default:
         }
 
-        return ListTile(
-          title: Row(
+        return Container(
+          color: index == 2 && _selectedParking == '3'
+              ? Colors.grey[100]
+              : Colors.white,
+          child: Column(
             children: [
-              Image.asset(
-                "images/$_icon.png",
-                height: 19,
-                width: 19,
-              ),
-              SizedBox(width: 18),
-              Text(
-                _parkingList[index],
-                style: TextStyle(
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14.0,
+              ListTile(
+                dense: true,
+                title: Row(
+                  children: [
+                    Image.asset(
+                      "images/$_icon.png",
+                      height: 19,
+                      width: 19,
+                    ),
+                    SizedBox(width: 18),
+                    Text(
+                      _parkingList[index],
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14.0,
+                      ),
+                    ),
+                  ],
                 ),
+                trailing: Padding(
+                  padding: EdgeInsets.only(right: 12),
+                  child: (index + 1).toString() == _selectedParking
+                      ? Image.asset("images/checkedCheck.png",
+                          height: 24, width: 24)
+                      : Image.asset(
+                          "images/uncheckedCheck.png",
+                          height: 24,
+                          width: 24,
+                        ),
+                ),
+                onTap: () {
+                  setState(
+                    () => _selectedParking = (index + 1).toString(),
+                  );
+                },
               ),
+              if (index == 2 && _selectedParking == '3')
+                Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Bay Number',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            width: 70,
+                            color: Colors.white,
+                            child: TextField(
+                              maxLines: 1,
+                              controller: _bayNumberController,
+                              keyboardType: TextInputType.number,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              decoration: InputDecoration(
+                                isDense: true,
+                                fillColor: Colors.white,
+                                contentPadding: EdgeInsets.all(8),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.grey[300]),
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              else
+                Container(),
             ],
           ),
-          trailing: Padding(
-            padding: EdgeInsets.only(right: 12),
-            child: (index + 1).toString() == _selectedParking
-                ? Image.asset("images/checkedCheck.png", height: 24, width: 24)
-                : Image.asset(
-                    "images/uncheckedCheck.png",
-                    height: 24,
-                    width: 24,
-                  ),
-          ),
-          onTap: () {
-            setState(
-              () => _selectedParking = (index + 1).toString(),
-            );
-          },
         );
       },
     );
