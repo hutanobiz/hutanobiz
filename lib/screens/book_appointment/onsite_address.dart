@@ -115,6 +115,7 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
           }
 
           return ListView.separated(
+              padding: const EdgeInsets.only(bottom: 65),
               separatorBuilder: (BuildContext context, int index) => Divider(
                     color: AppColors.haiti.withOpacity(0.20),
                   ),
@@ -150,6 +151,33 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
       state = '---';
     }
 
+    String _icon = 'ic_onsite_app', _roomNumb = '---', _addresstype = '1';
+
+    if (address['addresstype'] != null) {
+      _addresstype = address['addresstype'].toString();
+
+      switch (_addresstype) {
+        case '1':
+          _icon = 'ic_onsite_app';
+          break;
+        case '2':
+          _icon = 'ic_apartment';
+          _roomNumb = 'apt# ';
+          break;
+        case '3':
+          _icon = 'ic_condo';
+          _roomNumb = 'unit# ';
+          break;
+        case '4':
+          _icon = 'ic_hotel';
+          _roomNumb = 'room# ';
+          break;
+        default:
+      }
+
+      _roomNumb += (address['number']?.toString() ?? '---');
+    }
+
     return Row(
       children: [
         Expanded(
@@ -158,14 +186,31 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               index == 0 ? Container() : SizedBox(height: 20),
-              Text(
-                address['title']?.toString() ?? '---',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
+              Row(
+                children: [
+                  Image.asset(
+                    "images/$_icon.png",
+                    height: 19,
+                    width: 19,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    address['title']?.toString() ?? '---',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
               ),
+              _addresstype == '1' ? Container() : SizedBox(height: 10),
+              _addresstype == '1'
+                  ? Container()
+                  : Text(
+                      _roomNumb?.toString() ?? '---',
+                      style: style,
+                    ),
               SizedBox(height: 10),
               Text(
                 address['address']?.toString() ?? '---',
