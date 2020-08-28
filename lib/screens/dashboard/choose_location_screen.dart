@@ -1,13 +1,17 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_webservice/places.dart';
+import 'package:google_maps_webservice/places.dart' hide Location;
 import 'package:hutano/colors.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/fancy_button.dart';
+import 'package:hutano/widgets/widgets.dart';
+import 'package:location/location.dart';
 
 const kGoogleApiKey = "AIzaSyAkq7DnUBTkddWXddoHAX02Srw6570ktx8";
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -32,9 +36,63 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
   void initState() {
     super.initState();
 
-    _myLocation = CameraPosition(
-      target: LatLng(widget.latLng.latitude, widget.latLng.longitude),
-    );
+    if (widget.latLng != null &&
+        widget.latLng.latitude != 0.0 &&
+        widget.latLng.latitude != 0.0) {
+      _myLocation = CameraPosition(
+        target: LatLng(widget.latLng.latitude, widget.latLng.longitude),
+      );
+    } else {
+      initPlatformState();
+    }
+  }
+
+  initPlatformState() async {
+    Location _location = Location();
+    PermissionStatus _permission;
+
+    _permission = await _location.requestPermission();
+    print("Permission: $_permission");
+
+    switch (_permission) {
+      case PermissionStatus.granted:
+        bool serviceStatus = await _location.serviceEnabled();
+        print("Service status: $serviceStatus");
+
+        if (serviceStatus) {
+          Widgets.showToast("Getting Location. Please wait..");
+
+          try {
+            LocationData locationData = await _location.getLocation();
+
+            getLocationAddress(locationData.latitude, locationData.longitude);
+
+            setState(() {
+              _myLocation = CameraPosition(
+                target: LatLng(locationData.latitude, locationData.longitude),
+              );
+            });
+          } on PlatformException catch (e) {
+            Widgets.showToast(e.message.toString());
+            e.toString().debugLog();
+
+            log(e.code);
+
+            _location = null;
+          }
+        } else {
+          bool serviceStatusResult = await _location.requestService();
+          print("Service status activated after request: $serviceStatusResult");
+          initPlatformState();
+        }
+
+        break;
+      case PermissionStatus.denied:
+        initPlatformState();
+        break;
+      case PermissionStatus.deniedForever:
+        break;
+    }
   }
 
   @override
@@ -52,21 +110,23 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 0.0),
                       child: Stack(children: <Widget>[
-                        GoogleMap(
-                          initialCameraPosition: _myLocation,
-                          onMapCreated: _onMapCreated,
-                          myLocationButtonEnabled: true,
-                          myLocationEnabled: true,
-                          onCameraMove: (position) {
-                            _myLocation = position;
-                          },
-                          onCameraIdle: () {
-                            getLocationAddress(
-                              _myLocation.target.latitude,
-                              _myLocation.target.longitude,
-                            );
-                          },
-                        ),
+                        _myLocation == null
+                            ? Container()
+                            : GoogleMap(
+                                initialCameraPosition: _myLocation,
+                                onMapCreated: _onMapCreated,
+                                myLocationButtonEnabled: true,
+                                myLocationEnabled: true,
+                                onCameraMove: (position) {
+                                  _myLocation = position;
+                                },
+                                onCameraIdle: () {
+                                  getLocationAddress(
+                                    _myLocation.target.latitude,
+                                    _myLocation.target.longitude,
+                                  );
+                                },
+                              ),
                         Align(
                           alignment: Alignment.center,
                           child: Icon(
