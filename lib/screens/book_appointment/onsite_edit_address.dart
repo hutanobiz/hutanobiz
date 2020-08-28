@@ -40,13 +40,14 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
   TextEditingController _streetController = TextEditingController();
   TextEditingController _residenceTypeController = TextEditingController();
   TextEditingController _roomNoController = TextEditingController();
+  TextEditingController _securityNumberController = TextEditingController();
 
   Map _addressMap = {};
 
   String _token;
   LatLng _latLng = LatLng(0, 0);
 
-  List<String> typeList = ['Home', 'Appartment', 'Condo', 'Hotel'];
+  List<String> typeList = ['Home', 'Apartment', 'Condo', 'Hotel'];
 
   @override
   void initState() {
@@ -81,9 +82,38 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
     _roomNoController.addListener(() {
       setState(() {});
     });
+    _securityNumberController.addListener(() {
+      setState(() {});
+    });
 
     if (widget.addressObject != null) {
       _addressMap = widget.addressObject;
+
+      if (_addressMap['number'] != null) {
+        _roomNoController.text = _addressMap['number'].toString();
+      }
+
+      if (_addressMap['securityGate'] != null) {
+        _securityNumberController.text = _addressMap['securityGate'].toString();
+      }
+
+      if (_addressMap['addresstype'] != null) {
+        switch (_addressMap['addresstype']) {
+          case 1:
+            _residenceTypeController.text = 'Home';
+            break;
+          case 2:
+            _residenceTypeController.text = 'Apartment';
+            break;
+          case 3:
+            _residenceTypeController.text = 'Condo';
+            break;
+          case 4:
+            _residenceTypeController.text = 'Hotel';
+            break;
+          default:
+        }
+      }
 
       if (widget.addressObject['state'] is Map &&
           widget.addressObject['state'] != null) {
@@ -121,6 +151,7 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
     _streetController.dispose();
     _residenceTypeController.dispose();
     _roomNoController.dispose();
+    _securityNumberController.dispose();
     super.dispose();
   }
 
@@ -135,6 +166,7 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
         isAddBack: true,
         isAddAppBar: true,
         isLoading: isLoading,
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
         child: screenWidgetList(),
       ),
     );
@@ -285,123 +317,119 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
 
   Widget primaryLocationExpandedWidget() {
     return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 20.0),
-        child: ListView(
-          children: <Widget>[
-            CustomTextField(
-                controller: _titleController,
-                labelText: "Title",
-                onChanged: (v) {
-                  _addressMap['title'] = v;
-                }),
-            Widgets.sizedBox(height: 29.0),
-            picker(
+      child: ListView(
+        padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+        children: <Widget>[
+          CustomTextField(
+              controller: _titleController,
+              labelText: "Title",
+              onChanged: (v) {
+                _addressMap['title'] = v;
+              }),
+          Widgets.sizedBox(height: 29.0),
+          picker(
+            _residenceTypeController,
+            "Residence Type",
+            () => residenceTypeBottomDialog(
+              typeList,
               _residenceTypeController,
-              "Residence Type",
-              () => residenceTypeBottomDialog(
-                typeList,
-                _residenceTypeController,
-              ),
             ),
-            Widgets.sizedBox(height: 29.0),
-            _addressMap['addresstype'] == '1'
-                ? Container()
-                : CustomTextField(
-                    initialValue: _addressMap['number'],
-                    labelText: _addressMap['addresstype'] == '2'
-                        ? "Apartment Number"
-                        : (_addressMap['addresstype'] == '3'
-                            ? 'Unit number'
-                            : 'Room Number'),
-                    onChanged: (value) {
-                      _addressMap['number'] = value;
-                    }),
-            _addressMap['addresstype'] == '1'
-                ? Container()
-                : Widgets.sizedBox(height: 29.0),
-            Material(
-              color: AppColors.snow,
-              child: InkWell(
-                onTap: () {
-                  FocusScope.of(context).unfocus();
-                  _navigateToMap(context);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(1.0),
-                  child: TextFormField(
-                    controller: _addressController,
-                    enabled: false,
-                    decoration: InputDecoration(
-                      labelText: "Location",
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey[300]),
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      ),
+          ),
+          Widgets.sizedBox(height: 29.0),
+          _addressMap['addresstype'].toString() == '1'
+              ? Container()
+              : CustomTextField(
+                  controller: _roomNoController,
+                  inputType: TextInputType.number,
+                  labelText: _addressMap['addresstype'].toString() == '2'
+                      ? "Apartment Number"
+                      : (_addressMap['addresstype'].toString() == '3'
+                          ? 'Unit number'
+                          : 'Room Number'),
+                  onChanged: (value) {}),
+          _addressMap['addresstype'].toString() == '1'
+              ? Container()
+              : Widgets.sizedBox(height: 29.0),
+          Material(
+            color: AppColors.snow,
+            child: InkWell(
+              onTap: () {
+                FocusScope.of(context).unfocus();
+                _navigateToMap(context);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(1.0),
+                child: TextFormField(
+                  controller: _addressController,
+                  enabled: false,
+                  decoration: InputDecoration(
+                    labelText: "Location",
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey[300]),
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
                 ),
               ),
             ),
-            Widgets.sizedBox(height: 29.0),
-            CustomTextField(
-                initialValue: _addressMap['address'],
-                labelText: "Suite",
-                onChanged: (address) {
-                  _addressMap['address'] = address;
-                }),
-            Widgets.sizedBox(height: 29.0),
-            CustomTextField(
-                controller: _streetController,
-                labelText: "Street",
-                onChanged: (street) {
-                  _addressMap['street'] = street;
-                }),
-            Widgets.sizedBox(height: 29.0),
-            CustomTextField(
-                labelText: "City",
-                controller: _cityController,
-                onChanged: (city) {
-                  _addressMap['city'] = city;
-                }),
-            Widgets.sizedBox(height: 29.0),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: picker(
+          ),
+          Widgets.sizedBox(height: 29.0),
+          CustomTextField(
+              initialValue: _addressMap['address'],
+              labelText: "Suite",
+              onChanged: (address) {
+                _addressMap['address'] = address;
+              }),
+          Widgets.sizedBox(height: 29.0),
+          CustomTextField(
+              controller: _streetController,
+              labelText: "Street",
+              onChanged: (street) {
+                _addressMap['street'] = street;
+              }),
+          Widgets.sizedBox(height: 29.0),
+          CustomTextField(
+              labelText: "City",
+              controller: _cityController,
+              onChanged: (city) {
+                _addressMap['city'] = city;
+              }),
+          Widgets.sizedBox(height: 29.0),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: picker(
+                  _businessstateController,
+                  "State",
+                  () => stateBottomDialog(
+                    stateList,
                     _businessstateController,
-                    "State",
-                    () => stateBottomDialog(
-                      stateList,
-                      _businessstateController,
-                    ),
                   ),
                 ),
-                SizedBox(width: 20.0),
-                Expanded(
-                  child: CustomTextField(
-                      inputType: TextInputType.number,
-                      maxLength: 5,
-                      controller: _zipController,
-                      labelText: "Zip Code",
-                      onChanged: (zipCode) {
-                        _addressMap['zipCode'] = zipCode;
-                      }),
-                ),
-              ],
-            ),
-            Widgets.sizedBox(height: 29.0),
-            CustomTextField(
-                initialValue: _addressMap['securityGate'],
-                labelText: "Security Gate",
-                onChanged: (v) {
-                  _addressMap['securityGate'] = v;
-                }),
-          ],
-        ),
+              ),
+              SizedBox(width: 20.0),
+              Expanded(
+                child: CustomTextField(
+                    inputType: TextInputType.number,
+                    maxLength: 5,
+                    controller: _zipController,
+                    labelText: "Zip Code",
+                    onChanged: (zipCode) {
+                      _addressMap['zipCode'] = zipCode;
+                    }),
+              ),
+            ],
+          ),
+          Widgets.sizedBox(height: 29.0),
+          CustomTextField(
+              controller: _securityNumberController,
+              inputType: TextInputType.number,
+              labelText: "Security Gate",
+              onChanged: (v) {}),
+        ],
       ),
     );
   }
@@ -415,13 +443,17 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
     map['userAddress[state]'] = _addressMap['state'];
     map['userAddress[stateCode]'] = _addressMap['stateCode'];
     map['userAddress[zipCode]'] = _addressMap['zipCode'];
-    map['userAddress[useraddresstype]'] = _addressMap['addresstype'].toString();
+    map['userAddress[addresstype]'] = _addressMap['addresstype'].toString();
 
-    if (_addressMap['number'] != null) {
-      map['userAddress[number]'] = _addressMap['number'].toString();
+    if (_roomNoController.text != null || _roomNoController.text.isNotEmpty) {
+      map['userAddress[number]'] = _roomNoController.text;
     }
 
-    map['userAddress[securityGate]'] = _addressMap['securityGate'].toString();
+    if (_securityNumberController.text != null ||
+        _securityNumberController.text.isNotEmpty) {
+      map['userAddress[securityGate]'] = _securityNumberController.text;
+    }
+
     map['userAddress[coordinates][0]'] = _latLng.longitude.toString();
     map['userAddress[coordinates][1]'] = _latLng.latitude.toString();
 
@@ -460,6 +492,12 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
           context: context, description: "Enter Location Title");
 
       return false;
+    } else if (_residenceTypeController.text.isEmpty ||
+        _addressMap['addresstype'] == null) {
+      Widgets.showErrorialog(
+          context: context, description: "Select Residence type");
+
+      return false;
     } else if (_addressMap != null && _addressMap['address'] == null) {
       Widgets.showErrorialog(context: context, description: "Enter Suite");
 
@@ -482,6 +520,11 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
     } else if (_zipController.text.isEmpty) {
       Widgets.showErrorialog(
           context: context, description: "Enter Business Postal Code");
+
+      return false;
+    } else if (_securityNumberController.text.isEmpty) {
+      Widgets.showErrorialog(
+          context: context, description: "Enter Security Gate NUmber");
 
       return false;
     } else {
