@@ -470,16 +470,17 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                             if (value != null) {
                               setLoading(false);
 
-                              imagesList.clear();
-
                               if (mounted) {
                                 setState(() {
                                   if (value['medicalImages'] != null &&
                                       value['medicalImages'].isNotEmpty) {
-                                    for (dynamic images
-                                        in value['medicalImages']) {
-                                      imagesList.add(images);
-                                    }
+                                    imagesList.add(value['medicalImages'].last);
+                                  }
+
+                                  if (isBottomButtonsShow) {
+                                    setState(() {
+                                      _selectedImagesList.add(imagesList.last);
+                                    });
                                   }
                                 });
                               }

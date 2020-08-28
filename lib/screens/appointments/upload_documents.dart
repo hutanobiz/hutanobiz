@@ -105,9 +105,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
     super.dispose();
   }
 
-  void getMedicalDocuments() {
-    docsList.clear();
-
+  void getMedicalDocuments({bool isAdd = false}) {
     SharedPref().getToken().then((token) {
       setState(() {
         this.token = token;
@@ -120,11 +118,22 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
           setState(() {
             if (value['medicalDocuments'] != null &&
                 value['medicalDocuments'].isNotEmpty) {
-              for (dynamic docs in value['medicalDocuments']) {
-                docsList.add(docs);
+              if (isBottomButtonsShow && isAdd) {
+                docsList.add(value['medicalDocuments'].last);
+              } else {
+                docsList.clear();
+                for (dynamic docs in value['medicalDocuments']) {
+                  docsList.add(docs);
+                }
               }
             }
           });
+
+          if (isBottomButtonsShow && isAdd) {
+            setState(() {
+              _selectedDocsList.add(docsList.last);
+            });
+          }
         }
       }).futureError((error) {
         error.toString().debugLog();
@@ -537,7 +546,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                         documentTypeController.text = '';
                         documentDateController.text = '';
 
-                        getMedicalDocuments();
+                        getMedicalDocuments(isAdd: true);
                       }).futureError((error) => setLoading(false));
                     }
                   },
