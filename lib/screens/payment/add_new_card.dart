@@ -7,13 +7,13 @@ import 'package:hutano/screens/stripe/payment_intent.dart';
 import 'package:hutano/screens/stripe/payment_method.dart';
 import 'package:hutano/screens/stripe/stripe_payment.dart';
 import 'package:hutano/screens/stripe/token.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/utils/validations.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/mask_input_formatter.dart';
 import 'package:hutano/widgets/widgets.dart';
-import 'package:hutano/utils/extensions.dart';
 
 class AddNewCardScreen extends StatefulWidget {
   AddNewCardScreen({Key key}) : super(key: key);
@@ -99,7 +99,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            'Edit New Card',
+                            'Add New Card',
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.w600),
                           ),
@@ -167,6 +167,8 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                       }),
                                   SizedBox(height: 20.0),
                                   Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Expanded(
                                         child: TextFormField(
