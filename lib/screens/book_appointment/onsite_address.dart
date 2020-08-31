@@ -32,6 +32,8 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
   InheritedContainerState _container;
   dynamic _selectedAddress;
 
+  bool isAddressAdded = false;
+
   @override
   void initState() {
     super.initState();
@@ -84,6 +86,7 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
           if (value != null && value) {
             setState(() {
               _addressesFuture = api.getAddress(_token);
+              isAddressAdded = true;
             });
           }
         }),
@@ -106,13 +109,15 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
             );
           }
 
-          addressList.clear();
+          // addressList.clear();
 
-          for (var aa in snapshot.data) {
-            if (aa != null) {
-              addressList.add(aa);
-            }
-          }
+          // for (var aa in snapshot.data) {
+          //   if (aa != null) {
+          //     addressList.add(aa);
+          //   }
+          // }
+
+          addressList = snapshot.data;
 
           return ListView.separated(
               padding: const EdgeInsets.only(bottom: 65),
@@ -123,6 +128,16 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
               shrinkWrap: true,
               itemCount: addressList.length,
               itemBuilder: (context, index) {
+                Future.delayed(Duration(milliseconds: 500)).whenComplete(() {
+                  if (isAddressAdded) {
+                    _radioValue = addressList.length - 1;
+                    _selectedAddress = addressList[addressList.length - 1];
+                    setState(() {});
+                  }
+
+                  isAddressAdded = false;
+                });
+
                 dynamic address = addressList[index];
                 return addressWidget(address, index);
               });
@@ -326,14 +341,19 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
     };
   }
 
+//TODO: selected address is unchecking on deleting
   void _deleteAddress(String id) {
     Navigator.pop(context);
 
     setLoading(true);
     api.deleteAddress(_token, id).whenComplete(() {
       setLoading(false);
+
+      if (_selectedAddress['_id'].toString() == id) _selectedAddress = null;
+
+      addressList.removeWhere((element) => element['_id'].toString() == id);
       setState(() {
-        _addressesFuture = api.getAddress(_token);
+        // _addressesFuture = api.getAddress(_token);
       });
     }).futureError((e) {
       setLoading(false);
