@@ -169,7 +169,9 @@ class _UploadInsuranceImagesScreenState
             Routes.dashboardScreen, (Route<dynamic> route) => false);
       } else {
         Navigator.popUntil(
-            context, ModalRoute.withName(Routes.paymentMethodScreen));
+          context,
+          ModalRoute.withName(Routes.paymentMethodScreen),
+        );
       }
     }
   }

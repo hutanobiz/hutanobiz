@@ -43,6 +43,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
   bool isPayment = false;
 
+  bool insuranceAdded = false;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -405,6 +407,21 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                   physics: ClampingScrollPhysics(),
                   itemCount: _insuranceList.length,
                   itemBuilder: (context, index) {
+                    if (insuranceAdded) {
+                      _radioValue = null;
+                      _cardListRadioValue = null;
+                      _listRadioValue = _insuranceList.length - 1;
+
+                      insuranceId =
+                          _insuranceList[_insuranceList.length - 1]["_id"];
+                      insuranceName = _insuranceList[_insuranceList.length - 1]
+                          ["insuranceName"];
+                      insuranceImage = _insuranceList[_insuranceList.length - 1]
+                          ["insuranceDocumentFront"];
+                    }
+
+                    insuranceAdded = false;
+
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -641,6 +658,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                         _insuranceFuture = _api
                             .getUserDetails(token)
                             .timeout(Duration(seconds: 20));
+
+                        insuranceAdded = true;
                       });
                     },
                   ),
