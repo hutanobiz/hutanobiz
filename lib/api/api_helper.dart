@@ -600,6 +600,25 @@ class ApiBaseHelper {
       return res["response"];
     });
   }
+
+  Future<dynamic> logOUt(String token, String deviceToken) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    Map map = {};
+    map['deviceToken'] = deviceToken;
+
+    return _netUtil
+        .post(
+      base_url + "auth/api/logout",
+      body: map,
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
 }
 
 class NetworkUtil {
