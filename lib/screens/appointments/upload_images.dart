@@ -10,6 +10,7 @@ import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/round_corner_checkbox.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -213,16 +214,15 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
               ),
               isBottomButtonsShow
                   ? Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: SizedBox(
-                          height: 22,
-                          width: 22,
-                          child: Checkbox(
+                          height: 32,
+                          width: 32,
+                          child: RoundCornerCheckBox(
                             value: _selectedImagesList.contains(content),
-                            activeColor: AppColors.persian_blue,
-                            onChanged: (value) {
+                            onCheck: (value) {
                               if (value) {
                                 if (!_selectedImagesList.contains(content)) {
                                   setState(() {
