@@ -40,6 +40,27 @@ class Extensions {
         " " +
         (zipCode ?? "");
   }
+
+  static String getDistance(dynamic distance) {
+    String _distance;
+
+    if (distance != null && distance != '0') {
+      _distance = ((double.parse(distance.toString()) * 0.000621371)
+              .toStringAsFixed(0)) +
+          ' mi';
+
+      if (distance == '0 mi') {
+        _distance = ((distance is double)
+                ? distance.toStringAsFixed(0)
+                : distance.toString()) +
+            ' m';
+      }
+    } else {
+      _distance = '0 mi';
+    }
+
+    return _distance;
+  }
 }
 
 extension ImageIcon on String {
