@@ -49,7 +49,7 @@ class Extensions {
               .toStringAsFixed(0)) +
           ' mi';
 
-      if (distance == '0 mi') {
+      if (_distance == '0 mi') {
         _distance = ((distance is double)
                 ? distance.toStringAsFixed(0)
                 : distance.toString()) +
