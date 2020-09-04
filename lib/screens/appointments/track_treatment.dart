@@ -85,6 +85,8 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
   String _startDrivingStatusKey = PATIENT_START_DRIVING;
   String _arrivedStatusKey = PATIENT_ARRIVED;
 
+  var _userLocation = LatLng(0.00, 0.00);
+
   Future<void> initPlatformState() async {
     await BackgroundLocator.initialize();
   }
@@ -193,10 +195,18 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
 
     _container = InheritedContainer.of(context);
 
+    if (_container.userLocationMap != null &&
+        _container.userLocationMap.isNotEmpty) {
+      _userLocation = _container.userLocationMap['latLng'];
+    }
+
     SharedPref().getToken().then((token) {
       setState(() {
         _profileFuture = api.getAppointmentDetails(
-            token, _container.appointmentIdMap["appointmentId"]);
+          token,
+          _container.appointmentIdMap["appointmentId"],
+          _userLocation,
+        );
       });
     });
   }
@@ -656,6 +666,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
               Map _map = {};
               _map['id'] = _container.appointmentIdMap["appointmentId"];
               _map['appointmentType'] = _appointmentType;
+              _map['latLng'] = _userLocation;
 
               Navigator.of(context).pushNamed(
                 Routes.treatmentSummaryScreen,
@@ -690,6 +701,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                     Map _map = {};
                     _map['id'] = _container.appointmentIdMap["appointmentId"];
                     _map['appointmentType'] = _appointmentType;
+                    _map['latLng'] = _userLocation;
 
                     Navigator.of(context).pushNamed(
                       Routes.treatmentSummaryScreen,
@@ -903,7 +915,8 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
       api.appointmentTrackingStatus(token, map, id).then((value) {
         if (mounted) {
           setState(() {
-            _profileFuture = api.getAppointmentDetails(token, id);
+            _profileFuture =
+                api.getAppointmentDetails(token, id, _userLocation);
           });
           value.toString().debugLog();
         }
@@ -921,7 +934,8 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
       api.onsiteAppointmentTrackingStatus(token, map, id).then((value) {
         if (mounted) {
           setState(() {
-            _profileFuture = api.getAppointmentDetails(token, id);
+            _profileFuture =
+                api.getAppointmentDetails(token, id, _userLocation);
           });
           value.toString().debugLog();
         }

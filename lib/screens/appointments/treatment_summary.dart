@@ -60,7 +60,11 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
       ApiBaseHelper api = ApiBaseHelper();
 
       api
-          .getAppointmentDetails(token, widget.appointmentMap['id'])
+          .getAppointmentDetails(
+        token,
+        widget.appointmentMap['id'],
+        widget.appointmentMap['latLng'],
+      )
           .then((response) {
         setLoading(false);
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
@@ -24,11 +25,11 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   Future<dynamic> _requestsFuture;
   InheritedContainerState _container;
 
+  var _userLocation = LatLng(0.00, 0.00);
+
   @override
   void initState() {
     super.initState();
-
-    appointmentsFuture();
   }
 
   @override
@@ -36,12 +37,18 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     super.didChangeDependencies();
 
     _container = InheritedContainer.of(context);
+
+    if (_container.userLocationMap.isNotEmpty) {
+      _userLocation = _container.userLocationMap['latLng'];
+    }
+
+    appointmentsFuture(_userLocation);
   }
 
-  void appointmentsFuture() {
+  void appointmentsFuture(LatLng latLng) {
     SharedPref().getToken().then((token) {
       setState(() {
-        _requestsFuture = _api.userAppointments(token);
+        _requestsFuture = _api.userAppointments(token, latLng);
       });
     });
   }
@@ -79,19 +86,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
             return Center(
               child: Text("No appointments."),
             );
-
-          // if (_activeAppointmentsList.length > 1) {
-          //   _activeAppointmentsList.sort((a, b) {
-          //     var aDate = a['date'].toString() +
-          //         a["fromTime"].toString().timeOfDay(context) +
-          //         a["toTime"].toString().timeOfDay(context);
-          //     var bDate = b['date'].toString() +
-          //         b["fromTime"].toString().timeOfDay(context) +
-          //         b["toTime"].toString().timeOfDay(context);
-
-          //     return bDate.compareTo(aDate);
-          //   });
-          // }
 
           if (_closedAppointmentsList.length > 1) {
             _closedAppointmentsList.sort((a, b) {
@@ -174,7 +168,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         userRating,
         averageRating = "---",
         appointmentType = "---",
-        distance = "---",
         professionalTitle = "---";
 
     if (response["type"] != null)
@@ -230,22 +223,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           professionalTitle =
               detail["professionalTitle"]["title"]?.toString() ?? "---";
         }
-
-        if (detail['distance'] != null && detail['distance'] != '0') {
-          distance =
-              ((double.parse(detail['distance']?.toString() ?? 0) * 0.000621371)
-                      .toStringAsFixed(0)) +
-                  ' mi';
-
-          if (distance == '0 mi') {
-            distance = ((detail['distance'] is double)
-                    ? detail['distance'].toStringAsFixed(0)
-                    : detail['distance'].toString()) +
-                ' m';
-          }
-        } else {
-          distance = '0 mi';
-        }
       }
     }
 
@@ -272,7 +249,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                   Routes.appointmentDetailScreen,
                   arguments: appointment,
                 )
-                .whenComplete(() => appointmentsFuture());
+                .whenComplete(() => appointmentsFuture(_userLocation));
           },
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -412,7 +389,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                         "ic_app_distance".imageIcon(),
                         SizedBox(width: 5.0),
                         Text(
-                          distance,
+                          Extensions.getDistance(response['distance']),
                           style: TextStyle(
                             color: AppColors.windsor,
                           ),
@@ -463,6 +440,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                           Map _map = {};
                           _map['id'] = response["_id"].toString();
                           _map['appointmentType'] = response["type"];
+                          _map['latLng'] = _userLocation;
 
                           Navigator.of(context).pushNamed(
                             Routes.treatmentSummaryScreen,
@@ -482,7 +460,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                 Routes.rateDoctorScreen,
                                 arguments: "1",
                               )
-                              .whenComplete(() => appointmentsFuture());
+                              .whenComplete(
+                                  () => appointmentsFuture(_userLocation));
                         })
                       : Container(),
                 ],

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/widgets.dart';
-import 'package:intl/intl.dart';
 
 class RequestAppointmentsScreen extends StatefulWidget {
   const RequestAppointmentsScreen({Key key}) : super(key: key);
@@ -26,16 +27,24 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
 
   Future<dynamic> _requestsFuture;
 
+  var _userLocation = LatLng(0.00, 0.00);
+
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    var _container = InheritedContainer.of(context);
+
+    if (_container.userLocationMap.isNotEmpty) {
+      _userLocation = _container.userLocationMap['latLng'];
+    }
 
     SharedPref().getToken().then((token) {
       setState(() {
         token.toString().debugLog();
-        _requestsFuture = _api.appointmentRequests(token);
+        _requestsFuture = _api.appointmentRequests(token, _userLocation);
       });
     });
+
+    super.didChangeDependencies();
   }
 
   @override
@@ -171,7 +180,6 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
         appointmentType = "---",
         fee = "---",
         status = "---",
-        distance = "0",
         professionalTitle = "---";
 
     status = response["status"].toString();
@@ -201,11 +209,6 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                     ["professionalTitle"]["title"]
                 ?.toString() ??
             "---";
-      }
-
-      if (response["DoctorProfessionalDetail"]["distance"] != null) {
-        distance =
-            response["DoctorProfessionalDetail"]["distance"]?.toString() ?? "0";
       }
 
       if (response["DoctorProfessionalDetail"]["consultanceFee"] != null) {
@@ -417,7 +420,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                     ),
                     SizedBox(width: 5.0),
                     Text(
-                      "$distance miles",
+                      Extensions.getDistance(response['distance']),
                       style: TextStyle(
                         color: Colors.black.withOpacity(0.5),
                       ),
@@ -450,8 +453,10 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                                   "Appointment cancelled successfully");
 
                               setState(() {
-                                _requestsFuture =
-                                    _api.appointmentRequests(token);
+                                _requestsFuture = _api.appointmentRequests(
+                                  token,
+                                  _userLocation,
+                                );
                               });
                             }).futureError(
                                     (onError) => onError.toString().debugLog());
