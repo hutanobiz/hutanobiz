@@ -173,10 +173,14 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> getProviderProfile(String providerId) {
+  Future<dynamic> getProviderProfile(String providerId, Map locMap) {
     return _netUtil
         .get(
-      Uri.encodeFull(base_url + "api/patient/doctor-details?id=$providerId"),
+      Uri.encodeFull(
+        base_url +
+            "api/patient/doctor-details?id=$providerId&longitude"
+                "=${locMap['longitude']}&lattitude=${locMap['lattitude']}",
+      ),
     )
         .then((res) {
       return res["response"];

@@ -57,8 +57,17 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     Map _providerData = _container.providerIdMap;
 
     ApiBaseHelper api = ApiBaseHelper();
+    Map<String, String> locMap = {};
 
-    _profileFuture = api.getProviderProfile(_providerData["providerId"]);
+    if (_container.userLocationMap.isNotEmpty) {
+      LatLng _userLocation = _container.userLocationMap['latLng'];
+
+      locMap['lattitude'] = _userLocation.latitude.toStringAsFixed(2);
+      locMap['longitude'] = _userLocation.longitude.toStringAsFixed(2);
+    }
+
+    _profileFuture =
+        api.getProviderProfile(_providerData["providerId"], locMap);
 
     super.didChangeDependencies();
   }
@@ -165,7 +174,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
         todaysTimings = "",
         tomorrowsTimings = "",
         averageRating = "---",
-        boardCerficationText = '---';
+        boardCerficationText = '';
 
     LatLng latLng = LatLng(0, 0);
 
@@ -194,14 +203,15 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
       }
     }
 
-    if (_providerData["userId"] != null) {
-      if (_providerData["userId"]["language"] != null) {
-        languagesList = _providerData["userId"]["language"];
+    if (_providerData["User"][0] != null) {
+      if (_providerData["User"][0]["language"] != null) {
+        languagesList = _providerData["User"][0]["language"];
       }
     }
 
-    if (_providerData['specialties'] != null) {
-      speaciltyList = _providerData['specialties'];
+    if (_providerData['Specialties'] != null &&
+        _providerData['Specialties'] is List) {
+      speaciltyList = _providerData['Specialties'];
     }
 
     if (profileResponse['reviews'] != null) {
@@ -253,7 +263,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
         business["address"]?.toString(),
         business["street"]?.toString(),
         business["city"]?.toString(),
-        business["state"],
+        business["state"] is Map ? business["state"] : null,
         business["zipCode"]?.toString(),
       );
 
@@ -290,7 +300,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     formWidget.add(Padding(
       padding: const EdgeInsets.only(left: 20, top: 0, bottom: 12),
       child: Text(
-        "About ${_providerData["userId"]["fullName"]}",
+        "About ${_providerData["User"][0]["fullName"]}",
         style: TextStyle(
           fontSize: 14.0,
           fontWeight: FontWeight.w600,
@@ -358,7 +368,9 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
       Padding(
         padding: const EdgeInsets.only(left: 20, bottom: 16),
         child: Text(
-          boardCerficationText == null || boardCerficationText == '---'
+          boardCerficationText == null ||
+                  boardCerficationText == '---' ||
+                  boardCerficationText.isEmpty
               ? "No board certifications available"
               : boardCerficationText?.substring(
                   0, boardCerficationText.length - 2),
@@ -632,7 +644,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
       Padding(
         padding: const EdgeInsets.only(left: 20, bottom: 16, top: 16),
         child: Text(
-          "Feedback for ${_providerData["userId"]["fullName"]}",
+          "Feedback for ${_providerData["User"][0]["fullName"]}",
           style: TextStyle(
             fontSize: 14.0,
             fontWeight: FontWeight.w600,
