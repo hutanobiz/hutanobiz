@@ -148,25 +148,34 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> appointmentRequests(String token) {
+  Future<dynamic> appointmentRequests(String token, LatLng latLng) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
 
     return _netUtil
-        .get(base_url + "api/patient/user-notification", headers: headers)
+        .get(
+      base_url +
+          "api/patient/user-notification?longitude=${latLng.longitude.toStringAsFixed(2)}"
+              "&lattitude=${latLng.latitude.toStringAsFixed(2)}",
+      headers: headers,
+    )
         .then((res) {
       return res["response"];
     });
   }
 
-  Future<dynamic> userAppointments(String token) {
+  Future<dynamic> userAppointments(String token, LatLng latLng) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
 
     return _netUtil
-        .get(base_url + "api/patient/user-schedule-appointmnet",
+        .get(
+            base_url +
+                "api/patient/user-schedule-appointmnet?longitude"
+                    "=${latLng.longitude.toStringAsFixed(2)}"
+                    "&lattitude=${latLng.latitude.toStringAsFixed(2)}",
             headers: headers)
         .then((res) {
       return res["response"];
@@ -187,14 +196,19 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> getAppointmentDetails(String token, String providerId) {
+  Future<dynamic> getAppointmentDetails(
+      String token, String providerId, LatLng latLng) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
     return _netUtil
         .get(
       Uri.encodeFull(
-          base_url + "api/patient/doctor-appointment-details?id=$providerId"),
+        base_url +
+            "api/patient/doctor-appointment-details?id=$providerId&longitude"
+                "=${latLng.longitude.toStringAsFixed(2)}"
+                "&lattitude=${latLng.latitude.toStringAsFixed(2)}",
+      ),
       headers: headers,
     )
         .then((res) {
