@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/utils/extensions.dart';
-import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/loading_background.dart';
 
 class SavedCardsScreen extends StatefulWidget {
@@ -21,12 +20,7 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
   void initState() {
     super.initState();
 
-    SharedPref().getToken().then((token) {
-      setState(() {
-        _requestsFuture = _api.userAppointments(token);
-        //TODO: change api
-      });
-    });
+    //TODO: api
   }
 
   @override
@@ -43,41 +37,42 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
         //   "**** ***** **** 2563",
         //   "Dummy name",
         // ),
-        child: _buildList(),
+        child: Container(),
+        // child: _buildList(),
       ),
     );
   }
 
-  Widget _buildList() {
-    return FutureBuilder<dynamic>(
-      future: _requestsFuture,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data is String) {
-            return Center(
-              child: Text(snapshot.data),
-            );
-          } else {
-            List<dynamic> _cardsList = snapshot.data["data"];
+  // Widget _buildList() {
+  //   return FutureBuilder<dynamic>(
+  //     future: _requestsFuture,
+  //     builder: (context, snapshot) {
+  //       if (snapshot.hasData) {
+  //         if (snapshot.data is String) {
+  //           return Center(
+  //             child: Text(snapshot.data),
+  //           );
+  //         } else {
+  //           List<dynamic> _cardsList = snapshot.data["data"];
 
-            return SingleChildScrollView(
-              physics: ClampingScrollPhysics(),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    _listWidget(_cardsList),
-                  ]),
-            );
-          }
-        } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
-        }
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
-  }
+  //           return SingleChildScrollView(
+  //             physics: ClampingScrollPhysics(),
+  //             child: Column(
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: <Widget>[
+  //                   _listWidget(_cardsList),
+  //                 ]),
+  //           );
+  //         }
+  //       } else if (snapshot.hasError) {
+  //         return Text("${snapshot.error}");
+  //       }
+  //       return Center(
+  //         child: CircularProgressIndicator(),
+  //       );
+  //     },
+  //   );
+  // }
 
   Widget _listWidget(List<dynamic> _list) {
     return ListView.builder(
