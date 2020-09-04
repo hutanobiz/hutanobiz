@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
@@ -13,6 +15,7 @@ import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/widgets.dart';
+import 'package:location/location.dart';
 
 class AppointmentDetailScreen extends StatefulWidget {
   const AppointmentDetailScreen({Key key, this.args}) : super(key: key);
@@ -39,6 +42,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   BitmapDescriptor sourceIcon;
   Completer<GoogleMapController> _controller = Completer();
 
+  LatLng _userLocation = new LatLng(0.00, 0.00);
+
   void setSourceAndDestinationIcons() async {
     sourceIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
@@ -54,21 +59,73 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     _appointmentStatus = widget.args["_appointmentStatus"] ?? "---";
   }
 
+  initPlatformState() async {
+    Location _location = Location();
+    PermissionStatus _permission;
+
+    _permission = await _location.requestPermission();
+    print("Permission: $_permission");
+
+    switch (_permission) {
+      case PermissionStatus.granted:
+        bool serviceStatus = await _location.serviceEnabled();
+        print("Service status: $serviceStatus");
+
+        if (serviceStatus) {
+          Widgets.showToast("Getting Location. Please wait..");
+
+          try {
+            LocationData locationData = await _location.getLocation();
+
+            _userLocation =
+                LatLng(locationData.latitude, locationData.longitude);
+          } on PlatformException catch (e) {
+            Widgets.showToast(e.message.toString());
+            e.toString().debugLog();
+
+            log(e.code);
+
+            _location = null;
+          }
+        } else {
+          bool serviceStatusResult = await _location.requestService();
+          print("Service status activated after request: $serviceStatusResult");
+          initPlatformState();
+        }
+
+        break;
+      case PermissionStatus.denied:
+        initPlatformState();
+        break;
+      case PermissionStatus.deniedForever:
+        break;
+    }
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
     _container = InheritedContainer.of(context);
-    appointmentDetailsFuture();
+
+    if (_container.userLocationMap != null &&
+        _container.userLocationMap.isNotEmpty) {
+      _userLocation = _container.userLocationMap['latLng'];
+    } else {
+      initPlatformState();
+    }
+
+    appointmentDetailsFuture(_userLocation);
   }
 
-  void appointmentDetailsFuture() {
+  void appointmentDetailsFuture(LatLng latLng) {
     SharedPref().getToken().then((token) {
       ApiBaseHelper api = ApiBaseHelper();
       token.debugLog();
 
       setState(() {
-        _profileFuture = api.getAppointmentDetails(token, widget.args["id"]);
+        _profileFuture =
+            api.getAppointmentDetails(token, widget.args["id"], latLng);
       });
     });
   }
@@ -127,7 +184,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                     arguments: profileMap["data"]["type"],
                                   )
                                   .whenComplete(
-                                    () => appointmentDetailsFuture(),
+                                    () =>
+                                        appointmentDetailsFuture(_userLocation),
                                   ),
                         ),
                       ),
@@ -403,7 +461,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             _providerData["fromTime"].toString(),
             _providerData["toTime"].toString()),
         divider(topPadding: 8.0),
-        locationWidget(address, latLng),
+        locationWidget(address, latLng, _data['distance']),
         divider(),
         seekingCareWidget(_providerData),
         divider(),
@@ -449,7 +507,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                             Routes.rateDoctorScreen,
                             arguments: "2",
                           )
-                          .whenComplete(() => appointmentDetailsFuture()),
+                          .whenComplete(
+                              () => appointmentDetailsFuture(_userLocation)),
                       label: Text(
                         "Rate Now",
                         style: TextStyle(
@@ -584,9 +643,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     );
   }
 
-  Widget locationWidget(String location, LatLng latLng) {
+  Widget locationWidget(String location, LatLng latLng, dynamic distance) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
+      padding: const EdgeInsets.fromLTRB(20.0, 16.0, 0, 10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -623,9 +682,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                       alignment: Alignment.centerRight,
                       child: FlatButton(
                         padding: EdgeInsets.zero,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         onPressed: () => latLng.launchMaps(),
                         child: Text(
-                          "Get Directions",
+                          Extensions.getDistance(distance),
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             color: AppColors.windsor,
@@ -640,7 +700,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               ),
               Container(
                 height: 155.0,
-                margin: const EdgeInsets.only(top: 11.0),
+                margin: const EdgeInsets.only(top: 11.0, right: 20),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(14.0),
                   border: Border.all(color: Colors.grey[300]),
