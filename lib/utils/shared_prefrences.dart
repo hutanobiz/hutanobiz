@@ -13,6 +13,11 @@ class SharedPref {
     prefs.setString(key, value);
   }
 
+  Future<dynamic> setBoolValue(String key, bool value) async {
+    prefs = await SharedPreferences.getInstance();
+    prefs.setBool(key, value);
+  }
+
   Future<String> getToken() async {
     prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
