@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/screens/appointments/appointment_complete.dart';
 import 'package:hutano/screens/appointments/appointment_detail_screen.dart';
+import 'package:hutano/screens/appointments/cancel_appointment.dart';
 import 'package:hutano/screens/appointments/consent_to_treat_screen.dart';
 import 'package:hutano/screens/appointments/medical_history.dart';
 import 'package:hutano/screens/appointments/rate_doctor_screen.dart';
@@ -90,6 +91,7 @@ class Routes {
   static const String onsiteAddresses = '/onsiteAddresses';
   static const String onsiteEditAddress = '/onsiteEditAddress';
   static const String parkingScreen = '/parkingScreen';
+  static const String cancelAppointmentScreen = '/cancelAppointmentScreen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -329,6 +331,14 @@ class Routes {
         return _buildRoute(
           settings,
           SelectParkingScreen(),
+        );
+        break;
+      case cancelAppointmentScreen:
+        return _buildRoute(
+          settings,
+          CancelAppointmentScreen(
+            appointmentData: args,
+          ),
         );
         break;
       default:

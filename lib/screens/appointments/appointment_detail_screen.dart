@@ -636,7 +636,11 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             ),
           ).onClick(
             roundCorners: false,
-            onTap: () => Widgets.showToast("help"),
+            onTap: () => Navigator.pushNamed(
+              context,
+              Routes.cancelAppointmentScreen,
+              arguments: profileMap,
+            ),
           ),
         ],
       ),
