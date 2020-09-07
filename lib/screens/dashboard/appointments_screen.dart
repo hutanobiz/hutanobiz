@@ -27,6 +27,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
 
   var _userLocation = LatLng(0.00, 0.00);
 
+  Map _appointmentData = {};
+
   @override
   void initState() {
     super.initState();
@@ -86,19 +88,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
             return Center(
               child: Text("No appointments."),
             );
-
-          if (_closedAppointmentsList.length > 1) {
-            _closedAppointmentsList.sort((a, b) {
-              var aDate = a['date'].toString() +
-                  a["fromTime"].toString().timeOfDay(context) +
-                  a["toTime"].toString().timeOfDay(context);
-              var bDate = b['date'].toString() +
-                  b["fromTime"].toString().timeOfDay(context) +
-                  b["toTime"].toString().timeOfDay(context);
-
-              return bDate.compareTo(aDate);
-            });
-          }
 
           return SingleChildScrollView(
             physics: ClampingScrollPhysics(),
@@ -226,11 +215,6 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
       }
     }
 
-    _container.setAppointmentId(response["_id"].toString());
-    Map appointment = {};
-    appointment["_appointmentStatus"] = _appointmentStatus;
-    appointment["id"] = response["_id"];
-
     return Container(
       margin: const EdgeInsets.only(bottom: 22.0),
       decoration: BoxDecoration(
@@ -244,10 +228,15 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           borderRadius: BorderRadius.circular(14.0),
           splashColor: Colors.grey[200],
           onTap: () {
+            _container.setAppointmentId(response["_id"].toString());
+            _appointmentData["_appointmentStatus"] = _appointmentStatus;
+            _appointmentData["id"] = response["_id"];
+            _appointmentData["listType"] = listType;
+
             Navigator.of(context)
                 .pushNamed(
                   Routes.appointmentDetailScreen,
-                  arguments: appointment,
+                  arguments: _appointmentData,
                 )
                 .whenComplete(() => appointmentsFuture(_userLocation));
           },

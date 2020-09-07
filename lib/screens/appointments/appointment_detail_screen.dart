@@ -38,6 +38,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
   Map _medicalHistoryMap = {};
 
+  int _appointmentListType = 1;
+
   final Set<Marker> _markers = {};
   BitmapDescriptor sourceIcon;
   Completer<GoogleMapController> _controller = Completer();
@@ -55,6 +57,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     super.initState();
 
     setSourceAndDestinationIcons();
+
+    if (widget.args['listType'] != null) {
+      _appointmentListType = widget.args['listType'];
+    }
 
     _appointmentStatus = widget.args["_appointmentStatus"] ?? "---";
   }
@@ -611,37 +617,45 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               ),
             ],
           ),
-          SizedBox(height: 5.0),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-            child: Row(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 4.0),
-                  child: Text(
-                    "I need help with my Appiontment",
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: AppColors.windsor.withOpacity(0.85),
-                      fontSize: 13.0,
-                    ),
+          _appointmentListType == 2 ||
+                  _appointmentStatus == "2" ||
+                  _appointmentStatus == "6"
+              ? Container()
+              : SizedBox(height: 5.0),
+          _appointmentListType == 2 ||
+                  _appointmentStatus == "2" ||
+                  _appointmentStatus == "6"
+              ? Container()
+              : Padding(
+                  padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                  child: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 4.0),
+                        child: Text(
+                          "I need help with my Appiontment",
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: AppColors.windsor.withOpacity(0.85),
+                            fontSize: 13.0,
+                          ),
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        size: 10.0,
+                        color: AppColors.windsor,
+                      ),
+                    ],
+                  ),
+                ).onClick(
+                  roundCorners: false,
+                  onTap: () => Navigator.pushNamed(
+                    context,
+                    Routes.cancelAppointmentScreen,
+                    arguments: profileMap,
                   ),
                 ),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 10.0,
-                  color: AppColors.windsor,
-                ),
-              ],
-            ),
-          ).onClick(
-            roundCorners: false,
-            onTap: () => Navigator.pushNamed(
-              context,
-              Routes.cancelAppointmentScreen,
-              arguments: profileMap,
-            ),
-          ),
         ],
       ),
     );
