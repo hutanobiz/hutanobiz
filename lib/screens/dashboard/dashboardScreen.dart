@@ -31,7 +31,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   EdgeInsetsGeometry _edgeInsetsGeometry =
       const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0);
 
-  LatLng _latLng;
+  LatLng _latLng = new LatLng(0.00, 0.00);
 
   bool _isLocLoading = false;
 
@@ -57,12 +57,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       initPlatformState();
     });
 
-    SharedPref().getToken().then((token) {
-      setState(() {
-        _myDoctorsFuture = _api.getMyDoctors(token);
-      });
-    });
-
     _professionalTitleFuture = _api.getProfessionalTitle();
     _specialtiesFuture = _api.getSpecialties();
   }
@@ -76,7 +70,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _api.profile(value, Map()).then((value) {
             setState(() {
               isEmailVerified = value["response"]["isEmailVerified"] ?? false;
-              SharedPref().setValue("isEmailVerified",
+              SharedPref().setBoolValue("isEmailVerified",
                   value["response"]["isEmailVerified"] ?? false);
             });
           });
@@ -519,9 +513,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                 ),
                                 onPressed: () {
+                                  doctor['distance'] =
+                                      _myDoctorsList[index]['distance'];
                                   conatiner.providerResponse.clear();
                                   conatiner.setProviderData(
-                                      "providerData", doctor);
+                                    "providerData",
+                                    doctor,
+                                  );
 
                                   conatiner.setProviderData(
                                       "subServices", subServices);
@@ -841,6 +839,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
             getLocationAddress(locationData.latitude, locationData.longitude);
 
             _latLng = LatLng(locationData.latitude, locationData.longitude);
+
+            SharedPref().getToken().then((token) {
+              _myDoctorsFuture = _api.getMyDoctors(token, _latLng);
+            });
           } on PlatformException catch (e) {
             _locationLoading(false);
 

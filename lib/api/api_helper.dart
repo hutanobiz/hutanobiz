@@ -515,14 +515,16 @@ class ApiBaseHelper {
     });
   }
 
-  Future<List<dynamic>> getMyDoctors(String token) {
+  Future<List<dynamic>> getMyDoctors(String token, LatLng latLng) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
 
     return _netUtil
         .get(
-      base_url + "api/patient/my-doctors",
+      base_url +
+          "api/patient/my-doctors?longitude=${latLng.longitude.toStringAsFixed(2)}"
+              "&lattitude=${latLng.latitude.toStringAsFixed(2)}",
       headers: headers,
     )
         .then((res) {
