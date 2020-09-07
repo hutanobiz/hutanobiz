@@ -447,7 +447,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                             appointmentIdAmp["status"] = "5";
 
                             _api
-                                .cancelAppointment(token, appointmentIdAmp)
+                                .cancelRequest(token, appointmentIdAmp)
                                 .then((deleteResponse) {
                               Widgets.showToast(
                                   "Appointment cancelled successfully");
