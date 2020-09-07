@@ -314,20 +314,6 @@ class _SettingsScreenState extends State<SettingScreen> {
                 ),
               ),
               customListButton(
-                "Payment History",
-                "images/profile_payment_history.png",
-                () => Navigator.of(context).pushNamed(
-                  Routes.savedCardsScreen,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 28.0),
-                child: Divider(
-                  color: Colors.grey[300],
-                  height: 0,
-                ),
-              ),
-              customListButton(
                 "Update Medical History",
                 "images/profile_update_medical.png",
                 () => Navigator.of(context).pushNamed(
