@@ -22,11 +22,6 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
   Map _providerMap = Map();
   double _rating = 0;
   String _ratingText, _name, avatar;
-  bool _doctorFriendliness = false,
-      _responseTime = false,
-      _doctorAdvise = false,
-      _easeOfScheduling = false,
-      _staffFriendliness = false;
 
   ApiBaseHelper api = ApiBaseHelper();
 
@@ -34,8 +29,13 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
   Map rateMap = Map();
   bool _isLoading = false;
 
+  Future<List<dynamic>> _reasonsFuture;
+  List _reasonList = [];
+
   @override
   void initState() {
+    super.initState();
+
     _reviewController.addListener(() => setState(() {}));
 
     SharedPref().getToken().then((token) {
@@ -46,7 +46,8 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
         });
       });
     });
-    super.initState();
+
+    _reasonsFuture = api.getReviewReasons();
   }
 
   @override
@@ -105,30 +106,14 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                 height: 55.0,
                 child: FancyButton(
                   title: "Submit",
-                  onPressed: (_rating.round() >= 1)
+                  onPressed: (_rating.round() >= 1 &&
+                          (_reasonList != null && _reasonList.length > 0))
                       ? () {
                           FocusScope.of(context).requestFocus(FocusNode());
 
-                          List reasonList = List();
-                          if (_doctorFriendliness) {
-                            reasonList.add("1");
-                          }
-                          if (_responseTime) {
-                            reasonList.add("2");
-                          }
-                          if (_doctorAdvise) {
-                            reasonList.add("3");
-                          }
-                          if (_easeOfScheduling) {
-                            reasonList.add("4");
-                          }
-                          if (_staffFriendliness) {
-                            reasonList.add("5");
-                          }
-
-                          if (reasonList != null || reasonList.length > 0) {
-                            for (var i = 0; i < reasonList.length; i++) {
-                              rateMap["reason[$i]"] = reasonList[i];
+                          if (_reasonList != null || _reasonList.length > 0) {
+                            for (var i = 0; i < _reasonList.length; i++) {
+                              rateMap["reason[$i]"] = _reasonList[i];
                             }
                           }
 
@@ -412,36 +397,52 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
         ),
         border: Border.all(color: Colors.grey[300], width: 0.5),
       ),
-      child: Column(
-        children: <Widget>[
-          selectWrongTypeWidget("Doctor Friendliness", _doctorFriendliness,
-              (bool value) {
-            setState(() => _doctorFriendliness = value);
-          }),
-          selectWrongTypeWidget("Response Time", _responseTime, (bool value) {
-            setState(() => _responseTime = value);
-          }),
-          selectWrongTypeWidget("Doctor's Advise", _doctorAdvise, (bool value) {
-            setState(() => _doctorAdvise = value);
-          }),
-          selectWrongTypeWidget("Ease of scheduling", _easeOfScheduling,
-              (bool value) => setState(() => _easeOfScheduling = value)),
-          selectWrongTypeWidget("Staff friendliness", _staffFriendliness,
-              (bool value) => setState(() => _staffFriendliness = value)),
-        ],
-      ),
-    );
-  }
+      child: FutureBuilder<List<dynamic>>(
+        future: _reasonsFuture,
+        builder: (_, snapshot) {
+          if (snapshot.hasData) {
+            List<dynamic> data = snapshot.data;
 
-  Widget selectWrongTypeWidget(
-      String title, bool isChecked, Function onChanged) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10.0),
-      child: CheckboxListTile(
-        title: Text(title),
-        onChanged: onChanged,
-        activeColor: AppColors.goldenTainoi,
-        value: isChecked,
+            if (data == null || data.length == 0) return Container();
+
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: ScrollPhysics(),
+              padding: EdgeInsets.zero,
+              itemCount: data.length,
+              itemBuilder: (context, titleIndex) {
+                if (data == null || data.length == 0) return Container();
+
+                dynamic reason = data[titleIndex];
+
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: CheckboxListTile(
+                    title: Text(reason['reason']),
+                    onChanged: (value) {
+                      if (value &&
+                          !_reasonList.contains(reason['_id'].toString())) {
+                        _reasonList.add(reason['_id'].toString());
+                      } else {
+                        _reasonList.remove(reason['_id'].toString());
+                      }
+
+                      setState(() {});
+                      _reasonList.toString().debugLog();
+                    },
+                    activeColor: AppColors.goldenTainoi,
+                    value: _reasonList.contains(reason['_id'].toString()),
+                  ),
+                );
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
     );
   }
