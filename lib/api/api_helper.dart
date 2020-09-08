@@ -655,6 +655,16 @@ class ApiBaseHelper {
       return res;
     });
   }
+
+  Future<List<dynamic>> getReviewReasons() {
+    return _netUtil
+        .get(
+      base_url + "api/doctor-reason",
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
 }
 
 class NetworkUtil {
