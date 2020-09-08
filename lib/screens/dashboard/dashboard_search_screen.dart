@@ -1,10 +1,11 @@
-import 'dart:developer';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_tile_widget.dart';
@@ -24,7 +25,7 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
   List<dynamic> _servicesList = List();
   List<dynamic> _doctorList = List();
   List<dynamic> _specialityList = List();
-  List<dynamic> _professionalTitleList = List();
+  List<dynamic> _recentSearchesList = List();
 
   ApiBaseHelper _api = ApiBaseHelper();
 
@@ -37,20 +38,13 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
   void initState() {
     super.initState();
 
-    _isLoading = true;
-
-    _api.getProfessionalTitle().then((value) {
-      if (value != null) {
-        setState(() {
-          _isLoading = false;
-          _professionalTitleList = value;
-        });
+    SharedPref().checkValue('recentSearches').then((v) {
+      if (v != null && v) {
+        SharedPref().getValue('recentSearches').then((value) {
+          _recentSearchesList = jsonDecode(value);
+          setState(() {});
+        }).futureError((e) => e.toString().debugLog());
       }
-    }).futureError((error) {
-      setState(() {
-        _isLoading = false;
-      });
-      error.toString().debugLog();
     });
 
     if (widget.topSpecialtiesList != null) {
@@ -145,23 +139,27 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
         ),
         Expanded(
           child: _searchText.length < 0 || _searchText == ""
-              ? SingleChildScrollView(
-                  physics: ClampingScrollPhysics(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      heading("Professional Title", _professionalTitleList, 1),
-                      _specialityList.isNotEmpty
-                          ? _listWidget(
-                              _professionalTitleList, "title", false, 0)
-                          : Container(),
-                      heading("Specialities", _specialityList, 1),
-                      _specialityList.isNotEmpty
-                          ? _listWidget(_specialityList, "title", false, 1)
-                          : Container(),
-                    ],
-                  ),
-                )
+              ? _recentSearchesList.isEmpty
+                  ? Center(
+                      child: Text(
+                        'No recent searches',
+                      ),
+                    )
+                  : SingleChildScrollView(
+                      physics: ScrollPhysics(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          heading(
+                            "Recent Searches",
+                            _recentSearchesList,
+                            0,
+                            isAddSeeAll: false,
+                          ),
+                          _recentSearchWidget(_recentSearchesList)
+                        ],
+                      ),
+                    )
               : _buildList(),
         ),
       ],
@@ -195,7 +193,7 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
           }
 
           return SingleChildScrollView(
-            physics: ClampingScrollPhysics(),
+            physics: ScrollPhysics(),
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -223,7 +221,12 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
     );
   }
 
-  Widget heading(String heading, List<dynamic> list, int type) {
+  Widget heading(
+    String heading,
+    List<dynamic> list,
+    int type, {
+    bool isAddSeeAll = true,
+  }) {
     return list.isNotEmpty
         ? Container(
             width: MediaQuery.of(context).size.width,
@@ -241,7 +244,7 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                list.isNotEmpty
+                list.isNotEmpty && isAddSeeAll
                     ? Expanded(
                         child: Align(
                           alignment: Alignment.centerRight,
@@ -295,7 +298,7 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
 
     return ListView.separated(
       separatorBuilder: (BuildContext context, int index) => Divider(),
-      physics: ClampingScrollPhysics(),
+      physics: ScrollPhysics(),
       shrinkWrap: true,
       padding: const EdgeInsets.fromLTRB(20.0, 4.0, 20.0, 0.0),
       itemCount: tempList.length >= 5 ? 5 : tempList.length,
@@ -314,6 +317,18 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
                   name: tempList[index][searchKey],
                   profession: professionalTitle,
                   onTap: () {
+                    if (!_recentSearchesList.contains(tempList[index])) {
+                      if (_recentSearchesList.length >= 25) {
+                        _recentSearchesList.removeAt(0);
+                      }
+
+                      tempList[index]['type'] = type;
+                      _recentSearchesList.add(tempList[index]);
+
+                      SharedPref().setValue(
+                          'recentSearches', jsonEncode(_recentSearchesList));
+                    }
+
                     _container.setProviderId(tempList[index]["_id"].toString());
                     Navigator.of(context)
                         .pushNamed(Routes.providerProfileScreen);
@@ -324,15 +339,27 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
                   onTap: type == 0
                       ? null
                       : () {
+                          if (!_recentSearchesList.contains(tempList[index])) {
+                            if (_recentSearchesList.length >= 25) {
+                              _recentSearchesList.removeAt(0);
+                            }
+
+                            tempList[index]['type'] = type;
+                            _recentSearchesList.add(tempList[index]);
+                            SharedPref().setValue('recentSearches',
+                                jsonEncode(_recentSearchesList));
+                          }
+
                           _container.projectsResponse.clear();
 
                           if (type == 1) {
                             _container.setProjectsResponse(
-                                "specialtyId[${tempList[index].toString()}]",
+                                "specialtyId[${index.toString()}]",
                                 tempList[index]["_id"]);
+                            _container.setProjectsResponse("serviceType", '0');
                           } else if (type == 3) {
                             _container.setProjectsResponse(
-                                "subServices[${tempList[index].toString()}]",
+                                "subServices[${index.toString()}]",
                                 tempList[index]["_id"]);
                           }
 
@@ -342,6 +369,82 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
                               .pushNamed(Routes.providerListScreen);
                         },
                 );
+        }
+
+        return Container();
+      },
+    );
+  }
+
+  Widget _recentSearchWidget(List<dynamic> _list) {
+    return ListView.separated(
+      separatorBuilder: (BuildContext context, int index) => Divider(),
+      physics: ScrollPhysics(),
+      shrinkWrap: true,
+      padding: const EdgeInsets.fromLTRB(20.0, 4.0, 20.0, 0.0),
+      itemCount: _list.length >= 5 ? 5 : _list.length,
+      itemBuilder: (context, index) {
+        int _searchType = _list[index]['type'];
+        String _type = '';
+
+        switch (_searchType) {
+          case 1:
+            _type = 'Speciality';
+            break;
+          case 2:
+            _type = 'Provider';
+            break;
+          case 3:
+            _type = 'Service';
+            break;
+          default:
+            _type = '';
+        }
+
+        if (_list.isNotEmpty) {
+          return ListTile(
+            title: Text(
+              _searchType == 1
+                  ? _list[index]['title']
+                  : (_searchType == 3
+                      ? _list[index]['name']
+                      : _list[index]['fullName']),
+            ),
+            trailing: Text(
+              _type,
+              style: TextStyle(
+                fontSize: 12,
+                color: AppColors.tundora.withOpacity(0.7),
+              ),
+            ),
+            onTap: _searchType == 0
+                ? null
+                : () {
+                    _container.projectsResponse.clear();
+
+                    if (_searchType == 2) {
+                      _container.setProviderId(_list[index]["_id"].toString());
+                      Navigator.of(context)
+                          .pushNamed(Routes.providerProfileScreen);
+                    } else {
+                      if (_searchType == 1) {
+                        _container.setProjectsResponse(
+                            "specialtyId[${index.toString()}]",
+                            _list[index]["_id"]);
+                        _container.setProjectsResponse("serviceType", '0');
+                      } else if (_searchType == 3) {
+                        _container.setProjectsResponse(
+                            "subServices[${index.toString()}]",
+                            _list[index]["_id"]);
+                      }
+
+                      _container.setProjectsResponse("serviceType", '0');
+
+                      Navigator.of(context)
+                          .pushNamed(Routes.providerListScreen);
+                    }
+                  },
+          );
         }
 
         return Container();
