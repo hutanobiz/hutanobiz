@@ -29,7 +29,10 @@ class Extensions {
     }
 
     if (state != null) {
-      stateCode += state["stateCode"]?.toString() ?? "";
+      if (state is Map)
+        stateCode += state["stateCode"]?.toString() ?? "";
+      else
+        stateCode += state;
     }
 
     return (street ?? "---") +
