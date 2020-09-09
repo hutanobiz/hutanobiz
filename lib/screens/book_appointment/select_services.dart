@@ -299,15 +299,11 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
       value: _selectedServicesMap.containsKey(services.subServiceId),
       activeColor: AppColors.goldenTainoi,
       onChanged: (value) {
-        setState(() {
-          value == true
-              ? _selectedServicesMap[services.subServiceId] = services
-              : _selectedServicesMap.remove(services.subServiceId);
-        });
-
-        value == true
+        value
             ? _selectedServicesMap[services.subServiceId] = services
             : _selectedServicesMap.remove(services.subServiceId);
+
+        setState(() {});
       },
       title: Text(
         services.subServiceName ?? "---",
