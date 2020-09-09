@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
@@ -89,32 +90,6 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                 return Center(
                   child: Text("No Requests."),
                 );
-
-              if (_activeRequestsList.length > 1) {
-                _activeRequestsList.sort((a, b) {
-                  var aDate = a['date'].toString() +
-                      a["fromTime"].toString().timeOfDay(context) +
-                      a["toTime"].toString().timeOfDay(context);
-                  var bDate = b['date'].toString() +
-                      b["fromTime"].toString().timeOfDay(context) +
-                      b["toTime"].toString().timeOfDay(context);
-
-                  return bDate.compareTo(aDate);
-                });
-              }
-
-              // if (_closedRequestsList.length > 1) {
-              //   _closedRequestsList.sort((a, b) {
-              //     var aDate = a['date'].toString() +
-              //         a["fromTime"].toString().timeOfDay(context) +
-              //         a["toTime"].toString().timeOfDay(context);
-              //     var bDate = b['date'].toString() +
-              //         b["fromTime"].toString().timeOfDay(context) +
-              //         b["toTime"].toString().timeOfDay(context);
-
-              //     return bDate.compareTo(aDate);
-              //   });
-              // }
 
               return SingleChildScrollView(
                 physics: ClampingScrollPhysics(),
@@ -232,6 +207,18 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
       }
     }
 
+    if (response["type"].toString() == '3') {
+      address = Extensions.addressFormat(
+        response["userAddress"]["address"]?.toString(),
+        response["userAddress"]["street"]?.toString(),
+        response["userAddress"]["city"]?.toString(),
+        response["userAddress"]["state"] is Map
+            ? response["userAddress"]["state"]
+            : response["userAddress"]["stateCode"],
+        response["userAddress"]["zipCode"]?.toString(),
+      );
+    }
+
     return Container(
       margin: const EdgeInsets.only(bottom: 22.0),
       decoration: BoxDecoration(
@@ -239,254 +226,283 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
         borderRadius: BorderRadius.circular(14.0),
         border: Border.all(color: Colors.grey[300]),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.only(top: 18, left: 12, right: 12),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  width: 58.0,
-                  height: 58.0,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: avatar == null
-                          ? AssetImage('images/profile_user.png')
-                          : NetworkImage(ApiBaseHelper.imageUrl + avatar),
-                      fit: BoxFit.cover,
+      child: Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(14.0),
+          splashColor: Colors.grey[200],
+          onTap: () {
+            Navigator.of(context).pushNamed(
+              Routes.requestDetailScreen,
+              arguments: response,
+            );
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.only(top: 18, left: 12, right: 12),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      width: 58.0,
+                      height: 58.0,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: avatar == null
+                              ? AssetImage('images/profile_user.png')
+                              : NetworkImage(ApiBaseHelper.imageUrl + avatar),
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                        border: Border.all(
+                          color: Colors.grey[300],
+                          width: 1.0,
+                        ),
+                      ),
                     ),
-                    borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                    border: Border.all(
-                      color: Colors.grey[300],
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          name,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5.0,
-                        ),
-                        listType == 1
-                            ? Text(
-                                professionalTitle,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Colors.black.withOpacity(0.6),
-                                ),
-                              )
-                            : status?.appointmentStatus(isAddBackground: false),
-                        SizedBox(
-                          height: 4.0,
-                        ),
-                        Row(
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 4.0),
-                                child: RichText(
-                                  text: TextSpan(
+                            Text(
+                              name,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5.0,
+                            ),
+                            listType == 1
+                                ? Text(
+                                    professionalTitle,
+                                    overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                      fontSize: 13.0,
-                                      color: Colors.black.withOpacity(0.7),
-                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black.withOpacity(0.6),
                                     ),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                          text: listType == 2
-                                              ? "$professionalTitle "
-                                              : null),
-                                      TextSpan(
-                                        text: "\$$fee",
+                                  )
+                                : status?.appointmentStatus(
+                                    isAddBackground: false),
+                            SizedBox(
+                              height: 4.0,
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 4.0),
+                                    child: RichText(
+                                      text: TextSpan(
                                         style: TextStyle(
                                           fontSize: 13.0,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.black.withOpacity(0.80),
+                                          color: Colors.black.withOpacity(0.7),
+                                          fontWeight: FontWeight.w400,
                                         ),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                              text: listType == 2
+                                                  ? "$professionalTitle "
+                                                  : null),
+                                          TextSpan(
+                                            text: "\$$fee",
+                                            style: TextStyle(
+                                              fontSize: 13.0,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.black
+                                                  .withOpacity(0.80),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                            )
+                                )
+                              ],
+                            ),
                           ],
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    color: AppColors.goldenTainoi,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Text(
-                    appointmentType,
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8.0, 3.0, 8.0, 10.0),
-            child: Divider(
-              color: Colors.grey[300],
-              thickness: 0.5,
-            ),
-          ),
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 8.0),
-            child: Row(
-              children: <Widget>[
-                "ic_appointment_time".imageIcon(height: 12.0, width: 12.0),
-                SizedBox(width: 5.0),
-                Expanded(
-                  child: Text(
-                    (response['date'] != null
-                            ? response['date'].toString().formatDate(
-                                  dateFormat: "${Strings.datePattern}, ",
-                                )
-                            : "---") +
-                        (response["fromTime"] != null
-                            ? response["fromTime"].toString().timeOfDay(context)
-                            : "---") +
-                        " - " +
-                        (response["toTime"] != null
-                            ? response["toTime"].toString().timeOfDay(context)
-                            : "---"),
-                    style: TextStyle(
-                      color: Colors.black.withOpacity(0.5),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 18.0),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Row(
-                    children: <Widget>[
-                      Image(
-                        image: AssetImage(
-                          "images/ic_location_grey.png",
-                        ),
-                        height: 14.0,
-                        width: 11.0,
                       ),
-                      SizedBox(width: 5.0),
-                      Expanded(
-                        child: Text(
-                          "$address",
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: Colors.black.withOpacity(0.5),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8.0),
+                          decoration: BoxDecoration(
+                            color: AppColors.goldenTainoi,
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Text(
+                            appointmentType,
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                Row(
-                  children: <Widget>[
-                    Image(
-                      image: AssetImage(
-                        "images/ic_distance.png",
-                      ),
-                      height: 14.0,
-                      width: 14.0,
+                        SizedBox(height: 13.0),
+                        'ic_forward'.imageIcon(
+                          width: 8,
+                          height: 14,
+                        )
+                      ],
                     ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8.0, 3.0, 8.0, 10.0),
+                child: Divider(
+                  color: Colors.grey[300],
+                  thickness: 0.5,
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 8.0),
+                child: Row(
+                  children: <Widget>[
+                    "ic_appointment_time".imageIcon(height: 12.0, width: 12.0),
                     SizedBox(width: 5.0),
-                    Text(
-                      Extensions.getDistance(response['distance']),
-                      style: TextStyle(
-                        color: Colors.black.withOpacity(0.5),
+                    Expanded(
+                      child: Text(
+                        (response['date'] != null
+                                ? response['date'].toString().formatDate(
+                                      dateFormat: "${Strings.datePattern}, ",
+                                    )
+                                : "---") +
+                            (response["fromTime"] != null
+                                ? response["fromTime"]
+                                    .toString()
+                                    .timeOfDay(context)
+                                : "---") +
+                            " - " +
+                            (response["toTime"] != null
+                                ? response["toTime"]
+                                    .toString()
+                                    .timeOfDay(context)
+                                : "---"),
+                        style: TextStyle(
+                          color: Colors.black.withOpacity(0.5),
+                        ),
                       ),
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
-          listType == 1
-              ? InkWell(
-                  onTap: () {
-                    Widgets.showAlertDialog(
-                      context,
-                      "Cancel Appointment",
-                      "Are you sure you want to cancel this appointment?",
-                      () {
-                        SharedPref().getToken().then((token) {
-                          Map appointmentIdAmp = Map();
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 12.0, right: 12.0, bottom: 18.0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Row(
+                        children: <Widget>[
+                          Image(
+                            image: AssetImage(
+                              "images/ic_location_grey.png",
+                            ),
+                            height: 14.0,
+                            width: 11.0,
+                          ),
+                          SizedBox(width: 5.0),
+                          Expanded(
+                            child: Text(
+                              "$address",
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Colors.black.withOpacity(0.5),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Image(
+                          image: AssetImage(
+                            "images/ic_distance.png",
+                          ),
+                          height: 14.0,
+                          width: 14.0,
+                        ),
+                        SizedBox(width: 5.0),
+                        Text(
+                          Extensions.getDistance(response['distance']),
+                          style: TextStyle(
+                            color: Colors.black.withOpacity(0.5),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              listType == 1
+                  ? InkWell(
+                      onTap: () {
+                        Widgets.showAlertDialog(
+                          context,
+                          "Cancel Appointment",
+                          "Are you sure you want to cancel this appointment?",
+                          () {
+                            SharedPref().getToken().then((token) {
+                              Map appointmentIdAmp = Map();
 
-                          if (response["_id"].toString() != null) {
-                            appointmentIdAmp["appointmentId"] =
-                                response["_id"].toString();
-                            appointmentIdAmp["status"] = "5";
+                              if (response["_id"].toString() != null) {
+                                appointmentIdAmp["appointmentId"] =
+                                    response["_id"].toString();
+                                appointmentIdAmp["status"] = "5";
 
-                            _api
-                                .cancelRequest(token, appointmentIdAmp)
-                                .then((deleteResponse) {
-                              Widgets.showToast(
-                                  "Appointment cancelled successfully");
+                                _api
+                                    .cancelRequest(token, appointmentIdAmp)
+                                    .then((deleteResponse) {
+                                  Widgets.showToast(
+                                      "Appointment cancelled successfully");
 
-                              setState(() {
-                                _requestsFuture = _api.appointmentRequests(
-                                  token,
-                                  _userLocation,
-                                );
-                              });
-                            }).futureError(
-                                    (onError) => onError.toString().debugLog());
-                          }
-                        });
+                                  setState(() {
+                                    _requestsFuture = _api.appointmentRequests(
+                                      token,
+                                      _userLocation,
+                                    );
+                                  });
+                                }).futureError((onError) =>
+                                        onError.toString().debugLog());
+                              }
+                            });
+                          },
+                        );
                       },
-                    );
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                    decoration: BoxDecoration(
-                      color: AppColors.tundora.withOpacity(0.05),
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(14.0),
-                        bottomRight: Radius.circular(14.0),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                        decoration: BoxDecoration(
+                          color: AppColors.tundora.withOpacity(0.05),
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(14.0),
+                            bottomRight: Radius.circular(14.0),
+                          ),
+                        ),
+                        child: Text(
+                          "Cancel Request",
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ),
-                    ),
-                    child: Text(
-                      "Cancel Request",
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                )
-              : Container(),
-        ],
+                    )
+                  : Container(),
+            ],
+          ),
+        ),
       ),
     );
   }

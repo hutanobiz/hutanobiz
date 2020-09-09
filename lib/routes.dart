@@ -7,6 +7,7 @@ import 'package:hutano/screens/appointments/cancel_appointment.dart';
 import 'package:hutano/screens/appointments/consent_to_treat_screen.dart';
 import 'package:hutano/screens/appointments/medical_history.dart';
 import 'package:hutano/screens/appointments/rate_doctor_screen.dart';
+import 'package:hutano/screens/appointments/request_detail_screen.dart';
 import 'package:hutano/screens/appointments/seeking_cure.dart';
 import 'package:hutano/screens/appointments/track_treatment.dart';
 import 'package:hutano/screens/appointments/treatment_summary.dart';
@@ -92,6 +93,7 @@ class Routes {
   static const String onsiteEditAddress = '/onsiteEditAddress';
   static const String parkingScreen = '/parkingScreen';
   static const String cancelAppointmentScreen = '/cancelAppointmentScreen';
+  static const String requestDetailScreen = '/requestDetailScreen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -338,6 +340,14 @@ class Routes {
           settings,
           CancelAppointmentScreen(
             appointmentData: args,
+          ),
+        );
+        break;
+      case requestDetailScreen:
+        return _buildRoute(
+          settings,
+          RequestDetailScreen(
+            detailData: args,
           ),
         );
         break;
