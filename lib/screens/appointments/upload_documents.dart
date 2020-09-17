@@ -17,6 +17,7 @@ import 'package:hutano/widgets/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UploadDocumentsScreen extends StatefulWidget {
   UploadDocumentsScreen({Key key, this.isBottomButtonsShow}) : super(key: key);
@@ -398,11 +399,21 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
             ],
           ),
         ).onClick(
-          onTap: () => Navigator.of(context).pushNamed(
-            Routes.providerImageScreen,
-            arguments: document,
-          ),
-        ),
+            onTap: document.toLowerCase().endsWith("pdf")
+                ? () async {
+                    var url = document;
+                    if (await canLaunch(url)) {
+                      await launch(url);
+                    } else {
+                      throw 'Could not launch $url';
+                    }
+                  }
+                : () {
+                    Navigator.of(context).pushNamed(
+                      Routes.providerImageScreen,
+                      arguments: document,
+                    );
+                  }),
       );
     }
 

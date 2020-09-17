@@ -17,6 +17,7 @@ import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UploadInsuranceImagesScreen extends StatefulWidget {
   final Map insuranceViewMap;
@@ -194,12 +195,25 @@ class _UploadInsuranceImagesScreenState
         children: <Widget>[
           Expanded(
             child: DashedBorder(
-              onTap: () => frontImagePath != null
-                  ? Navigator.of(context).pushNamed(
-                      Routes.providerImageScreen,
-                      arguments: frontImagePath,
-                    )
-                  : showPickerDialog(true),
+              onTap: frontImagePath != null
+                  ? frontImagePath.toLowerCase().endsWith("pdf")
+                      ? () async {
+                          var url = frontImagePath;
+                          if (await canLaunch(url)) {
+                            await launch(url);
+                          } else {
+                            throw 'Could not launch $url';
+                          }
+                        }
+                      : () {
+                          Navigator.of(context).pushNamed(
+                            Routes.providerImageScreen,
+                            arguments: frontImagePath,
+                          );
+                        }
+                  : () {
+                      showPickerDialog(false);
+                    },
               child: frontImagePath == null
                   ? uploadWidget(
                       "Front", AssetImage("images/ic_front_image.png"))
@@ -212,12 +226,25 @@ class _UploadInsuranceImagesScreenState
           SizedBox(width: 16.0),
           Expanded(
             child: DashedBorder(
-              onTap: () => backImagePath != null
-                  ? Navigator.of(context).pushNamed(
-                      Routes.providerImageScreen,
-                      arguments: backImagePath,
-                    )
-                  : showPickerDialog(false),
+              onTap: backImagePath != null
+                  ? backImagePath.toLowerCase().endsWith("pdf")
+                      ? () async {
+                          var url = backImagePath;
+                          if (await canLaunch(url)) {
+                            await launch(url);
+                          } else {
+                            throw 'Could not launch $url';
+                          }
+                        }
+                      : () {
+                          Navigator.of(context).pushNamed(
+                            Routes.providerImageScreen,
+                            arguments: backImagePath,
+                          );
+                        }
+                  : () {
+                      showPickerDialog(false);
+                    },
               child: backImagePath == null
                   ? uploadWidget("Back", AssetImage("images/ic_back_image.png"))
                   : imageWidget(

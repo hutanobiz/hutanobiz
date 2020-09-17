@@ -14,6 +14,7 @@ import 'package:hutano/widgets/round_corner_checkbox.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UploadImagesScreen extends StatefulWidget {
   UploadImagesScreen({Key key, this.isBottomButtonsShow}) : super(key: key);
@@ -321,10 +322,21 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
             ],
           ),
         ).onClick(
-          onTap: () => Navigator.of(context).pushNamed(
-            Routes.providerImageScreen,
-            arguments: imageFile,
-          ),
+          onTap: imageFile.toLowerCase().endsWith("pdf")
+              ? () async {
+                  var url = imageFile;
+                  if (await canLaunch(url)) {
+                    await launch(url);
+                  } else {
+                    throw 'Could not launch $url';
+                  }
+                }
+              : () {
+                  Navigator.of(context).pushNamed(
+                    Routes.providerImageScreen,
+                    arguments: imageFile,
+                  );
+                },
         ),
       );
     }
