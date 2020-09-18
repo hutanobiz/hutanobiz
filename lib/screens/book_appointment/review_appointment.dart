@@ -141,10 +141,17 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     }
 
     _initialPosition = _userLocationMap["latLng"];
-    if (_profileMap["businessLocation"] != null) {
-      if (_profileMap["businessLocation"]["coordinates"].length > 0) {
-        _desPosition = LatLng(_profileMap["businessLocation"]["coordinates"][1],
-            _profileMap["businessLocation"]["coordinates"][0]);
+
+    if (_container.projectsResponse["serviceType"].toString() == '3') {
+      _desPosition = LatLng(_consentToTreatMap["userAddress"]['coordinates'][1],
+          _consentToTreatMap["userAddress"]['coordinates'][0]);
+    } else {
+      if (_profileMap["businessLocation"] != null) {
+        if (_profileMap["businessLocation"]["coordinates"].length > 0) {
+          _desPosition = LatLng(
+              _profileMap["businessLocation"]["coordinates"][1],
+              _profileMap["businessLocation"]["coordinates"][0]);
+        }
       }
     }
 
@@ -674,8 +681,6 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                       }
 
                       setState(() {
-                        setPolylines();
-
                         _controller.complete(controller);
 
                         _markers.add(Marker(
@@ -684,21 +689,13 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                           icon: _sourceIcon,
                         ));
 
-                        if (_container.projectsResponse["serviceType"]
-                                .toString() ==
-                            '3') {
-                          _desPosition = LatLng(
-                              _consentToTreatMap["userAddress"]['coordinates']
-                                  [1],
-                              _consentToTreatMap["userAddress"]['coordinates']
-                                  [0]);
-                        }
-
                         _markers.add(Marker(
                           markerId: MarkerId(_desPosition.toString()),
                           position: _desPosition,
                           icon: _destinationIcon,
                         ));
+
+                        setPolylines();
                       });
 
                       CameraUpdate u2 = CameraUpdate.newLatLngBounds(bound, 50);
