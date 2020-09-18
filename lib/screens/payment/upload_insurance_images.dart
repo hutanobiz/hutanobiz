@@ -212,7 +212,7 @@ class _UploadInsuranceImagesScreenState
                           );
                         }
                   : () {
-                      showPickerDialog(false);
+                      showPickerDialog(true);
                     },
               child: frontImagePath == null
                   ? uploadWidget(
@@ -389,14 +389,10 @@ class _UploadInsuranceImagesScreenState
               : backImagePath = croppedFile.path,
         );
 
-        if (isFront) {
-          if (_insuranceMap != null && _insuranceMap.isNotEmpty) {
-            _uploadImage(
-              'Insurance card added successfully',
-            );
-          } else {
-            _updateInsurance('Image updated');
-          }
+        if (_insuranceMap != null && _insuranceMap.isNotEmpty) {
+          _uploadImage(
+            'Insurance card added successfully',
+          );
         } else {
           _updateInsurance('Image updated');
         }
@@ -511,22 +507,22 @@ class _UploadInsuranceImagesScreenState
         );
 
         request.files.add(frontMultipartFile);
+      }
 
-        if (backImagePath != null &&
-            !(backImagePath.contains('http') ||
-                backImagePath.contains('https'))) {
-          File backImage = File(backImagePath);
-          var stream = http.ByteStream(DelegatingStream(backImage.openRead()));
-          var length = await backImage.length();
-          var backMultipartFile = http.MultipartFile(
-            "insuranceDocumentBack",
-            stream.cast(),
-            length,
-            filename: backImage.path,
-          );
+      if (backImagePath != null &&
+          !(backImagePath.contains('http') ||
+              backImagePath.contains('https'))) {
+        File backImage = File(backImagePath);
+        var stream = http.ByteStream(DelegatingStream(backImage.openRead()));
+        var length = await backImage.length();
+        var backMultipartFile = http.MultipartFile(
+          "insuranceDocumentBack",
+          stream.cast(),
+          length,
+          filename: backImage.path,
+        );
 
-          request.files.add(backMultipartFile);
-        }
+        request.files.add(backMultipartFile);
       }
 
       var response = await request.send();
