@@ -912,7 +912,7 @@ class UsNumberTextInputFormatter extends TextInputFormatter {
       newText.write(newValue.text.substring(6, usedSubstringIndex = 10) + ' ');
       if (newValue.selection.end >= 10) selectionIndex++;
     }
-    // Dump the rest.
+
     if (newTextLength >= usedSubstringIndex)
       newText.write(newValue.text.substring(usedSubstringIndex));
     return TextEditingValue(

@@ -257,50 +257,14 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
               ),
             ),
             SizedBox(width: 10),
-            // _insuranceViewMap['isPayment']
-            //     ? !_providerInsuranceList.contains(insurance["_id"].toString())
-            //         ? Container()
-            //         : checkBox(index, insurance)
-            //     :
             !isAcceptedByProvider ? Container() : checkBox(index, insurance),
           ],
         ),
-        // _insuranceViewMap['isPayment']
-        //     ? _providerInsuranceList.contains(insurance["_id"].toString()) &&
-        //             !_alreadyAddedInsuranceList
-        //                 .contains(insurance["_id"].toString())
-        //         ? Container()
-        //         : insuranceTextWidget(insurance)
-        //     : !_providerInsuranceList.contains(insurance["_id"].toString()) &&
-        //             !_alreadyAddedInsuranceList
-        //                 .contains(insurance["_id"].toString())
-        //         ? Container()
-        //         : insuranceTextWidget(insurance)
       ],
     );
   }
 
-  // Widget insuranceTextWidget(dynamic insurance) => Padding(
-  //       padding: const EdgeInsets.only(top: 5),
-  //       child: Text(
-  //         _alreadyAddedInsuranceList.contains(insurance["_id"].toString())
-  //             ? 'Insurance already added'
-  //             : "Insurance not accepted by the provider",
-  //         maxLines: 2,
-  //         overflow: TextOverflow.ellipsis,
-  //         style: TextStyle(
-  //           fontSize: 12.0,
-  //           color: Colors.grey[500],
-  //           fontWeight: FontWeight.w600,
-  //         ),
-  //       ),
-  //     );
-
-  Widget checkBox(int index, dynamic insurance) =>
-      // _alreadyAddedInsuranceList.contains(insurance["_id"].toString())
-      //     ? Container()
-      //     :
-      Expanded(
+  Widget checkBox(int index, dynamic insurance) => Expanded(
         child: Radio(
           activeColor: AppColors.persian_blue,
           value: index,
@@ -311,11 +275,7 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
       );
 
   Function _insuranceAlreadyAdded(dynamic insurance) {
-    return
-        // _alreadyAddedInsuranceList.contains(insurance["_id"].toString())
-        //     ? null
-        //     :
-        (value) {
+    return (value) {
       setState(
         () => _radioValue = value,
       );

@@ -304,15 +304,6 @@ class ProviderWidget extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    // SizedBox(height: 5),
-                    // Text(
-                    //   "Consultation",
-                    //   style: TextStyle(
-                    //     fontSize: 12.0,
-                    //     color: Colors.black.withOpacity(0.70),
-                    //     fontWeight: FontWeight.w400,
-                    //   ),
-                    // ),
                     SizedBox(height: 25),
                     isOptionsShow
                         ? 'ic_forward'.imageIcon(

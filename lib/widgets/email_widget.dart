@@ -39,12 +39,12 @@ class EmailTextField extends StatelessWidget {
       decoration: InputDecoration(
         labelStyle: TextStyle(color: Colors.grey),
         labelText: Strings.emailText,
-        suffixIcon:
-            emailController.text.isNotEmpty && emailKey.currentState != null && emailKey.currentState.validate()
-                ? suffixIcon
-                : null,
+        suffixIcon: emailController.text.isNotEmpty &&
+                emailKey.currentState != null &&
+                emailKey.currentState.validate()
+            ? suffixIcon
+            : null,
         prefixIcon: prefixIcon != null ? prefixIcon : null,
-        // contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         enabledBorder:
             OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300])),
         border: OutlineInputBorder(),

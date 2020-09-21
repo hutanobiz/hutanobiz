@@ -19,8 +19,6 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
   @override
   void initState() {
     super.initState();
-
-    //TODO: api
   }
 
   @override
@@ -33,46 +31,10 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
         addBackButton: true,
         isAddBack: false,
         color: Colors.white,
-        // child: paymentCard(
-        //   "**** ***** **** 2563",
-        //   "Dummy name",
-        // ),
         child: Container(),
-        // child: _buildList(),
       ),
     );
   }
-
-  // Widget _buildList() {
-  //   return FutureBuilder<dynamic>(
-  //     future: _requestsFuture,
-  //     builder: (context, snapshot) {
-  //       if (snapshot.hasData) {
-  //         if (snapshot.data is String) {
-  //           return Center(
-  //             child: Text(snapshot.data),
-  //           );
-  //         } else {
-  //           List<dynamic> _cardsList = snapshot.data["data"];
-
-  //           return SingleChildScrollView(
-  //             physics: ClampingScrollPhysics(),
-  //             child: Column(
-  //                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                 children: <Widget>[
-  //                   _listWidget(_cardsList),
-  //                 ]),
-  //           );
-  //         }
-  //       } else if (snapshot.hasError) {
-  //         return Text("${snapshot.error}");
-  //       }
-  //       return Center(
-  //         child: CircularProgressIndicator(),
-  //       );
-  //     },
-  //   );
-  // }
 
   Widget _listWidget(List<dynamic> _list) {
     return ListView.builder(

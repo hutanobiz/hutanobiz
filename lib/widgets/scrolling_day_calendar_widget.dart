@@ -154,7 +154,6 @@ class _ScrollingDayCalendarState extends State<ScrollingDayCalendar> {
           MaterialButton(
             minWidth: 20,
             onPressed: widget.endDate.isAfter(_selectedDate)
-                // isRightButtonEnable
                 ? () {
                     while (true) {
                       DateTime newDate = _selectedDate.add(

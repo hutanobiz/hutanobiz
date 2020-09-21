@@ -145,9 +145,7 @@ class Location {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['type'] = this.type;
-    // if (this.coordinates != null) {
-    //   data['coordinates'] = this.coordinates.map((v) => v.toJson()).toList();
-    // }
+
     return data;
   }
 }

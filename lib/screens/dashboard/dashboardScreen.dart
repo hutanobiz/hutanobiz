@@ -547,10 +547,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           );
         } else if (snapshot.hasError) {
           return Container();
-          // return Padding(
-          //   padding: const EdgeInsets.all(20),
-          //   child: Text('NO doctors available yet'),
-          // );
         }
         return Padding(
           padding: const EdgeInsets.all(20),
@@ -657,10 +653,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           );
         } else if (snapshot.hasError) {
           return Container();
-          // return Padding(
-          //   padding: const EdgeInsets.all(20),
-          //   child: Text('NO doctors available yet'),
-          // );
         }
         return Padding(
           padding: const EdgeInsets.all(20),
@@ -783,10 +775,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           );
         } else if (snapshot.hasError) {
           return Container();
-          // return Padding(
-          //   padding: const EdgeInsets.all(20),
-          //   child: Text('NO specialties available yet'),
-          // );
         }
         return Padding(
           padding: const EdgeInsets.all(20),

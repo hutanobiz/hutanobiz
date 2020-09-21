@@ -109,14 +109,6 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
             );
           }
 
-          // addressList.clear();
-
-          // for (var aa in snapshot.data) {
-          //   if (aa != null) {
-          //     addressList.add(aa);
-          //   }
-          // }
-
           addressList = snapshot.data;
 
           return ListView.separated(
@@ -341,7 +333,6 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
     };
   }
 
-//TODO: selected address is unchecking on deleting
   void _deleteAddress(String id) {
     Navigator.pop(context);
 
@@ -352,9 +343,7 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
       if (_selectedAddress['_id'].toString() == id) _selectedAddress = null;
 
       addressList.removeWhere((element) => element['_id'].toString() == id);
-      setState(() {
-        // _addressesFuture = api.getAddress(_token);
-      });
+      setState(() {});
     }).futureError((e) {
       setLoading(false);
       e.toString().debugLog();

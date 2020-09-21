@@ -149,11 +149,7 @@ class _VerticalTabsState extends State<VerticalTabs>
               setState(() {});
             },
             controller: pageController,
-
-            // the number of pages
             itemCount: widget.contents.length,
-
-            // building pages
             itemBuilder: (BuildContext context, int index) {
               return widget.contents[index];
             },

@@ -416,12 +416,6 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
       ),
       decoration: BoxDecoration(
         color: model.isSelected ? Colors.white : Colors.transparent,
-        // borderRadius: model.isSelected
-        //     ? BorderRadius.only(
-        //         bottomRight: const Radius.circular(22.0),
-        //         topRight: const Radius.circular(22.0),
-        //       )
-        //     : BorderRadius.all(Radius.zero),
       ),
     );
   }

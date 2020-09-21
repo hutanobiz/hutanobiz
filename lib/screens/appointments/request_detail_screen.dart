@@ -690,7 +690,6 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
         children: <Widget>[
           Text(
             feeMap["subServiceId"]?.toString() ?? "---",
-            //TODO: service name
             style: TextStyle(
               fontSize: 14.0,
               fontWeight: FontWeight.w500,
@@ -794,58 +793,6 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                   ),
                 ),
               ),
-              // FlatButton(
-              //     onPressed: () {
-              //       showDialog(
-              //         context: context,
-              //         builder: (BuildContext context) {
-              //           return AlertDialog(
-              //             shape: RoundedRectangleBorder(
-              //               borderRadius: BorderRadius.circular(14.0),
-              //             ),
-              //             content: Column(
-              //               crossAxisAlignment: CrossAxisAlignment.start,
-              //               mainAxisSize: MainAxisSize.min,
-              //               children: <Widget>[
-              //                 Row(
-              //                   children: <Widget>[
-              //                     Expanded(
-              //                       child: Text(
-              //                         'Insurance Info',
-              //                         style: TextStyle(
-              //                           color: Colors.black,
-              //                           fontSize: 18.0,
-              //                           fontWeight: FontWeight.bold,
-              //                         ),
-              //                       ),
-              //                     ),
-              //                     InkWell(
-              //                       onTap: () => Navigator.of(context).pop(),
-              //                       child: Container(
-              //                           decoration: BoxDecoration(
-              //                               borderRadius: BorderRadius.all(
-              //                                   Radius.circular(16.0)),
-              //                               color: AppColors.goldenTainoi),
-              //                           child: Icon(Icons.close,
-              //                               color: Colors.white)),
-              //                     ),
-              //                   ],
-              //                 ),
-              //                 SizedBox(height: 16.0),
-              //                 Text('Front'),
-              //                 SizedBox(height: 4.0),
-              //                 Image.asset("images/driving_license.png"),
-              //                 SizedBox(height: 16.0),
-              //                 Text('Back'),
-              //                 SizedBox(height: 4.0),
-              //                 Image.asset("images/driving_license.png")
-              //               ],
-              //             ),
-              //           );
-              //         },
-              //       );
-              //     },
-              //     child: Icon(Icons.info_outline))
             ],
           ),
         ],

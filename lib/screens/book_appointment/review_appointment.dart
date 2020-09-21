@@ -773,8 +773,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     c.animateCamera(u);
     LatLngBounds l1 = await c.getVisibleRegion();
     LatLngBounds l2 = await c.getVisibleRegion();
-    // print(l1.toString());
-    // print(l2.toString());
+
     if (l1.southwest.latitude == -90 || l2.southwest.latitude == -90)
       check(u, c);
   }

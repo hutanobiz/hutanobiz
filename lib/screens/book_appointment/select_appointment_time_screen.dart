@@ -230,7 +230,6 @@ class _SelectAppointmentTimeScreenState
     formWidget.add(ScrollingDayCalendar(
       startDate: startDate,
       endDate: DateTime(DateTime.now().year + 2),
-      // endDate: DateTime.now().add(Duration(days: 14)),
       selectedDate: DateTime.now(),
       displayDateFormat: "EEEE, dd MMMM",
       scheduleDaysList: _scheduleDaysList,

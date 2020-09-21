@@ -2,9 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
-import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/loading_background.dart';
-// import 'package:pdf_viewer_jk/pdf_viewer_jk.dart';
 import 'package:photo_view/photo_view.dart';
 
 class ProviderImageScreen extends StatefulWidget {
@@ -17,26 +15,10 @@ class ProviderImageScreen extends StatefulWidget {
 }
 
 class _ProviderImageScreenState extends State<ProviderImageScreen> {
-  // PDFDocument pdfDocument;
-
   @override
   void initState() {
     super.initState();
-
-    // loadPdf();
   }
-
-  // void loadPdf() {
-  //   if (widget.avatar.toLowerCase().endsWith("pdf")) {
-  //     PDFDocument.fromURL(widget.avatar).then((value) {
-  //       setState(() {
-  //         pdfDocument = value;
-  //       });
-  //     }).futureError((error) {
-  //       error.toString().debugLog();
-  //     });
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -47,24 +29,18 @@ class _ProviderImageScreenState extends State<ProviderImageScreen> {
         color: Colors.black,
         padding: EdgeInsets.zero,
         child: widget.avatar.toLowerCase().endsWith("pdf")
-            ? 
-            // (pdfDocument == null
-            //     ?
-                 Container(
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.white,
-                    alignment: Alignment.center,
-                    child: Text(
-                      "Can't load PDF",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15,
-                      ),
-                    ),
-                  )
-                // : PDFViewer(
-                //     document: pdfDocument,
-                //   ))
+            ? Container(
+                width: MediaQuery.of(context).size.width,
+                color: Colors.white,
+                alignment: Alignment.center,
+                child: Text(
+                  "Can't load PDF",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                  ),
+                ),
+              )
             : PhotoView(
                 minScale: PhotoViewComputedScale.contained,
                 backgroundDecoration: BoxDecoration(

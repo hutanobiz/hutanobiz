@@ -289,55 +289,6 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                               _isLoading = false;
                             });
                             Navigator.pop(context);
-                            // api
-                            //     .getCardList(context, token)
-                            //     .then((cardList) {
-                            //      if(cardList.length>0){
-                            //   var map = {};
-                            //   map['price'] =
-                            //       'price_1HBvKWGZaHJs1pLTPsUEd4XW';
-                            //   map['type'] = '2';
-                            //   map['quantity'] = count.toString();
-                            //   map['default_payment_method'] =
-                            //       cardList.first['paymentMethodId'];
-
-                            //   api
-                            //       .createStripeSubscription(
-                            //           context, token, map)
-                            //       .then((value) {
-                            //     Widgets.showErrorialog(
-                            //         context: context,
-                            //         buttonText: 'Ok',
-                            //         onPressed: () {
-                            //           Navigator.of(context).pushNamed(
-                            //               Routes
-                            //                   .autoAcceptAppointmentType,
-                            //               arguments: false);
-                            //         },
-                            //         title: '',
-                            //         description: 'Subscribed');
-                            //   })
-                            //         .futureError((error) {
-                            //           setState(() {
-                            //             _isLoading = false;
-                            //           });
-                            //           Widgets.showErrorialog(
-                            //             context: context,
-                            //             description: error.toString(),
-                            //           );
-                            //           error.toString().debugLog();
-                            //         });
-                            //       }
-                            //       else{
-                            //          setState(() {
-                            //             _isLoading = false;
-                            //           });
-                            //          Widgets.showErrorialog(
-                            //             context: context,
-                            //             description: 'Empty Card List',
-                            //           );
-                            //       }
-                            // });
                           }).futureError((error) {
                             setState(() {
                               _isLoading = false;
@@ -361,18 +312,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                 ),
               )
             ],
-          )
-          //   }
-          // } else if (snapshot.hasError) {
-          //   return Text("${snapshot.error}");
-          // } else {
-          //   return Center(
-          //     child: CircularProgressIndicator(),
-          //   );
-          // }
-          //},
-          // ),
-          ),
+          )),
     );
   }
 
