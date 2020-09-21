@@ -148,7 +148,8 @@ class _RegisterEmailState extends State<RegisterEmail> {
                             _phoneNumberController.text, false),
                       );
                     } else {
-                      Widgets.showToast('A 6-digit verification number has been sent to your phone.');
+                      Widgets.showToast(
+                          'A 6-digit verification number has been sent to your phone.');
                       Navigator.pushNamed(
                         context,
                         Routes.verifyOtpRoute,
@@ -171,12 +172,8 @@ class _RegisterEmailState extends State<RegisterEmail> {
   }
 
   bool isButtonEnable() {
-    if (_phoneNumberController.text.isEmpty ||
-        !_phoneNumberKey.currentState.validate()) {
-      return false;
-    } else {
-      return true;
-    }
+    return _phoneNumberController.text.isEmpty ||
+        !_phoneNumberKey.currentState.validate();
   }
 
   void setLoading(bool value) {
