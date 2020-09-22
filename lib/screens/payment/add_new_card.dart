@@ -188,7 +188,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                             ],
                                             validator: Validations.validateDate,
                                             decoration: InputDecoration(
-                                              labelText: "Expire Date",
+                                              labelText: "Valid Thru",
                                               hintText: 'mm/yy',
                                               hintStyle: TextStyle(
                                                 color: Colors.grey[400],
