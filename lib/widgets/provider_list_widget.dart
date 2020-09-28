@@ -313,7 +313,7 @@ class ProviderWidget extends StatelessWidget {
                     Text(
                       "\$$fee",
                       style: TextStyle(
-                        fontSize: 12.0,
+                        fontSize: 15.0,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
