@@ -74,6 +74,11 @@ class _SelectAppointmentTimeScreenState
     _providerData = _container.getProviderData();
     Map _servicesMap = _container.selectServiceMap;
 
+    if (_container.projectsResponse != null) {
+      _dayDateMap["appointmentType"] =
+          _container.projectsResponse['serviceType']?.toString() ?? '0';
+    }
+
     _dayDateMap["status"] = _servicesMap["status"];
 
     if (_servicesMap["services"] != null) {
