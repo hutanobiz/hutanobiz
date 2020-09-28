@@ -19,6 +19,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
   InheritedContainerState _container;
 
   int _radioValue = 0;
+  String _selectedAppointmentType = '1', _appointmentTypeKey;
   List<Services> servicesList;
   Map<String, Services> _selectedServicesMap = Map();
   List _serviceList;
@@ -28,6 +29,24 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
   void didChangeDependencies() {
     _container = InheritedContainer.of(context);
     _providerData = _container.getProviderData();
+
+    if (_container.projectsResponse != null) {
+      _selectedAppointmentType =
+          _container.projectsResponse['serviceType']?.toString() ?? '0';
+
+      switch (_selectedAppointmentType) {
+        case '1':
+          _appointmentTypeKey = 'officeConsultanceFee';
+          break;
+        case '2':
+          _appointmentTypeKey = 'vedioConsultanceFee';
+          break;
+        case '3':
+          _appointmentTypeKey = 'onsiteConsultanceFee';
+          break;
+        default:
+      }
+    }
 
     if (_providerData["providerData"]["subServices"] != null) {
       if (_providerData["providerData"]["subServices"] is List) {
@@ -43,8 +62,13 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
       }
     }
 
-    if (_serviceList != null)
+    if (_serviceList != null) {
+      _serviceList = _serviceList
+          .where((e) => e['serviceType'].toString() == _selectedAppointmentType)
+          .toList();
+
       servicesList = _serviceList.map((m) => Services.fromJson(m)).toList();
+    }
 
     super.didChangeDependencies();
   }
@@ -78,7 +102,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
           } else {
             _container.setServicesData("status", "0");
             _container.setServicesData(
-                "consultaceFee", profileMap["consultanceFee"]);
+                "consultaceFee", profileMap[_appointmentTypeKey]);
             Navigator.of(context).pushNamed(
               Routes.selectAppointmentTimeScreen,
               arguments: false,
@@ -128,13 +152,14 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
   }
 
   Widget consultancyFeeWidget() {
-    String fee = "0.00", duration = "---";
+    String fee = "0.00", duration = "0";
 
-    if (profileMap["consultanceFee"] != null) {
-      for (dynamic consultanceFee in profileMap["consultanceFee"]) {
-        fee = consultanceFee["fee"].toStringAsFixed(2) ?? "0.00";
-        duration = consultanceFee["duration"].toString() ?? "---";
-      }
+    if (profileMap[_appointmentTypeKey] != null &&
+        profileMap[_appointmentTypeKey].length > 0) {
+      fee = profileMap[_appointmentTypeKey][0]['fee'].toStringAsFixed(2) ??
+          '0.00';
+      duration =
+          profileMap[_appointmentTypeKey][0]['duration'].toString() ?? '0';
     }
 
     return Container(
@@ -267,7 +292,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
           ),
           _radioValue == 0
               ? Container()
-              : servicesList != null
+              : servicesList != null && servicesList.length > 0
                   ? ListView.separated(
                       separatorBuilder: (BuildContext context, int index) =>
                           Divider(),
