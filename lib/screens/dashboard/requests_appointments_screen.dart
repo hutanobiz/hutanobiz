@@ -155,7 +155,8 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
         appointmentType = "---",
         fee = "---",
         status = "---",
-        professionalTitle = "---";
+        professionalTitle = "---",
+        feeKey;
 
     status = response["status"].toString();
 
@@ -163,12 +164,15 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
       switch (response["type"]) {
         case 1:
           appointmentType = "Office Appt.";
+          feeKey = "officeConsultanceFee";
           break;
         case 2:
           appointmentType = "Video Chat Appt.";
+          feeKey = "vedioConsultanceFee";
           break;
         case 3:
           appointmentType = "Onsite Appt.";
+          feeKey = "onsiteConsultanceFee";
           break;
         default:
       }
@@ -186,11 +190,11 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
             "---";
       }
 
-      if (response["DoctorProfessionalDetail"]["consultanceFee"] != null) {
-        for (dynamic consultanceFee in response["DoctorProfessionalDetail"]
-            ["consultanceFee"]) {
-          fee = consultanceFee["fee"].toString() ?? "---";
-        }
+      if (response["DoctorProfessionalDetail"][feeKey] != null &&
+          response["DoctorProfessionalDetail"][feeKey].length > 0) {
+        fee = response["DoctorProfessionalDetail"][feeKey][0]["fee"]
+                ?.toStringAsFixed(2) ??
+            "0.00";
       }
 
       if (response["DoctorProfessionalDetail"]["businessLocation"] != null) {
