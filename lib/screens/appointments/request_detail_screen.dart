@@ -277,7 +277,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                       _appointmentStatus?.appointmentStatus(),
                       SizedBox(height: 5.0),
                       Text(
-                        "\$$fee",
+                        "\$${totalFee.toStringAsFixed(2)}",
                         style: TextStyle(
                           fontSize: 22.0,
                           fontWeight: FontWeight.w600,
