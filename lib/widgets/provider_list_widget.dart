@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
@@ -30,7 +32,7 @@ class ProviderWidget extends StatelessWidget {
     String nameTitle = "Dr. ",
         name = "---",
         avatar,
-        fee = "---",
+        fee = "0.00",
         practicingSince = "---",
         professionalTitle = "---",
         distance = "0",
@@ -50,18 +52,29 @@ class ProviderWidget extends StatelessWidget {
       }
     }
 
-    if (data["consultanceFee"] != null) {
-      for (dynamic consultanceFee in data["consultanceFee"]) {
-        fee = consultanceFee["fee"].toStringAsFixed(2) ?? '0.00';
-      }
-    } else if (data["userId"] != null) {
-      if (data['userId'] is Map) {
-        if (data["userId"]["consultanceFee"] != null) {
-          for (dynamic consultanceFee in data["userId"]["consultanceFee"]) {
-            fee = consultanceFee["fee"].toStringAsFixed(2) ?? "0.00";
-          }
-        }
-      }
+    if (data["officeConsultanceFee"] != null &&
+        data["officeConsultanceFee"].length > 0) {
+      fee = data["officeConsultanceFee"][0]['fee'].toStringAsFixed(2) ?? '0.00';
+    }
+
+    if (data["onsiteConsultanceFee"] != null &&
+        data["onsiteConsultanceFee"].length > 0) {
+      fee = min(
+        double.parse(fee),
+        double.parse(
+          data["onsiteConsultanceFee"][0]['fee'].toStringAsFixed(2),
+        ),
+      ).toStringAsFixed(2);
+    }
+
+    if (data["vedioFollowUpFee"] != null &&
+        data["vedioFollowUpFee"].length > 0) {
+      fee = min(
+        double.parse(fee),
+        double.parse(
+          data["vedioFollowUpFee"][0]['fee'].toStringAsFixed(2),
+        ),
+      ).toStringAsFixed(2);
     }
 
     if (data['userId'] is Map) {
@@ -71,8 +84,8 @@ class ProviderWidget extends StatelessWidget {
         avatar = data["userId"]["avatar"]?.toString();
       }
     } else if (data["User"] != null && data["User"].length > 0) {
-      nameTitle = data["User"][0]["title"]?.toString() ?? 'Dr. ';
-      name = nameTitle + data["User"][0]["fullName"]?.toString() ?? "---";
+      nameTitle = (data["User"][0]["title"]?.toString() ?? 'Dr. ');
+      name = '$nameTitle ' + (data["User"][0]["fullName"]?.toString() ?? "---");
       avatar = data["User"][0]["avatar"]?.toString();
     }
 
@@ -300,8 +313,17 @@ class ProviderWidget extends StatelessWidget {
                     Text(
                       "\$$fee",
                       style: TextStyle(
-                        fontSize: 15.0,
+                        fontSize: 12.0,
                         fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      "Starting from",
+                      style: TextStyle(
+                        fontSize: 13.0,
+                        color: Colors.grey[600],
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                     SizedBox(height: 25),
