@@ -334,10 +334,14 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
               _container.setProviderId(_provider["User"][0]["_id"]);
             }
 
-            Navigator.of(context).pushNamed(Routes.providerProfileScreen);
+            Navigator.of(context).pushNamed(
+              Routes.providerProfileScreen,
+              arguments: _selectedAppointmentType,
+            );
           },
           child: ProviderWidget(
             data: _provider,
+            selectedAppointment: _selectedAppointmentType,
             averageRating:
                 _provider['averageRating']?.toStringAsFixed(2) ?? "0",
             bookAppointment: () {

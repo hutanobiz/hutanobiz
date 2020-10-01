@@ -177,7 +177,11 @@ class Routes {
         return _buildRoute(settings, ReviewAppointmentScreen());
         break;
       case providerProfileScreen:
-        return _buildRoute(settings, ProviderProfileScreen());
+        return _buildRoute(
+            settings,
+            ProviderProfileScreen(
+              selectedAppointmentType: args,
+            ));
         break;
       case appointmentDetailScreen:
         return _buildRoute(

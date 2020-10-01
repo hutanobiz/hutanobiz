@@ -10,6 +10,7 @@ class ProviderWidget extends StatelessWidget {
   ProviderWidget({
     Key key,
     @required this.data,
+    this.selectedAppointment,
     this.bookAppointment,
     this.isOptionsShow = true,
     this.averageRating,
@@ -21,7 +22,7 @@ class ProviderWidget extends StatelessWidget {
         super(key: key);
 
   final data;
-  final String averageRating;
+  final String averageRating, selectedAppointment;
   final Function bookAppointment;
   final bool isOptionsShow, isProverPicShow;
   final EdgeInsets margin;
@@ -52,29 +53,57 @@ class ProviderWidget extends StatelessWidget {
       }
     }
 
-    if (data["officeConsultanceFee"] != null &&
-        data["officeConsultanceFee"].length > 0) {
-      fee = data["officeConsultanceFee"][0]['fee'].toStringAsFixed(2) ?? '0.00';
-    }
+    if (selectedAppointment != null && selectedAppointment != '0') {
+      switch (selectedAppointment) {
+        case '1':
+          if (data["officeConsultanceFee"] != null &&
+              data["officeConsultanceFee"].length > 0) {
+            fee = data["officeConsultanceFee"][0]['fee'].toStringAsFixed(2) ??
+                '0.00';
+          }
+          break;
+        case '2':
+          if (data["vedioFollowUpFee"] != null &&
+              data["vedioFollowUpFee"].length > 0) {
+            fee =
+                data["vedioFollowUpFee"][0]['fee'].toStringAsFixed(2) ?? '0.00';
+          }
+          break;
+        case '3':
+          if (data["onsiteConsultanceFee"] != null &&
+              data["onsiteConsultanceFee"].length > 0) {
+            fee = data["onsiteConsultanceFee"][0]['fee'].toStringAsFixed(2) ??
+                '0.00';
+          }
+          break;
+        default:
+      }
+    } else {
+      if (data["officeConsultanceFee"] != null &&
+          data["officeConsultanceFee"].length > 0) {
+        fee =
+            data["officeConsultanceFee"][0]['fee'].toStringAsFixed(2) ?? '0.00';
+      }
 
-    if (data["onsiteConsultanceFee"] != null &&
-        data["onsiteConsultanceFee"].length > 0) {
-      fee = min(
-        double.parse(fee),
-        double.parse(
-          data["onsiteConsultanceFee"][0]['fee'].toStringAsFixed(2),
-        ),
-      ).toStringAsFixed(2);
-    }
+      if (data["onsiteConsultanceFee"] != null &&
+          data["onsiteConsultanceFee"].length > 0) {
+        fee = min(
+          double.parse(fee),
+          double.parse(
+            data["onsiteConsultanceFee"][0]['fee'].toStringAsFixed(2),
+          ),
+        ).toStringAsFixed(2);
+      }
 
-    if (data["vedioFollowUpFee"] != null &&
-        data["vedioFollowUpFee"].length > 0) {
-      fee = min(
-        double.parse(fee),
-        double.parse(
-          data["vedioFollowUpFee"][0]['fee'].toStringAsFixed(2),
-        ),
-      ).toStringAsFixed(2);
+      if (data["vedioFollowUpFee"] != null &&
+          data["vedioFollowUpFee"].length > 0) {
+        fee = min(
+          double.parse(fee),
+          double.parse(
+            data["vedioFollowUpFee"][0]['fee'].toStringAsFixed(2),
+          ),
+        ).toStringAsFixed(2);
+      }
     }
 
     if (data['userId'] is Map) {
@@ -317,16 +346,25 @@ class ProviderWidget extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(height: 5),
-                    Text(
-                      "Starting from",
-                      style: TextStyle(
-                        fontSize: 13.0,
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.w400,
-                      ),
+                    selectedAppointment != null && selectedAppointment != '0'
+                        ? Container()
+                        : SizedBox(height: 5),
+                    selectedAppointment != null && selectedAppointment != '0'
+                        ? Container()
+                        : Text(
+                            "Starting from",
+                            style: TextStyle(
+                              fontSize: 13.0,
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                    SizedBox(
+                      height: selectedAppointment != null &&
+                              selectedAppointment != '0'
+                          ? 40
+                          : 25,
                     ),
-                    SizedBox(height: 25),
                     isOptionsShow
                         ? 'ic_forward'.imageIcon(
                             width: 9,

@@ -228,6 +228,8 @@ class _SelectAppointmentTimeScreenState
 
     formWidget.add(ProviderWidget(
       data: profileMap,
+      selectedAppointment:
+          _container.projectsResponse['serviceType'].toString(),
       isOptionsShow: false,
       averageRating: averageRating,
     ));

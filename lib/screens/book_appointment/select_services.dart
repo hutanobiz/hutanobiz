@@ -136,6 +136,8 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
 
     formWidget.add(ProviderWidget(
       data: profileMap,
+      selectedAppointment:
+          _container.projectsResponse['serviceType'].toString(),
       isOptionsShow: false,
       averageRating: averageRating,
     ));

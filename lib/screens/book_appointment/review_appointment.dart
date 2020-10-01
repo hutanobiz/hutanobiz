@@ -616,6 +616,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         ),
         child: ProviderWidget(
           data: _profileMap,
+          selectedAppointment:
+              _container.projectsResponse['serviceType'].toString(),
           isOptionsShow: false,
           averageRating: averageRating,
         ),

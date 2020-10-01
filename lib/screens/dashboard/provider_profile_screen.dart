@@ -16,7 +16,10 @@ import 'package:hutano/widgets/review_widget.dart';
 import 'package:intl/intl.dart';
 
 class ProviderProfileScreen extends StatefulWidget {
-  ProviderProfileScreen({Key key}) : super(key: key);
+  ProviderProfileScreen({Key key, this.selectedAppointmentType})
+      : super(key: key);
+
+  final String selectedAppointmentType;
 
   @override
   _ProviderProfileScreenState createState() => _ProviderProfileScreenState();
@@ -286,6 +289,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
         child: ProviderWidget(
           data: _providerData,
+          selectedAppointment: widget.selectedAppointmentType,
           averageRating: averageRating,
           isOptionsShow: false,
           isProverPicShow: true,
