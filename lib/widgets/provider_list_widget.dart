@@ -63,10 +63,10 @@ class ProviderWidget extends StatelessWidget {
           }
           break;
         case '2':
-          if (data["vedioFollowUpFee"] != null &&
-              data["vedioFollowUpFee"].length > 0) {
-            fee =
-                data["vedioFollowUpFee"][0]['fee'].toStringAsFixed(2) ?? '0.00';
+          if (data["vedioConsultanceFee"] != null &&
+              data["vedioConsultanceFee"].length > 0) {
+            fee = data["vedioConsultanceFee"][0]['fee'].toStringAsFixed(2) ??
+                '0.00';
           }
           break;
         case '3':
@@ -95,12 +95,12 @@ class ProviderWidget extends StatelessWidget {
         ).toStringAsFixed(2);
       }
 
-      if (data["vedioFollowUpFee"] != null &&
-          data["vedioFollowUpFee"].length > 0) {
+      if (data["vedioConsultanceFee"] != null &&
+          data["vedioConsultanceFee"].length > 0) {
         fee = min(
           double.parse(fee),
           double.parse(
-            data["vedioFollowUpFee"][0]['fee'].toStringAsFixed(2),
+            data["vedioConsultanceFee"][0]['fee'].toStringAsFixed(2),
           ),
         ).toStringAsFixed(2);
       }
