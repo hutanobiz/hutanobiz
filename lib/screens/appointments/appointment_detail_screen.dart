@@ -179,17 +179,27 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                       alignment: FractionalOffset.bottomRight,
                       child: Container(
                         height: 55.0,
-                        width: 185.0,
+                        width: 200.0,
                         margin: const EdgeInsets.only(top: 10),
                         padding: const EdgeInsets.only(right: 20.0),
                         child: FancyButton(
                           title: profileMap['data']["type"] == 2
-                              ? "Join Call"
+                              ? _appointmentStatus == '4'? 'Treatment Summary':"Join Call"
                               : "Show status",
                           onPressed: _appointmentStatus == "2" ||
                                   _appointmentStatus == "6"
                               ? null
-                              : profileMap['data']["type"] == 2?()  {
+                              : profileMap['data']["type"] == 2? _appointmentStatus == '4'?(){
+                                Map _map = {};
+                          _map['id'] =profileMap['data']["_id"].toString();
+                          _map['appointmentType'] = profileMap['data']["type"];
+                          _map['latLng'] = _userLocation;
+
+                          Navigator.of(context).pushNamed(
+                            Routes.treatmentSummaryScreen,
+                            arguments: _map,
+                          );
+                              }: ()  {
                                 var map = {};
                                   map['appointmentId'] =
                                       profileMap["data"]["_id"];
@@ -198,9 +208,15 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                           context, token, map)
                                       .then((value) async {
                                     await _handleCameraAndMic();
+                                  var map = {};
+                                  map['_id']= profileMap["data"]["_id"];
+                                  map['name']= profileMap['data']["doctor"]["fullName"]?.toString() ?? "---";
+                                  map['address']= 'a';
+                                  map['dateTime']= 't';
                                     return Navigator.of(context).pushNamed(
                                       Routes.callPage,
-                                      arguments: profileMap["data"]["_id"],
+                                     // arguments: profileMap["data"]["_id"],
+                                     arguments: map
                                     );
                                   }).futureError((onError) {
                                     Widgets.showErrorialog(
