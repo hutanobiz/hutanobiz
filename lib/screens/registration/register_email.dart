@@ -114,7 +114,7 @@ class _RegisterEmailState extends State<RegisterEmail> {
     formWidget.add(
       FancyButton(
         title: "Next",
-        onPressed: isButtonEnable()
+        onPressed: !isButtonEnable()
             ? () {
                 setLoading(true);
 
