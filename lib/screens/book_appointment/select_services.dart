@@ -148,7 +148,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
 
     formWidget.add(SizedBox(height: 26));
 
-    formWidget.add(servicesWidget());
+    formWidget.add(_selectedAppointmentType == '2'?SizedBox():servicesWidget());
 
     return formWidget;
   }
