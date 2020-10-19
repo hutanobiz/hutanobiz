@@ -665,6 +665,58 @@ class ApiBaseHelper {
       return res["response"];
     });
   }
+
+   Future<dynamic> checkTimeToStartVideo(BuildContext context,
+      String token, Map locationMap) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .post(
+            Uri.encodeFull(
+                base_url + "api/check/appintment/time-slot"),
+            body: locationMap,
+            headers: headers)
+        .then((res) {
+      return res["response"];
+    });
+  }
+
+   Future<dynamic> startVideoCall(BuildContext context,
+      String token, Map locationMap) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .post(
+            Uri.encodeFull(
+                base_url + "api/doctor/video-appointment"),
+            body: locationMap,
+            headers: headers)
+        .then((res) {
+      return res["response"];
+    });
+  }
+
+  Future<dynamic> stopVideoCall(BuildContext context,
+      String token, Map locationMap) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .post(
+            
+            Uri.encodeFull(
+                base_url + "api/doctor/video-appointment-stop"),
+            body: locationMap,
+            headers: headers)
+        .then((res) {
+      return res["response"];
+    });
+  }
 }
 
 class NetworkUtil {
