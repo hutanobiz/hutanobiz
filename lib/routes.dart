@@ -13,6 +13,7 @@ import 'package:hutano/screens/appointments/track_treatment.dart';
 import 'package:hutano/screens/appointments/treatment_summary.dart';
 import 'package:hutano/screens/appointments/upload_documents.dart';
 import 'package:hutano/screens/appointments/upload_images.dart';
+import 'package:hutano/screens/appointments/video_call.dart';
 import 'package:hutano/screens/book_appointment/onsite_address.dart';
 import 'package:hutano/screens/book_appointment/onsite_edit_address.dart';
 import 'package:hutano/screens/book_appointment/review_appointment.dart';
@@ -94,6 +95,7 @@ class Routes {
   static const String parkingScreen = '/parkingScreen';
   static const String cancelAppointmentScreen = '/cancelAppointmentScreen';
   static const String requestDetailScreen = '/requestDetailScreen';
+  static const String callPage = '/callPage';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -354,6 +356,9 @@ class Routes {
             detailData: args,
           ),
         );
+        break;
+      case callPage:
+        return _buildRoute(settings, CallPage(channelName: args,));
         break;
       default:
         return _errorRoute();
