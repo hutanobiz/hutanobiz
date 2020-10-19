@@ -275,7 +275,7 @@ class Routes {
         );
         break;
       case appointmentCompleteConfirmation:
-        if (args is Map<String, String>) {
+        if (args is Map) {
           return _buildRoute(
             settings,
             AppointmentCompleteConfirmation(
