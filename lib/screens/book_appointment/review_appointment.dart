@@ -145,7 +145,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     if (_container.projectsResponse["serviceType"].toString() == '3') {
       _desPosition = LatLng(_consentToTreatMap["userAddress"]['coordinates'][1],
           _consentToTreatMap["userAddress"]['coordinates'][0]);
-    } else {
+    } else if (_container.projectsResponse["serviceType"].toString() == '1') {
       if (_profileMap["businessLocation"] != null) {
         if (_profileMap["businessLocation"]["coordinates"].length > 0) {
           _desPosition = LatLng(
@@ -153,7 +153,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
               _profileMap["businessLocation"]["coordinates"][0]);
         }
       }
-    }
+    } else {}
 
     _middlePoint = LatLng(
         (_initialPosition.latitude + _desPosition.latitude) / 2,
@@ -518,7 +518,12 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Text(
-                  "Office Request Sent!",
+                  _container.projectsResponse["serviceType"].toString() == '1'
+                      ? "Office Request Sent!"
+                      : _container.projectsResponse["serviceType"].toString() ==
+                              '2'
+                          ? "Video Request Sent!"
+                          : "Onsite Request Sent!",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 18,
@@ -597,7 +602,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           _consentToTreatMap["userAddress"]['state'],
           _consentToTreatMap["userAddress"]["zipCode"]?.toString(),
         );
-      } else {
+      } else if (_container.projectsResponse["serviceType"].toString() == '1') {
         address = Extensions.addressFormat(
           business["address"]?.toString(),
           business["street"]?.toString(),
@@ -605,7 +610,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           _state,
           business["zipCode"]?.toString(),
         );
-      }
+      } else {}
     }
 
     _widgetList.add(
@@ -623,6 +628,22 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         ),
       ),
     );
+    _widgetList.add( Padding(
+          padding: const EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 11.0),
+          child: Text(
+            "Appointment Type",
+            style: TextStyle(
+              fontSize: 14.0,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ));
+        _widgetList.add(appoCard(
+          _container.projectsResponse["serviceType"].toString(),
+        ));
+    _container.projectsResponse["serviceType"].toString() == '2'
+        ? _widgetList.add(recordingInfoWidget())
+        : _widgetList.add(Container());
 
     _widgetList.add(
       container(
@@ -633,129 +654,134 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                   .format(context),
           "ic_calendar"),
     );
-
-    _widgetList.add(_initialPosition == null
-        ? Container()
-        : Stack(
-            children: <Widget>[
-              Container(
-                height: 155.0,
-                margin: const EdgeInsets.all(20.0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(14.0),
-                  child: GoogleMap(
-                    myLocationEnabled: false,
-                    compassEnabled: false,
-                    rotateGesturesEnabled: false,
-                    zoomControlsEnabled: false,
-                    myLocationButtonEnabled: false,
-                    initialCameraPosition: CameraPosition(
-                      target: _middlePoint,
-                      zoom: 8,
-                    ),
-                    polylines: _polyline,
-                    markers: _markers,
-                    onMapCreated: (GoogleMapController controller) {
-                      LatLngBounds bound;
-                      if (_initialPosition.latitude > _desPosition.latitude &&
-                          _initialPosition.longitude > _desPosition.longitude) {
-                        bound = LatLngBounds(
-                            southwest: _desPosition,
-                            northeast: _initialPosition);
-                      } else if (_initialPosition.longitude >
-                          _desPosition.longitude) {
-                        bound = LatLngBounds(
-                            southwest: LatLng(_initialPosition.latitude,
-                                _desPosition.longitude),
-                            northeast: LatLng(_desPosition.latitude,
-                                _initialPosition.longitude));
-                      } else if (_initialPosition.latitude >
-                          _desPosition.latitude) {
-                        bound = LatLngBounds(
-                            southwest: LatLng(_desPosition.latitude,
-                                _initialPosition.longitude),
-                            northeast: LatLng(_initialPosition.latitude,
-                                _desPosition.longitude));
-                      } else {
-                        bound = LatLngBounds(
-                            southwest: _initialPosition,
-                            northeast: _desPosition);
-                      }
-
-                      setState(() {
-                        _controller.complete(controller);
-
-                        _markers.add(Marker(
-                          markerId: MarkerId(_initialPosition.toString()),
-                          position: _initialPosition,
-                          icon: _sourceIcon,
-                        ));
-
-                        _markers.add(Marker(
-                          markerId: MarkerId(_desPosition.toString()),
-                          position: _desPosition,
-                          icon: _destinationIcon,
-                        ));
-
-                        setPolylines();
-                      });
-
-                      CameraUpdate u2 = CameraUpdate.newLatLngBounds(bound, 50);
-                      controller.animateCamera(u2).then((void v) {
-                        check(u2, controller);
-                      });
-                    },
-                  ),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.fromLTRB(60.0, 33.0, 0.0, 0.0),
-                padding: const EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(14.0),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    "ic_map_clock".imageIcon(width: 30.0, height: 30.0),
-                    SizedBox(width: 5.0),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          _totalDuration.toLowerCase().contains('mins')
-                              ? _totalDuration.replaceRange(
-                                  1, _totalDuration.length, ' minutes')
-                              : _totalDuration,
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+    _container.projectsResponse["serviceType"].toString() == '2'
+        ? _widgetList.add(Container())
+        : _widgetList.add(_initialPosition == null
+            ? Container()
+            : Stack(
+                children: <Widget>[
+                  Container(
+                    height: 155.0,
+                    margin: const EdgeInsets.all(20.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(14.0),
+                      child: GoogleMap(
+                        myLocationEnabled: false,
+                        compassEnabled: false,
+                        rotateGesturesEnabled: false,
+                        zoomControlsEnabled: false,
+                        myLocationButtonEnabled: false,
+                        initialCameraPosition: CameraPosition(
+                          target: _middlePoint,
+                          zoom: 8,
                         ),
-                        Text(
-                          _totalDistance,
-                          style: TextStyle(
-                            fontSize: 11.0,
-                          ),
+                        polylines: _polyline,
+                        markers: _markers,
+                        onMapCreated: (GoogleMapController controller) {
+                          LatLngBounds bound;
+                          if (_initialPosition.latitude >
+                                  _desPosition.latitude &&
+                              _initialPosition.longitude >
+                                  _desPosition.longitude) {
+                            bound = LatLngBounds(
+                                southwest: _desPosition,
+                                northeast: _initialPosition);
+                          } else if (_initialPosition.longitude >
+                              _desPosition.longitude) {
+                            bound = LatLngBounds(
+                                southwest: LatLng(_initialPosition.latitude,
+                                    _desPosition.longitude),
+                                northeast: LatLng(_desPosition.latitude,
+                                    _initialPosition.longitude));
+                          } else if (_initialPosition.latitude >
+                              _desPosition.latitude) {
+                            bound = LatLngBounds(
+                                southwest: LatLng(_desPosition.latitude,
+                                    _initialPosition.longitude),
+                                northeast: LatLng(_initialPosition.latitude,
+                                    _desPosition.longitude));
+                          } else {
+                            bound = LatLngBounds(
+                                southwest: _initialPosition,
+                                northeast: _desPosition);
+                          }
+
+                          setState(() {
+                            _controller.complete(controller);
+
+                            _markers.add(Marker(
+                              markerId: MarkerId(_initialPosition.toString()),
+                              position: _initialPosition,
+                              icon: _sourceIcon,
+                            ));
+
+                            _markers.add(Marker(
+                              markerId: MarkerId(_desPosition.toString()),
+                              position: _desPosition,
+                              icon: _destinationIcon,
+                            ));
+
+                            setPolylines();
+                          });
+
+                          CameraUpdate u2 =
+                              CameraUpdate.newLatLngBounds(bound, 50);
+                          controller.animateCamera(u2).then((void v) {
+                            check(u2, controller);
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(60.0, 33.0, 0.0, 0.0),
+                    padding: const EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(14.0),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        "ic_map_clock".imageIcon(width: 30.0, height: 30.0),
+                        SizedBox(width: 5.0),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              _totalDuration.toLowerCase().contains('mins')
+                                  ? _totalDuration.replaceRange(
+                                      1, _totalDuration.length, ' minutes')
+                                  : _totalDuration,
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              _totalDistance,
+                              style: TextStyle(
+                                fontSize: 11.0,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
-            ],
-          ));
-
-    _widgetList.add(container(
-        _container.projectsResponse["serviceType"].toString() == '3'
-            ? 'Site Address'
-            : "Office Address",
-        address,
-        "ic_office_address"));
+                  ),
+                ],
+              ));
+    _container.projectsResponse["serviceType"].toString() == '2'
+        ? _widgetList.add(Container())
+        : _widgetList.add(container(
+            _container.projectsResponse["serviceType"].toString() == '3'
+                ? 'Site Address'
+                : "Office Address",
+            address,
+            "ic_office_address"));
 
     _widgetList.add(
       servicesWidget(),
@@ -830,6 +856,46 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           SizedBox(height: 5),
           Text(
             "You will only be charged when the request has been accepted.",
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget recordingInfoWidget() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.fromLTRB(20, 6, 20, 20),
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: AppColors.sunglow.withOpacity(0.20),
+        border: Border.all(
+          width: 1.0,
+          color: AppColors.sunglow,
+        ),
+        borderRadius: BorderRadius.circular(
+          14.0,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Note",
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(height: 5),
+          Text(
+            "As per regulatory requirements, all audio & video calls done during an online consultation with the doctor, will be recorded & stored in a secure manner.",
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w500,
@@ -1099,5 +1165,44 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     setState(() {
       _isLoading = load;
     });
+  }
+  Widget appoCard(String cardText) {
+    return Container(
+      width: 172.0,
+      margin: const EdgeInsets.only(left: 20.0, right: 20.0,bottom: 10),
+      padding: const EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(14.0)),
+        border: Border.all(color: Colors.grey[100]),
+      ),
+      child: Row(
+        children: <Widget>[
+          Image(
+            image: AssetImage(
+              cardText == '1'
+                  ? "images/office_appointment.png"
+                  : cardText == '2'
+                      ? "images/video_chat_appointment.png"
+                      : "images/onsite_appointment.png",
+            ),
+            height: 52.0,
+            width: 52.0,
+          ),
+          SizedBox(width: 12.0),
+          Text(
+            cardText == '1'
+                ? "Office\nAppointment"
+                : cardText == '2' ? "Video\nAppointment" : "Onsite\nAppointment",
+            maxLines: 2,
+            style: TextStyle(
+              color: AppColors.midnight_express,
+              fontWeight: FontWeight.w500,
+              fontSize: 14.0,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
