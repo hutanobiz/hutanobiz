@@ -303,6 +303,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
         appoCard(
           _data["type"],
         ),
+        _data["type"] == 2?recordingInfoWidget():SizedBox(),
         divider(topPadding: 18.0),
         dateTimeWidget(
             _data['date'].toString().formatDate(
@@ -310,7 +311,9 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                 ),
             _data["fromTime"].toString(),
             _data["toTime"].toString()),
+        _data["type"] == 2?SizedBox():
         divider(topPadding: 8.0),
+        _data["type"] == 2?SizedBox():
         locationWidget(address, latLng, _data['distance']),
         divider(),
         seekingCareWidget(_data),
@@ -806,6 +809,45 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
       child: Divider(
         color: AppColors.white_smoke,
         thickness: 6.0,
+      ),
+    );
+  }
+   Widget recordingInfoWidget() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: AppColors.sunglow.withOpacity(0.20),
+        border: Border.all(
+          width: 1.0,
+          color: AppColors.sunglow,
+        ),
+        borderRadius: BorderRadius.circular(
+          14.0,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Note",
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(height: 5),
+          Text(
+            "As per regulatory requirements, all audio & video calls done during an online consultation with the doctor, will be recorded & stored in a secure manner.",
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+            ),
+          ),
+        ],
       ),
     );
   }
