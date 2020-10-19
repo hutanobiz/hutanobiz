@@ -16,6 +16,7 @@ import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:location/location.dart';
+import 'package:permission_handler/permission_handler.dart' as Permission;
 
 class AppointmentDetailScreen extends StatefulWidget {
   const AppointmentDetailScreen({Key key, this.args}) : super(key: key);
@@ -39,6 +40,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   Map _medicalHistoryMap = {};
 
   int _appointmentListType = 1;
+  ApiBaseHelper api = ApiBaseHelper();
+  String token = '';
 
   final Set<Marker> _markers = {};
   BitmapDescriptor sourceIcon;
@@ -125,13 +128,13 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   }
 
   void appointmentDetailsFuture(LatLng latLng) {
-    SharedPref().getToken().then((token) {
-      ApiBaseHelper api = ApiBaseHelper();
+    SharedPref().getToken().then((userToken) {
+      token = userToken;
       token.debugLog();
 
       setState(() {
         _profileFuture =
-            api.getAppointmentDetails(token, widget.args["id"], latLng);
+            api.getAppointmentDetails(userToken, widget.args["id"], latLng);
       });
     });
   }
@@ -180,11 +183,30 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         margin: const EdgeInsets.only(top: 10),
                         padding: const EdgeInsets.only(right: 20.0),
                         child: FancyButton(
-                          title: "Show status",
+                          title: profileMap['data']["type"] == 2
+                              ? "Join Call"
+                              : "Show status",
                           onPressed: _appointmentStatus == "2" ||
                                   _appointmentStatus == "6"
                               ? null
-                              : () => Navigator.of(context)
+                              : profileMap['data']["type"] == 2?()  {
+                                var map = {};
+                                  map['appointmentId'] =
+                                      profileMap["data"]["_id"];
+                                  api
+                                      .checkTimeToStartVideo(
+                                          context, token, map)
+                                      .then((value) async {
+                                    await _handleCameraAndMic();
+                                    return Navigator.of(context).pushNamed(
+                                      Routes.callPage,
+                                      arguments: profileMap["data"]["_id"],
+                                    );
+                                  }).futureError((onError) {
+                                    Widgets.showErrorialog(
+                                        context: context, description: onError);
+                                  });
+                              }: () => Navigator.of(context)
                                   .pushNamed(
                                     Routes.trackTreatmentScreen,
                                     arguments: profileMap["data"]["type"],
@@ -208,6 +230,12 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> _handleCameraAndMic() async {
+    await Permission.PermissionHandler().requestPermissions(
+      [Permission.PermissionGroup.camera, Permission.PermissionGroup.microphone],
     );
   }
 
@@ -251,7 +279,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       userRating = _data["reason"][0]["rating"]?.toString();
     }
 
-    averageRating = _data["averageRating"]?.toStringAsFixed(2) ?? "2";
+    averageRating = _data["averageRating"]?.toStringAsFixed(2) ?? "0";
 
     if (_providerData['medicalHistory'] != null &&
         _providerData['medicalHistory'].length > 0) {
@@ -459,6 +487,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         appoCard(
           _providerData["type"],
         ),
+        _providerData["type"] == 2 ? recordingInfoWidget() : SizedBox(),
         divider(topPadding: 18.0),
         dateTimeWidget(
             _providerData['date'].toString().formatDate(
@@ -466,8 +495,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                 ),
             _providerData["fromTime"].toString(),
             _providerData["toTime"].toString()),
-        divider(topPadding: 8.0),
-        locationWidget(address, latLng, _data['distance']),
+        _providerData["type"] == 2 ? SizedBox() : divider(topPadding: 8.0),
+        _providerData["type"] == 2
+            ? SizedBox()
+            : locationWidget(address, latLng, _data['distance']),
         divider(),
         seekingCareWidget(_providerData),
         divider(),
@@ -1070,6 +1101,46 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       child: Divider(
         color: AppColors.white_smoke,
         thickness: 6.0,
+      ),
+    );
+  }
+
+  Widget recordingInfoWidget() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: AppColors.sunglow.withOpacity(0.20),
+        border: Border.all(
+          width: 1.0,
+          color: AppColors.sunglow,
+        ),
+        borderRadius: BorderRadius.circular(
+          14.0,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Note",
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(height: 5),
+          Text(
+            "As per regulatory requirements, all audio & video calls done during an online consultation with the doctor, will be recorded & stored in a secure manner.",
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+            ),
+          ),
+        ],
       ),
     );
   }
