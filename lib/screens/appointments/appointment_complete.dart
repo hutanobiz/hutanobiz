@@ -3,7 +3,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 
 class AppointmentCompleteConfirmation extends StatelessWidget {
-  final Map<String, String> appointmentCompleteMap;
+  final Map appointmentCompleteMap;
 
   const AppointmentCompleteConfirmation(
       {Key key, @required this.appointmentCompleteMap})
@@ -17,7 +17,10 @@ class AppointmentCompleteConfirmation extends StatelessWidget {
           children: <Widget>[
             SizedBox(height: 50),
             Center(
-              child: Text("Office Visit Completed!!",
+              child: Text(
+                  appointmentCompleteMap.containsKey('_id')
+                      ? "Video Appointment Completed"
+                      : "Office Visit Completed!!",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -44,7 +47,10 @@ class AppointmentCompleteConfirmation extends StatelessWidget {
             SizedBox(height: 15),
             Center(
               child: Text(
-                appointmentCompleteMap["dateTime"],
+                // todo time
+                appointmentCompleteMap.containsKey('_id')
+                    ? ''
+                    : appointmentCompleteMap["dateTime"],
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
@@ -60,35 +66,37 @@ class AppointmentCompleteConfirmation extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10),
-            Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: Align(
-                      alignment: FractionalOffset.centerRight,
-                      child: Image.asset(
-                        "images/ic_address_grey.png",
-                        height: 20,
-                        width: 20,
-                      ),
+            appointmentCompleteMap.containsKey('_id')
+                ? SizedBox()
+                : Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Expanded(
+                          child: Align(
+                            alignment: FractionalOffset.centerRight,
+                            child: Image.asset(
+                              "images/ic_address_grey.png",
+                              height: 20,
+                              width: 20,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Expanded(
+                          flex: 5,
+                          child: Text(
+                            appointmentCompleteMap["address"],
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                  SizedBox(width: 8),
-                  Expanded(
-                    flex: 5,
-                    child: Text(
-                      appointmentCompleteMap["address"],
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black87,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(60.0),
