@@ -7,6 +7,7 @@ import 'package:hutano/models/services.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/loading_background.dart';
+import 'package:intl/intl.dart';
 
 class TreatmentSummaryScreen extends StatefulWidget {
   final Map appointmentMap;
@@ -52,6 +53,8 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
 
     if (_appointmentType == 3) {
       _trackingStatusKey = 'trackingStatusProvider';
+    } else if (_appointmentType == 2) {
+      _trackingStatusKey = 'videoAppointmentStatus';
     } else {
       _trackingStatusKey = 'trackingStatus';
     }
@@ -123,7 +126,19 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                 appointmentData["problemTimeSpan"]?.toString() ?? "---";
 
             if (appointmentData[_trackingStatusKey] != null) {
-              if (appointmentData[_trackingStatusKey]["treatmentStarted"] !=
+              if (_trackingStatusKey == 'videoAppointmentStatus') {
+                if (appointmentData["videoAppointmentStatus"]
+                        ["startcallTime"] !=
+                    null) {
+                  initiated = DateFormat('dd MMMM yyyy, hh:mm aa')
+                      .format(DateTime.parse(
+                              appointmentData["videoAppointmentStatus"]
+                                  ["startcallTime"])
+                          .toLocal())
+                      .toString();
+                }
+              } else if (appointmentData[_trackingStatusKey]
+                          ["treatmentStarted"] !=
                       null ||
                   appointmentData[_trackingStatusKey]["treatmentStarted"] !=
                       '') {
@@ -136,7 +151,17 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                         .toString()
                         .formatDate(dateFormat: 'hh:mm aa');
               }
-              if (appointmentData[_trackingStatusKey]
+              if (_trackingStatusKey == 'videoAppointmentStatus') {
+                if (appointmentData["videoAppointmentStatus"]["endcallTime"] !=
+                    null) {
+                  initiated = DateFormat('dd MMMM yyyy, hh:mm aa')
+                      .format(DateTime.parse(
+                              appointmentData["videoAppointmentStatus"]
+                                  ["endcallTime"])
+                          .toLocal())
+                      .toString();
+                }
+              } else if (appointmentData[_trackingStatusKey]
                           ["patientTreatmentEnded"] !=
                       null ||
                   appointmentData[_trackingStatusKey]
