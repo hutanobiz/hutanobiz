@@ -692,7 +692,7 @@ class ApiBaseHelper {
     return _netUtil
         .post(
             Uri.encodeFull(
-                base_url + "api/doctor/video-appointment"),
+                base_url + "api/video-appointment"),
             body: locationMap,
             headers: headers)
         .then((res) {
@@ -710,7 +710,7 @@ class ApiBaseHelper {
         .post(
             
             Uri.encodeFull(
-                base_url + "api/doctor/video-appointment-stop"),
+                base_url + "api/video-appointment-stop"),
             body: locationMap,
             headers: headers)
         .then((res) {
