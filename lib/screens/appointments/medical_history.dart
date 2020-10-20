@@ -150,7 +150,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                           physics: ClampingScrollPhysics(),
                           itemCount: data.length,
                           itemBuilder: (context, index) {
-                            dynamic medicalHistory = data[index];
+                            dynamic medicalHistory = data[index]??'';
 
                             return CheckboxListTile(
                               title: Text(
@@ -266,8 +266,10 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
         setLoading(true);
 
         for (int i = 0; i < _diseaseList.length; i++) {
+          if(_diseaseList[i]!=null){
           if (!diseaseMap.containsValue(_diseaseList[i])) {
             diseaseMap['medicalHistory[${i.toString()}]'] = _diseaseList[i];
+          }
           }
         }
 
