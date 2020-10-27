@@ -208,18 +208,24 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   }
 
   void _setBookingTime(String bookTime) {
-    _bookedTime = bookTime;
-
-    if (_bookedTime.length < 4) {
-      if (_bookedTime[0] != "0") {
-        _bookedTime =
-            _bookedTime.substring(0, 2) + "0" + _bookedTime.substring(2);
+    if (bookTime.length < 4) {
+      if (bookTime[0] != "0") {
+        bookTime = bookTime.substring(0, 2) + "0" + bookTime.substring(2);
       } else {
-        _bookedTime = "0" + _bookedTime;
+        bookTime = "0" + bookTime;
       }
     }
-    _timeHours = _bookedTime.substring(0, 2);
-    _timeMins = _bookedTime.substring(3);
+
+    var fromTime = new DateTime.utc(
+        DateTime.now().year,
+        DateTime.now().month,
+        9,
+        int.parse(bookTime.split(':')[0]),
+        int.parse(bookTime.split(':')[1]));
+
+    _timeHours = fromTime.toLocal().hour.toString();
+    _timeMins = fromTime.toLocal().minute.toString();
+    _bookedTime = '$_timeHours:$_timeMins';
   }
 
   void setSourceAndDestinationIcons() async {
@@ -312,7 +318,9 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                 child: Text(
                   paymentType == "3"
                       ? "Cash"
-                      : paymentType == "1" ? "Card" : insuranceName,
+                      : paymentType == "1"
+                          ? "Card"
+                          : insuranceName,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -330,7 +338,6 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   }
 
   _bookAppointment() async {
-
     try {
       SharedPref().getToken().then((token) async {
         _loading(true);
@@ -353,8 +360,13 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             _container.getProjectsResponse()["serviceType"]?.toString() ?? "1";
         _reviewAppointmentData["date"] =
             DateFormat("MM/dd/yyyy").format(_bookedDate).toString();
-        _reviewAppointmentData["fromTime"] = DateFormat("yyyy-MM-dd").format(_bookedDate).toString()+' '+_bookedTime+':00';
-        _reviewAppointmentData["timeZonePlace"] = _timezone;//DateTime.now().timeZoneOffset.toString();
+        _reviewAppointmentData["fromTime"] =
+            DateFormat("yyyy-MM-dd").format(_bookedDate).toString() +
+                ' ' +
+                _bookedTime +
+                ':00';
+        _reviewAppointmentData["timeZonePlace"] =
+            _timezone; 
         _reviewAppointmentData["doctor"] = doctorId;
 
         request.fields.addAll(_reviewAppointmentData);
@@ -643,19 +655,19 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         ),
       ),
     );
-    _widgetList.add( Padding(
-          padding: const EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 11.0),
-          child: Text(
-            "Appointment Type",
-            style: TextStyle(
-              fontSize: 14.0,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ));
-        _widgetList.add(appoCard(
-          _container.projectsResponse["serviceType"].toString(),
-        ));
+    _widgetList.add(Padding(
+      padding: const EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 11.0),
+      child: Text(
+        "Appointment Type",
+        style: TextStyle(
+          fontSize: 14.0,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    ));
+    _widgetList.add(appoCard(
+      _container.projectsResponse["serviceType"].toString(),
+    ));
     _container.projectsResponse["serviceType"].toString() == '2'
         ? _widgetList.add(recordingInfoWidget())
         : _widgetList.add(Container());
@@ -1181,10 +1193,11 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
       _isLoading = load;
     });
   }
+
   Widget appoCard(String cardText) {
     return Container(
       width: 172.0,
-      margin: const EdgeInsets.only(left: 20.0, right: 20.0,bottom: 10),
+      margin: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 10),
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -1208,7 +1221,9 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           Text(
             cardText == '1'
                 ? "Office\nAppointment"
-                : cardText == '2' ? "Video\nAppointment" : "Onsite\nAppointment",
+                : cardText == '2'
+                    ? "Video\nAppointment"
+                    : "Onsite\nAppointment",
             maxLines: 2,
             style: TextStyle(
               color: AppColors.midnight_express,
