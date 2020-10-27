@@ -290,8 +290,15 @@ class _SelectAppointmentTimeScreenState
               _scheduleList = snapshot.data;
 
               for (Schedule schedule in _scheduleList) {
-                int prefixValue =
-                    int.parse(schedule.startTime.toString().substring(0, 2));
+                var fromTime = new DateTime.utc(
+                    DateTime.now().year,
+                    DateTime.now().month,
+                    9,
+                    int.parse(schedule.startTime.toString().split(':')[0]),
+                    int.parse(schedule.startTime.toString().split(':')[1]));
+
+                int prefixValue = fromTime.toLocal().hour;
+                int minuteValue = fromTime.toLocal().minute;
 
                 if (currentDate == _dayDateMap["date"]) {
                   if (DateTime.now().hour < prefixValue) {
@@ -301,6 +308,16 @@ class _SelectAppointmentTimeScreenState
                       _afternoonList.add(schedule);
                     } else {
                       _eveningList.add(schedule);
+                    }
+                  } else if (DateTime.now().hour == prefixValue) {
+                    if (DateTime.now().minute < minuteValue) {
+                      if (prefixValue < 12) {
+                        _morningList.add(schedule);
+                      } else if (12 <= prefixValue && prefixValue < 18) {
+                        _afternoonList.add(schedule);
+                      } else {
+                        _eveningList.add(schedule);
+                      }
                     }
                   }
                 } else {
@@ -390,11 +407,16 @@ class _SelectAppointmentTimeScreenState
   }
 
   Widget _slotWidget(Schedule currentSchedule) {
+    var fromTime = new DateTime.utc(
+        DateTime.now().year,
+        DateTime.now().month,
+        9,
+        int.parse(currentSchedule.startTime.toString().split(':')[0]),
+        int.parse(currentSchedule.startTime.toString().split(':')[1]));
+
     String timing = TimeOfDay(
-            hour:
-                int.parse(currentSchedule.startTime.toString().substring(0, 2)),
-            minute:
-                int.parse(currentSchedule.startTime.toString().substring(3)))
+            hour: fromTime.toLocal().hour,
+            minute: fromTime.toLocal().minute)
         .format(context)
         .toString()
         .toLowerCase();
@@ -418,7 +440,9 @@ class _SelectAppointmentTimeScreenState
         decoration: BoxDecoration(
           color: currentSchedule.isBlock
               ? Colors.grey.withOpacity(0.05)
-              : currentSchedule.isSelected ? AppColors.windsor : AppColors.snow,
+              : currentSchedule.isSelected
+                  ? AppColors.windsor
+                  : AppColors.snow,
           borderRadius: BorderRadius.all(Radius.circular(14.0)),
           border: Border.all(
               color: currentSchedule.isBlock
@@ -433,7 +457,9 @@ class _SelectAppointmentTimeScreenState
           style: TextStyle(
             color: currentSchedule.isBlock
                 ? Colors.grey.withOpacity(0.6)
-                : currentSchedule.isSelected ? Colors.white : AppColors.windsor,
+                : currentSchedule.isSelected
+                    ? Colors.white
+                    : AppColors.windsor,
           ),
         ),
       ),
