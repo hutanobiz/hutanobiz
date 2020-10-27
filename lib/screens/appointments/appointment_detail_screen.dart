@@ -199,14 +199,15 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                             Routes.treatmentSummaryScreen,
                             arguments: _map,
                           );
-                              }: ()  {
-                                var map = {};
-                                  map['appointmentId'] =
-                                      profileMap["data"]["_id"];
-                                  api
-                                      .checkTimeToStartVideo(
-                                          context, token, map)
-                                      .then((value) async {
+                              }: ()  
+                                // { var map = {};
+                                //   map['appointmentId'] =
+                                //       profileMap["data"]["_id"];
+                                //   api
+                                //       .checkTimeToStartVideo(
+                                //           context, token, map)
+                                //       .then((value) 
+                                      async {
                                     await _handleCameraAndMic();
                                   var map = {};
                                   map['_id']= profileMap["data"]["_id"];
@@ -218,10 +219,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                      // arguments: profileMap["data"]["_id"],
                                      arguments: map
                                     );
-                                  }).futureError((onError) {
-                                    Widgets.showErrorialog(
-                                        context: context, description: onError);
-                                  });
+                                  // }).futureError((onError) {
+                                  //   Widgets.showErrorialog(
+                                  //       context: context, description: onError);
+                                  // });
                               }: () => Navigator.of(context)
                                   .pushNamed(
                                     Routes.trackTreatmentScreen,
