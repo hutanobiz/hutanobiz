@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -38,6 +39,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   DateTime _bookedDate;
   String _bookedTime;
   List<Services> _servicesList = new List();
+  String _timezone = 'Unknown';
 
   final Set<Marker> _markers = {};
   final Set<Polyline> _polyline = {};
@@ -100,6 +102,18 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
       ),
     );
     setSourceAndDestinationIcons();
+    _initData();
+  }
+
+  Future<void> _initData() async {
+    try {
+      _timezone = await FlutterNativeTimezone.getLocalTimezone();
+    } catch (e) {
+      print('Could not get the local timezone');
+    }
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -316,6 +330,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   }
 
   _bookAppointment() async {
+
     try {
       SharedPref().getToken().then((token) async {
         _loading(true);
@@ -338,8 +353,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             _container.getProjectsResponse()["serviceType"]?.toString() ?? "1";
         _reviewAppointmentData["date"] =
             DateFormat("MM/dd/yyyy").format(_bookedDate).toString();
-
-        _reviewAppointmentData["fromTime"] = _bookedTime;
+        _reviewAppointmentData["fromTime"] = DateFormat("yyyy-MM-dd").format(_bookedDate).toString()+' '+_bookedTime+':00';
+        _reviewAppointmentData["timeZonePlace"] = _timezone;//DateTime.now().timeZoneOffset.toString();
         _reviewAppointmentData["doctor"] = doctorId;
 
         request.fields.addAll(_reviewAppointmentData);
