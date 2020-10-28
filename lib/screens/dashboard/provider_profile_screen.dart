@@ -234,21 +234,29 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
         List _scheduleDaysList = scheduleList[i]["day"];
         if (j < _scheduleDaysList.length) {
           String day = _scheduleDaysList[j].toString();
+          var fromTime = DateTime.utc(
+              DateTime.now().year,
+              DateTime.now().month,
+              9,
+              int.parse(scheduleList[i]['fromTime'].toString().split(':')[0]),
+              int.parse(scheduleList[i]['fromTime'].toString().split(':')[1]));
+          var toTime = DateTime.utc(
+              DateTime.now().year,
+              DateTime.now().month,
+              9,
+              int.parse(scheduleList[i]['toTime'].toString().split(':')[0]),
+              int.parse(scheduleList[i]['toTime'].toString().split(':')[1]));
+
+          String from =
+              '${fromTime.toLocal().hour}:${fromTime.toLocal().minute}';
+          String to = '${toTime.toLocal().hour}:${toTime.toLocal().minute}';
 
           if (now.weekday.toString() == day) {
-            todaysTimings = todaysTimings +
-                scheduleList[i]["fromTime"] +
-                " - " +
-                scheduleList[i]["toTime"] +
-                " ; ";
+            todaysTimings = todaysTimings + from + " - " + to + " ; ";
           }
 
           if ((now.weekday + 1).toString() == day) {
-            tomorrowsTimings = tomorrowsTimings +
-                scheduleList[i]["fromTime"] +
-                " - " +
-                scheduleList[i]["toTime"] +
-                " ; ";
+            tomorrowsTimings = tomorrowsTimings + from + " - " + to + " ; ";
           }
 
           j++;
@@ -275,8 +283,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
 
         if (location.length > 0) {
           latLng = LatLng(
-            location[1],
-            location[0],
+            double.parse(location[1].toString()),
+            double.parse(location[0].toString()),
           );
         }
       }

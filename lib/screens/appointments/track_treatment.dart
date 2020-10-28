@@ -349,8 +349,8 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
 
             if (location.length > 0) {
               _desPosition = LatLng(
-                location[1],
-                location[0],
+                double.parse(location[1].toString()),
+                double.parse(location[0].toString()),
               );
             }
           }

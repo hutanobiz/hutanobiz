@@ -362,8 +362,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
             if (location.length > 0) {
               latLng = LatLng(
-                location[1],
-                location[0],
+                double.parse(location[1].toString()),
+                double.parse(location[0].toString()),
               );
             }
           }
@@ -384,8 +384,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
               if (location.length > 0) {
                 latLng = LatLng(
-                  location[1],
-                  location[0],
+                  double.parse(location[1].toString()),
+                  double.parse(location[0].toString()),
                 );
               }
             }

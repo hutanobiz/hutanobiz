@@ -162,9 +162,9 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     } else if (_container.projectsResponse["serviceType"].toString() == '1') {
       if (_profileMap["businessLocation"] != null) {
         if (_profileMap["businessLocation"]["coordinates"].length > 0) {
-          _desPosition = LatLng(
-              _profileMap["businessLocation"]["coordinates"][1],
-              _profileMap["businessLocation"]["coordinates"][0]);
+          _desPosition = LatLng(double.parse(
+              _profileMap["businessLocation"]["coordinates"][1].toString()),
+              double.parse(_profileMap["businessLocation"]["coordinates"][0].toString()));
         }
       }
     } else {}
