@@ -10,6 +10,7 @@ import 'package:hutano/screens/dashboard/appointments_screen.dart';
 import 'package:hutano/screens/dashboard/dashboardScreen.dart';
 import 'package:hutano/screens/dashboard/requests_appointments_screen.dart';
 import 'package:hutano/screens/dashboard/setting.dart';
+import 'package:permission_handler/permission_handler.dart' as Permission;
 
 const kstripePublishKey = 'pk_test_LlxS6SLz0PrOm9IY9mxM0LHo006tjnSqWX';
 
@@ -51,28 +52,46 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   navigateUser(message) {
-    String isTrack = Platform.isIOS
-        ? message['isTrack'] ?? "false"
-        : message["data"]['isTrack'] ?? "false";
+    String notificationType = Platform.isIOS
+        ? message['notification_type'] ?? ""
+        : message["data"]['notification_type'] ?? "";
 
-    Map appointment = {};
-    appointment["_appointmentStatus"] = "1";
-    appointment["id"] = Platform.isIOS
-        ? message['appointmentId']
-        : message["data"]['appointmentId'];
+    switch (notificationType) {
+      case 'call':
+        Map appointment = {};
+        appointment["_appointmentStatus"] = "1";
+        appointment["id"] = Platform.isIOS
+            ? message['appointmentId']
+            : message["data"]['appointmentId'];
+        Navigator.of(context).pushNamed(
+          Routes.appointmentDetailScreen,
+          arguments: appointment,
+        );
+        break;
+      default:
+        String isTrack = Platform.isIOS
+            ? message['isTrack'] ?? "false"
+            : message["data"]['isTrack'] ?? "false";
 
-    if (isTrack == "true") {
-      Navigator.of(context).pushNamed(
-        Routes.trackTreatmentScreen,
-        arguments: Platform.isIOS
-            ? message['appointmentType']
-            : message["data"]['appointmentType'],
-      );
-    } else {
-      Navigator.of(context).pushNamed(
-        Routes.appointmentDetailScreen,
-        arguments: appointment,
-      );
+        Map appointment = {};
+        appointment["_appointmentStatus"] = "1";
+        appointment["id"] = Platform.isIOS
+            ? message['appointmentId']
+            : message["data"]['appointmentId'];
+
+        if (isTrack == "true") {
+          Navigator.of(context).pushNamed(
+            Routes.trackTreatmentScreen,
+            arguments: Platform.isIOS
+                ? message['appointmentType']
+                : message["data"]['appointmentType'],
+          );
+        } else {
+          Navigator.of(context).pushNamed(
+            Routes.appointmentDetailScreen,
+            arguments: appointment,
+          );
+        }
     }
   }
 
@@ -96,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
             : message['aps']['alert']['title'].toString(),
         Platform.isAndroid
             ? message['notification']['body'].toString()
-            : message['aps']['alert']['title'].toString(),
+            : message['aps']['alert']['body'].toString(),
         platformChannelSpecifics,
         payload: json.encode(message));
   }
@@ -107,7 +126,37 @@ class _HomeScreenState extends State<HomeScreen> {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
-        showNotification(message);
+
+        String notificationType = Platform.isIOS
+            ? message['notification_type'] ?? ""
+            : message["data"]['notification_type'] ?? "";
+
+        switch (notificationType) {
+          case 'call':
+            // Map appointment = {};
+            // appointment["_appointmentStatus"] = "1";
+            // appointment["id"] = Platform.isIOS
+            //     ? message['appointmentId']
+            //     : message["data"]['appointmentId'];
+            // Navigator.of(context).pushNamed(
+            //   Routes.appointmentDetailScreen,
+            //   arguments: appointment,
+            // );
+            await _handleCameraAndMic();
+            var map = {};
+            map['_id'] = Platform.isIOS
+                ? message['appointmentId']
+                : message["data"]['appointmentId'];
+            map['name'] = "---";
+            map['address'] = 'a';
+            map['dateTime'] = 't';
+            return Navigator.of(context).popAndPushNamed(Routes.callPage,
+                // arguments: profileMap["data"]["_id"],
+                arguments: map);
+            break;
+          default:
+            showNotification(message);
+        }
       },
       onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
       onLaunch: (Map<String, dynamic> message) async {
@@ -203,6 +252,15 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _currentIndex = index;
     });
+  }
+
+  Future<void> _handleCameraAndMic() async {
+    await Permission.PermissionHandler().requestPermissions(
+      [
+        Permission.PermissionGroup.camera,
+        Permission.PermissionGroup.microphone
+      ],
+    );
   }
 }
 

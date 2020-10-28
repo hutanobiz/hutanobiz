@@ -461,8 +461,9 @@ class _CallPageState extends State<CallPage> {
                           api
                               .cancelCallEndNotification(token, map)
                               .then((value) {
-                            Navigator.pop(context);
+                           
                           });
+                           Navigator.pop(context);
                         }),
                     Spacer(),
                     FlatButton(
