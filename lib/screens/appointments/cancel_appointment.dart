@@ -7,6 +7,7 @@ import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/widgets.dart';
+import 'package:intl/intl.dart';
 
 class CancelAppointmentScreen extends StatefulWidget {
   const CancelAppointmentScreen({Key key, this.appointmentData})
@@ -420,18 +421,9 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
                 SizedBox(width: 3.0),
                 Expanded(
                   child: Text(
-                    (_data['date'] != null
-                            ? _data['date'].toString().formatDate(
-                                  dateFormat: "${Strings.datePattern}, ",
-                                )
-                            : "---") +
-                        (_data["fromTime"] != null
-                            ? _data["fromTime"].toString().timeOfDay(context)
-                            : "---") +
-                        " - " +
-                        (_data["toTime"] != null
-                            ? _data["toTime"].toString().timeOfDay(context)
-                            : "---"),
+                     DateFormat('EEEE, dd MMMM, HH:mm')
+                               .format(DateTime.parse(_data['fromTime']).toLocal()).toString()+' to '+DateFormat('HH:mm')
+                               .format(DateTime.parse(_data['toTime']).toLocal()).toString(),
                     style: TextStyle(
                       color: Colors.black.withOpacity(0.5),
                     ),

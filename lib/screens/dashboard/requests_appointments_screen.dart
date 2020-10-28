@@ -9,6 +9,7 @@ import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/widgets.dart';
+import 'package:intl/intl.dart';
 
 class RequestAppointmentsScreen extends StatefulWidget {
   const RequestAppointmentsScreen({Key key}) : super(key: key);
@@ -374,23 +375,9 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                     "ic_appointment_time".imageIcon(height: 12.0, width: 12.0),
                     SizedBox(width: 5.0),
                     Expanded(
-                      child: Text(
-                        (response['date'] != null
-                                ? response['date'].toString().formatDate(
-                                      dateFormat: "${Strings.datePattern}, ",
-                                    )
-                                : "---") +
-                            (response["fromTime"] != null
-                                ? response["fromTime"]
-                                    .toString()
-                                    .timeOfDay(context)
-                                : "---") +
-                            " - " +
-                            (response["toTime"] != null
-                                ? response["toTime"]
-                                    .toString()
-                                    .timeOfDay(context)
-                                : "---"),
+                      child: Text( DateFormat('EEEE, dd MMMM, HH:mm')
+                               .format(DateTime.parse(response['fromTime']).toLocal()).toString()+' to '+DateFormat('HH:mm')
+                               .format(DateTime.parse(response['toTime']).toLocal()).toString(),
                         style: TextStyle(
                           color: Colors.black.withOpacity(0.5),
                         ),

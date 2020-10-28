@@ -8,6 +8,7 @@ import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
+import 'package:intl/intl.dart';
 
 class AppointmentsScreen extends StatefulWidget {
   AppointmentsScreen({Key key}) : super(key: key);
@@ -397,22 +398,9 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                     SizedBox(width: 3.0),
                     Expanded(
                       child: Text(
-                        (response['date'] != null
-                                ? response['date'].toString().formatDate(
-                                      dateFormat: "${Strings.datePattern}, ",
-                                    )
-                                : "---") +
-                            (response["fromTime"] != null
-                                ? response["fromTime"]
-                                    .toString()
-                                    .timeOfDay(context)
-                                : "---") +
-                            " - " +
-                            (response["toTime"] != null
-                                ? response["toTime"]
-                                    .toString()
-                                    .timeOfDay(context)
-                                : "---"),
+                         DateFormat('EEEE, dd MMMM, HH:mm')
+                               .format(DateTime.parse(response['fromTime']).toLocal()).toString()+' to '+DateFormat('HH:mm')
+                               .format(DateTime.parse(response['toTime']).toLocal()).toString(),
                         style: TextStyle(
                           color: Colors.black.withOpacity(0.5),
                         ),

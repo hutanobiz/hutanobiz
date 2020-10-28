@@ -15,6 +15,7 @@ import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart' as Permission;
 
@@ -506,12 +507,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         ),
         _providerData["type"] == 2 ? recordingInfoWidget() : SizedBox(),
         divider(topPadding: 18.0),
-        dateTimeWidget(
-            _providerData['date'].toString().formatDate(
-                  dateFormat: "${Strings.datePattern}, ",
-                ),
-            _providerData["fromTime"].toString(),
-            _providerData["toTime"].toString()),
+        dateTimeWidget( DateFormat('EEEE, dd MMMM, HH:mm')
+                               .format(DateTime.parse(_providerData['fromTime']).toLocal()).toString()+' to '+DateFormat('HH:mm')
+                               .format(DateTime.parse(_providerData['toTime']).toLocal()).toString()),
+            
         _providerData["type"] == 2 ? SizedBox() : divider(topPadding: 8.0),
         _providerData["type"] == 2
             ? SizedBox()
@@ -633,7 +632,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     );
   }
 
-  Widget dateTimeWidget(String dateTime, String fromTime, String toTime) {
+  Widget dateTimeWidget(String dateTime) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 20.0),
       child: Column(
@@ -653,10 +652,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               "ic_appointment_time".imageIcon(),
               SizedBox(width: 8.0),
               Text(
-                dateTime +
-                    fromTime.timeOfDay(context) +
-                    " - " +
-                    toTime.timeOfDay(context),
+                dateTime ,
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Colors.black,

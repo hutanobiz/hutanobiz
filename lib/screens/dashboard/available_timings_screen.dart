@@ -144,56 +144,44 @@ class _AvailableTimingsScreenState extends State<AvailableTimingsScreen> {
         List _scheduleDaysList = _scheduleList[i]["day"];
         if (j < _scheduleDaysList.length) {
           String day = _scheduleDaysList[j].toString();
+          var fromTime = DateTime.utc(
+              DateTime.now().year,
+              DateTime.now().month,
+              9,
+              int.parse(_scheduleList[i]['fromTime'].toString().split(':')[0]),
+              int.parse(_scheduleList[i]['fromTime'].toString().split(':')[1]));
+          var toTime = DateTime.utc(
+              DateTime.now().year,
+              DateTime.now().month,
+              9,
+              int.parse(_scheduleList[i]['toTime'].toString().split(':')[0]),
+              int.parse(_scheduleList[i]['toTime'].toString().split(':')[1]));
+
+          String from =
+              '${fromTime.toLocal().hour}:${fromTime.toLocal().minute}';
+          String to = '${toTime.toLocal().hour}:${toTime.toLocal().minute}';
 
           switch (day) {
             case "1":
-              mondayTimings = mondayTimings +
-                  _scheduleList[i]["fromTime"] +
-                  " - " +
-                  _scheduleList[i]["toTime"] +
-                  "\n";
+              mondayTimings = mondayTimings + from + " - " + to + "\n";
               break;
             case "2":
-              tuesdayTimings = tuesdayTimings +
-                  _scheduleList[i]["fromTime"] +
-                  " - " +
-                  _scheduleList[i]["toTime"] +
-                  "\n";
+              tuesdayTimings = tuesdayTimings + from + " - " + to + "\n";
               break;
             case "3":
-              wednesdayTimings = wednesdayTimings +
-                  _scheduleList[i]["fromTime"] +
-                  " - " +
-                  _scheduleList[i]["toTime"] +
-                  "\n";
+              wednesdayTimings = wednesdayTimings + from + " - " + to + "\n";
               break;
             case "4":
-              thursdayTimings = thursdayTimings +
-                  _scheduleList[i]["fromTime"] +
-                  " - " +
-                  _scheduleList[i]["toTime"] +
-                  "\n";
+              thursdayTimings = thursdayTimings + from + " - " + to + "\n";
               break;
             case "5":
-              fridayTimings = fridayTimings +
-                  _scheduleList[i]["fromTime"] +
-                  " - " +
-                  _scheduleList[i]["toTime"] +
-                  "\n";
+              fridayTimings = fridayTimings + from + " - " + to + "\n";
               break;
             case "6":
-              saturdayTimings = saturdayTimings +
-                  _scheduleList[i]["fromTime"] +
-                  " - " +
-                  _scheduleList[i]["toTime"] +
-                  "\n";
+              saturdayTimings = saturdayTimings + from + " - " + to + "\n";
               break;
             case "7":
-              sundayTimings = sundayTimings +
-                  _scheduleList[i]["fromTime"] +
-                  " - " +
-                  _scheduleList[i]["toTime"] +
-                  "\n";
+              sundayTimings = sundayTimings + from + " - " + to + "\n";
               break;
           }
           j++;
