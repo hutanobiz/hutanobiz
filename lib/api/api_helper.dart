@@ -656,6 +656,22 @@ class ApiBaseHelper {
     });
   }
 
+  Future<dynamic> cancelCallEndNotification(String token, Map appointmentData) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .post(
+      base_url + "api/cancel-call-push-notification",
+      body: appointmentData,
+      headers: headers,
+    )
+        .then((res) {
+      return res;
+    });
+  }
+
   Future<List<dynamic>> getReviewReasons() {
     return _netUtil
         .get(

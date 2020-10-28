@@ -455,7 +455,14 @@ class _CallPageState extends State<CallPage> {
                           ),
                         ),
                         onPressed: () {
-                          Navigator.pop(context);
+                          Map<String, String> map = {};
+                          map['appointmentId'] =
+                              widget.channelName['_id'].toString();
+                          api
+                              .cancelCallEndNotification(token, map)
+                              .then((value) {
+                            Navigator.pop(context);
+                          });
                         }),
                     Spacer(),
                     FlatButton(
