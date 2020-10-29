@@ -185,54 +185,65 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         padding: const EdgeInsets.only(right: 20.0),
                         child: FancyButton(
                           title: profileMap['data']["type"] == 2
-                              ? _appointmentStatus == '4'? 'Treatment Summary':"Join Call"
+                              ? _appointmentStatus == '4'
+                                  ? 'Treatment Summary'
+                                  : "Join Call"
                               : "Show status",
                           onPressed: _appointmentStatus == "2" ||
                                   _appointmentStatus == "6"
                               ? null
-                              : profileMap['data']["type"] == 2? _appointmentStatus == '4'?(){
-                                Map _map = {};
-                          _map['id'] =profileMap['data']["_id"].toString();
-                          _map['appointmentType'] = profileMap['data']["type"];
-                          _map['latLng'] = _userLocation;
+                              : profileMap['data']["type"] == 2
+                                  ? _appointmentStatus == '4'
+                                      ? () {
+                                          Map _map = {};
+                                          _map['id'] = profileMap['data']["_id"]
+                                              .toString();
+                                          _map['appointmentType'] =
+                                              profileMap['data']["type"];
+                                          _map['latLng'] = _userLocation;
 
-                          Navigator.of(context).pushNamed(
-                            Routes.treatmentSummaryScreen,
-                            arguments: _map,
-                          );
-                              }: ()  
-                                // { var map = {};
-                                //   map['appointmentId'] =
-                                //       profileMap["data"]["_id"];
-                                //   api
-                                //       .checkTimeToStartVideo(
-                                //           context, token, map)
-                                //       .then((value) 
+                                          Navigator.of(context).pushNamed(
+                                            Routes.treatmentSummaryScreen,
+                                            arguments: _map,
+                                          );
+                                        }
+                                      : ()
+                                      // { var map = {};
+                                      //   map['appointmentId'] =
+                                      //       profileMap["data"]["_id"];
+                                      //   api
+                                      //       .checkTimeToStartVideo(
+                                      //           context, token, map)
+                                      //       .then((value)
                                       async {
-                                    await _handleCameraAndMic();
-                                  var map = {};
-                                  map['_id']= profileMap["data"]["_id"];
-                                  map['name']= profileMap['data']["doctor"]["fullName"]?.toString() ?? "---";
-                                  map['address']= 'a';
-                                  map['dateTime']= 't';
-                                    return Navigator.of(context).pushNamed(
-                                      Routes.callPage,
-                                     // arguments: profileMap["data"]["_id"],
-                                     arguments: map
-                                    );
-                                  // }).futureError((onError) {
-                                  //   Widgets.showErrorialog(
-                                  //       context: context, description: onError);
-                                  // });
-                              }: () => Navigator.of(context)
-                                  .pushNamed(
-                                    Routes.trackTreatmentScreen,
-                                    arguments: profileMap["data"]["type"],
-                                  )
-                                  .whenComplete(
-                                    () =>
-                                        appointmentDetailsFuture(_userLocation),
-                                  ),
+                                          await _handleCameraAndMic();
+                                          var map = {};
+                                          map['_id'] =
+                                              profileMap["data"]["_id"];
+                                          map['name'] = profileMap['data']
+                                                      ["doctor"]["fullName"]
+                                                  ?.toString() ??
+                                              "---";
+                                          map['address'] = 'a';
+                                          map['dateTime'] = 't';
+                                          return Navigator.of(context).pushNamed(
+                                              Routes.callPage,
+                                              // arguments: profileMap["data"]["_id"],
+                                              arguments: map);
+                                          // }).futureError((onError) {
+                                          //   Widgets.showErrorialog(
+                                          //       context: context, description: onError);
+                                          // });
+                                        }
+                                  : () => Navigator.of(context)
+                                      .pushNamed(
+                                        Routes.trackTreatmentScreen,
+                                        arguments: profileMap["data"]["type"],
+                                      )
+                                      .whenComplete(
+                                        () => appointmentDetailsFuture(
+                                            _userLocation),
+                                      ),
                         ),
                       ),
                     )
@@ -253,7 +264,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
   Future<void> _handleCameraAndMic() async {
     await Permission.PermissionHandler().requestPermissions(
-      [Permission.PermissionGroup.camera, Permission.PermissionGroup.microphone],
+      [
+        Permission.PermissionGroup.camera,
+        Permission.PermissionGroup.microphone
+      ],
     );
   }
 
@@ -507,10 +521,29 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         ),
         _providerData["type"] == 2 ? recordingInfoWidget() : SizedBox(),
         divider(topPadding: 18.0),
-        dateTimeWidget( DateFormat('EEEE, dd MMMM, HH:mm')
-                               .format(DateTime.parse(_providerData['fromTime']).toLocal()).toString()+' to '+DateFormat('HH:mm')
-                               .format(DateTime.parse(_providerData['toTime']).toLocal()).toString()),
-            
+        dateTimeWidget(DateFormat('EEEE, dd MMMM,')
+                .format(DateTime.parse(_providerData['date']).toLocal())
+                .toString() +
+            " " +
+            DateFormat('HH:mm')
+                .format(DateTime.utc(
+                        DateTime.now().year,
+                        DateTime.now().month,
+                        DateTime.now().day,
+                        int.parse(_providerData['fromTime'].split(':')[0]),
+                        int.parse(_providerData['fromTime'].split(':')[1]))
+                    .toLocal())
+                .toString() +
+            ' to ' +
+            DateFormat('HH:mm')
+                .format(DateTime.utc(
+                        DateTime.now().year,
+                        DateTime.now().month,
+                        DateTime.now().day,
+                        int.parse(_providerData['toTime'].split(':')[0]),
+                        int.parse(_providerData['toTime'].split(':')[1]))
+                    .toLocal())
+                .toString()),
         _providerData["type"] == 2 ? SizedBox() : divider(topPadding: 8.0),
         _providerData["type"] == 2
             ? SizedBox()
@@ -619,7 +652,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           Text(
             cardText == 1
                 ? "Office\nAppointment"
-                : cardText == 2 ? "Video\nAppointment" : "Onsite\nAppointment",
+                : cardText == 2
+                    ? "Video\nAppointment"
+                    : "Onsite\nAppointment",
             maxLines: 2,
             style: TextStyle(
               color: AppColors.midnight_express,
@@ -652,7 +687,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               "ic_appointment_time".imageIcon(),
               SizedBox(width: 8.0),
               Text(
-                dateTime ,
+                dateTime,
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Colors.black,
@@ -932,7 +967,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                               ? "Days"
                               : timeSpan == "3"
                                   ? "Weeks"
-                                  : timeSpan == "4" ? "Months" : "---",
+                                  : timeSpan == "4"
+                                      ? "Months"
+                                      : "---",
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,

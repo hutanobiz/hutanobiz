@@ -421,9 +421,29 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
                 SizedBox(width: 3.0),
                 Expanded(
                   child: Text(
-                     DateFormat('EEEE, dd MMMM, HH:mm')
-                               .format(DateTime.parse(_data['fromTime']).toLocal()).toString()+' to '+DateFormat('HH:mm')
-                               .format(DateTime.parse(_data['toTime']).toLocal()).toString(),
+                    DateFormat('EEEE, dd MMMM,')
+                            .format(DateTime.parse(_data['date']).toLocal())
+                            .toString() +
+                        " " +
+                        DateFormat('HH:mm')
+                            .format(DateTime.utc(
+                                    DateTime.now().year,
+                                    DateTime.now().month,
+                                    DateTime.now().day,
+                                    int.parse(_data['fromTime'].split(':')[0]),
+                                    int.parse(_data['fromTime'].split(':')[1]))
+                                .toLocal())
+                            .toString() +
+                        ' to ' +
+                        DateFormat('HH:mm')
+                            .format(DateTime.utc(
+                                    DateTime.now().year,
+                                    DateTime.now().month,
+                                    DateTime.now().day,
+                                    int.parse(_data['toTime'].split(':')[0]),
+                                    int.parse(_data['toTime'].split(':')[1]))
+                                .toLocal())
+                            .toString(),
                     style: TextStyle(
                       color: Colors.black.withOpacity(0.5),
                     ),

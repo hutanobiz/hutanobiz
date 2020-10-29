@@ -375,9 +375,35 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                     "ic_appointment_time".imageIcon(height: 12.0, width: 12.0),
                     SizedBox(width: 5.0),
                     Expanded(
-                      child: Text( DateFormat('EEEE, dd MMMM, HH:mm')
-                               .format(DateTime.parse(response['fromTime']).toLocal()).toString()+' to '+DateFormat('HH:mm')
-                               .format(DateTime.parse(response['toTime']).toLocal()).toString(),
+                      child: Text(
+                        DateFormat('EEEE, dd MMMM,')
+                                .format(
+                                    DateTime.parse(response['date']).toLocal())
+                                .toString() +
+                            " " +
+                            DateFormat('HH:mm')
+                                .format(DateTime.utc(
+                                        DateTime.now().year,
+                                        DateTime.now().month,
+                                        DateTime.now().day,
+                                        int.parse(
+                                            response['fromTime'].split(':')[0]),
+                                        int.parse(
+                                            response['fromTime'].split(':')[1]))
+                                    .toLocal())
+                                .toString() +
+                            ' to ' +
+                            DateFormat('HH:mm')
+                                .format(DateTime.utc(
+                                        DateTime.now().year,
+                                        DateTime.now().month,
+                                        DateTime.now().day,
+                                        int.parse(
+                                            response['toTime'].split(':')[0]),
+                                        int.parse(
+                                            response['toTime'].split(':')[1]))
+                                    .toLocal())
+                                .toString(),
                         style: TextStyle(
                           color: Colors.black.withOpacity(0.5),
                         ),

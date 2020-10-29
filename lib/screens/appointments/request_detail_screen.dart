@@ -304,16 +304,35 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
         appoCard(
           _data["type"],
         ),
-        _data["type"] == 2?recordingInfoWidget():SizedBox(),
+        _data["type"] == 2 ? recordingInfoWidget() : SizedBox(),
         divider(topPadding: 18.0),
-        dateTimeWidget(
-             DateFormat('EEEE, dd MMMM, HH:mm')
-                               .format(DateTime.parse(_data['fromTime']).toLocal()).toString()+' to '+DateFormat('HH:mm')
-                               .format(DateTime.parse(_data['toTime']).toLocal()).toString()),
-        _data["type"] == 2?SizedBox():
-        divider(topPadding: 8.0),
-        _data["type"] == 2?SizedBox():
-        locationWidget(address, latLng, _data['distance']),
+        dateTimeWidget(DateFormat('EEEE, dd MMMM,')
+                .format(DateTime.parse(_data['date']).toLocal())
+                .toString() +
+            " " +
+            DateFormat('HH:mm')
+                .format(DateTime.utc(
+                        DateTime.now().year,
+                        DateTime.now().month,
+                        DateTime.now().day,
+                        int.parse(_data['fromTime'].split(':')[0]),
+                        int.parse(_data['fromTime'].split(':')[1]))
+                    .toLocal())
+                .toString() +
+            ' to ' +
+            DateFormat('HH:mm')
+                .format(DateTime.utc(
+                        DateTime.now().year,
+                        DateTime.now().month,
+                        DateTime.now().day,
+                        int.parse(_data['toTime'].split(':')[0]),
+                        int.parse(_data['toTime'].split(':')[1]))
+                    .toLocal())
+                .toString()),
+        _data["type"] == 2 ? SizedBox() : divider(topPadding: 8.0),
+        _data["type"] == 2
+            ? SizedBox()
+            : locationWidget(address, latLng, _data['distance']),
         divider(),
         seekingCareWidget(_data),
         divider(),
@@ -354,7 +373,9 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
           Text(
             cardText == 1
                 ? "Office\nAppointment"
-                : cardText == 2 ? "Video\nAppointment" : "Onsite\nAppointment",
+                : cardText == 2
+                    ? "Video\nAppointment"
+                    : "Onsite\nAppointment",
             maxLines: 2,
             style: TextStyle(
               color: AppColors.midnight_express,
@@ -624,7 +645,9 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                               ? "Days"
                               : timeSpan == "3"
                                   ? "Weeks"
-                                  : timeSpan == "4" ? "Months" : "---",
+                                  : timeSpan == "4"
+                                      ? "Months"
+                                      : "---",
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -808,7 +831,8 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
       ),
     );
   }
-   Widget recordingInfoWidget() {
+
+  Widget recordingInfoWidget() {
     return Container(
       width: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
