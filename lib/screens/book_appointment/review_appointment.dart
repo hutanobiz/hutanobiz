@@ -360,11 +360,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             _container.getProjectsResponse()["serviceType"]?.toString() ?? "1";
         _reviewAppointmentData["date"] =
             DateFormat("MM/dd/yyyy").format(_bookedDate).toString();
-        _reviewAppointmentData["fromTime"] =
-            DateFormat("yyyy-MM-dd").format(_bookedDate).toString() +
-                ' ' +
-                _bookedTime +
-                ':00';
+        _reviewAppointmentData["fromTime"] =_bookedTime ;
         _reviewAppointmentData["timeZonePlace"] =
             _timezone; 
         _reviewAppointmentData["doctor"] = doctorId;
