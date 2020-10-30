@@ -395,6 +395,19 @@ class ApiBaseHelper {
     });
   }
 
+   Future<dynamic> getAppointmentRecordings(BuildContext context, String token,String appointmentId) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.contentTypeHeader: "application/json"
+    };
+    return _netUtil
+        .get(base_url + "api/appointmnet-video-calls?appointmentId=$appointmentId", headers: headers)
+        .then((res) {
+      print(res.toString());
+      return res["response"];
+    });
+  }
+
   Future<dynamic> multipartPost(String url, String token, String key,
       Map<String, String> fileMap, File file) {
     return _netUtil
