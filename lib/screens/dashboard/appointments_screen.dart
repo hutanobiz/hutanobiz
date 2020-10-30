@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/appointments/videos_list.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
@@ -228,6 +229,14 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         child: InkWell(
           borderRadius: BorderRadius.circular(14.0),
           splashColor: Colors.grey[200],
+          onDoubleTap: (){
+            Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => VideoListScreen(appointmentId: response["_id"]),
+                            ),
+                          );
+          },
           onTap: () {
             _container.setAppointmentId(response["_id"].toString());
             _appointmentData["_appointmentStatus"] = _appointmentStatus;
