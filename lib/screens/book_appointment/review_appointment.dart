@@ -223,8 +223,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         int.parse(bookTime.split(':')[0]),
         int.parse(bookTime.split(':')[1]));
 
-    _timeHours = fromTime.toLocal().hour.toString();
-    _timeMins = fromTime.toLocal().minute.toString();
+    _timeHours = DateFormat('HH').format(fromTime.toLocal());
+    _timeMins =  DateFormat('mm').format(fromTime.toLocal());
     _bookedTime = '$_timeHours:$_timeMins';
   }
 
