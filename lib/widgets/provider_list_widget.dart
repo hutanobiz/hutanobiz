@@ -81,13 +81,13 @@ class ProviderWidget extends StatelessWidget {
     } else {
       if (data["officeConsultanceFee"] != null &&
           data["officeConsultanceFee"].length > 0) {
-        fee =
+        fee = data["officeConsultanceFee"][0]['fee'] == null?'0.00':
             data["officeConsultanceFee"][0]['fee'].toStringAsFixed(2) ?? '0.00';
       }
 
       if (data["onsiteConsultanceFee"] != null &&
           data["onsiteConsultanceFee"].length > 0) {
-        fee = min(
+        fee =data["onsiteConsultanceFee"][0]['fee'] == null?'0.00': min(
           double.parse(fee),
           double.parse(
             data["onsiteConsultanceFee"][0]['fee'].toStringAsFixed(2),
@@ -97,7 +97,7 @@ class ProviderWidget extends StatelessWidget {
 
       if (data["vedioConsultanceFee"] != null &&
           data["vedioConsultanceFee"].length > 0) {
-        fee = min(
+        fee = data["vedioConsultanceFee"][0]['fee']==null?'0.00': min(
           double.parse(fee),
           double.parse(
             data["vedioConsultanceFee"][0]['fee'].toStringAsFixed(2),
