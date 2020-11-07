@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/models/schedule.dart';
@@ -29,7 +30,7 @@ class _SelectAppointmentTimeScreenState
   Future<List<Schedule>> _scheduleFuture;
   ApiBaseHelper _apiBaseHelper = ApiBaseHelper();
   Map _dayDateMap = Map();
-
+  String _timezone = 'Unknown';
   List<Schedule> _morningList = List();
   List<Schedule> _afternoonList = List();
   List<Schedule> _eveningList = List();
@@ -64,10 +65,22 @@ class _SelectAppointmentTimeScreenState
     _dayDateMap["date"] = currentDate;
 
     newDate = DateTime.now();
+    // _initData();
   }
 
+  // Future<void> _initData() async {
+  //   try {
+  //     _timezone = await FlutterNativeTimezone.getLocalTimezone();
+  //   } catch (e) {
+  //     print('Could not get the local timezone');
+  //   }
+  //   if (mounted) {
+  //     setState(() {});
+  //   }
+  // }
+
   @override
-  void didChangeDependencies() {
+  Future<void> didChangeDependencies() async {
     super.didChangeDependencies();
 
     _container = InheritedContainer.of(context);
@@ -125,6 +138,15 @@ class _SelectAppointmentTimeScreenState
         }
       }
     }
+    try {
+      _timezone = await FlutterNativeTimezone.getLocalTimezone();
+    } catch (e) {
+      print('Could not get the local timezone');
+    }
+    if (mounted) {
+      setState(() {});
+    }
+    _dayDateMap["timezone"] = _timezone;
 
     while (true) {
       if (_scheduleDaysList.contains(newDate.weekday)) {
@@ -244,6 +266,7 @@ class _SelectAppointmentTimeScreenState
         _dayDateMap["day"] = selectedDate.weekday.toString();
         _dayDateMap["date"] =
             DateFormat("MM/dd/yyyy").format(selectedDate).toString();
+        _dayDateMap["timezone"] = _timezone;
 
         setState(() {
           _scheduleFuture = _apiBaseHelper
@@ -297,8 +320,8 @@ class _SelectAppointmentTimeScreenState
                     int.parse(schedule.startTime.toString().split(':')[0]),
                     int.parse(schedule.startTime.toString().split(':')[1]));
 
-                int prefixValue = fromTime.toLocal().hour;
-                int minuteValue = fromTime.toLocal().minute;
+                int prefixValue = fromTime.hour;
+                int minuteValue = fromTime.minute;
 
                 if (currentDate == _dayDateMap["date"]) {
                   if (DateTime.now().hour < prefixValue) {
@@ -330,6 +353,10 @@ class _SelectAppointmentTimeScreenState
                   }
                 }
               }
+
+              _morningList.sort((a, b) => a.startTime.compareTo(b.startTime));
+              _afternoonList.sort((a, b) => a.startTime.compareTo(b.startTime));
+              _eveningList.sort((a, b) => a.startTime.compareTo(b.startTime));
 
               return Column(
                 children: <Widget>[
@@ -414,9 +441,7 @@ class _SelectAppointmentTimeScreenState
         int.parse(currentSchedule.startTime.toString().split(':')[0]),
         int.parse(currentSchedule.startTime.toString().split(':')[1]));
 
-    String timing = TimeOfDay(
-            hour: fromTime.toLocal().hour,
-            minute: fromTime.toLocal().minute)
+    String timing = TimeOfDay(hour: fromTime.hour, minute: fromTime.minute)
         .format(context)
         .toString()
         .toLowerCase();
