@@ -102,18 +102,6 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
       ),
     );
     setSourceAndDestinationIcons();
-    _initData();
-  }
-
-  Future<void> _initData() async {
-    try {
-      _timezone = await FlutterNativeTimezone.getLocalTimezone();
-    } catch (e) {
-      print('Could not get the local timezone');
-    }
-    if (mounted) {
-      setState(() {});
-    }
   }
 
   @override
@@ -162,9 +150,11 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     } else if (_container.projectsResponse["serviceType"].toString() == '1') {
       if (_profileMap["businessLocation"] != null) {
         if (_profileMap["businessLocation"]["coordinates"].length > 0) {
-          _desPosition = LatLng(double.parse(
-              _profileMap["businessLocation"]["coordinates"][1].toString()),
-              double.parse(_profileMap["businessLocation"]["coordinates"][0].toString()));
+          _desPosition = LatLng(
+              double.parse(
+                  _profileMap["businessLocation"]["coordinates"][1].toString()),
+              double.parse(_profileMap["businessLocation"]["coordinates"][0]
+                  .toString()));
         }
       }
     } else {}
@@ -223,8 +213,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         int.parse(bookTime.split(':')[0]),
         int.parse(bookTime.split(':')[1]));
 
-    _timeHours = DateFormat('HH').format(fromTime.toLocal());
-    _timeMins =  DateFormat('mm').format(fromTime.toLocal());
+    _timeHours = DateFormat('HH').format(fromTime);
+    _timeMins = DateFormat('mm').format(fromTime);
     _bookedTime = '$_timeHours:$_timeMins';
   }
 
@@ -339,6 +329,14 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
   _bookAppointment() async {
     try {
+      _timezone = await FlutterNativeTimezone.getLocalTimezone();
+    } catch (e) {
+      print('Could not get the local timezone');
+    }
+    if (mounted) {
+      setState(() {});
+    }
+    try {
       SharedPref().getToken().then((token) async {
         _loading(true);
         Uri uri = Uri.parse(
@@ -360,9 +358,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             _container.getProjectsResponse()["serviceType"]?.toString() ?? "1";
         _reviewAppointmentData["date"] =
             DateFormat("MM/dd/yyyy").format(_bookedDate).toString();
-        _reviewAppointmentData["fromTime"] =_bookedTime ;
-        _reviewAppointmentData["timeZonePlace"] =
-            _timezone; 
+        _reviewAppointmentData["fromTime"] = _bookedTime;
+        _reviewAppointmentData["timeZonePlace"] = _timezone;
         _reviewAppointmentData["doctor"] = doctorId;
 
         request.fields.addAll(_reviewAppointmentData);
