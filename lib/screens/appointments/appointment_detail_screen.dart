@@ -8,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/appointments/video_player.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
@@ -548,6 +549,15 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         _providerData["type"] == 2
             ? SizedBox()
             : locationWidget(address, latLng, _data['distance']),
+        _data["videos"].length > 0
+            ? divider(topPadding: 8.0)
+            : SizedBox(height: 1),
+        _data["videos"].length > 0
+            ? recordingWidget(_data["videos"])
+            : SizedBox(),
+        _data["videos"].length > 0
+            ? divider(topPadding: 8.0)
+            : SizedBox(height: 1),
         divider(),
         seekingCareWidget(_providerData),
         divider(),
@@ -830,6 +840,97 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                 ),
               )
             ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  recordingWidget(List<dynamic> videos) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Recordings",
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          ListView.separated(
+            separatorBuilder: (BuildContext context, int index) =>
+                SizedBox(height: 17),
+            padding: const EdgeInsets.only(top: 20),
+            shrinkWrap: true,
+            physics: ScrollPhysics(),
+            itemCount: videos.length,
+            itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SamplePlayer(
+                        videoPath: videos[index]['videoLink'],
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(12.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                    border: Border.all(color: Colors.grey[100]),
+                  ),
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.goldenTainoi.withOpacity(0.2),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(8.0)),
+                            border: Border.all(color: Colors.grey[100]),
+                          ),
+                          height: 44,
+                          width: 44,
+                          child: Center(child: 'video'.imageIcon(height: 16))),
+                      SizedBox(width: 17.0),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              'Recorded video call',
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            SizedBox(height: 8.0),
+                            Text(
+                              DateFormat('dd MMMM, HH:mm').format(
+                                  DateTime.parse(videos[index]['createdAt'])
+                                      .toLocal()),
+                              style: TextStyle(
+                                fontSize: 12.0,
+                                color: Colors.black.withOpacity(0.7),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Icon(
+                        Icons.play_circle_fill,
+                        color: AppColors.windsor,
+                        size: 28,
+                      )
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
         ],
       ),
