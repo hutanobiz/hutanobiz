@@ -378,7 +378,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                       child: Text(
                         DateFormat('EEEE, dd MMMM,')
                                 .format(
-                                    DateTime.parse(response['date']).toLocal())
+                                    DateTime.parse(response['date']))
                                 .toString() +
                             " " +
                             DateFormat('HH:mm')

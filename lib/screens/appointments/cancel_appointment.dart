@@ -422,7 +422,7 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
                 Expanded(
                   child: Text(
                     DateFormat('EEEE, dd MMMM,')
-                            .format(DateTime.parse(_data['date']).toLocal())
+                            .format(DateTime.parse(_data['date']))
                             .toString() +
                         " " +
                         DateFormat('HH:mm')

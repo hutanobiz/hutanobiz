@@ -522,7 +522,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         _providerData["type"] == 2 ? recordingInfoWidget() : SizedBox(),
         divider(topPadding: 18.0),
         dateTimeWidget(DateFormat('EEEE, dd MMMM,')
-                .format(DateTime.parse(_providerData['date']).toLocal())
+                .format(DateTime.parse(_providerData['date']))
                 .toString() +
             " " +
             DateFormat('HH:mm')
