@@ -157,9 +157,13 @@ class _AvailableTimingsScreenState extends State<AvailableTimingsScreen> {
               int.parse(_scheduleList[i]['toTime'].toString().split(':')[0]),
               int.parse(_scheduleList[i]['toTime'].toString().split(':')[1]));
 
-          String from =
-              '${fromTime.toLocal().hour}:${fromTime.toLocal().minute}';
-          String to = '${toTime.toLocal().hour}:${toTime.toLocal().minute}';
+          String from = DateFormat('HH:mm')
+                .format(fromTime.toLocal());
+              // '${fromTime.toLocal().hour}:${fromTime.toLocal().minute}';
+          String to = 
+          DateFormat('HH:mm')
+                .format(toTime.toLocal());
+                //'${toTime.toLocal().hour}:${toTime.toLocal().minute}';
 
           switch (day) {
             case "1":

@@ -247,9 +247,13 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
               int.parse(scheduleList[i]['toTime'].toString().split(':')[0]),
               int.parse(scheduleList[i]['toTime'].toString().split(':')[1]));
 
-          String from =
-              '${fromTime.toLocal().hour}:${fromTime.toLocal().minute}';
-          String to = '${toTime.toLocal().hour}:${toTime.toLocal().minute}';
+           String from = DateFormat('HH:mm')
+                .format(fromTime.toLocal());
+              // '${fromTime.toLocal().hour}:${fromTime.toLocal().minute}';
+          String to = 
+          DateFormat('HH:mm')
+                .format(toTime.toLocal());
+                //'${toTime.toLocal().hour}:${toTime.toLocal().minute}';
 
           if (now.weekday.toString() == day) {
             todaysTimings = todaysTimings + from + " - " + to + " ; ";
