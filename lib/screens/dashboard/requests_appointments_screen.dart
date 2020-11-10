@@ -412,6 +412,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                   ],
                 ),
               ),
+              address.trim() == '---, ,'?SizedBox(height: 8,):
               Padding(
                 padding: const EdgeInsets.only(
                     left: 12.0, right: 12.0, bottom: 18.0),

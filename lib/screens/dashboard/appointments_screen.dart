@@ -360,6 +360,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                   color: Colors.grey[300],
                 ),
               ),
+              address.trim() == '---, ,'?SizedBox():
               Padding(
                 padding: const EdgeInsets.only(
                     left: 12.0, right: 12.0, bottom: 10.0),
