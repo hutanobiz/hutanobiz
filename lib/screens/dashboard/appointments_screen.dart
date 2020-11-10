@@ -408,16 +408,16 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                     SizedBox(width: 3.0),
                     Expanded(
                       child: Text(
-                        DateFormat('EEEE, dd MMMM,')
-                                .format(
-                                    DateTime.parse(response['date']))
-                                .toString() +
-                            " " +
-                            DateFormat('HH:mm')
+                        // DateFormat('EEEE, dd MMMM,')
+                        //         .format(
+                        //             DateTime.parse(response['date']))
+                        //         .toString() +
+                        //     " " +
+                            DateFormat('EEEE, dd MMMM, HH:mm')
                                 .format(DateTime.utc(
-                                        DateTime.now().year,
-                                        DateTime.now().month,
-                                        DateTime.now().day,
+                                        DateTime.parse(response['date']).year,
+                                        DateTime.parse(response['date']).month,
+                                        DateTime.parse(response['date']).day,
                                         int.parse(
                                             response['fromTime'].split(':')[0]),
                                         int.parse(
@@ -427,9 +427,9 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                             ' to ' +
                             DateFormat('HH:mm')
                                 .format(DateTime.utc(
-                                        DateTime.now().year,
-                                        DateTime.now().month,
-                                        DateTime.now().day,
+                                        DateTime.parse(response['date']).year,
+                                        DateTime.parse(response['date']).month,
+                                        DateTime.parse(response['date']).day,
                                         int.parse(
                                             response['toTime'].split(':')[0]),
                                         int.parse(

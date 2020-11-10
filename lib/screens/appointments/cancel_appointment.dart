@@ -421,15 +421,16 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
                 SizedBox(width: 3.0),
                 Expanded(
                   child: Text(
-                    DateFormat('EEEE, dd MMMM,')
-                            .format(DateTime.parse(_data['date']))
-                            .toString() +
-                        " " +
-                        DateFormat('HH:mm')
+                      // DateFormat(
+                      // 'EEEE, dd MMMM,')
+                      //       .format(DateTime.parse(_data['date']))
+                      //       .toString() +
+                      //   " " +
+                        DateFormat('EEEE, dd MMMM, HH:mm')
                             .format(DateTime.utc(
-                                    DateTime.now().year,
-                                    DateTime.now().month,
-                                    DateTime.now().day,
+                                   DateTime.parse(_data['date']).year,
+                                    DateTime.parse(_data['date']).month,
+                                    DateTime.parse(_data['date']).day,
                                     int.parse(_data['fromTime'].split(':')[0]),
                                     int.parse(_data['fromTime'].split(':')[1]))
                                 .toLocal())
@@ -437,9 +438,9 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
                         ' to ' +
                         DateFormat('HH:mm')
                             .format(DateTime.utc(
-                                    DateTime.now().year,
-                                    DateTime.now().month,
-                                    DateTime.now().day,
+                                    DateTime.parse(_data['date']).year,
+                                    DateTime.parse(_data['date']).month,
+                                    DateTime.parse(_data['date']).day,
                                     int.parse(_data['toTime'].split(':')[0]),
                                     int.parse(_data['toTime'].split(':')[1]))
                                 .toLocal())

@@ -306,15 +306,16 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
         ),
         _data["type"] == 2 ? recordingInfoWidget() : SizedBox(),
         divider(topPadding: 18.0),
-        dateTimeWidget(DateFormat('EEEE, dd MMMM,')
-                .format(DateTime.parse(_data['date']))
-                .toString() +
-            " " +
-            DateFormat('HH:mm')
+        dateTimeWidget(
+          // DateFormat('EEEE, dd MMMM,')
+          //       .format(DateTime.parse(_data['date']))
+          //       .toString() +
+          //   " " +
+            DateFormat('EEEE, dd MMMM, HH:mm')
                 .format(DateTime.utc(
-                        DateTime.now().year,
-                        DateTime.now().month,
-                        DateTime.now().day,
+                        DateTime.parse(_data['date']).year,
+                        DateTime.parse(_data['date']).month,
+                        DateTime.parse(_data['date']).day,
                         int.parse(_data['fromTime'].split(':')[0]),
                         int.parse(_data['fromTime'].split(':')[1]))
                     .toLocal())
@@ -322,9 +323,9 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
             ' to ' +
             DateFormat('HH:mm')
                 .format(DateTime.utc(
-                        DateTime.now().year,
-                        DateTime.now().month,
-                        DateTime.now().day,
+                        DateTime.parse(_data['date']).year,
+                        DateTime.parse(_data['date']).month,
+                        DateTime.parse(_data['date']).day,
                         int.parse(_data['toTime'].split(':')[0]),
                         int.parse(_data['toTime'].split(':')[1]))
                     .toLocal())
