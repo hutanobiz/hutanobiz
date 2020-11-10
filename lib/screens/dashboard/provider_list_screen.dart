@@ -256,6 +256,11 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                       case 3:
                         _appointmentFilterMap['isOnsiteEnabled'] = '1';
                         break;
+                      default:
+                      _appointmentFilterMap.remove('isOnsiteEnabled');
+                      _appointmentFilterMap.remove('isVideoChatEnabled');
+                      _appointmentFilterMap.remove('isOfficeEnabled');
+
                     }
 
                     SharedPref().getToken().then((token) {
