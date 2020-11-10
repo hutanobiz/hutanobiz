@@ -272,12 +272,11 @@ class _CallPageState extends State<CallPage> {
 
   /// Video view wrapper
   Widget _videoView(view) {
-    return Expanded(
-        child: ClipRRect(
+    return ClipRRect(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
                 bottomRight: Radius.circular(20)),
-            child: view));
+            child: view);
   }
 
   Widget _myVideoView(view) {
