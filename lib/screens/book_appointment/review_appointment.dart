@@ -1087,7 +1087,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           ),
           children: <TextSpan>[
             TextSpan(
-              text: 'Amount \$ ',
+              text: 'Amount: \$',
               style: TextStyle(
                 fontSize: 13.0,
                 fontWeight: FontWeight.w500,
@@ -1103,7 +1103,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
               ),
             ),
             TextSpan(
-              text: 'Duration ',
+              text: 'Duration: ',
               style: TextStyle(
                 fontSize: 13.0,
                 fontWeight: FontWeight.w500,
@@ -1143,7 +1143,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           ),
           children: <TextSpan>[
             TextSpan(
-              text: 'Fee \$ ',
+              text: 'Fee: \$',
               style: TextStyle(
                 fontSize: 13.0,
                 fontWeight: FontWeight.w500,
@@ -1160,7 +1160,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
               ),
             ),
             TextSpan(
-              text: 'Duration ',
+              text: 'Duration: ',
               style: TextStyle(
                 fontSize: 13.0,
                 fontWeight: FontWeight.w500,
@@ -1168,7 +1168,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
               ),
             ),
             TextSpan(
-              text: consultaion["duration"]?.toString() ?? "---" + ' min',
+              text: consultaion["duration"]?.toString()+' min' ?? "---" + ' min',
               style: TextStyle(
                 fontSize: 13.0,
                 fontWeight: FontWeight.w600,
