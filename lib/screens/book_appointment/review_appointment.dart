@@ -400,6 +400,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             request.fields['insuranceId'] = insuranceId;
           } else {
             request.fields['paymentMethod'] = "1";
+            request.fields['cardId'] = _consentToTreatMap["paymentMap"]["selectedCard"]
+                  ['id'];
           }
         }
 
@@ -471,43 +473,43 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           responseJson["response"].toString().debugLog();
           throw Exception(responseJson);
         } else {
-          if (responseJson["response"] is String) {
+          // if (responseJson["response"] is String) {
             _loading(false);
             Widgets.showErrorialog(
               context: context,
               description: responseJson["response"],
             );
-          } else if (responseJson["response"]['paymentIntent'] != null) {
-            String _clientSecret =
-                responseJson["response"]['paymentIntent']['client_secret'];
+          // } else if (responseJson["response"]['paymentIntent'] != null) {
+          //   String _clientSecret =
+          //       responseJson["response"]['paymentIntent']['client_secret'];
 
-            PaymentIntent _paymentIntent = PaymentIntent(
-              paymentMethodId: _consentToTreatMap["paymentMap"]["selectedCard"]
-                  ['id'],
-              clientSecret: _clientSecret,
-            );
+          //   PaymentIntent _paymentIntent = PaymentIntent(
+          //     paymentMethodId: _consentToTreatMap["paymentMap"]["selectedCard"]
+          //         ['id'],
+          //     clientSecret: _clientSecret,
+          //   );
 
-            StripePayment.confirmPaymentIntent(
-              _paymentIntent,
-            ).then((PaymentIntentResult value) {
-              _loading(false);
-              showConfirmDialog();
-            }).futureError((error) {
-              _loading(false);
+          //   StripePayment.confirmPaymentIntent(
+          //     _paymentIntent,
+          //   ).then((PaymentIntentResult value) {
+          //     _loading(false);
+          //     showConfirmDialog();
+          //   }).futureError((error) {
+          //     _loading(false);
 
-              Widgets.showErrorialog(
-                context: context,
-                description: error.toString(),
-              );
-            });
-          } else {
-            _loading(false);
+          //     Widgets.showErrorialog(
+          //       context: context,
+          //       description: error.toString(),
+          //     );
+          //   });
+          // } else {
+          //   _loading(false);
 
-            responseJson["response"].toString().debugLog();
+          //   responseJson["response"].toString().debugLog();
 
-            showConfirmDialog();
-          }
-          _loading(false);
+          //   showConfirmDialog();
+          // }
+          // _loading(false);
         }
       });
     } on Exception catch (error) {
