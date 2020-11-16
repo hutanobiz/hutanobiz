@@ -22,7 +22,7 @@ dependencies:
   fluttertoast: ^7.1.1
   http: ^0.12.1
   shared_preferences: ^0.5.7+3
-  google_maps_flutter: ^0.5.28+1
+  google_maps_flutter: ^1.0.6
   flutter_google_places: ^0.2.5
   location: ^3.0.2
   intl: ^0.16.1
