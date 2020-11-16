@@ -68,6 +68,55 @@ class _HomeScreenState extends State<HomeScreen> {
           arguments: appointment,
         );
         break;
+      case 'call-reminder':
+        Map appointment = {};
+        appointment["_appointmentStatus"] = "1";
+        appointment["id"] = Platform.isIOS
+            ? message['appointmentId']
+            : message["data"]['appointmentId'];
+        Navigator.of(context).pushNamed(
+          Routes.appointmentDetailScreen,
+          arguments: appointment,
+        );
+        break;
+
+      case 'tracking':
+        Map appointment = {};
+        appointment["_appointmentStatus"] = "1";
+        appointment["id"] = Platform.isIOS
+            ? message['appointmentId']
+            : message["data"]['appointmentId'];
+        Navigator.of(context).pushNamed(
+          Routes.trackTreatmentScreen,
+          arguments: Platform.isIOS
+              ? message['appointmentType']
+              : message["data"]['appointmentType'],
+        );
+        break;
+
+      case 'request_status':
+        Map appointment = {};
+        appointment["_appointmentStatus"] = "1";
+        appointment["id"] = Platform.isIOS
+            ? message['appointmentId']
+            : message["data"]['appointmentId'];
+        Navigator.of(context).pushNamed(
+          Routes.appointmentDetailScreen,
+          arguments: appointment,
+        );
+        break;
+
+      case 'treatment_summary':
+        Map appointment = {};
+        appointment["_appointmentStatus"] = "1";
+        appointment["id"] = Platform.isIOS
+            ? message['appointmentId']
+            : message["data"]['appointmentId'];
+        Navigator.of(context).pushNamed(
+          Routes.appointmentDetailScreen,
+          arguments: appointment,
+        );
+        break;
       default:
         String isTrack = Platform.isIOS
             ? message['isTrack'] ?? "false"
