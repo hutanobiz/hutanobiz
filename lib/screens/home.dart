@@ -10,6 +10,7 @@ import 'package:hutano/screens/dashboard/appointments_screen.dart';
 import 'package:hutano/screens/dashboard/dashboardScreen.dart';
 import 'package:hutano/screens/dashboard/requests_appointments_screen.dart';
 import 'package:hutano/screens/dashboard/setting.dart';
+import 'package:hutano/widgets/widgets.dart';
 import 'package:permission_handler/permission_handler.dart' as Permission;
 
 const kstripePublishKey = 'pk_test_LlxS6SLz0PrOm9IY9mxM0LHo006tjnSqWX';
@@ -191,17 +192,29 @@ class _HomeScreenState extends State<HomeScreen> {
             //   Routes.appointmentDetailScreen,
             //   arguments: appointment,
             // );
-            await _handleCameraAndMic();
-            var map = {};
-            map['_id'] = Platform.isIOS
-                ? message['appointmentId']
-                : message["data"]['appointmentId'];
-            map['name'] = "---";
-            map['address'] = 'a';
-            map['dateTime'] = 't';
-            return Navigator.of(context).popAndPushNamed(Routes.callPage,
-                // arguments: profileMap["data"]["_id"],
-                arguments: map);
+            Map<Permission.Permission, Permission.PermissionStatus> statuses =
+                await [
+              Permission.Permission.camera,
+              Permission.Permission.microphone
+            ].request();
+            if ((statuses[Permission.Permission.camera].isGranted) &&
+                (statuses[Permission.Permission.microphone].isGranted)) {
+              var map = {};
+              map['_id'] = Platform.isIOS
+                  ? message['appointmentId']
+                  : message["data"]['appointmentId'];
+              map['name'] = "---";
+              map['address'] = 'a';
+              map['dateTime'] = 't';
+              return Navigator.of(context).popAndPushNamed(Routes.callPage,
+                  // arguments: profileMap["data"]["_id"],
+                  arguments: map);
+            } else {
+              Widgets.showErrorialog(
+                  context: context,
+                  description: 'Camera & Microphone permission Requied');
+            }
+
             break;
           default:
             showNotification(message);
@@ -301,15 +314,6 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _currentIndex = index;
     });
-  }
-
-  Future<void> _handleCameraAndMic() async {
-    await Permission.PermissionHandler().requestPermissions(
-      [
-        Permission.PermissionGroup.camera,
-        Permission.PermissionGroup.microphone
-      ],
-    );
   }
 }
 

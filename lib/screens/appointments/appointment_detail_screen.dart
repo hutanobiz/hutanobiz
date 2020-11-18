@@ -217,24 +217,42 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                       //           context, token, map)
                                       //       .then((value)
                                       async {
-                                          await _handleCameraAndMic();
-                                          var map = {};
-                                          map['_id'] =
-                                              profileMap["data"]["_id"];
-                                          map['name'] = profileMap['data']
-                                                      ["doctor"]["fullName"]
-                                                  ?.toString() ??
-                                              "---";
-                                          map['address'] = 'a';
-                                          map['dateTime'] = 't';
-                                          return Navigator.of(context).pushNamed(
-                                              Routes.callPage,
-                                              // arguments: profileMap["data"]["_id"],
-                                              arguments: map);
-                                          // }).futureError((onError) {
-                                          //   Widgets.showErrorialog(
-                                          //       context: context, description: onError);
-                                          // });
+                                          Map<Permission.Permission,
+                                                  Permission.PermissionStatus>
+                                              statuses = await [
+                                            Permission.Permission.camera,
+                                            Permission.Permission.microphone
+                                          ].request();
+                                          if ((statuses[Permission
+                                                      .Permission.camera]
+                                                  .isGranted) &&
+                                              (statuses[Permission
+                                                      .Permission.microphone]
+                                                  .isGranted)) {
+                                            var map = {};
+                                            map['_id'] =
+                                                profileMap["data"]["_id"];
+                                            map['name'] = profileMap['data']
+                                                        ["doctor"]["fullName"]
+                                                    ?.toString() ??
+                                                "---";
+                                            map['address'] = 'a';
+                                            map['dateTime'] = 't';
+                                            return Navigator.of(context).pushNamed(
+                                                Routes.callPage,
+                                                // arguments: profileMap["data"]["_id"],
+                                                arguments: map);
+                                            // }).futureError((onError) {
+                                            //   Widgets.showErrorialog(
+                                            //       context: context, description: onError);
+                                            // });
+
+                                          } else {
+                                            Widgets.showErrorialog(
+                                                context: context,
+                                                description:
+                                                    'Camera & Microphone permission Requied');
+                                          }
                                         }
                                   : () => Navigator.of(context)
                                       .pushNamed(
@@ -264,12 +282,17 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   }
 
   Future<void> _handleCameraAndMic() async {
-    await Permission.PermissionHandler().requestPermissions(
-      [
-        Permission.PermissionGroup.camera,
-        Permission.PermissionGroup.microphone
-      ],
-    );
+// Map<Permission.Permission,Permission.PermissionStatus> statuses =
+    await [Permission.Permission.camera, Permission.Permission.microphone]
+        .request();
+// print(statuses[Permission.Permission.location]);
+
+    // await Permission.PermissionHandler().requestPermissions(
+    //   [
+    //     Permission.PermissionGroup.camera,
+    //     Permission.PermissionGroup.microphone
+    //   ],
+    // );
   }
 
   Widget profileWidget(Map _data) {
@@ -523,29 +546,29 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         _providerData["type"] == 2 ? recordingInfoWidget() : SizedBox(),
         divider(topPadding: 18.0),
         dateTimeWidget(
-          // DateFormat('EEEE, dd MMMM,')
-          //       .format(DateTime.parse(_providerData['date']))
-          //       .toString() +
-          //   " " +
+            // DateFormat('EEEE, dd MMMM,')
+            //       .format(DateTime.parse(_providerData['date']))
+            //       .toString() +
+            //   " " +
             DateFormat('EEEE, dd MMMM, HH:mm')
-                .format(DateTime.utc(
-                        DateTime.parse(_providerData['date']).year,
-                        DateTime.parse(_providerData['date']).month,
-                       DateTime.parse(_providerData['date']).day,
-                        int.parse(_providerData['fromTime'].split(':')[0]),
-                        int.parse(_providerData['fromTime'].split(':')[1]))
-                    .toLocal())
-                .toString() +
-            ' to ' +
-            DateFormat('HH:mm')
-                .format(DateTime.utc(
-                        DateTime.parse(_providerData['date']).year,
-                        DateTime.parse(_providerData['date']).month,
-                        DateTime.parse(_providerData['date']).day,
-                        int.parse(_providerData['toTime'].split(':')[0]),
-                        int.parse(_providerData['toTime'].split(':')[1]))
-                    .toLocal())
-                .toString()),
+                    .format(DateTime.utc(
+                            DateTime.parse(_providerData['date']).year,
+                            DateTime.parse(_providerData['date']).month,
+                            DateTime.parse(_providerData['date']).day,
+                            int.parse(_providerData['fromTime'].split(':')[0]),
+                            int.parse(_providerData['fromTime'].split(':')[1]))
+                        .toLocal())
+                    .toString() +
+                ' to ' +
+                DateFormat('HH:mm')
+                    .format(DateTime.utc(
+                            DateTime.parse(_providerData['date']).year,
+                            DateTime.parse(_providerData['date']).month,
+                            DateTime.parse(_providerData['date']).day,
+                            int.parse(_providerData['toTime'].split(':')[0]),
+                            int.parse(_providerData['toTime'].split(':')[1]))
+                        .toLocal())
+                    .toString()),
         _providerData["type"] == 2 ? SizedBox() : divider(topPadding: 8.0),
         _providerData["type"] == 2
             ? SizedBox()
