@@ -197,7 +197,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
 
     if (_container.userLocationMap != null &&
         _container.userLocationMap.isNotEmpty) {
-      _userLocation = _container.userLocationMap['latLng'];
+      _userLocation = _container.userLocationMap['latLng']?? LatLng(0.00, 0.00);
     }
 
     SharedPref().getToken().then((token) {

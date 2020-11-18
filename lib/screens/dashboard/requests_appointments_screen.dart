@@ -36,7 +36,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
     var _container = InheritedContainer.of(context);
 
     if (_container.userLocationMap.isNotEmpty) {
-      _userLocation = _container.userLocationMap['latLng'];
+      _userLocation = _container.userLocationMap['latLng']??LatLng(0.00, 0.00);
     }
 
     SharedPref().getToken().then((token) {

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/models/services.dart';
@@ -66,7 +67,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
           .getAppointmentDetails(
         token,
         widget.appointmentMap['id'],
-        widget.appointmentMap['latLng'],
+        widget.appointmentMap['latLng']?? LatLng(0.00, 0.00),
       )
           .then((response) {
         setLoading(false);

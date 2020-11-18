@@ -63,7 +63,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     Map<String, String> locMap = {};
 
     if (_container.userLocationMap.isNotEmpty) {
-      LatLng _userLocation = _container.userLocationMap['latLng'];
+      LatLng _userLocation = _container.userLocationMap['latLng']??LatLng(0.00, 0.00);
 
       locMap['lattitude'] = _userLocation.latitude.toStringAsFixed(2);
       locMap['longitude'] = _userLocation.longitude.toStringAsFixed(2);

@@ -826,7 +826,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
             getLocationAddress(locationData.latitude, locationData.longitude);
 
-            _latLng = LatLng(locationData.latitude, locationData.longitude);
+            _latLng = LatLng(locationData.latitude??0.00, locationData.longitude??0.00);
 
             SharedPref().getToken().then((token) {
               _myDoctorsFuture = _api.getMyDoctors(token, _latLng);
