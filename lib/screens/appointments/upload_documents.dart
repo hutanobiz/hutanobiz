@@ -154,43 +154,68 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
         isAddAppBar: isBottomButtonsShow,
         isLoading: _isLoading,
         isAddBack: false,
-        addBottomArrows: isBottomButtonsShow,
-        onForwardTap: () {
-          if (_selectedDocsList != null && _selectedDocsList.length > 0) {
-            _container.setConsentToTreatData("docsList", _selectedDocsList);
-          }
-
-          Navigator.of(context).pushNamed(
-            _container.projectsResponse['serviceType'].toString() == '3'
-                ? Routes.onsiteAddresses
-                : Routes.paymentMethodScreen,
-            arguments: true,
-          );
-        },
+        addBackButton: isBottomButtonsShow,
         color: Colors.white,
-        padding: EdgeInsets.fromLTRB(20, 20, 20, isBottomButtonsShow ? 90 : 20),
-        child: Stack(
-          children: <Widget>[
-            Container(
-              margin: const EdgeInsets.only(bottom: 65),
-              child: ListView(
-                children: widgetList(),
-              ),
-            ),
-            isFromAppointment
-                ? Container()
-                : Align(
-                    alignment: Alignment.bottomCenter,
-                    child: SizedBox(
-                      height: 55.0,
-                      child: FancyButton(
-                        title: "Please Upload Docs",
-                        buttonIcon: "ic_upload",
-                        buttonColor: AppColors.windsor,
-                        onPressed: showPickerDialog,
-                      ),
+        padding: EdgeInsets.fromLTRB(20, 20, 20, isBottomButtonsShow ? 20 : 20),
+        child: Column(
+          children: [
+            Expanded(
+              child: Stack(
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 65),
+                    child: ListView(
+                      children: widgetList(),
                     ),
                   ),
+                  isFromAppointment
+                      ? Container()
+                      : Align(
+                          alignment: Alignment.bottomCenter,
+                          child: SizedBox(
+                            height: 55.0,
+                            child: FancyButton(
+                              title: "upload document(s)",
+                              buttonIcon: "ic_upload",
+                              buttonColor: AppColors.windsor,
+                              onPressed: showPickerDialog,
+                            ),
+                          ),
+                        ),
+                ],
+              ),
+            ),
+            Divider(height: 0.5),
+            isBottomButtonsShow
+                ? Align(
+                    alignment: FractionalOffset.bottomRight,
+                    child: Container(
+                      height: 55.0,
+                      width: MediaQuery.of(context).size.width - 76.0,
+                      margin: const EdgeInsets.only(top: 10),
+                      padding: const EdgeInsets.only(right: 0.0, left: 40.0),
+                      child: FancyButton(
+                        title: "Continue",
+                        onPressed: () {
+                          if (_selectedDocsList != null &&
+                              _selectedDocsList.length > 0) {
+                            _container.setConsentToTreatData(
+                                "docsList", _selectedDocsList);
+                          }
+
+                          Navigator.of(context).pushNamed(
+                            _container.projectsResponse['serviceType']
+                                        .toString() ==
+                                    '3'
+                                ? Routes.onsiteAddresses
+                                : Routes.paymentMethodScreen,
+                            arguments: true,
+                          );
+                        },
+                      ),
+                    ),
+                  )
+                : SizedBox()
           ],
         ),
       ),
@@ -201,7 +226,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
     List<Widget> formWidget = List();
 
     formWidget.add(Text(
-      "Medical documents, including imaging documents like x-ray and MRI reports can be uploaded for your provider to review to understand your condition and provide appropriate care.",
+      '\u2022 Do you have a copy of imaging results like an MRI, Xray or CAT Scan report?\n\u2022 Please upload the documents for your provider to review before your appointment.\n\u2022 Once uploaded, your documents will be available anytime you need to refer to them.',
       style: TextStyle(
         fontSize: 14.0,
       ),
@@ -469,11 +494,11 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
           TextField(
             enabled: false,
             controller: documentTypeController,
-            decoration: getInputDecoration('Type'),
+            decoration: getInputDecoration('What kind of document is this?'),
           ).onClick(onTap: _documentTypeBottomDialog),
           SizedBox(height: 25),
           textField(
-            'Name',
+            'What is the body part',
             (value) {
               documentName = value;
             },
