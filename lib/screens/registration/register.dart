@@ -625,9 +625,9 @@ class _SignUpFormState extends State<Register> {
     Map<String, String> loginData = Map();
     loginData["email"] = _emailController.text;
     loginData["fullName"] =
-        "${_firstNameController.text} ${_lastNameController.text}";
-    loginData["firstName"] = _firstNameController.text;
-    loginData["lastName"] = _lastNameController.text;
+        "${_firstNameController.text.trim()} ${_lastNameController.text.trim()}";
+    loginData["firstName"] = _firstNameController.text.trim();
+    loginData["lastName"] = _lastNameController.text.trim();
 
     if (!isUpdateProfile) {
       loginData["type"] = "1";
