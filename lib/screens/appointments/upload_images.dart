@@ -110,42 +110,67 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
       backgroundColor:
           isBottomButtonsShow ? AppColors.goldenTainoi : Colors.white,
       body: LoadingBackground(
-        title: "Upload Images",
+        title: "Images",
         isLoading: _isLoading,
         isAddAppBar: isBottomButtonsShow,
         isAddBack: false,
-        addBottomArrows: isBottomButtonsShow,
-        onForwardTap: () {
-          if (_selectedImagesList != null && _selectedImagesList.length > 0) {
-            _container.setConsentToTreatData("imagesList", _selectedImagesList);
-          }
-
-          Navigator.of(context).pushNamed(Routes.uploadDocumentsScreen);
-        },
+        addBackButton: isBottomButtonsShow,
         color: Colors.white,
-        padding: EdgeInsets.fromLTRB(20, 20, 20, isBottomButtonsShow ? 90 : 20),
-        child: Stack(
+        padding: EdgeInsets.fromLTRB(20, 20, 20, isBottomButtonsShow ? 20 : 20),
+        child: Column(
           children: <Widget>[
-            Container(
-              margin: const EdgeInsets.only(bottom: 65),
-              child: ListView(
-                children: widgetList(),
-              ),
-            ),
-            isFromAppointment
-                ? Container()
-                : Align(
-                    alignment: Alignment.bottomCenter,
-                    child: SizedBox(
-                      height: 55.0,
-                      child: FancyButton(
-                        title: "Please Upload images",
-                        buttonIcon: "ic_upload",
-                        buttonColor: AppColors.windsor,
-                        onPressed: showPickerDialog,
-                      ),
+            Expanded(
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 65.0),
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: widgetList(),
                     ),
                   ),
+                  isFromAppointment
+                      ? Container()
+                      : Align(
+                          alignment: Alignment.bottomCenter,
+                          child: SizedBox(
+                            height: 55.0,
+                            child: FancyButton(
+                              title: "Please Upload images",
+                              buttonIcon: "ic_upload",
+                              buttonColor: AppColors.windsor,
+                              onPressed: showPickerDialog,
+                            ),
+                          ),
+                        ),
+                ],
+              ),
+            ),
+            Divider(height: 0.5),
+            isBottomButtonsShow
+                ? Align(
+                    alignment: FractionalOffset.bottomRight,
+                    child: Container(
+                      height: 55.0,
+                      width: MediaQuery.of(context).size.width - 76.0,
+                      margin: const EdgeInsets.only(top: 10),
+                      padding: const EdgeInsets.only(right: 0.0, left: 40.0),
+                      child: FancyButton(
+                        title: "Continue",
+                        onPressed: () {
+                          if (_selectedImagesList != null &&
+                              _selectedImagesList.length > 0) {
+                            _container.setConsentToTreatData(
+                                "imagesList", _selectedImagesList);
+                          }
+
+                          Navigator.of(context)
+                              .pushNamed(Routes.uploadDocumentsScreen);
+                        },
+                      ),
+                    ),
+                  )
+                : SizedBox()
           ],
         ),
       ),
@@ -413,7 +438,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
             },
             decoration: InputDecoration(
               labelStyle: TextStyle(color: Colors.grey),
-              labelText: "Name",
+              labelText: "what body part is this?",
               alignLabelWithHint: true,
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14.0),
