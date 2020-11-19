@@ -61,13 +61,13 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
 
     ApiBaseHelper api = ApiBaseHelper();
     Map<String, String> locMap = {};
-
+    LatLng _userLocation = LatLng(0.00, 0.00);
     if (_container.userLocationMap.isNotEmpty) {
-      LatLng _userLocation = _container.userLocationMap['latLng']??LatLng(0.00, 0.00);
-
-      locMap['lattitude'] = _userLocation.latitude.toStringAsFixed(2);
-      locMap['longitude'] = _userLocation.longitude.toStringAsFixed(2);
+      _userLocation =
+          _container.userLocationMap['latLng'] ?? LatLng(0.00, 0.00);
     }
+    locMap['lattitude'] = _userLocation.latitude.toStringAsFixed(2);
+    locMap['longitude'] = _userLocation.longitude.toStringAsFixed(2);
 
     _profileFuture =
         api.getProviderProfile(_providerData["providerId"], locMap);
@@ -79,96 +79,132 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
-        title: "Provider Profile",
-        color: Colors.white,
-        isAddBack: false,
-        addBackButton: true,
-        padding: const EdgeInsets.only(bottom: 20),
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: FutureBuilder(
-                  future: _profileFuture,
-                  builder: (context, snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.none:
-                        return Text("NO data available");
-                        break;
-                      case ConnectionState.waiting:
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                        break;
-                      case ConnectionState.active:
-                        break;
-                      case ConnectionState.done:
-                        if (snapshot.hasData) {
-                          profileMapResponse = snapshot.data;
+      body: FutureBuilder(
+          future: _profileFuture,
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+                return Text("NO data available");
+                break;
+              case ConnectionState.waiting:
+                return Container(
+                  color: AppColors.snow,
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+                break;
+              case ConnectionState.active:
+                break;
+              case ConnectionState.done:
+                if (snapshot.hasData) {
+                  profileMapResponse = snapshot.data;
 
-                          if (profileMapResponse.isEmpty ||
-                              profileMapResponse["data"] == null) {
-                            return Container();
-                          }
+                  if (profileMapResponse.isEmpty ||
+                      profileMapResponse["data"] == null) {
+                    return Container();
+                  }
 
-                          return SingleChildScrollView(
+                  Map _providerData = profileMapResponse["data"][0];
+                  String nameTitle = "Dr. ", name = "---";
+                  if (_providerData['userId'] is Map) {
+                    if (_providerData["userId"] != null) {
+                      nameTitle =
+                          _providerData["userId"]["title"]?.toString() ??
+                              'Dr. ';
+                      name = nameTitle +
+                              _providerData["userId"]["fullName"]?.toString() ??
+                          "---";
+                    }
+                  } else if (_providerData["User"] != null &&
+                      _providerData["User"].length > 0) {
+                    nameTitle =
+                        (_providerData["User"][0]["title"]?.toString() ??
+                            'Dr. ');
+                    name = '$nameTitle ' +
+                        (_providerData["User"][0]["fullName"]?.toString() ??
+                            "---");
+                  }
+
+                  return LoadingBackground(
+                      title: name,
+                      color: Colors.white,
+                      isAddBack: false,
+                      addBackButton: true,
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: Column(children: <Widget>[
+                        Expanded(
+                          child: SingleChildScrollView(
                             controller: _scrollController,
                             padding: const EdgeInsets.only(bottom: 10),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: widgetList(profileMapResponse),
                             ),
-                          );
-                        } else if (snapshot.hasError) {
-                          return Text("${snapshot.error}");
-                        }
-                        break;
-                    }
-                    return null;
-                  }),
-            ),
-            Divider(height: 0.5),
-            Align(
-              alignment: FractionalOffset.bottomRight,
-              child: Container(
-                height: 55.0,
-                width: MediaQuery.of(context).size.width - 76.0,
-                margin: const EdgeInsets.only(top: 10),
-                padding: const EdgeInsets.only(right: 20.0, left: 40.0),
-                child: FancyButton(
-                  title: "Schedule Appointment",
-                  onPressed: () {
-                    Map _appointentTypeMap = {};
+                          ),
+                        ),
+                        Divider(height: 0.5),
+                        Align(
+                          alignment: FractionalOffset.bottomRight,
+                          child: Container(
+                            height: 55.0,
+                            width: MediaQuery.of(context).size.width - 76.0,
+                            margin: const EdgeInsets.only(top: 10),
+                            padding:
+                                const EdgeInsets.only(right: 20.0, left: 40.0),
+                            child: FancyButton(
+                              title: "Schedule Appointment",
+                              onPressed: () {
+                                Map _appointentTypeMap = {};
 
-                    dynamic response = profileMapResponse["data"][0];
+                                dynamic response =
+                                    profileMapResponse["data"][0];
 
-                    _appointentTypeMap["isOfficeEnabled"] =
-                        response["isOfficeEnabled"];
-                    _appointentTypeMap["isVideoChatEnabled"] =
-                        response["isVideoChatEnabled"];
-                    _appointentTypeMap["isOnsiteEnabled"] =
-                        response["isOnsiteEnabled"];
-                    _container.providerResponse.clear();
+                                _appointentTypeMap["isOfficeEnabled"] =
+                                    response["isOfficeEnabled"];
+                                _appointentTypeMap["isVideoChatEnabled"] =
+                                    response["isVideoChatEnabled"];
+                                _appointentTypeMap["isOnsiteEnabled"] =
+                                    response["isOnsiteEnabled"];
+                                _container.providerResponse.clear();
 
-                    _container.setProviderData(
-                        "providerData", profileMapResponse);
+                                _container.setProviderData(
+                                    "providerData", profileMapResponse);
 
-                    Navigator.of(context).pushNamed(
-                      Routes.appointmentTypeScreen,
-                      arguments: _appointentTypeMap,
-                    );
-                  },
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
+                                Navigator.of(context).pushNamed(
+                                  Routes.appointmentTypeScreen,
+                                  arguments: _appointentTypeMap,
+                                );
+                              },
+                            ),
+                          ),
+                        )
+                      ]));
+                } else if (snapshot.hasError) {
+                  return Text("${snapshot.error}");
+                }
+                break;
+            }
+            return null;
+          }),
     );
   }
 
   List<Widget> widgetList(Map profileResponse) {
     Map _providerData = profileResponse["data"][0];
+    String nameTitle = "Dr. ", name = "---";
+    if (_providerData['userId'] is Map) {
+      if (_providerData["userId"] != null) {
+        nameTitle = _providerData["userId"]["title"]?.toString() ?? 'Dr. ';
+        name = nameTitle + _providerData["userId"]["fullName"]?.toString() ??
+            "---";
+      }
+    } else if (_providerData["User"] != null &&
+        _providerData["User"].length > 0) {
+      nameTitle = (_providerData["User"][0]["title"]?.toString() ?? 'Dr. ');
+      name = '$nameTitle ' +
+          (_providerData["User"][0]["fullName"]?.toString() ?? "---");
+    }
 
     List languagesList = List();
 
@@ -185,9 +221,9 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
 
     if (_providerData["education"] != null) {
       for (dynamic education in _providerData["education"]) {
-        doctorEducation += (education["institute"]?.toString() ?? "---") +
-            ", " +
-            (education["degree"]?.toString() ?? "---") +
+        doctorEducation += (education["degree"]?.toString() ?? "---") +
+            "\n" +
+            (education["institute"]?.toString() ?? "---") +
             "\n\n";
       }
     }
@@ -247,13 +283,10 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
               int.parse(scheduleList[i]['toTime'].toString().split(':')[0]),
               int.parse(scheduleList[i]['toTime'].toString().split(':')[1]));
 
-           String from = DateFormat('HH:mm')
-                .format(fromTime.toLocal());
-              // '${fromTime.toLocal().hour}:${fromTime.toLocal().minute}';
-          String to = 
-          DateFormat('HH:mm')
-                .format(toTime.toLocal());
-                //'${toTime.toLocal().hour}:${toTime.toLocal().minute}';
+          String from = DateFormat('HH:mm').format(fromTime.toLocal());
+          // '${fromTime.toLocal().hour}:${fromTime.toLocal().minute}';
+          String to = DateFormat('HH:mm').format(toTime.toLocal());
+          //'${toTime.toLocal().hour}:${toTime.toLocal().minute}';
 
           if (now.weekday.toString() == day) {
             todaysTimings = todaysTimings + from + " - " + to + " ; ";
@@ -314,9 +347,9 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     );
 
     formWidget.add(Padding(
-      padding: const EdgeInsets.only(left: 20, top: 0, bottom: 12),
+      padding: const EdgeInsets.only(left: 20, top: 0, bottom: 12, right: 20),
       child: Text(
-        "About ${_providerData["User"][0]["fullName"]}",
+        "About $name",
         style: TextStyle(
           fontSize: 14.0,
           fontWeight: FontWeight.w600,
@@ -342,7 +375,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
       Padding(
         padding: const EdgeInsets.only(left: 20, top: 16, bottom: 12),
         child: Text(
-          "Education",
+          "Medical Education",
           style: TextStyle(
             fontSize: 14.0,
             fontWeight: FontWeight.w600,
@@ -542,17 +575,22 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
       ),
     );
 
-    formWidget.add(divider());
+    (_providerData["isOfficeEnabled"] ?? false)
+        ? formWidget.add(divider())
+        : SizedBox();
 
-    formWidget.add(locationWidget(address, latLng));
+    (_providerData["isOfficeEnabled"] ?? false)
+        ? formWidget.add(locationWidget(address, latLng))
+        : SizedBox();
 
     formWidget.add(divider());
 
     formWidget.add(
       Padding(
-        padding: const EdgeInsets.only(left: 20, top: 16, bottom: 12),
+        padding:
+            const EdgeInsets.only(left: 20, top: 16, bottom: 12, right: 20),
         child: Text(
-          "Service options",
+          "$name offers the following service options:",
           style: TextStyle(
             fontSize: 14.0,
             fontWeight: FontWeight.w600,
@@ -614,9 +652,9 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     formWidget.add(divider());
 
     formWidget.add(Padding(
-      padding: const EdgeInsets.only(left: 20, top: 16),
+      padding: const EdgeInsets.only(left: 20, top: 16, right: 20),
       child: Text(
-        "Specialities",
+        "$name is a specialist in the following areas:",
         style: TextStyle(
           fontSize: 14.0,
           fontWeight: FontWeight.w600,
