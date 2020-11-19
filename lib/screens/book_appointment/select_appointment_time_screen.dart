@@ -6,6 +6,7 @@ import 'package:hutano/models/schedule.dart';
 import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
@@ -193,26 +194,47 @@ class _SelectAppointmentTimeScreenState
         title: "Select an Appointment Time",
         color: AppColors.snow,
         isAddBack: false,
-        addBottomArrows: true,
-        child: ListView(
-          shrinkWrap: true,
-          padding: const EdgeInsets.only(bottom: 70.0),
-          children: widgetList(),
-        ),
-        onForwardTap: () {
-          if (_selectedDate != null && _selectedTiming != null) {
-            _container.setAppointmentData("date", _selectedDate);
-            _container.setAppointmentData("time", _selectedTiming);
+        addBottomArrows: false,
+        addBackButton: true,
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView(
+                shrinkWrap: true,
+                padding: const EdgeInsets.only(bottom: 70.0),
+                children: widgetList(),
+              ),
+            ),
+            Divider(height: 0.5),
+            Align(
+              alignment: FractionalOffset.bottomRight,
+              child: Container(
+                height: 55.0,
+                width: MediaQuery.of(context).size.width - 76.0,
+                margin: const EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.only(right: 0.0, left: 40.0),
+                child: FancyButton(
+                  title: "Book now",
+                  onPressed: () {
+                    if (_selectedDate != null && _selectedTiming != null) {
+                      _container.setAppointmentData("date", _selectedDate);
+                      _container.setAppointmentData("time", _selectedTiming);
 
-            if (isEditDateTime) {
-              Navigator.pop(context, _container.appointmentData);
-            } else {
-              Navigator.of(context).pushNamed(Routes.consentToTreatScreen);
-            }
-          } else {
-            Widgets.showToast("Please select a timing");
-          }
-        },
+                      if (isEditDateTime) {
+                        Navigator.pop(context, _container.appointmentData);
+                      } else {
+                        Navigator.of(context)
+                            .pushNamed(Routes.consentToTreatScreen);
+                      }
+                    } else {
+                      Widgets.showToast("Please select a timing");
+                    }
+                  },
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -405,7 +427,7 @@ class _SelectAppointmentTimeScreenState
             ),
             SizedBox(width: 6.0),
             Text(
-              "${list.length.toString()} slots",
+              "${list.length.toString()} available time slots",
               style: TextStyle(
                 fontSize: 11.0,
                 color: AppColors.goldenTainoi,
