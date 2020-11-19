@@ -38,7 +38,7 @@ class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackground(
-        title: "Book Your Service",
+        title: "How do you want to receive care?",
         color: AppColors.snow,
         isAddBack: false,
         addBackButton: true,
@@ -53,39 +53,30 @@ class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
       children: <Widget>[
         cardView(
           'images/office_appointment.png',
-          "Office Appointment",
-          _appointentTypeMap["isOfficeEnabled"],
+          "At the providers office",
+          _appointentTypeMap["isOfficeEnabled"],'1'
         ),
         SizedBox(height: 20.0),
         cardView(
           'images/video_chat_appointment.png',
-          "Video Chat Appointment",
-          _appointentTypeMap["isVideoChatEnabled"],
+          "Virtually by telemedicine",
+          _appointentTypeMap["isVideoChatEnabled"],'2'
         ),
         SizedBox(height: 20.0),
         cardView(
           'images/onsite_appointment.png',
-          "Onsite Appointment",
-          _appointentTypeMap["isOnsiteEnabled"],
+          "In your home or office",
+          _appointentTypeMap["isOnsiteEnabled"],'3'
         ),
       ],
     );
   }
 
-  Widget cardView(String image, String cardText, bool isAppointmentTypeTrue) {
+  Widget cardView(String image, String cardText, bool isAppointmentTypeTrue,String type) {
     return !isAppointmentTypeTrue
         ? Container()
         : CustomCardView(
             onTap: () {
-              String type;
-              if (cardText.toLowerCase().contains("office")) {
-                type = "1";
-              } else if (cardText.toLowerCase().contains("video")) {
-                type = "2";
-              } else {
-                type = "3";
-              }
-
               conatiner.setProjectsResponse("serviceType", type);
 
               Navigator.of(context).pushNamed(Routes.selectServicesScreen);
