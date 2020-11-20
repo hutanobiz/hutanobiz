@@ -28,9 +28,10 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
   bool isFromAppointment = false;
 
   String token = '';
-
+  List<dynamic> searchList = [];
+  List<dynamic> data = [];
   bool _isLoading = false;
-
+  String _searchText = '';
   TextEditingController _otherDiseaseController = TextEditingController();
 
   InheritedContainerState _container;
@@ -98,6 +99,20 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
     super.dispose();
   }
 
+  void filterSearch(String searchKey) {
+    searchList.clear();
+
+    if (searchKey.isNotEmpty) {
+      for (dynamic f in data) {
+        if (f != null) {
+          if (f.toLowerCase().contains(searchKey.toLowerCase())) {
+            searchList.add(f);
+          }
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,6 +130,48 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
         padding: const EdgeInsets.all(5.0),
         child: Column(
           children: <Widget>[
+            Padding(
+              padding: EdgeInsets.fromLTRB(20, 8, 20, 8),
+              child: TextFormField(
+                style: TextStyle(
+                  fontSize: 15,
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    _searchText = value;
+                    filterSearch(value);
+                  });
+                },
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  filled: true,
+                  hintMaxLines: 1,
+                  isDense: true,
+                  alignLabelWithHint: true,
+                  prefixIcon: Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: Icon(Icons.search),
+                  ),
+                  hintText: 'Search',
+                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.4)),
+                  disabledBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: AppColors.goldenTainoi, width: 0.5),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: AppColors.goldenTainoi, width: 0.5),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.goldenTainoi),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                keyboardType: TextInputType.text,
+              ),
+            ),
             Expanded(
               child: ListView(
                 padding: EdgeInsets.only(
@@ -127,7 +184,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                       if (snapshot.hasData) {
                         if (snapshot.data == null) return Container();
 
-                        List<dynamic> data = [];
+                        // List<dynamic> data = [];
                         data.clear();
 
                         for (dynamic medicalHistory in snapshot.data) {
@@ -148,9 +205,14 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                                   : 65),
                           shrinkWrap: true,
                           physics: ClampingScrollPhysics(),
-                          itemCount: data.length,
+                          itemCount: _searchText == null || _searchText == ''
+                              ? data.length
+                              : searchList.length,
                           itemBuilder: (context, index) {
-                            dynamic medicalHistory = data[index]??'';
+                            dynamic medicalHistory =
+                                _searchText == null || _searchText == ''
+                                    ? data[index] ?? ''
+                                    : searchList[index] ?? '';
 
                             return CheckboxListTile(
                               title: Text(
@@ -266,10 +328,10 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
         setLoading(true);
 
         for (int i = 0; i < _diseaseList.length; i++) {
-          if(_diseaseList[i]!=null){
-          if (!diseaseMap.containsValue(_diseaseList[i])) {
-            diseaseMap['medicalHistory[${i.toString()}]'] = _diseaseList[i];
-          }
+          if (_diseaseList[i] != null) {
+            if (!diseaseMap.containsValue(_diseaseList[i])) {
+              diseaseMap['medicalHistory[${i.toString()}]'] = _diseaseList[i];
+            }
           }
         }
 
