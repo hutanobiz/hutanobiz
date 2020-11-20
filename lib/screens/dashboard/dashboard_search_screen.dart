@@ -87,7 +87,7 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackground(
-        title: "Search",
+        title: "Find a provider",
         isLoading: _isLoading,
         color: Colors.white,
         padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
@@ -120,7 +120,7 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
               filled: true,
               fillColor: AppColors.snow,
               labelStyle: TextStyle(fontSize: 13.0, color: Colors.grey),
-              labelText: "Search for doctors or by specialty...",
+              labelText: "Type the name of a provider or specialty",
               prefixIcon: Icon(
                 Icons.search,
                 color: Colors.black,
@@ -314,6 +314,7 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
 
           return isDoctorList
               ? ProviderTileWidget(
+                  avatar: tempList[index]['avatar']??'',
                   name: tempList[index][searchKey],
                   profession: professionalTitle,
                   onTap: () {

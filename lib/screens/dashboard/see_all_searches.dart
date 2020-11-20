@@ -58,6 +58,7 @@ class _SeeAllSearchScreeenState extends State<SeeAllSearchScreeen> {
 
               return title.toLowerCase().contains("provider")
                   ? ProviderTileWidget(
+                      avatar: _list[index]["avatar"] ?? '',
                       name: _list[index]["fullName"],
                       profession: professionalTitle,
                       onTap: () {
