@@ -25,6 +25,10 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
   List _providerInsuranceList = [];
   List _alreadyAddedInsuranceList = [];
   List _notAcceptednsuranceList = [];
+  List<dynamic> searchList = [];
+  List insuranceList = [];
+  String _searchText = '';
+  dynamic selectedInsurance;
 
   bool isFromRegister = false;
 
@@ -64,6 +68,20 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
     }
   }
 
+  void filterSearch(String searchKey) {
+    searchList.clear();
+
+    if (searchKey.isNotEmpty) {
+      for (dynamic f in insuranceList) {
+        if (f != null) {
+          if (f['title'].toLowerCase().contains(searchKey.toLowerCase())) {
+            searchList.add(f);
+          }
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +93,7 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
             : "Insurances",
         color: Colors.white,
         padding: EdgeInsets.zero,
-        rightButtonText: 'Skip',
+        rightButtonText: 'I do not have insurance',
         onRightButtonTap: !_insuranceViewMap['isPayment'] && isFromRegister
             ? () {
                 Navigator.of(context).pushNamedAndRemoveUntil(
@@ -84,10 +102,58 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
             : null,
         child: Stack(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(
-                  right: 15, left: 15, top: 15, bottom: 60),
-              child: _buildList(),
+            Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 8, 20, 8),
+                  child: TextFormField(
+                    style: TextStyle(
+                      fontSize: 15,
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _searchText = value;
+                        filterSearch(value);
+                      });
+                    },
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      hintMaxLines: 1,
+                      isDense: true,
+                      alignLabelWithHint: true,
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.all(14.0),
+                        child: Icon(Icons.search),
+                      ),
+                      hintText: 'Search',
+                      hintStyle: TextStyle(color: Colors.grey.withOpacity(0.4)),
+                      disabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: AppColors.goldenTainoi, width: 0.5),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: AppColors.goldenTainoi, width: 0.5),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: AppColors.goldenTainoi),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    keyboardType: TextInputType.text,
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        right: 15, left: 15, top: 15, bottom: 60),
+                    child: _buildList(),
+                  ),
+                ),
+              ],
             ),
             Align(
               alignment: FractionalOffset.bottomRight,
@@ -121,8 +187,6 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
       future: _insuranceFuture,
       builder: (_, snapshot) {
         if (snapshot.hasData) {
-          List insuranceList = [];
-
           if (insuranceList.isNotEmpty) insuranceList.clear();
           if (_notAcceptednsuranceList.isNotEmpty)
             _notAcceptednsuranceList.clear();
@@ -173,12 +237,16 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
                           separatorBuilder: (BuildContext context, int index) =>
                               SizedBox(height: 15),
                           shrinkWrap: true,
-                          itemCount: insuranceList.length,
+                          itemCount: _searchText == null || _searchText == ''
+                              ? insuranceList.length
+                              : searchList.length,
                           itemBuilder: (context, index) {
                             return Padding(
                               padding: const EdgeInsets.fromLTRB(4, 0, 4, 4),
                               child: insuranceWidget(
-                                insuranceList[index],
+                                _searchText == null || _searchText == ''
+                                    ? insuranceList[index]
+                                    : searchList[index],
                                 index,
                                 isAcceptedByProvider: true,
                               ),
@@ -268,7 +336,9 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
         child: Radio(
           activeColor: AppColors.persian_blue,
           value: index,
-          groupValue: _radioValue,
+          groupValue: _searchText == null || _searchText == ''
+              ? insuranceList.indexOf(selectedInsurance)
+              : searchList.indexOf(selectedInsurance),
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           onChanged: _insuranceAlreadyAdded(insurance),
         ),
@@ -277,7 +347,10 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
   Function _insuranceAlreadyAdded(dynamic insurance) {
     return (value) {
       setState(
-        () => _radioValue = value,
+        () {
+          selectedInsurance = insurance;
+          return _radioValue = value;
+        },
       );
 
       _container.setInsuranceData("insuranceId", insurance["_id"].toString());

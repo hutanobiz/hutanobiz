@@ -98,7 +98,7 @@ class _UploadInsuranceImagesScreenState
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackground(
         title:
-            _insuranceViewMap['isViewDetail'] ? insuranceName : "Upload Images",
+            _insuranceViewMap['isViewDetail'] ? insuranceName : "Upload insurance images",
         isLoading: _isLoading,
         isAddBack: !_insuranceViewMap['isPayment'],
         addBackButton: _insuranceViewMap['isPayment'],
@@ -180,15 +180,15 @@ class _UploadInsuranceImagesScreenState
   List<Widget> widgetList() {
     List<Widget> formWidget = List();
 
-    formWidget.add(Text(
-      "Upload insurance front and back (optional) image",
-      style: TextStyle(
-        fontSize: 14.0,
-        fontWeight: FontWeight.w500,
-      ),
-    ));
+    // formWidget.add(Text(
+    //   "Upload insurance front and back (optional) image",
+    //   style: TextStyle(
+    //     fontSize: 14.0,
+    //     fontWeight: FontWeight.w500,
+    //   ),
+    // ));
 
-    formWidget.add(SizedBox(height: 30));
+    formWidget.add(SizedBox(height: 20));
 
     formWidget.add(
       Row(
@@ -391,10 +391,10 @@ class _UploadInsuranceImagesScreenState
 
         if (_insuranceMap != null && _insuranceMap.isNotEmpty) {
           _uploadImage(
-            'Insurance card added successfully',
+            'Insurance images uploaded successfully',
           );
         } else {
-          _updateInsurance('Image updated');
+          _updateInsurance('Insurance Images updated');
         }
       }
     }
