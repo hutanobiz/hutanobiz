@@ -473,13 +473,13 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           responseJson["response"].toString().debugLog();
           throw Exception(responseJson);
         } else {
-          // if (responseJson["response"] is String) {
+           if (responseJson["response"] is String) {
           _loading(false);
           Widgets.showErrorialog(
             context: context,
-            description: 'Appointment Booked'//responseJson["response"],
+            description: responseJson["response"],
           );
-          // } else if (responseJson["response"]['paymentIntent'] != null) {
+          //  } else if (responseJson["response"]['paymentIntent'] != null) {
           //   String _clientSecret =
           //       responseJson["response"]['paymentIntent']['client_secret'];
 
@@ -502,14 +502,14 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           //       description: error.toString(),
           //     );
           //   });
-          // } else {
-          //   _loading(false);
+          } else {
+            _loading(false);
 
-          //   responseJson["response"].toString().debugLog();
+            responseJson["response"].toString().debugLog();
 
-          //   showConfirmDialog();
-          // }
-          // _loading(false);
+            showConfirmDialog();
+          }
+          _loading(false);
         }
       });
     } on Exception catch (error) {
