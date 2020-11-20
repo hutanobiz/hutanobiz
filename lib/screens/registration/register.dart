@@ -709,7 +709,7 @@ class _SignUpFormState extends State<Register> {
               .setValue("fullName", responseJson["response"]["fullName"]);
           SharedPref().setValue("complete", "0");
 
-          Widgets.showToast("Profile created successfully");
+          Widgets.showToast("Congratulations! Your profile as been successfully created");
 
           Map _insuranceMap = {};
           _insuranceMap['isPayment'] = false;
