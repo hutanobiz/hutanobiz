@@ -83,17 +83,36 @@ class LoadingBackground extends StatelessWidget {
                               onRightButtonTap != null)
                             InkWell(
                               onTap: onRightButtonTap,
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Text(
-                                  rightButtonText,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14.0,
-                                  ),
-                                ),
-                              ),
+                              child: rightButtonText.contains('do not')
+                                  ? Container(
+                                      margin: EdgeInsets.only(right: 10),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.windsor,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(12.0),
+                                        ),
+                                      ),
+                                      padding: EdgeInsets.all(10),
+                                      child: Text(
+                                        rightButtonText,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 14.0,
+                                        ),
+                                      ),
+                                    )
+                                  : Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Text(
+                                        rightButtonText,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 14.0,
+                                        ),
+                                      ),
+                                    ),
                             )
                           else
                             Container(),
