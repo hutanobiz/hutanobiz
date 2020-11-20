@@ -59,12 +59,12 @@ class _VerifyOTPState extends State<VerifyOTP> {
     formWidget.add(Column(
       children: <Widget>[
         Text(
-          "Verify code",
+          "Verify your mobile number",
           style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
         ),
         Widgets.sizedBox(height: 10.0),
         Text(
-          "Enter the OTP sent to",
+          "Enter the one-time password sent to",
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.black26,
