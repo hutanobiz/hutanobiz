@@ -861,7 +861,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
           ),
           SizedBox(height: 5),
           Text(
-            "As per regulatory requirements, all audio & video calls done during an online consultation with the doctor, will be recorded & stored in a secure manner.",
+            "Video appointments are recorded and securely stored for you and your provider's to review on demand.",
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w500,
