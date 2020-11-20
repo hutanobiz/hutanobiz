@@ -309,7 +309,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                   paymentType == "3"
                       ? "Cash"
                       : paymentType == "1"
-                          ? "Card"
+                          ? "Card **** **** **** ${_consentToTreatMap["paymentMap"]["selectedCard"]['card']['last4']}"
                           : insuranceName,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -400,8 +400,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             request.fields['insuranceId'] = insuranceId;
           } else {
             request.fields['paymentMethod'] = "1";
-            request.fields['cardId'] = _consentToTreatMap["paymentMap"]["selectedCard"]
-                  ['id'];
+            request.fields['cardId'] =
+                _consentToTreatMap["paymentMap"]["selectedCard"]['id'];
           }
         }
 
@@ -474,11 +474,11 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           throw Exception(responseJson);
         } else {
           // if (responseJson["response"] is String) {
-            _loading(false);
-            Widgets.showErrorialog(
-              context: context,
-              description: responseJson["response"],
-            );
+          _loading(false);
+          Widgets.showErrorialog(
+            context: context,
+            description: 'Appointment Booked'//responseJson["response"],
+          );
           // } else if (responseJson["response"]['paymentIntent'] != null) {
           //   String _clientSecret =
           //       responseJson["response"]['paymentIntent']['client_secret'];
@@ -917,7 +917,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           ),
           SizedBox(height: 5),
           Text(
-            "As per regulatory requirements, all audio & video calls done during an online consultation with the doctor, will be recorded & stored in a secure manner.",
+            "Video appointments are recorded and securely stored for you and your provider's to review on demand.",
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w500,
@@ -1089,7 +1089,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           ),
           children: <TextSpan>[
             TextSpan(
-              text: 'Amount: \$',
+              text: 'Fee: \$',
               style: TextStyle(
                 fontSize: 13.0,
                 fontWeight: FontWeight.w500,
@@ -1113,7 +1113,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
               ),
             ),
             TextSpan(
-              text: '${services.duration} min',
+              text: '${services.duration} minutes',
               style: TextStyle(
                 fontSize: 13.0,
                 fontWeight: FontWeight.w600,
@@ -1170,7 +1170,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
               ),
             ),
             TextSpan(
-              text: consultaion["duration"]?.toString()+' min' ?? "---" + ' min',
+              text: consultaion["duration"]?.toString() + ' minutes' ??
+                  "---" + ' minutes',
               style: TextStyle(
                 fontSize: 13.0,
                 fontWeight: FontWeight.w600,
