@@ -231,7 +231,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         ? Padding(
             padding: const EdgeInsets.only(top: 10.0),
             child: Text(
-              "This doctor does not accept any insurance.",
+              "Your providers does not accept your insurance. Please select your saved credit or add a new credit card for payment.",
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
