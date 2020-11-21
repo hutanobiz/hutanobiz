@@ -1020,13 +1020,18 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   }
 
   Widget servicesWidget() {
+  String selectedService = _container.projectsResponse["serviceType"].toString() == '1'
+                ? "Office Appointment"
+                : _container.projectsResponse["serviceType"].toString() == '2'
+                    ? "Telemedicine"
+                    : "Onsite Appointment";
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            "Selected Services",
+            "Selected Services: $selectedService",
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w500,
@@ -1218,7 +1223,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             cardText == '1'
                 ? "Office\nAppointment"
                 : cardText == '2'
-                    ? "Video\nAppointment"
+                    ? "Telemedicine"
                     : "Onsite\nAppointment",
             maxLines: 2,
             style: TextStyle(
