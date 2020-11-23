@@ -35,6 +35,8 @@ class _CallPageState extends State<CallPage> {
   var token = '';
   var appid = '1dba38a531814b9f823d4d1c4e0c9a89';
 
+  bool remoteAudio = true, remoteVideo = true;
+
   @override
   void dispose() {
     // clear users
@@ -127,10 +129,18 @@ class _CallPageState extends State<CallPage> {
 
         _users.clear();
       });
+    }, userMuteAudio: (uid, muted) {
+      setState(() {
+        remoteAudio = !muted;
+      });
+    }, userMuteVideo: (uid, muted) {
+      setState(() {
+        remoteVideo = !muted;
+      });
     }, userJoined: (uid, elapsed) {
       //aquire();
       //updateSubscriptionList();
-     // startCall();
+      // startCall();
       setState(() {
         final info = 'userJoined: $uid';
         _infoStrings.add(info);
@@ -171,13 +181,18 @@ class _CallPageState extends State<CallPage> {
     setState(() {
       mutedVideo = !mutedVideo;
     });
+
+    //  mutedVideo? _engine.disableVideo():_engine.enableVideo();
+    // _engine.muteLocalVideoStream(mutedVideo);
     _engine.muteLocalVideoStream(mutedVideo);
+    _engine.enableLocalVideo(!mutedVideo);
   }
 
   void _onToggleMute() {
     setState(() {
       muted = !muted;
     });
+// muted? _engine.disableAudio():_engine.enableAudio();
     _engine.muteLocalAudioStream(muted);
   }
 
@@ -197,6 +212,24 @@ class _CallPageState extends State<CallPage> {
                 children: <Widget>[
                   _viewRows(),
                   // _panel(),
+
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        children: [
+                          remoteAudio
+                              ? SizedBox()
+                              : Expanded(
+                                  child: Icon(
+                                  Icons.mic_off,
+                                  size: 48,
+                                )),
+                          remoteVideo
+                              ? SizedBox()
+                              : Expanded(
+                                  child: Icon(Icons.videocam_off, size: 48)),
+                        ],
+                      )),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
@@ -273,10 +306,9 @@ class _CallPageState extends State<CallPage> {
   /// Video view wrapper
   Widget _videoView(view) {
     return ClipRRect(
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20)),
-            child: view);
+        borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+        child: view);
   }
 
   Widget _myVideoView(view) {
@@ -459,10 +491,8 @@ class _CallPageState extends State<CallPage> {
                               widget.channelName['_id'].toString();
                           api
                               .cancelCallEndNotification(token, map)
-                              .then((value) {
-                           
-                          });
-                           Navigator.pop(context);
+                              .then((value) {});
+                          Navigator.pop(context);
                         }),
                     Spacer(),
                     FlatButton(
