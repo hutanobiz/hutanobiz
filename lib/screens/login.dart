@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/loading_widget.dart';
 import 'package:hutano/widgets/password_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key key}) : super(key: key);
@@ -36,10 +38,11 @@ class _LoginState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
 
   final _mobileFormatter = UsNumberTextInputFormatter();
-
+  String countryCode = '+1';
   bool checked = false;
   bool _obscureText = true;
   bool isLoading = false;
+  bool isTermAccepted = false;
 
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 14.0);
 
@@ -99,30 +102,98 @@ class _LoginState extends State<LoginScreen> {
     List<Widget> formWidget = new List();
 
     formWidget.add(AppLogo());
-    formWidget.add(Widgets.sizedBox(height: 51.0));
+    formWidget.add(Widgets.sizedBox(height: 12.0));
+
+    formWidget.add(Center(
+        child: Text(
+      'Please sign in to continue.',
+      style: TextStyle(fontWeight: FontWeight.w600),
+    )));
+    formWidget.add(Widgets.sizedBox(height: 32.0));
+
     formWidget.add(
-      TextFormField(
-        key: _phoneNumberKey,
-        controller: _phoneNumberController,
-        keyboardType: TextInputType.phone,
-        validator: Validations.validatePhone,
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(14),
-          WhitelistingTextInputFormatter.digitsOnly,
-          _mobileFormatter,
-        ],
-        autocorrect: true,
-        decoration: InputDecoration(
-            labelText: "Phone",
-            prefix: Text(
-              "+1",
-              style: TextStyle(color: Colors.black, fontSize: 16),
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                height: 60,
+                width: 96,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                  border: Border.all(
+                    color: Colors.grey[300],
+                    width: 1.0,
+                  ),
+                ),
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: CountryCodePicker(
+                        onChanged: ((country) {
+                          countryCode = country.dialCode;
+                        }),
+                        hideMainText: true,
+                        showFlagMain: true,
+                        // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
+                        initialSelection: 'US',
+                        favorite: ['+1', 'US'],
+
+                        // optional. Shows only country name and flag
+                        showCountryOnly: false,
+                        // optional. Shows only country name and flag when popup is closed.
+                        //  showOnlyCountryWhenClosed: false,
+
+                        // optional. aligns the flag and the Text left
+                        alignLeft: true,
+                        flagWidth: 48,
+                      ),
+                    ),
+                    Positioned(
+                        right: 10,
+                        top: 24,
+                        child: Image.asset('images/arrow_bottom_down.png',
+                            height: 12))
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: TextFormField(
+              key: _phoneNumberKey,
+              controller: _phoneNumberController,
+              keyboardType: TextInputType.phone,
+              validator: Validations.validatePhone,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(14),
+                WhitelistingTextInputFormatter.digitsOnly,
+                _mobileFormatter,
+              ],
+              autocorrect: true,
+              decoration: InputDecoration(
+                  labelText: "Phone",
+                  prefixIcon: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.asset('images/login_phone.png', height: 16),
+                  ),
+                  prefix: Text(
+                    countryCode,
+                    style: TextStyle(color: Colors.black, fontSize: 16),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey[300]),
+                      borderRadius: BorderRadius.circular(5.0)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0))),
             ),
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[300]),
-                borderRadius: BorderRadius.circular(5.0)),
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
+          ),
+        ],
       ),
     );
     formWidget.add(Widgets.sizedBox(height: 30.0));
@@ -132,7 +203,10 @@ class _LoginState extends State<LoginScreen> {
       labelText: Strings.passwordText,
       passwordController: _passwordController,
       style: style,
-      prefixIcon: Icon(Icons.lock, color: AppColors.windsor, size: 13.0),
+      prefixIcon: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Image.asset('images/lock.png', height: 12),
+      ),
       suffixIcon: GestureDetector(
         dragStartBehavior: DragStartBehavior.down,
         onTap: () {
@@ -158,7 +232,60 @@ class _LoginState extends State<LoginScreen> {
     ));
 
     formWidget.add(Widgets.sizedBox(height: 16.0));
+    formWidget.add(Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text('I agree to Hutano '),
+                  Text(
+                    'Terms & Conditions',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ).onClick(onTap: () async {
+                    var url = 'https://staging.hutano.xyz/';
+                    if (await canLaunch(url)) {
+                      await launch(url);
+                    } else {
+                      throw 'Could not launch $url';
+                    }
+                  }),
+                ],
+              ),
+              Text(
+                '& Privacy Policy',
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  decoration: TextDecoration.underline,
+                ),
+              ).onClick(onTap: () async {
+                var url = 'https://staging.hutano.xyz/';
+                if (await canLaunch(url)) {
+                  await launch(url);
+                } else {
+                  throw 'Could not launch $url';
+                }
+              })
+            ],
+          ),
+        ),
+        Switch(
+            value: isTermAccepted,
+            activeColor: AppColors.goldenTainoi,
+            onChanged: ((val) {
+              setState(() {
+                isTermAccepted = val;
+              });
+            }))
+      ],
+    ));
 
+    formWidget.add(Widgets.sizedBox(height: 16.0));
     formWidget.add(FancyButton(
       buttonHeight: Dimens.buttonHeight,
       title: Strings.logIn,
@@ -212,6 +339,27 @@ class _LoginState extends State<LoginScreen> {
       ),
     );
 
+    formWidget.add(Widgets.sizedBox(height: 42.0));
+    formWidget.add(Center(
+        child: Text('Help Signing in?').onClick(onTap: () async {
+      var url = 'https://staging.hutano.xyz/';
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
+    })));
+    formWidget.add(Widgets.sizedBox(height: 16.0));
+    formWidget.add(Center(
+        child: Text('Hutano data security statement').onClick(onTap: () async {
+      var url = 'https://staging.hutano.xyz/';
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
+    })));
+
     return formWidget;
   }
 
@@ -243,7 +391,9 @@ class _LoginState extends State<LoginScreen> {
   }
 
   bool isButtonEnable() {
-    if (_phoneNumberController.text.isEmpty ||
+    if (isTermAccepted) {
+      return false;
+    } else if (_phoneNumberController.text.isEmpty ||
         !_phoneNumberKey.currentState.validate()) {
       return false;
     } else if (_passwordController.text.isEmpty ||
