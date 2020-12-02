@@ -67,6 +67,22 @@ class ApiBaseHelper {
     });
   }
 
+  Future<dynamic> getConsentContent(String token) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    return _netUtil
+        .get(
+      Uri.encodeFull(base_url + "api/patient/consent-treat"),
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
+
+  
+
   Future<dynamic> getSetupIntent(BuildContext context, String token) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
