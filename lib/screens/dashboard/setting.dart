@@ -166,7 +166,7 @@ class _SettingsScreenState extends State<SettingScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(14.0),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Container(
                       width: 74.0,
@@ -202,10 +202,40 @@ class _SettingsScreenState extends State<SettingScreen> {
                         SizedBox(
                           height: 8,
                         ),
-                        Text(
-                          name,
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                name,
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            Icon(
+                              Icons.edit,
+                              color: AppColors.goldenTainoi,
+                              size: 14,
+                            ),
+                            SizedBox(
+                              width: 4,
+                            ),
+                            Text(
+                              "Edit",
+                              style: TextStyle(color: AppColors.goldenTainoi),
+                            ).onClick(
+                                roundCorners: false,
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    Routes.registerRoute,
+                                    arguments: RegisterArguments(
+                                      phone,
+                                      false,
+                                      isProfileUpdate: true,
+                                    ),
+                                  ).whenComplete(() => getProfileData());
+                                })
+                          ],
                         ),
                         SizedBox(
                           height: 8,
@@ -220,11 +250,13 @@ class _SettingsScreenState extends State<SettingScreen> {
                             SizedBox(
                               width: 4,
                             ),
-                            Text(email,
-                                style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.black54)),
+                            Expanded(
+                              child: Text(email,
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black54)),
+                            ),
                           ],
                         ),
                         SizedBox(
@@ -249,37 +281,6 @@ class _SettingsScreenState extends State<SettingScreen> {
                         ),
                       ], crossAxisAlignment: CrossAxisAlignment.start),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.edit,
-                            color: AppColors.goldenTainoi,
-                            size: 14,
-                          ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Text(
-                            "Edit",
-                            style: TextStyle(color: AppColors.goldenTainoi),
-                          )
-                        ],
-                      ),
-                    ).onClick(
-                        roundCorners: false,
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            Routes.registerRoute,
-                            arguments: RegisterArguments(
-                              phone,
-                              false,
-                              isProfileUpdate: true,
-                            ),
-                          ).whenComplete(() => getProfileData());
-                        })
                   ],
                 ),
               ),
