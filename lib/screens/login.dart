@@ -391,7 +391,7 @@ class _LoginState extends State<LoginScreen> {
   }
 
   bool isButtonEnable() {
-    if (isTermAccepted) {
+    if (!isTermAccepted) {
       return false;
     } else if (_phoneNumberController.text.isEmpty ||
         !_phoneNumberKey.currentState.validate()) {
