@@ -257,10 +257,9 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                         _appointmentFilterMap['isOnsiteEnabled'] = '1';
                         break;
                       default:
-                      _appointmentFilterMap.remove('isOnsiteEnabled');
-                      _appointmentFilterMap.remove('isVideoChatEnabled');
-                      _appointmentFilterMap.remove('isOfficeEnabled');
-
+                        _appointmentFilterMap.remove('isOnsiteEnabled');
+                        _appointmentFilterMap.remove('isVideoChatEnabled');
+                        _appointmentFilterMap.remove('isOfficeEnabled');
                     }
 
                     SharedPref().getToken().then((token) {
@@ -339,6 +338,9 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
               _container.setProviderId(_provider["User"][0]["_id"]);
             }
 
+            _container.setProjectsResponse(
+                "serviceType", _selectedAppointmentType);
+
             Navigator.of(context).pushNamed(
               Routes.providerProfileScreen,
               arguments: _selectedAppointmentType,
@@ -356,10 +358,17 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
               _container.setProviderData("providerData", _provider);
               _container.setProviderData("subServices", subServices);
 
-              Navigator.of(context).pushNamed(
-                Routes.appointmentTypeScreen,
-                arguments: _appointentTypeMap,
-              );
+              if (_selectedAppointmentType == '0') {
+                Navigator.of(context).pushNamed(
+                  Routes.appointmentTypeScreen,
+                  arguments: _appointentTypeMap,
+                );
+              } else {
+                _container.setProjectsResponse(
+                    "serviceType", _selectedAppointmentType);
+
+                Navigator.of(context).pushNamed(Routes.selectServicesScreen);
+              }
             },
           ),
         );

@@ -171,10 +171,21 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                                 _container.setProviderData(
                                     "providerData", profileMapResponse);
 
-                                Navigator.of(context).pushNamed(
-                                  Routes.appointmentTypeScreen,
-                                  arguments: _appointentTypeMap,
-                                );
+                                dynamic projectResponse =
+                                    _container.getProjectsResponse();
+
+                                String serviceType =
+                                    projectResponse['serviceType'] ?? '0';
+
+                                if (serviceType == '0') {
+                                  Navigator.of(context).pushNamed(
+                                    Routes.appointmentTypeScreen,
+                                    arguments: _appointentTypeMap,
+                                  );
+                                } else {
+                                  Navigator.of(context)
+                                      .pushNamed(Routes.selectServicesScreen);
+                                }
                               },
                             ),
                           ),
