@@ -179,7 +179,7 @@ class _LoginState extends State<LoginScreen> {
               decoration: InputDecoration(
                   labelText: "Phone",
                   prefixIcon: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(16.0),
                     child: Image.asset('images/login_phone.png', height: 16),
                   ),
                   prefix: Text(
@@ -204,7 +204,7 @@ class _LoginState extends State<LoginScreen> {
       passwordController: _passwordController,
       style: style,
       prefixIcon: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: Image.asset('images/lock.png', height: 12),
       ),
       suffixIcon: GestureDetector(
