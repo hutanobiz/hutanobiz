@@ -109,8 +109,10 @@ class _ResetPasswordState extends State<ResetPassword> {
       labelText: Strings.passwordText,
       passwordController: _passwordController,
       style: style,
-      prefixIcon: Icon(Icons.lock, color: AppColors.windsor, size: 13.0),
-      suffixIcon: GestureDetector(
+        prefixIcon: Padding(
+        padding: const EdgeInsets.all(14.0),
+        child: Image.asset('images/lock.png', height: 12),
+      ),suffixIcon: GestureDetector(
         dragStartBehavior: DragStartBehavior.down,
         onTap: () {
           setState(() {
@@ -130,8 +132,10 @@ class _ResetPasswordState extends State<ResetPassword> {
       labelText: "Confirm Password",
       passwordController: _confirmPassController,
       style: style,
-      prefixIcon: Icon(Icons.lock, color: AppColors.windsor, size: 13.0),
-      suffixIcon: GestureDetector(
+        prefixIcon: Padding(
+        padding: const EdgeInsets.all(14.0),
+        child: Image.asset('images/lock.png', height: 12),
+      ), suffixIcon: GestureDetector(
         dragStartBehavior: DragStartBehavior.down,
         onTap: () {
           setState(() {

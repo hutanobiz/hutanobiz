@@ -96,7 +96,14 @@ class _VerifyOTPState extends State<VerifyOTP> {
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(14.0))),
         submit: (String pin) {
-          otp = pin;
+          setState(() {
+            if(pin.length == 6){
+ otp = pin;
+            }else{
+               otp = null;
+            }
+          });
+         
           print(pin);
         }));
 
@@ -105,8 +112,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
           padding: EdgeInsets.only(top: 40),
           child: FancyButton(
             title: "Verify",
-            onPressed: () {
-              if (otp != null) {
+            onPressed: otp != null? () {
                 setLoading(true);
 
                 ApiBaseHelper api = new ApiBaseHelper();
@@ -150,7 +156,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
                   });
                 }
               }
-            },
+            :null,
             buttonHeight: Dimens.buttonHeight,
           )),
     );

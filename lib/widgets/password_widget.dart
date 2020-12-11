@@ -9,7 +9,9 @@ class PasswordTextField extends StatelessWidget {
       @required this.style,
       @required this.labelText,
       @required this.passwordController,
-      this.prefixIcon});
+      this.isDense,
+      this.prefixIcon,
+      this.validator});
 
   final GlobalKey<FormFieldState> passwordKey;
   final TextEditingController passwordController;
@@ -17,7 +19,9 @@ class PasswordTextField extends StatelessWidget {
   final Widget suffixIcon;
   final Widget prefixIcon;
   final TextStyle style;
+  final bool isDense;
   final String labelText;
+  final String Function(String) validator;
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +32,10 @@ class PasswordTextField extends StatelessWidget {
       keyboardType: TextInputType.visiblePassword,
       obscureText: obscureText,
       style: style,
-      validator: Validations.validatePassword,
+       validator: validator ?? Validations.validatePassword,
       controller: passwordController,
       decoration: InputDecoration(
+        isDense: isDense ?? false,
         labelStyle: TextStyle(color: Colors.grey),
         labelText: labelText,
         suffixIcon: suffixIcon,

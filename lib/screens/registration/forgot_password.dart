@@ -104,6 +104,10 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         ],
         autocorrect: true,
         decoration: InputDecoration(
+          prefixIcon: Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: Image.asset('images/login_phone.png', height: 16),
+              ),
             labelText: "Phone",
             prefix: Text(
               "+1",

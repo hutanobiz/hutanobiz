@@ -10,7 +10,7 @@ class AppTheme {
 
     return ThemeData.light().copyWith(
       brightness: Brightness.light,
-      primaryColor: AppColors.goldenTainoi,
+      primaryColor: AppColors.goldenTainoii,
       accentColor: AppColors.accentColor,
       buttonColor: Colors.white,
       textSelectionColor: Colors.cyan[100],

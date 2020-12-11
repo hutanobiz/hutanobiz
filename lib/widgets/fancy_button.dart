@@ -64,6 +64,7 @@ class FancyButton extends StatelessWidget {
             ),
           ],
         ),
+        disabledColor: Colors.grey[350],
         color: buttonColor ?? AppColors.goldenTainoi,
         splashColor: Colors.orange,
         onPressed: onPressed,

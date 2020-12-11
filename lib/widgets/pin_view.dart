@@ -118,9 +118,9 @@ class _PinViewState extends State<PinView> {
                   }
                 }
 
-                if (_pin.indexOf("") == -1) {
+                // if (_pin.indexOf("") == -1) {
                   widget.submit(_pin.join());
-                }
+                // }
               },
             )));
   }

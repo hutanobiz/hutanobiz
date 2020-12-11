@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:country_code_picker/country_code_picker.dart';
+import 'package:hutano/widgets/country_code_picker.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -111,15 +111,15 @@ class _LoginState extends State<LoginScreen> {
     )));
     formWidget.add(Widgets.sizedBox(height: 32.0));
 
-    formWidget.add(
+     formWidget.add(
       Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Container(
-                height: 60,
-                width: 96,
+                height: 50,
+                width: 60,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(5.0)),
                   border: Border.all(
@@ -135,6 +135,7 @@ class _LoginState extends State<LoginScreen> {
                         onChanged: ((country) {
                           countryCode = country.dialCode;
                         }),
+
                         hideMainText: true,
                         showFlagMain: true,
                         // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
@@ -148,12 +149,11 @@ class _LoginState extends State<LoginScreen> {
 
                         // optional. aligns the flag and the Text left
                         alignLeft: true,
-                        flagWidth: 48,
                       ),
                     ),
                     Positioned(
-                        right: 10,
-                        top: 24,
+                        right: 4,
+                        top: 19,
                         child: Image.asset('images/arrow_bottom_down.png',
                             height: 12))
                   ],
@@ -168,29 +168,29 @@ class _LoginState extends State<LoginScreen> {
             child: TextFormField(
               key: _phoneNumberKey,
               controller: _phoneNumberController,
-              keyboardType: TextInputType.phone,
+              autocorrect: true,
               validator: Validations.validatePhone,
+              autovalidate: true,
               inputFormatters: [
-                LengthLimitingTextInputFormatter(14),
                 WhitelistingTextInputFormatter.digitsOnly,
                 _mobileFormatter,
               ],
-              autocorrect: true,
+              maxLength: 14,
               decoration: InputDecoration(
-                  labelText: "Phone",
+                  isDense: true,
                   prefixIcon: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(14.0),
                     child: Image.asset('images/login_phone.png', height: 16),
                   ),
-                  prefix: Text(
-                    countryCode,
-                    style: TextStyle(color: Colors.black, fontSize: 16),
-                  ),
+                  counterText: "",
+                  //  prefixText: countryCode,
+                  labelText: "Phone Number",
                   enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey[300]),
                       borderRadius: BorderRadius.circular(5.0)),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0))),
+              keyboardType: TextInputType.phone,
             ),
           ),
         ],
@@ -198,13 +198,15 @@ class _LoginState extends State<LoginScreen> {
     );
     formWidget.add(Widgets.sizedBox(height: 30.0));
     formWidget.add(PasswordTextField(
+      isDense: true,
       passwordKey: _passwordKey,
+      validator: Validations.validateLoginPassword,
       obscureText: _obscureText,
       labelText: Strings.passwordText,
       passwordController: _passwordController,
       style: style,
       prefixIcon: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(14.0),
         child: Image.asset('images/lock.png', height: 12),
       ),
       suffixIcon: GestureDetector(

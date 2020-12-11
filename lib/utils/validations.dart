@@ -29,6 +29,14 @@ class Validations {
     else
       return null;
   }
+  static String validateLoginPassword(String value) {
+    if (value.isEmpty) {
+      return null;
+    } else if (value.length < 6)
+      return Strings.enterValidPassword;
+    else
+      return null;
+  }
 
   static String validatePhone(String value) {
     if (value.isEmpty) {

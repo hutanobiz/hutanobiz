@@ -1,4 +1,4 @@
-import 'package:country_code_picker/country_code_picker.dart';
+import 'package:hutano/widgets/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hutano/api/api_helper.dart';
@@ -95,8 +95,8 @@ class _RegisterEmailState extends State<RegisterEmail> {
           Row(
             children: [
               Container(
-                height: 60,
-                width: 96,
+                height: 50,
+                width: 60,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(5.0)),
                   border: Border.all(
@@ -112,6 +112,7 @@ class _RegisterEmailState extends State<RegisterEmail> {
                         onChanged: ((country) {
                           countryCode = country.dialCode;
                         }),
+
                         hideMainText: true,
                         showFlagMain: true,
                         // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
@@ -125,12 +126,11 @@ class _RegisterEmailState extends State<RegisterEmail> {
 
                         // optional. aligns the flag and the Text left
                         alignLeft: true,
-                        flagWidth: 48,
                       ),
                     ),
                     Positioned(
-                        right: 10,
-                        top: 24,
+                        right: 4,
+                        top: 19,
                         child: Image.asset('images/arrow_bottom_down.png',
                             height: 12))
                   ],
@@ -145,26 +145,25 @@ class _RegisterEmailState extends State<RegisterEmail> {
             child: TextFormField(
               key: _phoneNumberKey,
               controller: _phoneNumberController,
-              keyboardType: TextInputType.phone,
+              autocorrect: true,
               validator: Validations.validatePhone,
+              autovalidate: true,
               inputFormatters: [
-                LengthLimitingTextInputFormatter(14),
                 WhitelistingTextInputFormatter.digitsOnly,
                 _mobileFormatter,
               ],
-              autocorrect: true,
+              maxLength: 14,
               decoration: InputDecoration(
-                  prefixIcon: Image.asset('images/login_phone.png'),
+                  isDense: true,
+                  counterText: "",
+                  // prefixText: countryCode,
                   labelText: "Phone Number",
-                  prefix: Text(
-                    countryCode,
-                    style: TextStyle(color: Colors.black, fontSize: 16),
-                  ),
                   enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey[300]),
                       borderRadius: BorderRadius.circular(5.0)),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0))),
+              keyboardType: TextInputType.phone,
             ),
           ),
         ],
@@ -174,6 +173,46 @@ class _RegisterEmailState extends State<RegisterEmail> {
     formWidget.add(Widgets.sizedBox(height: 20.0));
     formWidget.add(Row(
       children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text('I agree to Hutano '),
+                  Text(
+                    'Terms & Conditions',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ).onClick(onTap: () async {
+                    var url = 'https://staging.hutano.xyz/';
+                    if (await canLaunch(url)) {
+                      await launch(url);
+                    } else {
+                      throw 'Could not launch $url';
+                    }
+                  })
+                ],
+              ),
+              Text(
+                '& Privacy Policy',
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  decoration: TextDecoration.underline,
+                ),
+              ).onClick(onTap: () async {
+                var url = 'https://staging.hutano.xyz/';
+                if (await canLaunch(url)) {
+                  await launch(url);
+                } else {
+                  throw 'Could not launch $url';
+                }
+              })
+            ],
+          ),
+        ),
         InkWell(
             onTap: () {
               setState(() {
@@ -186,45 +225,6 @@ class _RegisterEmailState extends State<RegisterEmail> {
                   : 'images/uncheckedCheck.png',
               height: 32,
             )),
-        SizedBox(width: 8),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Text('I agree to Hutano '),
-                Text(
-                  'Terms & Conditions',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    decoration: TextDecoration.underline,
-                  ),
-                ).onClick(onTap: () async {
-                  var url = 'https://staging.hutano.xyz/';
-                  if (await canLaunch(url)) {
-                    await launch(url);
-                  } else {
-                    throw 'Could not launch $url';
-                  }
-                })
-              ],
-            ),
-            Text(
-              '& Privacy Policy',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                decoration: TextDecoration.underline,
-              ),
-            ).onClick(onTap: () async {
-              var url = 'https://staging.hutano.xyz/';
-              if (await canLaunch(url)) {
-                await launch(url);
-              } else {
-                throw 'Could not launch $url';
-              }
-            })
-          ],
-        ),
       ],
     ));
 
