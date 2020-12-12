@@ -709,7 +709,8 @@ class _SignUpFormState extends State<Register> {
               .setValue("fullName", responseJson["response"]["fullName"]);
           SharedPref().setValue("complete", "0");
 
-          Widgets.showToast("Congratulations! Your profile as been successfully created");
+          Widgets.showToast(
+              "Congratulations! Your profile as been successfully created");
 
           Map _insuranceMap = {};
           _insuranceMap['isPayment'] = false;
@@ -772,19 +773,15 @@ class _SignUpFormState extends State<Register> {
         aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
-          CropAspectRatioPreset.ratio3x2,
-          CropAspectRatioPreset.original,
-          CropAspectRatioPreset.ratio4x3,
-          CropAspectRatioPreset.ratio16x9
         ],
         androidUiSettings: AndroidUiSettings(
             toolbarColor: Colors.transparent,
             toolbarWidgetColor: Colors.transparent,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false),
+            initAspectRatio: CropAspectRatioPreset.square,
+            lockAspectRatio: true),
         iosUiSettings: IOSUiSettings(
           minimumAspectRatio: 1.0,
-          aspectRatioLockDimensionSwapEnabled: true,
+          // aspectRatioLockDimensionSwapEnabled: true,
         ),
       );
       if (croppedFile != null) {
