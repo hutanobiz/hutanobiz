@@ -7,10 +7,13 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:http/http.dart' as http;
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/dashboard/choose_location_screen.dart';
+import 'package:google_maps_webservice/places.dart';
 import 'package:hutano/utils/dimens.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
@@ -43,7 +46,7 @@ class _SignUpFormState extends State<Register> {
   final _stateController = TextEditingController();
   final _phoneController = TextEditingController();
   final _zipController = TextEditingController();
-
+  GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
   String stateId = "";
 
   String _genderGroup = "";
@@ -64,6 +67,7 @@ class _SignUpFormState extends State<Register> {
   bool isLoading = false;
   DateTime _selectedDate;
   bool isUpdateProfile = false;
+  PlacesDetailsResponse detail;
 
   final _dobController = new TextEditingController();
 
@@ -480,6 +484,12 @@ class _SignUpFormState extends State<Register> {
       TextFormField(
         controller: _addressController,
         decoration: InputDecoration(
+            suffixIcon: IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                _onLocationTap();
+              },
+            ),
             labelText: "Address",
             enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey[300]),
@@ -757,6 +767,88 @@ class _SignUpFormState extends State<Register> {
         );
       },
     );
+  }
+
+  Future<void> _onLocationTap() async {
+    Prediction p = await PlacesAutocomplete.show(
+        context: context,
+        apiKey: kGoogleApiKey,
+        mode: Mode.fullscreen,
+        language: "en");
+    if (p != null) {
+      detail = await _places.getDetailsByPlaceId(p.placeId);
+      final lat = detail.result.geometry.location.lat;
+      final lng = detail.result.geometry.location.lng;
+      print(detail.result.adrAddress.toString());
+      PlacesDetailsResponse aa = detail;
+      print(aa);
+      List<double> coordinates = List();
+      coordinates.add(aa.result.geometry.location.lng);
+      coordinates.add(aa.result.geometry.location.lat);
+      // businessLocation.coordinates = coordinates;
+      print(aa.result.adrAddress);
+      if (aa.result.adrAddress.contains('locality')) {
+        final startIndex = aa.result.adrAddress.indexOf('"locality">');
+        final endIndex = aa.result.adrAddress
+            .indexOf('</span>', startIndex + '"locality">'.length);
+        // businessLocation.city = aa.result.adrAddress
+        // .substring(startIndex + '"locality">'.length, endIndex);
+        _cityController.text = aa.result.adrAddress
+            .substring(startIndex + '"locality">'.length, endIndex);
+        print(aa.result.adrAddress
+            .substring(startIndex + '"locality">'.length, endIndex));
+      } else {
+        // businessLocation.city = "";
+        _cityController.text = "";
+      }
+
+      if (aa.result.adrAddress.contains('postal-code')) {
+        final startIndex = aa.result.adrAddress.indexOf('"postal-code">');
+        final endIndex = aa.result.adrAddress
+            .indexOf('</span>', startIndex + '"postal-code">'.length);
+        // businessLocation.zipCode = aa.result.adrAddress
+        // .substring(startIndex + '"postal-code">'.length, endIndex)
+        // .substring(0, 5);
+        _zipController.text = aa.result.adrAddress
+            .substring(startIndex + '"postal-code">'.length, endIndex)
+            .substring(0, 5);
+        print(aa.result.adrAddress
+            .substring(startIndex + '"postal-code">'.length, endIndex));
+      } else {
+        // businessLocation.zipCode = "";
+        _zipController.text = "";
+      }
+
+      if (aa.result.adrAddress.contains('region')) {
+        final startIndex = aa.result.adrAddress.indexOf('"region">');
+        final endIndex = aa.result.adrAddress
+            .indexOf('</span>', startIndex + '"region">'.length);
+        print(aa.result.adrAddress
+            .substring(startIndex + '"region">'.length, endIndex));
+
+        for (dynamic state in stateList) {
+          if (state['title'] ==
+                  aa.result.adrAddress
+                      .substring(startIndex + '"region">'.length, endIndex) ||
+              state['stateCode'] ==
+                  aa.result.adrAddress
+                      .substring(startIndex + '"region">'.length, endIndex)) {
+            _stateController.text = state['title'];
+            stateId = state["_id"]?.toString();
+
+            // _stateController.text = res["state"]["title"]?.toString();
+            //     stateId = res["state"]["_id"]?.toString();
+            // businessLocation.state = state["_id"];
+          }
+        }
+      } else {
+        // businessLocation.state = "";
+        _stateController.text = "";
+      }
+      // businessLocation.street = aa.result.name ?? "";
+      // _stateController.text = aa.result.name ?? "";
+      _addressController.text = aa.result.name;
+    }
   }
 
   Future getImage(int source) async {
