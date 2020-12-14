@@ -11,6 +11,7 @@ import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/circular_loader.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
+import 'package:hutano/widgets/provider_tile_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:location/location.dart';
 
@@ -37,6 +38,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   InheritedContainerState conatiner;
   List _topSpecialtiesList = [];
+  Future<dynamic> _searchFuture;
+  String _searchText = "";
+  List<dynamic> _servicesList = List();
+  List<dynamic> _doctorList = List();
+  List<dynamic> _specialityList = List();
+  InheritedContainerState _container;
 
   bool _isLoading = false;
   List<String> _topProvidersList = [
@@ -81,6 +88,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         });
       }
     });
+    _container = InheritedContainer.of(context);
+
     super.didChangeDependencies();
   }
 
@@ -142,37 +151,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: searchBar(),
                 ),
                 Expanded(
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.only(top: 16.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: const Radius.circular(22.0),
-                        topRight: const Radius.circular(22.0),
-                      ),
-                    ),
-                    child: ListView(
-                      padding: const EdgeInsets.only(top: 20, bottom: 20),
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20),
-                          child: Text(
-                            'Find Top Providers',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
+                  child: _searchText != ''
+                      ? _buildList()
+                      : Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: const EdgeInsets.only(top: 16.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              topLeft: const Radius.circular(22.0),
+                              topRight: const Radius.circular(22.0),
                             ),
                           ),
+                          child: ListView(
+                            padding: const EdgeInsets.only(top: 20, bottom: 20),
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: Text(
+                                  'Find Top Providers',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              topProviderWidget(),
+                              myDoctorsWidget(),
+                              professionalTitleWidget(),
+                              specialtiesWidget(),
+                            ],
+                          ),
                         ),
-                        topProviderWidget(),
-                        myDoctorsWidget(),
-                        professionalTitleWidget(),
-                        specialtiesWidget(),
-                      ],
-                    ),
-                  ),
                 ),
               ],
             ),
@@ -268,38 +279,277 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         SizedBox(height: 6.0),
         InkWell(
-          onTap: () {
-            conatiner.projectsResponse.clear();
-            Navigator.of(context).pushNamed(
-              Routes.dashboardSearchScreen,
-              arguments: _topSpecialtiesList,
-            );
-          },
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.fromLTRB(12.0, 15.0, 14.0, 14.0),
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("images/ic_search.png"),
-                alignment: Alignment.centerRight,
+          // onTap: () {
+          //   conatiner.projectsResponse.clear();
+          //   Navigator.of(context).pushNamed(
+          //     Routes.dashboardSearchScreen,
+          //     arguments: _topSpecialtiesList,
+          //   );
+          // },
+          // child: Container(
+          // width: MediaQuery.of(context).size.width,
+          // padding: const EdgeInsets.fromLTRB(12.0, 15.0, 14.0, 14.0),
+          // decoration: BoxDecoration(
+          //   image: DecorationImage(
+          //     image: AssetImage("images/ic_search.png"),
+          //     alignment: Alignment.centerRight,
+          //   ),
+          //   color: Colors.white,
+          //   borderRadius: BorderRadius.all(
+          //     Radius.circular(
+          //       8.0,
+          //     ),
+          //   ),
+          // ),
+          child: TextFormField(
+            maxLines: 1,
+            onChanged: (value) {
+              _searchText = value;
+
+              setState(() {
+                _searchFuture = _api.searchDoctors(_searchText);
+              });
+            },
+            keyboardType: TextInputType.text,
+            decoration: InputDecoration(
+              suffixIcon: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset("images/ic_search.png", height: 24),
               ),
-              color: Colors.white,
-              borderRadius: BorderRadius.all(
-                Radius.circular(
-                  8.0,
-                ),
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              filled: true,
+              fillColor: AppColors.snow,
+              labelStyle: TextStyle(fontSize: 13.0, color: Colors.grey),
+              hintText: "Type the name of a provider or specialty",
+              prefixIcon: Icon(
+                Icons.search,
+                color: Colors.black,
               ),
-            ),
-            child: Text(
-              "Search for providers by name or specialty",
-              style: TextStyle(
-                fontSize: 13.0,
-                color: Colors.grey,
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: AppColors.windsor),
+                borderRadius: BorderRadius.circular(8.0),
               ),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: AppColors.windsor),
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              contentPadding: EdgeInsets.fromLTRB(12.0, 15.0, 14.0, 14.0),
             ),
           ),
         ),
+        // ),
       ],
+    );
+  }
+
+  Widget _buildList() {
+    return FutureBuilder<dynamic>(
+      future: _searchFuture,
+      builder: (_, snapshot) {
+        if (snapshot.hasData) {
+          _servicesList.clear();
+          _doctorList.clear();
+          _specialityList.clear();
+
+          if (snapshot.data["services"].length > 0) {
+            for (dynamic services in snapshot.data["services"]) {
+              if (services['subServices'] != null) {
+                for (dynamic subServices in services['subServices']) {
+                  _servicesList.add(subServices);
+                }
+              }
+            }
+          }
+          if (snapshot.data["doctorName"].length > 0) {
+            _doctorList.addAll(snapshot.data["doctorName"]);
+          }
+
+          if (snapshot.data["specialty"].length > 0) {
+            _specialityList.addAll(snapshot.data["specialty"]);
+          }
+
+          return SingleChildScrollView(
+            physics: ScrollPhysics(),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  heading("Specialities", _specialityList, 1),
+                  _specialityList.isNotEmpty
+                      ? _listWidget(_specialityList, "title", false, 1)
+                      : Container(),
+                  heading("Providers", _doctorList, 2),
+                  _doctorList.isNotEmpty
+                      ? _listWidget(_doctorList, "fullName", true, 2)
+                      : Container(),
+                  heading("Services", _servicesList, 3),
+                  _servicesList.isNotEmpty
+                      ? _listWidget(_servicesList, "name", false, 3)
+                      : Container(),
+                ]),
+          );
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+  }
+
+  Widget heading(
+    String heading,
+    List<dynamic> list,
+    int type, {
+    bool isAddSeeAll = true,
+  }) {
+    return list.isNotEmpty
+        ? Container(
+            width: MediaQuery.of(context).size.width,
+            margin: const EdgeInsets.only(top: 20.0),
+            padding: const EdgeInsets.fromLTRB(20.0, 11.0, 5.0, 11.0),
+            color: AppColors.snow,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  heading,
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                list.isNotEmpty && isAddSeeAll
+                    ? Expanded(
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: InkWell(
+                            customBorder: CircleBorder(),
+                            onTap: type == 0
+                                ? null
+                                : () => Navigator.of(context).pushNamed(
+                                      Routes.seeAllSearchScreeen,
+                                      arguments: SearchArguments(
+                                        list: list,
+                                        title: heading,
+                                        type: type,
+                                      ),
+                                    ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 8.0, right: 8.0),
+                              child: Text(
+                                "See all",
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    : Container()
+              ],
+            ),
+          )
+        : Container();
+  }
+
+  Widget _listWidget(
+      List<dynamic> _list, String searchKey, bool isDoctorList, int type) {
+    List<dynamic> tempList = List();
+    String professionalTitle = "---";
+
+    if (_list.isNotEmpty)
+      _list.forEach((f) {
+        if (f[searchKey] != null) {
+          if (f[searchKey].toLowerCase().contains(_searchText.toLowerCase())) {
+            tempList.add(f);
+          }
+        }
+      });
+
+    return ListView.separated(
+      separatorBuilder: (BuildContext context, int index) => Divider(),
+      physics: ScrollPhysics(),
+      shrinkWrap: true,
+      padding: const EdgeInsets.fromLTRB(20.0, 4.0, 20.0, 0.0),
+      itemCount: tempList.length >= 5 ? 5 : tempList.length,
+      itemBuilder: (context, index) {
+        if (tempList.isNotEmpty) {
+          if (tempList[index]["UserDoctorDetails"] != null) {
+            dynamic details = tempList[index]["UserDoctorDetails"];
+            if (details["professionalTitle"] != null) {
+              professionalTitle =
+                  details["professionalTitle"]["title"]?.toString() ?? "---";
+            }
+          }
+
+          return isDoctorList
+              ? ProviderTileWidget(
+                  avatar: tempList[index]['avatar'] ?? '',
+                  name: tempList[index][searchKey],
+                  profession: professionalTitle,
+                  onTap: () {
+                    // if (!_recentSearchesList.contains(tempList[index])) {
+                    //   if (_recentSearchesList.length >= 25) {
+                    //     _recentSearchesList.removeAt(0);
+                    //   }
+
+                    //   tempList[index]['type'] = type;
+                    //   _recentSearchesList.add(tempList[index]);
+
+                    //   SharedPref().setValue(
+                    //       'recentSearches', jsonEncode(_recentSearchesList));
+                    // }
+
+                    _container.setProviderId(tempList[index]["_id"].toString());
+                    Navigator.of(context)
+                        .pushNamed(Routes.providerProfileScreen);
+                  },
+                )
+              : ListTile(
+                  title: Text(tempList[index][searchKey]),
+                  onTap: type == 0
+                      ? null
+                      : () {
+                          // if (!_recentSearchesList.contains(tempList[index])) {
+                          //   if (_recentSearchesList.length >= 25) {
+                          //     _recentSearchesList.removeAt(0);
+                          //   }
+
+                          //   tempList[index]['type'] = type;
+                          //   _recentSearchesList.add(tempList[index]);
+                          //   SharedPref().setValue('recentSearches',
+                          //       jsonEncode(_recentSearchesList));
+                          // }
+
+                          _container.projectsResponse.clear();
+
+                          if (type == 1) {
+                            _container.setProjectsResponse(
+                                "specialtyId[${index.toString()}]",
+                                tempList[index]["_id"]);
+                            _container.setProjectsResponse("serviceType", '0');
+                          } else if (type == 3) {
+                            _container.setProjectsResponse(
+                                "subServices[${index.toString()}]",
+                                tempList[index]["_id"]);
+                          }
+
+                          _container.setProjectsResponse("serviceType", '0');
+
+                          Navigator.of(context)
+                              .pushNamed(Routes.providerListScreen);
+                        },
+                );
+        }
+
+        return Container();
+      },
     );
   }
 
@@ -826,7 +1076,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
             getLocationAddress(locationData.latitude, locationData.longitude);
 
-            _latLng = LatLng(locationData.latitude??0.00, locationData.longitude??0.00);
+            _latLng = LatLng(
+                locationData.latitude ?? 0.00, locationData.longitude ?? 0.00);
 
             SharedPref().getToken().then((token) {
               _myDoctorsFuture = _api.getMyDoctors(token, _latLng);
