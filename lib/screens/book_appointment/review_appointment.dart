@@ -473,35 +473,35 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           responseJson["response"].toString().debugLog();
           throw Exception(responseJson);
         } else {
-           if (responseJson["response"] is String) {
-          _loading(false);
-          Widgets.showErrorialog(
-            context: context,
-            description: responseJson["response"],
-          );
-          //  } else if (responseJson["response"]['paymentIntent'] != null) {
-          //   String _clientSecret =
-          //       responseJson["response"]['paymentIntent']['client_secret'];
+          if (responseJson["response"] is String) {
+            _loading(false);
+            Widgets.showErrorialog(
+              context: context,
+              description: responseJson["response"],
+            );
+            //  } else if (responseJson["response"]['paymentIntent'] != null) {
+            //   String _clientSecret =
+            //       responseJson["response"]['paymentIntent']['client_secret'];
 
-          //   PaymentIntent _paymentIntent = PaymentIntent(
-          //     paymentMethodId: _consentToTreatMap["paymentMap"]["selectedCard"]
-          //         ['id'],
-          //     clientSecret: _clientSecret,
-          //   );
+            //   PaymentIntent _paymentIntent = PaymentIntent(
+            //     paymentMethodId: _consentToTreatMap["paymentMap"]["selectedCard"]
+            //         ['id'],
+            //     clientSecret: _clientSecret,
+            //   );
 
-          //   StripePayment.confirmPaymentIntent(
-          //     _paymentIntent,
-          //   ).then((PaymentIntentResult value) {
-          //     _loading(false);
-          //     showConfirmDialog();
-          //   }).futureError((error) {
-          //     _loading(false);
+            //   StripePayment.confirmPaymentIntent(
+            //     _paymentIntent,
+            //   ).then((PaymentIntentResult value) {
+            //     _loading(false);
+            //     showConfirmDialog();
+            //   }).futureError((error) {
+            //     _loading(false);
 
-          //     Widgets.showErrorialog(
-          //       context: context,
-          //       description: error.toString(),
-          //     );
-          //   });
+            //     Widgets.showErrorialog(
+            //       context: context,
+            //       description: error.toString(),
+            //     );
+            //   });
           } else {
             _loading(false);
 
@@ -1020,11 +1020,12 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   }
 
   Widget servicesWidget() {
-  String selectedService = _container.projectsResponse["serviceType"].toString() == '1'
-                ? "Office Appointment"
-                : _container.projectsResponse["serviceType"].toString() == '2'
-                    ? "Telemedicine"
-                    : "Onsite Appointment";
+    String selectedService =
+        _container.projectsResponse["serviceType"].toString() == '1'
+            ? "Office Appointment"
+            : _container.projectsResponse["serviceType"].toString() == '2'
+                ? "Telemedicine"
+                : "Onsite Appointment";
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -1069,6 +1070,21 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                       return consultationSlotWidget(consultance);
                     }),
           ),
+          if (_consentToTreatMap != null &&
+              _consentToTreatMap["parkingMap"] != null && 
+              _consentToTreatMap["parkingMap"]["parkingFee"])
+            Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(14.0),
+                  border: Border.all(
+                    color: Colors.grey[200],
+                    width: 0.5,
+                  ),
+                ),
+                child: serviceSlotWidget(Services(
+                    amount: _consentToTreatMap["parkingMap"]["parkingFee"],
+                    duration: 60,
+                    subServiceName: "Parking Fee"))),
           SizedBox(height: 6.0),
         ],
       ),
