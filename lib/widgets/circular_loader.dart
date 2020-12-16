@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'custom_loader.dart';
+
 class CircularLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -10,9 +12,10 @@ class CircularLoader extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.4),
       ),
-      child: CircularProgressIndicator(
-        backgroundColor: Colors.grey[200],
-      ),
+      child: CustomLoader()
+      // CircularProgressIndicator(
+      //   backgroundColor: Colors.grey[200],
+      // ),
     );
   }
 }

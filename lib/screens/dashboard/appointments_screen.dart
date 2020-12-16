@@ -7,6 +7,7 @@ import 'package:hutano/screens/appointments/videos_list.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:intl/intl.dart';
@@ -111,7 +112,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           return Text('No appointments.');
         }
         return Center(
-          child: CircularProgressIndicator(),
+          child: CustomLoader(),
         );
       },
     );

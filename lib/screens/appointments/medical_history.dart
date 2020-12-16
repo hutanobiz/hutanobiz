@@ -4,6 +4,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
@@ -253,7 +254,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                         return Text("${snapshot.error}");
                       }
                       return Center(
-                        child: CircularProgressIndicator(),
+                        child: CustomLoader(),
                       );
                     },
                   ),
