@@ -59,16 +59,17 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
-        title: "Appointments",
-        isAddBack: false,
-        color: Colors.white,
-        child: _buildList(),
-      ),
-    );
+    // return Scaffold(
+    //   resizeToAvoidBottomInset: false,
+    //   backgroundColor: AppColors.goldenTainoi,
+    //   body: LoadingBackground(
+    //     title: "Appointments",
+    //     isAddBack: false,
+    //     color: Colors.white,
+    //     child: _buildList(),
+    //   ),
+    // );
+    return _buildList();
   }
 
   Widget _buildList() {

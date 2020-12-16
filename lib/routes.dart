@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hutano/screens/all_appointments/all_appointments.dart';
 import 'package:hutano/screens/appointments/appointment_complete.dart';
 import 'package:hutano/screens/appointments/appointment_detail_screen.dart';
 import 'package:hutano/screens/appointments/cancel_appointment.dart';
@@ -81,6 +82,7 @@ class Routes {
       '/uploadInsuranceImagesScreen';
   static const String treatmentSummaryScreen = '/treatmentSummaryScreen';
   static const String appointmentsScreen = '/appointmentsScreen';
+  static const String allAppointmentsScreen = '/allAppointmentScreen';
   static const String trackTreatmentScreen = '/trackTreatmentScreen';
   static const String appointmentCompleteConfirmation =
       '/appointmentCompleteConfirmation';
@@ -265,6 +267,9 @@ class Routes {
         break;
       case appointmentsScreen:
         return _buildRoute(settings, AppointmentsScreen());
+        break;
+      case allAppointmentsScreen:
+        return _buildRoute(settings, AllAppointments());
         break;
       case trackTreatmentScreen:
         return _buildRoute(

@@ -13,6 +13,8 @@ import 'package:hutano/screens/dashboard/setting.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:permission_handler/permission_handler.dart' as Permission;
 
+import 'all_appointments/all_appointments.dart';
+
 const kstripePublishKey = 'pk_test_LlxS6SLz0PrOm9IY9mxM0LHo006tjnSqWX';
 
 class HomeScreen extends StatefulWidget {
@@ -27,8 +29,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> _children = [
     DashboardScreen(),
-    AppointmentsScreen(),
-    RequestAppointmentsScreen(),
+    AllAppointments(),
+    // AppointmentsScreen(),
+    // RequestAppointmentsScreen(),
     SettingScreen(),
   ];
 
@@ -291,10 +294,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               title: Text('Appointments'),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.receipt),
-              title: Text('Requests'),
-            ),
+            // BottomNavigationBarItem(
+            //   icon: Icon(Icons.receipt),
+            //   title: Text('Requests'),
+            // ),
             BottomNavigationBarItem(
               icon: ImageIcon(
                 AssetImage("images/ic_settings.png"),
