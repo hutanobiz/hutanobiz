@@ -95,6 +95,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                 );
 
               return SingleChildScrollView(
+                primary: true,
                 physics: ClampingScrollPhysics(),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,7 +143,8 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
 
   Widget _listWidget(List<dynamic> _list, int listType) {
     return ListView.builder(
-      physics: ClampingScrollPhysics(),
+      physics: NeverScrollableScrollPhysics(),
+      primary: false,
       shrinkWrap: true,
       itemCount: _list.length,
       itemBuilder: (context, index) {

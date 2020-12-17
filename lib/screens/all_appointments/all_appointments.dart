@@ -55,7 +55,9 @@ class _AllAppointmentsState extends State<AllAppointments>
             SizedBox(
               height: 30,
             ),
-            _tabsContent(),
+            Expanded(
+              child: _tabsContent(),
+            )
           ],
         ),
       ),
