@@ -1072,7 +1072,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           ),
           if (_consentToTreatMap != null &&
               _consentToTreatMap["parkingMap"] != null && 
-              _consentToTreatMap["parkingMap"]["parkingFee"])
+              _consentToTreatMap["parkingMap"]["parkingFee"] != null)
             Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(14.0),
