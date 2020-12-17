@@ -97,43 +97,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                isEmailVerified
-                    ? Container()
-                    : Container(
-                        width: MediaQuery.of(context).size.width,
-                        color: AppColors.windsor,
-                        padding: EdgeInsets.all(4.0),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Text(
-                                "Email not verified.",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 12),
-                              ),
-                            ),
-                            Text(
-                              "Resend Verification Link",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ).onClick(onTap: () {
-                        _loading(true);
-                        SharedPref().getToken().then((value) {
-                          Map map = {};
-                          map["step"] = "5";
-                          _api.emailVerfication(value, map).whenComplete(() {
-                            _loading(false);
-                            Widgets.showToast(
-                                'Verification link sent successfully');
-                          }).futureError((error) => _loading(false));
-                        });
-                      }),
                 Padding(
                   padding: _edgeInsetsGeometry,
                   child: adressBar(),

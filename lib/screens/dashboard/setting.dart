@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
@@ -100,43 +102,43 @@ class _SettingsScreenState extends State<SettingScreen> {
 
   List<Widget> getFormWidget() {
     List<Widget> formWidget = new List();
-    formWidget.add(
-      isEmailVerified
-          ? Container()
-          : Container(
-              width: MediaQuery.of(context).size.width,
-              color: AppColors.windsor,
-              padding: EdgeInsets.all(4.0),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Text(
-                      "Email not verified.",
-                      style: TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                  ),
-                  Text(
-                    "Resend Verification Link",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ],
-              ),
-            ).onClick(onTap: () {
-              setLoading(true);
-              SharedPref().getToken().then((value) {
-                Map map = {};
-                map["step"] = "5";
-                api.emailVerfication(value, map).whenComplete(() {
-                  setLoading(false);
-                  Widgets.showToast('Verification link sent successfully');
-                }).futureError((error) => setLoading(false));
-              });
-            }),
-    );
+    // formWidget.add(
+    //   isEmailVerified
+    //       ? Container()
+    //       : Container(
+    //           width: MediaQuery.of(context).size.width,
+    //           color: AppColors.windsor,
+    //           padding: EdgeInsets.all(4.0),
+    //           child: Row(
+    //             children: <Widget>[
+    //               Expanded(
+    //                 child: Text(
+    //                   "Email not verified.",
+    //                   style: TextStyle(color: Colors.white, fontSize: 12),
+    //                 ),
+    //               ),
+    //               Text(
+    //                 "Resend Verification Link",
+    //                 style: TextStyle(
+    //                   color: Colors.white,
+    //                   fontSize: 12,
+    //                   decoration: TextDecoration.underline,
+    //                 ),
+    //               ),
+    //             ],
+    //           ),
+    //         ).onClick(onTap: () {
+    //           setLoading(true);
+    //           SharedPref().getToken().then((value) {
+    //             Map map = {};
+    //             map["step"] = "5";
+    //             api.emailVerfication(value, map).whenComplete(() {
+    //               setLoading(false);
+    //               Widgets.showToast('Verification link sent successfully');
+    //             }).futureError((error) => setLoading(false));
+    //           });
+    //         }),
+    // );
 
     formWidget.add(
       Stack(
@@ -202,10 +204,48 @@ class _SettingsScreenState extends State<SettingScreen> {
                         SizedBox(
                           height: 8,
                         ),
-                        Text(
-                          name,
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                name,
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.edit,
+                                    color: AppColors.goldenTainoi,
+                                    size: 14,
+                                  ),
+                                  SizedBox(
+                                    width: 4,
+                                  ),
+                                  Text(
+                                    "Edit",
+                                    style: TextStyle(
+                                        color: AppColors.goldenTainoi),
+                                  )
+                                ],
+                              ),
+                            ).onClick(
+                                roundCorners: false,
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    Routes.registerRoute,
+                                    arguments: RegisterArguments(
+                                      phone,
+                                      false,
+                                      isProfileUpdate: true,
+                                    ),
+                                  ).whenComplete(() => getProfileData());
+                                })
+                          ],
                         ),
                         SizedBox(
                           height: 8,
@@ -220,11 +260,34 @@ class _SettingsScreenState extends State<SettingScreen> {
                             SizedBox(
                               width: 4,
                             ),
-                            Text(email,
+                            Text(email + " ",
                                 style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w400,
                                     color: Colors.black54)),
+                            !isEmailVerified
+                                ? Text(
+                                    "(Not verified)",
+                                    style: TextStyle(
+                                        color: AppColors.persian_blue,
+                                        decoration: TextDecoration.underline,
+                                        fontSize: 12),
+                                  ).onClick(onTap: () {
+                                    setLoading(true);
+                                    SharedPref().getToken().then((value) {
+                                      Map map = {};
+                                      map["step"] = "5";
+                                      api
+                                          .emailVerfication(value, map)
+                                          .whenComplete(() {
+                                        setLoading(false);
+                                        Widgets.showToast(
+                                            'Verification link sent successfully');
+                                      }).futureError(
+                                              (error) => setLoading(false));
+                                    });
+                                  })
+                                : SizedBox()
                           ],
                         ),
                         SizedBox(
@@ -248,38 +311,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                           ],
                         ),
                       ], crossAxisAlignment: CrossAxisAlignment.start),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.edit,
-                            color: AppColors.goldenTainoi,
-                            size: 14,
-                          ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Text(
-                            "Edit",
-                            style: TextStyle(color: AppColors.goldenTainoi),
-                          )
-                        ],
-                      ),
-                    ).onClick(
-                        roundCorners: false,
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            Routes.registerRoute,
-                            arguments: RegisterArguments(
-                              phone,
-                              false,
-                              isProfileUpdate: true,
-                            ),
-                          ).whenComplete(() => getProfileData());
-                        })
+                    )
                   ],
                 ),
               ),
