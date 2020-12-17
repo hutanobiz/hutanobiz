@@ -153,15 +153,19 @@ class _HomeScreenState extends State<HomeScreen> {
       Platform.isAndroid ? 'xyz.appening.hutano' : 'xyz.appening.hutano',
       'Hutano Patient',
       'your channel description',
+      sound: RawResourceAndroidNotificationSound('my_sound'),
       playSound: true,
       enableVibration: true,
       importance: Importance.Max,
       priority: Priority.High,
     );
-    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails(
+      sound: 'my_sound.aiff',
+    );
     var platformChannelSpecifics = new NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
+      
         0,
         Platform.isAndroid
             ? message['notification']['title'].toString()
