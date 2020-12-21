@@ -473,41 +473,57 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           responseJson["response"].toString().debugLog();
           throw Exception(responseJson);
         } else {
-           if (responseJson["response"] is String) {
-          _loading(false);
-          Widgets.showErrorialog(
-            context: context,
-            description: responseJson["response"],
-          );
-          //  } else if (responseJson["response"]['paymentIntent'] != null) {
-          //   String _clientSecret =
-          //       responseJson["response"]['paymentIntent']['client_secret'];
+          if (responseJson["response"] is String) {
+            _loading(false);
+            Widgets.showErrorialog(
+              context: context,
+              description: responseJson["response"],
+            );
+            //  } else if (responseJson["response"]['paymentIntent'] != null) {
+            //   String _clientSecret =
+            //       responseJson["response"]['paymentIntent']['client_secret'];
 
-          //   PaymentIntent _paymentIntent = PaymentIntent(
-          //     paymentMethodId: _consentToTreatMap["paymentMap"]["selectedCard"]
-          //         ['id'],
-          //     clientSecret: _clientSecret,
-          //   );
+            //   PaymentIntent _paymentIntent = PaymentIntent(
+            //     paymentMethodId: _consentToTreatMap["paymentMap"]["selectedCard"]
+            //         ['id'],
+            //     clientSecret: _clientSecret,
+            //   );
 
-          //   StripePayment.confirmPaymentIntent(
-          //     _paymentIntent,
-          //   ).then((PaymentIntentResult value) {
-          //     _loading(false);
-          //     showConfirmDialog();
-          //   }).futureError((error) {
-          //     _loading(false);
+            //   StripePayment.confirmPaymentIntent(
+            //     _paymentIntent,
+            //   ).then((PaymentIntentResult value) {
+            //     _loading(false);
+            //     showConfirmDialog();
+            //   }).futureError((error) {
+            //     _loading(false);
 
-          //     Widgets.showErrorialog(
-          //       context: context,
-          //       description: error.toString(),
-          //     );
-          //   });
+            //     Widgets.showErrorialog(
+            //       context: context,
+            //       description: error.toString(),
+            //     );
+            //   });
           } else {
             _loading(false);
 
             responseJson["response"].toString().debugLog();
 
-            showConfirmDialog();
+            // showConfirmDialog();
+            Widgets.showAppDialog(
+                context: context,
+                description: null,
+                buttonText: 'Done',
+                isCongrats: true,
+                onPressed: () {
+                  _container.consentToTreatMap.clear();
+                  _container.getProviderData().clear();
+                  _container.appointmentData.clear();
+
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    Routes.dashboardScreen,
+                    (Route<dynamic> route) => false,
+                    arguments: true,
+                  );
+                });
           }
           _loading(false);
         }
@@ -1020,11 +1036,12 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   }
 
   Widget servicesWidget() {
-  String selectedService = _container.projectsResponse["serviceType"].toString() == '1'
-                ? "Office Appointment"
-                : _container.projectsResponse["serviceType"].toString() == '2'
-                    ? "Telemedicine"
-                    : "Onsite Appointment";
+    String selectedService =
+        _container.projectsResponse["serviceType"].toString() == '1'
+            ? "Office Appointment"
+            : _container.projectsResponse["serviceType"].toString() == '2'
+                ? "Telemedicine"
+                : "Onsite Appointment";
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
