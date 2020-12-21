@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:uuid/uuid.dart';
 
 import 'package:async/async.dart';
 import 'package:flutter/gestures.dart';
@@ -48,6 +49,10 @@ class _SignUpFormState extends State<Register> {
   final _zipController = TextEditingController();
   GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
   String stateId = "";
+  var uuid = new Uuid();
+  String _sessionToken;
+  List<dynamic> _placeList = [];
+  bool isShowList = false;
 
   String _genderGroup = "";
 
@@ -191,6 +196,23 @@ class _SignUpFormState extends State<Register> {
     _dobController.dispose();
 
     super.dispose();
+  }
+
+  void getSuggestion(String input) async {
+    String kPLACES_API_KEY = kGoogleApiKey;
+    String type = '(regions)';
+    String baseURL =
+        'https://maps.googleapis.com/maps/api/place/autocomplete/json';
+    String request =
+        '$baseURL?input=$input&rankby=distance&location=31.45,77.1120762&key=$kPLACES_API_KEY&sessiontoken=$_sessionToken';
+    var response = await http.get(request);
+    if (response.statusCode == 200) {
+      setState(() {
+        _placeList = json.decode(response.body)['predictions'];
+      });
+    } else {
+      throw Exception('Failed to load predictions');
+    }
   }
 
   @override
@@ -483,13 +505,16 @@ class _SignUpFormState extends State<Register> {
     formWidget.add(
       TextFormField(
         controller: _addressController,
+        onChanged: ((val) {
+          if (_sessionToken == null) {
+            setState(() {
+              _sessionToken = uuid.v4();
+            });
+          }
+          isShowList = true;
+          getSuggestion(val);
+        }),
         decoration: InputDecoration(
-            suffixIcon: IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {
-                _onLocationTap();
-              },
-            ),
             labelText: "Address",
             enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey[300]),
@@ -500,6 +525,86 @@ class _SignUpFormState extends State<Register> {
         validator: Validations.validateEmpty,
       ),
     );
+
+    formWidget.add(isShowList
+        ? ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: _placeList.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                onTap: () async {
+                  detail = await _places
+                      .getDetailsByPlaceId(_placeList[index]["place_id"]);
+                  final lat = detail.result.geometry.location.lat;
+                  final lng = detail.result.geometry.location.lng;
+                  print(detail.result.adrAddress.toString());
+                  PlacesDetailsResponse aa = detail;
+                  print(aa);
+                  List<double> coordinates = List();
+                  coordinates.add(aa.result.geometry.location.lng);
+                  coordinates.add(aa.result.geometry.location.lat);
+                  print(aa.result.adrAddress);
+                  if (aa.result.adrAddress.contains('locality')) {
+                    final startIndex =
+                        aa.result.adrAddress.indexOf('"locality">');
+                    final endIndex = aa.result.adrAddress
+                        .indexOf('</span>', startIndex + '"locality">'.length);
+                    _cityController.text = aa.result.adrAddress
+                        .substring(startIndex + '"locality">'.length, endIndex);
+                    print(aa.result.adrAddress.substring(
+                        startIndex + '"locality">'.length, endIndex));
+                  } else {
+                    _cityController.text = "";
+                  }
+
+                  if (aa.result.adrAddress.contains('postal-code')) {
+                    final startIndex =
+                        aa.result.adrAddress.indexOf('"postal-code">');
+                    final endIndex = aa.result.adrAddress.indexOf(
+                        '</span>', startIndex + '"postal-code">'.length);
+                    _zipController.text = aa.result.adrAddress
+                        .substring(
+                            startIndex + '"postal-code">'.length, endIndex)
+                        .substring(0, 5);
+                    print(aa.result.adrAddress.substring(
+                        startIndex + '"postal-code">'.length, endIndex));
+                  } else {
+                    _zipController.text = "";
+                  }
+
+                  if (aa.result.adrAddress.contains('region')) {
+                    final startIndex =
+                        aa.result.adrAddress.indexOf('"region">');
+                    final endIndex = aa.result.adrAddress
+                        .indexOf('</span>', startIndex + '"region">'.length);
+                    print(aa.result.adrAddress
+                        .substring(startIndex + '"region">'.length, endIndex));
+
+                    for (dynamic state in stateList) {
+                      if (state['title'] ==
+                              aa.result.adrAddress.substring(
+                                  startIndex + '"region">'.length, endIndex) ||
+                          state['stateCode'] ==
+                              aa.result.adrAddress.substring(
+                                  startIndex + '"region">'.length, endIndex)) {
+                        _stateController.text = state['title'];
+                        stateId = state["_id"]?.toString();
+                      }
+                    }
+                  } else {
+                    _stateController.text = "";
+                  }
+                  _addressController.text = aa.result.name;
+                  setState(() {
+                    isShowList = false;
+                  });
+                },
+                title: Text(_placeList[index]["description"]),
+              );
+            },
+          )
+        : SizedBox());
 
     formWidget.add(Widgets.sizedBox(height: 29.0));
 
