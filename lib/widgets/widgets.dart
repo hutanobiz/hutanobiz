@@ -74,6 +74,107 @@ static void showErrorialog({
     );
   }
 
+    static void showAppDialog(
+      {@required BuildContext context,
+      String title,
+      @required String description,
+      String buttonText,
+      Function onPressed,
+      bool isError = false,
+      bool isCongrats = false}) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(20.0)), //this right here
+            // child: Center(
+          child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(14),
+                  )),
+              height: 200,
+              width: MediaQuery.of(context).size.width / 1.3,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  isError
+                      ? Text(
+                          'Opps!',
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700),
+                        )
+                      : isCongrats
+                          ? Text(
+                              'Congratulations!',
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700),
+                            )
+                          : Text(
+                              title ?? 'Message',
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                  SizedBox(
+                    height: 12,
+                  ),
+                  Expanded(
+                      child: Text(
+                    description ?? 'Description',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 3,
+                  )),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  FlatButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                      Radius.circular(14),
+                    )),
+                    height: 40,
+                    child: Text(
+                      buttonText ?? 'Close',
+                      style: TextStyle(fontFamily: 'Montserrat',color: Colors.white),
+                    ),
+                    onPressed: onPressed ??
+                        () {
+                          Navigator.pop(context);
+                        },
+                    color: AppColors.windsor,
+                  ),
+                  SizedBox(
+                    height: 16,
+                  )
+                ],
+              )),
+        );
+      },
+    );
+  }
+
   static void showErrorDialog({
     @required BuildContext context,
     String title,
