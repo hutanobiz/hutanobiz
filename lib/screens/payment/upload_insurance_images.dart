@@ -389,7 +389,7 @@ class _UploadInsuranceImagesScreenState
               : backImagePath = croppedFile.path,
         );
 
-        if (_insuranceMap != null && _insuranceMap.isNotEmpty) {
+        if (userInsuranceId == ''){ 
           _uploadImage(
             'Insurance images uploaded successfully',
           );
