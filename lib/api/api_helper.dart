@@ -14,7 +14,10 @@ import 'package:hutano/widgets/widgets.dart';
 
 class ApiBaseHelper {
   NetworkUtil _netUtil = new NetworkUtil();
-  static const String base_url = "https://staging.hutano.xyz/";
+  // static const String base_url = "https://staging.hutano.xyz/";
+  static const String base_url = "https://sa-staging.hutano.xyz/";
+  // static const String base_url = "http://993b8890ce9f.ngrok.io/";
+  // static const String base_url = "http://15531298602f.ngrok.io/";
   static const String imageUrl = base_url + "uploads/";
 
   Future<dynamic> login(Map loginData) {
@@ -130,7 +133,7 @@ class ApiBaseHelper {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
-
+print(base_url);
     return _netUtil
         .post(base_url + "api/patient/appointment-booking",
             body: appointmentData, headers: headers)
@@ -758,6 +761,7 @@ class NetworkUtil {
   Future<dynamic> get(url, {Map headers}) async {
     var responseJson;
     try {
+      log("Api get url: $url");
       final response = await http.get(url, headers: headers);
       final int statusCode = response.statusCode;
       log("Status code: $statusCode");
@@ -792,6 +796,7 @@ class NetworkUtil {
   Future<dynamic> post(String url, {Map headers, body, encoding}) async {
     var responseJson;
     try {
+          log("Api post url: $url");
       final response = await http.post(url,
           body: body, headers: headers, encoding: encoding);
       final int statusCode = response.statusCode;
@@ -808,13 +813,13 @@ class NetworkUtil {
           en["response"].map((m) => showError(m["msg"])).toList();
         }
 
-        debugPrint(en["response"].toString(), wrapWidth: 1024);
+        // debugPrint(en["response"].toString(), wrapWidth: 1024);
         throw Exception(en);
       }
 
       responseJson = _decoder.convert(response.body);
 
-      debugPrint(responseJson.toString(), wrapWidth: 1024);
+      // debugPrint(responseJson.toString(), wrapWidth: 1024);
     } on SocketException {
       showError(Strings.noInternet);
       throw Exception(Strings.noInternet);

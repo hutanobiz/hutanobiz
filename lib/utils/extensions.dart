@@ -229,3 +229,19 @@ extension FormatDate on String {
     ).format(DateTime.parse(this).toLocal()).toString();
   }
 }
+
+extension StringExtension on String {
+  static String placeholderPattern = '(\{\{([a-zA-Z0-9]+)\}\})';
+
+  String format(List replacements) {
+    var template = this;
+    var regExp = RegExp(placeholderPattern);
+    assert(regExp.allMatches(template).length == replacements.length,
+        "Template and Replacements length are incompatible");
+
+    for (var replacement in replacements) {
+      template = template.replaceFirst(regExp, replacement.toString());
+    }
+    return template;
+  }
+}

@@ -7,6 +7,7 @@ import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/fancy_button.dart';
+import 'package:hutano/widgets/feedback_wdiget.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 
@@ -87,7 +88,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
       resizeToAvoidBottomInset: true,
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackground(
-        title: "Rate Doctor",
+        title: "Feedback",
         isAddBack: true,
         isLoading: _isLoading,
         color: AppColors.white_smoke,
@@ -107,8 +108,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                 height: 55.0,
                 child: FancyButton(
                   title: "Submit",
-                  onPressed: (_rating.round() >= 1 &&
-                          (_reasonList != null && _reasonList.length > 0))
+                  onPressed: (_rating.round() >= 1)
                       ? () {
                           FocusScope.of(context).requestFocus(FocusNode());
 
@@ -147,29 +147,43 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
     );
   }
 
+  _onChanged(int count) {
+    setState(() {
+      _rating = count.toDouble();
+    });
+  }
+
   List<Widget> widgetList(Map _providerData) {
     List<Widget> widgetList = List();
 
     widgetList.add(profileWidget(_providerData));
 
-    widgetList.add(rateWidget());
+    // widgetList.add(rateWidget());
 
-    widgetList.add(_rating.round() >= 1
-        ? Text(
-            _rating.round() >= 5
-                ? "Tell us what went right"
-                : "Tell us what went wrong",
-            style: TextStyle(
-              fontSize: 14.0,
-              fontWeight: FontWeight.w700,
-            ),
-          )
-        : Container());
+    widgetList.add(SizedBox(
+      height: 25,
+    ));
+    widgetList.add(FeedbackWidget(
+      onChanged: _onChanged,
+    ));
 
-    widgetList.add(_rating.round() >= 1 ? _selectWrongWidget() : Container());
+    // widgetList.add(_rating.round() >= 1
+    //     ? Text(
+    //         _rating.round() >= 5
+    //             ? "Tell us what went right"
+    //             : "Tell us what went wrong",
+    //         style: TextStyle(
+    //           fontSize: 14.0,
+    //           fontWeight: FontWeight.w700,
+    //         ),
+    //       )
+    //     : Container());
 
+    // widgetList.add(_rating.round() >= 1 ? _selectWrongWidget() : Container());
+
+    widgetList.add(SizedBox(height: 30));
     widgetList.add(Text(
-      "Leave a Review",
+      "Do you have any suggetions to improve your care next time ?",
       style: TextStyle(
         fontSize: 14.0,
         fontWeight: FontWeight.w700,
@@ -387,6 +401,24 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
     );
   }
 
+  Widget showRatingBar() {
+    return RatingBar(
+      initialRating: _rating,
+      itemSize: 32.0,
+      minRating: 1,
+      itemPadding: const EdgeInsets.only(right: 10.0),
+      itemCount: 5,
+      glow: false,
+      itemBuilder: (context, index) => Image(
+        image: AssetImage(
+          "images/ic_star_rating.png",
+        ),
+        color: AppColors.goldenTainoi,
+      ),
+      onRatingUpdate: (double rating) {},
+    );
+  }
+
   Widget _selectWrongWidget() {
     return Container(
       margin: const EdgeInsets.only(top: 20.0, bottom: 40.0),
@@ -459,7 +491,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
             ),
           ),
           child: Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(
                 14.0,
@@ -474,10 +506,38 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                 ),
                 SizedBox(height: 15),
                 Text(
-                  "Thank You.\nWe value your feedback.",
+                  "Thank You For Your Feedback.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
+                ),
+                 SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "You Rated $_name",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(
+                  height: 25,
+                ),
+                showRatingBar(),
+                SizedBox(
+                  height: 25,
+                ),
+                Text(
+                  "We value your feedback.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15,
                     fontWeight: FontWeight.w700,
                     color: Colors.black,
                   ),

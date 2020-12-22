@@ -10,4 +10,13 @@ class Strings {
   static const String loggedIn = "Logged in successfully";
   static const String datePattern = 'MMMM dd, yyyy';
   static const String dateTimePattern = 'MMMM dd, yyyy, HH:mm';
+  static List<String> qustions=[
+    "Did Dr. {{doctor}} see you on time ?",
+    "Did Dr. {{doctor}} to your needs ?",
+    "Are you happy with the care you recieved today ?",
+    "Would you recommend a Family member to see {{doctor}} ?",
+    "Would you see {{doctor}} again?",
+  ];
+
+
 }
