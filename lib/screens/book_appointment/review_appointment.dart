@@ -475,7 +475,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         } else {
           if (responseJson["response"] is String) {
             _loading(false);
-            Widgets.showErrorialog(
+            Widgets.showAppDialog(
+              isError: true,
               context: context,
               description: responseJson["response"],
             );
@@ -508,9 +509,26 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             responseJson["response"].toString().debugLog();
 
             // showConfirmDialog();
+            String name = '', nameTitle = '';
+            if (_profileMap['userId'] is Map) {
+              if (_profileMap["userId"] != null) {
+                nameTitle =
+                    _profileMap["userId"]["title"]?.toString() ?? 'Dr. ';
+                name =
+                    nameTitle + _profileMap["userId"]["fullName"]?.toString() ??
+                        "---";
+              }
+            } else if (_profileMap["User"] != null &&
+                _profileMap["User"].length > 0) {
+              nameTitle =
+                  (_profileMap["User"][0]["title"]?.toString() ?? 'Dr. ');
+              name = '$nameTitle ' +
+                  (_profileMap["User"][0]["fullName"]?.toString() ?? "---");
+            }
             Widgets.showAppDialog(
                 context: context,
-                description: null,
+                description:
+                    'Your telemedicine appointment with $name is complete.',
                 buttonText: 'Done',
                 isCongrats: true,
                 onPressed: () {
