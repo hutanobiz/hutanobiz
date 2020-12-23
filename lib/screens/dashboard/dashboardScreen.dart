@@ -10,6 +10,7 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/circular_loader.dart';
+import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/provider_tile_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
@@ -44,6 +45,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
   List<dynamic> _doctorList = List();
   List<dynamic> _specialityList = List();
   InheritedContainerState _container;
+  final TextEditingController _typeContoller = TextEditingController();
+  final TextEditingController _placeContoller = TextEditingController();
+  final TextEditingController _insuranceContoller = TextEditingController();
+  Map typeMap = Map();
+  Map placesMap = Map();
+  Map insuranceMap = Map();
+  String selectedType = '1', selectedPlace = '1', selectedInsurance = '1';
+  String avatar;
 
   bool _isLoading = false;
   List<String> _topProvidersList = [
@@ -66,6 +75,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     _professionalTitleFuture = _api.getProfessionalTitle();
     _specialtiesFuture = _api.getSpecialties();
+    typeMap['1'] = "At the provider's office";
+    typeMap['2'] = 'Virtually by telemedicine';
+    typeMap['3'] = 'In your home or office';
+    insuranceMap['1'] = 'All Providers';
+    insuranceMap['2'] = 'Provider who take my insurance';
+    placesMap['1'] = 'Providers near me';
+    placesMap['2'] = 'Type City or Zip Code';
+    _typeContoller.text = typeMap[selectedType];
+    _placeContoller.text = placesMap[selectedPlace];
+    _insuranceContoller.text = insuranceMap[selectedInsurance];
   }
 
   @override
@@ -79,6 +98,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               isEmailVerified = value["response"]["isEmailVerified"] ?? false;
               SharedPref().setBoolValue("isEmailVerified",
                   value["response"]["isEmailVerified"] ?? false);
+              avatar = value['response']['avatar'].toString();
             });
           });
         });
@@ -98,92 +118,166 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
-      backgroundColor: AppColors.white_smoke,
+      backgroundColor: AppColors.goldenTainoi,
       body: SafeArea(
         child: Stack(
           children: <Widget>[
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                isEmailVerified
-                    ? Container()
-                    : Container(
-                        width: MediaQuery.of(context).size.width,
-                        color: AppColors.windsor,
-                        padding: EdgeInsets.all(4.0),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Text(
-                                "Email not verified.",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 12),
-                              ),
-                            ),
-                            Text(
-                              "Resend Verification Link",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ).onClick(onTap: () {
-                        _loading(true);
-                        SharedPref().getToken().then((value) {
-                          Map map = {};
-                          map["step"] = "5";
-                          _api.emailVerfication(value, map).whenComplete(() {
-                            _loading(false);
-                            Widgets.showToast(
-                                'Verification link sent successfully');
-                          }).futureError((error) => _loading(false));
-                        });
-                      }),
                 Padding(
-                  padding: _edgeInsetsGeometry,
-                  child: adressBar(),
-                ),
-                Padding(
-                  padding: _edgeInsetsGeometry,
-                  child: searchBar(),
-                ),
-                Expanded(
-                  child: _searchText != ''
-                      ? _buildList()
-                      : Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin: const EdgeInsets.only(top: 16.0),
+                  padding: const EdgeInsets.fromLTRB(21.0, 17.0, 0.0, 17.0),
+                  child: Row(
+                    children: <Widget>[
+                      Image(
+                        width: 32.0,
+                        height: 32.0,
+                        image: AssetImage("images/logo.png"),
+                      ),
+                      Spacer(),
+                      Image(
+                        width: 28.0,
+                        height: 28.0,
+                        image: AssetImage("images/ic_notification.png"),
+                      ),
+                      SizedBox(width: 16),
+                      InkWell(
+                        onTap: () {},
+                        child: Container(
+                          width: 32.0,
+                          height: 32.0,
+                          alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                              topLeft: const Radius.circular(22.0),
-                              topRight: const Radius.circular(22.0),
+                            color: Colors.grey[100],
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Colors.grey[300],
                             ),
                           ),
-                          child: ListView(
-                            padding: const EdgeInsets.only(top: 20, bottom: 20),
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: Text(
-                                  'Find Top Providers',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                          child: avatar == null || avatar == "null"
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: Image(
+                                    image:
+                                        AssetImage('images/profile_user.png'),
+                                    fit: BoxFit.cover,
+                                    // height: 32.0,
+                                    // width: 32.0,
+                                  ),
+                                )
+                              : ClipOval(
+                                  child: Image.network(
+                                    ApiBaseHelper.imageUrl + avatar,
+                                    // width: 76.0,
+                                    // height: 76.0,
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
-                              ),
-                              topProviderWidget(),
-                              myDoctorsWidget(),
-                              professionalTitleWidget(),
-                              specialtiesWidget(),
-                            ],
-                          ),
                         ),
+                      ),
+                      SizedBox(width: 20),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: const Radius.circular(22.0),
+                        topRight: const Radius.circular(22.0),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: _edgeInsetsGeometry,
+                          child: adressBar(),
+                        ),
+                        Padding(
+                          padding: _edgeInsetsGeometry,
+                          child: searchBar(),
+                        ),
+                        Expanded(
+                          child: _searchText != ''
+                              ? _buildList()
+                              : Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  margin: const EdgeInsets.only(top: 16.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: const Radius.circular(22.0),
+                                      topRight: const Radius.circular(22.0),
+                                    ),
+                                  ),
+                                  child: ListView(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20),
+                                    children: <Widget>[
+                                      Text(
+                                        'How do you want to receive care?',
+                                        style: TextStyle(
+                                          color: AppColors.midnight_express,
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 20),
+                                      picker(
+                                          _typeContoller,
+                                          "",
+                                          selectedType == '1'
+                                              ? 'images/ic_office_app.png'
+                                              : selectedType == '2'
+                                                  ? 'images/ic_provider_video.png'
+                                                  : 'images/ic_provider_onsite.png',
+                                          () {
+                                        mapBottomDialog(
+                                            _typeContoller, typeMap, 1);
+                                      }),
+                                      SizedBox(height: 20),
+                                      picker(_placeContoller, "",
+                                          'images/near_location.png', () {
+                                        mapBottomDialog(
+                                            _placeContoller, placesMap, 2);
+                                      }),
+                                      SizedBox(height: 20),
+                                      picker(_insuranceContoller, "",
+                                          'images/my_insurance.png', () {
+                                        mapBottomDialog(_insuranceContoller,
+                                            insuranceMap, 3);
+                                      }),
+                                      SizedBox(height: 20),
+                                      FancyButton(
+                                          title: 'Search providers',
+                                          onPressed: () {}),
+                                      SizedBox(height: 20),
+                                      // Text(
+                                      //   'Find Top Providers',
+                                      //   style: TextStyle(
+                                      //     color: AppColors.midnight_express,
+                                      //     fontSize: 14,
+                                      //     fontWeight: FontWeight.w700,
+                                      //   ),
+                                      // ),
+                                      // topProviderWidget(),
+                                      myDoctorsWidget(),
+                                      // professionalTitleWidget(),
+                                      // specialtiesWidget(),
+                                      // pointsWidget(),
+                                      // SizedBox(height: 20),
+                                      // inviteWidget(),
+                                      SizedBox(height: 20)
+                                    ],
+                                  ),
+                                ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -192,6 +286,196 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
     );
+  }
+
+  Container pointsWidget() {
+    return Container(
+        height: 186,
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey[100]),
+            color: AppColors.windsor.withOpacity(0.1)),
+        child: Column(
+          // mainAxisAlignment:
+          //     MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Image.asset(
+                  'images/refer_star.png',
+                  height: 48,
+                ),
+                Text(
+                  '76',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 26,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Spacer(),
+                Image.asset(
+                  'images/refer_info.png',
+                  height: 48,
+                ),
+              ],
+            ),
+            Text(
+              'STAR BALANCE',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            Divider(color: Colors.white,),
+            Row(
+              children: [
+                Text(
+                  'REDEEM POINTS',
+                  style: TextStyle(
+                    color: AppColors.windsor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Spacer(),
+                Icon(Icons.arrow_forward_ios,
+                    color: AppColors.windsor, size: 12)
+              ],
+            )
+          ],
+        ));
+  }
+
+  Container inviteWidget() {
+    return Container(
+        height: 80,
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey[100]),
+            color: Colors.white),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset('images/refer_icon.png', height: 44),
+            SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Invite Friends',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Text(
+                        'Earn more points',
+                        style: TextStyle(
+                          color: AppColors.windsor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(width: 4),
+                      Icon(Icons.arrow_forward_ios,
+                          color: AppColors.windsor, size: 12)
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ));
+  }
+
+  Widget picker(final controller, String labelText, String image, onTap) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        splashColor: Colors.grey[300],
+        onTap: () {
+          FocusScope.of(context).unfocus();
+          onTap();
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 1.0),
+          child: TextFormField(
+            controller: controller,
+            enabled: false,
+            style: const TextStyle(fontSize: 14.0, color: Colors.black87),
+            decoration: InputDecoration(
+              prefixIcon: Padding(
+                padding: const EdgeInsets.all(13.0),
+                child: Image.asset(image, height: 16),
+              ),
+              suffixIcon: Icon(
+                Icons.keyboard_arrow_down,
+                color: Colors.grey[400],
+              ),
+              labelText: labelText,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void mapBottomDialog(controller, Map list, int value) {
+    showModalBottomSheet(
+        context: _scaffoldKey.currentContext,
+        builder: (context) {
+          return Container(
+            height: list.length * 60.0,
+            child: ListView.builder(
+              itemCount: list.length,
+              itemBuilder: (context, index) {
+                String key = list.keys.elementAt(index);
+                return ListTile(
+                  title: Center(
+                    child: Text(
+                      list[key],
+                      style: TextStyle(
+                          // color: key == value ? AppColors.neon_blue : Colors.black,
+                          // fontSize: key == value ? 20.0 : 16.0,
+                          ),
+                    ),
+                  ),
+                  onTap: () {
+                    setState(() {
+                      controller.text = list[key];
+                      switch (value) {
+                        case 1:
+                          selectedType = key;
+
+                          break;
+                        case 2:
+                          selectedPlace = key;
+                          break;
+                        default:
+                          selectedInsurance = key;
+                      }
+                      Navigator.pop(context);
+                    });
+                  },
+                );
+              },
+            ),
+          );
+        });
   }
 
   Widget adressBar() {
@@ -205,59 +489,35 @@ class _DashboardScreenState extends State<DashboardScreen> {
           image: AssetImage("images/ic_location.png"),
         ),
         SizedBox(width: 10),
-        _isLocLoading
-            ? Expanded(
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              )
-            : InkWell(
-                onTap: () => _navigateToMap(context),
-                child: Row(
-                  children: <Widget>[
-                    _currentddress != null && _currentddress.length > 45
-                        ? SizedBox(
-                            width: 250,
-                            child: Text(
-                              _currentddress,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: AppColors.midnight_express,
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          )
-                        : Text(
-                            _currentddress,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: AppColors.midnight_express,
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                    _currentddress.length > 45
-                        ? Container()
-                        : SizedBox(width: 5),
-                    Image(
-                      width: 8.0,
-                      height: 4.0,
-                      image: AssetImage("images/ic_arrow_down.png"),
-                    ),
-                  ],
+        InkWell(
+          onTap: () => _navigateToMap(context),
+          child: Row(
+            children: <Widget>[
+              Text(
+                _isLocLoading
+                    ? '---'
+                    : _currentddress.substring(0, 20) + ' \u2022 ',
+                maxLines: 1,
+                style: TextStyle(
+                  color: AppColors.windsor,
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-        Expanded(
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: Image(
-              width: 20.0,
-              height: 20.0,
-              image: AssetImage("images/ic_notification.png"),
-            ),
+              Text(
+                'Within 60 kilometers ',
+                style: TextStyle(
+                  color: AppColors.windsor,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+              Image(
+                width: 10.0,
+                height: 5.0,
+                image: AssetImage("images/ic_arrow_down.png"),
+              ),
+            ],
           ),
         ),
       ],
@@ -269,74 +529,57 @@ class _DashboardScreenState extends State<DashboardScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Text(
-          "What are you looking for?",
-          style: TextStyle(
-            color: AppColors.midnight_express,
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 6.0),
-        InkWell(
-          // onTap: () {
-          //   conatiner.projectsResponse.clear();
-          //   Navigator.of(context).pushNamed(
-          //     Routes.dashboardSearchScreen,
-          //     arguments: _topSpecialtiesList,
-          //   );
-          // },
-          // child: Container(
-          // width: MediaQuery.of(context).size.width,
-          // padding: const EdgeInsets.fromLTRB(12.0, 15.0, 14.0, 14.0),
-          // decoration: BoxDecoration(
-          //   image: DecorationImage(
-          //     image: AssetImage("images/ic_search.png"),
-          //     alignment: Alignment.centerRight,
-          //   ),
-          //   color: Colors.white,
-          //   borderRadius: BorderRadius.all(
-          //     Radius.circular(
-          //       8.0,
-          //     ),
-          //   ),
-          // ),
-          child: TextFormField(
-            maxLines: 1,
-            onChanged: (value) {
-              _searchText = value;
+        // Text(
+        //   "What are you looking for?",
+        //   style: TextStyle(
+        //     color: AppColors.midnight_express,
+        //     fontSize: 16.0,
+        //     fontWeight: FontWeight.bold,
+        //   ),
+        // ),
+        // SizedBox(height: 6.0),
+        // InkWell(
+        //   child:
+        TextFormField(
+          maxLines: 1,
+          onChanged: (value) {
+            _searchText = value;
 
-              setState(() {
-                _searchFuture = _api.searchDoctors(_searchText);
-              });
-            },
-            keyboardType: TextInputType.text,
-            decoration: InputDecoration(
-              suffixIcon: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Image.asset("images/ic_search.png", height: 24),
+            setState(() {
+              _searchFuture = _api.searchDoctors(_searchText);
+            });
+          },
+          keyboardType: TextInputType.text,
+          decoration: InputDecoration(
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+            filled: true,
+            fillColor: AppColors.snow,
+            labelStyle: TextStyle(fontSize: 13.0, color: Colors.grey),
+            hintText: "Search provider by name or phone no.",
+            prefixIcon: Padding(
+              padding: const EdgeInsets.all(13.0),
+              child: Image.asset(
+                'images/search.png',
+                height: 16,
+                // color: Colors.black,
               ),
-              floatingLabelBehavior: FloatingLabelBehavior.never,
-              filled: true,
-              fillColor: AppColors.snow,
-              labelStyle: TextStyle(fontSize: 13.0, color: Colors.grey),
-              hintText: "Type the name of a provider or specialty",
-              prefixIcon: Icon(
-                Icons.search,
-                color: Colors.black,
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: AppColors.windsor),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: AppColors.windsor),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              contentPadding: EdgeInsets.fromLTRB(12.0, 15.0, 14.0, 14.0),
             ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: AppColors.snow),
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            // focusedBorder: OutlineInputBorder(
+            //   borderSide: BorderSide(color: AppColors.snow),
+            //   borderRadius: BorderRadius.circular(8.0),
+            // ),
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: AppColors.snow),
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            contentPadding: EdgeInsets.fromLTRB(12.0, 15.0, 14.0, 14.0),
           ),
         ),
+        // ),
         // ),
       ],
     );
@@ -559,7 +802,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       width: 143,
       margin: const EdgeInsets.only(top: 20, bottom: 30),
       child: ListView.separated(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
         separatorBuilder: (BuildContext context, int index) =>
             SizedBox(width: 13),
         scrollDirection: Axis.horizontal,
@@ -634,22 +877,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Text(
-                  'My Doctors',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
+              Text(
+                'My Providers',
+                style: TextStyle(
+                  color: AppColors.midnight_express,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               Container(
-                height: 175,
+                height: 158,
                 margin: const EdgeInsets.only(top: 20, bottom: 30),
                 child: ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                   separatorBuilder: (BuildContext context, int index) =>
                       SizedBox(width: 13),
                   scrollDirection: Axis.horizontal,
@@ -683,8 +923,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     }
 
                     return Container(
-                      height: 173,
-                      width: 160,
+                      height: 156,
+                      width: 130,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(color: Colors.grey[100]),
@@ -695,8 +935,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           children: <Widget>[
                             Container(
                               margin: const EdgeInsets.all(12),
-                              width: 72.0,
-                              height: 72.0,
+                              width: 52.0,
+                              height: 52.0,
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
@@ -706,14 +946,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ? Image(
                                       image:
                                           AssetImage('images/profile_user.png'),
-                                      height: 72.0,
-                                      width: 72.0,
+                                      height: 52.0,
+                                      width: 52.0,
                                     )
                                   : ClipOval(
                                       child: Image.network(
                                         ApiBaseHelper.imageUrl + avatar,
-                                        width: 72.0,
-                                        height: 72.0,
+                                        width: 52.0,
+                                        height: 52.0,
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -755,7 +995,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                 ),
                                 child: Text(
-                                  "Book Appointment",
+                                  "BOOK APPT.",
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 12.0,
@@ -823,22 +1063,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Text(
-                  'Professional titles',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
+              Text(
+                'Professional titles',
+                style: TextStyle(
+                  color: AppColors.midnight_express,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               Container(
                 height: 130,
                 margin: const EdgeInsets.only(top: 20, bottom: 25),
                 child: ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                   separatorBuilder: (BuildContext context, int index) =>
                       SizedBox(width: 13),
                   scrollDirection: Axis.horizontal,
@@ -938,22 +1174,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Text(
-                  'Top Specialities',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
+              Text(
+                'Top Specialities',
+                style: TextStyle(
+                  color: AppColors.midnight_express,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               Container(
                 height: 137,
                 margin: const EdgeInsets.only(top: 20, bottom: 30),
                 child: ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                   separatorBuilder: (BuildContext context, int index) =>
                       SizedBox(width: 13),
                   scrollDirection: Axis.horizontal,
