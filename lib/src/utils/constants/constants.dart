@@ -1,0 +1,56 @@
+const String routeLaunch = "routeLaunch";
+const String routeLogin = "routeLogin";
+const String routeRegister = "routeRegister";
+const String routeForgotPassword = "routeForgotPassword";
+const String routeResetPin = "routeResetPin";
+const String routeResetPassword = "routeResetPassword";
+const String routePinVerification = "routePinVerification";
+const String routeWelcomeScreen = "routeWelcomeScreen";
+const String routeLoginPin = "routeLoginPin";
+const String routeEmailVerification = "routeEmailVerification";
+const String routeEmailVerificationComplete = "routeEmailVerificationComplete";
+const String routeMyMedicalHistory = "routeMyMedicalHistory";
+const String routeBodySymptoms = "routeBodySymptoms";
+const String routePainSymptoms = "routePainSymptoms";
+const String routeSymptomsInformation = "routeSymptomsInformation";
+const String routeGeneralizedPainSymptoms = "routeGeneralizedPainSymptoms";
+const String routeMedicineInformation = "routeMedicineInformation";
+const String routeUploadTestDocuments = "routeUploadTestDocuments";
+const String routeTestDocumentsList = "routeTestDocumentsList";
+const String routeUploadSymptomsImages = "routeUploadSymptomsImages";
+const String routePaymentMethods = "routePaymentMethods";
+const String routeCheckout = "routeCheckout";
+const String routeFamilyCircle = "routeFamilyCircle";
+const String routeAddPaymentOption = "routeAddPaymentOption";
+const String routeInviteFamilyMember = "routeInviteFamilyMember";
+const String routeSetupPin = "routeSetupPin";
+const String routeProviderSearch = "routeProviderSearch";
+const String routeRegisterNumber = "routeRegisterNumber";
+const String routeMemberMessage = "routeMemberMessage";
+const String routeProviderAddNetwork = "routeProviderAddNetwork";
+const String routeInviteByEmail = "routeInviteByEmail";
+const String routeInviteByText = "routeInviteByText";
+const String routeReedmPoints ="routeRedeempoints";
+const String routeMyAppointments = "routeMyAppointments";
+const String routeAddProvider = "routeAddProvider";
+const String routeSearch = "routeSearch";
+const String routeAddFamilyMember = "routeAddFamilyMember";
+const String routeMyProviderNetwork = "routeMyProviderNetwork";
+const String routeHome = "routeHome";
+const String routeSearchMember = "routeSearchMember";
+const String routeCreateGroup = "routeCreateGroup";
+const String routeInsuranceList = "routeInsuranceList";
+const String routeUploadInsuranceImage = "routeUploadInsuranceImage";
+const String routeWebView = "routeWebView";
+
+const String apiToken = "apiToken";
+
+const int splashTime = 2;
+const String ddMMMMyyyy= 'dd MMMM yyyy' ;
+
+const int dataLimit=20;
+
+const String stepOne = "1";
+const String stepTwo = "2";
+const String stepThree = "3";
+const String stepFour = "4";
