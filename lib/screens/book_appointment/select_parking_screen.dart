@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/validations.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
@@ -138,7 +139,7 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
     _widgetList.add(
       Container(
         padding: const EdgeInsets.only(top: 20, bottom: 20),
-        margin: const EdgeInsets.only(bottom: 20),
+        margin: const EdgeInsets.only(bottom: 20, right: 1),
         decoration: BoxDecoration(
           color: Colors.white,
           shape: BoxShape.rectangle,
@@ -148,100 +149,123 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(right: 20, left: 20, bottom: 20),
+              padding: const EdgeInsets.only(right: 20, left: 20),
               child: Row(
                 children: [
-                  Text(
-                    'Parking Fee',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16.0,
-                    ),
-                  ),
                   Expanded(
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.circular(7),
-                          border:
-                              Border.all(width: 0.5, color: Colors.grey[300]),
-                        ),
-                        child: Text(
-                          "\$${_parkingFee.round().toString()}  /hr",
-                          style: TextStyle(
-                            color: Colors.black87,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12.0,
-                          ),
-                        ),
+                    flex: 3,
+                    child: Text(
+                      'Parking Fee',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16.0,
                       ),
                     ),
-                  )
-                ],
-              ),
-            ),
-            SliderTheme(
-              data: SliderTheme.of(context).copyWith(
-                activeTrackColor: AppColors.goldenTainoi,
-                inactiveTrackColor: Colors.grey[300],
-                thumbColor: AppColors.goldenTainoi,
-                thumbShape: RoundSliderThumbShape(
-                  enabledThumbRadius: 12,
-                  disabledThumbRadius: 12,
-                ),
-                showValueIndicator: ShowValueIndicator.always,
-                valueIndicatorColor: Colors.transparent,
-                valueIndicatorTextStyle: TextStyle(
-                  color: Colors.black.withOpacity(0.90),
-                  fontWeight: FontWeight.w500,
-                  fontSize: 13.0,
-                ),
-              ),
-              child: Slider.adaptive(
-                value: _parkingFee,
-                min: 0,
-                max: 100,
-                label: "\$${_parkingFee.round().toString()}",
-                onChanged: (v) {
-                  setState(() {
-                    _parkingFee = v;
-                  });
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-              child: Row(
-                children: [
-                  Text(
-                    'Free',
-                    style: TextStyle(
-                      color: Colors.black.withOpacity(0.67),
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12.0,
-                    ),
                   ),
                   Expanded(
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        "\$100",
-                        style: TextStyle(
-                          color: Colors.black.withOpacity(0.67),
+                    flex: 1,
+                    child: TextFormField(
+                      validator: Validations.validateEmpty,
+                      autovalidateMode: AutovalidateMode.always,
+                      keyboardType: TextInputType.number,
+                      initialValue:
+                          _parkingFee == null ? "" : _parkingFee.toString(),
+                      style: TextStyle(
+                          fontSize: 13.0,
                           fontWeight: FontWeight.w500,
-                          fontSize: 12.0,
+                          color: Colors.black87),
+                      onChanged: (fee) {
+                        setState(() {
+                          _parkingFee = double.parse(fee);
+                        });
+                      },
+                      decoration: InputDecoration(
+                        prefix: Text("\$ ",
+                            style: TextStyle(
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black87)),
+                        suffix: Text(" /hr",
+                            style: TextStyle(
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black87)),
+                        isDense: true,
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey[300]),
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
                         ),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
-            )
+            ),
+            // SliderTheme(
+            //   data: SliderTheme.of(context).copyWith(
+            //     activeTrackColor: AppColors.goldenTainoi,
+            //     inactiveTrackColor: Colors.grey[300],
+            //     thumbColor: AppColors.goldenTainoi,
+            //     thumbShape: RoundSliderThumbShape(
+            //       enabledThumbRadius: 12,
+            //       disabledThumbRadius: 12,
+            //     ),
+            //     showValueIndicator: ShowValueIndicator.always,
+            //     valueIndicatorColor: Colors.transparent,
+            //     valueIndicatorTextStyle: TextStyle(
+            //       color: Colors.black.withOpacity(0.90),
+            //       fontWeight: FontWeight.w500,
+            //       fontSize: 13.0,
+            //     ),
+            //   ),
+            //   child: Slider.adaptive(
+            //     value: _parkingFee,
+            //     min: 0,
+            //     max: 100,
+            //     label: "\$${_parkingFee.round().toString()}",
+            //     onChanged: (v) {
+            //       setState(() {
+            //         _parkingFee = v;
+            //       });
+            //     },
+            //   ),
+            // ),
+            // Padding(
+            //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+            //   child: Row(
+            //     children: [
+            //       Text(
+            //         'Free',
+            //         style: TextStyle(
+            //           color: Colors.black.withOpacity(0.67),
+            //           fontWeight: FontWeight.w500,
+            //           fontSize: 12.0,
+            //         ),
+            //       ),
+            //       Expanded(
+            //         child: Align(
+            //           alignment: Alignment.centerRight,
+            //           child: Text(
+            //             "\$100",
+            //             style: TextStyle(
+            //               color: Colors.black.withOpacity(0.67),
+            //               fontWeight: FontWeight.w500,
+            //               fontSize: 12.0,
+            //             ),
+            //           ),
+            //         ),
+            //       )
+            //     ],
+            //   ),
+            // )
           ],
         ),
       ),
