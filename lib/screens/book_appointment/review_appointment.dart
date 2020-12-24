@@ -525,10 +525,18 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
               name = '$nameTitle ' +
                   (_profileMap["User"][0]["fullName"]?.toString() ?? "---");
             }
+            var appointmentType = '';
+            appointmentType = _container.projectsResponse["serviceType"]
+                        .toString() ==
+                    '1'
+                ? "Office"
+                : _container.projectsResponse["serviceType"].toString() == '2'
+                    ? "Telemedicine"
+                    : "Onsite";
             Widgets.showAppDialog(
                 context: context,
                 description:
-                    'Your telemedicine appointment with $name is complete.',
+                    'Your $appointmentType appointment with $name is complete.',
                 buttonText: 'Done',
                 isCongrats: true,
                 onPressed: () {
