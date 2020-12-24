@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/src/utils/constants/constants.dart';
+import 'package:hutano/src/utils/navigation.dart';
 import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
@@ -97,8 +99,10 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
         rightButtonText: 'I do not have insurance',
         onRightButtonTap: !_insuranceViewMap['isPayment'] && isFromRegister
             ? () {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    Routes.dashboardScreen, (Route<dynamic> route) => false);
+              //TODO : Refactor : Adding welcome screen code
+              NavigationUtils.pushReplacement(context, routeWelcomeScreen);
+                // Navigator.of(context).pushNamedAndRemoveUntil(
+                //     Routes.dashboardScreen, (Route<dynamic> route) => false);
               }
             : null,
         child: Stack(

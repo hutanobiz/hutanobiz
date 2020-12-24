@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:hutano/utils/shared_prefrences.dart';
 
+import '../../../../routes.dart';
 import '../../../apis/api_manager.dart';
 import '../../../apis/error_model.dart';
 import '../../../utils/address_util.dart';
@@ -96,6 +98,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   List<Address> _placeList = [];
   List<AddressComponents> _placeDetail = [];
   bool isSecureField = true;
+  String deviceToken;
 
   final labelStyle = TextStyle(fontSize: fontSize14, color: colorGrey60);
 
@@ -104,6 +107,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => _getInsuranceList());
     WidgetsBinding.instance.addPostFrameCallback((_) => _getStatesList());
+
+    SharedPref().getValue("deviceToken").then((value) {
+      deviceToken = value;
+    });
 
     if (_addressFocus != null) {
       _addressFocus.addListener(() {
@@ -330,13 +337,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
     try {
       _registerModel.fullName =
           "${_registerModel.firstName} ${_registerModel.lastName}";
+      _registerModel.deviceToken = deviceToken;
       var res = await ApiManager().registerUser(_registerModel, _imageFile);
-      setString(PreferenceKey.id, res.response.sId);
-      setString(PreferenceKey.email, res.response.email);
-      setInt(PreferenceKey.gender, res.response.gender);
-      setString(PreferenceKey.tokens, res.response.tokens[0].token);
-      setString(PreferenceKey.phone, res.response.phoneNumber.toString());
-      NavigationUtils.pushReplacement(context, routeWelcomeScreen);
+
+
+      //TODO : Verify code
+      SharedPref().setValue(PreferenceKey.id, res.response.sId);
+      SharedPref().setValue(PreferenceKey.email, res.response.email);
+      SharedPref().setValue(PreferenceKey.gender, res.response.gender);
+      SharedPref().setValue(PreferenceKey.tokens, res.response.tokens[0].token);
+      SharedPref().setValue(PreferenceKey.phone, res.response.phoneNumber.toString());
+
+      //TODO : Verify code
+      SharedPref().saveToken(res.response.tokens[0].token);
+      SharedPref().setValue("fullName", _registerModel.fullName);
+      SharedPref().setValue("complete", "0");
+
+      //TODO:
+      //Note : Old register coded added
+      Map _insuranceMap = {};
+      _insuranceMap['isPayment'] = false;
+      _insuranceMap['isFromRegister'] = true;
+      
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        Routes.insuranceListScreen,
+        (Route<dynamic> route) => false,
+        arguments: _insuranceMap,
+      );
+
+      // NavigationUtils.pushReplacement(context, routeWelcomeScreen);
+
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);

@@ -8,6 +8,8 @@ import 'package:http/http.dart' as http;
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/src/utils/constants/constants.dart';
+import 'package:hutano/src/utils/navigation.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/dashed_border.dart';
@@ -166,8 +168,13 @@ class _UploadInsuranceImagesScreenState
       Widgets.showToast("Please upload front insurance card image");
     } else {
       if (isFromRegister) {
-        Navigator.of(context).pushNamedAndRemoveUntil(
-            Routes.dashboardScreen, (Route<dynamic> route) => false);
+        //TODO : refactor 
+        // adding welcome screen code
+
+        NavigationUtils.pushReplacement(context, routeWelcomeScreen);
+        
+        // Navigator.of(context).pushNamedAndRemoveUntil(
+        //     Routes.dashboardScreen, (Route<dynamic> route) => false);
       } else {
         Navigator.popUntil(
           context,

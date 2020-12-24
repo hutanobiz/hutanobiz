@@ -15,6 +15,7 @@ class ReqRegister {
   String referedBy;
   int type;
   int step;
+  String deviceToken;
   int gender;
   String fullName;
   ReqRegister(
@@ -34,6 +35,7 @@ class ReqRegister {
       this.referedBy,
       this.type,
       this.step,
+      this.deviceToken,
       this.gender,
       this.fullName});
 
@@ -44,6 +46,7 @@ class ReqRegister {
       'lastName': lastName,
       'address': address,
       'email': email,
+      'deviceToken': deviceToken,
       'zipCode': zipCode,
       'state': state,
       'dob': dob,
@@ -71,6 +74,7 @@ class ReqRegister {
       email: map['email'],
       zipCode: map['zipCode'],
       state: map['state'],
+      deviceToken: map['deviceToken'],
       dob: map['dob'],
       city: map['city'],
       insuranceId: map['insuranceId'],

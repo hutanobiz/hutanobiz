@@ -29,7 +29,8 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
   void initState() {
     SharedPref().getToken().then((token) {
       setState(() {
-        _requestsConsent = api.getConsentContent(token);
+        //TODO : MAKE API
+        // _requestsConsent = api.getConsentContent(token);
       });
     });
     super.initState();

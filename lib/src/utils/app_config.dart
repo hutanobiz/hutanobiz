@@ -21,14 +21,17 @@ void setEnvironment(Environment env) {
 }
 
 dynamic get apiBaseUrl {
+  _config = devConstants;
   return _config[_baseUrl];
 }
 
 dynamic get imageUrl {
+  _config = devConstants;
   return _config[_baseImageUrl];
 }
 
 dynamic get googleApiKey {
+  _config = devConstants;
   return _config[_googleApiKey];
 }
 

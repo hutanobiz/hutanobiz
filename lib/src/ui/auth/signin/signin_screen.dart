@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:local_auth/local_auth.dart';
 
 import '../../../apis/api_manager.dart';
@@ -45,10 +49,31 @@ class _SignInScreenState extends State<SignInScreen> {
   String selectedCountry = "+1";
   bool isRememberMe = false;
   bool isSecureField = true;
+  String deviceToken;
 
   @override
   void initState() {
     super.initState();
+
+    //TODO
+    //Verify : New code added
+    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+    if (Platform.isIOS) {
+      _firebaseMessaging.requestNotificationPermissions(
+          const IosNotificationSettings(
+              sound: true, badge: true, alert: true, provisional: true));
+      _firebaseMessaging.onIosSettingsRegistered
+          .listen((IosNotificationSettings settings) {
+        print("Settings registered: $settings");
+      });
+    }
+    _firebaseMessaging.getToken().then((String token) {
+      deviceToken=token;
+      SharedPref().setValue("deviceToken", token);
+      print(token);
+    });
+    //
     if (getBool(PreferenceKey.isRemember)) {
       _phoneController =
           TextEditingController(text: getString(PreferenceKey.phone));
@@ -280,8 +305,11 @@ class _SignInScreenState extends State<SignInScreen> {
 
       final req = ReqLogin(
           phoneNumber: phonenumber,
+          type: 1,
+          deviceToken: deviceToken,
           password: _passwordController.text,
           mobileCountryCode: selectedCountry);
+          
       try {
         await ApiManager().login(req).then((value) {
           ProgressDialogUtils.dismissProgressDialog();
@@ -301,6 +329,18 @@ class _SignInScreenState extends State<SignInScreen> {
           setString(PreferenceKey.tokens, value.response.tokens[0].token);
           setString(PreferenceKey.phone, value.response.phoneNumber.toString());
           setInt(PreferenceKey.gender, value.response.gender);
+
+          //TODO
+          //Note : Duplication of pref code
+          SharedPref().saveToken(value.response.tokens[0].token);
+          SharedPref().setValue("fullName", value.response.fullName);
+          SharedPref().setValue("isEmailVerified", value.response.isEmailVerified);
+
+          //TODO
+          //Note : Duplication of pref code
+
+
+          //TODO : change route to Dashboard
           if (value.response.pin == null && value.response.isEmailVerified) {
             NavigationUtils.push(context, routeSetupPin, arguments: {
               ArgumentConstant.setPinScreen: SetupScreenFrom.login
