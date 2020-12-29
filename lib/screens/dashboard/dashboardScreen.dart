@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -7,14 +9,22 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/dashboard/choose_location_screen.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/utils/validations.dart';
 import 'package:hutano/widgets/circular_loader.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/provider_tile_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
-import 'package:location/location.dart';
+import 'package:location/location.dart' as Loc;
+import 'package:uuid/uuid.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:http/http.dart' as http;
+import 'package:hutano/screens/dashboard/choose_location_screen.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_webservice/places.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key key}) : super(key: key);
@@ -27,7 +37,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ApiBaseHelper _api = new ApiBaseHelper();
   bool isEmailVerified = false;
-
+  GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
+  var uuid = new Uuid();
+  String _sessionToken;
+  List<dynamic> _placeList = [];
+  List<String> radiusList = ['1', '2', '5', '10', '20', '50'];
+  bool isShowList = false;
+  bool isShowRadiusList = false;
+  Completer<GoogleMapController> _controller = Completer();
+  PlacesDetailsResponse detail;
+  final _addressController = TextEditingController();
+  final radiuscontroller = TextEditingController();
+  CameraPosition _myLocation;
+  GoogleMapController controller;
   String _currentddress;
 
   EdgeInsetsGeometry _edgeInsetsGeometry =
@@ -53,6 +75,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Map insuranceMap = Map();
   String selectedType = '1', selectedPlace = '1', selectedInsurance = '1';
   String avatar;
+  String radius = '---';
 
   bool _isLoading = false;
   List<String> _topProvidersList = [
@@ -65,13 +88,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Future<List<dynamic>> _specialtiesFuture;
   Future<List<dynamic>> _professionalTitleFuture;
 
-  @override
-  void initState() {
-    super.initState();
+  getLocation() async {
+    var lat = await SharedPref().getValue('lat');
+    var lng = await SharedPref().getValue('lng');
+    _currentddress = await SharedPref().getValue('address');
+    radius = await SharedPref().getValue('radius');
 
-    setState(() {
-      initPlatformState();
+    _myLocation = CameraPosition(
+      target: LatLng(lat ?? 0.00, lng ?? 0.00),
+    );
+
+    _latLng = new LatLng(lat ?? 0.00, lng ?? 0.00);
+    SharedPref().getToken().then((token) {
+      _myDoctorsFuture = _api.getMyDoctors(token, _latLng);
     });
+    setState(() {});
+  }
+
+  @override
+  Future<void> initState() {
+    super.initState();
+    getLocation();
 
     _professionalTitleFuture = _api.getProfessionalTitle();
     _specialtiesFuture = _api.getSpecialties();
@@ -162,15 +199,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     image:
                                         AssetImage('images/profile_user.png'),
                                     fit: BoxFit.cover,
-                                    // height: 32.0,
-                                    // width: 32.0,
                                   ),
                                 )
                               : ClipOval(
                                   child: Image.network(
                                     ApiBaseHelper.imageUrl + avatar,
-                                    // width: 76.0,
-                                    // height: 76.0,
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -253,7 +286,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       SizedBox(height: 20),
                                       FancyButton(
                                           title: 'Search providers',
-                                          onPressed: () {}),
+                                          onPressed: () {
+                                            if (selectedPlace == '2') {
+                                              showLocationDialog(true);
+                                            } else {}
+
+// selectedType
+// selectedPlace
+// selectedInsurance
+                                          }),
                                       SizedBox(height: 20),
                                       // Text(
                                       //   'Find Top Providers',
@@ -330,7 +371,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            Divider(color: Colors.white,),
+            Divider(
+              color: Colors.white,
+            ),
             Row(
               children: [
                 Text(
@@ -490,13 +533,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         SizedBox(width: 10),
         InkWell(
-          onTap: () => _navigateToMap(context),
+          onTap: () {
+            showLocationDialog(false);
+          }, // _navigateToMap(context),
           child: Row(
             children: <Widget>[
+              // SizedBox(
+              //   width: (MediaQuery.of(context).size.width - 224),
+              //   child:
               Text(
-                _isLocLoading
+                _currentddress == null
                     ? '---'
-                    : _currentddress.substring(0, 20) + ' \u2022 ',
+                    : _currentddress.length > 14
+                        ? _currentddress.substring(0, 14)
+                        : _currentddress,
+                overflow: TextOverflow.ellipsis,
                 maxLines: 1,
                 style: TextStyle(
                   color: AppColors.windsor,
@@ -504,8 +555,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              // ),
               Text(
-                'Within 60 kilometers ',
+                ' \u2022 ',
+                style: TextStyle(
+                  color: AppColors.windsor,
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                'Within $radius kilometers ',
                 style: TextStyle(
                   color: AppColors.windsor,
                   fontSize: 14.0,
@@ -593,7 +653,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _servicesList.clear();
           _doctorList.clear();
           _specialityList.clear();
-
+          _container.setProjectsResponse("serviceType", '0');
           if (snapshot.data["services"].length > 0) {
             for (dynamic services in snapshot.data["services"]) {
               if (services['subServices'] != null) {
@@ -861,6 +921,296 @@ class _DashboardScreenState extends State<DashboardScreen> {
         },
       ),
     );
+  }
+
+  void showLocationDialog(isFilter) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setModalState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)),
+              child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(14),
+                      )),
+                  child: Stack(
+                    children: [
+                      Column(
+                        children: [
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                'Change Location',
+                                style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    color: Colors.black,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                              Spacer(),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Image.asset(
+                                  'images/locationClose.png',
+                                  height: 32,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 12,
+                          ),
+                          TextFormField(
+                            controller: _addressController,
+                            onChanged: ((val) {
+                              if (_sessionToken == null) {
+                                setModalState(() {
+                                  _sessionToken = uuid.v4();
+                                });
+                              }
+                              isShowList = true;
+                              isShowRadiusList = false;
+                              getSuggestion(val, setModalState);
+                            }),
+                            decoration: InputDecoration(
+                                labelText: "Address",
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.grey[300]),
+                                    borderRadius: BorderRadius.circular(5.0)),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5.0))),
+                            keyboardType: TextInputType.text,
+                            validator: Validations.validateEmpty,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              splashColor: Colors.grey[300],
+                              onTap: () {
+                                FocusScope.of(context).unfocus();
+                                setModalState(() {
+                                  isShowList = false;
+
+                                  isShowRadiusList = true;
+                                });
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 1.0),
+                                child: TextFormField(
+                                  controller: radiuscontroller,
+                                  enabled: false,
+                                  style: const TextStyle(
+                                      fontSize: 14.0, color: Colors.black87),
+                                  decoration: InputDecoration(
+                                    suffixIcon: Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: Colors.grey[400],
+                                    ),
+                                    labelText: 'Radius',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          Expanded(
+                            child: GoogleMap(
+                              initialCameraPosition: _myLocation,
+                              onMapCreated: ((controller) {
+                                _onMapCreated(controller, setModalState);
+                              }),
+                              myLocationButtonEnabled: false,
+                              myLocationEnabled: false,
+                              zoomControlsEnabled: false,
+                              onCameraMove: (position) {},
+                              onCameraIdle: () {},
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: FlatButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                Radius.circular(14),
+                              )),
+                              height: 40,
+                              child: Text(
+                                'Confirm',
+                                style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    color: Colors.white),
+                              ),
+                              onPressed: () {
+                                SharedPref().setDoubleValue(
+                                    'lat', _myLocation.target.latitude);
+                                SharedPref().setDoubleValue(
+                                    'lng', _myLocation.target.longitude);
+                                SharedPref().setValue(
+                                    'address', _addressController.text);
+                                SharedPref().setValue('radius',
+                                    radiuscontroller.text.split(' ')[0]);
+                                getLocation();
+                                Navigator.pop(context, true);
+                                if (isFilter) {}
+                              },
+                              color: AppColors.windsor,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 16,
+                          )
+                        ],
+                      ),
+                      isShowList
+                          ? Column(
+                              children: [
+                                SizedBox(height: 130),
+                                Expanded(
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: _placeList.length,
+                                    itemBuilder: (context, index) {
+                                      return ListTile(
+                                        tileColor: Colors.white,
+                                        onTap: () async {
+                                          detail =
+                                              await _places.getDetailsByPlaceId(
+                                                  _placeList[index]
+                                                      ["place_id"]);
+                                          final lat = detail
+                                              .result.geometry.location.lat;
+                                          final lng = detail
+                                              .result.geometry.location.lng;
+                                          _myLocation = CameraPosition(
+                                            bearing: 0,
+                                            target: LatLng(lat, lng),
+                                            zoom: 17.0,
+                                          );
+                                          print(detail.result.adrAddress
+                                              .toString());
+                                          PlacesDetailsResponse aa = detail;
+                                          print(aa);
+                                          print(aa.result.adrAddress);
+
+                                          _addressController.text =
+                                              aa.result.name;
+                                          if (controller == null) {
+                                            controller =
+                                                await _controller.future;
+                                          }
+                                          controller.animateCamera(
+                                              CameraUpdate.newCameraPosition(
+                                            _myLocation,
+                                          ));
+                                          setModalState(() {
+                                            isShowList = false;
+                                          });
+                                        },
+                                        title: Text(
+                                            _placeList[index]["description"]),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            )
+                          : SizedBox(),
+                      isShowRadiusList
+                          ? Column(
+                              children: [
+                                SizedBox(height: 200),
+                                Expanded(
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: radiusList.length,
+                                    itemBuilder: (context, index) {
+                                      return ListTile(
+                                        tileColor: Colors.white,
+                                        onTap: () {
+                                          radiuscontroller.text =
+                                              radiusList[index] + ' Kilometers';
+                                          setModalState(() {
+                                            isShowRadiusList = false;
+                                          });
+                                        },
+                                        title: Text(
+                                            radiusList[index] + ' Kilometers'),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            )
+                          : SizedBox(),
+                    ],
+                  )),
+            );
+          });
+        });
+  }
+
+  void _onMapCreated(
+      GoogleMapController controller, StateSetter setModalState) async {
+    if (!_controller.isCompleted) {
+      _controller.complete(controller);
+    }
+    if ([_myLocation] != null) {
+      LatLng position = _myLocation.target;
+
+      Future.delayed(Duration(seconds: 0), () async {
+        if (!_controller.isCompleted) {
+          controller = await _controller.future;
+        }
+        this.controller = controller;
+        controller.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              target: position,
+              zoom: 17.0,
+            ),
+          ),
+        );
+      });
+      setModalState(() {});
+    }
+  }
+
+  void getSuggestion(String input, StateSetter setModalState) async {
+    String kPLACES_API_KEY = kGoogleApiKey;
+    String type = '(cities)';
+    String baseURL =
+        'https://maps.googleapis.com/maps/api/place/autocomplete/json';
+    String request =
+        '$baseURL?input=$input&types=$type&rankby=distance&location=31.45,77.1120762&key=$kPLACES_API_KEY&sessiontoken=$_sessionToken';
+    var response = await http.get(request);
+    if (response.statusCode == 200) {
+      setModalState(() {
+        _placeList = json.decode(response.body)['predictions'];
+      });
+    } else {
+      throw Exception('Failed to load predictions');
+    }
   }
 
   Widget myDoctorsWidget() {
@@ -1282,21 +1632,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       _latLng = latLng;
 
-      getLocationAddress(latLng.latitude, latLng.longitude);
+      // getLocationAddress(latLng.latitude, latLng.longitude);
     }
   }
 
   initPlatformState() async {
     _locationLoading(true);
 
-    Location _location = Location();
-    PermissionStatus _permission;
+    Loc.Location _location = Loc.Location();
+    Loc.PermissionStatus _permission;
 
     _permission = await _location.requestPermission();
     print("Permission: $_permission");
 
     switch (_permission) {
-      case PermissionStatus.granted:
+      case Loc.PermissionStatus.granted:
         bool serviceStatus = await _location.serviceEnabled();
         print("Service status: $serviceStatus");
 
@@ -1304,7 +1654,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Widgets.showToast("Getting Location. Please wait..");
 
           try {
-            LocationData locationData = await _location.getLocation();
+            Loc.LocationData locationData = await _location.getLocation();
 
             getLocationAddress(locationData.latitude, locationData.longitude);
 
@@ -1331,10 +1681,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         }
 
         break;
-      case PermissionStatus.denied:
+      case Loc.PermissionStatus.denied:
         initPlatformState();
         break;
-      case PermissionStatus.deniedForever:
+      case Loc.PermissionStatus.deniedForever:
         break;
     }
   }
