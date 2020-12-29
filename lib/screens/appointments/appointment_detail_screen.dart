@@ -375,10 +375,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
         _container.setProviderInsuranceMap(providerInsuranceList);
 
-        if (detail["consultanceFee"] != null) {
-          for (dynamic consultanceFee in detail["consultanceFee"]) {
-            fee = consultanceFee["fee"]?.toStringAsFixed(2) ?? "0.00";
-          }
+        if (_data['data']["fees"] != null) {
+          // for (dynamic consultanceFee in _data['data']["fees"]) {
+            fee = _data['data']["fees"]?.toStringAsFixed(2) ?? "0.00";
+          // }
         }
 
         if (_providerData["type"].toString() == '3') {
@@ -515,7 +515,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                       _appointmentStatus?.appointmentStatus(),
                       SizedBox(height: 5.0),
                       Text(
-                        "\$${totalFee.toStringAsFixed(2)}",
+                        "\$${double.parse(fee).toStringAsFixed(2)}",
                         style: TextStyle(
                           fontSize: 22.0,
                           fontWeight: FontWeight.w600,
