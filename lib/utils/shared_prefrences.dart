@@ -18,6 +18,11 @@ class SharedPref {
     prefs.setBool(key, value);
   }
 
+  Future<dynamic> setDoubleValue(String key, double value) async {
+    prefs = await SharedPreferences.getInstance();
+    prefs.setDouble(key, value);
+  }
+
   Future<String> getToken() async {
     prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
