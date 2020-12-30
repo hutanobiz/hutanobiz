@@ -249,12 +249,18 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                     switch (index) {
                       case 1:
                         _appointmentFilterMap['isOfficeEnabled'] = '1';
+                        _appointmentFilterMap.remove('isOnsiteEnabled');
+                        _appointmentFilterMap.remove('isVideoChatEnabled');
                         break;
                       case 2:
                         _appointmentFilterMap['isVideoChatEnabled'] = '1';
+                        _appointmentFilterMap.remove('isOnsiteEnabled');
+                        _appointmentFilterMap.remove('isOfficeEnabled');
                         break;
                       case 3:
                         _appointmentFilterMap['isOnsiteEnabled'] = '1';
+                        _appointmentFilterMap.remove('isOfficeEnabled');
+                        _appointmentFilterMap.remove('isVideoChatEnabled');
                         break;
                       default:
                         _appointmentFilterMap.remove('isOnsiteEnabled');
