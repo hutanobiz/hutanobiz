@@ -31,6 +31,7 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
       experienceMaxValue = 50,
       distanceMinValue = 0,
       distanceMaxValue = 100;
+  String insuranceType = '0';
 
   bool _isLoading = false;
 
@@ -52,6 +53,7 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
     _filterOptionsList.add(RadioModel(false, "Experience"));
     _filterOptionsList.add(RadioModel(false, "Distance"));
     _filterOptionsList.add(RadioModel(false, "Language"));
+    _filterOptionsList.add(RadioModel(false, "Insurance"));
 
     _filtersMap = widget.filterMap;
 
@@ -80,6 +82,10 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
           ),
         );
       });
+    }
+
+    if (_filtersMap['insuranceType'] != null) {
+      insuranceType = _filtersMap['insuranceType'];
     }
 
     if (_filtersMap['minimumDistance'] != null &&
@@ -119,6 +125,7 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
               children: <Widget>[
                 Material(
                   child: Container(
+                    padding: EdgeInsets.only(bottom: 120),
                     decoration: BoxDecoration(
                       color: Color(0xFFF3F2F8).withOpacity(0.50),
                       borderRadius: BorderRadius.only(
@@ -203,82 +210,121 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
                               }
                             },
                           )
-                        : Expanded(
-                            child: ListView.separated(
-                              separatorBuilder: (context, index) {
-                                return SizedBox(height: 20);
-                              },
-                              padding:
-                                  const EdgeInsets.fromLTRB(10, 26, 10, 140),
-                              shrinkWrap: true,
-                              itemCount: _filtersList.length,
-                              itemBuilder: (context, index) {
-                                dynamic _filterTitle = _filtersList[index];
-
-                                return RoundCornerCheckBox(
-                                    title: _filtersList[index][
-                                        (filterListIndex == 6 ||
-                                                filterListIndex == 2)
-                                            ? 'name'
-                                            : "title"],
-                                    textStyle: TextStyle(
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black.withOpacity(0.85),
+                        : filterListIndex == 7
+                            ? Expanded(
+                                child: Column(
+                                  children: <Widget>[
+                                    ListTile(
+                                      title: const Text('All Providers'),
+                                      leading: Radio(
+                                        activeColor: AppColors.windsor,
+                                        value: '0',
+                                        groupValue: insuranceType,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            insuranceType = value;
+                                            _filtersMap['insuranceType'] =
+                                                value;
+                                          });
+                                        },
+                                      ),
                                     ),
-                                    value: _filtersMap.containsValue(
-                                        _filterTitle[filterListIndex == 3
-                                            ? 'title'
-                                            : '_id']),
-                                    onCheck: (value) {
-                                      setState(() {
-                                        if (filterListIndex == 3) {
-                                          value
-                                              ? _filtersMap[
-                                                      "$filterMapKey[${index.toString()}]"] =
-                                                  _filterTitle["title"]
-                                                      .toString()
-                                              : _filtersMap.remove(
-                                                  "$filterMapKey[${index.toString()}]");
-                                        } else {
-                                          value
-                                              ? _filtersMap[
-                                                      "$filterMapKey[${index.toString()}]"] =
-                                                  _filterTitle["_id"].toString()
-                                              : _filtersMap.remove(
-                                                  "$filterMapKey[${index.toString()}]");
-                                        }
-
-                                        if (filterListIndex == 0) {
+                                    ListTile(
+                                      title: const Text(
+                                          'Provider who take my insurance'),
+                                      leading: Radio(
+                                        activeColor: AppColors.windsor,
+                                        value: '1',
+                                        groupValue: insuranceType,
+                                        onChanged: (value) {
                                           setState(() {
-                                            value
-                                                ? professionalTitleMap[
-                                                        "$filterMapKey[${index.toString()}]"] =
-                                                    _filterTitle["_id"]
-                                                        .toString()
-                                                : professionalTitleMap.remove(
-                                                    '$filterMapKey[${index.toString()}]');
+                                            insuranceType = value;
+                                            _filtersMap['insuranceType'] =
+                                                value;
                                           });
-                                        }
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Expanded(
+                                child: ListView.separated(
+                                  separatorBuilder: (context, index) {
+                                    return SizedBox(height: 20);
+                                  },
+                                  padding: const EdgeInsets.fromLTRB(
+                                      10, 26, 10, 140),
+                                  shrinkWrap: true,
+                                  itemCount: _filtersList.length,
+                                  itemBuilder: (context, index) {
+                                    dynamic _filterTitle = _filtersList[index];
 
-                                        if (filterListIndex == 1) {
+                                    return RoundCornerCheckBox(
+                                        title: _filtersList[index][
+                                            (filterListIndex == 6 ||
+                                                    filterListIndex == 2)
+                                                ? 'name'
+                                                : "title"],
+                                        textStyle: TextStyle(
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.black.withOpacity(0.85),
+                                        ),
+                                        value: _filtersMap.containsValue(
+                                            _filterTitle[filterListIndex == 3
+                                                ? 'title'
+                                                : '_id']),
+                                        onCheck: (value) {
                                           setState(() {
-                                            value
-                                                ? specialitiesMap[
-                                                        "$filterMapKey[${index.toString()}]"] =
-                                                    _filterTitle["_id"]
-                                                        .toString()
-                                                : specialitiesMap.remove(
-                                                    '$filterMapKey[${index.toString()}]');
-                                          });
-                                        }
-                                      });
+                                            if (filterListIndex == 3) {
+                                              value
+                                                  ? _filtersMap[
+                                                          "$filterMapKey[${index.toString()}]"] =
+                                                      _filterTitle["title"]
+                                                          .toString()
+                                                  : _filtersMap.remove(
+                                                      "$filterMapKey[${index.toString()}]");
+                                            } else {
+                                              value
+                                                  ? _filtersMap[
+                                                          "$filterMapKey[${index.toString()}]"] =
+                                                      _filterTitle["_id"]
+                                                          .toString()
+                                                  : _filtersMap.remove(
+                                                      "$filterMapKey[${index.toString()}]");
+                                            }
 
-                                      _filtersMap.toString().debugLog();
-                                    });
-                              },
-                            ),
-                          ),
+                                            if (filterListIndex == 0) {
+                                              setState(() {
+                                                value
+                                                    ? professionalTitleMap[
+                                                            "$filterMapKey[${index.toString()}]"] =
+                                                        _filterTitle["_id"]
+                                                            .toString()
+                                                    : professionalTitleMap.remove(
+                                                        '$filterMapKey[${index.toString()}]');
+                                              });
+                                            }
+
+                                            if (filterListIndex == 1) {
+                                              setState(() {
+                                                value
+                                                    ? specialitiesMap[
+                                                            "$filterMapKey[${index.toString()}]"] =
+                                                        _filterTitle["_id"]
+                                                            .toString()
+                                                    : specialitiesMap.remove(
+                                                        '$filterMapKey[${index.toString()}]');
+                                              });
+                                            }
+                                          });
+
+                                          _filtersMap.toString().debugLog();
+                                        });
+                                  },
+                                ),
+                              ),
               ],
             ),
             Align(
