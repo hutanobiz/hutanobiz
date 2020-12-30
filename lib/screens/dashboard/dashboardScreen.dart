@@ -287,9 +287,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       FancyButton(
                                           title: 'Search providers',
                                           onPressed: () {
+                                             conatiner.setUserLocation("latLng", LatLng(_myLocation.target.latitude, _myLocation.target.longitude));
+                                 
+                                            conatiner.setProjectsResponse(
+                                                "serviceType", selectedType);
+                                            conatiner.setProjectsResponse(
+                                                "insuranceType",
+                                                selectedInsurance == '2'
+                                                    ? '1'
+                                                    : '0');
+                                            conatiner.setProjectsResponse(
+                                                "maximumDistance", radius);
+
                                             if (selectedPlace == '2') {
                                               showLocationDialog(true);
-                                            } else {}
+                                            } else {
+                                              Navigator.pushNamed(
+                                                  context,
+                                                  Routes
+                                                      .allTitlesSpecialtesScreen);
+                                            }
 
 // selectedType
 // selectedPlace
@@ -311,7 +328,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       // pointsWidget(),
                                       // SizedBox(height: 20),
                                       // inviteWidget(),
-                                      SizedBox(height: 20)
+                                      // SizedBox(height: 20)
                                     ],
                                   ),
                                 ),
@@ -1072,7 +1089,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     radiuscontroller.text.split(' ')[0]);
                                 getLocation();
                                 Navigator.pop(context, true);
-                                if (isFilter) {}
+                                if (isFilter) {
+                                  conatiner.setUserLocation("latLng", LatLng(_myLocation.target.latitude, _myLocation.target.longitude));
+                                  conatiner.setProjectsResponse(
+                                      "serviceType", selectedType);
+                                  conatiner.setProjectsResponse("insuranceType",
+                                      selectedInsurance == '2' ? '1' : '0');
+                                  conatiner.setProjectsResponse(
+                                      "maximumDistance", radiuscontroller.text.split(' ')[0]);
+                                  Navigator.pushNamed(context,
+                                      Routes.allTitlesSpecialtesScreen);
+                                }
                               },
                               color: AppColors.windsor,
                             ),
