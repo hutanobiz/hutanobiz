@@ -15,9 +15,8 @@ import 'package:hutano/widgets/widgets.dart';
 class ApiBaseHelper {
   NetworkUtil _netUtil = new NetworkUtil();
   // static const String base_url = "https://staging.hutano.xyz/";
-  static const String base_url = "https://sa-staging.hutano.xyz/";
-  // static const String base_url = "http://993b8890ce9f.ngrok.io/";
-  // static const String base_url = "http://15531298602f.ngrok.io/";
+  // static const String base_url = "https://sa-staging.hutano.xyz/";
+  static const String base_url = "https://api.stage.hutano.com/";
   static const String imageUrl = base_url + "uploads/";
 
   Future<dynamic> login(Map loginData) {
@@ -104,6 +103,18 @@ class ApiBaseHelper {
     });
   }
 
+  Future<List<dynamic>> getConsentContent(String token) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    return _netUtil
+        .get(base_url + "api/consent-treat", headers: headers)
+        .then((res) {
+      print(res);
+      return res["response"];
+    });
+  }
+
   Future<List<dynamic>> getProfessionalSpecility(Map map) {
     return _netUtil
         .post(base_url + "api/provider/specialties", body: map)
@@ -133,7 +144,7 @@ class ApiBaseHelper {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
-print(base_url);
+    print(base_url);
     return _netUtil
         .post(base_url + "api/patient/appointment-booking",
             body: appointmentData, headers: headers)
@@ -398,13 +409,17 @@ print(base_url);
     });
   }
 
-   Future<dynamic> getAppointmentRecordings(BuildContext context, String token,String appointmentId) {
+  Future<dynamic> getAppointmentRecordings(
+      BuildContext context, String token, String appointmentId) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
       HttpHeaders.contentTypeHeader: "application/json"
     };
     return _netUtil
-        .get(base_url + "api/appointmnet-video-calls?appointmentId=$appointmentId", headers: headers)
+        .get(
+            base_url +
+                "api/appointmnet-video-calls?appointmentId=$appointmentId",
+            headers: headers)
         .then((res) {
       print(res.toString());
       return res["response"];
@@ -688,63 +703,50 @@ print(base_url);
     });
   }
 
-  Future<List<dynamic>> getReviewReasons() {
-    return _netUtil
-        .get(
-      base_url + "api/doctor-reason",
-    )
-        .then((res) {
-      return res["response"];
-    });
+  Future<List<dynamic>> getReviewReasons(id) async {
+    var res = await _netUtil.get(
+      base_url + "api/doctor-reason?providerId=" + id,
+    );
+    return res["response"];
   }
 
-   Future<dynamic> checkTimeToStartVideo(BuildContext context,
-      String token, Map locationMap) {
+  Future<dynamic> checkTimeToStartVideo(
+      BuildContext context, String token, Map locationMap) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
 
     return _netUtil
-        .post(
-            Uri.encodeFull(
-                base_url + "api/check/appintment/time-slot"),
-            body: locationMap,
-            headers: headers)
+        .post(Uri.encodeFull(base_url + "api/check/appintment/time-slot"),
+            body: locationMap, headers: headers)
         .then((res) {
       return res["response"];
     });
   }
 
-   Future<dynamic> startVideoCall(BuildContext context,
-      String token, Map locationMap) {
+  Future<dynamic> startVideoCall(
+      BuildContext context, String token, Map locationMap) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
 
     return _netUtil
-        .post(
-            Uri.encodeFull(
-                base_url + "api/video-appointment"),
-            body: locationMap,
-            headers: headers)
+        .post(Uri.encodeFull(base_url + "api/video-appointment"),
+            body: locationMap, headers: headers)
         .then((res) {
       return res["response"];
     });
   }
 
-  Future<dynamic> stopVideoCall(BuildContext context,
-      String token, Map locationMap) {
+  Future<dynamic> stopVideoCall(
+      BuildContext context, String token, Map locationMap) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
 
     return _netUtil
-        .post(
-            
-            Uri.encodeFull(
-                base_url + "api/video-appointment-stop"),
-            body: locationMap,
-            headers: headers)
+        .post(Uri.encodeFull(base_url + "api/video-appointment-stop"),
+            body: locationMap, headers: headers)
         .then((res) {
       return res["response"];
     });
@@ -796,7 +798,7 @@ class NetworkUtil {
   Future<dynamic> post(String url, {Map headers, body, encoding}) async {
     var responseJson;
     try {
-          log("Api post url: $url");
+      log("Api post url: $url");
       final response = await http.post(url,
           body: body, headers: headers, encoding: encoding);
       final int statusCode = response.statusCode;
@@ -819,7 +821,7 @@ class NetworkUtil {
 
       responseJson = _decoder.convert(response.body);
 
-      // debugPrint(responseJson.toString(), wrapWidth: 1024);
+      debugPrint(responseJson.toString(), wrapWidth: 1024);
     } on SocketException {
       showError(Strings.noInternet);
       throw Exception(Strings.noInternet);
