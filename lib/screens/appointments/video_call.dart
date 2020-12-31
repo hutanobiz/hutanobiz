@@ -207,12 +207,12 @@ class _CallPageState extends State<CallPage> {
                               context: context,
                               title: 'End Call',
                               description: 'Are You Sure to end Call',
-                              leftText: 'No',
-                              onLeftPressed: () {
+                              rightText: 'No',
+                              onRightPressed: () {
                                 Navigator.pop(context);
                               },
-                              rightText: 'Yes',
-                              onRightPressed: () {
+                              leftText: 'Yes',
+                              onLeftPressed: () {
                                 Navigator.pop(context);
                                 Navigator.of(context).pushReplacementNamed(
                                   Routes.appointmentCompleteConfirmation,
