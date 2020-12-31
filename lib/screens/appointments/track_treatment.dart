@@ -64,6 +64,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
   String _totalDistance = "";
   String _totalDuration = "";
   Map<String, String> appointmentCompleteMap = Map();
+  bool _isLocationApidCalled = false;
 
   PinInformation currentlySelectedPin = PinInformation(
     pinPath: '',
@@ -198,7 +199,8 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
 
     if (_container.userLocationMap != null &&
         _container.userLocationMap.isNotEmpty) {
-      _userLocation = _container.userLocationMap['latLng']?? LatLng(0.00, 0.00);
+      _userLocation =
+          _container.userLocationMap['latLng'] ?? LatLng(0.00, 0.00);
     }
 
     SharedPref().getToken().then((token) {
@@ -214,13 +216,14 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_initialPosition != null) {
+    if (_initialPosition != null && !_isLocationApidCalled) {
       initialCameraPosition = CameraPosition(
         target: LatLng(_initialPosition.latitude, _initialPosition.longitude),
         zoom: CAMERA_ZOOM,
         tilt: CAMERA_TILT,
         bearing: CAMERA_BEARING,
       );
+      
     }
 
     return Scaffold(
@@ -238,7 +241,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
           child: FutureBuilder(
             future: _profileFuture,
             builder: (context, snapshot) {
-              if (_initialPosition != null) {
+              if (_initialPosition != null && _desPosition != LatLng(0, 0) && !_isLocationApidCalled) {
                 api
                     .getDistanceAndTime(
                         _initialPosition, _desPosition, kGoogleApiKey)
@@ -253,7 +256,9 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                           value["rows"][0]["elements"][0].toString())
                       .toString()
                       .debugLog();
+                      _isLocationApidCalled = true;
                 }).futureError((error) {
+                  _isLocationApidCalled = true;
                   setState(() {
                     _totalDuration = "NO duration available";
                     _totalDistance = "NO distance available";
@@ -261,7 +266,6 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                   error.toString().debugLog();
                 });
               }
-
               if (snapshot.hasData) {
                 return widgetList(snapshot.data);
               } else if (snapshot.hasError) {
@@ -300,7 +304,9 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
 
     appointmentType = response["type"] == 1
         ? "Office response"
-        : response["type"] == 2 ? "Video response" : "Onsite response";
+        : response["type"] == 2
+            ? "Video response"
+            : "Onsite response";
 
     rating = appointment["averageRating"]?.toStringAsFixed(2) ?? "0";
 
@@ -532,20 +538,21 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                                 ),
                               ),
                               SizedBox(height: 7.0),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Text(
-                                      address,
-                                      style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black.withOpacity(0.7),
+                              if (response["type"] == 1)
+                                Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Text(
+                                        address,
+                                        style: TextStyle(
+                                          fontSize: 12.0,
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.black.withOpacity(0.7),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
+                                  ],
+                                ),
                               SizedBox(
                                 height: 4.0,
                               ),
