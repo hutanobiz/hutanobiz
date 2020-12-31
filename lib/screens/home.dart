@@ -151,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void showNotification(message) async {
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
       Platform.isAndroid ? 'xyz.appening.hutano' : 'xyz.appening.hutano',
-      'Hutano Patient',
+      'Hutano_Patient',
       'your channel description',
       sound: RawResourceAndroidNotificationSound('my_sound'),
       playSound: true,

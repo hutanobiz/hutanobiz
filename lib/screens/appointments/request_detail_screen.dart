@@ -109,6 +109,8 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
 
     LatLng latLng = new LatLng(0, 0);
 
+    String onsiteFee="0";
+
     _appointmentStatus = _data['status']?.toString() ?? '0';
 
     averageRating = _data["averageRating"]?.toStringAsFixed(2) ?? "0";
@@ -149,6 +151,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
         if (_data['parking'] != null && _data['parking']['fee'] != null) {
           parkingFee = _data['parking']['fee'].toStringAsFixed(2);
         }
+      onsiteFee =(_data["DoctorProfessionalDetail"]["onsiteConsultanceFee"][0]["fee"]).toString();
 
         address = Extensions.addressFormat(
           _data["userAddress"]["address"]?.toString(),
@@ -201,7 +204,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
       avatar = _data["doctor"]["avatar"];
     }
 
-    if (_data["parking"] != null) {
+    if (_data["parking"] != null && _data["type"].toString() == '3') {
       officeVisitFee = _data["parking"]["fee"]?.toStringAsFixed(2) ?? "0.00";
     }
 
@@ -337,7 +340,10 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
         divider(),
         seekingCareWidget(_data),
         divider(),
-        feeWidget(fee, officeVisitFee, parkingFee, _data["type"].toString()),
+        feeWidget(fee, officeVisitFee, parkingFee, _data["type"].toString(),
+        fees: _data["fees"].toString(),
+        onsiteFee:onsiteFee
+        ),
         divider(),
         paymentType == 0
             ? Container()
@@ -520,16 +526,25 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
   }
 
   Widget feeWidget(String generalFee, String officeVisitCharge,
-      String parkingFee, String appType) {
+      String parkingFee, String appType ,{String fees ,String onsiteFee}) {
     if (feeList.length > 0) {
       totalFee = feeList.fold(
           0, (sum, item) => sum + double.parse(item["amount"].toString()));
     } else {
-      totalFee = (double.parse(generalFee) + double.parse(officeVisitCharge));
+      // totalFee = (double.parse(generalFee) + double.parse(officeVisitCharge));
+      totalFee = (double.parse(generalFee));
+
+      if(fees != null && fees != '' && appType != '3'){
+        totalFee =totalFee +double.parse(fees);
+      }
     }
 
     if (appType == '3') {
       totalFee += double.parse(officeVisitCharge);
+    }
+
+    if(onsiteFee != null && onsiteFee != '0' && appType == '3'){
+      totalFee += double.parse(onsiteFee);
     }
 
     return Padding(
@@ -567,13 +582,21 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                               "General Medicine Consult", "\$$generalFee"),
                           officeVisitCharge == "0.00"
                               ? Container()
-                              : subFeeWidget("Office Visit charge",
-                                  "\$$officeVisitCharge"),
+                              :
+                              Container()
+                              //  subFeeWidget("Office Visit charge",
+                              //     "\$$officeVisitCharge"),
                         ],
                       ),
                 appType != '3'
                     ? Container()
                     : subFeeWidget("Parking charge", "\$$parkingFee"),
+                if(appType == '1') 
+                  subFeeWidget("Office charge", "\$$fees"),
+                if(appType == '2') 
+                  subFeeWidget("Video Call charge", "\$$fees"),
+                if(appType == '3') 
+                  subFeeWidget("Onsite charge", "\$$onsiteFee"),
                 SizedBox(height: 16),
                 Divider(),
                 subFeeWidget("Total", "\$" + totalFee.toStringAsFixed(2)),

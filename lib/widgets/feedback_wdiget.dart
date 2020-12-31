@@ -6,10 +6,9 @@ import 'package:hutano/utils/extensions.dart';
 
 class FeedbackWidget extends StatefulWidget {
   final Function onChanged;
-  const FeedbackWidget({
-    Key key,
-    this.onChanged,
-  }) : super(key: key);
+  final List<dynamic> quetions;
+  const FeedbackWidget({Key key, this.onChanged, this.quetions})
+      : super(key: key);
   @override
   _FeedbackState createState() => _FeedbackState();
 }
@@ -21,17 +20,17 @@ class _FeedbackState extends State<FeedbackWidget> {
 
   @override
   void initState() {
-    Strings.qustions.asMap().forEach((index, value) => {
-          index == 2
-              ? question.add(value)
-              : question.add(value.format(["Mukave"]))
-        });
+    for (var i = 0; i < widget.quetions.length; i++) {
+      print(widget.quetions[i]["reason"]);
+      question.add(widget.quetions[i]["reason"]);
+    }
+
     super.initState();
   }
 
   _getRatingCount() {
     final count = postiveFeedback.where((item) => item == true).length;
-    widget.onChanged(count);
+    widget.onChanged(count ,postiveFeedback);
   }
 
   @override

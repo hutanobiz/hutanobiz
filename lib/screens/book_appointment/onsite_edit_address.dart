@@ -437,7 +437,9 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
   void updateAddress() {
     Map map = {};
     map['userAddress[title]'] = _addressMap['title'];
+    if(_addressMap['address'] != null){
     map['userAddress[address]'] = _addressMap['address'];
+    }
     map['userAddress[street]'] = _addressMap['street'];
     map['userAddress[city]'] = _addressMap['city'];
     map['userAddress[state]'] = _addressMap['state'];
@@ -498,7 +500,7 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
           context: context, description: "Select Residence type");
 
       return false;
-    } else if (_addressMap != null && _addressMap['address'] == null) {
+    } else if (_addressMap != null && _addressMap['address'] == null && _residenceTypeController.text != 'Home') {
       Widgets.showErrorialog(context: context, description: "Enter Suite");
 
       return false;
@@ -522,12 +524,7 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
           context: context, description: "Enter Business Postal Code");
 
       return false;
-    } else if (_securityNumberController.text.isEmpty) {
-      Widgets.showErrorialog(
-          context: context, description: "Enter Security Gate NUmber");
-
-      return false;
-    } else {
+    }else {
       return true;
     }
   }

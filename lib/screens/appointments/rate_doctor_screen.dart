@@ -24,14 +24,14 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
   Map _providerMap = Map();
   double _rating = 0;
   String _ratingText, _name, avatar;
-
+  List<bool> postiveFeedback = [false, false, false, false, false];
   ApiBaseHelper api = ApiBaseHelper();
+  bool _ratingSelected =false;
 
   final TextEditingController _reviewController = TextEditingController();
   Map rateMap = Map();
   bool _isLoading = false;
 
-  Future<List<dynamic>> _reasonsFuture;
   List _reasonList = [];
 
   @override
@@ -48,8 +48,6 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
         });
       });
     });
-
-    _reasonsFuture = api.getReviewReasons();
   }
 
   @override
@@ -59,11 +57,17 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
   }
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     super.didChangeDependencies();
 
     _container = InheritedContainer.of(context);
     _providerMap = _container.getProviderData();
+
+    if (_reasonList.length == 0) {
+      String id = _providerMap['providerData']['doctor']['_id'];
+
+      _reasonList = await api.getReviewReasons(id);
+    }
 
     if (_providerMap['providerData']["data"] != null) {
       if (_providerMap['providerData']["data"]["doctor"] != null) {
@@ -96,11 +100,13 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
           children: <Widget>[
             Container(
               margin: const EdgeInsets.only(bottom: 60.0),
-              child: ListView(
-                padding: const EdgeInsets.only(bottom: 70.0),
-                shrinkWrap: true,
-                children: widgetList(_providerMap),
-              ),
+              child: _reasonList.length > 0
+                  ? ListView(
+                      padding: const EdgeInsets.only(bottom: 70.0),
+                      shrinkWrap: true,
+                      children: widgetList(_providerMap),
+                    )
+                  : Container(),
             ),
             Align(
               alignment: FractionalOffset.bottomRight,
@@ -108,15 +114,20 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                 height: 55.0,
                 child: FancyButton(
                   title: "Submit",
-                  onPressed: (_rating.round() >= 1)
+                  onPressed: (_ratingSelected)
                       ? () {
                           FocusScope.of(context).requestFocus(FocusNode());
-
+                            int _count=0;
                           if (_reasonList != null || _reasonList.length > 0) {
                             for (var i = 0; i < _reasonList.length; i++) {
-                              rateMap["reason[$i]"] = _reasonList[i];
+                              if (postiveFeedback[i]) {
+                                rateMap["reason[$_count]"] = _reasonList[i]["_id"];
+                                _count++;
+                              }
                             }
                           }
+
+                          rateMap["rating"] =_rating.toString();
 
                           setState(() => _isLoading = true);
 
@@ -147,9 +158,11 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
     );
   }
 
-  _onChanged(int count) {
+  _onChanged(int count, updatedFeedback) {
+    _ratingSelected =true;
     setState(() {
       _rating = count.toDouble();
+      postiveFeedback = updatedFeedback;
     });
   }
 
@@ -163,9 +176,9 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
     widgetList.add(SizedBox(
       height: 25,
     ));
-    widgetList.add(FeedbackWidget(
-      onChanged: _onChanged,
-    ));
+
+    widgetList
+        .add(FeedbackWidget(onChanged: _onChanged, quetions: _reasonList));
 
     // widgetList.add(_rating.round() >= 1
     //     ? Text(
@@ -419,66 +432,66 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
     );
   }
 
-  Widget _selectWrongWidget() {
-    return Container(
-      margin: const EdgeInsets.only(top: 20.0, bottom: 40.0),
-      padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(
-          Radius.circular(14.0),
-        ),
-        border: Border.all(color: Colors.grey[300], width: 0.5),
-      ),
-      child: FutureBuilder<List<dynamic>>(
-        future: _reasonsFuture,
-        builder: (_, snapshot) {
-          if (snapshot.hasData) {
-            List<dynamic> data = snapshot.data;
+  // Widget _selectWrongWidget() {
+  //   return Container(
+  //     margin: const EdgeInsets.only(top: 20.0, bottom: 40.0),
+  //     padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+  //     decoration: BoxDecoration(
+  //       color: Colors.white,
+  //       borderRadius: BorderRadius.all(
+  //         Radius.circular(14.0),
+  //       ),
+  //       border: Border.all(color: Colors.grey[300], width: 0.5),
+  //     ),
+  //     child: FutureBuilder<List<dynamic>>(
+  //       future: _reasonsFuture,
+  //       builder: (_, snapshot) {
+  //         if (snapshot.hasData) {
+  //           List<dynamic> data = snapshot.data;
 
-            if (data == null || data.length == 0) return Container();
+  //           if (data == null || data.length == 0) return Container();
 
-            return ListView.builder(
-              shrinkWrap: true,
-              physics: ScrollPhysics(),
-              padding: EdgeInsets.zero,
-              itemCount: data.length,
-              itemBuilder: (context, titleIndex) {
-                if (data == null || data.length == 0) return Container();
+  //           return ListView.builder(
+  //             shrinkWrap: true,
+  //             physics: ScrollPhysics(),
+  //             padding: EdgeInsets.zero,
+  //             itemCount: data.length,
+  //             itemBuilder: (context, titleIndex) {
+  //               if (data == null || data.length == 0) return Container();
 
-                dynamic reason = data[titleIndex];
+  //               dynamic reason = data[titleIndex];
 
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
-                  child: CheckboxListTile(
-                    title: Text(reason['reason']),
-                    onChanged: (value) {
-                      if (value &&
-                          !_reasonList.contains(reason['_id'].toString())) {
-                        _reasonList.add(reason['_id'].toString());
-                      } else {
-                        _reasonList.remove(reason['_id'].toString());
-                      }
+  //               return Padding(
+  //                 padding: const EdgeInsets.only(bottom: 10.0),
+  //                 child: CheckboxListTile(
+  //                   title: Text(reason['reason']),
+  //                   onChanged: (value) {
+  //                     if (value &&
+  //                         !_reasonList.contains(reason['_id'].toString())) {
+  //                       _reasonList.add(reason['_id'].toString());
+  //                     } else {
+  //                       _reasonList.remove(reason['_id'].toString());
+  //                     }
 
-                      setState(() {});
-                      _reasonList.toString().debugLog();
-                    },
-                    activeColor: AppColors.goldenTainoi,
-                    value: _reasonList.contains(reason['_id'].toString()),
-                  ),
-                );
-              },
-            );
-          } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
-          }
-          return Center(
-            child: CustomLoader(),
-          );
-        },
-      ),
-    );
-  }
+  //                     setState(() {});
+  //                     _reasonList.toString().debugLog();
+  //                   },
+  //                   activeColor: AppColors.goldenTainoi,
+  //                   value: _reasonList.contains(reason['_id'].toString()),
+  //                 ),
+  //               );
+  //             },
+  //           );
+  //         } else if (snapshot.hasError) {
+  //           return Text("${snapshot.error}");
+  //         }
+  //         return Center(
+  //           child: CustomLoader(),
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 
   void showThankDialog() {
     showDialog(
@@ -514,7 +527,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                     color: Colors.black,
                   ),
                 ),
-                 SizedBox(
+                SizedBox(
                   height: 10,
                 ),
                 Text(

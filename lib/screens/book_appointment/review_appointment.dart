@@ -96,6 +96,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   @override
   void initState() {
     super.initState();
+
     StripePayment.setOptions(
       StripeOptions(
         publishableKey: kstripePublishKey,
@@ -367,12 +368,18 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         if (_reviewAppointmentData["type"] == '3') {
           request.fields['userAddressId'] =
               _consentToTreatMap["userAddress"]["_id"].toString();
-          request.fields['parkingType'] =
-              _consentToTreatMap["parkingMap"]["parkingType"].toString();
-          request.fields['parkingFee'] =
-              _consentToTreatMap["parkingMap"]["parkingFee"].toString();
-          request.fields['parkingBay'] =
-              _consentToTreatMap["parkingMap"]["parkingBay"].toString();
+          if (_consentToTreatMap["parkingMap"]["parkingType"] == null) {
+            request.fields['parkingType'] = "";
+            request.fields['parkingFee'] = "";
+            request.fields['parkingBay'] = "";
+          } else {
+            request.fields['parkingType'] =
+                _consentToTreatMap["parkingMap"]["parkingType"].toString();
+            request.fields['parkingFee'] =
+                _consentToTreatMap["parkingMap"]["parkingFee"].toString();
+            request.fields['parkingBay'] =
+                _consentToTreatMap["parkingMap"]["parkingBay"].toString();
+          }
 
           if (_consentToTreatMap["parkingMap"]["instructions"].toString() !=
               null) {
@@ -450,6 +457,10 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           _loading(false);
           e.toString().debugLog();
         });
+
+        if(response == null){
+          return ;
+        }
         final int statusCode = response.statusCode;
         log("Status code: $statusCode");
 
@@ -678,7 +689,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     );
     _container.projectsResponse["serviceType"].toString() == '2'
         ? _widgetList.add(Container())
-        : _widgetList.add(_initialPosition == null
+        : _widgetList.add((_initialPosition == null && _middlePoint == null)
             ? Container()
             : Stack(
                 children: <Widget>[
@@ -699,7 +710,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                         ),
                         polylines: _polyline,
                         markers: _markers,
-                        onMapCreated: (GoogleMapController controller) {
+                        onMapCreated: (GoogleMapController controller) async {
                           LatLngBounds bound;
                           if (_initialPosition.latitude >
                                   _desPosition.latitude &&
@@ -745,12 +756,17 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
                             setPolylines();
                           });
-
-                          CameraUpdate u2 =
-                              CameraUpdate.newLatLngBounds(bound, 50);
-                          controller.animateCamera(u2).then((void v) {
-                            check(u2, controller);
-                          });
+                          try {
+                            Future.delayed(Duration(milliseconds: 1000), () {
+                              CameraUpdate u2 =
+                                  CameraUpdate.newLatLngBounds(bound, 50);
+                              controller.animateCamera(u2).then((void v) {
+                                check(u2, controller);
+                              });
+                            });
+                          } catch (e) {
+                            print(e);
+                          }
                         },
                       ),
                     ),
@@ -1071,7 +1087,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                     }),
           ),
           if (_consentToTreatMap != null &&
-              _consentToTreatMap["parkingMap"] != null && 
+              _consentToTreatMap["parkingMap"] != null &&
               _consentToTreatMap["parkingMap"]["parkingFee"] != null)
             Container(
                 decoration: BoxDecoration(

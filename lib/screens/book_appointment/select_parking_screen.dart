@@ -80,14 +80,7 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
                 child: FancyButton(
                   title: "Proceed to payment",
                   onPressed: () {
-                    if (_selectedParking == null) {
-                      Widgets.showErrorDialog(
-                        context: context,
-                        description: 'Please select a parking type',
-                      );
-                      return;
-                    }
-                    if (_parkingFee == null) {
+                    if (_selectedParking != null && _parkingFee == null) {
                       Widgets.showErrorDialog(
                         context: context,
                         description: 'Please enter parking fee',
@@ -106,7 +99,9 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
                     Map _paymentMap = new Map();
 
                     _paymentMap["parkingType"] = _selectedParking;
-                    _paymentMap["parkingFee"] = double.parse(_parkingFee);
+                    _paymentMap["parkingFee"] = (_parkingFee == null)
+                        ? null
+                        : double.parse(_parkingFee);
                     _paymentMap["parkingBay"] = _bayNumberController.text;
 
                     if (_instructionsController.text != null ||

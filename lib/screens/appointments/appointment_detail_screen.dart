@@ -330,6 +330,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         insuranceName = "---",
         insuranceImage;
 
+    String onsiteFee = "0";
+
     LatLng latLng = new LatLng(0, 0);
 
     if (_data["reason"] != null && _data["reason"].length > 0) {
@@ -387,6 +389,12 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               _providerData['parking']['fee'] != null) {
             parkingFee = _providerData['parking']['fee'].toStringAsFixed(2);
           }
+          if (_providerData["DoctorProfessionalDetail"] != null) {
+            onsiteFee = _providerData["DoctorProfessionalDetail"]
+                    ["onsiteConsultanceFee"][0]["fee"] ??
+                "";
+          }
+          onsiteFee = onsiteFee.toString();
 
           address = Extensions.addressFormat(
             _providerData["userAddress"]["address"]?.toString(),
@@ -438,7 +446,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       avatar = _providerData["doctor"]["avatar"];
     }
 
-    if (_providerData["parking"] != null) {
+    if (_providerData["parking"] != null && _data["type"].toString() == '3') {
       officeVisitFee =
           _providerData["parking"]["fee"]?.toStringAsFixed(2) ?? "0.00";
     }
@@ -587,7 +595,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         seekingCareWidget(_providerData),
         divider(),
         feeWidget(
-            fee, officeVisitFee, parkingFee, _providerData["type"].toString()),
+            fee, officeVisitFee, parkingFee, _providerData["type"].toString(),
+            fees: _providerData["fees"].toString(), onsiteFee: onsiteFee),
         divider(),
         paymentType == 0
             ? Container()
@@ -963,18 +972,28 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   }
 
   Widget feeWidget(String generalFee, String officeVisitCharge,
-      String parkingFee, String appType) {
+      String parkingFee, String appType,
+      {String fees, String onsiteFee}) {
     if (feeList.length > 0) {
       totalFee = feeList.fold(
           0,
           (sum, item) =>
               sum + double.parse(item["subService"]["amount"].toString()));
     } else {
-      totalFee = (double.parse(generalFee) + double.parse(officeVisitCharge));
+      // totalFee = (double.parse(generalFee) + double.parse(officeVisitCharge));
+      totalFee = (double.parse(generalFee));
+
+      if (fees != null && fees != '0' && fees != '' && appType != '3') {
+        totalFee = totalFee + double.parse(fees);
+      }
     }
 
     if (appType == '3') {
       totalFee += double.parse(officeVisitCharge);
+    }
+
+    if (onsiteFee != null && onsiteFee.isNotEmpty && onsiteFee != '0' && appType == '3') {
+      totalFee += double.parse(onsiteFee);
     }
 
     _container.setProviderData("totalFee", totalFee.toStringAsFixed(2));
@@ -1014,8 +1033,16 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                               "General Medicine Consult", "\$$generalFee"),
                           officeVisitCharge == "0.00"
                               ? Container()
-                              : subFeeWidget("Office Visit charge",
-                                  "\$$officeVisitCharge"),
+                              : Container(),
+                          //  subFeeWidget("Office Visit charge",
+                          //     "\$$officeVisitCharge"),
+
+                          if (appType == '1')
+                            subFeeWidget("Office charge", "\$$fees"),
+                          if (appType == '2')
+                            subFeeWidget("Video Call charge", "\$$fees"),
+                          if (appType == '3')
+                            subFeeWidget("Onsite charge", "\$$onsiteFee"),
                         ],
                       ),
                 appType != '3'
