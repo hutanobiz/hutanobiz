@@ -161,7 +161,7 @@ class _SignUpFormState extends State<Register> {
               setState(() {
                 if (res["dob"] != null) {
                   _selectedDate =
-                      DateFormat("MM/dd/yyyy").parse(res["dob"].toString());
+                      DateFormat("dd/MM/yyyy").parse(res["dob"].toString());
                 } else {
                   _selectedDate = DateTime(DateTime.now().year - 18,
                       DateTime.now().month, DateTime.now().day);
@@ -428,9 +428,9 @@ class _SignUpFormState extends State<Register> {
             if (date != null) {
               setState(() {
                 _selectedDate = date;
-                var aa = DateFormat('MM').format(date) +
+                var aa = DateFormat('dd').format(date) +
                     '/' +
-                    DateFormat('dd').format(date) +
+                    DateFormat('MM').format(date) +
                     '/' +
                     date.year.toString();
 
