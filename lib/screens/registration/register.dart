@@ -761,10 +761,10 @@ class _SignUpFormState extends State<Register> {
 
     if (isUpdateProfile) {
       loginData["dob"] =
-          DateFormat("MM/dd/yyyy").format(_selectedDate).toString();
+          DateFormat("dd/MM/yyyy").format(_selectedDate).toString();
     } else {
       loginData["dob"] =
-          DateFormat("MM/dd/yyyy").format(_selectedDate).toString();
+          DateFormat("dd/MM/yyyy").format(_selectedDate).toString();
     }
 
     try {
