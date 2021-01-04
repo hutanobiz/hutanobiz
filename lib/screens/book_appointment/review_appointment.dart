@@ -529,14 +529,14 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             appointmentType = _container.projectsResponse["serviceType"]
                         .toString() ==
                     '1'
-                ? "Office"
+                ? "office"
                 : _container.projectsResponse["serviceType"].toString() == '2'
-                    ? "Telemedicine"
-                    : "Onsite";
+                    ? "telemedicine"
+                    : "onsite";
             Widgets.showAppDialog(
                 context: context,
                 description:
-                    'Your $appointmentType appointment with $name is complete.',
+                    'Your $appointmentType appointment with $name is booked.',
                 buttonText: 'Done',
                 isCongrats: true,
                 onPressed: () {
