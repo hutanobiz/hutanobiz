@@ -18,6 +18,7 @@ class ProviderWidget extends StatelessWidget {
     this.margin,
     this.onRatingClick,
     this.onLocationClick,
+    this.totalDistance
   })  : assert(data != null),
         super(key: key);
 
@@ -27,6 +28,7 @@ class ProviderWidget extends StatelessWidget {
   final bool isOptionsShow, isProverPicShow;
   final EdgeInsets margin;
   final Function onRatingClick, onLocationClick;
+  final String totalDistance;
 
   @override
   Widget build(BuildContext context) {
@@ -415,7 +417,7 @@ class ProviderWidget extends StatelessWidget {
                     children: <Widget>[
                       "ic_app_distance".imageIcon(),
                       SizedBox(width: 5.0),
-                      Text(
+                      Text(totalDistance??
                         distance,
                         style: TextStyle(
                           color: AppColors.windsor,
