@@ -1086,30 +1086,43 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     color: Colors.white),
                               ),
                               onPressed: () {
-                                SharedPref().setDoubleValue(
-                                    'lat', _myLocation.target.latitude);
-                                SharedPref().setDoubleValue(
-                                    'lng', _myLocation.target.longitude);
-                                SharedPref().setValue(
-                                    'address', _addressController.text);
-                                SharedPref().setValue('radius',
-                                    radiuscontroller.text.split(' ')[0]);
-                                getLocation();
-                                Navigator.pop(context, true);
-                                if (isFilter) {
-                                  conatiner.setUserLocation(
-                                      "latLng",
-                                      LatLng(_myLocation.target.latitude,
-                                          _myLocation.target.longitude));
-                                  conatiner.setProjectsResponse(
-                                      "serviceType", selectedType);
-                                  conatiner.setProjectsResponse("insuranceType",
-                                      selectedInsurance == '2' ? '1' : '0');
-                                  conatiner.setProjectsResponse(
-                                      "maximumDistance",
+                                if (_addressController.text == '') {
+                                  Widgets.showAppDialog(
+                                      context: context,
+                                      description: 'Please Enter Address',
+                                      isError: true);
+                                } else if (radiuscontroller.text == '') {
+                                  Widgets.showAppDialog(
+                                      context: context,
+                                      description: 'Please Select Radius',
+                                      isError: true);
+                                } else {
+                                  SharedPref().setDoubleValue(
+                                      'lat', _myLocation.target.latitude);
+                                  SharedPref().setDoubleValue(
+                                      'lng', _myLocation.target.longitude);
+                                  SharedPref().setValue(
+                                      'address', _addressController.text);
+                                  SharedPref().setValue('radius',
                                       radiuscontroller.text.split(' ')[0]);
-                                  Navigator.pushNamed(context,
-                                      Routes.allTitlesSpecialtesScreen);
+                                  getLocation();
+                                  Navigator.pop(context, true);
+                                  if (isFilter) {
+                                    conatiner.setUserLocation(
+                                        "latLng",
+                                        LatLng(_myLocation.target.latitude,
+                                            _myLocation.target.longitude));
+                                    conatiner.setProjectsResponse(
+                                        "serviceType", selectedType);
+                                    conatiner.setProjectsResponse(
+                                        "insuranceType",
+                                        selectedInsurance == '2' ? '1' : '0');
+                                    conatiner.setProjectsResponse(
+                                        "maximumDistance",
+                                        radiuscontroller.text.split(' ')[0]);
+                                    Navigator.pushNamed(context,
+                                        Routes.allTitlesSpecialtesScreen);
+                                  }
                                 }
                               },
                               color: AppColors.windsor,
