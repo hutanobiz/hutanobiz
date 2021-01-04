@@ -17,33 +17,22 @@ class AppointmentCompleteConfirmation extends StatelessWidget {
           children: <Widget>[
             SizedBox(height: 50),
             Center(
-              child: Text(
-                  appointmentCompleteMap.containsKey('_id')
-                      ? "Video Appointment Completed"
-                      : "Office Visit Completed!!",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.midnight_express,
-                  )),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Text(
+                    appointmentCompleteMap['type'] == 2
+                        ? "Telemedicine appointment with Dr. ${appointmentCompleteMap["name"]} is complete."
+                        : appointmentCompleteMap['type'] == 1
+                            ? "Office Visit with Dr. ${appointmentCompleteMap["name"]} is complete"
+                            : "Onsite Appointment with Dr. ${appointmentCompleteMap["name"]} is complete",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.midnight_express,
+                    )),
+              ),
             ),
             SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text("with",
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.midnight_express)),
-                SizedBox(width: 8),
-                Text(appointmentCompleteMap["name"],
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.midnight_express))
-              ],
-            ),
             SizedBox(height: 15),
             Center(
               child: Text(
