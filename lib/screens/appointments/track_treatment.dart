@@ -340,7 +340,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
     appointmentCompleteMap["name"] = name;
     appointmentCompleteMap["address"] = address;
     appointmentCompleteMap["dateTime"] = dateTime;
-    appointmentCompleteMap["type"] = response["type"];
+    appointmentCompleteMap["type"] = response["type"].toString();
 
     if (appointment["doctorData"] != null) {
       for (dynamic detail in appointment["doctorData"]) {
