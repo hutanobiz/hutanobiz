@@ -689,6 +689,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
               _container.projectsResponse['serviceType'].toString(),
           isOptionsShow: false,
           averageRating: averageRating,
+          totalDistance:_totalDistance
         ),
       ),
     );
@@ -817,8 +818,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                           children: <Widget>[
                             Text(
                               _totalDuration.toLowerCase().contains('mins')
-                                  ? _totalDuration.replaceRange(
-                                      1, _totalDuration.length, ' minutes')
+                                  ? _totalDuration.replaceAll('mins', ' minutes')
                                   : _totalDuration,
                               style: TextStyle(
                                 fontSize: 14.0,
