@@ -41,7 +41,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   var uuid = new Uuid();
   String _sessionToken;
   List<dynamic> _placeList = [];
-  List<String> radiusList = ['1', '2', '5', '10', '20', '50'];
+  List<String> radiusList = ['1', '2', '5', '10', '20', '50', '100', '1000'];
   bool isShowList = false;
   bool isShowRadiusList = false;
   Completer<GoogleMapController> _controller = Completer();
@@ -589,7 +589,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
               Text(
-                'Within $radius kilometers ',
+                'Within $radius Miles ',
                 style: TextStyle(
                   color: AppColors.windsor,
                   fontSize: 14.0,
@@ -1200,13 +1200,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         tileColor: Colors.white,
                                         onTap: () {
                                           radiuscontroller.text =
-                                              radiusList[index] + ' Kilometers';
+                                              radiusList[index] + ' Miles';
                                           setModalState(() {
                                             isShowRadiusList = false;
                                           });
                                         },
                                         title: Text(
-                                            radiusList[index] + ' Kilometers'),
+                                            radiusList[index] + ' Miles'),
                                       );
                                     },
                                   ),
