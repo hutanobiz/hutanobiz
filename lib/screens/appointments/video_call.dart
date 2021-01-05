@@ -10,6 +10,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/widgets.dart';
+import 'package:wakelock/wakelock.dart';
 
 const APP_ID = '1dba38a531814b9f823d4d1c4e0c9a89';
 
@@ -42,12 +43,15 @@ class _CallPageState extends State<CallPage> {
     // destroy sdk
     _engine.leaveChannel();
     _engine.destroy();
+    Wakelock.disable();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
+    // prevent screen from turning off
+    Wakelock.enable();
     SharedPref().getToken().then((usertoken) {
       token = usertoken;
     });
