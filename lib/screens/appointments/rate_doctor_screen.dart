@@ -64,7 +64,12 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
     _providerMap = _container.getProviderData();
 
     if (_reasonList.length == 0) {
-      String id = _providerMap['providerData']['doctor']['_id'];
+      String id="";
+      if(_providerMap['providerData']["data"] != null){
+        id = _providerMap['providerData']['data']['doctor']['_id'];
+      }else{
+        id= _providerMap['providerData']['doctor']['_id'];
+      }
 
       _reasonList = await api.getReviewReasons(id);
     }
