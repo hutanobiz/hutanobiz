@@ -55,7 +55,7 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
                   Expanded(
                     child: Align(
                       alignment: Alignment.centerRight,
-                      child: RatingBar(
+                      child: RatingBar.builder(
                         initialRating:
                             double.parse(widget.reviewMap['averageRating']),
                         itemSize: 20.0,

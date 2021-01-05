@@ -746,7 +746,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
-              child: RatingBar(
+              child: RatingBar.builder(
                 initialRating: double.parse(averageRating),
                 itemSize: 20.0,
                 minRating: 1,
