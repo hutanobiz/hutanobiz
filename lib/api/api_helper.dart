@@ -191,7 +191,7 @@ class ApiBaseHelper {
             base_url +
                 "api/patient/user-schedule-appointmnet?longitude"
                     "=${latLng.longitude.toStringAsFixed(2)}"
-                    "&lattitude=${latLng.latitude.toStringAsFixed(2)}",
+                    "&latitude=${latLng.latitude.toStringAsFixed(2)}",
             headers: headers)
         .then((res) {
       return res["response"];
