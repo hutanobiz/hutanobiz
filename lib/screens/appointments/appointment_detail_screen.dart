@@ -638,7 +638,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         ),
                       ),
                     )
-                  : RatingBar(
+                  : RatingBar.builder(
                       initialRating: double.parse(userRating),
                       itemSize: 20.0,
                       minRating: 1,
@@ -646,7 +646,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                       allowHalfRating: true,
                       itemCount: 5,
                       glow: false,
-                      itemBuilder: (context, index) => Icon(
+                       itemBuilder:(context, index) => Icon(
                         Icons.star,
                         color: Colors.amber,
                       ),

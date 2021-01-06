@@ -74,7 +74,7 @@ class ReviewWidget extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
-                RatingBar(
+                RatingBar.builder(
                   initialRating: reviewerRating,
                   itemSize: 20.0,
                   minRating: 1,
