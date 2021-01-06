@@ -121,48 +121,49 @@ class _SelectAppointmentTimeScreenState
 
     _getScheduleDaysList();
     _scheduleDaysList.sort();
-
-    if (_scheduleDaysList.contains(DateTime.now().weekday)) {
-      _dayDateMap["day"] = DateTime.now().weekday.toString();
-      _dayDateMap["date"] = currentDate;
-      startDate = DateTime.now();
-    } else {
-      for (int i = 0; i < 7; i++) {
-        if (_scheduleDaysList
-            .contains(DateTime.now().add(Duration(days: i + 1)).weekday)) {
-          _dayDateMap["day"] =
-              DateTime.now().add(Duration(days: i + 1)).weekday.toString();
-          _dayDateMap["date"] = DateFormat('MM/dd/yyyy')
-              .format(DateTime.now().add(Duration(days: i + 1)));
-          startDate = DateTime.now().add(Duration(days: i + 1));
-          break;
+    if (_scheduleDaysList.length > 0) {
+      if (_scheduleDaysList.contains(DateTime.now().weekday)) {
+        _dayDateMap["day"] = DateTime.now().weekday.toString();
+        _dayDateMap["date"] = currentDate;
+        startDate = DateTime.now();
+      } else {
+        for (int i = 0; i < 7; i++) {
+          if (_scheduleDaysList
+              .contains(DateTime.now().add(Duration(days: i + 1)).weekday)) {
+            _dayDateMap["day"] =
+                DateTime.now().add(Duration(days: i + 1)).weekday.toString();
+            _dayDateMap["date"] = DateFormat('MM/dd/yyyy')
+                .format(DateTime.now().add(Duration(days: i + 1)));
+            startDate = DateTime.now().add(Duration(days: i + 1));
+            break;
+          }
         }
       }
-    }
-    try {
-      _timezone = await FlutterNativeTimezone.getLocalTimezone();
-    } catch (e) {
-      print('Could not get the local timezone');
-    }
-    if (mounted) {
-      setState(() {});
-    }
-    _dayDateMap["timezone"] = _timezone;
+      try {
+        _timezone = await FlutterNativeTimezone.getLocalTimezone();
+      } catch (e) {
+        print('Could not get the local timezone');
+      }
+      if (mounted) {
+        setState(() {});
+      }
+      _dayDateMap["timezone"] = _timezone;
 
-    while (true) {
-      if (_scheduleDaysList.contains(newDate.weekday)) {
-        setState(() {
-          _selectedDate = newDate;
-        });
+      while (true) {
+        if (_scheduleDaysList.contains(newDate.weekday)) {
+          setState(() {
+            _selectedDate = newDate;
+          });
 
-        break;
-      } else {
-        setState(() {
-          newDate = _selectedDate.add(
-            Duration(days: _initialDay),
-          );
-        });
-        _initialDay++;
+          break;
+        } else {
+          setState(() {
+            newDate = _selectedDate.add(
+              Duration(days: _initialDay),
+            );
+          });
+          _initialDay++;
+        }
       }
     }
 
@@ -202,7 +203,9 @@ class _SelectAppointmentTimeScreenState
               child: ListView(
                 shrinkWrap: true,
                 padding: const EdgeInsets.only(bottom: 70.0),
-                children: widgetList(),
+                children: _scheduleDaysList.length > 0
+                    ? widgetList()
+                    : noScheduleAdded(),
               ),
             ),
             Divider(height: 0.5),
@@ -257,6 +260,16 @@ class _SelectAppointmentTimeScreenState
         }
       }
     }
+  }
+
+  List<Widget> noScheduleAdded() {
+    List<Widget> formWidget = new List();
+
+    formWidget.add(SizedBox(height: 20.0));
+
+    formWidget.add(Text('No Schedules added'));
+
+    return formWidget;
   }
 
   List<Widget> widgetList() {
