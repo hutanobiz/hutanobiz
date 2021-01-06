@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'dart:math' as math;
 import 'package:background_locator/background_locator.dart';
 import 'package:background_locator/location_dto.dart';
-import 'package:background_locator/location_settings.dart';
+import 'package:background_locator/settings/android_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -395,8 +395,10 @@ class _OfficeTrackTreatmentScreenState extends State<OfficeTrackTreatmentScreen>
       }
     }
 
-    return (status == 0 &&
-            appointmentTime.difference(DateTime.now()).inHours > 24)
+    return (status == 1 
+    // &&
+    //         appointmentTime.difference(DateTime.now()).inHours > 24
+            )
         ? previousDayWidget(avatar, name, rating, professionalTitle, doctorData,
             response, address, appointmentTime)
         : (status == 0 || status == 1)
@@ -1574,16 +1576,18 @@ class _OfficeTrackTreatmentScreenState extends State<OfficeTrackTreatmentScreen>
   void startLocationService() {
     BackgroundLocator.registerLocationUpdate(
       callback,
-      settings: LocationSettings(
-        notificationTitle: "Start Location Tracking",
-        notificationMsg: "Track location in background",
-        wakeLockTime: 20,
-        autoStop: false,
-        interval: 5,
+      androidSettings: AndroidSettings(
+        androidNotificationSettings: AndroidNotificationSettings(
+          notificationTitle: "Start Location Tracking",
+          notificationMsg: "Track location in background",
+          //wakeLockTime: 20,
+          //autoStop: false,
+          //interval: 5,
+        ),
+
       ),
     );
   }
-
   void showPinsOnMap(LatLng _initialPosition) {
     var pinPosition =
         LatLng(_initialPosition.latitude, _initialPosition.longitude);
