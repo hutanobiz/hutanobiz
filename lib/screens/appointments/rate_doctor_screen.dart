@@ -3,7 +3,6 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/widgets/circular_loader.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
@@ -20,34 +19,40 @@ class RateDoctorScreen extends StatefulWidget {
 
 class _RateDoctorScreenState extends State<RateDoctorScreen> {
   InheritedContainerState _container;
-  //Map _providerMap = Map();
+  Map _providerMap = Map();
   double _rating = 0;
   String _ratingText, _name, avatar;
   ApiBaseHelper api = ApiBaseHelper();
 
-   Image selected= Image.asset('images/selectedStar.png',height: 40,);
-   Image unselected= Image.asset('images/unselectedStar.png',height: 40,);
-   Image img1;
-   Image img2;
-   Image img3;
-   Image img4;
-   Image img5;
-   int count=0;
-  List<bool> star = [false, false, false,false,false];
+  Image selected = Image.asset(
+    'images/selectedStar.png',
+    height: 40,
+  );
+  Image unselected = Image.asset(
+    'images/unselectedStar.png',
+    height: 40,
+  );
+  Image img1;
+  Image img2;
+  Image img3;
+  Image img4;
+  Image img5;
+  int count = 0;
+  List<bool> star = [false, false, false, false, false];
   final TextEditingController _reviewController = TextEditingController();
   Map rateMap = Map();
   bool _isLoading = false;
-  final reviewText=TextEditingController();
+  final reviewText = TextEditingController();
   Future<List<dynamic>> _reasonsFuture;
   List _reasonList = [];
 
   @override
   void initState() {
-    img1=unselected;
-    img2=unselected;
-    img3=unselected;
-    img4=unselected;
-    img5=unselected;
+    img1 = unselected;
+    img2 = unselected;
+    img3 = unselected;
+    img4 = unselected;
+    img5 = unselected;
 
     super.initState();
     _reviewController.addListener(() => setState(() {}));
@@ -56,9 +61,6 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
         setState(() {
           rateMap["user"] = response["response"]["_id"];
           rateMap["userType"] = response["response"]["type"].toString();
-          rateMap["appointment"] = _container.appointmentIdMap["appointmentId"];
-          //rateMap["review"] = reviewText.toString();
-          //rateMap["rating"] = count.toString();
         });
       });
     });
@@ -71,29 +73,29 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
     super.dispose();
   }
 
- // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //
-  //   _container = InheritedContainer.of(context);
-  //   _providerMap = _container.getProviderData();
-  //
-  //   if (_providerMap['providerData']["data"] != null) {
-  //     if (_providerMap['providerData']["data"]["doctor"] != null) {
-  //       _name =
-  //           _providerMap['providerData']["data"]["doctor"]["fullName"] ?? "---";
-  //       avatar = _providerMap['providerData']["data"]["doctor"]["avatar"];
-  //     }
-  //   } else if (_providerMap['providerData'] != null) {
-  //     if (_providerMap['providerData']["doctor"] != null) {
-  //       _name = _providerMap['providerData']["doctor"]["fullName"] ?? "---";
-  //       avatar = _providerMap['providerData']["doctor"]["avatar"];
-  //     }
-  //   }
-  //   _ratingText = "How was your experience with $_name ?";
-  //
-  //   rateMap["appointment"] = _container.appointmentIdMap["appointmentId"];
-  // }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _container = InheritedContainer.of(context);
+    _providerMap = _container.getProviderData();
+
+    if (_providerMap['providerData']["data"] != null) {
+      if (_providerMap['providerData']["data"]["doctor"] != null) {
+        _name =
+            _providerMap['providerData']["data"]["doctor"]["fullName"] ?? "---";
+        avatar = _providerMap['providerData']["data"]["doctor"]["avatar"];
+      }
+    } else if (_providerMap['providerData'] != null) {
+      if (_providerMap['providerData']["doctor"] != null) {
+        _name = _providerMap['providerData']["doctor"]["fullName"] ?? "---";
+        avatar = _providerMap['providerData']["doctor"]["avatar"];
+      }
+    }
+    _ratingText = "How was your experience with $_name ?";
+
+    rateMap["appointment"] = _container.appointmentIdMap["appointmentId"];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,29 +111,39 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
           children: <Widget>[
             Container(
               child: ListView(
-               // padding: const EdgeInsets.only(bottom: 70.0),
+                // padding: const EdgeInsets.only(bottom: 70.0),
                 shrinkWrap: true,
                 //children: widgetList(),//_providerMap),
                 children: [
                   Container(
-                    padding: EdgeInsets.only(bottom: 20,top: 10),
+                    padding: EdgeInsets.only(bottom: 20, top: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Image.asset('images/doctorImage.png',height: 70,),
+                        Image.asset(
+                          'images/doctorImage.png',
+                          height: 70,
+                        ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Text('Appointment Complete',style: TextStyle(fontSize: 18,),),
+                            Text(
+                              'Appointment Complete',
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
+                            ),
                             SizedBox(
                               height: 10,
                             ),
-                            Text('How was your experience?',style: TextStyle(fontSize: 18),),
+                            Text(
+                              'How was your experience?',
+                              style: TextStyle(fontSize: 18),
+                            ),
                           ],
                         ),
                       ],
                     ),
-
                   ),
                   Card(
                     shape: RoundedRectangleBorder(
@@ -161,43 +173,43 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                     ),
                     child: Padding(
                       padding: EdgeInsets.all(15),
-                        child: FutureBuilder<List<dynamic>>(
-                          future: _reasonsFuture,
-                          builder: (_, snapshot) {
-                            if (snapshot.hasData) {
-                              List<dynamic> data = snapshot.data;
-                              if (data == null || data.length == 0) return Container();
-                              return ListView.builder(
-                                shrinkWrap: true,
-                                physics: ScrollPhysics(),
-                                padding: EdgeInsets.zero,
-                                itemCount: data.length,
-                                itemBuilder: (context, titleIndex) {
-                                  if (data == null || data.length == 0) return Container();
-                                  dynamic reason = data[titleIndex];
-                                  return CheckboxListTile(
-                                    activeColor: AppColors.goldenTainoi ,
-                                    title: Text(reason['reason']),
-                                    value: star[titleIndex],
-                                    onChanged: (value){
-                                      setState(() {
-                                        changeStar(value,reason['reason']);
-                                        star[titleIndex]=value;
-
-                                      });
-                                    },
-                                  );
-                                },
-                              );
-                            } else if (snapshot.hasError) {
-                              return Text("${snapshot.error}");
-                            }
-                            return LinearProgressIndicator();
-                          },
-                        ),
+                      child: FutureBuilder<List<dynamic>>(
+                        future: _reasonsFuture,
+                        builder: (_, snapshot) {
+                          if (snapshot.hasData) {
+                            List<dynamic> data = snapshot.data;
+                            if (data == null || data.length == 0)
+                              return Container();
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              physics: ScrollPhysics(),
+                              padding: EdgeInsets.zero,
+                              itemCount: data.length,
+                              itemBuilder: (context, titleIndex) {
+                                if (data == null || data.length == 0)
+                                  return Container();
+                                dynamic reason = data[titleIndex];
+                                return CheckboxListTile(
+                                  activeColor: AppColors.goldenTainoi,
+                                  title: Text(reason['reason']),
+                                  value: star[titleIndex],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      changeStar(value, reason['reason']);
+                                      star[titleIndex] = value;
+                                    });
+                                  },
+                                );
+                              },
+                            );
+                          } else if (snapshot.hasError) {
+                            return Text("${snapshot.error}");
+                          }
+                          return LinearProgressIndicator();
+                        },
                       ),
                     ),
-
+                  ),
                   SizedBox(
                     height: 10,
                   ),
@@ -235,9 +247,9 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                   onPressed: (count >= 1 &&
                           (_reasonList != null && _reasonList.length > 0))
                       ? () {
-                            rateMap["review"] = reviewText.toString();
-                            rateMap["rating"] = count.toString();
-                            FocusScope.of(context).requestFocus(FocusNode());
+                          rateMap["review"] = reviewText.toString();
+                          rateMap["rating"] = count.toString();
+                          FocusScope.of(context).requestFocus(FocusNode());
 
                           if (_reasonList != null || _reasonList.length > 0) {
                             for (var i = 0; i < _reasonList.length; i++) {
@@ -272,8 +284,8 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
     );
   }
 
-  void changeStar(bool value,reason){
-    if(value==true) {
+  void changeStar(bool value, reason) {
+    if (value == true) {
       count++;
       _reasonList.add(reason);
       switch (count) {
@@ -306,8 +318,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
           }
           break;
       }
-    }
-    else{
+    } else {
       count--;
       switch (count) {
         case 0:
@@ -339,15 +350,14 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
           }
           break;
       }
-
     }
-
   }
 
-  List<Widget> widgetList(){//Map _providerData) {
+  List<Widget> widgetList() {
+    //Map _providerData) {
     List<Widget> widgetList = List();
 
-   // widgetList.add(profileWidget(_providerData);
+    // widgetList.add(profileWidget(_providerData);
 
     widgetList.add(rateWidget());
 
