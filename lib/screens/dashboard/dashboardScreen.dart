@@ -148,6 +148,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
       }
     });
     _container = InheritedContainer.of(context);
+    conatiner.setUserLocation(
+                                                "latLng",
+                                                LatLng(
+                                                    _latLng.latitude,
+                                                    _latLng
+                                                        .longitude));
 
     super.didChangeDependencies();
   }
@@ -295,6 +301,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                     _myLocation.target.latitude,
                                                     _myLocation
                                                         .target.longitude));
+                                                         conatiner.setUserLocation("userAddress", _currentddress);
 
                                             conatiner.setProjectsResponse(
                                                 "serviceType", selectedType);
@@ -1112,6 +1119,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         "latLng",
                                         LatLng(_myLocation.target.latitude,
                                             _myLocation.target.longitude));
+                                             conatiner.setUserLocation("userAddress", _addressController.text);
                                     conatiner.setProjectsResponse(
                                         "serviceType", selectedType);
                                     conatiner.setProjectsResponse(
