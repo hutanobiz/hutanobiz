@@ -107,7 +107,10 @@ class Routes {
         return _buildRoute(settings, LoginScreen());
         break;
       case dashboardScreen:
-        return _buildRoute(settings, HomeScreen());
+      if (args is int) {
+          return _buildRoute(settings, HomeScreen(currentIndex: args));
+        }
+        return _errorRoute();
         break;
       case forgotPasswordRoute:
         return _buildRoute(settings, ForgetPassword());

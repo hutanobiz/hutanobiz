@@ -97,7 +97,7 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
         onRightButtonTap: !_insuranceViewMap['isPayment'] && isFromRegister
             ? () {
                 Navigator.of(context).pushNamedAndRemoveUntil(
-                    Routes.dashboardScreen, (Route<dynamic> route) => false);
+                    Routes.dashboardScreen, (Route<dynamic> route) => false,arguments: 0);
               }
             : null,
         child: Stack(

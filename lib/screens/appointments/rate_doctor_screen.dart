@@ -722,7 +722,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                             Navigator.of(context).pushNamedAndRemoveUntil(
                               Routes.dashboardScreen,
                               (Route<dynamic> route) => false,
-                              arguments: true,
+                              arguments: 0,
                             );
                             break;
                         }

@@ -167,7 +167,7 @@ class _UploadInsuranceImagesScreenState
     } else {
       if (isFromRegister) {
         Navigator.of(context).pushNamedAndRemoveUntil(
-            Routes.dashboardScreen, (Route<dynamic> route) => false);
+            Routes.dashboardScreen, (Route<dynamic> route) => false,arguments: 0);
       } else {
         Navigator.popUntil(
           context,

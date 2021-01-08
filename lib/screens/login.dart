@@ -375,7 +375,7 @@ class _LoginState extends State<LoginScreen> {
 
       setLoading(false);
       Navigator.of(context).pushNamedAndRemoveUntil(
-          Routes.dashboardScreen, (Route<dynamic> route) => false);
+          Routes.dashboardScreen, (Route<dynamic> route) => false,arguments: 0);
 
       SharedPref().saveToken(response["tokens"][0]["token"].toString());
       SharedPref().setValue("fullName", response["fullName"].toString());
