@@ -103,13 +103,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
     SharedPref().getToken().then((token) {
       _myDoctorsFuture = _api.getMyDoctors(token, _latLng);
     });
+     conatiner.setUserLocation(
+                                                "latLng",
+                                                LatLng(
+                                                    _latLng.latitude,
+                                                    _latLng
+                                                        .longitude));
     setState(() {});
   }
 
   @override
   Future<void> initState() {
     super.initState();
-    getLocation();
+    
     initPlatformState();
 
     _professionalTitleFuture = _api.getProfessionalTitle();
@@ -148,12 +154,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       }
     });
     _container = InheritedContainer.of(context);
-    conatiner.setUserLocation(
-                                                "latLng",
-                                                LatLng(
-                                                    _latLng.latitude,
-                                                    _latLng
-                                                        .longitude));
+    getLocation();
+   
 
     super.didChangeDependencies();
   }
@@ -293,7 +295,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       }),
                                       SizedBox(height: 20),
                                       FancyButton(
-                                          title: 'Search providers',
+                                          title: 'Explore providers',
                                           onPressed: () {
                                             conatiner.setUserLocation(
                                                 "latLng",
@@ -1716,7 +1718,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         print("Service status: $serviceStatus");
 
         if (serviceStatus) {
-          Widgets.showToast("Getting Location. Please wait..");
+          // Widgets.showToast("Getting Location. Please wait..");
 
           try {
             // Loc.LocationData
