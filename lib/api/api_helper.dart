@@ -25,6 +25,21 @@ class ApiBaseHelper {
     });
   }
 
+  Future<dynamic> sendEmailOtp(BuildContext context, Map verifyEmail) {
+    return _netUtil
+        .postEmail(context, base_url + "auth/api/email-sendotp", body: verifyEmail)
+        .then((res) {
+      return res;
+    });
+  }
+  Future<dynamic> verifyEmailOtp(BuildContext context, Map<String, String> loginData) {
+    return _netUtil
+        .postEmail(context, base_url + "auth/api/email-verify", body: loginData)
+        .then((res) {
+      return res["response"];
+    });
+  }
+
   Future<dynamic> register(Map<String, String> map) {
     return _netUtil.post(base_url + "auth/api/register", body: map).then((res) {
       return (res["response"]);
@@ -766,7 +781,9 @@ class ApiBaseHelper {
 
 class NetworkUtil {
   static final NetworkUtil _instance = new NetworkUtil.internal();
+
   factory NetworkUtil() => _instance;
+
   NetworkUtil.internal();
 
   final JsonDecoder _decoder = new JsonDecoder();
@@ -839,11 +856,57 @@ class NetworkUtil {
     return responseJson;
   }
 
+  Future<dynamic> postEmail(BuildContext context, String url,
+      {Map headers, body, encoding}) async {
+    var responseJson;
+    try {
+      final response = await http.post(url,
+          body: body, headers: headers, encoding: encoding);
+      final int statusCode = response.statusCode;
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        final en = json.decode(response.body);
+
+        if (en["response"] is String)
+          Widgets.showErrorialog(
+            title: "Error",
+            context: context,
+            description: en["response"],
+          );
+        else if (en["response"] is Map)
+          Widgets.showErrorialog(
+            title: "Error",
+            context: context,
+            description: en,
+          );
+        else {
+          en["response"]
+              .map((m) =>
+              Widgets.showErrorialog(
+                  title: "Error", context: context, description: m["msg"]))
+              .toList();
+        }
+
+        throw Exception(en);
+      }
+
+      responseJson = _decoder.convert(response.body);
+
+      debugPrint(responseJson.toString(), wrapWidth: 1024);
+    } on SocketException {
+      Widgets.showErrorialog(
+          title: "Error", context: context, description: Strings.noInternet);
+      throw Exception(Strings.noInternet);
+    }
+
+    return responseJson;
+  }
+
   Future<dynamic> multipartPost(String url,
       {String token,
-      Map<String, String> fileMap,
-      File file,
-      String key}) async {
+        Map<String, String> fileMap,
+        File file,
+        String key}) async {
     var responseJson;
     try {
       Uri uri = Uri.parse(url);
@@ -858,7 +921,7 @@ class NetworkUtil {
       var stream = ByteStream(DelegatingStream(file.openRead()));
       var length = await file.length();
       var multipartFile =
-          MultipartFile(key, stream.cast(), length, filename: file.path);
+      MultipartFile(key, stream.cast(), length, filename: file.path);
       request.files.add(multipartFile);
 
       var response = await request.send();
@@ -899,3 +962,4 @@ class NetworkUtil {
     );
   }
 }
+
