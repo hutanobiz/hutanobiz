@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:hutano/main.dart';
 import 'package:hutano/models/schedule.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/widgets/widgets.dart';
 
@@ -959,6 +960,13 @@ class NetworkUtil {
     Widgets.showErrorDialog(
       context: navigatorKey.currentState.overlay.context,
       description: message,
+      onPressed: (){
+        if(message == 'Unauthorized'){
+         Navigator.pushNamed(navigatorKey.currentState.overlay.context, Routes.loginRoute,arguments: true);
+        }else{
+          Navigator.pop(navigatorKey.currentState.overlay.context);
+        }
+      }
     );
   }
 }

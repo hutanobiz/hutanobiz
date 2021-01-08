@@ -22,8 +22,8 @@ import 'package:hutano/widgets/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({Key key}) : super(key: key);
-
+  LoginScreen({Key key,this.isBack=false}) : super(key: key);
+bool isBack;
   @override
   _LoginState createState() => _LoginState();
 }
@@ -373,13 +373,20 @@ class _LoginState extends State<LoginScreen> {
     api.login(_loginDataMap).then((dynamic response) {
       Widgets.showToast(Strings.loggedIn);
 
-      setLoading(false);
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          Routes.dashboardScreen, (Route<dynamic> route) => false,arguments: 0);
+      
 
       SharedPref().saveToken(response["tokens"][0]["token"].toString());
       SharedPref().setValue("fullName", response["fullName"].toString());
       SharedPref().setValue("isEmailVerified", response["isEmailVerified"]);
+setLoading(false);
+      if(widget.isBack){
+Navigator.pop(context);
+Navigator.pop(context);
+      }else{
+
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          Routes.dashboardScreen, (Route<dynamic> route) => false,arguments: 0);
+      }
     }).futureError((error) {
       setLoading(false);
       error.toString().debugLog();

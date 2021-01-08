@@ -380,7 +380,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                   SharedPref().clearSharedPref();
                   Navigator.of(context).pushNamedAndRemoveUntil(
                     Routes.loginRoute,
-                    (Route<dynamic> route) => false,
+                    (Route<dynamic> route) => false,arguments: false
                   );
                 } else {
                   Widgets.showErrorDialog(
