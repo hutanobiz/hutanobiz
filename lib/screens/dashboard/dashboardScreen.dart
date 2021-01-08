@@ -41,7 +41,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   var uuid = new Uuid();
   String _sessionToken;
   List<dynamic> _placeList = [];
-  List<String> radiusList = ['1', '2', '5', '10', '20', '50'];
+  List<String> radiusList = ['1', '2', '5', '10', '20', '50', '100', '1000'];
   bool isShowList = false;
   bool isShowRadiusList = false;
   Completer<GoogleMapController> _controller = Completer();
@@ -51,6 +51,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   CameraPosition _myLocation;
   GoogleMapController controller;
   String _currentddress;
+  Loc.LocationData geoLocation;
 
   EdgeInsetsGeometry _edgeInsetsGeometry =
       const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0);
@@ -109,6 +110,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Future<void> initState() {
     super.initState();
     getLocation();
+    initPlatformState();
 
     _professionalTitleFuture = _api.getProfessionalTitle();
     _specialtiesFuture = _api.getSpecialties();
@@ -146,6 +148,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
       }
     });
     _container = InheritedContainer.of(context);
+    conatiner.setUserLocation(
+                                                "latLng",
+                                                LatLng(
+                                                    _latLng.latitude,
+                                                    _latLng
+                                                        .longitude));
 
     super.didChangeDependencies();
   }
@@ -287,8 +295,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       FancyButton(
                                           title: 'Search providers',
                                           onPressed: () {
-                                             conatiner.setUserLocation("latLng", LatLng(_myLocation.target.latitude, _myLocation.target.longitude));
-                                 
+                                            conatiner.setUserLocation(
+                                                "latLng",
+                                                LatLng(
+                                                    _myLocation.target.latitude,
+                                                    _myLocation
+                                                        .target.longitude));
+                                                         conatiner.setUserLocation("userAddress", _currentddress);
+
                                             conatiner.setProjectsResponse(
                                                 "serviceType", selectedType);
                                             conatiner.setProjectsResponse(
@@ -582,7 +596,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
               Text(
-                'Within $radius kilometers ',
+                'Within $radius Miles ',
                 style: TextStyle(
                   color: AppColors.windsor,
                   fontSize: 14.0,
@@ -1079,26 +1093,44 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     color: Colors.white),
                               ),
                               onPressed: () {
-                                SharedPref().setDoubleValue(
-                                    'lat', _myLocation.target.latitude);
-                                SharedPref().setDoubleValue(
-                                    'lng', _myLocation.target.longitude);
-                                SharedPref().setValue(
-                                    'address', _addressController.text);
-                                SharedPref().setValue('radius',
-                                    radiuscontroller.text.split(' ')[0]);
-                                getLocation();
-                                Navigator.pop(context, true);
-                                if (isFilter) {
-                                  conatiner.setUserLocation("latLng", LatLng(_myLocation.target.latitude, _myLocation.target.longitude));
-                                  conatiner.setProjectsResponse(
-                                      "serviceType", selectedType);
-                                  conatiner.setProjectsResponse("insuranceType",
-                                      selectedInsurance == '2' ? '1' : '0');
-                                  conatiner.setProjectsResponse(
-                                      "maximumDistance", radiuscontroller.text.split(' ')[0]);
-                                  Navigator.pushNamed(context,
-                                      Routes.allTitlesSpecialtesScreen);
+                                if (_addressController.text == '') {
+                                  Widgets.showAppDialog(
+                                      context: context,
+                                      description: 'Please Enter Address',
+                                      isError: true);
+                                } else if (radiuscontroller.text == '') {
+                                  Widgets.showAppDialog(
+                                      context: context,
+                                      description: 'Please Select Radius',
+                                      isError: true);
+                                } else {
+                                  SharedPref().setDoubleValue(
+                                      'lat', _myLocation.target.latitude);
+                                  SharedPref().setDoubleValue(
+                                      'lng', _myLocation.target.longitude);
+                                  SharedPref().setValue(
+                                      'address', _addressController.text);
+                                  SharedPref().setValue('radius',
+                                      radiuscontroller.text.split(' ')[0]);
+                                  getLocation();
+                                  Navigator.pop(context, true);
+                                  if (isFilter) {
+                                    conatiner.setUserLocation(
+                                        "latLng",
+                                        LatLng(_myLocation.target.latitude,
+                                            _myLocation.target.longitude));
+                                             conatiner.setUserLocation("userAddress", _addressController.text);
+                                    conatiner.setProjectsResponse(
+                                        "serviceType", selectedType);
+                                    conatiner.setProjectsResponse(
+                                        "insuranceType",
+                                        selectedInsurance == '2' ? '1' : '0');
+                                    conatiner.setProjectsResponse(
+                                        "maximumDistance",
+                                        radiuscontroller.text.split(' ')[0]);
+                                    Navigator.pushNamed(context,
+                                        Routes.allTitlesSpecialtesScreen);
+                                  }
                                 }
                               },
                               color: AppColors.windsor,
@@ -1176,13 +1208,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         tileColor: Colors.white,
                                         onTap: () {
                                           radiuscontroller.text =
-                                              radiusList[index] + ' Kilometers';
+                                              radiusList[index] + ' Miles';
                                           setModalState(() {
                                             isShowRadiusList = false;
                                           });
                                         },
                                         title: Text(
-                                            radiusList[index] + ' Kilometers'),
+                                            radiusList[index] + ' Miles'),
                                       );
                                     },
                                   ),
@@ -1228,8 +1260,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
     String type = '(cities)';
     String baseURL =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json';
-    String request =
-        '$baseURL?input=$input&types=$type&rankby=distance&location=31.45,77.1120762&key=$kPLACES_API_KEY&sessiontoken=$_sessionToken';
+    String request;
+    if (geoLocation != null) {
+      request =
+          '$baseURL?input=$input&radius=5000&location=${geoLocation.latitude},${geoLocation.longitude}&key=$kPLACES_API_KEY&sessiontoken=$_sessionToken';
+    } else {
+      request =
+          '$baseURL?input=$input&key=$kPLACES_API_KEY&sessiontoken=$_sessionToken';
+    }
     var response = await http.get(request);
     if (response.statusCode == 200) {
       setModalState(() {
@@ -1664,7 +1702,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   initPlatformState() async {
-    _locationLoading(true);
+    // _locationLoading(true);
 
     Loc.Location _location = Loc.Location();
     Loc.PermissionStatus _permission;
@@ -1681,18 +1719,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Widgets.showToast("Getting Location. Please wait..");
 
           try {
-            Loc.LocationData locationData = await _location.getLocation();
+            // Loc.LocationData
+            geoLocation = await _location.getLocation();
 
-            getLocationAddress(locationData.latitude, locationData.longitude);
+            // getLocationAddress(locationData.latitude, locationData.longitude);
 
-            _latLng = LatLng(
-                locationData.latitude ?? 0.00, locationData.longitude ?? 0.00);
+            // _latLng = LatLng(
+            //     locationData.latitude ?? 0.00, locationData.longitude ?? 0.00);
 
-            SharedPref().getToken().then((token) {
-              _myDoctorsFuture = _api.getMyDoctors(token, _latLng);
-            });
+            // SharedPref().getToken().then((token) {
+            //   _myDoctorsFuture = _api.getMyDoctors(token, _latLng);
+            // });
           } on PlatformException catch (e) {
-            _locationLoading(false);
+            // _locationLoading(false);
 
             Widgets.showToast(e.message.toString());
             e.toString().debugLog();

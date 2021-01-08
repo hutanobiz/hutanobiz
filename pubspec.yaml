@@ -27,7 +27,7 @@ dependencies:
   location: ^3.0.2
   intl: ^0.16.1
   flutter_polyline_points: ^0.2.1
-  flutter_rating_bar: ^3.0.1+1
+  flutter_rating_bar: ^3.2.0+1
   package_info: ^0.4.0+18
   image_picker: ^0.6.7+7
   image_cropper: ^1.3.1
@@ -35,7 +35,7 @@ dependencies:
   file_picker: ^1.12.0
   geocoder: ^0.2.1
   dotted_border: ^1.0.5
-  background_locator: ^1.1.3+1
+  background_locator: ^1.3.2+1
   map_launcher: ^0.10.0
   pedantic: ^1.8.0
   firebase_messaging: ^7.0.3

@@ -20,9 +20,9 @@ class AppointmentCompleteConfirmation extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Text(
-                    appointmentCompleteMap['type'] == 2
+                    appointmentCompleteMap['type'] == '2'
                         ? "Telemedicine appointment with Dr. ${appointmentCompleteMap["name"]} is complete."
-                        : appointmentCompleteMap['type'] == 1
+                        : appointmentCompleteMap['type'] == '1'
                             ? "Office Visit with Dr. ${appointmentCompleteMap["name"]} is complete"
                             : "Onsite Appointment with Dr. ${appointmentCompleteMap["name"]} is complete",
                     style: TextStyle(
