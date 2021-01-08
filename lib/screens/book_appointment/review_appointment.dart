@@ -487,6 +487,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             Widgets.showAppDialog(
                 isError: true,
                 context: context,
+                buttonText: responseJson["response"].contains('already')?'Go to Requests':'Close',
                 description: responseJson["response"],
                 onPressed: () {
                   if (responseJson["response"].contains('already')) {
@@ -560,7 +561,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                 context: context,
                 description:
                     'Your $appointmentType appointment with $name is booked.',
-                buttonText: 'Done',
+                buttonText: 'Go to Requests',
                 isCongrats: true,
                 onPressed: () {
                   _container.consentToTreatMap.clear();
