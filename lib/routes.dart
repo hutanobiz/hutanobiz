@@ -46,6 +46,7 @@ import 'package:hutano/screens/registration/register.dart';
 import 'package:hutano/screens/registration/register_email.dart';
 import 'package:hutano/screens/registration/reset_password.dart';
 import 'package:hutano/screens/registration/verify_otp.dart';
+import 'package:hutano/screens/registration/verify_email_otp.dart';
 
 class Routes {
   static const String loginRoute = '/login';
@@ -53,6 +54,7 @@ class Routes {
   static const String forgotPasswordRoute = '/forgotPassword';
   static const String registerEmailRoute = '/registerEmail';
   static const String verifyOtpRoute = '/verifyOtp';
+  static const String verifyEmailOtpRoute = '/verifyEmailOtp';
   static const String registerRoute = '/register';
   static const String resetPasswordRoute = '/resetPassword';
   static const String chooseSpecialities = '/chooseSpecialities';
@@ -119,6 +121,11 @@ class Routes {
         }
         return _errorRoute();
         break;
+       case verifyEmailOtpRoute:
+        if (args is Map) {
+          return _buildRoute(settings, VerifyEmailOTP(args: args));
+        }
+        return _errorRoute();
       case registerRoute:
         if (args is RegisterArguments) {
           return _buildRoute(settings, Register(args: args));
