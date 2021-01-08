@@ -1298,7 +1298,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                'My Providers',
+                'Top Providers',
                 style: TextStyle(
                   color: AppColors.midnight_express,
                   fontSize: 14,
