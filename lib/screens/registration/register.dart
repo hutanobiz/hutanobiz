@@ -826,16 +826,41 @@ class _SignUpFormState extends State<Register> {
 
           Widgets.showToast(
               "Congratulations! Your profile as been successfully created");
+          var verifyEmail = Map();
+          //var phone=int.parse(widget.args.email);
+          String phonenumber = widget.args.phoneNumber.substring(1, 4) +
+              "" +
+              widget.args.phoneNumber.substring(6, 9) +
+              "" +
+              widget.args.phoneNumber.substring(10, 14);
+          verifyEmail["email"]=_emailController.text;
+          verifyEmail["phoneNumber"]= phonenumber;
 
-          Map _insuranceMap = {};
-          _insuranceMap['isPayment'] = false;
-          _insuranceMap['isFromRegister'] = true;
+          api.sendEmailOtp(context, verifyEmail).then((dynamic response) {
+            setLoading(false);
+            //verifyEmail["otp"]= response["verificationCode"].toString();
+            Widgets.showToast(response["verificationCode"].toString());
 
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            Routes.insuranceListScreen,
-            (Route<dynamic> route) => false,
-            arguments: _insuranceMap,
-          );
+            Navigator.pushNamed(
+              context,
+              Routes.verifyEmailOtpRoute,
+              arguments: verifyEmail,
+            );
+            // Navigator.of(context).pushNamedAndRemoveUntil(
+            //     Routes.registerEducation, (Route<dynamic> route) => false);
+          }).futureError((onError){
+            Widgets.showErrorialog(
+                title: "Error", context: context, description: "Error!");
+          });
+          // Map _insuranceMap = {};
+          // _insuranceMap['isPayment'] = false;
+          // _insuranceMap['isFromRegister'] = true;
+          //
+          // Navigator.of(context).pushNamedAndRemoveUntil(
+          //   Routes.insuranceListScreen,
+          //   (Route<dynamic> route) => false,
+          //   arguments: _insuranceMap,
+          // );
         }
 
         setLoading(false);
