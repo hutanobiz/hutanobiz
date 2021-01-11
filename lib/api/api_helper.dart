@@ -720,7 +720,7 @@ class ApiBaseHelper {
   Future<List<dynamic>> getReviewReasons() {
     return _netUtil
         .get(
-      base_url + "api/doctor-reason",
+      base_url + "api/patient/reason",
     )
         .then((res) {
       return res["response"];
