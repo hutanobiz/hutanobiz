@@ -281,7 +281,27 @@ class _CallPageState extends State<CallPage> {
     final views = _getRenderViews();
     switch (views.length) {
       case 1:
-        return _videoView(views[0]);
+        return mutedVideo
+            ? Stack(
+                children: [
+                  Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(20),
+                              bottomRight: Radius.circular(20)),
+                          color: Colors.black)),
+                  Center(
+                      child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.videocam_off, color: Colors.red, size: 48),
+                      Text('Please turn on your video',
+                          style: TextStyle(color: Colors.red))
+                    ],
+                  )),
+                ],
+              )
+            : _videoView(views[0]);
       case 2:
         return Container(
             child: Stack(
@@ -320,9 +340,22 @@ class _CallPageState extends State<CallPage> {
         child: Container(
             height: 120,
             width: 80,
-            child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(12)),
-                child: view)));
+            child: mutedVideo
+              ? Stack(
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                            color: Colors.black)),
+                    Center(
+                        child: Icon(Icons.videocam_off,
+                            color: Colors.red, size: 24)),
+                  ],
+                )
+              : ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
+                  child: view),
+        ));
     // return Expanded(child: Container(child: view));
   }
 
