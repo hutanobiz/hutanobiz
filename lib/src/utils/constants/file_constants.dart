@@ -98,6 +98,10 @@ class FileConstants {
   static const String icCheckCircle = "assets/images/ic_check_circle.png";
   static const String icLogout = "assets/images/ic_logout.png";
   static const String icInsuranceBlue = "assets/images/ic_insurance_blue.png";
+  static const String icWelcomeNote = "assets/images/ic_welcome_note.png";
+  static const String icLogoBlack = "assets/images/ic_logo_black.png";
+  static const String icSkipLater = "assets/images/ic_skip_later.png";
+  static const String icDonePurple = "assets/images/ic_done_purple.png";
 
   static const String libCountryPicker = "country_code_picker";
 

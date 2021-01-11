@@ -240,7 +240,7 @@ class LocalizationEN implements Localization {
   String get completeTaskNow => "COMPLETE TASKS NOW";
 
   @override
-  String get skipTasks => "SKIP TASKS";
+  String get skipTasks => "Skip for later";
 
   @override
   String get checkYourEmail => "Check your email.";

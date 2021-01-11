@@ -15,6 +15,8 @@ class HutanoStepsHeader extends StatelessWidget {
   final Color borderColor;
   final CrossAxisAlignment alignment;
   final bool subTitlePadding;
+  final TextStyle titleStyle;
+  final TextStyle subTitleStyle;
 
   const HutanoStepsHeader(
       {Key key,
@@ -27,7 +29,7 @@ class HutanoStepsHeader extends StatelessWidget {
       this.bgColor,
       this.borderColor,
       this.alignment = CrossAxisAlignment.start,
-      this.subTitlePadding = true})
+      this.subTitlePadding = true, this.titleStyle, this.subTitleStyle})
       : assert(title != null),
         super(key: key);
 
@@ -39,7 +41,7 @@ class HutanoStepsHeader extends StatelessWidget {
       child: Row(
         children: [
           Padding(
-            padding: const EdgeInsets.all(spacing5),
+            padding: const EdgeInsets.all(0),
             child: HutanoRoundButton(
               borderColor: borderColor,
               bgColor: bgColor,
@@ -57,19 +59,20 @@ class HutanoStepsHeader extends StatelessWidget {
                 child: Text(
                   title,
                   textAlign: TextAlign.start,
-                  style: const TextStyle(
+                  style: titleStyle ??const TextStyle(
                       color: colorDarkBlack,
                       fontWeight: fontWeightSemiBold,
                       fontSize: fontSize18),
                 ),
               ),
+              SizedBox(height: 5,),
               if (subTitle != null)
                 Padding(
                   padding: EdgeInsets.only(left: subTitlePadding ? 20 : 0),
                   child: Container(
                     child: Text(
                       subTitle,
-                      style: const TextStyle(
+                      style:subTitleStyle ?? const TextStyle(
                         fontWeight: fontWeightSemiBold,
                         fontSize: fontSize10,
                         color: colorLightGrey,

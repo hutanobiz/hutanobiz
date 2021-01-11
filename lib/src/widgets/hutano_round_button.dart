@@ -30,14 +30,14 @@ class HutanoRoundButton extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(
-              width: 1.0, color: borderColor!=null ?borderColor: colorBlack45,
+              width: 1.0, color: borderColor!=null ?borderColor: colorBorder2.withOpacity(0.1),
               style: BorderStyle.solid),
           color: bgColor!=null ?bgColor : accentColor ,
         ),
         child: isIcon ? Image.asset(icon, width: iconSize, height: iconSize) :Container(
-          padding: const EdgeInsets.all(18.0),
+          padding: const EdgeInsets.all(9.0),
           child: Text(iconText,
-              style: TextStyle(color: Colors.white, fontSize: fontSize27)),
+              style: TextStyle(color: Colors.white, fontSize: fontSize20)),
         ));
   }
 }

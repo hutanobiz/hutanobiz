@@ -65,3 +65,5 @@ const Color colorDarkgrey2 = Color(0xFF666666);
 const Color colorLightGreen = Color(0xFF89C97A);
 const Color colorActiveBodyPart = Colors.white;
 const Color colorInactiveBodyPart = Colors.black;
+const Color colorLightBlack2 =Color(0xFF262626);
+const Color colorBorder2 =Color(0xFF202020);
