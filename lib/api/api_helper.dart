@@ -16,7 +16,7 @@ import 'package:hutano/widgets/widgets.dart';
 class ApiBaseHelper {
   NetworkUtil _netUtil = new NetworkUtil();
   static const String base_url = "https://dev.hutano.xyz/";
-  static const String imageUrl = base_url + "uploads/";
+  static const String imageUrl = "https://hutano-assets.s3.amazonaws.com/";
 
   Future<dynamic> login(Map loginData) {
     return _netUtil
