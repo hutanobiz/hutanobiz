@@ -97,6 +97,7 @@ class FileConstants {
   static const String icUploadPurple = "assets/images/ic_upload_purple.png";
   static const String icCheckCircle = "assets/images/ic_check_circle.png";
   static const String icLogout = "assets/images/ic_logout.png";
+  static const String icInsuranceBlue = "assets/images/ic_insurance_blue.png";
 
   static const String libCountryPicker = "country_code_picker";
 
@@ -104,5 +105,4 @@ class FileConstants {
   static const String svgFemaleFront = "assets/svg/female_front.svg";
   static const String svgMaleBack = "assets/svg/male_back.svg";
   static const String svgMaleFront = "assets/svg/male_front.svg";
-  
 }

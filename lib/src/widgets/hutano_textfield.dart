@@ -142,7 +142,7 @@ class _HutanoTextFieldState extends State<HutanoTextField> {
             enabled: widget.isFieldEnable,
             decoration: InputDecoration(
               labelText: widget.labelText,
-              isDense: true,
+              
               errorText: widget.errorText,
               labelStyle: widget.labelTextStyle != null
                   ? widget.labelTextStyle
@@ -159,12 +159,15 @@ class _HutanoTextFieldState extends State<HutanoTextField> {
               floatingLabelBehavior: widget.floatingBehaviour,
               hintStyle: TextStyle(color: colorBlack60, fontSize: fontSize14),
               focusedBorder: OutlineInputBorder(
+                borderRadius: const BorderRadius.all(Radius.circular(12)),
                   borderSide:
                       BorderSide(color: widget.focusedBorderColor, width: 1)),
               enabledBorder: OutlineInputBorder(
+                borderRadius: const BorderRadius.all(Radius.circular(12)),
                   borderSide:
                       BorderSide(color: widget.enabledBorderColor, width: 1)),
               disabledBorder: OutlineInputBorder(
+                borderRadius: const BorderRadius.all(Radius.circular(12)),
                   borderSide:
                       BorderSide(color: widget.disableBorderColor, width: 1)),
               prefixIconConstraints: BoxConstraints(),

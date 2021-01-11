@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:hutano/src/widgets/text_with_image.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 
 import '../../../../routes.dart';
@@ -340,13 +341,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _registerModel.deviceToken = deviceToken;
       var res = await ApiManager().registerUser(_registerModel, _imageFile);
 
-
       //TODO : Verify code
       SharedPref().setValue(PreferenceKey.id, res.response.sId);
       SharedPref().setValue(PreferenceKey.email, res.response.email);
       SharedPref().setValue(PreferenceKey.gender, res.response.gender);
       SharedPref().setValue(PreferenceKey.tokens, res.response.tokens[0].token);
-      SharedPref().setValue(PreferenceKey.phone, res.response.phoneNumber.toString());
+      SharedPref()
+          .setValue(PreferenceKey.phone, res.response.phoneNumber.toString());
 
       //TODO : Verify code
       SharedPref().saveToken(res.response.tokens[0].token);
@@ -358,7 +359,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       Map _insuranceMap = {};
       _insuranceMap['isPayment'] = false;
       _insuranceMap['isFromRegister'] = true;
-      
+
       Navigator.of(context).pushNamedAndRemoveUntil(
         Routes.insuranceListScreen,
         (Route<dynamic> route) => false,
@@ -461,13 +462,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: spacing15,
+                      height: spacing20,
                     ),
                     UploadImage(
                       onImagePicked: _onImagePicked,
                     ),
                     SizedBox(
-                      height: spacing15,
+                      height: spacing20,
                     ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -482,15 +483,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         onDateSelected: _onDateSelected,
                         controller: _dobController),
                     SizedBox(
-                      height: spacing15,
+                      height: spacing20,
                     ),
                     _buildPasswordField(),
                     SizedBox(
-                      height: spacing15,
+                      height: spacing20,
                     ),
                     _buildAddressField(),
                     SizedBox(
-                      height: spacing15,
+                      height: spacing20,
                     ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -504,7 +505,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ],
                     ),
                     SizedBox(
-                      height: spacing15,
+                      height: spacing20,
                     ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -515,19 +516,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ],
                     ),
                     SizedBox(
-                      height: spacing15,
+                      height: spacing20,
                     ),
                     GenderSelector(
                         onGenderChange: _onGenderChange, gender: _gender),
                     SizedBox(
-                      height: spacing15,
+                      height: spacing20,
+                    ),
+                    _buildHealthInsurance(),
+                    SizedBox(
+                      height: spacing20,
                     ),
                     InsuranceList(
                         controller: _insuranceController,
                         insuranceList: _insuranceList,
                         onInsuranceSelected: _onInsuranceSelected),
                     SizedBox(
-                      height: spacing15,
+                      height: spacing20,
                     ),
                     _buildRefCodeField(),
                     SizedBox(
@@ -538,7 +543,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       label: Localization.of(context).next,
                     ),
                     SizedBox(
-                      height: spacing15,
+                      height: spacing20,
                     ),
                   ],
                 ),
@@ -737,10 +742,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
               hintStyle: TextStyle(color: colorBlack60, fontSize: fontSize14),
               border: OutlineInputBorder(),
               focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(color: colorBlack20, width: 1)),
               enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(color: colorBlack20, width: 1)),
               disabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(color: colorBlack20, width: 1)),
               labelStyle: labelStyle)),
       suggestionsCallback: (pattern) async {
@@ -840,6 +848,62 @@ class _RegisterScreenState extends State<RegisterScreen> {
           showError(RegisterError.zipCode.index);
         },
         textInputAction: TextInputAction.done);
+  }
+
+  _buildHealthInsurance() {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+          color: colorGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(14)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          TextWithImage(
+              size: spacing30,
+              textStyle: TextStyle(fontSize: fontSize16),
+              label: Localization.of(context).labelHealthInsurance,
+              image: FileConstants.icInsuranceBlue),
+          SizedBox(
+            height: 14,
+          ),
+          Text(
+            Localization.of(context).healthInsurance,
+            textAlign: TextAlign.start,
+            style: TextStyle(fontSize: fontSize15),
+          ),
+          SizedBox(
+            height: 17,
+          ),
+          Row(
+            children: [
+              HutanoButton(
+                label: 'Yes',
+                onPressed: () {},
+                buttonType: HutanoButtonType.onlyLabel,
+                width: 80,
+                color: colorPurple,
+                height: 40,
+              ),
+              SizedBox(
+                width: 15,
+              ),
+              HutanoButton(
+                borderColor: colorGrey,
+                label: 'No',
+                onPressed: () {},
+                buttonType: HutanoButtonType.onlyLabel,
+                width: 80,
+                labelColor: colorBlack,
+                color: colorWhite,
+                borderWidth: 1,
+                height: 40,
+              )
+            ],
+          )
+        ],
+      ),
+    );
   }
 
   @override

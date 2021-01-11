@@ -7,7 +7,8 @@ class TextWithImage extends StatelessWidget {
   final String image;
   final String label;
   final TextStyle textStyle;
-  const TextWithImage({this.image, this.label, this.textStyle});
+  final double size;
+  const TextWithImage({this.image, this.label, this.textStyle, this.size=spacing18});
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -15,8 +16,8 @@ class TextWithImage extends StatelessWidget {
       children: [
         Image.asset(
           image,
-          height: spacing18,
-          width: spacing18,
+          height: size,
+          width: size,
         ),
         SizedBox(
           width: 4,

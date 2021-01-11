@@ -276,4 +276,6 @@ abstract class Localization {
   String get logout;
   String get selectBodyPart;
   String get errorBodyPartSelect;
+  String get healthInsurance;
+  String get labelHealthInsurance;
 }

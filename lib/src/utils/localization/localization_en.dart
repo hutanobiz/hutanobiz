@@ -707,6 +707,12 @@ class LocalizationEN implements Localization {
   @override
   String get errorBodyPartSelect => "Please select body part.";
 
+  @override
+  String get labelHealthInsurance => "Health Insurance";
+
+  @override
+  String get healthInsurance => "Do you have health insurance?";
+
 
   @override
   String get selectBodyPart =>
