@@ -46,64 +46,49 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
         color: Colors.white,
         child: SafeArea(
             child: Scaffold(
-                body: SingleChildScrollView(
-                    child: Column(
+                body: Column(
           children: [
-            HutanoProgressBar(progressSteps: HutanoProgressSteps.one),
-            HutanoHeader(
-              headerInfo: HutanoHeaderInfo(
-                title: Localization.of(context).emailVerification,
-                subTitle: Localization.of(context).checkYourEmail,
-                subTitleFontSize: fontSize15,
+            SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  HutanoProgressBar(progressSteps: HutanoProgressSteps.one),
+                  HutanoHeader(
+                    headerInfo: HutanoHeaderInfo(
+                      title: Localization.of(context).emailVerification,
+                    ),
+                    spacing: 10,
+                  ),
+                  Text(
+                    Localization.of(context)
+                        .enterActivationCode
+                        .format([getString(PreferenceKey.email, "")]),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        color: colorBlack85,
+                        fontWeight: fontWeightMedium,
+                        fontSize: fontSize15),
+                  ),
+                  SizedBox(
+                    height: spacing30,
+                  ),
+                  _buildVerificationCode(context),
+                  SizedBox(
+                    height: spacing20,
+                  ),
+                  _buildActivateEmailButton(context),
+                  SizedBox(
+                    height: spacing20,
+                  ),
+                  _buildResend(context),
+                ],
               ),
-              spacing: 10,
             ),
-            Text(
-              Localization.of(context).stepOneofFour,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                  color: colorBlack,
-                  fontWeight: fontWeightMedium,
-                  fontSize: fontSize17),
-            ),
-            SizedBox(
-              height: spacing20,
-            ),
-            HutanoStepsHeader(
-              title: Localization.of(context).activateEmail,
-              iconText: stepOne,
-            ),
-            Text(
-              Localization.of(context)
-                  .enterActivationCode
-                  .format([getString(PreferenceKey.email, "")]),
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                  color: colorLightGrey1,
-                  fontWeight: fontWeightMedium,
-                  fontSize: fontSize12),
-            ),
-            SizedBox(
-              height: spacing30,
-            ),
-            _buildVerificationCode(context),
-            SizedBox(
-              height: spacing10,
-            ),
-            _buildResend(context),
-            SizedBox(
-              height: spacing70,
-            ),
-            _buildActivateEmailButton(context),
-            SizedBox(
-              height: spacing20,
-            ),
+            Spacer(),
             _buildSkipTaskNowButton(context),
-            SizedBox(
-              height: spacing20,
-            ),
           ],
-        )))));
+        ))));
   }
 
   Widget _buildResend(BuildContext context) {
@@ -176,11 +161,12 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       padding: const EdgeInsets.only(
           left: spacing20, right: spacing20, bottom: spacing20),
       child: HutanoButton(
-        buttonType: HutanoButtonType.withIcon,
+        buttonType: HutanoButtonType.withPrefixIcon,
         isIconButton: true,
         iconSize: spacing20,
-        color: colorYellow,
-        icon: FileConstants.icSkip,
+        labelColor: colorBlack,
+        color: Colors.transparent,
+                icon: FileConstants.icSkipLater,
         label: Localization.of(context).skipTasks,
         onPressed: _skipTaskNow,
       ));

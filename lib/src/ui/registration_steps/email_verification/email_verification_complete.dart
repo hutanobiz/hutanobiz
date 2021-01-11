@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hutano/src/utils/navigation.dart';
+import 'package:hutano/src/widgets/round_success.dart';
 
 import '../../../utils/color_utils.dart';
 import '../../../utils/constants/constants.dart';
@@ -25,58 +26,42 @@ class EmailVerifiCompleteScreen extends StatefulWidget {
 }
 
 class _EmailVerifiCompleteScreenState extends State<EmailVerifiCompleteScreen> {
-   TextEditingController _codeController = TextEditingController();
+  TextEditingController _codeController = TextEditingController();
   bool _enableButton = true;
-@override
+  @override
   void initState() {
-
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
         color: Colors.white,
         child: SafeArea(
             child: Scaffold(
-                body: SingleChildScrollView(
-                    child: Column(
+                body: Column(
+          mainAxisSize: MainAxisSize.max,
           children: [
             HutanoProgressBar(progressSteps: HutanoProgressSteps.one),
             HutanoHeader(
               headerInfo: HutanoHeaderInfo(
                 title: Localization.of(context).emailVerification,
-                subTitle: Localization.of(context).complete,
+                subTitle: Localization.of(context).taskComplete,
                 subTitleFontSize: fontSize15,
               ),
             ),
-            SizedBox(
-              height: spacing40,
-            ),
-            HutanoStepsHeader(
-              isIcon: true,
-              title: Localization.of(context).activateEmail,
-              subTitle: Localization.of(context).taskComplete,
-              iconText: stepOne,
-              icon: FileConstants.icComplete,
-              bgColor: Colors.transparent,
-              iconSize: spacing50,
-              borderColor: Colors.transparent,
-              alignment: CrossAxisAlignment.center,
-            ),
+            Spacer(),
+            RoundSuccess(),
+            Spacer(),
             SizedBox(
               height: spacing30,
             ),
-
-         //   _buildVerificationCode(context),
-            SizedBox(
-              height: spacing50,
-            ),
             _buildNextButton(context),
             SizedBox(
-              height: spacing20,
+              height: spacing30,
             ),
           ],
-        )))));
+        ))));
   }
 
   Widget _buildVerificationCode(BuildContext context) {
@@ -106,10 +91,8 @@ class _EmailVerifiCompleteScreenState extends State<EmailVerifiCompleteScreen> {
   _buildNextButton(BuildContext context) => Padding(
       padding: const EdgeInsets.only(left: spacing20, right: spacing20),
       child: HutanoButton(
-        buttonType: HutanoButtonType.withIcon,
-        isIconButton: true,
-        icon: FileConstants.icNext,
-        color: colorDarkBlue,
+        buttonType: HutanoButtonType.onlyLabel,
+        color: colorYellow,
         iconSize: 20,
         label: Localization.of(context).next,
         onPressed: _enableButton ? _nextClick : null,
@@ -117,6 +100,5 @@ class _EmailVerifiCompleteScreenState extends State<EmailVerifiCompleteScreen> {
 
   _nextClick() {
     NavigationUtils.pushReplacement(context, routeSetupPin);
-
   }
 }
