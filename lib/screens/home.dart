@@ -185,16 +185,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
         switch (notificationType) {
           case 'call':
-            // Map appointment = {};
-            // appointment["_appointmentStatus"] = "1";
-            // appointment["id"] = Platform.isIOS
-            //     ? message['appointmentId']
-            //     : message["data"]['appointmentId'];
-            // Navigator.of(context).pushNamed(
-            //   Routes.appointmentDetailScreen,
-            //   arguments: appointment,
-            // );
-            Map<Permission.Permission, Permission.PermissionStatus> statuses =
+              Widgets.showConfirmationDialog(
+                context: context,
+                title: 'Call request',
+                description: 'Do you want to join call again?',
+                leftText: 'Cancel',
+                onLeftPressed: () {
+                  Navigator.pop(context);
+                },
+                rightText: 'Join',
+                onRightPressed: () async {
+                   Map<Permission.Permission, Permission.PermissionStatus> statuses =
                 await [
               Permission.Permission.camera,
               Permission.Permission.microphone
@@ -216,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   context: context,
                   description: 'Camera & Microphone permission Requied');
             }
-
+                });
             break;
           default:
             showNotification(message);
