@@ -147,6 +147,15 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     if (_container.projectsResponse["serviceType"].toString() == '3') {
       _desPosition = LatLng(_consentToTreatMap["userAddress"]['coordinates'][1],
           _consentToTreatMap["userAddress"]['coordinates'][0]);
+      if (_profileMap["businessLocation"] != null) {
+        if (_profileMap["businessLocation"]["coordinates"].length > 0) {
+          _initialPosition = LatLng(
+              double.parse(
+                  _profileMap["businessLocation"]["coordinates"][1].toString()),
+              double.parse(_profileMap["businessLocation"]["coordinates"][0]
+                  .toString()));
+        }
+      }
     } else if (_container.projectsResponse["serviceType"].toString() == '1') {
       if (_profileMap["businessLocation"] != null) {
         if (_profileMap["businessLocation"]["coordinates"].length > 0) {
@@ -476,10 +485,25 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           if (responseJson["response"] is String) {
             _loading(false);
             Widgets.showAppDialog(
-              isError: true,
-              context: context,
-              description: responseJson["response"],
-            );
+                isError: true,
+                context: context,
+                buttonText: responseJson["response"].contains('already')?'Go to Requests':'Close',
+                description: responseJson["response"],
+                onPressed: () {
+                  if (responseJson["response"].contains('already')) {
+                    _container.consentToTreatMap.clear();
+                    _container.getProviderData().clear();
+                    _container.appointmentData.clear();
+
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      Routes.dashboardScreen,
+                      (Route<dynamic> route) => false,
+                      arguments: 2,
+                    );
+                  } else {
+                    Navigator.pop(context);
+                  }
+                });
             //  } else if (responseJson["response"]['paymentIntent'] != null) {
             //   String _clientSecret =
             //       responseJson["response"]['paymentIntent']['client_secret'];
@@ -537,7 +561,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                 context: context,
                 description:
                     'Your $appointmentType appointment with $name is booked.',
-                buttonText: 'Done',
+                buttonText: 'Go to Requests',
                 isCongrats: true,
                 onPressed: () {
                   _container.consentToTreatMap.clear();
@@ -547,7 +571,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                   Navigator.of(context).pushNamedAndRemoveUntil(
                     Routes.dashboardScreen,
                     (Route<dynamic> route) => false,
-                    arguments: true,
+                    arguments: 2,
                   );
                 });
           }
@@ -631,7 +655,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                       Navigator.of(context).pushNamedAndRemoveUntil(
                         Routes.dashboardScreen,
                         (Route<dynamic> route) => false,
-                        arguments: true,
+                        arguments: 2,
                       );
                     })
               ],
@@ -684,13 +708,12 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           left: 20.0,
         ),
         child: ProviderWidget(
-          data: _profileMap,
-          selectedAppointment:
-              _container.projectsResponse['serviceType'].toString(),
-          isOptionsShow: false,
-          averageRating: averageRating,
-          totalDistance:_totalDistance
-        ),
+            data: _profileMap,
+            selectedAppointment:
+                _container.projectsResponse['serviceType'].toString(),
+            isOptionsShow: false,
+            averageRating: averageRating,
+            totalDistance: _totalDistance),
       ),
     );
     _widgetList.add(Padding(
@@ -818,7 +841,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                           children: <Widget>[
                             Text(
                               _totalDuration.toLowerCase().contains('mins')
-                                  ? _totalDuration.replaceAll('mins', ' minutes')
+                                  ? _totalDuration.replaceAll(
+                                      'mins', ' minutes')
                                   : _totalDuration,
                               style: TextStyle(
                                 fontSize: 14.0,

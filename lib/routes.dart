@@ -106,10 +106,16 @@ class Routes {
 
     switch (settings.name) {
       case loginRoute:
-        return _buildRoute(settings, LoginScreen());
+      if (args is bool) {
+          return _buildRoute(settings, LoginScreen(isBack: args));
+        }
+        return _errorRoute();
         break;
       case dashboardScreen:
-        return _buildRoute(settings, HomeScreen());
+      if (args is int) {
+          return _buildRoute(settings, HomeScreen(currentIndex: args));
+        }
+        return _errorRoute();
         break;
       case forgotPasswordRoute:
         return _buildRoute(settings, ForgetPassword());

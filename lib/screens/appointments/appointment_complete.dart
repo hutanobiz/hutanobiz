@@ -166,7 +166,7 @@ class AppointmentCompleteConfirmation extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pushNamedAndRemoveUntil(
                           Routes.dashboardScreen,
-                          (Route<dynamic> route) => false);
+                          (Route<dynamic> route) => false,arguments: 0);
                     },
                   )),
             )

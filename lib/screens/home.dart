@@ -16,7 +16,8 @@ import 'package:permission_handler/permission_handler.dart' as Permission;
 const kstripePublishKey = 'pk_test_LlxS6SLz0PrOm9IY9mxM0LHo006tjnSqWX';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key key}) : super(key: key);
+  HomeScreen({Key key,this.currentIndex =0}) : super(key: key);
+  int currentIndex;
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -173,6 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     configLocalNotification();
+     _currentIndex = widget.currentIndex;
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");

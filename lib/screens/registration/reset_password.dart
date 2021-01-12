@@ -168,7 +168,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                   Widgets.showToast("Password reset successfully!");
 
                   Navigator.of(context).pushNamedAndRemoveUntil(
-                      Routes.loginRoute, (Route<dynamic> route) => false);
+                      Routes.loginRoute, (Route<dynamic> route) => false,arguments: false);
                 }).futureError((error) {
                   setLoading(false);
                   error.toString().debugLog();

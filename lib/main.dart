@@ -25,7 +25,7 @@ void main() async {
     runApp(
       InheritedContainer(
         child: MaterialApp(
-          title: "Flutter Home",
+          title: "Hutano",
           debugShowCheckedModeBanner: false,
           theme: AppTheme.theme,
           home: _defaultHome,

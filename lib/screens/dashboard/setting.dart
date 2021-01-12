@@ -216,13 +216,13 @@ class _SettingsScreenState extends State<SettingScreen> {
                               color: AppColors.goldenTainoi,
                               size: 14,
                             ),
-                            SizedBox(
-                              width: 4,
-                            ),
-                            Text(
-                              "Edit",
-                              style: TextStyle(color: AppColors.goldenTainoi),
-                            ).onClick(
+                            Padding(
+                                padding: EdgeInsets.all(4),
+                                child: Text(
+                                  "Edit",
+                                  style:
+                                      TextStyle(color: AppColors.goldenTainoi),
+                                )).onClick(
                                 roundCorners: false,
                                 onTap: () {
                                   Navigator.pushNamed(
@@ -380,7 +380,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                   SharedPref().clearSharedPref();
                   Navigator.of(context).pushNamedAndRemoveUntil(
                     Routes.loginRoute,
-                    (Route<dynamic> route) => false,
+                    (Route<dynamic> route) => false,arguments: false
                   );
                 } else {
                   Widgets.showErrorDialog(

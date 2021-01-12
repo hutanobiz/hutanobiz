@@ -195,7 +195,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                                   value: star[titleIndex],
                                   onChanged: (value) {
                                     setState(() {
-                                      changeStar(value, reason['reason']);
+                                      changeStar(value, reason);
                                       star[titleIndex] = value;
                                     });
                                   },
@@ -247,13 +247,13 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                   onPressed: (count >= 1 &&
                           (_reasonList != null && _reasonList.length > 0))
                       ? () {
-                          rateMap["review"] = reviewText.toString();
+                          rateMap["review"] = reviewText.text.toString();
                           rateMap["rating"] = count.toString();
                           FocusScope.of(context).requestFocus(FocusNode());
 
                           if (_reasonList != null || _reasonList.length > 0) {
                             for (var i = 0; i < _reasonList.length; i++) {
-                              rateMap["reason[$i]"] = _reasonList[i];
+                              rateMap["reason[$i]"] = _reasonList[i]['_id'];
                             }
                           }
                           setState(() => _isLoading = true);
@@ -320,6 +320,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
       }
     } else {
       count--;
+      _reasonList.remove(reason);
       switch (count) {
         case 0:
           {
@@ -722,7 +723,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                             Navigator.of(context).pushNamedAndRemoveUntil(
                               Routes.dashboardScreen,
                               (Route<dynamic> route) => false,
-                              arguments: true,
+                              arguments: 0,
                             );
                             break;
                         }

@@ -824,8 +824,8 @@ class _SignUpFormState extends State<Register> {
               .setValue("fullName", responseJson["response"]["fullName"]);
           SharedPref().setValue("complete", "0");
 
-          Widgets.showToast(
-              "Congratulations! Your profile as been successfully created");
+          // Widgets.showToast(
+          //     "Congratulations! Your profile as been successfully created");
           var verifyEmail = Map();
           //var phone=int.parse(widget.args.email);
           String phonenumber = widget.args.phoneNumber.substring(1, 4) +

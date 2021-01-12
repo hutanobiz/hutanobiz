@@ -103,13 +103,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
     SharedPref().getToken().then((token) {
       _myDoctorsFuture = _api.getMyDoctors(token, _latLng);
     });
+     conatiner.setUserLocation(
+                                                "latLng",
+                                                LatLng(
+                                                    _latLng.latitude,
+                                                    _latLng
+                                                        .longitude));
     setState(() {});
   }
 
   @override
   Future<void> initState() {
     super.initState();
-    getLocation();
+    
     initPlatformState();
 
     _professionalTitleFuture = _api.getProfessionalTitle();
@@ -148,12 +154,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       }
     });
     _container = InheritedContainer.of(context);
-    conatiner.setUserLocation(
-                                                "latLng",
-                                                LatLng(
-                                                    _latLng.latitude,
-                                                    _latLng
-                                                        .longitude));
+    getLocation();
+   
 
     super.didChangeDependencies();
   }
@@ -293,7 +295,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       }),
                                       SizedBox(height: 20),
                                       FancyButton(
-                                          title: 'Search providers',
+                                          title: 'Explore providers',
                                           onPressed: () {
                                             conatiner.setUserLocation(
                                                 "latLng",
@@ -1196,31 +1198,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             )
                           : SizedBox(),
                       isShowRadiusList
-                          ? Column(
-                              children: [
-                                SizedBox(height: 200),
-                                Expanded(
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: radiusList.length,
-                                    itemBuilder: (context, index) {
-                                      return ListTile(
-                                        tileColor: Colors.white,
-                                        onTap: () {
-                                          radiuscontroller.text =
-                                              radiusList[index] + ' Miles';
-                                          setModalState(() {
-                                            isShowRadiusList = false;
-                                          });
-                                        },
-                                        title: Text(
-                                            radiusList[index] + ' Miles'),
-                                      );
-                                    },
+                          ? Container(
+                            margin: const EdgeInsets.only(bottom:80.0),
+                            child: Column(
+                                children: [
+                                  SizedBox(height: 200),
+                                  Expanded(
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: radiusList.length,
+                                      itemBuilder: (context, index) {
+                                        return ListTile(
+                                          tileColor: Colors.white,
+                                          onTap: () {
+                                            radiuscontroller.text =
+                                                radiusList[index] + ' Miles';
+                                            setModalState(() {
+                                              isShowRadiusList = false;
+                                            });
+                                          },
+                                          title: Text(
+                                              radiusList[index] + ' Miles'),
+                                        );
+                                      },
+                                    ),
                                   ),
-                                ),
-                              ],
-                            )
+                                ],
+                              ),
+                          )
                           : SizedBox(),
                     ],
                   )),
@@ -1293,7 +1298,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                'My Providers',
+                'Top Providers',
                 style: TextStyle(
                   color: AppColors.midnight_express,
                   fontSize: 14,
@@ -1716,7 +1721,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         print("Service status: $serviceStatus");
 
         if (serviceStatus) {
-          Widgets.showToast("Getting Location. Please wait..");
+          // Widgets.showToast("Getting Location. Please wait..");
 
           try {
             // Loc.LocationData
