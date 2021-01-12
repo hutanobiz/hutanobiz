@@ -27,14 +27,14 @@ class ApiBaseHelper {
 
   Future<dynamic> sendEmailOtp(BuildContext context, Map verifyEmail) {
     return _netUtil
-        .postEmail(context, base_url + "auth/api/email-sendotp", body: verifyEmail)
+        .post( base_url + "auth/api/email-sendotp", body: verifyEmail)
         .then((res) {
       return res;
     });
   }
   Future<dynamic> verifyEmailOtp(BuildContext context, Map<String, String> loginData) {
     return _netUtil
-        .postEmail(context, base_url + "auth/api/email-verify", body: loginData)
+        .post( base_url + "auth/api/email-verify", body: loginData)
         .then((res) {
       return res["response"];
     });
@@ -850,52 +850,6 @@ class NetworkUtil {
       debugPrint(responseJson.toString(), wrapWidth: 1024);
     } on SocketException {
       showError(Strings.noInternet);
-      throw Exception(Strings.noInternet);
-    }
-
-    return responseJson;
-  }
-
-  Future<dynamic> postEmail(BuildContext context, String url,
-      {Map headers, body, encoding}) async {
-    var responseJson;
-    try {
-      final response = await http.post(url,
-          body: body, headers: headers, encoding: encoding);
-      final int statusCode = response.statusCode;
-
-      if (statusCode < 200 || statusCode > 400 || json == null) {
-        final en = json.decode(response.body);
-
-        if (en["response"] is String)
-          Widgets.showErrorialog(
-            title: "Error",
-            context: context,
-            description: en["response"],
-          );
-        else if (en["response"] is Map)
-          Widgets.showErrorialog(
-            title: "Error",
-            context: context,
-            description: en,
-          );
-        else {
-          en["response"]
-              .map((m) =>
-              Widgets.showErrorialog(
-                  title: "Error", context: context, description: m["msg"]))
-              .toList();
-        }
-
-        throw Exception(en);
-      }
-
-      responseJson = _decoder.convert(response.body);
-
-      debugPrint(responseJson.toString(), wrapWidth: 1024);
-    } on SocketException {
-      Widgets.showErrorialog(
-          title: "Error", context: context, description: Strings.noInternet);
       throw Exception(Strings.noInternet);
     }
 
