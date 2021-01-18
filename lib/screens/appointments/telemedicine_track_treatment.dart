@@ -96,11 +96,13 @@ class _TelemedicineTrackTreatmentScreenState
         .toLocal();
     var currentTime = DateTime.now();
 
-    return appointmentTime.difference(currentTime).inSeconds > 90000
+    return appointmentTime.difference(currentTime).inSeconds > 900
         ? previousDayWidget(appointment, appointmentTime, currentTime)
-        : appointmentTime.difference(currentTime).inSeconds > 0
-            ? waitingWidget(appointment, appointmentTime, currentTime)
-            : availableWidget(appointment, appointmentTime, currentTime);
+        : 
+        // appointmentTime.difference(currentTime).inSeconds > 0
+        //     ?
+             waitingWidget(appointment, appointmentTime, currentTime);
+            // : availableWidget(appointment, appointmentTime, currentTime);
   }
 
   ListView previousDayWidget(Map appointment, appointmentTime, currentTime) {
@@ -170,7 +172,7 @@ class _TelemedicineTrackTreatmentScreenState
 
               // Border Thickness of the Countdown Circle
               strokeWidth: 3.0,
-              bottomText: 'ETA',
+              bottomText: 'hours left',
               // Begin and end contours with a flat edge and no extension
               strokeCap: StrokeCap.butt,
 
@@ -214,7 +216,7 @@ class _TelemedicineTrackTreatmentScreenState
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.exit_to_app),
+                            Image.asset('images/exit.png'),
                             SizedBox(width: 6),
                             Text('Exit'),
                           ],
@@ -236,9 +238,9 @@ class _TelemedicineTrackTreatmentScreenState
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.exit_to_app),
+                          Image.asset('images/reschedule.png'),
                           SizedBox(width: 6),
-                          Text('Reschedule'),
+                          Text('Reschedule',style: TextStyle(color: AppColors.windsor),),
                         ],
                       )),
                 ),
@@ -573,17 +575,18 @@ class _TelemedicineTrackTreatmentScreenState
             ),
             borderRadius: BorderRadius.circular(15),
           ),
-          width: MediaQuery.of(context).size.width * .95,
-          height: MediaQuery.of(context).size.height * .6,
+         
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(height:32),
               Text(
                 'Upcoming Telemedicine Appointment',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
               ),
+               SizedBox(height:24),
               Container(
                 decoration: BoxDecoration(
                   color: Color(0xFFF7F7F7),
@@ -617,11 +620,9 @@ class _TelemedicineTrackTreatmentScreenState
                   ],
                 ),
               ),
-              Icon(
-                Icons.error,
-                color: AppColors.goldenTainoi,
-                size: 80,
-              ),
+              SizedBox(height:24),
+              Image.asset('images/videoBusy.png',height:60),
+              SizedBox(height:24),
               Padding(
                   padding: EdgeInsets.only(left: 30, right: 30),
                   child: Text(
@@ -629,7 +630,9 @@ class _TelemedicineTrackTreatmentScreenState
                         appointment["data"]["doctorName"] +
                         ' is busy helping another patient.',
                     style: TextStyle(fontSize: 20),
+                    textAlign: TextAlign.center,
                   )),
+                  SizedBox(height:32),
               Row(
                 children: [
                   SizedBox(
@@ -678,6 +681,7 @@ class _TelemedicineTrackTreatmentScreenState
                   ),
                 ],
               ),
+              SizedBox(height:24),
             ],
           ),
         ),

@@ -221,11 +221,12 @@ class CircularCountDownTimerState extends State<CircularCountDownTimer>
                                                                 2 *
                                                                 math.pi,
                                                         child: Image.asset(
-                                                            'images/waiting.png'),
+                                                            'images/waiting.png',height:30),
                                                       );
                                                     },
                                                   )
                                                 : SizedBox(),
+                                                SizedBox(height: 8,),
                                             Text(
                                               time,
                                               style: widget.textStyle ??

@@ -16,8 +16,7 @@ import 'package:permission_handler/permission_handler.dart' as Permission;
 
 class VirtualWaingRoom extends StatefulWidget {
   final String appointmentId;
-  const VirtualWaingRoom(
-      {Key key, @required this.appointmentId})
+  const VirtualWaingRoom({Key key, @required this.appointmentId})
       : super(key: key);
 
   @override
@@ -25,8 +24,7 @@ class VirtualWaingRoom extends StatefulWidget {
 }
 
 class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
-
- Future<dynamic> _profileFuture;
+  Future<dynamic> _profileFuture;
   ApiBaseHelper api = ApiBaseHelper();
   bool video = true;
   bool record = true;
@@ -94,7 +92,6 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
     return availableWidget(appointment, appointmentTime, currentTime);
   }
 
-
   ListView availableWidget(Map appointment, appointmentTime, currentTime) {
     return ListView(
       padding: EdgeInsets.all(20),
@@ -108,21 +105,18 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
             ),
             borderRadius: BorderRadius.circular(15),
           ),
-          width: MediaQuery.of(context).size.width * .95,
-          height: MediaQuery.of(context).size.height * .6,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(height: 32),
               Text(
                 'Virtual Waiting Room',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
               ),
-              Icon(
-                Icons.check_circle,
-                color: AppColors.emerald,
-                size: 80,
-              ),
+              SizedBox(height: 24),
+              Image.asset('images/videoAvailable.png'),
+              SizedBox(height: 24),
               Padding(
                   padding: EdgeInsets.only(left: 50, right: 50),
                   child: Text(
@@ -132,6 +126,7 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
                     style: TextStyle(fontSize: 20),
                     textAlign: TextAlign.center,
                   )),
+              SizedBox(height: 24),
               Container(
                 height: MediaQuery.of(context).size.height * .05,
                 child: Row(
@@ -154,6 +149,7 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
                   });
                 }),
               ),
+              SizedBox(height: 24),
               Container(
                   width: 190,
                   child: FancyButton(
@@ -167,9 +163,9 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
                       if ((statuses[Permission.Permission.camera].isGranted) &&
                           (statuses[Permission.Permission.microphone]
                               .isGranted)) {
-                                Map appointment = {};
-        appointment["_appointmentStatus"] = "1";
-        appointment["id"] = widget.appointmentId;
+                        Map appointment = {};
+                        appointment["_appointmentStatus"] = "1";
+                        appointment["_id"] = widget.appointmentId;
                         return Navigator.of(context).pushNamed(
                           Routes.callPage,
                           arguments: appointment,
@@ -188,10 +184,12 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
                     title: 'Start meeting now',
                     buttonColor: AppColors.goldenTainoi,
                   )),
+              SizedBox(height: 24),
               Divider(
                 thickness: .5,
                 color: AppColors.containerBorderColor,
               ),
+              SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -232,7 +230,8 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
                     });
                   }),
                 ],
-              )
+              ),
+              SizedBox(height: 24),
             ],
           ),
         ),
@@ -240,7 +239,7 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
     );
   }
 
-   Container profileWidget(Map appointment) {
+  Container profileWidget(Map appointment) {
     String practicingSince = '';
     Map response = appointment["data"];
     Map doctorData = appointment['doctorData'][0];
