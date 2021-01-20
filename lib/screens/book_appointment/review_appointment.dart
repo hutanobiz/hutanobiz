@@ -1042,7 +1042,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                             Navigator.of(context)
                                 .pushNamed(
                               Routes.selectAppointmentTimeScreen,
-                              arguments: true,
+                              arguments: 1,
                             )
                                 .then((value) {
                               if (value != null) {

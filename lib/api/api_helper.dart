@@ -248,6 +248,20 @@ class ApiBaseHelper {
     });
   }
 
+  Future<dynamic> rescheduleAppointment( String token, Map map) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.contentTypeHeader: "application/json"
+    };
+
+    return _netUtil
+        .post( base_url + "api/reschedule-appointment",
+            headers: headers, body: json.encode(map))
+        .then((res) {
+      return res;
+    });
+  }
+
   Future<dynamic> postPayment(
       String token, String appointmentId, Map paymentMap) {
     Map<String, String> headers = {

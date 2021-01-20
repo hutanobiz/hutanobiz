@@ -120,7 +120,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
                           "consultaceFee", profileMap[_appointmentTypeKey]);
                       Navigator.of(context).pushNamed(
                         Routes.selectAppointmentTimeScreen,
-                        arguments: false,
+                        arguments: 0,
                       );
                     }
                   },

@@ -7,6 +7,7 @@ import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/circular_countdown_timer.dart';
 import 'package:hutano/widgets/controller.dart';
 import 'package:hutano/widgets/fancy_button.dart';
+import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_widgets.dart';
 import 'package:hutano/widgets/simple_timer_text.dart';
 import 'package:intl/intl.dart';
@@ -35,6 +36,8 @@ class _TelemedicineTrackTreatmentScreenState
   bool record = true;
   String _totalDistance = '';
   String token = '';
+  InheritedContainerState _container;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -50,6 +53,11 @@ class _TelemedicineTrackTreatmentScreenState
     });
     super.initState();
   }
+  @override
+  void didChangeDependencies() {
+     _container = InheritedContainer.of(context);
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +65,7 @@ class _TelemedicineTrackTreatmentScreenState
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackground(
+        isLoading: isLoading,
         title: "Telemedicine",
         isAddBack: true,
         addBackButton: false,
@@ -242,7 +251,58 @@ class _TelemedicineTrackTreatmentScreenState
                           SizedBox(width: 6),
                           Text('Reschedule',style: TextStyle(color: AppColors.windsor),),
                         ],
-                      )),
+                      )).onClick(onTap:(){
+
+var locMap={};
+    locMap['lattitude'] = 0;
+    locMap['longitude'] = 0;
+     setState(() {
+                          isLoading = true;
+                        });
+api.getProviderProfile(appointment['data']['doctor']['_id'], locMap).then((value) {
+
+                                _container.setProviderData(
+                                    "providerData", value);
+
+                                    _container.setAppointmentId(appointment['data']['_id']);
+
+                                     _container.setProjectsResponse('serviceType', appointment['data']['type'].toString());
+ setState(() {
+                          isLoading = false;
+                        });
+ if (appointment['subServices'].length >0) {
+                        _container.setServicesData("status", "1");
+                        _container.setServicesData(
+                            "services", appointment['subServices']);
+
+                        Navigator.of(context)
+                            .pushNamed(Routes.selectAppointmentTimeScreen,arguments: 2);
+                     
+                    } else {
+                      _container.setServicesData("status", "0");
+                      _container.setServicesData(
+                          "consultaceFee", '10');
+                      Navigator.of(context).pushNamed(
+                        Routes.selectAppointmentTimeScreen,
+                        arguments: 2,
+                      );
+                    }
+
+  
+});
+
+
+
+                   
+var map={};
+//  map['status'] = appointment['subServices'].length >0?'1': '0';
+                        map['appointmentId'] = appointment['data']['_id'];
+                        // map['service'] = appointment['data']['type'].toString();
+                        // map['id'] = appointment['data']['doctor']['_id'];
+                        // map['services']=appointment['subServices'];
+                        // map['schedules']=appointment['doctorData'][0]['schedules'];
+
+                      }),
                 ),
               ],
             ),

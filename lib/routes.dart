@@ -190,7 +190,7 @@ class Routes {
         return _buildRoute(
           settings,
           SelectAppointmentTimeScreen(
-            isEditDateTime: args,
+            fromScreen: args,
           ),
         );
         break;

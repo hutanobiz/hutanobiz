@@ -6,6 +6,7 @@ import 'package:hutano/models/schedule.dart';
 import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
@@ -15,9 +16,9 @@ import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 
 class SelectAppointmentTimeScreen extends StatefulWidget {
-  final bool isEditDateTime;
+  final int fromScreen; //0-services,1-edit datetime,2-reschedule
 
-  const SelectAppointmentTimeScreen({Key key, this.isEditDateTime})
+  const SelectAppointmentTimeScreen({Key key, this.fromScreen = 0})
       : super(key: key);
 
   @override
@@ -45,19 +46,18 @@ class _SelectAppointmentTimeScreenState
   String currentDate;
   String averageRating = "0";
 
-  bool isEditDateTime = false;
-
   List<int> _scheduleDaysList = [];
   int _initialDay = 1;
   DateTime newDate;
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
 
-    if (widget.isEditDateTime != null) {
-      isEditDateTime = widget.isEditDateTime;
-    }
+    // if (widget.isEditDateTime != null) {
+    //   isEditDateTime = widget.isEditDateTime;
+    // }
 
     currentDate = DateFormat('MM/dd/yyyy').format(DateTime.now());
     _selectedDate = DateTime.now();
@@ -192,11 +192,12 @@ class _SelectAppointmentTimeScreenState
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackground(
+        isLoading: isLoading,
         title: "Select an Appointment Time",
         color: AppColors.snow,
         isAddBack: false,
         addBottomArrows: false,
-        addBackButton: true,
+        addBackButton: widget.fromScreen == 2 ? false : true,
         child: Column(
           children: [
             Expanded(
@@ -213,21 +214,47 @@ class _SelectAppointmentTimeScreenState
               alignment: FractionalOffset.bottomRight,
               child: Container(
                 height: 55.0,
-                width: MediaQuery.of(context).size.width - 76.0,
+                width: widget.fromScreen == 2
+                    ? MediaQuery.of(context).size.width
+                    : MediaQuery.of(context).size.width - 76.0,
                 margin: const EdgeInsets.only(top: 10),
-                padding: const EdgeInsets.only(right: 0.0, left: 40.0),
+                padding: EdgeInsets.only(
+                    right: 0.0, left: widget.fromScreen == 2 ? 0 : 40.0),
                 child: FancyButton(
-                  title: "Book now",
+                  title: widget.fromScreen == 2 ? "Reschedule" : "Book now",
                   onPressed: () {
                     if (_selectedDate != null && _selectedTiming != null) {
-                      _container.setAppointmentData("date", _selectedDate);
-                      _container.setAppointmentData("time", _selectedTiming);
+                      if (widget.fromScreen == 2) {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        var map = {};
+                        map['appointmentId'] =
+                            _container.appointmentIdMap['appointmentId'];
+                        map['date'] = DateFormat("MM/dd/yyyy")
+                            .format(_selectedDate)
+                            .toString();
+                        map['fromTime'] = _selectedTiming;
 
-                      if (isEditDateTime) {
-                        Navigator.pop(context, _container.appointmentData);
+                        SharedPref().getToken().then((token) {
+                          _apiBaseHelper
+                              .rescheduleAppointment(token, map)
+                              .then((value) {
+                            setState(() {
+                              isLoading = false;
+                            });
+                          });
+                        });
                       } else {
-                        Navigator.of(context)
-                            .pushNamed(Routes.consentToTreatScreen);
+                        _container.setAppointmentData("date", _selectedDate);
+                        _container.setAppointmentData("time", _selectedTiming);
+
+                        if (widget.fromScreen == 1) {
+                          Navigator.pop(context, _container.appointmentData);
+                        } else {
+                          Navigator.of(context)
+                              .pushNamed(Routes.consentToTreatScreen);
+                        }
                       }
                     } else {
                       Widgets.showToast("Please select a timing");
