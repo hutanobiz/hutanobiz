@@ -247,199 +247,200 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
     List<Widget> columnContent = [];
 
     for (Map content in docsList) {
-      String document = content['medicalDocuments'];
+      if (content['medicalDocuments'] != null) {
+        String document = content['medicalDocuments'];
+        if (!document.contains('data/')) {
+          document = ApiBaseHelper.imageUrl + content['medicalDocuments'];
+        }
 
-      if (!document.contains('data/')) {
-        document = ApiBaseHelper.imageUrl + content['medicalDocuments'];
-      }
-
-      columnContent.add(
-        Container(
-          height: 150.0,
-          width: 180.0,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16.0),
-            border: Border.all(
-              color: Colors.grey[300],
-            ),
-          ),
-          child: Stack(
-            fit: StackFit.expand,
-            children: <Widget>[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(16.0),
-                child: document.toLowerCase().endsWith("pdf")
-                    ? "ic_pdf".imageIcon()
-                    : (document.contains('http') || document.contains('https')
-                        ? Image.network(
-                            document,
-                            height: 125.0,
-                            width: 180.0,
-                            fit: BoxFit.cover,
-                          )
-                        : Image.file(
-                            File(document),
-                            height: 125.0,
-                            width: 180.0,
-                            fit: BoxFit.cover,
-                          )),
+        columnContent.add(
+          Container(
+            height: 150.0,
+            width: 180.0,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.0),
+              border: Border.all(
+                color: Colors.grey[300],
               ),
-              isBottomButtonsShow
-                  ? Padding(
-                      padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: SizedBox(
-                          height: 32,
-                          width: 32,
-                          child: RoundCornerCheckBox(
-                            value: _selectedDocsList.contains(content),
-                            onCheck: (value) {
-                              if (value) {
-                                if (!_selectedDocsList.contains(content)) {
+            ),
+            child: Stack(
+              fit: StackFit.expand,
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(16.0),
+                  child: document.toLowerCase().endsWith("pdf")
+                      ? "ic_pdf".imageIcon()
+                      : (document.contains('http') || document.contains('https')
+                          ? Image.network(
+                              document,
+                              height: 125.0,
+                              width: 180.0,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.file(
+                              File(document),
+                              height: 125.0,
+                              width: 180.0,
+                              fit: BoxFit.cover,
+                            )),
+                ),
+                isBottomButtonsShow
+                    ? Padding(
+                        padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: SizedBox(
+                            height: 32,
+                            width: 32,
+                            child: RoundCornerCheckBox(
+                              value: _selectedDocsList.contains(content),
+                              onCheck: (value) {
+                                if (value) {
+                                  if (!_selectedDocsList.contains(content)) {
+                                    setState(() {
+                                      _selectedDocsList.add(content);
+                                    });
+                                  }
+                                } else {
                                   setState(() {
-                                    _selectedDocsList.add(content);
+                                    _selectedDocsList
+                                        .remove(content['_id'].toString());
                                   });
                                 }
-                              } else {
-                                setState(() {
-                                  _selectedDocsList
-                                      .remove(content['_id'].toString());
-                                });
-                              }
-                            },
+                              },
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                  : isFromAppointment
-                      ? Container()
-                      : Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Align(
-                            alignment: Alignment.topRight,
-                            child: SizedBox(
-                              height: 22,
-                              width: 22,
-                              child: RawMaterialButton(
-                                onPressed: () {
-                                  setLoading(true);
+                      )
+                    : isFromAppointment
+                        ? Container()
+                        : Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Align(
+                              alignment: Alignment.topRight,
+                              child: SizedBox(
+                                height: 22,
+                                width: 22,
+                                child: RawMaterialButton(
+                                  onPressed: () {
+                                    setLoading(true);
 
-                                  _api
-                                      .deletePatientMedicalDocs(
-                                    token,
-                                    content['_id'],
-                                  )
-                                      .whenComplete(() {
-                                    setLoading(false);
-                                    setState(() => docsList.remove(content));
-                                  }).futureError((error) {
-                                    setLoading(false);
-                                    error.toString().debugLog();
-                                  });
-                                },
-                                child: Icon(
-                                  Icons.close,
-                                  color: Colors.grey,
-                                  size: 16.0,
-                                ),
-                                shape: CircleBorder(),
-                                elevation: 2.0,
-                                fillColor: Colors.white,
-                                constraints: const BoxConstraints(
-                                  minWidth: 22.0,
-                                  minHeight: 22.0,
+                                    _api
+                                        .deletePatientMedicalDocs(
+                                      token,
+                                      content['_id'],
+                                    )
+                                        .whenComplete(() {
+                                      setLoading(false);
+                                      setState(() => docsList.remove(content));
+                                    }).futureError((error) {
+                                      setLoading(false);
+                                      error.toString().debugLog();
+                                    });
+                                  },
+                                  child: Icon(
+                                    Icons.close,
+                                    color: Colors.grey,
+                                    size: 16.0,
+                                  ),
+                                  shape: CircleBorder(),
+                                  elevation: 2.0,
+                                  fillColor: Colors.white,
+                                  constraints: const BoxConstraints(
+                                    minWidth: 22.0,
+                                    minHeight: 22.0,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  height: 72,
-                  width: 180,
-                  padding: const EdgeInsets.all(10.0),
-                  alignment: Alignment.centerLeft,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(14.0),
-                    border: Border.all(
-                      color: Colors.grey[100],
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    height: 72,
+                    width: 180,
+                    padding: const EdgeInsets.all(10.0),
+                    alignment: Alignment.centerLeft,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(14.0),
+                      border: Border.all(
+                        color: Colors.grey[100],
+                      ),
                     ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        content['name'],
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                          color: Colors.black.withOpacity(0.85),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text(
+                          content['name'],
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                            color: Colors.black.withOpacity(0.85),
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 5.0),
-                      Text(
-                        'Type - ' + content['type'],
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12,
-                          color: Colors.black.withOpacity(0.60),
+                        SizedBox(width: 5.0),
+                        Text(
+                          'Type - ' + content['type'],
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                            color: Colors.black.withOpacity(0.60),
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 5.0),
-                      Text(
-                        'Date - ' + content['date'],
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12,
-                          color: Colors.black.withOpacity(0.60),
+                        SizedBox(width: 5.0),
+                        Text(
+                          'Date - ' + content['date'],
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                            color: Colors.black.withOpacity(0.60),
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 5.0),
-                    ],
-                  ),
-                ).onClick(
-                  onTap: () {
-                    _selectedDocsList.toString().debugLog();
+                        SizedBox(width: 5.0),
+                      ],
+                    ),
+                  ).onClick(
+                    onTap: () {
+                      _selectedDocsList.toString().debugLog();
 
-                    if (!_selectedDocsList.contains(content)) {
-                      setState(() {
-                        _selectedDocsList.add(content);
-                      });
-                    } else {
-                      setState(() {
-                        _selectedDocsList.remove(content);
-                      });
-                    }
-                  },
+                      if (!_selectedDocsList.contains(content)) {
+                        setState(() {
+                          _selectedDocsList.add(content);
+                        });
+                      } else {
+                        setState(() {
+                          _selectedDocsList.remove(content);
+                        });
+                      }
+                    },
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ).onClick(
-            onTap: document.toLowerCase().endsWith("pdf")
-                ? () async {
-                    var url = document;
-                    if (await canLaunch(url)) {
-                      await launch(url);
-                    } else {
-                      throw 'Could not launch $url';
+              ],
+            ),
+          ).onClick(
+              onTap: document.toLowerCase().endsWith("pdf")
+                  ? () async {
+                      var url = document;
+                      if (await canLaunch(url)) {
+                        await launch(url);
+                      } else {
+                        throw 'Could not launch $url';
+                      }
                     }
-                  }
-                : () {
-                    Navigator.of(context).pushNamed(
-                      Routes.providerImageScreen,
-                      arguments: document,
-                    );
-                  }),
-      );
+                  : () {
+                      Navigator.of(context).pushNamed(
+                        Routes.providerImageScreen,
+                        arguments: document,
+                      );
+                    }),
+        );
+      }
     }
 
     return columnContent;

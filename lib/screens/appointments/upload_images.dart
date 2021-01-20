@@ -206,164 +206,167 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
     List<Widget> columnContent = [];
 
     for (dynamic content in imagesList) {
-      String imageFile = content['images'];
+      if (content['images'] != null) {
+        String imageFile = content['images'];
+        if (!content['images'].toString().contains('image_cropper')) {
+          imageFile = ApiBaseHelper.imageUrl + content['images'];
+        }
 
-      if (!content['images'].toString().contains('image_cropper')) {
-        imageFile = ApiBaseHelper.imageUrl + content['images'];
-      }
-
-      columnContent.add(
-        Container(
-          height: 120.0,
-          width: 180.0,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16.0),
-            border: Border.all(
-              color: Colors.grey[300],
-            ),
-          ),
-          child: Stack(
-            fit: StackFit.expand,
-            children: <Widget>[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(16.0),
-                child: imageFile.contains('http') || imageFile.contains('https')
-                    ? Image.network(
-                        imageFile,
-                        fit: BoxFit.cover,
-                      )
-                    : Image.file(
-                        File(imageFile),
-                        fit: BoxFit.cover,
-                      ),
+        columnContent.add(
+          Container(
+            height: 120.0,
+            width: 180.0,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.0),
+              border: Border.all(
+                color: Colors.grey[300],
               ),
-              isBottomButtonsShow
-                  ? Padding(
-                      padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: SizedBox(
-                          height: 32,
-                          width: 32,
-                          child: RoundCornerCheckBox(
-                            value: _selectedImagesList.contains(content),
-                            onCheck: (value) {
-                              if (value) {
-                                if (!_selectedImagesList.contains(content)) {
+            ),
+            child: Stack(
+              fit: StackFit.expand,
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(16.0),
+                  child:
+                      imageFile.contains('http') || imageFile.contains('https')
+                          ? Image.network(
+                              imageFile,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.file(
+                              File(imageFile),
+                              fit: BoxFit.cover,
+                            ),
+                ),
+                isBottomButtonsShow
+                    ? Padding(
+                        padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: SizedBox(
+                            height: 32,
+                            width: 32,
+                            child: RoundCornerCheckBox(
+                              value: _selectedImagesList.contains(content),
+                              onCheck: (value) {
+                                if (value) {
+                                  if (!_selectedImagesList.contains(content)) {
+                                    setState(() {
+                                      _selectedImagesList.add(content);
+                                    });
+                                  }
+                                } else {
                                   setState(() {
-                                    _selectedImagesList.add(content);
+                                    _selectedImagesList
+                                        .remove(content['_id'].toString());
                                   });
                                 }
-                              } else {
-                                setState(() {
-                                  _selectedImagesList
-                                      .remove(content['_id'].toString());
-                                });
-                              }
-                            },
-                          ),
-                        ),
-                      ),
-                    )
-                  : isFromAppointment
-                      ? Container()
-                      : Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Align(
-                            alignment: Alignment.topRight,
-                            child: SizedBox(
-                              height: 22,
-                              width: 22,
-                              child: RawMaterialButton(
-                                onPressed: () {
-                                  setLoading(true);
-
-                                  _api
-                                      .deletePatientImage(
-                                    token,
-                                    content['_id'],
-                                  )
-                                      .whenComplete(() {
-                                    setLoading(false);
-                                    setState(() => imagesList.remove(content));
-                                  }).futureError((error) {
-                                    setLoading(false);
-                                    error.toString().debugLog();
-                                  });
-                                },
-                                child: Icon(
-                                  Icons.close,
-                                  color: Colors.grey,
-                                  size: 16.0,
-                                ),
-                                shape: CircleBorder(),
-                                elevation: 2.0,
-                                fillColor: Colors.white,
-                                constraints: const BoxConstraints(
-                                    minWidth: 22.0, minHeight: 22.0),
-                              ),
+                              },
                             ),
                           ),
                         ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  height: 46,
-                  padding: const EdgeInsets.all(10.0),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(14.0),
-                    border: Border.all(
-                      color: Colors.grey[100],
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      "ic_image".imageIcon(width: 20, height: 15),
-                      SizedBox(width: 5.0),
-                      Expanded(
-                        child: Text(
-                          content['name'],
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                      )
+                    : isFromAppointment
+                        ? Container()
+                        : Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Align(
+                              alignment: Alignment.topRight,
+                              child: SizedBox(
+                                height: 22,
+                                width: 22,
+                                child: RawMaterialButton(
+                                  onPressed: () {
+                                    setLoading(true);
+
+                                    _api
+                                        .deletePatientImage(
+                                      token,
+                                      content['_id'],
+                                    )
+                                        .whenComplete(() {
+                                      setLoading(false);
+                                      setState(
+                                          () => imagesList.remove(content));
+                                    }).futureError((error) {
+                                      setLoading(false);
+                                      error.toString().debugLog();
+                                    });
+                                  },
+                                  child: Icon(
+                                    Icons.close,
+                                    color: Colors.grey,
+                                    size: 16.0,
+                                  ),
+                                  shape: CircleBorder(),
+                                  elevation: 2.0,
+                                  fillColor: Colors.white,
+                                  constraints: const BoxConstraints(
+                                      minWidth: 22.0, minHeight: 22.0),
+                                ),
+                              ),
+                            ),
+                          ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    height: 46,
+                    padding: const EdgeInsets.all(10.0),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(14.0),
+                      border: Border.all(
+                        color: Colors.grey[100],
                       ),
-                    ],
-                  ),
-                ).onClick(onTap: () {
-                  if (!_selectedImagesList.contains(content)) {
-                    setState(() {
-                      _selectedImagesList.add(content);
-                    });
-                  } else {
-                    setState(() {
-                      _selectedImagesList.remove(content);
-                    });
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        "ic_image".imageIcon(width: 20, height: 15),
+                        SizedBox(width: 5.0),
+                        Expanded(
+                          child: Text(
+                            content['name'],
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ).onClick(onTap: () {
+                    if (!_selectedImagesList.contains(content)) {
+                      setState(() {
+                        _selectedImagesList.add(content);
+                      });
+                    } else {
+                      setState(() {
+                        _selectedImagesList.remove(content);
+                      });
+                    }
+                  }),
+                ),
+              ],
+            ),
+          ).onClick(
+            onTap: imageFile.toLowerCase().endsWith("pdf")
+                ? () async {
+                    var url = imageFile;
+                    if (await canLaunch(url)) {
+                      await launch(url);
+                    } else {
+                      throw 'Could not launch $url';
+                    }
                   }
-                }),
-              ),
-            ],
+                : () {
+                    Navigator.of(context).pushNamed(
+                      Routes.providerImageScreen,
+                      arguments: imageFile,
+                    );
+                  },
           ),
-        ).onClick(
-          onTap: imageFile.toLowerCase().endsWith("pdf")
-              ? () async {
-                  var url = imageFile;
-                  if (await canLaunch(url)) {
-                    await launch(url);
-                  } else {
-                    throw 'Could not launch $url';
-                  }
-                }
-              : () {
-                  Navigator.of(context).pushNamed(
-                    Routes.providerImageScreen,
-                    arguments: imageFile,
-                  );
-                },
-        ),
-      );
+        );
+      }
     }
 
     return columnContent;
