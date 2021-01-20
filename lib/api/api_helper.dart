@@ -278,6 +278,19 @@ class ApiBaseHelper {
     });
   }
 
+  Future<dynamic> patientAvailableForCall(String token, Map appointmentId) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .post(base_url + "api/patient/join-call",
+            body: appointmentId, headers: headers)
+        .then((res) {
+      return res["response"];
+    });
+  }
+
   Future<dynamic> cancelRequest(String token, Map rateDoctorData) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,

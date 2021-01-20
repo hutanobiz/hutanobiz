@@ -10,11 +10,13 @@ import 'package:hutano/screens/appointments/office_track_treatment.dart';
 import 'package:hutano/screens/appointments/rate_doctor_screen.dart';
 import 'package:hutano/screens/appointments/request_detail_screen.dart';
 import 'package:hutano/screens/appointments/seeking_cure.dart';
+import 'package:hutano/screens/appointments/telemedicine_track_treatment.dart';
 import 'package:hutano/screens/appointments/track_treatment.dart';
 import 'package:hutano/screens/appointments/treatment_summary.dart';
 import 'package:hutano/screens/appointments/upload_documents.dart';
 import 'package:hutano/screens/appointments/upload_images.dart';
 import 'package:hutano/screens/appointments/video_call.dart';
+import 'package:hutano/screens/appointments/virtual_waiting_room.dart';
 import 'package:hutano/screens/book_appointment/onsite_address.dart';
 import 'package:hutano/screens/book_appointment/onsite_edit_address.dart';
 import 'package:hutano/screens/book_appointment/review_appointment.dart';
@@ -85,6 +87,8 @@ class Routes {
   static const String treatmentSummaryScreen = '/treatmentSummaryScreen';
   static const String appointmentsScreen = '/appointmentsScreen';
   static const String trackTreatmentScreen = '/trackTreatmentScreen';
+  static const String telemedicineTrackTreatmentScreen = '/telemedicineTrackTreatmentScreen';
+  static const String virtualWaitingRoom = '/virtualWaitingRoom';
   static const String appointmentCompleteConfirmation =
       '/appointmentCompleteConfirmation';
   static const String availableTimingsScreen = '/availableTimingsScreen';
@@ -297,6 +301,23 @@ class Routes {
           ),
         );
         break;
+
+      case telemedicineTrackTreatmentScreen:
+      return _buildRoute(
+          settings,
+          TelemedicineTrackTreatmentScreen(
+            appointmentId: args,
+          ),
+        );
+        break; 
+      case virtualWaitingRoom:
+      return _buildRoute(
+          settings,
+          VirtualWaingRoom(
+            appointmentId: args,
+          ),
+        );
+        break; 
       case appointmentCompleteConfirmation:
         if (args is Map) {
           return _buildRoute(

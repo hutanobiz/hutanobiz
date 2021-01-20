@@ -38,7 +38,7 @@ class CircularCountDownTimer extends StatefulWidget {
   final TextStyle textStyle;
 
   final String bottomText;
-                                              final TextStyle bottomTextStyle;
+  final TextStyle bottomTextStyle;
 
   /// true for reverse countdown (max to 0), false for forward countdown (0 to max)
   final bool isReverse;
@@ -67,8 +67,7 @@ class CircularCountDownTimer extends StatefulWidget {
       this.strokeWidth,
       this.strokeCap,
       this.isImage = true,
-      
-                                              this.bottomTextStyle,
+      this.bottomTextStyle,
       this.textStyle,
       this.key,
       this.isTimerTextShown = true,
@@ -138,7 +137,9 @@ class CircularCountDownTimerState extends State<CircularCountDownTimer>
   @override
   void initState() {
     super.initState();
-      _animationcontroller = AnimationController(vsync: this, duration: Duration(seconds: 2))..repeat();
+    _animationcontroller =
+        AnimationController(vsync: this, duration: Duration(seconds: 2))
+          ..repeat();
 
     _controller = AnimationController(
       vsync: this,
@@ -205,17 +206,27 @@ class CircularCountDownTimerState extends State<CircularCountDownTimer>
                                     ? Align(
                                         alignment: FractionalOffset.center,
                                         child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
-                                          widget.isImage?  AnimatedBuilder(
-          animation: _animationcontroller,
-          builder: (_, child) {
-            return Transform.rotate(
-              angle: _animationcontroller.value * 2 * math.pi,
-              child: Image.asset('images/waiting.png'),
-            );
-          },
-                  ):SizedBox(),
+                                            widget.isImage
+                                                ? AnimatedBuilder(
+                                                    animation:
+                                                        _animationcontroller,
+                                                    builder: (_, child) {
+                                                      return Transform.rotate(
+                                                        angle:
+                                                            _animationcontroller
+                                                                    .value *
+                                                                2 *
+                                                                math.pi,
+                                                        child: Image.asset(
+                                                            'images/waiting.png',height:30),
+                                                      );
+                                                    },
+                                                  )
+                                                : SizedBox(),
+                                                SizedBox(height: 8,),
                                             Text(
                                               time,
                                               style: widget.textStyle ??
@@ -224,7 +235,6 @@ class CircularCountDownTimerState extends State<CircularCountDownTimer>
                                                     color: Colors.black,
                                                   ),
                                             ),
-
                                             Text(
                                               widget.bottomText,
                                               style: widget.bottomTextStyle ??

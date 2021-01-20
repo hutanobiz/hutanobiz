@@ -222,13 +222,15 @@ class _CallPageState extends State<CallPage> {
                               ? SizedBox()
                               : Expanded(
                                   child: Icon(
-                                  Icons.mic_off,color: Colors.red,
+                                  Icons.mic_off,
+                                  color: Colors.red,
                                   size: 48,
                                 )),
                           remoteVideo
                               ? SizedBox()
                               : Expanded(
-                                  child: Icon(Icons.videocam_off,color: Colors.red, size: 48)),
+                                  child: Icon(Icons.videocam_off,
+                                      color: Colors.red, size: 48)),
                         ],
                       )),
                   Align(
@@ -306,7 +308,11 @@ class _CallPageState extends State<CallPage> {
         return Container(
             child: Stack(
           children: <Widget>[
-            remoteVideo? _videoView(views[1]):Container(color: Colors.black,),
+            remoteVideo
+                ? _videoView(views[1])
+                : Container(
+                    color: Colors.black,
+                  ),
             _myVideoView(views[0]),
           ],
         ));
@@ -338,9 +344,9 @@ class _CallPageState extends State<CallPage> {
         right: 20,
         top: 50,
         child: Container(
-            height: 120,
-            width: 80,
-            child: mutedVideo
+          height: 120,
+          width: 80,
+          child: mutedVideo
               ? Stack(
                   children: [
                     Container(

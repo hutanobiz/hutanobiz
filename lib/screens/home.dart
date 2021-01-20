@@ -70,6 +70,14 @@ class _HomeScreenState extends State<HomeScreen> {
           arguments: appointment,
         );
         break;
+         case 'call_join':
+        Navigator.pushNamed(context, Routes.virtualWaitingRoom,
+            arguments: 
+              Platform.isIOS
+                  ? message['appointmentId']
+                  : message["data"]['appointmentId'],
+            );
+        break;
       case 'call-reminder':
         Map appointment = {};
         appointment["_appointmentStatus"] = "1";
@@ -217,6 +225,24 @@ class _HomeScreenState extends State<HomeScreen> {
                   context: context,
                   description: 'Camera & Microphone permission Requied');
             }
+                });
+            break;
+          case 'call_join':
+          Widgets.showConfirmationDialog(
+                context: context,
+                title: 'Call request',
+                description: 'Do you want to enter to waiting room?',
+                leftText: 'Cancel',
+                onLeftPressed: () {
+                  Navigator.pop(context);
+                },
+                rightText: 'Waiting Room',
+                onRightPressed: () {
+              return Navigator.of(context).popAndPushNamed(Routes.virtualWaitingRoom,
+                  arguments: Platform.isIOS
+                  ? message['appointmentId']
+                  : message["data"]['appointmentId']);
+           
                 });
             break;
           default:
