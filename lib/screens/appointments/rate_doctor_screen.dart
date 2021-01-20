@@ -61,10 +61,11 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
         setState(() {
           rateMap["user"] = response["response"]["_id"];
           rateMap["userType"] = response["response"]["type"].toString();
+          _reasonsFuture = api.getReviewReasons(token);
         });
       });
     });
-    _reasonsFuture = api.getReviewReasons();
+
   }
 
   @override
