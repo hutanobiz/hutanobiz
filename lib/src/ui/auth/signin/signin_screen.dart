@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:local_auth/local_auth.dart';
 
@@ -69,7 +70,7 @@ class _SignInScreenState extends State<SignInScreen> {
       });
     }
     _firebaseMessaging.getToken().then((String token) {
-      deviceToken=token;
+      deviceToken = token;
       SharedPref().setValue("deviceToken", token);
       print(token);
     });
@@ -187,7 +188,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Widget _getForgotPasswordButton() => GestureDetector(
         onTap: () {
-          NavigationUtils.push(context, routeForgotPassword, arguments: {
+          Navigator.of(context).pushNamed(routeForgotPassword, arguments: {
             ArgumentConstant.verificationScreen:
                 VerificationScreen.resetPassword
           });
@@ -292,7 +293,7 @@ class _SignInScreenState extends State<SignInScreen> {
           )));
 
   void _registerPressed() {
-    NavigationUtils.push(context, routeRegisterNumber);
+    Navigator.of(context).pushNamed(routeRegisterNumber);
   }
 
   Future<void> _onLoginClick() async {
@@ -309,12 +310,13 @@ class _SignInScreenState extends State<SignInScreen> {
           deviceToken: deviceToken,
           password: _passwordController.text,
           mobileCountryCode: selectedCountry);
-          
+
       try {
         await ApiManager().login(req).then((value) {
           ProgressDialogUtils.dismissProgressDialog();
 
           clear();
+          SharedPref().setValue("deviceToken", deviceToken);
           if (isRememberMe) {
             _storeValue(phonenumber);
           } else {
@@ -334,19 +336,18 @@ class _SignInScreenState extends State<SignInScreen> {
           //Note : Duplication of pref code
           SharedPref().saveToken(value.response.tokens[0].token);
           SharedPref().setValue("fullName", value.response.fullName);
-          SharedPref().setValue("isEmailVerified", value.response.isEmailVerified);
+          // SharedPref().setValue("isEmailVerified", value.response.isEmailVerified);
 
           //TODO
           //Note : Duplication of pref code
 
-
           //TODO : change route to Dashboard
           if (value.response.pin == null && value.response.isEmailVerified) {
-            NavigationUtils.push(context, routeSetupPin, arguments: {
+            Navigator.of(context).pushNamed(routeSetupPin, arguments: {
               ArgumentConstant.setPinScreen: SetupScreenFrom.login
             });
           } else {
-            NavigationUtils.pushReplacement(context, routeHome);
+            Navigator.of(context).pushReplacementNamed(Routes.dashboardScreen);
             if (value.response.pin != null) {
               setBool(PreferenceKey.setPin, true);
             }

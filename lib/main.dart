@@ -7,6 +7,7 @@ import 'package:hutano/screens/login.dart';
 import 'package:hutano/src/ui/auth/login_pin/login_pin.dart';
 import 'package:hutano/src/ui/auth/signin/signin_screen.dart';
 import 'package:hutano/src/ui/medical_history/provider/appoinment_provider.dart';
+import 'package:hutano/src/ui/registration_steps/add_provider/add_provider.dart';
 import 'package:hutano/src/ui/registration_steps/home/home.dart';
 import 'package:hutano/src/ui/registration_steps/payment/provider/credit_card_provider.dart';
 import 'package:hutano/src/ui/welcome/welcome_screen.dart';
@@ -76,9 +77,10 @@ class MyApp extends StatelessWidget {
           //   }),
           // ),
           // initialRoute: routeLaunch,
+          onGenerateRoute: Routes.generateRoute,
           navigatorKey: navigatorKey,
           home: _gotoNextScreen(context),
-          onGenerateRoute: NavigationUtils.generateRoute,
+          // onGenerateRoute: NavigationUtils.generateRoute,
           localizationsDelegates: [
             const MyLocalizationsDelegate(),
             CountryLocalizations.delegate,
@@ -103,6 +105,7 @@ class MyApp extends StatelessWidget {
     var skipStep = getBool(PreferenceKey.skipStep, false);
     var performedStep = getBool(PreferenceKey.perFormedSteps, false);
     var isSetupPin = getBool(PreferenceKey.setPin, false);
+
 
     if (token.isNotEmpty) {
       if (skipStep || performedStep) {

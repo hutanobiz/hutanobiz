@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../routes.dart';
 import '../../apis/appoinment_service.dart';
 import '../../utils/color_utils.dart';
 import '../../utils/constants/constants.dart';
@@ -180,7 +181,9 @@ class _MedicineInformationState extends State<MedicineInformation> {
         message: "appointment created",
         isCancelEnable: false,
         okButtonAction: () {
-          NavigationUtils.push(context, routeUploadSymptomsImages);
+          //TODO : Temp changing route
+          Navigator.of(context).pushNamed(Routes.uploadImagesScreen);
+          // Navigator.of(context).pushNamed(routeUploadSymptomsImages);
         },
       );
     }, onError: (e) {
@@ -331,7 +334,10 @@ class _MedicineInformationState extends State<MedicineInformation> {
           });
         }
         if (_isTakingMedicine == 'no') {
-          createAppoinment();
+          //TODO : TEMP COMMENTING CREATE APPOINTMENT CODE
+          // createAppoinment();
+          Navigator.of(context).pushNamed(Routes.uploadImagesScreen);
+          // Navigator.of(context).pushNamed( routeUploadSymptomsImages);
         }
       });
 
@@ -561,7 +567,7 @@ class _MedicineInformationState extends State<MedicineInformation> {
             //     label: Localization.of(context).skip,
             //     color: primaryColor,
             //     onPressed: () {
-            //       NavigationUtils.push(context, routeUploadSymptomsImages);
+            //       Navigator.of(context).pushNamed( routeUploadSymptomsImages);
             //     },
             //   ),
             // ),
@@ -571,15 +577,22 @@ class _MedicineInformationState extends State<MedicineInformation> {
                 label: Localization.of(context).next,
                 onPressed: () {
                   if (_currentStepIndex == 2) {
-                    createAppoinment();
-                    // NavigationUtils.push(context, routeUploadSymptomsImages);
+                    //TODO : TEMP CODE : Redirecting to upload image screen
+                    Navigator.of(context).pushNamed(Routes.uploadImagesScreen);
+                    //
+                    // createAppoinment();
+                    // Navigator.of(context).pushNamed( routeUploadSymptomsImages);
                   } else {
                     if (_currentStepIndex == 1 && _isTakingMedicine == 'yes') {
                       setState(() {
                         _currentStepIndex++;
                       });
                     } else {
-                      createAppoinment();
+                      //TODO : TEMP CODE : Redirecting to upload image screen
+                      Navigator.of(context)
+                          .pushNamed(Routes.uploadImagesScreen);
+                          //
+                      // createAppoinment();
                     }
                   }
                 },

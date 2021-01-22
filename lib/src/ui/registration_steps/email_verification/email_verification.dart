@@ -197,7 +197,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
         DialogUtils.showAlertDialog(context, value.response);
         ProgressDialogUtils.dismissProgressDialog();
         setBool(PreferenceKey.isEmailVerified, true);
-        NavigationUtils.pushReplacement(context, routeEmailVerificationComplete,
+        Navigator.of(context).pushReplacementNamed( routeEmailVerificationComplete,
             arguments: {
               ArgumentConstant.verifyCode: _codeController.text,
             });
@@ -213,6 +213,6 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   }
 
   _skipTaskNow() {
-    NavigationUtils.push(context, routeAddPaymentOption);
+    Navigator.of(context).pushNamed( routeAddPaymentOption);
   }
 }

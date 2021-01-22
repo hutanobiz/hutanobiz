@@ -70,7 +70,7 @@ class _MyMedicalHistoryState extends State<MyMedicalHistory> {
                     Provider.of<SymptomsInfoProvider>(context, listen: false)
                         .setBodyType(_gender);
 
-                    NavigationUtils.push(context, routeBodySymptoms);
+                    Navigator.of(context).pushNamed( routeBodySymptoms);
                   }),
             )
           ],

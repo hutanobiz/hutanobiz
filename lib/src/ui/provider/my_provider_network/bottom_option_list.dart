@@ -51,13 +51,13 @@ class BottomOptionList extends StatelessWidget {
                 return RippleEffect(
                   onTap: () {
                     if(pos == 3){
-                    NavigationUtils.push(context, optionList[pos].route,
+                    Navigator.of(context).pushNamed( optionList[pos].route,
                         arguments: {
                           ArgumentConstant.shareMessage: shareMessage,
                           ArgumentConstant.loadAllData: pos == 0 ? true : false,
                         });
                     }else{
-                      NavigationUtils.push(context, optionList[pos].route,
+                      Navigator.of(context).pushNamed( optionList[pos].route,
                         arguments: {
                           ArgumentConstant.shareMessage: shareMessage,
                         });

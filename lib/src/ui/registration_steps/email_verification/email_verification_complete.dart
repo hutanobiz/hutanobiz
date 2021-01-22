@@ -99,6 +99,6 @@ class _EmailVerifiCompleteScreenState extends State<EmailVerifiCompleteScreen> {
       ));
 
   _nextClick() {
-    NavigationUtils.pushReplacement(context, routeSetupPin);
+    Navigator.of(context).pushReplacementNamed( routeSetupPin);
   }
 }

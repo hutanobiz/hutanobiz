@@ -1,7 +1,50 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hutano/screens/all_appointments/all_appointments.dart';
+import 'package:hutano/screens/appointments/appointment_complete.dart';
+import 'package:hutano/screens/appointments/appointment_detail_screen.dart';
+import 'package:hutano/screens/appointments/cancel_appointment.dart';
+import 'package:hutano/screens/appointments/consent_to_treat_screen.dart';
+import 'package:hutano/screens/appointments/medical_history.dart';
+import 'package:hutano/screens/appointments/rate_doctor_screen.dart';
+import 'package:hutano/screens/appointments/request_detail_screen.dart';
+import 'package:hutano/screens/appointments/seeking_cure.dart';
+import 'package:hutano/screens/appointments/track_treatment.dart';
+import 'package:hutano/screens/appointments/treatment_summary.dart';
+import 'package:hutano/screens/appointments/upload_documents.dart';
+import 'package:hutano/screens/appointments/upload_images.dart';
+import 'package:hutano/screens/appointments/video_call.dart';
+import 'package:hutano/screens/book_appointment/onsite_address.dart';
+import 'package:hutano/screens/book_appointment/onsite_edit_address.dart';
+import 'package:hutano/screens/book_appointment/review_appointment.dart';
+import 'package:hutano/screens/book_appointment/select_appointment_time_screen.dart';
+import 'package:hutano/screens/book_appointment/select_parking_screen.dart';
+import 'package:hutano/screens/book_appointment/select_services.dart';
+import 'package:hutano/screens/dashboard/all_reviews_screen.dart';
+import 'package:hutano/screens/dashboard/all_tiltes_specialties_screen.dart';
+import 'package:hutano/screens/dashboard/appointment_type_screen.dart';
+import 'package:hutano/screens/dashboard/appointments_screen.dart';
+import 'package:hutano/screens/dashboard/available_timings_screen.dart';
+import 'package:hutano/screens/dashboard/choose_location_screen.dart';
+import 'package:hutano/screens/dashboard/choose_specialities.dart';
+import 'package:hutano/screens/dashboard/dashboard_search_screen.dart';
+import 'package:hutano/screens/dashboard/provider_filters.dart';
+import 'package:hutano/screens/dashboard/provider_list_screen.dart';
+import 'package:hutano/screens/dashboard/provider_profile_image.dart';
+import 'package:hutano/screens/dashboard/provider_profile_screen.dart';
+import 'package:hutano/screens/dashboard/see_all_searches.dart';
+import 'package:hutano/screens/dashboard/update_medical_history.dart';
+import 'package:hutano/screens/home.dart';
+import 'package:hutano/screens/payment/add_new_card.dart';
+import 'package:hutano/screens/payment/insurance_list.dart';
+import 'package:hutano/screens/payment/payments_methods.dart';
+import 'package:hutano/screens/payment/saved_cards.dart';
+import 'package:hutano/screens/payment/upload_insurance_images.dart';
 import 'package:hutano/src/ui/auth/signin/web_view.dart';
 import 'package:hutano/src/ui/medical_history/upload_insurance_image.dart';
 
+import '../../routes.dart';
 import '../ui/appointments/my_appointments/my_appointments.dart';
 import '../ui/auth/forgotpassword/forgot_password.dart';
 import '../ui/auth/login_pin/login_pin.dart';
@@ -49,7 +92,12 @@ import 'constants/key_constant.dart';
 
 class NavigationUtils {
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    final Map<String, dynamic> args = settings.arguments;
+     var args;
+    if (settings.arguments == Map) {
+       args= settings.arguments;
+    }else{
+      args=settings.arguments;
+    }
     switch (settings.name) {
       case routeRegister:
         final String number = args[ArgumentConstant.number];
@@ -123,9 +171,7 @@ class NavigationUtils {
         return MaterialPageRoute(builder: (_) => PaymentMethods());
       case routeCheckout:
         final card = args[ArgumentConstant.card];
-        return MaterialPageRoute(builder: (_) => Checkout(
-          card:card
-        ));
+        return MaterialPageRoute(builder: (_) => Checkout(card: card));
       case routeUploadInsuranceImage:
         return MaterialPageRoute(
             builder: (_) => UploadInsuranceImage(
@@ -234,9 +280,255 @@ class NavigationUtils {
         return MaterialPageRoute(builder: (_) => InsuranceList());
       case routeWebView:
         return MaterialPageRoute(builder: (_) => WebView());
+      case 'onsiteAddresses':
+        return _buildRoute(
+            settings,
+            OnsiteAddresses(
+              isBookAppointment: args,
+            ));
+        break;
+      case dashboardScreen:
+        return _buildRoute(settings, HomeScreen());
+        break;
+      case chooseSpecialities:
+        return _buildRoute(
+          settings,
+          ChooseSpecialities(professionaltitleId: args),
+        );
+        break;
+      case appointmentTypeScreen:
+        return _buildRoute(
+          settings,
+          AppointmentTypeScreen(
+            appointmentTypeMap: args,
+          ),
+        );
+        break;
+      case chooseLocation:
+        if (args is LatLng) {
+          return _buildRoute(
+            settings,
+            ChooseLocationScreen(latLng: args),
+          );
+        }
+        break;
+      case providerListScreen:
+        return _buildRoute(settings, ProviderListScreen());
+        break;
+      case dashboardSearchScreen:
+        return _buildRoute(
+            settings, DashboardSearchScreen(topSpecialtiesList: args));
+        break;
+      case seeAllSearchScreeen:
+        if (args is SearchArguments) {
+          return _buildRoute(settings, SeeAllSearchScreeen(arguments: args));
+        }
+break;
+      case selectAppointmentTimeScreen:
+        return _buildRoute(
+          settings,
+          SelectAppointmentTimeScreen(
+            isEditDateTime: args,
+          ),
+        );
+        break;
+      case reviewAppointmentScreen:
+        return _buildRoute(settings, ReviewAppointmentScreen());
+        break;
+      case providerProfileScreen:
+        return _buildRoute(
+            settings,
+            ProviderProfileScreen(
+              selectedAppointmentType: args,
+            ));
+        break;
+      case appointmentDetailScreen:
+        return _buildRoute(
+          settings,
+          AppointmentDetailScreen(
+            args: args,
+          ),
+        );
+        break;
+      case rateDoctorScreen:
+        if (args is String) {
+          return _buildRoute(
+            settings,
+            RateDoctorScreen(
+              rateFrom: args,
+            ),
+          );
+        }
+        break;
+      case paymentMethodScreen:
+        if (args is bool) {
+          return _buildRoute(
+            settings,
+            PaymentMethodScreen(
+              isPayment: args,
+            ),
+          );
+        }
+        break;
+      case addNewCardScreen:
+        return _buildRoute(settings, AddNewCardScreen());
+        break;
+      case consentToTreatScreen:
+        return _buildRoute(settings, ConsentToTreatScreen());
+        break;
+      case medicalHistoryScreen:
+        return _buildRoute(settings, MedicalHistoryScreen());
+        break;
+      case seekingCureScreen:
+        return _buildRoute(settings, SeekingCureScreen());
+        break;
+      case uploadImagesScreen:
+        return _buildRoute(settings, UploadImagesScreen());
+        break;
+      case uploadDocumentsScreen:
+        return _buildRoute(settings, UploadDocumentsScreen());
+        break;
+      case savedCardsScreen:
+        return _buildRoute(settings, SavedCardsScreen());
+        break;
+      case selectServicesScreen:
+        return _buildRoute(settings, SelectServicesScreen());
+        break;
+      case insuranceListScreen:
+        return _buildRoute(
+          settings,
+          InsuranceListScreen(
+            insuranceMap: args,
+          ),
+        );
+        break;
+      case uploadInsuranceImagesScreen:
+        return _buildRoute(
+          settings,
+          UploadInsuranceImagesScreen(
+            insuranceViewMap: args,
+          ),
+        );
+        break;
+      case treatmentSummaryScreen:
+        return _buildRoute(
+          settings,
+          TreatmentSummaryScreen(
+            appointmentMap: args,
+          ),
+        );
+        break;
+      case appointmentsScreen:
+        return _buildRoute(settings, AppointmentsScreen());
+        break;
+      case allAppointmentsScreen:
+        return _buildRoute(settings, AllAppointments());
+        break;
+      case trackTreatmentScreen:
+        return _buildRoute(
+          settings,
+          TrackTreatmentScreen(
+            appointmentType: args,
+          ),
+        );
+        break;
+      case appointmentCompleteConfirmation:
+        if (args is Map) {
+          return _buildRoute(
+            settings,
+            AppointmentCompleteConfirmation(
+              appointmentCompleteMap: args,
+            ),
+          );
+        }
+        break;
+      case availableTimingsScreen:
+        return _buildRoute(settings, AvailableTimingsScreen());
+        break;
+      case providerFiltersScreen:
+        return _buildRoute(
+          settings,
+          ProviderFiltersScreen(
+            filterMap: args,
+          ),
+        );
+        break;
+      case providerImageScreen:
+        return _buildRoute(
+            settings,
+            ProviderImageScreen(
+              avatar: args,
+            ));
+        break;
+      case allReviewsScreen:
+        return _buildRoute(
+          settings,
+          AllReviewsScreen(
+            reviewMap: args,
+          ),
+        );
+        break;
+      case updateMedicalHistory:
+        return _buildRoute(
+          settings,
+          UpdateMedicalHistory(isBottomButtonsShow: args),
+        );
+        break;
+      case allTitlesSpecialtesScreen:
+        return _buildRoute(settings, AllTitlesSpecialtesScreen());
+        break;
+      case onsiteAddresses:
+        return _buildRoute(
+            settings,
+            OnsiteAddresses(
+              isBookAppointment: args,
+            ));
+        break;
+      case onsiteEditAddress:
+        return _buildRoute(
+          settings,
+          OnsiteEditAddress(
+            addressObject: args,
+          ),
+        );
+        break;
+      case parkingScreen:
+        return _buildRoute(
+          settings,
+          SelectParkingScreen(),
+        );
+        break;
+      case cancelAppointmentScreen:
+        return _buildRoute(
+          settings,
+          CancelAppointmentScreen(
+            appointmentData: args,
+          ),
+        );
+        break;
+      case requestDetailScreen:
+        return _buildRoute(
+          settings,
+          RequestDetailScreen(
+            detailData: args,
+          ),
+        );
+        break;
+      case callPage:
+        return _buildRoute(settings, CallPage(channelName: args,));
+        break;
       default:
         return _errorRoute(" Comming soon...");
     }
+  }
+
+  static CupertinoPageRoute _buildRoute(
+      RouteSettings settings, Widget builder) {
+    return CupertinoPageRoute(
+      settings: settings,
+      maintainState: true,
+      builder: (_) => builder,
+    );
   }
 
   static Route<dynamic> _errorRoute(String message) {

@@ -13,8 +13,10 @@ import 'package:hutano/widgets/provider_tile_widget.dart';
 
 class DashboardSearchScreen extends StatefulWidget {
   final List topSpecialtiesList;
+  final String searchParam;
 
-  const DashboardSearchScreen({Key key, this.topSpecialtiesList})
+  const DashboardSearchScreen(
+      {Key key, this.topSpecialtiesList, this.searchParam})
       : super(key: key);
 
   @override
@@ -74,6 +76,11 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
         });
         error.toString().debugLog();
       });
+    }
+
+    if (widget.searchParam != null) {
+      _searchText = widget.searchParam;
+      _searchFuture = _api.searchDoctors(_searchText);
     }
   }
 
@@ -315,7 +322,7 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
 
           return isDoctorList
               ? ProviderTileWidget(
-                  avatar: tempList[index]['avatar']??'',
+                  avatar: tempList[index]['avatar'] ?? '',
                   name: tempList[index][searchKey],
                   profession: professionalTitle,
                   onTap: () {

@@ -66,8 +66,7 @@ class _ResetPasswordState extends State<ResetPassword> {
           isCancelEnable: false,
           okButtonTitle: Localization.of(context).ok,
           okButtonAction: () {
-            NavigationUtils.pushReplacement(
-              context,
+            Navigator.of(context).pushReplacementNamed(
               routeLogin,
             );
           });
@@ -75,7 +74,7 @@ class _ResetPasswordState extends State<ResetPassword> {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);
     }
-    NavigationUtils.pushAndRemoveUntil(context, routeLogin);
+    Navigator.of(context).pushNamedAndRemoveUntil(routeLogin,(route) => false);
   }
 
   @override

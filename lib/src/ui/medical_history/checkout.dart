@@ -64,7 +64,7 @@ class _CheckoutState extends State<Checkout> {
             isCancelEnable: false,
             okButtonTitle: Localization.of(context).ok,
             okButtonAction: () {
-              NavigationUtils.pushAndRemoveUntil(context, routeHome);
+              Navigator.of(context).pushNamedAndRemoveUntil(routeHome,(route) => false);
             });
       }
     } on ErrorModel catch (e) {
@@ -339,7 +339,7 @@ class _CheckoutState extends State<Checkout> {
               buttonType: HutanoButtonType.onlyIcon,
               icon: FileConstants.icBackArrow,
               onPressed: () {
-                NavigationUtils.pop(context);
+                Navigator.of(context).pop();
               },
             ),
             SizedBox(width: 100 * 0.2),

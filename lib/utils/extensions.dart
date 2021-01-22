@@ -244,4 +244,18 @@ extension StringExtension on String {
     }
     return template;
   }
+
+   String getInitials() {
+    var names = split(" ");
+    var initials = "";
+    var numWords = names.length;
+
+    if (numWords < names.length) {
+      numWords = names.length;
+    }
+    for (var i = 0; i < numWords; i++) {
+      initials += '${names[i][0].toUpperCase()}';
+    }
+    return initials;
+  }
 }

@@ -59,7 +59,7 @@ class _SetupPinState extends State<SetupPin> {
           localizedReason: Localization.of(context).labelAuthWithFingerPrint,
           useErrorDialogs: true);
       if (authenticated) {
-        NavigationUtils.pushReplacement(context, routeAddPaymentOption);
+        Navigator.of(context).pushReplacementNamed( routeAddPaymentOption);
         setBool(PreferenceKey.setPin, true);
       }
     } on PlatformException catch (e) {
@@ -129,9 +129,9 @@ class _SetupPinState extends State<SetupPin> {
           ProgressDialogUtils.dismissProgressDialog();
           setBool(PreferenceKey.setPin, true);
           if (widget.setupScreen == SetupScreenFrom.login) {
-            NavigationUtils.pushReplacement(context, routeHome);
+            Navigator.of(context).pushReplacementNamed( routeHome);
           } else {
-            NavigationUtils.pushReplacement(context, routeAddPaymentOption);
+            Navigator.of(context).pushReplacementNamed( routeAddPaymentOption);
           }
         }).catchError((dynamic e) {
           ProgressDialogUtils.dismissProgressDialog();

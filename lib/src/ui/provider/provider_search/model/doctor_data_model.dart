@@ -257,7 +257,7 @@ class User {
     state = json['state'];
     avatar = json['avatar'];
     zipCode = json['zipCode'];
-    phoneNumber = json['phoneNumber'];
+    phoneNumber = json['phoneNumber'].toString();
     gender = json['gender'];
     language = json['language'].cast<String>();
     email = json['email'];

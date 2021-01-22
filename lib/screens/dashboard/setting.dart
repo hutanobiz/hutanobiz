@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/src/utils/constants/constants.dart';
+import 'package:hutano/src/utils/navigation.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/circular_loader.dart';
@@ -409,10 +411,14 @@ class _SettingsScreenState extends State<SettingScreen> {
 
                 if (v.toString().toLowerCase() == 'logout') {
                   SharedPref().clearSharedPref();
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                    Routes.loginRoute,
-                    (Route<dynamic> route) => false,
-                  );
+                  //TODO : VERIFY: ROUTE CHANGED
+
+                  // Navigator.of(context).pushNamedAndRemoveUntil(
+                  //   Routes.loginRoute,
+                  //   (Route<dynamic> route) => false,
+                  // );
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil(routeLogin, (route) => false);
                 } else {
                   Widgets.showErrorDialog(
                     context: context,

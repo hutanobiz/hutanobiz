@@ -39,7 +39,7 @@ class ShareProvider extends StatelessWidget {
                 itemBuilder: (_, pos) {
                   return RippleEffect(
                     onTap: () {
-                      NavigationUtils.push(context, routeMemberMessage,
+                      Navigator.of(context).pushNamed( routeMemberMessage,
                           arguments: {
                             ArgumentConstant.member: memberList[pos],
                             ArgumentConstant.shareMessage: shareMessage

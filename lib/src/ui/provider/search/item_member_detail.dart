@@ -47,7 +47,7 @@ class MemberDetail extends StatelessWidget {
               Text(
                 member.fullName == null
                     ? ""
-                    : member.fullName.substring(0, 1).toUpperCase(),
+                    : member.fullName,
                 style: titleStyle ??
                     const TextStyle(
                         color: colorBlack,

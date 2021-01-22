@@ -130,7 +130,7 @@ class _FamilyCircleState extends State<FamilyCircle> {
             label: Localization.of(context).next,
             labelColor: colorBlack,
             onPressed: () {
-              NavigationUtils.push(context, routeAddProvider);
+              Navigator.of(context).pushNamed( routeAddProvider);
             },
           ),
           SizedBox(
@@ -148,7 +148,7 @@ class _FamilyCircleState extends State<FamilyCircle> {
         children: [
           HutanoButton(
             onPressed: () {
-              NavigationUtils.pop(context);
+              Navigator.of(context).pop();
             },
             icon: FileConstants.icBack,
             buttonType: HutanoButtonType.onlyIcon,

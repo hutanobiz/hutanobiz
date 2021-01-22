@@ -389,14 +389,21 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         }
 
         request.fields['consentToTreat'] = '1';
-        request.fields['problemTimeSpan'] =
-            _consentToTreatMap["problemTimeSpan"];
-        request.fields['isProblemImproving'] =
-            _consentToTreatMap["isProblemImproving"];
-        request.fields['isTreatmentReceived'] =
-            _consentToTreatMap["isTreatmentReceived"];
-        request.fields['description'] =
-            _consentToTreatMap["description"].toString().trim();
+        //TODO : Temp code added for appointment book
+
+        // request.fields['problemTimeSpan'] =
+        //     _consentToTreatMap["problemTimeSpan"];
+        // request.fields['isProblemImproving'] =
+        //     _consentToTreatMap["isProblemImproving"];
+        // request.fields['isTreatmentReceived'] =
+        //     _consentToTreatMap["isTreatmentReceived"];
+        // request.fields['description'] =
+        //     _consentToTreatMap["description"].toString().trim();
+
+        request.fields['problemTimeSpan'] = "2";
+        request.fields['isProblemImproving'] = "1";
+        request.fields['isTreatmentReceived'] = "0";
+        request.fields['description'] = "Treatment";
 
         if (paymentType != null) {
           if (paymentType == "3") {
@@ -458,8 +465,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           e.toString().debugLog();
         });
 
-        if(response == null){
-          return ;
+        if (response == null) {
+          return;
         }
         final int statusCode = response.statusCode;
         log("Status code: $statusCode");

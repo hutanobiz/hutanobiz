@@ -52,7 +52,7 @@ class Response {
   bool _isEmailVerified;
   int _status;
   int _type;
-  int _resetPasswordVerificationCode;
+  String _resetPasswordVerificationCode;
   String _resetPasswordVerificationCodeSentAt;
   String _stripeCustomerId;
   String _stripeConnectAccount;
@@ -94,7 +94,7 @@ class Response {
         bool isEmailVerified,
         int status,
         int type,
-        int resetPasswordVerificationCode,
+        String resetPasswordVerificationCode,
         String resetPasswordVerificationCodeSentAt,
         String stripeCustomerId,
         String stripeConnectAccount,
@@ -207,8 +207,8 @@ class Response {
   set status(int status) => _status = status;
   int get type => _type;
   set type(int type) => _type = type;
-  int get resetPasswordVerificationCode => _resetPasswordVerificationCode;
-  set resetPasswordVerificationCode(int resetPasswordVerificationCode) =>
+  String get resetPasswordVerificationCode => _resetPasswordVerificationCode;
+  set resetPasswordVerificationCode(String resetPasswordVerificationCode) =>
       _resetPasswordVerificationCode = resetPasswordVerificationCode;
   String get resetPasswordVerificationCodeSentAt =>
       _resetPasswordVerificationCodeSentAt;

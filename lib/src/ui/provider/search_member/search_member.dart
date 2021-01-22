@@ -119,7 +119,7 @@ class _SearchScreenState extends State<SearchMember> {
                     itemBuilder: (context, pos) {
                       return RippleEffect(
                         onTap: () {
-                          NavigationUtils.push(context, routeMemberMessage,
+                          Navigator.of(context).pushNamed( routeMemberMessage,
                               arguments: {
                                 ArgumentConstant.member: _memberList[pos],
                                 ArgumentConstant.shareMessage: widget.message,
@@ -150,7 +150,7 @@ class _SearchScreenState extends State<SearchMember> {
   Widget _buildButton() {
     return HutanoButton(
       onPressed: () {
-        NavigationUtils.pop(context);
+        Navigator.of(context).pop();
       },
       icon: FileConstants.icBack,
       buttonType: HutanoButtonType.onlyIcon,

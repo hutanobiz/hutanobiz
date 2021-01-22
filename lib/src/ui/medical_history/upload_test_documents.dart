@@ -174,8 +174,7 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
         color: primaryColor,
         onPressed: () async {
           if (_selectedType != null) {
-            NavigationUtils.push(
-              context,
+            Navigator.of(context).pushNamed(
               routeTestDocumentsList,
               arguments: {
                 ArgumentConstant.documentType: _selectedType,
@@ -197,7 +196,7 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
                 label: Localization.of(context).skip,
                 color: primaryColor,
                 onPressed: () {
-                  NavigationUtils.push(context, routePaymentMethods);
+                  Navigator.of(context).pushNamed( routePaymentMethods);
                 },
               ),
             ),
@@ -206,7 +205,7 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
               child: HutanoButton(
                 label: Localization.of(context).next,
                 onPressed: () {
-                  NavigationUtils.push(context, routePaymentMethods);
+                  Navigator.of(context).pushNamed( routePaymentMethods);
                 },
               ),
             ),

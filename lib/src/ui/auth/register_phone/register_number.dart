@@ -51,7 +51,7 @@ class _RegisterNumberState extends State<RegisterNumber> {
   }
 
   void _navigate() {
-    NavigationUtils.push(context, routeWebView);
+    Navigator.of(context).pushNamed( routeWebView);
   }
 
   _onSubmitClick() async {
@@ -76,7 +76,7 @@ class _RegisterNumberState extends State<RegisterNumber> {
             countryCode: _countryCode,
             verificationScreen: VerificationScreen.registration),
       };
-      NavigationUtils.push(context, routePinVerification, arguments: args);
+      Navigator.of(context).pushNamed( routePinVerification, arguments: args);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);

@@ -90,7 +90,7 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
   }
 
   _onAddMore() async {
-    final response = await NavigationUtils.push(context, routeSearch,
+    dynamic response = await Navigator.of(context).pushNamed(routeSearch,
         arguments: {ArgumentConstant.searchScreen: SearchScreenFrom.addMore});
     print(member);
     if (response != null) {
@@ -101,7 +101,7 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
   }
 
   _onContinue() {
-    NavigationUtils.push(context, routeFamilyCircle);
+    Navigator.of(context).pushNamed( routeFamilyCircle);
   }
 
   _onAdd(FamilyMember member) async {

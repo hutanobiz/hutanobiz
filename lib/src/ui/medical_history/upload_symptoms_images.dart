@@ -60,7 +60,7 @@ class _UploadSymptomsImagesState extends State<UploadSymptomsImages> {
           _sortList(res.data.medicalImages);
           // DialogUtils.showAlertDialog(
           //     context, Localization.of(context).imagesUploaded);
-          NavigationUtils.push(context, routeUploadTestDocuments);
+          Navigator.of(context).pushNamed( routeUploadTestDocuments);
         }
       } on ErrorModel catch (e) {
         ProgressDialogUtils.dismissProgressDialog();
@@ -101,7 +101,7 @@ class _UploadSymptomsImagesState extends State<UploadSymptomsImages> {
       var res = await ApiManager().removeMedicalImages(request);
       ProgressDialogUtils.dismissProgressDialog();
       _sortList(res.data.medicalImages);
-      NavigationUtils.push(context, routeUploadTestDocuments);
+      Navigator.of(context).pushNamed( routeUploadTestDocuments);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);
@@ -279,7 +279,7 @@ class _UploadSymptomsImagesState extends State<UploadSymptomsImages> {
                     label: Localization.of(context).skip,
                     color: primaryColor,
                     onPressed: () {
-                      NavigationUtils.push(context, routeUploadTestDocuments);
+                      Navigator.of(context).pushNamed( routeUploadTestDocuments);
                     },
                   ),
                 ),
@@ -288,7 +288,7 @@ class _UploadSymptomsImagesState extends State<UploadSymptomsImages> {
                   child: HutanoButton(
                     label: Localization.of(context).next,
                     // onPressed: () {
-                    //   NavigationUtils.push(context, routeUploadTestDocuments);
+                    //   Navigator.of(context).pushNamed( routeUploadTestDocuments);
                     // },
                     onPressed: _uploadImages,
                   ),
@@ -349,7 +349,7 @@ class _UploadSymptomsImagesState extends State<UploadSymptomsImages> {
                             _imagenameController.text = "";
                             setState(() {});
                           }
-                          NavigationUtils.pop(context);
+                          Navigator.of(context).pop();
                         }
                       },
                     ),
@@ -367,7 +367,7 @@ class _UploadSymptomsImagesState extends State<UploadSymptomsImages> {
                             _imagenameController.text = "";
                             setState(() {});
                           }
-                          NavigationUtils.pop(context);
+                          Navigator.of(context).pop();
                         }
                       },
                     ),

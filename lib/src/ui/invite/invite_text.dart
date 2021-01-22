@@ -119,7 +119,7 @@ class _InviteByTextScreenState extends State<InviteByTextScreen> {
       labelColor: colorWhite,
       color: colorPurple,
       onPressed: () {
-        NavigationUtils.push(context, routeAddProvider);
+        Navigator.of(context).pushNamed( routeAddProvider);
       },
     );
   }
@@ -131,7 +131,7 @@ class _InviteByTextScreenState extends State<InviteByTextScreen> {
         children: [
           HutanoButton(
             onPressed: () {
-              NavigationUtils.pop(context);
+              Navigator.of(context).pop();
             },
             icon: FileConstants.icBack,
             buttonType: HutanoButtonType.onlyIcon,
@@ -169,7 +169,7 @@ class _InviteByTextScreenState extends State<InviteByTextScreen> {
             context: context,
             message: value.response,
             okButtonAction: () {
-              NavigationUtils.pop(context);
+              Navigator.of(context).pop();
             },
             okButtonTitle: 'Ok',
             isCancelEnable: false,

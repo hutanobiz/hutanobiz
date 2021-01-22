@@ -82,7 +82,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
           child: Scaffold(
             body: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(spacing4),
+                padding: const EdgeInsets.all(0),
                 child: Column(children: [
                   HutanoProgressBar(progressSteps: HutanoProgressSteps.two),
                   HutanoHeader(
@@ -149,7 +149,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
       ));
 
   _skipTaskNow() {
-    NavigationUtils.pushReplacement(context, routeInviteFamilyMember);
+    Navigator.of(context).pushReplacementNamed( routeInviteFamilyMember);
   }
 
   Widget _getCreditCardField() {
@@ -570,7 +570,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
 
   _nextClick() {
     if (mainList.length > 0) {
-      NavigationUtils.pushReplacement(context, routeInviteFamilyMember);
+      Navigator.of(context).pushReplacementNamed( routeInviteFamilyMember);
     } else {
       DialogUtils.showAlertDialog(
           context, Localization.of(context).addCardDetails.toUpperCase());

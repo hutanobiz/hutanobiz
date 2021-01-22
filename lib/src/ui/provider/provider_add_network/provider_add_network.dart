@@ -52,9 +52,11 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
     try {
       var res = await ApiManager().getProviderGroups();
       ProgressDialogUtils.dismissProgressDialog();
+      if(res.response.data.providerNetwork != null){
       setState(() {
         specialityList = res.response.data.providerNetwork;
       });
+      }
       if (specialityList.length > 0) {
         _index = specialityList.length - 1;
         setState(() {
@@ -86,8 +88,7 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
           isCancelEnable: false,
           okButtonTitle: Localization.of(context).ok,
           okButtonAction: () {
-            NavigationUtils.push(
-              context,
+            Navigator.of(context).pushNamed(
               routeMyProviderNetwork,
             );
           });
@@ -100,7 +101,7 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
   }
 
   void _createGroup() async {
-    final res = await NavigationUtils.push(context, routeCreateGroup);
+    final res = await Navigator.of(context).pushNamed( routeCreateGroup);
     if (res != null) {
       _getProvidersGroup();
     }
@@ -207,7 +208,7 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
         children: [
           HutanoButton(
             onPressed: () {
-              NavigationUtils.pop(context);
+              Navigator.of(context).pop();
             },
             icon: FileConstants.icBack,
             buttonType: HutanoButtonType.onlyIcon,

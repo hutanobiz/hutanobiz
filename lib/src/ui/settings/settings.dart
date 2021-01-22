@@ -28,7 +28,7 @@ class _SettingsState extends State<Settings> {
           RippleEffect(
             onTap: () async {
               clear().then((value) {
-                NavigationUtils.pushAndRemoveUntil(context, routeLogin);
+                Navigator.of(context).pushNamedAndRemoveUntil( routeLogin ,(route) => false);
               });
             },
             child: IntrinsicWidth(

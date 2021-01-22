@@ -41,19 +41,19 @@ class _SplashScreenState extends State<SplashScreen> {
     if (token.isNotEmpty) {
       if (skipStep || performedStep) {
         if (isSetupPin) {
-          NavigationUtils.pushReplacement(context, routeLoginPin, arguments: {
+          Navigator.of(context).pushReplacementNamed( routeLoginPin, arguments: {
             ArgumentConstant.number: phone,
           });
         } else {
-          NavigationUtils.pushReplacement(context, routeHome);
+          Navigator.of(context).pushReplacementNamed( routeHome);
         }
       } else if (!performedStep) {
-        NavigationUtils.pushReplacement(context, routeWelcomeScreen);
+        Navigator.of(context).pushReplacementNamed( routeWelcomeScreen);
       } else {
-        NavigationUtils.pushReplacement(context, routeLogin);
+        Navigator.of(context).pushReplacementNamed( routeLogin);
       }
     } else {
-      NavigationUtils.pushReplacement(context, routeLogin);
+      Navigator.of(context).pushReplacementNamed( routeLogin);
     }
   }
 

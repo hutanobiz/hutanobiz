@@ -295,7 +295,7 @@ class _TestDocumentsListState extends State<TestDocumentsList> {
                     label: Localization.of(context).skip,
                     color: primaryColor,
                     onPressed: () {
-                      NavigationUtils.push(context, routePaymentMethods);
+                      Navigator.of(context).pushNamed( routePaymentMethods);
                     },
                   ),
                 ),
@@ -304,7 +304,7 @@ class _TestDocumentsListState extends State<TestDocumentsList> {
                   child: HutanoButton(
                     label: Localization.of(context).next,
                     onPressed: () {
-                    NavigationUtils.pop(context);
+                    Navigator.of(context).pop();
                     },
                   ),
                 ),

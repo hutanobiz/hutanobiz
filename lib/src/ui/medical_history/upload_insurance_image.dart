@@ -126,7 +126,7 @@ class _UploadInsuranceImageState extends State<UploadInsuranceImage> {
                 children: [
                   HutanoButton(
                     onPressed: () {
-                      NavigationUtils.pop(context);
+                      Navigator.of(context).pop();
                     },
                     icon: FileConstants.icBack,
                     buttonType: HutanoButtonType.onlyIcon,
@@ -173,7 +173,7 @@ class _UploadInsuranceImageState extends State<UploadInsuranceImage> {
           context: context,
           message: "Document uploaded successfully",
           okButtonAction: () {
-            NavigationUtils.pop(context);
+            Navigator.of(context).pop();
           },
           okButtonTitle: 'Ok',
           isCancelEnable: false,

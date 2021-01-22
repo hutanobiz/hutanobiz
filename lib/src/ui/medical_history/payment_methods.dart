@@ -184,7 +184,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
   }
 
   _onAddInsurance() async {
-    var res = await NavigationUtils.push(context, routeInsuranceList);
+    dynamic res = await Navigator.of(context).pushNamed(routeInsuranceList);
     if (res != null) {
       if (res[ArgumentConstant.member] != null) {
         if (res[ArgumentConstant.member] is Insurance) {
@@ -570,7 +570,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
   Widget _buildAddInsurance() => InkWell(
         onTap: () {
           if (_selectedInsurance != null) {
-            NavigationUtils.push(context, routeUploadInsuranceImage,
+            Navigator.of(context).pushNamed( routeUploadInsuranceImage,
                 arguments: {
                   ArgumentConstant.insuranceId: _selectedInsurance?.sId ?? ""
                 });
@@ -618,7 +618,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
               buttonType: HutanoButtonType.onlyIcon,
               icon: FileConstants.icBackArrow,
               onPressed: () {
-                NavigationUtils.pop(context);
+                Navigator.of(context).pop();
               },
             ),
             Spacer(),
@@ -631,7 +631,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
                       context, Localization.of(context).selectCreditCard);
                   return;
                 }
-                NavigationUtils.push(context, routeCheckout, arguments: {
+                Navigator.of(context).pushNamed( routeCheckout, arguments: {
                   ArgumentConstant.card: list[_selectedCardIndex]
                 });
               },

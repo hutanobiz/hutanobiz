@@ -39,7 +39,6 @@ class Response {
   String _dob;
   String _address;
   String _city;
-  String _state;
   String _avatar;
   int _zipCode;
   String _phoneNumber;
@@ -53,7 +52,7 @@ class Response {
   bool _isEmailVerified;
   int _status;
   int _type;
-  int _resetPasswordVerificationCode;
+  String _resetPasswordVerificationCode;
   String _resetPasswordVerificationCodeSentAt;
   String _stripeCustomerId;
   Null _stripeConnectAccount;
@@ -79,7 +78,6 @@ class Response {
         String dob,
         String address,
         String city,
-        String state,
         String avatar,
         int zipCode,
         String phoneNumber,
@@ -93,7 +91,7 @@ class Response {
         bool isEmailVerified,
         int status,
         int type,
-        int resetPasswordVerificationCode,
+        String resetPasswordVerificationCode,
         String resetPasswordVerificationCodeSentAt,
         String stripeCustomerId,
         Null stripeConnectAccount,
@@ -117,7 +115,7 @@ class Response {
     this._dob = dob;
     this._address = address;
     this._city = city;
-    this._state = state;
+    
     this._avatar = avatar;
     this._zipCode = zipCode;
     this._phoneNumber = phoneNumber;
@@ -167,8 +165,7 @@ class Response {
   set address(String address) => _address = address;
   String get city => _city;
   set city(String city) => _city = city;
-  String get state => _state;
-  set state(String state) => _state = state;
+  
   String get avatar => _avatar;
   set avatar(String avatar) => _avatar = avatar;
   int get zipCode => _zipCode;
@@ -202,8 +199,8 @@ class Response {
   set status(int status) => _status = status;
   int get type => _type;
   set type(int type) => _type = type;
-  int get resetPasswordVerificationCode => _resetPasswordVerificationCode;
-  set resetPasswordVerificationCode(int resetPasswordVerificationCode) =>
+  String get resetPasswordVerificationCode => _resetPasswordVerificationCode;
+  set resetPasswordVerificationCode(String resetPasswordVerificationCode) =>
       _resetPasswordVerificationCode = resetPasswordVerificationCode;
   String get resetPasswordVerificationCodeSentAt =>
       _resetPasswordVerificationCodeSentAt;
@@ -256,7 +253,6 @@ class Response {
     _dob = json['dob'];
     _address = json['address'];
     _city = json['city'];
-    _state = json['state'];
     _avatar = json['avatar'];
     _zipCode = json['zipCode'];
     _phoneNumber = json['phoneNumber'];
@@ -322,7 +318,6 @@ class Response {
     data['dob'] = this._dob;
     data['address'] = this._address;
     data['city'] = this._city;
-    data['state'] = this._state;
     data['avatar'] = this._avatar;
     data['zipCode'] = this._zipCode;
     data['phoneNumber'] = this._phoneNumber;

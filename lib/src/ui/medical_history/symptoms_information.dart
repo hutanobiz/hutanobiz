@@ -360,7 +360,7 @@ class _SymptomsInformationState extends State<SymptomsInformation> {
                     hositalizedTimeNumber: _selectedPainTimeNumber,
                     diagnosticTest: _isDiagnostic == "yes",
                     diagnosticTests: _selectedDiagnosticTests);
-            NavigationUtils.push(context, routeMedicineInformation, arguments: {
+            Navigator.of(context).pushNamed( routeMedicineInformation, arguments: {
               ArgumentConstant.argSeletedSymptomsType:
                   widget.selectedSymtomsType
             });
@@ -480,7 +480,7 @@ class _SymptomsInformationState extends State<SymptomsInformation> {
                 label: Localization.of(context).skip,
                 color: primaryColor,
                 onPressed: () {
-                  NavigationUtils.push(context, routeUploadSymptomsImages);
+                  Navigator.of(context).pushNamed( routeUploadSymptomsImages);
                 },
               ),
             ),
@@ -544,8 +544,7 @@ class _SymptomsInformationState extends State<SymptomsInformation> {
                                       _selectedPainTimeNumber,
                                   diagnosticTest: _isDiagnostic == "yes",
                                   diagnosticTests: _selectedDiagnosticTests);
-                          NavigationUtils.push(
-                              context, routeMedicineInformation, arguments: {
+                          Navigator.of(context).pushNamed( routeMedicineInformation, arguments: {
                             ArgumentConstant.argSeletedSymptomsType:
                                 widget.selectedSymtomsType
                           });
@@ -566,7 +565,7 @@ class _SymptomsInformationState extends State<SymptomsInformation> {
                                 hositalizedTimeNumber: _selectedPainTimeNumber,
                                 diagnosticTest: _isDiagnostic == "yes",
                                 diagnosticTests: _selectedDiagnosticTests);
-                        NavigationUtils.push(context, routeMedicineInformation,
+                        Navigator.of(context).pushNamed( routeMedicineInformation,
                             arguments: {
                               ArgumentConstant.argSeletedSymptomsType:
                                   widget.selectedSymtomsType

@@ -14,6 +14,7 @@ import 'package:hutano/widgets/provider_list_widget.dart';
 import 'package:hutano/widgets/scrolling_day_calendar_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class SelectAppointmentTimeScreen extends StatefulWidget {
   final bool isEditDateTime;
@@ -59,7 +60,7 @@ class _SelectAppointmentTimeScreenState
     if (widget.isEditDateTime != null) {
       isEditDateTime = widget.isEditDateTime;
     }
-
+    initializeDateFormatting('en');
     currentDate = DateFormat('MM/dd/yyyy').format(DateTime.now());
     _selectedDate = DateTime.now();
 

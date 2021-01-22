@@ -115,7 +115,7 @@ class _BodySymptomsState extends State<BodySymptoms> {
                     label: Localization.of(context).skip,
                     color: primaryColor,
                     onPressed: () {
-                      NavigationUtils.push(context, routeMedicineInformation);
+                      Navigator.of(context).pushNamed( routeMedicineInformation);
                     },
                   ),
                 ),
@@ -137,15 +137,14 @@ class _BodySymptomsState extends State<BodySymptoms> {
                               listen: false)
                           .bodySide;
                       if (symtomsType == 0) {
-                        NavigationUtils.push(context, routePainSymptoms,
+                        Navigator.of(context).pushNamed( routePainSymptoms,
                             arguments: {
                               ArgumentConstant.argselectedBodyType: bodySide,
                               ArgumentConstant.argsselectBodyPart:
                                   _selectedBodyPart,
                             });
                       } else if (symtomsType == 1) {
-                        NavigationUtils.push(
-                            context, routeGeneralizedPainSymptoms);
+                        Navigator.of(context).pushNamed(routeGeneralizedPainSymptoms);
                       }
                     },
                   ),
@@ -178,11 +177,11 @@ class _BodySymptomsState extends State<BodySymptoms> {
               resetState = false;
             });
             // if (symtomsType == 0) {
-            //   NavigationUtils.push(context, routePainSymptoms, arguments: {
+            //   Navigator.of(context).pushNamed( routePainSymptoms, arguments: {
             //     ArgumentConstant.argselectedBodyType: bodySide,
             //   });
             // } else if (symtomsType == 1) {
-            //   NavigationUtils.push(context, routeGeneralizedPainSymptoms);
+            //   Navigator.of(context).pushNamed( routeGeneralizedPainSymptoms);
             // }
           },
           child: Container(

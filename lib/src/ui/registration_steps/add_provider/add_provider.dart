@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/src/utils/constants/key_constant.dart';
 import 'package:hutano/src/utils/navigation.dart';
 
@@ -42,7 +43,7 @@ class _AddProviderState extends State<AddProvider> {
             child: Scaffold(
                 body: SingleChildScrollView(
                     child: Container(
-          margin: EdgeInsets.all(spacing10),
+          margin: EdgeInsets.all(0),
           child: Column(
             children: [
               HutanoProgressBar(progressSteps: HutanoProgressSteps.four),
@@ -179,21 +180,26 @@ class _AddProviderState extends State<AddProvider> {
   _nextScreen() {
     FocusManager.instance.primaryFocus.unfocus();
 
+    //TODO : TEMPORARY CODE 
+    //Chaning route to dashboard screen from home
     if (_phoneController.text.isNotEmpty) {
-      NavigationUtils.pushAndRemoveUntil(context, routeHome,
-          arguments: {ArgumentConstant.searchText: _phoneController.text});
+      Navigator.of(context).pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false);
+      Navigator.of(context).pushNamed(Routes.dashboardSearchScreen,arguments: {'searchParam':_phoneController.text});
+      // Navigator.of(context).pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false,
+      //     arguments: {ArgumentConstant.searchText: _phoneController.text});
     } else if (!_nameController.text.isEmpty) {
-      NavigationUtils.pushAndRemoveUntil(context, routeHome,
-          arguments: {ArgumentConstant.searchText: _nameController.text});
+      Navigator.of(context).pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false);
+      Navigator.of(context).pushNamed(Routes.dashboardSearchScreen,arguments: {'searchParam':_nameController.text});
+      // Navigator.of(context).pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false,
+      //     arguments: {ArgumentConstant.searchText: _nameController.text});
     } else {
-      NavigationUtils.pushAndRemoveUntil(context, routeHome);
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false);
     }
   }
 
   _skipTaskNow() {
-    NavigationUtils.pushAndRemoveUntil(
-      context,
-      routeHome,
-    );
+    // Navigator.of(context).pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false);
+    Navigator.of(context).pushNamed(Routes.dashboardSearchScreen,arguments: {'searchParam':'Test'});
   }
 }

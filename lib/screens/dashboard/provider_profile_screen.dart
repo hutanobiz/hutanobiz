@@ -14,6 +14,7 @@ import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
 import 'package:hutano/widgets/review_widget.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
 class ProviderProfileScreen extends StatefulWidget {
@@ -52,6 +53,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
   void initState() {
     super.initState();
 
+    initializeDateFormatting('en');
     setSourceAndDestinationIcons();
   }
 

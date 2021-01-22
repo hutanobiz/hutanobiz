@@ -133,7 +133,7 @@ class _MemberMessageState extends State<MemberMessage> {
         children: [
           HutanoButton(
             onPressed: () {
-              NavigationUtils.pop(context);
+              Navigator.of(context).pop();
             },
             icon: FileConstants.icBack,
             buttonType: HutanoButtonType.onlyIcon,

@@ -156,7 +156,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       ));
 
   _completeTaskNow() {
-    NavigationUtils.pushReplacement(context, routeEmailVerification);
+    Navigator.of(context).pushReplacementNamed( routeEmailVerification);
     setBool(PreferenceKey.perFormedSteps, true);
     _sendCode();
   }
@@ -174,7 +174,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   _skipTaskNow() {
-    NavigationUtils.pushAndRemoveUntil(context, routeHome);
+    Navigator.of(context).pushNamedAndRemoveUntil( routeHome ,(route) => false);
     setBool(PreferenceKey.skipStep, true);
   }
 }

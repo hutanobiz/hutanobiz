@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/screens/dashboard/setting.dart';
 
 import '../../../utils/color_utils.dart';
 import '../../../utils/constants/file_constants.dart';
@@ -27,7 +28,7 @@ class _HomeState extends State<Home> {
         serachText: widget.searchText ?? "",
       ),
       MyAppointments(),
-      Settings()
+      SettingScreen()
     ]);
   }
 

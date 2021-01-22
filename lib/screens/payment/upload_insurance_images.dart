@@ -171,7 +171,7 @@ class _UploadInsuranceImagesScreenState
         //TODO : refactor 
         // adding welcome screen code
 
-        NavigationUtils.pushReplacement(context, routeWelcomeScreen);
+        Navigator.of(context).pushReplacementNamed( routeWelcomeScreen);
         
         // Navigator.of(context).pushNamedAndRemoveUntil(
         //     Routes.dashboardScreen, (Route<dynamic> route) => false);

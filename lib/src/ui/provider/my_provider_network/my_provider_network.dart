@@ -96,14 +96,14 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
   }
 
   _onCancel() {
-    NavigationUtils.pop(context);
+    Navigator.of(context).pop();
   }
 
   _onRemove() async {
     ProgressDialogUtils.showProgressDialog(context);
     try {
       var res = await ApiManager().removeProvider(_removeProvider);
-      NavigationUtils.pop(context);
+      Navigator.of(context).pop();
       _getMyProviderGroupList(showProgress: false);
       ProgressDialogUtils.dismissProgressDialog();
     } on ErrorModel catch (e) {

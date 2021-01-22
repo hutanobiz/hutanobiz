@@ -20,7 +20,7 @@ class HutanoHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // AppLogo(),
+        AppLogo(),
         if(headerLabel!=null) headerLabel,
         SizedBox(
           height: spacing35,

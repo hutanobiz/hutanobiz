@@ -113,7 +113,7 @@ class _InviteByEmailScreenState extends State<InviteByEmailScreen> {
       labelColor: colorWhite,
       color: colorPurple,
       onPressed: () {
-        NavigationUtils.push(context, routeAddProvider);
+        Navigator.of(context).pushNamed( routeAddProvider);
       },
     );
   }
@@ -177,7 +177,7 @@ class _InviteByEmailScreenState extends State<InviteByEmailScreen> {
         children: [
           HutanoButton(
             onPressed: () {
-              NavigationUtils.pop(context);
+              Navigator.of(context).pop();
             },
             icon: FileConstants.icBack,
             buttonType: HutanoButtonType.onlyIcon,
@@ -225,7 +225,7 @@ class _InviteByEmailScreenState extends State<InviteByEmailScreen> {
               context: context,
               message: value.response,
               okButtonAction: () {
-                NavigationUtils.pop(context);
+                Navigator.of(context).pop();
               },
               okButtonTitle: 'Ok',
               isCancelEnable: false,

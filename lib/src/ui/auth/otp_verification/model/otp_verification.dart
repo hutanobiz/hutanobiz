@@ -62,7 +62,7 @@ class _OtpVerificationState extends State<OtpVerification> {
       final args = {
         ArgumentConstant.verificationModel: widget.verificationModel ,
       };
-      NavigationUtils.pushReplacement(context,
+      Navigator.of(context).pushReplacementNamed(
           routeResetPassword, arguments: args);
 
     } on ErrorModel catch (e) {
@@ -85,7 +85,7 @@ class _OtpVerificationState extends State<OtpVerification> {
       await ApiManager().resetPin(request);
       ProgressDialogUtils.dismissProgressDialog();
 
-      NavigationUtils.pushReplacement(context, routeResetPin, arguments: {
+      Navigator.of(context).pushReplacementNamed( routeResetPin, arguments: {
         ArgumentConstant.verificationModel: widget.verificationModel,
       });
     } on ErrorModel catch (e) {
@@ -109,7 +109,7 @@ class _OtpVerificationState extends State<OtpVerification> {
       await ApiManager().register(request);
       ProgressDialogUtils.dismissProgressDialog();
 
-      NavigationUtils.pushReplacement(context, routeRegister, arguments: {
+      Navigator.of(context).pushReplacementNamed( routeRegister, arguments: {
         ArgumentConstant.number: widget.verificationModel.phone.rawNumber(),
         ArgumentConstant.countryCode: widget.verificationModel.countryCode
       });
@@ -169,8 +169,8 @@ class _OtpVerificationState extends State<OtpVerification> {
   _resendRegistrationApi() async {
     ProgressDialogUtils.showProgressDialog(context);
     final request = ReqRegsiterNumber(
-      step: 1,
-      type: 1,
+      step: 4,
+           type: 1,
       isAgreeTermsAndCondition: 1,
       phoneNumber: widget.verificationModel.phone.rawNumber(),
       mobileCountryCode: widget.verificationModel.countryCode,

@@ -229,7 +229,7 @@ class _GeneralizedPainSymptomsState extends State<GeneralizedPainSymptoms> {
                 label: Localization.of(context).skip,
                 color: primaryColor,
                 onPressed: () {
-                  NavigationUtils.push(context, routeMedicineInformation);
+                  Navigator.of(context).pushNamed( routeMedicineInformation);
                 },
               ),
             ),
@@ -256,7 +256,7 @@ class _GeneralizedPainSymptomsState extends State<GeneralizedPainSymptoms> {
                             .setGeneralSysptomDetails(
                                 bodypart: _selectedBodyPart,
                                 bodyPartPain: _selectedPainDesc);
-                        NavigationUtils.push(context, routeSymptomsInformation,
+                        Navigator.of(context).pushNamed( routeSymptomsInformation,
                             arguments: {
                               ArgumentConstant.argSeletedSymptomsType: 1
                             });

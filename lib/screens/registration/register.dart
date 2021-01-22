@@ -23,6 +23,7 @@ import 'package:hutano/widgets/password_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
 class Register extends StatefulWidget {
@@ -76,6 +77,7 @@ class _SignUpFormState extends State<Register> {
     SharedPref().getValue("deviceToken").then((value) {
       deviceToken = value;
     });
+    initializeDateFormatting('en');
 
     phoneNumber = widget.args.phoneNumber;
 
@@ -167,7 +169,7 @@ class _SignUpFormState extends State<Register> {
         }).futureError((error) {
           setLoading(false);
           error.toString().debugLog();
-          Navigator.of(context).pop();
+          // Navigator.of(context).pop();
         });
       });
     }

@@ -2,7 +2,7 @@ const apiRegister = 'register';
 const String apiLogin = "auth/api/login";
 
 const String apiSetupIntent = "api/stripe-setUp-intent";
-const String kstripePublishKey = 'pk_test_8VkB77yzhwvL1U9ilj1oxRl7';
+const String kstripePublishKey = 'pk_test_LlxS6SLz0PrOm9IY9mxM0LHo006tjnSqWX';
 const String apiEmailVerification = "api/email-verification";
 const String apiResetPassword = "reset-password";
 const String apiLoginPin = "pin-login";

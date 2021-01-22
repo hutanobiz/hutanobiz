@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/src/apis/api_manager.dart';
 import 'package:hutano/src/apis/error_model.dart';
 import 'package:hutano/src/ui/auth/login_pin/model/req_login_pin.dart';
@@ -50,7 +51,7 @@ class _LoginPinState extends State<LoginPin> {
   }
 
   void _onForgotPinClick() =>
-      NavigationUtils.push(context, routeForgotPassword, arguments: {
+      Navigator.of(context).pushNamed( routeForgotPassword, arguments: {
         ArgumentConstant.verificationScreen: VerificationScreen.resetPin
       });
 
@@ -79,7 +80,10 @@ class _LoginPinState extends State<LoginPin> {
       await ApiManager().loginPin(request).then((value) {
         try {
           ProgressDialogUtils.dismissProgressDialog();
-          NavigationUtils.pushReplacement(context, routeHome);
+          //TODO : Verify Code
+          // Changing route to dashbaord
+          Navigator.of(context).pushReplacementNamed(Routes.dashboardScreen);
+          // Navigator.of(context).pushReplacementNamed( routeHome);
         } catch (e) {
           print(e);
         }
@@ -94,7 +98,7 @@ class _LoginPinState extends State<LoginPin> {
     }
   }
 
-  void _onRegisterClick() => NavigationUtils.push(context, routeRegisterNumber);
+  void _onRegisterClick() => Navigator.of(context).pushNamed( routeRegisterNumber);
 
   Widget _buildOtp(BuildContext context) {
     return Container(
@@ -139,7 +143,7 @@ class _LoginPinState extends State<LoginPin> {
           localizedReason: Localization.of(context).labelAuthWithFingerPrint,
           useErrorDialogs: true);
       if (authenticated) {
-        NavigationUtils.pushReplacement(context, routeHome);
+        Navigator.of(context).pushReplacementNamed( routeHome);
       }
     } on PlatformException catch (e) {
       if (e.code == auth_error.notEnrolled) {

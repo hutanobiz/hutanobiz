@@ -51,7 +51,7 @@ class _CreateProviderGroupState extends State<CreateProviderGroup> {
           isCancelEnable: false,
           okButtonTitle: Localization.of(context).ok,
           okButtonAction: () {
-            NavigationUtils.pop(context, args: {ArgumentConstant.number: ""});
+            Navigator.of(context).pop({ArgumentConstant.number: ""});
           });
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
@@ -124,7 +124,7 @@ class _CreateProviderGroupState extends State<CreateProviderGroup> {
         children: [
           HutanoButton(
             onPressed: () {
-              NavigationUtils.pop(context);
+              Navigator.of(context).pop();
             },
             icon: FileConstants.icBack,
             buttonType: HutanoButtonType.onlyIcon,

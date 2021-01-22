@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/src/ui/medical_history/provider/appoinment_provider.dart';
+import 'package:hutano/src/utils/constants/constants.dart';
+import 'package:hutano/src/utils/preference_key.dart';
+import 'package:hutano/src/utils/preference_utils.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/custom_loader.dart';
@@ -9,6 +13,7 @@ import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/widgets.dart';
+import 'package:provider/provider.dart';
 
 class MedicalHistoryScreen extends StatefulWidget {
   MedicalHistoryScreen({Key key, this.isBottomButtonsShow}) : super(key: key);
@@ -308,6 +313,14 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
 
   void saveMedicalHistory() {
     if (_diseaseList.length > 0) {
+      //TODO : Temp code added
+      // Medical history in provider old app.
+      final _gender = getInt(PreferenceKey.gender);
+      Provider.of<SymptomsInfoProvider>(context, listen: false)
+          .setBodyType(_gender);
+
+      
+
       Map<String, String> diseaseMap = {};
 
       if ((_diseaseList.contains('Others') || _diseaseList.contains('Other')) &&
@@ -349,8 +362,10 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                 _container.setConsentToTreatData(
                     "medicalHistory", _diseaseList);
               }
-
-              Navigator.of(context).pushNamed(Routes.seekingCureScreen);
+            
+            //TODO TEMP: COMMETNING CODE
+              Navigator.of(context).pushNamed(routeBodySymptoms);
+              // Navigator.of(context).pushNamed(Routes.seekingCureScreen);
             }
           }
         }).futureError((error) {

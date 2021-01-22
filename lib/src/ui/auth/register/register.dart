@@ -201,7 +201,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           okButtonTitle: Localization.of(context).recover,
           okButtonAction: () {
             _dialogOpen = false;
-            NavigationUtils.pushReplacement(context, routeForgotPassword,
+            Navigator.of(context).pushReplacementNamed( routeForgotPassword,
                 arguments: {
                   ArgumentConstant.verificationScreen:
                       VerificationScreen.resetPassword
@@ -218,6 +218,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   _submitData() async {
+
+    
     FocusManager.instance.primaryFocus.unfocus();
     if (_registerModel.dob == null) {
       CustomErrorDialog.showOkCancelErrorDialog(
@@ -344,7 +346,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       //TODO : Verify code
       SharedPref().setValue(PreferenceKey.id, res.response.sId);
       SharedPref().setValue(PreferenceKey.email, res.response.email);
-      SharedPref().setValue(PreferenceKey.gender, res.response.gender);
+      // SharedPref().setValue(PreferenceKey.gender, res.response.gender);
+      setInt(PreferenceKey.gender, res.response.gender);
       SharedPref().setValue(PreferenceKey.tokens, res.response.tokens[0].token);
       SharedPref()
           .setValue(PreferenceKey.phone, res.response.phoneNumber.toString());
@@ -360,13 +363,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _insuranceMap['isPayment'] = false;
       _insuranceMap['isFromRegister'] = true;
 
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        Routes.insuranceListScreen,
-        (Route<dynamic> route) => false,
-        arguments: _insuranceMap,
-      );
+     //TODO:
+      //Code commented due to error
+      // Navigator.of(context).pushNamedAndRemoveUntil(
+      //   Routes.insuranceListScreen,
+      //   (Route<dynamic> route) => false,
+      //   arguments: _insuranceMap,
+      // );
 
-      // NavigationUtils.pushReplacement(context, routeWelcomeScreen);
+      Navigator.of(context).pushReplacementNamed( routeWelcomeScreen);
 
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();

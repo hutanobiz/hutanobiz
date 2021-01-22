@@ -87,8 +87,7 @@ class _ResetPinState extends State<ResetPin> {
           isCancelEnable: false,
           okButtonTitle: Localization.of(context).ok,
           okButtonAction: () {
-            NavigationUtils.pushReplacement(
-              context,
+            Navigator.of(context).pushReplacementNamed(
               routeLoginPin,
             );
           });

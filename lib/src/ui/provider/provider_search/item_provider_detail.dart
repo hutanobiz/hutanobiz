@@ -53,7 +53,7 @@ class ItemProviderDetail extends StatelessWidget {
                   name = 'Dr. $name , ${occupation.getInitials()}';
                 }
 
-                NavigationUtils.push(context, routeProviderAddNetwork,
+                Navigator.of(context).pushNamed( routeProviderAddNetwork,
                     arguments: {
                       ArgumentConstant.doctorId: providerDetail.userId,
                       ArgumentConstant.doctorName: name,
@@ -75,7 +75,7 @@ class ItemProviderDetail extends StatelessWidget {
               Provider.of<SymptomsInfoProvider>(context, listen: false)
                   .setAppoinmentData(
                       providerDetail.userId, getString(PreferenceKey.id));
-              NavigationUtils.push(context, routeMyMedicalHistory);
+              Navigator.of(context).pushNamed( routeMyMedicalHistory);
             },
             label: Localization.of(context).bookAppointment,
             height: 45,

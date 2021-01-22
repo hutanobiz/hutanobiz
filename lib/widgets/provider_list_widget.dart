@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/src/utils/constants/constants.dart';
+import 'package:hutano/src/utils/constants/key_constant.dart';
+import 'package:hutano/src/utils/localization/localization.dart';
 import 'package:hutano/utils/extensions.dart';
 
 class ProviderWidget extends StatelessWidget {
@@ -81,28 +84,34 @@ class ProviderWidget extends StatelessWidget {
     } else {
       if (data["officeConsultanceFee"] != null &&
           data["officeConsultanceFee"].length > 0) {
-        fee = data["officeConsultanceFee"][0]['fee'] == null?'0.00':
-            data["officeConsultanceFee"][0]['fee'].toStringAsFixed(2) ?? '0.00';
+        fee = data["officeConsultanceFee"][0]['fee'] == null
+            ? '0.00'
+            : data["officeConsultanceFee"][0]['fee'].toStringAsFixed(2) ??
+                '0.00';
       }
 
       if (data["onsiteConsultanceFee"] != null &&
           data["onsiteConsultanceFee"].length > 0) {
-        fee =data["onsiteConsultanceFee"][0]['fee'] == null?'0.00': min(
-          double.parse(fee),
-          double.parse(
-            data["onsiteConsultanceFee"][0]['fee'].toStringAsFixed(2),
-          ),
-        ).toStringAsFixed(2);
+        fee = data["onsiteConsultanceFee"][0]['fee'] == null
+            ? '0.00'
+            : min(
+                double.parse(fee),
+                double.parse(
+                  data["onsiteConsultanceFee"][0]['fee'].toStringAsFixed(2),
+                ),
+              ).toStringAsFixed(2);
       }
 
       if (data["vedioConsultanceFee"] != null &&
           data["vedioConsultanceFee"].length > 0) {
-        fee = data["vedioConsultanceFee"][0]['fee']==null?'0.00': min(
-          double.parse(fee),
-          double.parse(
-            data["vedioConsultanceFee"][0]['fee'].toStringAsFixed(2),
-          ),
-        ).toStringAsFixed(2);
+        fee = data["vedioConsultanceFee"][0]['fee'] == null
+            ? '0.00'
+            : min(
+                double.parse(fee),
+                double.parse(
+                  data["vedioConsultanceFee"][0]['fee'].toStringAsFixed(2),
+                ),
+              ).toStringAsFixed(2);
       }
     }
 
@@ -428,31 +437,87 @@ class ProviderWidget extends StatelessWidget {
             ),
           ),
           isOptionsShow
-              ? Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: const EdgeInsets.only(top: 12.0),
-                  child: FlatButton(
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    color: AppColors.persian_indigo,
-                    splashColor: Colors.grey[300],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        bottomRight: Radius.circular(13.0),
-                        bottomLeft: Radius.circular(13.0),
+              ? Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: const EdgeInsets.only(top: 12.0),
+                        child: FlatButton(
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          color: Colors.transparent,
+                          splashColor: Colors.grey[300],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(13.0),
+                            ),
+                            side: BorderSide(
+                                width: 0.5, color: AppColors.persian_indigo),
+                          ),
+                          child: Text(
+                            Localization.of(context).addToNetwork,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12.0,
+                              color: Colors.black,
+                            ),
+                          ),
+                          onPressed: () {
+                            final user = data["User"][0];
+                            var name = "";
+                            var occupation = "";
+                            if (user == null) {
+                              return;
+                            }
+                            name = user["fullName"];
+                            if (data["Specialties"].length > 0) {
+                              occupation = data["Specialties"][0]["title"];
+                              name = 'Dr. $name , ${occupation.getInitials()}';
+                            }
+
+                            Navigator.of(context)
+                                .pushNamed(routeProviderAddNetwork, arguments: {
+                              ArgumentConstant.doctorId: data["userId"],
+                              ArgumentConstant.doctorName: name,
+                              ArgumentConstant.doctorAvatar: data["User"][0]
+                                  ["avatar"]
+                            });
+
+                            print(data);
+                          },
+                        ),
                       ),
-                      side: BorderSide(
-                          width: 0.5, color: AppColors.persian_indigo),
                     ),
-                    child: Text(
-                      "Book Appointment",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12.0,
-                        color: Colors.white,
+                    Expanded(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: const EdgeInsets.only(top: 12.0),
+                        child: FlatButton(
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          color: AppColors.persian_indigo,
+                          splashColor: Colors.grey[300],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular(13.0),
+                            ),
+                            side: BorderSide(
+                                width: 0.5, color: AppColors.persian_indigo),
+                          ),
+                          child: Text(
+                            "Book Appointment",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12.0,
+                              color: Colors.white,
+                            ),
+                          ),
+                          onPressed: bookAppointment,
+                        ),
                       ),
                     ),
-                    onPressed: bookAppointment,
-                  ),
+                  ],
                 )
               : Container(),
         ],

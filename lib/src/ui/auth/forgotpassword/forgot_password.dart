@@ -75,7 +75,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             countryCode: _countryCode,
             verificationScreen: widget.verificationScreen),
       };
-      NavigationUtils.push(context, routePinVerification, arguments: args);
+      Navigator.of(context).pushNamed( routePinVerification, arguments: args);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);
@@ -96,7 +96,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             countryCode: _countryCode,
             verificationScreen: widget.verificationScreen),
       };
-      NavigationUtils.push(context, routePinVerification, arguments: args);
+      Navigator.of(context).pushNamed( routePinVerification, arguments: args);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);
@@ -104,7 +104,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   void _onLoginBackClick() {
-    NavigationUtils.pushReplacement(context, routeLogin);
+    Navigator.of(context).pushReplacementNamed( routeLogin);
   }
 
   @override

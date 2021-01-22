@@ -45,8 +45,8 @@ class _InsuranceListState extends State<InsuranceList> {
   }
 
   _addInsurance() async {
-    NavigationUtils.pop(context,
-        args: {ArgumentConstant.member: _insuranceList[_selectedCardIndex]});
+    Navigator.of(context).pop(
+        {ArgumentConstant.member: _insuranceList[_selectedCardIndex]});
     return;
     // ProgressDialogUtils.showProgressDialog(context);
     final request = ReqAddMyInsurance(
@@ -56,8 +56,8 @@ class _InsuranceListState extends State<InsuranceList> {
       var res = await ApiManager().addInsurance(request);
       ProgressDialogUtils.dismissProgressDialog();
 
-      NavigationUtils.pop(context,
-          args: {ArgumentConstant.member: _insuranceList[_selectedCardIndex]});
+      Navigator.of(context).pop(
+          {ArgumentConstant.member: _insuranceList[_selectedCardIndex]});
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       print(e);

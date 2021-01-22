@@ -22,7 +22,7 @@ class ApiServiceStripe {
       receiveTimeout: 10 * 1000,
       contentType: 'application/x-www-form-urlencoded',
       headers: {
-        'authorization': "Bearer ${kstripePublishKey}",
+        'authorization': "Bearer pk_test_LlxS6SLz0PrOm9IY9mxM0LHo006tjnSqWX",
       },
     );
     final mDio = Dio(baseOption);

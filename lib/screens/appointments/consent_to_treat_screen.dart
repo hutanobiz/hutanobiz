@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/src/ui/medical_history/provider/appoinment_provider.dart';
+import 'package:hutano/src/utils/constants/constants.dart';
+import 'package:hutano/src/utils/preference_key.dart';
+import 'package:hutano/src/utils/preference_utils.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/round_corner_checkbox.dart';
 import 'package:hutano/widgets/widgets.dart';
+import 'package:provider/provider.dart';
 
 class ConsentToTreatScreen extends StatefulWidget {
   ConsentToTreatScreen({Key key}) : super(key: key);
@@ -24,6 +30,7 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
   dynamic response;
   bool isInitialLoad = false;
   bool isLoading = false;
+  String userId;
 
   @override
   void initState() {
@@ -33,6 +40,14 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
       });
     });
     super.initState();
+  }
+
+  Future<void> didChangeDependencies() async {
+    super.didChangeDependencies();
+
+    var _container = InheritedContainer.of(context);
+    userId = _container.providerResponse["providerData"]["userId"];
+    print(_container);
   }
 
   @override
@@ -45,6 +60,15 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
         isAddBack: false,
         addBottomArrows: true,
         onForwardTap: () {
+          //TODO : REFACTOR CODE. COMMENTING CURRNET API AND USING ANOTHER
+          // isAgree
+          //     ? Navigator.of(context).pushNamed(Routes.medicalHistoryScreen)
+          //     : Widgets.showToast("Please agree to continue");
+
+          Provider.of<SymptomsInfoProvider>(context, listen: false)
+              .setAppoinmentData(userId, getString(PreferenceKey.id));
+
+          // Navigator.of(context).pushNamed(routeMyMedicalHistory)
           isAgree
               ? Navigator.of(context).pushNamed(Routes.medicalHistoryScreen)
               : Widgets.showToast("Please agree to continue");
@@ -54,8 +78,8 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
           future: _requestsConsent,
           builder: (context, snapshot) {
             return ListView(
-                  children: widgetList(),
-                );
+              children: widgetList(),
+            );
             // if (snapshot.hasData) {
             //   if (isInitialLoad) {
             //     response = snapshot.data;

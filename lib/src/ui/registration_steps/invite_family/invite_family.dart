@@ -50,7 +50,7 @@ class _InviteFamilyScreenState extends State<InviteFamilyScreen> {
                 key: _scaffoldKey,
                 body: SingleChildScrollView(
                     child: Container(
-                  margin: EdgeInsets.all(spacing10),
+                  margin: EdgeInsets.all(0),
                   child: Column(
                     children: [
                       HutanoProgressBar(
@@ -282,7 +282,7 @@ class _InviteFamilyScreenState extends State<InviteFamilyScreen> {
         _emailController.clear();
         _isActionPerformed = true;
         FocusManager.instance.primaryFocus.unfocus();
-        NavigationUtils.push(context, routeInviteByEmail, arguments: {
+        Navigator.of(context).pushNamed( routeInviteByEmail, arguments: {
           ArgumentConstant.email: email,
         });
       } else {
@@ -295,7 +295,7 @@ class _InviteFamilyScreenState extends State<InviteFamilyScreen> {
         _phoneController.clear();
         _isActionPerformed = true;
         FocusManager.instance.primaryFocus.unfocus();
-        NavigationUtils.push(context, routeSearch, arguments: {
+        Navigator.of(context).pushNamed( routeSearch, arguments: {
           ArgumentConstant.number: phone,
           ArgumentConstant.searchScreen: SearchScreenFrom.inviteFamily
         });
@@ -309,7 +309,7 @@ class _InviteFamilyScreenState extends State<InviteFamilyScreen> {
         _textController.clear();
         _isActionPerformed = true;
         FocusManager.instance.primaryFocus.unfocus();
-        NavigationUtils.push(context, routeInviteByText, arguments: {
+        Navigator.of(context).pushNamed( routeInviteByText, arguments: {
           ArgumentConstant.sms: smsNumber,
         });
       } else {
@@ -318,7 +318,7 @@ class _InviteFamilyScreenState extends State<InviteFamilyScreen> {
       }
     } else {
       if (_isActionPerformed) {
-        NavigationUtils.push(context, routeAddProvider);
+        Navigator.of(context).pushNamed( routeAddProvider);
       } else {
         DialogUtils.showAlertDialog(
             context, Localization.of(context).errorSelectOneOption);
@@ -333,6 +333,6 @@ class _InviteFamilyScreenState extends State<InviteFamilyScreen> {
   }
 
   _skipTaskNow() {
-    NavigationUtils.push(context, routeAddProvider);
+    Navigator.of(context).pushNamed( routeAddProvider);
   }
 }

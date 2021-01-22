@@ -669,7 +669,7 @@ class _PainSymptomsState extends State<PainSymptoms> {
                       label: Localization.of(context).skip,
                       color: primaryColor,
                       onPressed: () {
-                        NavigationUtils.push(context, routeMedicineInformation);
+                        Navigator.of(context).pushNamed(routeMedicineInformation);
                       },
                     ),
                   ),
@@ -731,8 +731,7 @@ class _PainSymptomsState extends State<PainSymptoms> {
                                 painIntensity: _painIntensity.toInt(),
                                 painCondition: _selectedPainCondition,
                               );
-                              NavigationUtils.push(
-                                  context, routeSymptomsInformation,
+                              Navigator.of(context).pushNamed(routeSymptomsInformation,
                                   arguments: {
                                     ArgumentConstant.argSeletedSymptomsType: 0
                                   });

@@ -129,12 +129,11 @@ class _SearchScreenState extends State<SearchScreen> {
                         onTap: () {
                           if (widget.searchScreen != null &&
                               widget.searchScreen == SearchScreenFrom.addMore) {
-                            NavigationUtils.pop(context, args: {
+                            Navigator.of(context).pop({
                               ArgumentConstant.member: _memberList[pos]
                             });
                           } else {
-                            NavigationUtils.pushReplacement(
-                                context, routeAddFamilyMember, arguments: {
+                            Navigator.of(context).pushReplacementNamed( routeAddFamilyMember, arguments: {
                               ArgumentConstant.member: _memberList[pos]
                             });
                           }
@@ -156,7 +155,7 @@ class _SearchScreenState extends State<SearchScreen> {
       onPressed: () {
         FocusManager.instance.primaryFocus.unfocus();
 
-        NavigationUtils.pop(context);
+        Navigator.of(context).pop();
       },
       icon: FileConstants.icBack,
       buttonType: HutanoButtonType.onlyIcon,
