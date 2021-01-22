@@ -61,7 +61,6 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   @override
   void initState() {
     super.initState();
-
     setSourceAndDestinationIcons();
 
     if (widget.args['listType'] != null) {
@@ -389,10 +388,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               _providerData['parking']['fee'] != null) {
             parkingFee = _providerData['parking']['fee'].toStringAsFixed(2);
           }
-          if (_providerData["DoctorProfessionalDetail"] != null) {
-            onsiteFee = _providerData["DoctorProfessionalDetail"]
-                    ["onsiteConsultanceFee"][0]["fee"] ??
-                "";
+          if (detail != null && detail["onsiteConsultanceFee"] != null) {
+            onsiteFee =
+                detail["onsiteConsultanceFee"][0]["fee"].toString() ?? "";
           }
           onsiteFee = onsiteFee.toString();
 
@@ -990,9 +988,15 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
     if (appType == '3') {
       totalFee += double.parse(officeVisitCharge);
+      if (parkingFee != null && parkingFee.isNotEmpty && parkingFee != "0") {
+        totalFee += double.parse(parkingFee);
+      }
     }
 
-    if (onsiteFee != null && onsiteFee.isNotEmpty && onsiteFee != '0' && appType == '3') {
+    if (onsiteFee != null &&
+        onsiteFee.isNotEmpty &&
+        onsiteFee != '0' &&
+        appType == '3') {
       totalFee += double.parse(onsiteFee);
     }
 

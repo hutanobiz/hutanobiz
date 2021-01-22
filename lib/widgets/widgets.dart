@@ -332,6 +332,7 @@ class Widgets {
                         onPressed: onPressed ??
                             () {
                               yyDialog.dismiss();
+                              onPressed();
                             },
                         child: Padding(
                           padding: EdgeInsets.all(10),

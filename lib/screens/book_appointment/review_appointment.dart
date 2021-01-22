@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -23,6 +24,7 @@ import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:location/location.dart';
 
 class ReviewAppointmentScreen extends StatefulWidget {
   @override
@@ -113,7 +115,13 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
     _providerData = _container.getProviderData();
     _appointmentData = _container.appointmentData;
-    _userLocationMap = _container.userLocationMap;
+    if (_container.userLocationMap != null &&
+        _container.userLocationMap.isNotEmpty) {
+      _userLocationMap = _container.userLocationMap;
+    } else {
+      _userLocationMap = _container.userLocationMap;
+      initPlatformState();
+    }
     _consentToTreatMap = _container.consentToTreatMap;
 
     if (_consentToTreatMap["paymentMap"] != null) {
@@ -142,7 +150,6 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
       _profileMap = _providerData["providerData"];
       averageRating = _profileMap["averageRating"]?.toStringAsFixed(2) ?? "0";
     }
-
     _initialPosition = _userLocationMap["latLng"];
 
     if (_container.projectsResponse["serviceType"].toString() == '3') {
@@ -159,13 +166,14 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         }
       }
     } else {}
-
-    _middlePoint = LatLng(
-        (_initialPosition.latitude + _desPosition.latitude) / 2,
-        (_initialPosition.longitude + _desPosition.longitude) / 2);
-
     if (_initialPosition != null) {
-      getDistanceAndTime(_initialPosition, _desPosition);
+      _middlePoint = LatLng(
+          (_initialPosition.latitude + _desPosition.latitude) / 2,
+          (_initialPosition.longitude + _desPosition.longitude) / 2);
+
+      if (_initialPosition != null) {
+        getDistanceAndTime(_initialPosition, _desPosition);
+      }
     }
 
     _setBookingTime(_appointmentData["time"]);
@@ -195,6 +203,56 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         _reviewAppointmentData["consultanceFee[${i.toString()}][fee]"] =
             _consultaceList[i]["fee"].toString();
       }
+    }
+  }
+
+  initPlatformState() async {
+    Location _location = Location();
+    PermissionStatus _permission;
+
+    _permission = await _location.requestPermission();
+    print("Permission: $_permission");
+
+    switch (_permission) {
+      case PermissionStatus.granted:
+        bool serviceStatus = await _location.serviceEnabled();
+        print("Service status: $serviceStatus");
+
+        if (serviceStatus) {
+          Widgets.showToast("Getting Location. Please wait..");
+
+          try {
+            LocationData locationData = await _location.getLocation();
+
+            _initialPosition =
+                LatLng(locationData.latitude, locationData.longitude);
+            _middlePoint = LatLng(
+                (_initialPosition.latitude + _desPosition.latitude) / 2,
+                (_initialPosition.longitude + _desPosition.longitude) / 2);
+
+            if (_initialPosition != null) {
+              getDistanceAndTime(_initialPosition, _desPosition);
+            }
+          } on PlatformException catch (e) {
+            Widgets.showToast(e.message.toString());
+            e.toString().debugLog();
+
+            log(e.code);
+
+            _location = null;
+          }
+        } else {
+          bool serviceStatusResult = await _location.requestService();
+          print("Service status activated after request: $serviceStatusResult");
+          initPlatformState();
+        }
+
+        break;
+      case PermissionStatus.denied:
+        initPlatformState();
+        break;
+      case PermissionStatus.deniedForever:
+        break;
     }
   }
 
@@ -798,8 +856,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                           children: <Widget>[
                             Text(
                               _totalDuration.toLowerCase().contains('mins')
-                                  ? _totalDuration.replaceRange(
-                                      1, _totalDuration.length, ' minutes')
+                                  ? _totalDuration.replaceAll("mins","minutes")
                                   : _totalDuration,
                               style: TextStyle(
                                 fontSize: 14.0,
@@ -863,6 +920,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
       ("DISTANCE AND TIME: " + value["rows"][0]["elements"][0].toString())
           .toString()
           .debugLog();
+      setState(() {});
     }).futureError((error) {
       setState(() {
         _totalDuration = "NO duration available";

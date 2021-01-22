@@ -64,7 +64,12 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
     _providerMap = _container.getProviderData();
 
     if (_reasonList.length == 0) {
-      String id = _providerMap['providerData']['doctor']['_id'];
+      String id="";
+      if(_providerMap['providerData']["data"] != null){
+        id = _providerMap['providerData']['data']['doctor']['_id'];
+      }else{
+        id= _providerMap['providerData']['doctor']['_id'];
+      }
 
       _reasonList = await api.getReviewReasons(id);
     }
@@ -171,7 +176,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
 
     widgetList.add(profileWidget(_providerData));
 
-    // widgetList.add(rateWidget());
+    widgetList.add(rateWidget());
 
     widgetList.add(SizedBox(
       height: 25,
@@ -325,7 +330,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
 
   Widget rateWidget() {
     return Container(
-      margin: const EdgeInsets.only(top: 20.0, bottom: 40.0),
+      margin: const EdgeInsets.only(top: 20.0, bottom: 20.0),
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -336,30 +341,6 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
       ),
       child: Column(
         children: <Widget>[
-          _rating.round() == 1
-              ? "ic_one_rating".imageIcon(height: 55.0, width: 55.0)
-              : _rating.round() == 2
-                  ? "ic_two_rating".imageIcon(height: 55.0, width: 55.0)
-                  : _rating.round() == 3
-                      ? "ic_three_rating".imageIcon(height: 55.0, width: 55.0)
-                      : _rating.round() == 4
-                          ? "ic_four_rating"
-                              .imageIcon(height: 55.0, width: 55.0)
-                          : _rating.round() == 5
-                              ? "ic_five_rating"
-                                  .imageIcon(height: 55.0, width: 55.0)
-                              : Container(),
-          _rating.round() >= 1 ? SizedBox(height: 21.0) : Container(),
-          Text(
-            _ratingText,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontWeight:
-                  _rating.round() >= 1 ? FontWeight.w700 : FontWeight.w600,
-              fontSize: _rating.round() >= 1 ? 18.0 : 16.0,
-            ),
-          ),
-          SizedBox(height: 22.0),
           RatingBar(
             initialRating: _rating,
             itemSize: 35.0,
@@ -374,39 +355,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
               color: AppColors.goldenTainoi,
             ),
             onRatingUpdate: (double rating) {
-              setState(() {
-                _rating = rating;
-              });
-
-              rateMap["rating"] = _rating.round().toString();
-
-              switch (rating.round()) {
-                case 1:
-                  setState(() {
-                    _ratingText = "Very Poor!!";
-                  });
-                  break;
-                case 2:
-                  setState(() {
-                    _ratingText = "Below Average!!";
-                  });
-                  break;
-                case 3:
-                  setState(() {
-                    _ratingText = "Average!!";
-                  });
-                  break;
-                case 4:
-                  setState(() {
-                    _ratingText = "Good!!";
-                  });
-                  break;
-                case 5:
-                  setState(() {
-                    _ratingText = "Excellent!!";
-                  });
-                  break;
-              }
+              
             },
           ),
         ],

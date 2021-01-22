@@ -10,7 +10,10 @@ import 'package:http/http.dart';
 import 'package:hutano/main.dart';
 import 'package:hutano/models/schedule.dart';
 import 'package:hutano/strings.dart';
+import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/widgets.dart';
+
+import '../routes.dart';
 
 class ApiBaseHelper {
   NetworkUtil _netUtil = new NetworkUtil();
@@ -18,6 +21,8 @@ class ApiBaseHelper {
   // static const String base_url = "https://sa-staging.hutano.xyz/";
   // static const String base_url = "https://api.stage.hutano.com/";
   static const String base_url = "http://2de927ad221e.ngrok.io/";
+  // static const String base_url = "https://api.stage.hutano.com/";
+  // static const String base_url = "http://fe1f3ac1b8b0.ngrok.io/";
   static const String imageUrl = base_url + "uploads/";
 
   Future<dynamic> login(Map loginData) {
@@ -773,7 +778,13 @@ class NetworkUtil {
         final en = json.decode(response.body);
 
         if (en["response"] is String) {
-          showError(en["response"].toString());
+          if (statusCode == 401) {
+            showError(en["response"].toString() ,onPressed: (){
+              _logout();
+              });
+          } else {
+            showError(en["response"].toString());
+          }
         } else if (en["response"] is Map) {
           showError(en);
         } else {
@@ -809,7 +820,13 @@ class NetworkUtil {
         final en = json.decode(response.body);
 
         if (en["response"] is String) {
-          showError(en["response"].toString());
+          if (statusCode == 401) {
+            showError(en["response"].toString() ,onPressed: (){
+              _logout();
+              });
+          } else {
+            showError(en["response"].toString());
+          }
         } else if (en["response"] is Map) {
           showError(en);
         } else {
@@ -884,10 +901,19 @@ class NetworkUtil {
     return responseJson;
   }
 
-  void showError(String message) {
+  void showError(String message, {Function onPressed}) {
     Widgets.showErrorDialog(
-      context: navigatorKey.currentState.overlay.context,
-      description: message,
+        context: navigatorKey.currentState.overlay.context,
+        description: message,
+        onPressed: onPressed);
+  }
+
+  void _logout() async {
+    SharedPref().clearSharedPref();
+    Navigator.of(navigatorKey.currentState.overlay.context)
+        .pushNamedAndRemoveUntil(
+      Routes.loginRoute,
+      (Route<dynamic> route) => false,
     );
   }
 }
