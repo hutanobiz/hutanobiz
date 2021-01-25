@@ -32,6 +32,8 @@ class _TelemedicineTrackTreatmentScreenState
   CountDownController _countDownController = CountDownController();
   SimpleCountDownController _simpleCountDownController =
       SimpleCountDownController();
+      SimpleCountDownController _simpleCountDownController1 =
+      SimpleCountDownController();
   bool video = true;
   bool record = true;
   String _totalDistance = '';
@@ -142,184 +144,197 @@ class _TelemedicineTrackTreatmentScreenState
             ),
             border: Border.all(color: Colors.grey[300]),
           ),
-          child: Column(children: <Widget>[
-            SizedBox(
-              height: 32,
-            ),
-            Text(
-              'Upcoming Telemedicine Appointment',
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.w600,
+          child: Stack(
+            children: [
+              SimpleCountDownTimer(
+                controller: _simpleCountDownController1,
+                duration:
+                    appointmentTime.difference(currentTime).inSeconds - 900,
+                text: '',
+                onComplete: () {
+                  setState(() {});
+                },
               ),
-            ),
-            SizedBox(
-              height: 12,
-            ),
-            Text(
-              DateFormat('EEEE, dd MMMM, HH:mm')
-                  .format(appointmentTime)
-                  .toString(),
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 12.0,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            SizedBox(
-              height: 32,
-            ),
-            CircularCountDownTimer(
-              // Countdown duration in Seconds
-              duration: appointmentTime.difference(currentTime).inSeconds,
-
-              // Controller to control (i.e Pause, Resume, Restart) the Countdown
-              controller: _countDownController,
-
-              // Width of the Countdown Widget
-              width: 176,
-
-              // Height of the Countdown Widget
-              height: 176,
-
-              // Default Color for Countdown Timer
-              color: Colors.grey[300],
-
-              // Filling Color for Countdown Timer
-              fillColor: AppColors.windsor,
-
-              // Background Color for Countdown Widget
-              backgroundColor: null,
-
-              // Border Thickness of the Countdown Circle
-              strokeWidth: 3.0,
-              bottomText: 'hours left',
-              // Begin and end contours with a flat edge and no extension
-              strokeCap: StrokeCap.butt,
-
-              // Text Style for Countdown Text
-              textStyle: TextStyle(
-                  fontSize: 22.0,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold),
-
-              // true for reverse countdown (max to 0), false for forward countdown (0 to max)
-              isReverse: true,
-
-              // true for reverse animation, false for forward animation
-              isReverseAnimation: true,
-
-              // Optional [bool] to hide the [Text] in this widget.
-              isTimerTextShown: true,
-
-              // Function which will execute when the Countdown Ends
-              onComplete: () {
-                // Here, do whatever you want
-                print('Countdown Ended');
-              },
-            ),
-            SizedBox(
-              height: 32,
-            ),
-            Row(
-              children: [
-                Expanded(
-                    flex: 1,
-                    child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(14.0),
-                          ),
-                          border: Border.all(color: Colors.grey[300]),
-                        ),
-                        height: 55,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset('images/exit.png'),
-                            SizedBox(width: 6),
-                            Text('Exit'),
-                          ],
-                        ))),
+              Column(children: <Widget>[
                 SizedBox(
-                  width: 16,
+                  height: 32,
                 ),
-                Expanded(
-                  flex: 2,
-                  child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(14.0),
-                        ),
-                        border: Border.all(color: Colors.grey[300]),
-                      ),
-                      height: 55,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset('images/reschedule.png'),
-                          SizedBox(width: 6),
-                          Text(
-                            'Reschedule',
-                            style: TextStyle(color: AppColors.windsor),
+                Text(
+                  'Upcoming Telemedicine Appointment',
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(
+                  height: 12,
+                ),
+                Text(
+                  DateFormat('EEEE, dd MMMM, HH:mm')
+                      .format(appointmentTime)
+                      .toString(),
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(
+                  height: 32,
+                ),
+                CircularCountDownTimer(
+                  // Countdown duration in Seconds
+                  duration: appointmentTime.difference(currentTime).inSeconds,
+
+                  // Controller to control (i.e Pause, Resume, Restart) the Countdown
+                  controller: _countDownController,
+
+                  // Width of the Countdown Widget
+                  width: 176,
+
+                  // Height of the Countdown Widget
+                  height: 176,
+
+                  // Default Color for Countdown Timer
+                  color: Colors.grey[300],
+
+                  // Filling Color for Countdown Timer
+                  fillColor: AppColors.windsor,
+
+                  // Background Color for Countdown Widget
+                  backgroundColor: null,
+
+                  // Border Thickness of the Countdown Circle
+                  strokeWidth: 3.0,
+                  bottomText: 'hours left',
+                  // Begin and end contours with a flat edge and no extension
+                  strokeCap: StrokeCap.butt,
+
+                  // Text Style for Countdown Text
+                  textStyle: TextStyle(
+                      fontSize: 22.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
+
+                  // true for reverse countdown (max to 0), false for forward countdown (0 to max)
+                  isReverse: true,
+
+                  // true for reverse animation, false for forward animation
+                  isReverseAnimation: true,
+
+                  // Optional [bool] to hide the [Text] in this widget.
+                  isTimerTextShown: true,
+
+                  // Function which will execute when the Countdown Ends
+                  onComplete: () {
+                    // Here, do whatever you want
+                    print('Countdown Ended');
+                  },
+                ),
+                SizedBox(
+                  height: 32,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                        flex: 1,
+                        child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(14.0),
+                              ),
+                              border: Border.all(color: Colors.grey[300]),
+                            ),
+                            height: 55,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset('images/exit.png'),
+                                SizedBox(width: 6),
+                                Text('Exit'),
+                              ],
+                            ))),
+                    SizedBox(
+                      width: 16,
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(14.0),
+                            ),
+                            border: Border.all(color: Colors.grey[300]),
                           ),
-                        ],
-                      )).onClick(onTap: () {
-                    var locMap = {};
-                    locMap['lattitude'] = 0;
-                    locMap['longitude'] = 0;
-                    setState(() {
-                      isLoading = true;
-                    });
-                    api
-                        .getProviderProfile(
-                            appointment['data']['doctor']['_id'], locMap)
-                        .then((value) {
-                      _container.setProviderData("providerData", value);
+                          height: 55,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset('images/reschedule.png'),
+                              SizedBox(width: 6),
+                              Text(
+                                'Reschedule',
+                                style: TextStyle(color: AppColors.windsor),
+                              ),
+                            ],
+                          )).onClick(onTap: () {
+                        var locMap = {};
+                        locMap['lattitude'] = 0;
+                        locMap['longitude'] = 0;
+                        setState(() {
+                          isLoading = true;
+                        });
+                        api
+                            .getProviderProfile(
+                                appointment['data']['doctor']['_id'], locMap)
+                            .then((value) {
+                          _container.setProviderData("providerData", value);
 
-                      _container.setAppointmentId(appointment['data']['_id']);
+                          _container.setAppointmentId(appointment['data']['_id']);
 
-                      _container.setProjectsResponse('serviceType',
-                          appointment['data']['type'].toString());
-                      setState(() {
-                        isLoading = false;
-                      });
-                      if (appointment['subServices'].length > 0) {
-                        _container.setServicesData("status", "1");
-                        _container.setServicesData(
-                            "services", appointment['subServices']);
+                          _container.setProjectsResponse('serviceType',
+                              appointment['data']['type'].toString());
+                          setState(() {
+                            isLoading = false;
+                          });
+                          if (appointment['subServices'].length > 0) {
+                            _container.setServicesData("status", "1");
+                            _container.setServicesData(
+                                "services", appointment['subServices']);
 
-                        Navigator.of(context).pushNamed(
-                            Routes.selectAppointmentTimeScreen,
-                            arguments: 2);
-                      } else {
-                        _container.setServicesData("status", "0");
-                        _container.setServicesData("consultaceFee", '10');
-                        Navigator.of(context).pushNamed(
-                          Routes.selectAppointmentTimeScreen,
-                          arguments: 2,
-                        );
-                      }
-                    });
+                            Navigator.of(context).pushNamed(
+                                Routes.selectAppointmentTimeScreen,
+                                arguments: 2);
+                          } else {
+                            _container.setServicesData("status", "0");
+                            _container.setServicesData("consultaceFee", '10');
+                            Navigator.of(context).pushNamed(
+                              Routes.selectAppointmentTimeScreen,
+                              arguments: 2,
+                            );
+                          }
+                        });
 
-                    var map = {};
+                        var map = {};
 //  map['status'] = appointment['subServices'].length >0?'1': '0';
-                    map['appointmentId'] = appointment['data']['_id'];
-                    // map['service'] = appointment['data']['type'].toString();
-                    // map['id'] = appointment['data']['doctor']['_id'];
-                    // map['services']=appointment['subServices'];
-                    // map['schedules']=appointment['doctorData'][0]['schedules'];
-                  }),
+                        map['appointmentId'] = appointment['data']['_id'];
+                        // map['service'] = appointment['data']['type'].toString();
+                        // map['id'] = appointment['data']['doctor']['_id'];
+                        // map['services']=appointment['subServices'];
+                        // map['schedules']=appointment['doctorData'][0]['schedules'];
+                      }),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            SizedBox(
-              height: 24,
-            ),
-          ]),
+                SizedBox(
+                  height: 24,
+                ),
+              ]),
+            ],
+          ),
         ),
       ],
     );
