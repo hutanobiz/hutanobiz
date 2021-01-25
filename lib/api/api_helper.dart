@@ -744,10 +744,14 @@ class ApiBaseHelper {
     });
   }
 
-  Future<List<dynamic>> getReviewReasons() {
+  Future<List<dynamic>> getReviewReasons(String token) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
     return _netUtil
         .get(
       base_url + "api/patient/reason",
+      headers: headers,
     )
         .then((res) {
       return res["response"];
