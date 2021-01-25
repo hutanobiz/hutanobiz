@@ -385,7 +385,7 @@ Navigator.pop(context);
       }else{
 
       Navigator.of(context).pushNamedAndRemoveUntil(
-          Routes.dashboardScreen, (Route<dynamic> route) => false,arguments: 0);
+          Routes.homeMain, (Route<dynamic> route) => false);
       }
     }).futureError((error) {
       setLoading(false);

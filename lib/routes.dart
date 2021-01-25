@@ -38,6 +38,7 @@ import 'package:hutano/screens/dashboard/provider_profile_screen.dart';
 import 'package:hutano/screens/dashboard/see_all_searches.dart';
 import 'package:hutano/screens/dashboard/update_medical_history.dart';
 import 'package:hutano/screens/home.dart';
+import 'package:hutano/screens/home_main.dart';
 import 'package:hutano/screens/login.dart';
 import 'package:hutano/screens/payment/add_new_card.dart';
 import 'package:hutano/screens/payment/insurance_list.dart';
@@ -104,6 +105,7 @@ class Routes {
   static const String requestDetailScreen = '/requestDetailScreen';
   static const String callPage = '/callPage';
   static const String officeTrackTreatmentScreen = '/officeTrackTreatmentScreen';
+  static const String homeMain = '/homeMain';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -118,6 +120,12 @@ class Routes {
       case dashboardScreen:
       if (args is int) {
           return _buildRoute(settings, HomeScreen(currentIndex: args));
+        }
+        return _errorRoute();
+        break;
+       case homeMain:
+      if (args is int) {
+          return _buildRoute(settings, HomeMain());
         }
         return _errorRoute();
         break;
