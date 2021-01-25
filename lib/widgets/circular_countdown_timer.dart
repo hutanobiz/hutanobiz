@@ -88,6 +88,7 @@ class CircularCountDownTimerState extends State<CircularCountDownTimer>
   AnimationController _controller;
   Animation<double> _countDownAnimation;
   AnimationController _animationcontroller;
+  String bottomTextVar = '';
 
   String get time {
     if (widget.isReverse && _controller.isDismissed) {
@@ -122,10 +123,12 @@ class CircularCountDownTimerState extends State<CircularCountDownTimer>
   String _getTime(Duration duration) {
     // For HH:mm:ss format
     if (duration.inHours != 0) {
+      bottomTextVar = 'HOURS LEFT';
       return '${duration.inHours}:${duration.inMinutes % 60}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
     }
     // For mm:ss format
     else {
+      bottomTextVar = 'MINS LEFT';
       return '${duration.inMinutes % 60}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
     }
   }
@@ -236,7 +239,7 @@ class CircularCountDownTimerState extends State<CircularCountDownTimer>
                                                   ),
                                             ),
                                             Text(
-                                              widget.bottomText,
+                                              bottomTextVar,
                                               style: widget.bottomTextStyle ??
                                                   TextStyle(
                                                     fontSize: 16.0,

@@ -53,6 +53,7 @@ class _CallPageState extends State<CallPage> {
     SharedPref().getToken().then((usertoken) {
       token = usertoken;
     });
+    mutedVideo = !widget.channelName['video'];
     // String plainCredentials =
     //     "a6ec51f4c7484224a81195e695a3ca17:5c927e729da145d98121b6abbbfe8317";
     // token = base64.encode(utf8.encode(plainCredentials));
@@ -85,7 +86,8 @@ class _CallPageState extends State<CallPage> {
     EncryptionConfig encryptionConfig =
         EncryptionConfig(EncryptionMode.AES128ECB, encrypted.base64.toString());
     await _engine.enableEncryption(true, encryptionConfig);
-
+    _engine.muteLocalVideoStream(mutedVideo);
+    _engine.enableLocalVideo(!mutedVideo);
     _engine
         .joinChannel(null, widget.channelName['_id'], null, userId)
         .then((value) {});

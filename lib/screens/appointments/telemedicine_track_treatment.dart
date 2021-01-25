@@ -53,9 +53,10 @@ class _TelemedicineTrackTreatmentScreenState
     });
     super.initState();
   }
+
   @override
   void didChangeDependencies() {
-     _container = InheritedContainer.of(context);
+    _container = InheritedContainer.of(context);
     super.didChangeDependencies();
   }
 
@@ -106,12 +107,24 @@ class _TelemedicineTrackTreatmentScreenState
     var currentTime = DateTime.now();
 
     return appointmentTime.difference(currentTime).inSeconds > 900
-        ? previousDayWidget(appointment, appointmentTime, currentTime)
-        : 
-        appointmentTime.difference(currentTime).inSeconds > 0
-            ?waitingWidget(appointment, appointmentTime, currentTime)
-             : timeOutWidget(appointment, appointmentTime, currentTime);
-            // : availableWidget(appointment, appointmentTime, currentTime);
+            ? previousDayWidget(appointment, appointmentTime, currentTime)
+            : ((appointment['data']["isDoctorJoin"] ?? false) &&
+                    (appointment['data']["isUserJoin"] ?? false))
+                ? availableWidget(appointment, appointmentTime, currentTime)
+                : appointment['data']["isUserJoin"] ?? false
+                    ? waitingOtherWidget(
+                        appointment, appointmentTime, currentTime)
+                    :
+                    //  appointmentTime.difference(currentTime).inSeconds > 0
+                    //     ?
+                    waitingWidget(appointment, appointmentTime, currentTime)
+        // : timeOutWidget(appointment, appointmentTime, currentTime)
+        ;
+
+    // :  appointmentTime.difference(currentTime).inSeconds > 0
+    //     ?  waitingWidget(appointment, appointmentTime, currentTime)
+    //     : timeOutWidget(appointment, appointmentTime, currentTime);
+    // : availableWidget(appointment, appointmentTime, currentTime);
   }
 
   ListView previousDayWidget(Map appointment, appointmentTime, currentTime) {
@@ -134,7 +147,7 @@ class _TelemedicineTrackTreatmentScreenState
               height: 32,
             ),
             Text(
-              'Upcoming Office Appointment',
+              'Upcoming Telemedicine Appointment',
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontSize: 16.0,
@@ -171,7 +184,7 @@ class _TelemedicineTrackTreatmentScreenState
               height: 176,
 
               // Default Color for Countdown Timer
-              color: Colors.white,
+              color: Colors.grey[300],
 
               // Filling Color for Countdown Timer
               fillColor: AppColors.windsor,
@@ -249,60 +262,57 @@ class _TelemedicineTrackTreatmentScreenState
                         children: [
                           Image.asset('images/reschedule.png'),
                           SizedBox(width: 6),
-                          Text('Reschedule',style: TextStyle(color: AppColors.windsor),),
+                          Text(
+                            'Reschedule',
+                            style: TextStyle(color: AppColors.windsor),
+                          ),
                         ],
-                      )).onClick(onTap:(){
+                      )).onClick(onTap: () {
+                    var locMap = {};
+                    locMap['lattitude'] = 0;
+                    locMap['longitude'] = 0;
+                    setState(() {
+                      isLoading = true;
+                    });
+                    api
+                        .getProviderProfile(
+                            appointment['data']['doctor']['_id'], locMap)
+                        .then((value) {
+                      _container.setProviderData("providerData", value);
 
-var locMap={};
-    locMap['lattitude'] = 0;
-    locMap['longitude'] = 0;
-     setState(() {
-                          isLoading = true;
-                        });
-api.getProviderProfile(appointment['data']['doctor']['_id'], locMap).then((value) {
+                      _container.setAppointmentId(appointment['data']['_id']);
 
-                                _container.setProviderData(
-                                    "providerData", value);
-
-                                    _container.setAppointmentId(appointment['data']['_id']);
-
-                                     _container.setProjectsResponse('serviceType', appointment['data']['type'].toString());
- setState(() {
-                          isLoading = false;
-                        });
- if (appointment['subServices'].length >0) {
+                      _container.setProjectsResponse('serviceType',
+                          appointment['data']['type'].toString());
+                      setState(() {
+                        isLoading = false;
+                      });
+                      if (appointment['subServices'].length > 0) {
                         _container.setServicesData("status", "1");
                         _container.setServicesData(
                             "services", appointment['subServices']);
 
-                        Navigator.of(context)
-                            .pushNamed(Routes.selectAppointmentTimeScreen,arguments: 2);
-                     
-                    } else {
-                      _container.setServicesData("status", "0");
-                      _container.setServicesData(
-                          "consultaceFee", '10');
-                      Navigator.of(context).pushNamed(
-                        Routes.selectAppointmentTimeScreen,
-                        arguments: 2,
-                      );
-                    }
+                        Navigator.of(context).pushNamed(
+                            Routes.selectAppointmentTimeScreen,
+                            arguments: 2);
+                      } else {
+                        _container.setServicesData("status", "0");
+                        _container.setServicesData("consultaceFee", '10');
+                        Navigator.of(context).pushNamed(
+                          Routes.selectAppointmentTimeScreen,
+                          arguments: 2,
+                        );
+                      }
+                    });
 
-  
-});
-
-
-
-                   
-var map={};
+                    var map = {};
 //  map['status'] = appointment['subServices'].length >0?'1': '0';
-                        map['appointmentId'] = appointment['data']['_id'];
-                        // map['service'] = appointment['data']['type'].toString();
-                        // map['id'] = appointment['data']['doctor']['_id'];
-                        // map['services']=appointment['subServices'];
-                        // map['schedules']=appointment['doctorData'][0]['schedules'];
-
-                      }),
+                    map['appointmentId'] = appointment['data']['_id'];
+                    // map['service'] = appointment['data']['type'].toString();
+                    // map['id'] = appointment['data']['doctor']['_id'];
+                    // map['services']=appointment['subServices'];
+                    // map['schedules']=appointment['doctorData'][0]['schedules'];
+                  }),
                 ),
               ],
             ),
@@ -558,64 +568,65 @@ var map={};
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(height: 16),
-                    'ic_forward'.imageIcon(
-                      width: 9,
-                      height: 15,
-                    ),
+                    // SizedBox(height: 16),
+                    // 'ic_forward'.imageIcon(
+                    //   width: 9,
+                    //   height: 15,
+                    // ),
                   ],
                 ),
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8.0, 3.0, 8.0, 3.0),
-            child: Divider(
-              thickness: 0.5,
-              color: Colors.grey[300],
-            ),
-          ),
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 18.0),
-            child: Row(
-              children: <Widget>[
-                'ic_location_grey'.imageIcon(height: 14.0, width: 11.0),
-                SizedBox(width: 3.0),
-                Expanded(
-                  child: Text(
-                    address,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      decoration: TextDecoration.none,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                      color: Colors.black.withOpacity(0.6),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 15),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Row(
-                    children: <Widget>[
-                      "ic_app_distance".imageIcon(),
-                      SizedBox(width: 5.0),
-                      Text(
-                        _totalDistance == 'NO distance available'
-                            ? '---'
-                            : _totalDistance,
-                        style: TextStyle(
-                          color: AppColors.windsor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+          SizedBox(height: 10),
+          // Padding(
+          //   padding: const EdgeInsets.fromLTRB(8.0, 3.0, 8.0, 3.0),
+          //   child: Divider(
+          //     thickness: 0.5,
+          //     color: Colors.grey[300],
+          //   ),
+          // ),
+          // Padding(
+          //   padding:
+          //       const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 18.0),
+          //   child: Row(
+          //     children: <Widget>[
+          //       'ic_location_grey'.imageIcon(height: 14.0, width: 11.0),
+          //       SizedBox(width: 3.0),
+          //       Expanded(
+          //         child: Text(
+          //           address,
+          //           maxLines: 2,
+          //           overflow: TextOverflow.ellipsis,
+          //           style: TextStyle(
+          //             decoration: TextDecoration.none,
+          //             fontWeight: FontWeight.w400,
+          //             fontSize: 12,
+          //             color: Colors.black.withOpacity(0.6),
+          //           ),
+          //         ),
+          //       ),
+          //       SizedBox(width: 15),
+          //       Align(
+          //         alignment: Alignment.centerRight,
+          //         child: Row(
+          //           children: <Widget>[
+          //             "ic_app_distance".imageIcon(),
+          //             SizedBox(width: 5.0),
+          //             Text(
+          //               _totalDistance == 'NO distance available'
+          //                   ? '---'
+          //                   : _totalDistance,
+          //               style: TextStyle(
+          //                 color: AppColors.windsor,
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );
@@ -635,18 +646,17 @@ var map={};
             ),
             borderRadius: BorderRadius.circular(15),
           ),
-         
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height:32),
+              SizedBox(height: 32),
               Text(
                 'Upcoming Telemedicine Appointment',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
               ),
-               SizedBox(height:24),
+              SizedBox(height: 24),
               Container(
                 decoration: BoxDecoration(
                   color: Color(0xFFF7F7F7),
@@ -665,34 +675,47 @@ var map={};
                       Icons.info,
                       color: Color(0xFFA1A1A1),
                     ),
-                    SimpleCountDownTimer(
-                      controller: _simpleCountDownController,
-                      duration:
-                          appointmentTime.difference(currentTime).inSeconds,
-                      text: 'Your appointment starts in ',
-                      onComplete: () {
-                        setState(() {});
-                        // Navigator.popAndPushNamed(
-                        //     context, Routes.virtualWaitingRoom,
-                        //     arguments: widget.appointmentId);
-                      },
-                    ),
+                    appointmentTime.difference(currentTime).inSeconds > 0
+                        ? SimpleCountDownTimer(
+                            controller: _simpleCountDownController,
+                            duration: appointmentTime
+                                .difference(currentTime)
+                                .inSeconds,
+                            text: 'Your appointment starts in ',
+                            onComplete: () {
+                              setState(() {});
+                              // Navigator.popAndPushNamed(
+                              //     context, Routes.virtualWaitingRoom,
+                              //     arguments: widget.appointmentId);
+                            },
+                          )
+                        : Text(
+                            'Your appointment starts in 00:00',
+                          )
                   ],
                 ),
               ),
-              SizedBox(height:24),
-              Image.asset('images/videoBusy.png',height:60),
-              SizedBox(height:24),
+              SizedBox(height: 24),
+              Image.asset(
+                  appointment['data']["isDoctorJoin"] ?? false
+                      ? 'images/videoAvailable.png'
+                      : 'images/videoBusy.png',
+                  height: 60),
+              SizedBox(height: 24),
               Padding(
                   padding: EdgeInsets.only(left: 30, right: 30),
                   child: Text(
-                    'Dr. ' +
-                        appointment["data"]["doctorName"] +
-                        ' is busy helping another patient.',
+                    appointment['data']["isDoctorJoin"] ?? false
+                        ? 'Dr. ' +
+                            appointment["data"]["doctorName"] +
+                            ' Is ready for your appointment.'
+                        : 'Dr. ' +
+                            appointment["data"]["doctorName"] +
+                            ' is busy helping another patient.',
                     style: TextStyle(fontSize: 20),
                     textAlign: TextAlign.center,
                   )),
-                  SizedBox(height:32),
+              SizedBox(height: 32),
               Row(
                 children: [
                   SizedBox(
@@ -731,9 +754,16 @@ var map={};
                             api
                                 .patientAvailableForCall(token, appointmentId)
                                 .then((value) {
-                              Navigator.popAndPushNamed(
-                                  context, Routes.virtualWaitingRoom,
-                                  arguments: widget.appointmentId);
+                              setState(() {
+                                _profileFuture = api.getAppointmentDetails(
+                                  token,
+                                  widget.appointmentId,
+                                  LatLng(0.00, 0.00),
+                                );
+                              });
+                              // Navigator.pushNamed(
+                              //     context, Routes.virtualWaitingRoom,
+                              //     arguments: widget.appointmentId);
                             });
                           })),
                   SizedBox(
@@ -741,7 +771,7 @@ var map={};
                   ),
                 ],
               ),
-              SizedBox(height:24),
+              SizedBox(height: 24),
             ],
           ),
         ),
@@ -749,7 +779,7 @@ var map={};
     );
   }
 
-   ListView timeOutWidget(Map appointment, appointmentTime, currentTime) {
+  ListView timeOutWidget(Map appointment, appointmentTime, currentTime) {
     return ListView(
       padding: EdgeInsets.all(20),
       children: [
@@ -763,18 +793,17 @@ var map={};
             ),
             borderRadius: BorderRadius.circular(15),
           ),
-         
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height:32),
+              SizedBox(height: 32),
               Text(
                 'Upcoming Telemedicine Appointment',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
               ),
-               SizedBox(height:24),
+              SizedBox(height: 24),
               Container(
                 decoration: BoxDecoration(
                   color: Color(0xFFF7F7F7),
@@ -793,25 +822,33 @@ var map={};
                       Icons.info,
                       color: Color(0xFFA1A1A1),
                     ),
-                    Text('Your appointment starts in 00:00',
-                    
+                    Text(
+                      'Your appointment starts in 00:00',
                     ),
                   ],
                 ),
               ),
-              SizedBox(height:24),
-              Image.asset('images/videoBusy.png',height:60),
-              SizedBox(height:24),
+              SizedBox(height: 24),
+              Image.asset(
+                  appointment['data']["isDoctorJoin"] ?? false
+                      ? 'images/videoAvailable.png'
+                      : 'images/videoBusy.png',
+                  height: 60),
+              SizedBox(height: 24),
               Padding(
                   padding: EdgeInsets.only(left: 30, right: 30),
                   child: Text(
-                    'Dr. ' +
-                        appointment["data"]["doctorName"] +
-                        ' is busy helping another patient.',
+                    appointment['data']["isDoctorJoin"] ?? false
+                        ? 'Dr. ' +
+                            appointment["data"]["doctorName"] +
+                            ' Is ready for your appointment.'
+                        : 'Dr. ' +
+                            appointment["data"]["doctorName"] +
+                            ' is busy helping another patient.',
                     style: TextStyle(fontSize: 20),
                     textAlign: TextAlign.center,
                   )),
-                  SizedBox(height:32),
+              SizedBox(height: 32),
               Row(
                 children: [
                   SizedBox(
@@ -850,9 +887,16 @@ var map={};
                             api
                                 .patientAvailableForCall(token, appointmentId)
                                 .then((value) {
-                              Navigator.popAndPushNamed(
-                                  context, Routes.virtualWaitingRoom,
-                                  arguments: widget.appointmentId);
+                              setState(() {
+                                _profileFuture = api.getAppointmentDetails(
+                                  token,
+                                  widget.appointmentId,
+                                  LatLng(0.00, 0.00),
+                                );
+                              });
+                              // Navigator.pushNamed(
+                              //     context, Routes.virtualWaitingRoom,
+                              //     arguments: widget.appointmentId);
                             });
                           })),
                   SizedBox(
@@ -860,7 +904,7 @@ var map={};
                   ),
                 ],
               ),
-              SizedBox(height:24),
+              SizedBox(height: 24),
             ],
           ),
         ),
@@ -881,21 +925,18 @@ var map={};
             ),
             borderRadius: BorderRadius.circular(15),
           ),
-          width: MediaQuery.of(context).size.width * .95,
-          height: MediaQuery.of(context).size.height * .6,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(height: 32),
               Text(
                 'Virtual Waiting Room',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
               ),
-              Icon(
-                Icons.check_circle,
-                color: AppColors.emerald,
-                size: 80,
-              ),
+              SizedBox(height: 24),
+              Image.asset('images/videoAvailable.png'),
+              SizedBox(height: 24),
               Padding(
                   padding: EdgeInsets.only(left: 50, right: 50),
                   child: Text(
@@ -905,6 +946,7 @@ var map={};
                     style: TextStyle(fontSize: 20),
                     textAlign: TextAlign.center,
                   )),
+              SizedBox(height: 24),
               Container(
                 height: MediaQuery.of(context).size.height * .05,
                 child: Row(
@@ -927,6 +969,7 @@ var map={};
                   });
                 }),
               ),
+              SizedBox(height: 24),
               Container(
                   width: 190,
                   child: FancyButton(
@@ -940,9 +983,14 @@ var map={};
                       if ((statuses[Permission.Permission.camera].isGranted) &&
                           (statuses[Permission.Permission.microphone]
                               .isGranted)) {
+                        Map appointment = {};
+                        appointment["_appointmentStatus"] = "1";
+                        appointment["_id"] = widget.appointmentId;
+                        appointment['video'] = video;
+                        appointment['record'] = record;
                         return Navigator.of(context).pushNamed(
                           Routes.callPage,
-                          arguments: widget.appointmentId,
+                          arguments: appointment,
                         );
                       } else {
                         Widgets.showErrorialog(
@@ -958,10 +1006,12 @@ var map={};
                     title: 'Start meeting now',
                     buttonColor: AppColors.goldenTainoi,
                   )),
+              SizedBox(height: 24),
               Divider(
                 thickness: .5,
                 color: AppColors.containerBorderColor,
               ),
+              SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -1002,7 +1052,110 @@ var map={};
                     });
                   }),
                 ],
-              )
+              ),
+              SizedBox(height: 24),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  ListView waitingOtherWidget(Map appointment, appointmentTime, currentTime) {
+    return ListView(
+      padding: EdgeInsets.all(20),
+      children: [
+        profileWidget(appointment),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(
+              color: AppColors.containerBorderColor,
+              width: .5,
+            ),
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 32),
+              Text(
+                'Upcoming Telemedicine Appointment',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 24),
+              Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFFF7F7F7),
+                  border: Border.all(
+                    color: AppColors.containerBorderColor,
+                    width: .5,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Icon(
+                      Icons.info,
+                      color: Color(0xFFA1A1A1),
+                    ),
+                    appointmentTime.difference(currentTime).inSeconds > 0
+                        ? SimpleCountDownTimer(
+                            controller: _simpleCountDownController,
+                            duration: appointmentTime
+                                .difference(currentTime)
+                                .inSeconds,
+                            text: 'Your appointment starts in ',
+                            onComplete: () {
+                              setState(() {});
+                              // Navigator.popAndPushNamed(
+                              //     context, Routes.virtualWaitingRoom,
+                              //     arguments: widget.appointmentId);
+                            },
+                          )
+                        : Text(
+                            'Your appointment starts in 00:00',
+                          )
+                  ],
+                ),
+              ),
+              SizedBox(height: 24),
+              Image.asset('images/videoBusy.png', height: 60),
+              SizedBox(height: 24),
+              Padding(
+                  padding: EdgeInsets.only(left: 30, right: 30),
+                  child: Text(
+                    'Dr. ' +
+                        appointment["data"]["doctorName"] +
+                        ' is busy helping another patient.',
+                    style: TextStyle(fontSize: 20),
+                    textAlign: TextAlign.center,
+                  )),
+              SizedBox(height: 32),
+              Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(14.0),
+                    ),
+                    border: Border.all(color: Colors.grey[300]),
+                  ),
+                  height: 55,
+                  width: 90,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.exit_to_app),
+                      SizedBox(width: 6),
+                      Text('Exit'),
+                    ],
+                  )),
+              SizedBox(height: 24),
             ],
           ),
         ),

@@ -195,7 +195,7 @@ class _SelectAppointmentTimeScreenState
         isLoading: isLoading,
         title: "Select an Appointment Time",
         color: AppColors.snow,
-        isAddBack: false,
+        isAddBack: widget.fromScreen == 2,
         addBottomArrows: false,
         addBackButton: widget.fromScreen == 2 ? false : true,
         child: Column(
@@ -240,6 +240,29 @@ class _SelectAppointmentTimeScreenState
                           _apiBaseHelper
                               .rescheduleAppointment(token, map)
                               .then((value) {
+                            setState(() {
+                              isLoading = false;
+                            });
+                            Widgets.showAppDialog(
+                                context: context,
+                                description: 'Appointment Rescheduled',
+                                isCongrats: true,
+                                buttonText: 'Go To Appointment',
+                                onPressed: () {
+                                  Navigator.of(context).pushNamedAndRemoveUntil(
+                                      Routes.dashboardScreen,
+                                      (Route<dynamic> route) => false,
+                                      arguments: 1);
+                                  // Map appointment = {};
+                                  // appointment["_appointmentStatus"] = "1";
+                                  // appointment["id"] = _container
+                                  //     .appointmentIdMap['appointmentId'];
+                                  // Navigator.of(context).pushNamed(
+                                  //   Routes.appointmentDetailScreen,
+                                  //   arguments: appointment,
+                                  // );
+                                });
+                          }).futureError((onError) {
                             setState(() {
                               isLoading = false;
                             });

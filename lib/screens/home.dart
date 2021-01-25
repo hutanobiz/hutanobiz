@@ -16,7 +16,7 @@ import 'package:permission_handler/permission_handler.dart' as Permission;
 const kstripePublishKey = 'pk_test_LlxS6SLz0PrOm9IY9mxM0LHo006tjnSqWX';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key key,this.currentIndex =0}) : super(key: key);
+  HomeScreen({Key key, this.currentIndex = 0}) : super(key: key);
   int currentIndex;
 
   @override
@@ -70,13 +70,14 @@ class _HomeScreenState extends State<HomeScreen> {
           arguments: appointment,
         );
         break;
-         case 'call_join':
-        Navigator.pushNamed(context, Routes.virtualWaitingRoom,
-            arguments: 
-              Platform.isIOS
-                  ? message['appointmentId']
-                  : message["data"]['appointmentId'],
-            );
+      case 'call_join':
+        Navigator.pushNamed(
+          context,
+          Routes.telemedicineTrackTreatmentScreen,
+          arguments: Platform.isIOS
+              ? message['appointmentId']
+              : message["data"]['appointmentId'],
+        );
         break;
       case 'call-reminder':
         Map appointment = {};
@@ -182,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     configLocalNotification();
-     _currentIndex = widget.currentIndex;
+    _currentIndex = widget.currentIndex;
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
@@ -193,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
         switch (notificationType) {
           case 'call':
-              Widgets.showConfirmationDialog(
+            Widgets.showConfirmationDialog(
                 context: context,
                 title: 'Call request',
                 description: 'Do you want to join call again?',
@@ -203,32 +204,45 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 rightText: 'Join',
                 onRightPressed: () async {
-                   Map<Permission.Permission, Permission.PermissionStatus> statuses =
-                await [
-              Permission.Permission.camera,
-              Permission.Permission.microphone
-            ].request();
-            if ((statuses[Permission.Permission.camera].isGranted) &&
-                (statuses[Permission.Permission.microphone].isGranted)) {
-              var map = {};
-              map['_id'] = Platform.isIOS
-                  ? message['appointmentId']
-                  : message["data"]['appointmentId'];
-              map['name'] = "---";
-              map['address'] = 'a';
-              map['dateTime'] = 't';
-              return Navigator.of(context).popAndPushNamed(Routes.callPage,
-                  // arguments: profileMap["data"]["_id"],
-                  arguments: map);
-            } else {
-              Widgets.showErrorialog(
-                  context: context,
-                  description: 'Camera & Microphone permission Requied');
-            }
+                  Map<Permission.Permission, Permission.PermissionStatus>
+                      statuses = await [
+                    Permission.Permission.camera,
+                    Permission.Permission.microphone
+                  ].request();
+                  if ((statuses[Permission.Permission.camera].isGranted) &&
+                      (statuses[Permission.Permission.microphone].isGranted)) {
+                    var map = {};
+                    map['_id'] = Platform.isIOS
+                        ? message['appointmentId']
+                        : message["data"]['appointmentId'];
+                    map['name'] = "---";
+                    map['address'] = 'a';
+                    map['dateTime'] = 't';
+                    map['video'] = true;
+                    map['record'] = true;
+                    return Navigator.of(context)
+                        .popAndPushNamed(Routes.callPage,
+                            // arguments: profileMap["data"]["_id"],
+                            arguments: map);
+                  } else {
+                    Widgets.showErrorialog(
+                        context: context,
+                        description: 'Camera & Microphone permission Requied');
+                  }
                 });
             break;
           case 'call_join':
-          Widgets.showConfirmationDialog(
+            bool isCurrent(String routeName) {
+                    var isCurrent = false;
+                    Navigator.popUntil(context, (route) {
+                      if (route.settings.name == routeName) {
+                        isCurrent = true;
+                      }
+                      return true;
+                    });
+                    return isCurrent;
+                  }
+            Widgets.showConfirmationDialog(
                 context: context,
                 title: 'Call request',
                 description: 'Do you want to enter to waiting room?',
@@ -238,11 +252,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 rightText: 'Waiting Room',
                 onRightPressed: () {
-              return Navigator.of(context).popAndPushNamed(Routes.virtualWaitingRoom,
-                  arguments: Platform.isIOS
-                  ? message['appointmentId']
-                  : message["data"]['appointmentId']);
-           
+                
+
+                  if (!isCurrent(Routes.telemedicineTrackTreatmentScreen)) {
+                    Navigator.of(context).popAndPushNamed(
+                        Routes.telemedicineTrackTreatmentScreen,
+                        arguments: Platform.isIOS
+                            ? message['appointmentId']
+                            : message["data"]['appointmentId']);
+                  } else {
+                    Navigator.pop(context);
+                    Navigator.pushReplacementNamed(
+                        context, Routes.telemedicineTrackTreatmentScreen,
+                        arguments: Platform.isIOS
+                            ? message['appointmentId']
+                            : message["data"]['appointmentId']);
+                  }
                 });
             break;
           default:

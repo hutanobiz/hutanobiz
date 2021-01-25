@@ -89,7 +89,9 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
         .toLocal();
     var currentTime = DateTime.now();
 
-    return availableWidget(appointment, appointmentTime, currentTime);
+    return appointment['data']["isDoctorJoin"] ?? false
+        ? availableWidget(appointment, appointmentTime, currentTime)
+        : waitingWidget(appointment, appointmentTime, currentTime);
   }
 
   ListView availableWidget(Map appointment, appointmentTime, currentTime) {
@@ -166,6 +168,8 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
                         Map appointment = {};
                         appointment["_appointmentStatus"] = "1";
                         appointment["_id"] = widget.appointmentId;
+                        appointment['video'] = video;
+                        appointment['record'] = record;
                         return Navigator.of(context).pushNamed(
                           Routes.callPage,
                           arguments: appointment,
@@ -231,6 +235,94 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
                   }),
                 ],
               ),
+              SizedBox(height: 24),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  ListView waitingWidget(Map appointment, appointmentTime, currentTime) {
+    return ListView(
+      padding: EdgeInsets.all(20),
+      children: [
+        profileWidget(appointment),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(
+              color: AppColors.containerBorderColor,
+              width: .5,
+            ),
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 32),
+              Text(
+                'Upcoming Telemedicine Appointment',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 24),
+              Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFFF7F7F7),
+                  border: Border.all(
+                    color: AppColors.containerBorderColor,
+                    width: .5,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Icon(
+                      Icons.info,
+                      color: Color(0xFFA1A1A1),
+                    ),
+                    Text(
+                      'Your appointment starts in 00:00',
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(height: 24),
+              Image.asset('images/videoBusy.png', height: 60),
+              SizedBox(height: 24),
+              Padding(
+                  padding: EdgeInsets.only(left: 30, right: 30),
+                  child: Text(
+                    'Dr. ' +
+                        appointment["data"]["doctorName"] +
+                        ' is busy helping another patient.',
+                    style: TextStyle(fontSize: 20),
+                    textAlign: TextAlign.center,
+                  )),
+              SizedBox(height: 32),
+              Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(14.0),
+                    ),
+                    border: Border.all(color: Colors.grey[300]),
+                  ),
+                  height: 55,
+                  width: 90,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.exit_to_app),
+                      SizedBox(width: 6),
+                      Text('Exit'),
+                    ],
+                  )),
               SizedBox(height: 24),
             ],
           ),

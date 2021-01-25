@@ -84,6 +84,7 @@ static void showErrorialog({
       bool isCongrats = false}) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
         return Dialog(
             shape: RoundedRectangleBorder(
