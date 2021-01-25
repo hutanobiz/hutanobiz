@@ -255,7 +255,9 @@ class _TelemedicineTrackTreatmentScreenState
                               SizedBox(width: 6),
                               Text('Exit'),
                             ],
-                          ))),
+                          )).onClick(onTap: () {
+                        Navigator.pop(context);
+                      })),
                   SizedBox(
                     width: 16,
                   ),
@@ -753,7 +755,9 @@ class _TelemedicineTrackTreatmentScreenState
                               SizedBox(width: 6),
                               Text('Exit'),
                             ],
-                          ))),
+                          )).onClick(onTap: () {
+                        Navigator.pop(context);
+                      })),
                   SizedBox(
                     width: 16,
                   ),
@@ -886,7 +890,9 @@ class _TelemedicineTrackTreatmentScreenState
                               SizedBox(width: 6),
                               Text('Exit'),
                             ],
-                          ))),
+                          )).onClick(onTap: () {
+                        Navigator.pop(context);
+                      })),
                   SizedBox(
                     width: 16,
                   ),
@@ -1168,7 +1174,9 @@ class _TelemedicineTrackTreatmentScreenState
                       SizedBox(width: 6),
                       Text('Exit'),
                     ],
-                  )),
+                  )).onClick(onTap: () {
+                        Navigator.pop(context);
+                      }),
               SizedBox(height: 24),
             ],
           ),
