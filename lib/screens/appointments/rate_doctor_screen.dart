@@ -65,7 +65,6 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
       });
        _reasonsFuture = api.getReviewReasons(token);
     });
-   
   }
 
   @override

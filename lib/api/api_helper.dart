@@ -744,7 +744,7 @@ class ApiBaseHelper {
     });
   }
 
-  Future<List<dynamic>> getReviewReasons(String token) {
+  Future<List<dynamic>> getReviewReasons(token) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
