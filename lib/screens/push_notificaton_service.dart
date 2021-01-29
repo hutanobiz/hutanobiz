@@ -185,15 +185,28 @@ class PushNotificationService {
         break;
 
       case 'request_status':
-        Map appointment = {};
-        appointment["_appointmentStatus"] = "1";
-        appointment["id"] = Platform.isIOS
-            ? message['appointmentId']
-            : message["data"]['appointmentId'];
-        Navigator.of(navigatorContext).pushNamed(
-          Routes.appointmentDetailScreen,
-          arguments: appointment,
+        var appointmentType = Platform.isIOS
+            ? message['appointmentType']
+            : message["data"]['appointmentType'];
+        if (appointmentType == "2") {
+           Navigator.pushNamed(
+          navigatorContext,
+          Routes.telemedicineTrackTreatmentScreen,
+          arguments: Platform.isIOS
+              ? message['appointmentId']
+              : message["data"]['appointmentId'],
         );
+        } else {
+          Map appointment = {};
+          appointment["_appointmentStatus"] = "1";
+          appointment["id"] = Platform.isIOS
+              ? message['appointmentId']
+              : message["data"]['appointmentId'];
+          Navigator.of(navigatorContext).pushNamed(
+            Routes.appointmentDetailScreen,
+            arguments: appointment,
+          );
+        }
         break;
 
       case 'treatment_summary':
