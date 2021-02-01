@@ -94,7 +94,7 @@ const String callPage = 'callPage';
 const String apiToken = "apiToken";
 
 const int splashTime = 2;
-const String ddMMMMyyyy = 'dd MMMM yyyy';
+const String ddMMMMyyyy = 'MM/dd/yyyy';
 
 const int dataLimit = 20;
 

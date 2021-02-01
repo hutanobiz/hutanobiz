@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/src/utils/constants/key_constant.dart';
 import 'package:hutano/src/utils/preference_key.dart';
 import 'package:hutano/src/utils/preference_utils.dart';
@@ -45,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ArgumentConstant.number: phone,
           });
         } else {
-          Navigator.of(context).pushReplacementNamed( routeHome);
+          Navigator.of(context).pushReplacementNamed( Routes.dashboardScreen);
         }
       } else if (!performedStep) {
         Navigator.of(context).pushReplacementNamed( routeWelcomeScreen);

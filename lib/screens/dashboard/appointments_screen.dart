@@ -35,6 +35,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   @override
   void initState() {
     super.initState();
+    
   }
 
   @override

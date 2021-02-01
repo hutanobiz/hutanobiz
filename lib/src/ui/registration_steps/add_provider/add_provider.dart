@@ -199,7 +199,7 @@ class _AddProviderState extends State<AddProvider> {
   }
 
   _skipTaskNow() {
-    // Navigator.of(context).pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false);
-    Navigator.of(context).pushNamed(Routes.dashboardSearchScreen,arguments: {'searchParam':'Test'});
+    Navigator.of(context).pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false);
+    // Navigator.of(context).pushNamed(Routes.dashboardSearchScreen,arguments: {'searchParam':'Test'});
   }
 }

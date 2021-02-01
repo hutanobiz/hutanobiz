@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/src/apis/api_manager.dart';
 import 'package:hutano/src/apis/error_model.dart';
 import 'package:hutano/src/ui/registration_steps/email_verification/model/req_email.dart';
@@ -174,7 +175,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   _skipTaskNow() {
-    Navigator.of(context).pushNamedAndRemoveUntil( routeHome ,(route) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil( Routes.dashboardScreen ,(route) => false);
     setBool(PreferenceKey.skipStep, true);
   }
 }

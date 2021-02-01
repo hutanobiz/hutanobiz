@@ -398,10 +398,15 @@ class Routes {
         return _buildRoute(settings, ProviderListScreen());
         break;
       case dashboardSearchScreen:
-        if (args['searchParam'] != null) {
+        if (args is List) {
           return _buildRoute(
               settings,
-              DashboardSearchScreen( searchParam: args['searchParam']));
+              DashboardSearchScreen(
+                topSpecialtiesList: args,
+              ));
+        } else if (args['searchParam'] != null) {
+          return _buildRoute(settings,
+              DashboardSearchScreen(searchParam: args['searchParam']));
         }
         return _buildRoute(
             settings,

@@ -11,6 +11,7 @@ import 'package:hutano/src/utils/enum_utils.dart';
 import 'package:hutano/src/utils/preference_key.dart';
 import 'package:hutano/src/utils/preference_utils.dart';
 import 'package:hutano/src/utils/progress_dialog.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:local_auth/local_auth.dart';
 
@@ -48,6 +49,7 @@ class _LoginPinState extends State<LoginPin> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => {_checkBiometrics()});
+    initializeDateFormatting('en');
   }
 
   void _onForgotPinClick() =>
@@ -143,7 +145,7 @@ class _LoginPinState extends State<LoginPin> {
           localizedReason: Localization.of(context).labelAuthWithFingerPrint,
           useErrorDialogs: true);
       if (authenticated) {
-        Navigator.of(context).pushReplacementNamed( routeHome);
+        Navigator.of(context).pushReplacementNamed( Routes.dashboardScreen);
       }
     } on PlatformException catch (e) {
       if (e.code == auth_error.notEnrolled) {

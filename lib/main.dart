@@ -2,6 +2,7 @@ import 'package:country_code_picker/country_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/dashboard/dashboardScreen.dart';
 import 'package:hutano/screens/home.dart';
 import 'package:hutano/screens/login.dart';
 import 'package:hutano/src/ui/auth/login_pin/login_pin.dart';
@@ -15,6 +16,7 @@ import 'package:hutano/src/utils/localization/localization.dart';
 import 'package:hutano/src/utils/navigation.dart';
 import 'package:hutano/src/utils/preference_key.dart';
 import 'package:hutano/src/utils/preference_utils.dart';
+import 'package:hutano/src/utils/size_config.dart';
 import 'package:hutano/theme.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
@@ -99,6 +101,7 @@ class MyApp extends StatelessWidget {
   }
 
   Widget _gotoNextScreen(context) {
+    
     var emailVerified = getBool(PreferenceKey.isEmailVerified, false);
     var phone = getString(PreferenceKey.phone);
     var token = getString(PreferenceKey.tokens);
@@ -112,7 +115,7 @@ class MyApp extends StatelessWidget {
         if (isSetupPin) {
           return LoginPin();
         } else {
-          return Home();
+          return DashboardScreen();
         }
       } else if (!performedStep) {
         return WelcomeScreen();

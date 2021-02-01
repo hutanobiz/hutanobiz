@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/routes.dart';
 import 'package:provider/provider.dart';
 
 import '../../apis/api_constants.dart';
@@ -64,7 +65,7 @@ class _CheckoutState extends State<Checkout> {
             isCancelEnable: false,
             okButtonTitle: Localization.of(context).ok,
             okButtonAction: () {
-              Navigator.of(context).pushNamedAndRemoveUntil(routeHome,(route) => false);
+              Navigator.of(context).pushNamedAndRemoveUntil(Routes.dashboardScreen,(route) => false);
             });
       }
     } on ErrorModel catch (e) {

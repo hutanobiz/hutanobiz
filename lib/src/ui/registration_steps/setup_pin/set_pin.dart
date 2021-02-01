@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/src/apis/api_manager.dart';
 import 'package:hutano/src/apis/error_model.dart';
 import 'package:hutano/src/ui/registration_steps/setup_pin/model/req_setup_pin.dart';
@@ -129,7 +130,7 @@ class _SetupPinState extends State<SetupPin> {
           ProgressDialogUtils.dismissProgressDialog();
           setBool(PreferenceKey.setPin, true);
           if (widget.setupScreen == SetupScreenFrom.login) {
-            Navigator.of(context).pushReplacementNamed( routeHome);
+            Navigator.of(context).pushReplacementNamed( Routes.dashboardScreen);
           } else {
             Navigator.of(context).pushReplacementNamed( routeAddPaymentOption);
           }

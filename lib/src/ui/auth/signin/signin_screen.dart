@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:local_auth/local_auth.dart';
 
 import '../../../apis/api_manager.dart';
@@ -55,7 +56,6 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   void initState() {
     super.initState();
-
     //TODO
     //Verify : New code added
     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
@@ -81,6 +81,7 @@ class _SignInScreenState extends State<SignInScreen> {
       selectedCountry = getString(PreferenceKey.flag);
       isRememberMe = getBool(PreferenceKey.isRemember);
     }
+    initializeDateFormatting('en');
   }
 
   @override
