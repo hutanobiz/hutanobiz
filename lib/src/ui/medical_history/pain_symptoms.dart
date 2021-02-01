@@ -477,7 +477,7 @@ class _PainSymptomsState extends State<PainSymptoms> {
               });
             },
             touchSize: 30,
-            disabled: (_currentStepIndex > 4),
+            disabled: false,
             selectByTap: false,
             jump: false,
             values: [_painIntensity],

@@ -1,12 +1,15 @@
 import 'package:country_code_picker/country_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hutano/models/medicalHistory.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/appointments/medical_history.dart';
 import 'package:hutano/screens/dashboard/dashboardScreen.dart';
 import 'package:hutano/screens/home.dart';
 import 'package:hutano/screens/login.dart';
 import 'package:hutano/src/ui/auth/login_pin/login_pin.dart';
 import 'package:hutano/src/ui/auth/signin/signin_screen.dart';
+import 'package:hutano/src/ui/medical_history/my_medical_history.dart';
 import 'package:hutano/src/ui/medical_history/provider/appoinment_provider.dart';
 import 'package:hutano/src/ui/registration_steps/add_provider/add_provider.dart';
 import 'package:hutano/src/ui/registration_steps/home/home.dart';
@@ -115,7 +118,7 @@ class MyApp extends StatelessWidget {
         if (isSetupPin) {
           return LoginPin();
         } else {
-          return DashboardScreen();
+          return HomeScreen();
         }
       } else if (!performedStep) {
         return WelcomeScreen();
