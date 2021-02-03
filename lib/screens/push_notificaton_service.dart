@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:permission_handler/permission_handler.dart' as Permission;
 
@@ -12,6 +14,7 @@ class PushNotificationService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
+  ApiBaseHelper api = ApiBaseHelper();
 
   Future initialise() async {
     configLocalNotification();
@@ -73,31 +76,62 @@ class PushNotificationService {
               });
               return isCurrent;
             }
-            Widgets.showConfirmationDialog(
-                context: navigatorContext,
-                title: 'Call request',
-                description: 'Do you want to enter to waiting room?',
-                leftText: 'Cancel',
-                onLeftPressed: () {
-                  Navigator.pop(navigatorContext);
-                },
-                rightText: 'Waiting Room',
-                onRightPressed: () {
-                  if (!isCurrent(Routes.telemedicineTrackTreatmentScreen)) {
-                    Navigator.of(navigatorContext).popAndPushNamed(
-                        Routes.telemedicineTrackTreatmentScreen,
-                        arguments: Platform.isIOS
-                            ? message['appointmentId']
-                            : message["data"]['appointmentId']);
-                  } else {
+            if (Platform.isIOS
+                ? message['isUserJoin']
+                : message["data"]['isUserJoin'] == "true") {
+              Navigator.pop(navigatorContext);
+              Navigator.pushReplacementNamed(
+                  navigatorContext, Routes.telemedicineTrackTreatmentScreen,
+                  arguments: Platform.isIOS
+                      ? message['appointmentId']
+                      : message["data"]['appointmentId']);
+            } else {
+              Widgets.showConfirmationDialog(
+                  context: navigatorContext,
+                  title: 'Call request',
+                  description: 'Do you want to enter to waiting room?',
+                  leftText: 'Cancel',
+                  onLeftPressed: () {
                     Navigator.pop(navigatorContext);
-                    Navigator.pushReplacementNamed(navigatorContext,
-                        Routes.telemedicineTrackTreatmentScreen,
-                        arguments: Platform.isIOS
+                  },
+                  rightText: 'Waiting Room',
+                  onRightPressed: () {
+                    if (!isCurrent(Routes.telemedicineTrackTreatmentScreen)) {
+                      SharedPref().getToken().then((token) {
+                        var appointmentId = {};
+                        appointmentId['appointmentId'] = Platform.isIOS
                             ? message['appointmentId']
-                            : message["data"]['appointmentId']);
-                  }
-                });
+                            : message["data"]['appointmentId'];
+                        api
+                            .patientAvailableForCall(token, appointmentId)
+                            .then((value) {
+                          Navigator.of(navigatorContext).popAndPushNamed(
+                              Routes.telemedicineTrackTreatmentScreen,
+                              arguments: Platform.isIOS
+                                  ? message['appointmentId']
+                                  : message["data"]['appointmentId']);
+                        });
+                      });
+                    } else {
+                      SharedPref().getToken().then((token) {
+                        var appointmentId = {};
+                        appointmentId['appointmentId'] = Platform.isIOS
+                            ? message['appointmentId']
+                            : message["data"]['appointmentId'];
+                        api
+                            .patientAvailableForCall(token, appointmentId)
+                            .then((value) {
+                          Navigator.pop(navigatorContext);
+                          Navigator.pushReplacementNamed(navigatorContext,
+                              Routes.telemedicineTrackTreatmentScreen,
+                              arguments: Platform.isIOS
+                                  ? message['appointmentId']
+                                  : message["data"]['appointmentId']);
+                        });
+                      });
+                    }
+                  });
+            }
             break;
           default:
             showNotification(message);
@@ -189,13 +223,13 @@ class PushNotificationService {
             ? message['appointmentType']
             : message["data"]['appointmentType'];
         if (appointmentType == "2") {
-           Navigator.pushNamed(
-          navigatorContext,
-          Routes.telemedicineTrackTreatmentScreen,
-          arguments: Platform.isIOS
-              ? message['appointmentId']
-              : message["data"]['appointmentId'],
-        );
+          Navigator.pushNamed(
+            navigatorContext,
+            Routes.telemedicineTrackTreatmentScreen,
+            arguments: Platform.isIOS
+                ? message['appointmentId']
+                : message["data"]['appointmentId'],
+          );
         } else {
           Map appointment = {};
           appointment["_appointmentStatus"] = "1";
