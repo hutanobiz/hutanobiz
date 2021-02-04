@@ -161,7 +161,7 @@ class _SignUpFormState extends State<Register> {
               setState(() {
                 if (res["dob"] != null) {
                   _selectedDate =
-                      DateFormat("dd/MM/yyyy").parse(res["dob"].toString());
+                      DateFormat("MM/dd/yyyy").parse(res["dob"].toString());
                 } else {
                   _selectedDate = DateTime(DateTime.now().year - 18,
                       DateTime.now().month, DateTime.now().day);
@@ -428,9 +428,9 @@ class _SignUpFormState extends State<Register> {
             if (date != null) {
               setState(() {
                 _selectedDate = date;
-                var aa = DateFormat('dd').format(date) +
+                var aa = DateFormat('MM').format(date) +
                     '/' +
-                    DateFormat('MM').format(date) +
+                    DateFormat('dd').format(date) +
                     '/' +
                     date.year.toString();
 
@@ -761,10 +761,10 @@ class _SignUpFormState extends State<Register> {
 
     if (isUpdateProfile) {
       loginData["dob"] =
-          DateFormat("dd/MM/yyyy").format(_selectedDate).toString();
+          DateFormat("MM/dd/yyyy").format(_selectedDate).toString();
     } else {
       loginData["dob"] =
-          DateFormat("dd/MM/yyyy").format(_selectedDate).toString();
+          DateFormat("MM/dd/yyyy").format(_selectedDate).toString();
     }
 
     try {
@@ -833,8 +833,8 @@ class _SignUpFormState extends State<Register> {
               widget.args.phoneNumber.substring(6, 9) +
               "" +
               widget.args.phoneNumber.substring(10, 14);
-          verifyEmail["email"]=_emailController.text;
-          verifyEmail["phoneNumber"]= phonenumber;
+          verifyEmail["email"] = _emailController.text;
+          verifyEmail["phoneNumber"] = phonenumber;
 
           api.sendEmailOtp(context, verifyEmail).then((dynamic response) {
             setLoading(false);
@@ -848,7 +848,7 @@ class _SignUpFormState extends State<Register> {
             );
             // Navigator.of(context).pushNamedAndRemoveUntil(
             //     Routes.registerEducation, (Route<dynamic> route) => false);
-          }).futureError((onError){
+          }).futureError((onError) {
             Widgets.showErrorialog(
                 title: "Error", context: context, description: "Error!");
           });
@@ -990,20 +990,22 @@ class _SignUpFormState extends State<Register> {
       File imageFile = File(image.path);
 
       File croppedFile = await ImageCropper.cropImage(
-        compressQuality: imageFile.lengthSync() > 100000 ? 25 : 100,
+        cropStyle: CropStyle.circle,
         sourcePath: image.path,
+        compressQuality: imageFile.lengthSync() > 100000 ? 25 : 100,
         aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
         ],
         androidUiSettings: AndroidUiSettings(
-            toolbarColor: Colors.transparent,
-            toolbarWidgetColor: Colors.transparent,
-            initAspectRatio: CropAspectRatioPreset.square,
-            lockAspectRatio: true),
+          toolbarColor: Colors.transparent,
+          toolbarWidgetColor: Colors.transparent,
+          initAspectRatio: CropAspectRatioPreset.square,
+          lockAspectRatio: false,
+        ),
         iosUiSettings: IOSUiSettings(
+          aspectRatioLockEnabled: false,
           minimumAspectRatio: 1.0,
-          // aspectRatioLockDimensionSwapEnabled: true,
         ),
       );
       if (croppedFile != null) {
