@@ -124,10 +124,7 @@ class Routes {
         return _errorRoute();
         break;
        case homeMain:
-      if (args is int) {
           return _buildRoute(settings, HomeMain());
-        }
-        return _errorRoute();
         break;
       case forgotPasswordRoute:
         return _buildRoute(settings, ForgetPassword());

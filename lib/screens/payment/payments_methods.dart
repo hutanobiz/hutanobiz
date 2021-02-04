@@ -438,9 +438,13 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(16.0),
                                 child: Image.network(
-                                  ApiBaseHelper.imageUrl +
-                                      _insuranceList[index]
-                                          ["insuranceDocumentFront"],
+                                  _insuranceList[index]
+                                              ["insuranceDocumentFront"] !=
+                                          null
+                                      ? ApiBaseHelper.imageUrl +
+                                          _insuranceList[index]
+                                              ["insuranceDocumentFront"]
+                                      : ApiBaseHelper.imageUrl,
                                   width: 70,
                                   height: 70,
                                   fit: BoxFit.cover,
