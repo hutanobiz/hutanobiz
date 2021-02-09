@@ -34,6 +34,8 @@ class _TelemedicineTrackTreatmentScreenState
       SimpleCountDownController();
   SimpleCountDownController _simpleCountDownController1 =
       SimpleCountDownController();
+  SimpleCountDownController _simpleCountDownController2 =
+      SimpleCountDownController();
   bool video = true;
   bool record = true;
   String _totalDistance = '';
@@ -145,6 +147,20 @@ class _TelemedicineTrackTreatmentScreenState
               },
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(50.0),
+            child: SimpleCountDownTimer(
+              controller: _simpleCountDownController2,
+              duration: appointmentTime.difference(currentTime).inSeconds >
+                      86400
+                  ? appointmentTime.difference(currentTime).inSeconds - 86400
+                  : 0,
+              text: '',
+              onComplete: () {
+                setState(() {});
+              },
+            ),
+          ),
           Container(
             margin: const EdgeInsets.only(bottom: 22.0),
             padding: EdgeInsets.symmetric(horizontal: 20),
@@ -248,87 +264,97 @@ class _TelemedicineTrackTreatmentScreenState
                             border: Border.all(color: Colors.grey[300]),
                           ),
                           height: 55,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset('images/exit.png'),
-                              SizedBox(width: 6),
-                              Text('Exit'),
-                            ],
-                          )).onClick(onTap: () {
-                        Navigator.pop(context);
+                          child: Center(child: Text('Detail')),
+                            
+                          ).onClick(onTap: () {
+                        _container.setAppointmentId(widget.appointmentId);
+                        var _appointmentData = {};
+                        _appointmentData["_appointmentStatus"] =
+                            appointment['data']['status'].toString();
+                        _appointmentData["id"] = widget.appointmentId;
+                        _appointmentData["listType"] = 2;
+                        Navigator.of(context).pushNamed(
+                          Routes.appointmentDetailScreen,
+                          arguments: _appointmentData,
+                        );
+                        // .whenComplete(() => appointmentsFuture(_userLocation));
                       })),
                   SizedBox(
                     width: 16,
                   ),
-                  Expanded(
-                    flex: 2,
-                    child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(14.0),
-                          ),
-                          border: Border.all(color: Colors.grey[300]),
-                        ),
-                        height: 55,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset('images/reschedule.png'),
-                            SizedBox(width: 6),
-                            Text(
-                              'Reschedule',
-                              style: TextStyle(color: AppColors.windsor),
-                            ),
-                          ],
-                        )).onClick(onTap: () {
-                      var locMap = {};
-                      locMap['lattitude'] = 0;
-                      locMap['longitude'] = 0;
-                      setState(() {
-                        isLoading = true;
-                      });
-                      api
-                          .getProviderProfile(
-                              appointment['data']['doctor']['_id'], locMap)
-                          .then((value) {
-                        _container.setProviderData("providerData", value);
+                  appointmentTime.difference(currentTime).inSeconds > 86400
+                      ? Expanded(
+                          flex: 2,
+                          child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(14.0),
+                                ),
+                                border: Border.all(color: Colors.grey[300]),
+                              ),
+                              height: 55,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset('images/reschedule.png'),
+                                  SizedBox(width: 6),
+                                  Text(
+                                    'Reschedule',
+                                    style: TextStyle(color: AppColors.windsor),
+                                  ),
+                                ],
+                              )).onClick(onTap: () {
+                            var locMap = {};
+                            locMap['lattitude'] = 0;
+                            locMap['longitude'] = 0;
+                            setState(() {
+                              isLoading = true;
+                            });
+                            api
+                                .getProviderProfile(
+                                    appointment['data']['doctor']['_id'],
+                                    locMap)
+                                .then((value) {
+                              _container.setProviderData("providerData", value);
 
-                        _container.setAppointmentId(appointment['data']['_id']);
+                              _container
+                                  .setAppointmentId(appointment['data']['_id']);
 
-                        _container.setProjectsResponse('serviceType',
-                            appointment['data']['type'].toString());
-                        setState(() {
-                          isLoading = false;
-                        });
-                        if (appointment['subServices'].length > 0) {
-                          _container.setServicesData("status", "1");
-                          _container.setServicesData(
-                              "services", appointment['subServices']);
+                              _container.setProjectsResponse('serviceType',
+                                  appointment['data']['type'].toString());
+                              setState(() {
+                                isLoading = false;
+                              });
+                              if (appointment['subServices'].length > 0) {
+                                _container.setServicesData("status", "1");
+                                _container.setServicesData(
+                                    "services", appointment['subServices']);
 
-                          Navigator.of(context).pushNamed(
-                              Routes.selectAppointmentTimeScreen,
-                              arguments: 2);
-                        } else {
-                          _container.setServicesData("status", "0");
-                          _container.setServicesData("consultaceFee", '10');
-                          Navigator.of(context).pushNamed(
-                            Routes.selectAppointmentTimeScreen,
-                            arguments: 2,
-                          );
-                        }
-                      });
+                                Navigator.of(context).pushNamed(
+                                    Routes.selectAppointmentTimeScreen,
+                                    arguments: 2);
+                              } else {
+                                _container.setServicesData("status", "0");
+                                _container.setServicesData(
+                                    "consultaceFee", '10');
+                                Navigator.of(context).pushNamed(
+                                  Routes.selectAppointmentTimeScreen,
+                                  arguments: 2,
+                                );
+                              }
+                            });
 
-                      var map = {};
+                            var map = {};
 //  map['status'] = appointment['subServices'].length >0?'1': '0';
-                      map['appointmentId'] = appointment['data']['_id'];
-                      // map['service'] = appointment['data']['type'].toString();
-                      // map['id'] = appointment['data']['doctor']['_id'];
-                      // map['services']=appointment['subServices'];
-                      // map['schedules']=appointment['doctorData'][0]['schedules'];
-                    }),
-                  ),
+                            map['appointmentId'] = appointment['data']['_id'];
+                            // map['service'] = appointment['data']['type'].toString();
+                            // map['id'] = appointment['data']['doctor']['_id'];
+                            // map['services']=appointment['subServices'];
+                            // map['schedules']=appointment['doctorData'][0]['schedules'];
+                          }),
+                        )
+                      : SizedBox(),
                 ],
               ),
               SizedBox(
@@ -748,15 +774,20 @@ class _TelemedicineTrackTreatmentScreenState
                             border: Border.all(color: Colors.grey[300]),
                           ),
                           height: 55,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.exit_to_app),
-                              SizedBox(width: 6),
-                              Text('Exit'),
-                            ],
+                          child: Center(child:
+                              Text('Detail'),
+                          
                           )).onClick(onTap: () {
-                        Navigator.pop(context);
+                        _container.setAppointmentId(widget.appointmentId);
+                        var _appointmentData = {};
+                        _appointmentData["_appointmentStatus"] =
+                            appointment['data']['status'].toString();
+                        _appointmentData["id"] = widget.appointmentId;
+                        _appointmentData["listType"] = 2;
+                        Navigator.of(context).pushNamed(
+                          Routes.appointmentDetailScreen,
+                          arguments: _appointmentData,
+                        );
                       })),
                   SizedBox(
                     width: 16,
@@ -883,15 +914,19 @@ class _TelemedicineTrackTreatmentScreenState
                             border: Border.all(color: Colors.grey[300]),
                           ),
                           height: 55,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.exit_to_app),
-                              SizedBox(width: 6),
-                              Text('Exit'),
-                            ],
+                          child: Center(child:
+                              Text('Detail'),
                           )).onClick(onTap: () {
-                        Navigator.pop(context);
+                        _container.setAppointmentId(widget.appointmentId);
+                        var _appointmentData = {};
+                        _appointmentData["_appointmentStatus"] =
+                            appointment['data']['status'].toString();
+                        _appointmentData["id"] = widget.appointmentId;
+                        _appointmentData["listType"] = 2;
+                        Navigator.of(context).pushNamed(
+                          Routes.appointmentDetailScreen,
+                          arguments: _appointmentData,
+                        );
                       })),
                   SizedBox(
                     width: 16,
@@ -1167,16 +1202,104 @@ class _TelemedicineTrackTreatmentScreenState
                   ),
                   height: 55,
                   width: 90,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.exit_to_app),
-                      SizedBox(width: 6),
-                      Text('Exit'),
-                    ],
+                  child: Center(child:
+                      Text('Detail'),
+                    
                   )).onClick(onTap: () {
-                        Navigator.pop(context);
-                      }),
+                _container.setAppointmentId(widget.appointmentId);
+                var _appointmentData = {};
+                _appointmentData["_appointmentStatus"] =
+                    appointment['data']['status'].toString();
+                _appointmentData["id"] = widget.appointmentId;
+                _appointmentData["listType"] = 2;
+                Navigator.of(context).pushNamed(
+                  Routes.appointmentDetailScreen,
+                  arguments: _appointmentData,
+                );
+              }),
+              SizedBox(height: 24),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  ListView completedWidget(Map appointment, appointmentTime, currentTime) {
+    return ListView(
+      padding: EdgeInsets.all(20),
+      children: [
+        profileWidget(appointment),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(
+              color: AppColors.containerBorderColor,
+              width: .5,
+            ),
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 32),
+              Text(
+                'Telemedicine Appointment',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 24),
+              Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFFF7F7F7),
+                  border: Border.all(
+                    color: AppColors.containerBorderColor,
+                    width: .5,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Icon(
+                      Icons.info,
+                      color: Color(0xFFA1A1A1),
+                    ),
+                    Text(
+                      'Your appointment is completed.',
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(height: 24),
+              Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(14.0),
+                    ),
+                    border: Border.all(color: Colors.grey[300]),
+                  ),
+                  height: 55,
+                  width: 90,
+                  child: Center(child:
+                      Text('Detail'),
+                    
+                  )).onClick(onTap: () {
+                _container.setAppointmentId(widget.appointmentId);
+                var _appointmentData = {};
+                _appointmentData["_appointmentStatus"] =
+                    appointment['data']['status'].toString();
+                _appointmentData["id"] = widget.appointmentId;
+                _appointmentData["listType"] = 2;
+                Navigator.of(context).pushNamed(
+                  Routes.appointmentDetailScreen,
+                  arguments: _appointmentData,
+                );
+              }),
               SizedBox(height: 24),
             ],
           ),

@@ -177,6 +177,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         child: profileWidget(profileMap),
                       ),
                     ),
+                    profileMap['data']["type"] == 2?SizedBox():
                     Align(
                       alignment: FractionalOffset.bottomRight,
                       child: Container(

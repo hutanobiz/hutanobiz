@@ -43,7 +43,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     _container = InheritedContainer.of(context);
 
     if (_container.userLocationMap.isNotEmpty) {
-      _userLocation = _container.userLocationMap['latLng']?? LatLng(0.00, 0.00);
+      _userLocation =
+          _container.userLocationMap['latLng'] ?? LatLng(0.00, 0.00);
     }
 
     appointmentsFuture(_userLocation);
@@ -229,26 +230,33 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         child: InkWell(
           borderRadius: BorderRadius.circular(14.0),
           splashColor: Colors.grey[200],
-          onDoubleTap: (){
-            Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => VideoListScreen(appointmentId: response["_id"]),
-                            ),
-                          );
-          },
           onTap: () {
             _container.setAppointmentId(response["_id"].toString());
             _appointmentData["_appointmentStatus"] = _appointmentStatus;
             _appointmentData["id"] = response["_id"];
             _appointmentData["listType"] = listType;
-
-            Navigator.of(context)
-                .pushNamed(
-                  Routes.appointmentDetailScreen,
-                  arguments: _appointmentData,
-                )
-                .whenComplete(() => appointmentsFuture(_userLocation));
+            if (response['type'] != 2) {
+              Navigator.of(context)
+                  .pushNamed(
+                    Routes.appointmentDetailScreen,
+                    arguments: _appointmentData,
+                  )
+                  .whenComplete(() => appointmentsFuture(_userLocation));
+            } else {
+              if (_appointmentStatus == '4') {
+                Navigator.of(context)
+                  .pushNamed(
+                    Routes.appointmentDetailScreen,
+                    arguments: _appointmentData,
+                  )
+                  .whenComplete(() => appointmentsFuture(_userLocation));
+              } else {
+                Navigator.pushNamed(
+                        context, Routes.telemedicineTrackTreatmentScreen,
+                        arguments: response["_id"])
+                    .whenComplete(() => appointmentsFuture(_userLocation));
+              }
+            }
           },
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -360,45 +368,46 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                   color: Colors.grey[300],
                 ),
               ),
-              address.trim() == '---, ,'?SizedBox():
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 12.0, right: 12.0, bottom: 10.0),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
+              address.trim() == '---, ,'
+                  ? SizedBox()
+                  : Padding(
+                      padding: const EdgeInsets.only(
+                          left: 12.0, right: 12.0, bottom: 10.0),
                       child: Row(
                         children: <Widget>[
-                          "ic_location_grey".imageIcon(width: 11.0),
-                          SizedBox(width: 3.0),
                           Expanded(
-                            child: Text(
-                              "$address",
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: Colors.black.withOpacity(0.5),
-                              ),
+                            child: Row(
+                              children: <Widget>[
+                                "ic_location_grey".imageIcon(width: 11.0),
+                                SizedBox(width: 3.0),
+                                Expanded(
+                                  child: Text(
+                                    "$address",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: Colors.black.withOpacity(0.5),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
+                          ),
+                          SizedBox(width: 15),
+                          Row(
+                            children: <Widget>[
+                              "ic_app_distance".imageIcon(),
+                              SizedBox(width: 5.0),
+                              Text(
+                                Extensions.getDistance(response['distance']),
+                                style: TextStyle(
+                                  color: AppColors.windsor,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(width: 15),
-                    Row(
-                      children: <Widget>[
-                        "ic_app_distance".imageIcon(),
-                        SizedBox(width: 5.0),
-                        Text(
-                          Extensions.getDistance(response['distance']),
-                          style: TextStyle(
-                            color: AppColors.windsor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
               Padding(
                 padding: const EdgeInsets.only(
                     left: 12.0, right: 12.0, bottom: 14.0),
@@ -413,7 +422,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                         //             DateTime.parse(response['date']))
                         //         .toString() +
                         //     " " +
-                            DateFormat('EEEE, dd MMMM, HH:mm')
+                        DateFormat('EEEE, dd MMMM, HH:mm')
                                 .format(DateTime.utc(
                                         DateTime.parse(response['date']).year,
                                         DateTime.parse(response['date']).month,
