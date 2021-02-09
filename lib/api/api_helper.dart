@@ -15,7 +15,8 @@ import 'package:hutano/widgets/widgets.dart';
 
 class ApiBaseHelper {
   NetworkUtil _netUtil = new NetworkUtil();
-  static const String base_url = "https://dev.hutano.xyz/";
+  // static const String base_url = "https://dev.hutano.xyz/";
+  static const String base_url = "http://18.211.235.106:3000/";
   static const String imageUrl = "https://hutano-assets.s3.amazonaws.com/";
 
   Future<dynamic> login(Map loginData) {
@@ -28,14 +29,16 @@ class ApiBaseHelper {
 
   Future<dynamic> sendEmailOtp(BuildContext context, Map verifyEmail) {
     return _netUtil
-        .post( base_url + "auth/api/email-sendotp", body: verifyEmail)
+        .post(base_url + "auth/api/email-sendotp", body: verifyEmail)
         .then((res) {
       return res;
     });
   }
-  Future<dynamic> verifyEmailOtp(BuildContext context, Map<String, String> loginData) {
+
+  Future<dynamic> verifyEmailOtp(
+      BuildContext context, Map<String, String> loginData) {
     return _netUtil
-        .post( base_url + "auth/api/email-verify", body: loginData)
+        .post(base_url + "auth/api/email-verify", body: loginData)
         .then((res) {
       return res["response"];
     });
@@ -96,8 +99,6 @@ class ApiBaseHelper {
       return res["response"];
     });
   }
-
-  
 
   Future<dynamic> getSetupIntent(BuildContext context, String token) {
     Map<String, String> headers = {
@@ -248,14 +249,14 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> rescheduleAppointment( String token, Map map) {
+  Future<dynamic> rescheduleAppointment(String token, Map map) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
       HttpHeaders.contentTypeHeader: "application/json"
     };
 
     return _netUtil
-        .post( base_url + "api/reschedule-appointment",
+        .post(base_url + "api/reschedule-appointment",
             headers: headers, body: json.encode(map))
         .then((res) {
       return res;
@@ -454,13 +455,17 @@ class ApiBaseHelper {
     });
   }
 
-   Future<dynamic> getAppointmentRecordings(BuildContext context, String token,String appointmentId) {
+  Future<dynamic> getAppointmentRecordings(
+      BuildContext context, String token, String appointmentId) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
       HttpHeaders.contentTypeHeader: "application/json"
     };
     return _netUtil
-        .get(base_url + "api/appointmnet-video-calls?appointmentId=$appointmentId", headers: headers)
+        .get(
+            base_url +
+                "api/appointmnet-video-calls?appointmentId=$appointmentId",
+            headers: headers)
         .then((res) {
       print(res.toString());
       return res["response"];
@@ -758,53 +763,43 @@ class ApiBaseHelper {
     });
   }
 
-   Future<dynamic> checkTimeToStartVideo(BuildContext context,
-      String token, Map locationMap) {
+  Future<dynamic> checkTimeToStartVideo(
+      BuildContext context, String token, Map locationMap) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
 
     return _netUtil
-        .post(
-            Uri.encodeFull(
-                base_url + "api/check/appintment/time-slot"),
-            body: locationMap,
-            headers: headers)
+        .post(Uri.encodeFull(base_url + "api/check/appintment/time-slot"),
+            body: locationMap, headers: headers)
         .then((res) {
       return res["response"];
     });
   }
 
-   Future<dynamic> startVideoCall(BuildContext context,
-      String token, Map locationMap) {
+  Future<dynamic> startVideoCall(
+      BuildContext context, String token, Map locationMap) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
 
     return _netUtil
-        .post(
-            Uri.encodeFull(
-                base_url + "api/video-appointment"),
-            body: locationMap,
-            headers: headers)
+        .post(Uri.encodeFull(base_url + "api/video-appointment"),
+            body: locationMap, headers: headers)
         .then((res) {
       return res["response"];
     });
   }
 
-  Future<dynamic> stopVideoCall(BuildContext context,
-      String token, Map locationMap) {
+  Future<dynamic> stopVideoCall(
+      BuildContext context, String token, Map locationMap) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
 
     return _netUtil
-        .post(
-            
-            Uri.encodeFull(
-                base_url + "api/video-appointment-stop"),
-            body: locationMap,
-            headers: headers)
+        .post(Uri.encodeFull(base_url + "api/video-appointment-stop"),
+            body: locationMap, headers: headers)
         .then((res) {
       return res["response"];
     });
@@ -890,9 +885,9 @@ class NetworkUtil {
 
   Future<dynamic> multipartPost(String url,
       {String token,
-        Map<String, String> fileMap,
-        File file,
-        String key}) async {
+      Map<String, String> fileMap,
+      File file,
+      String key}) async {
     var responseJson;
     try {
       Uri uri = Uri.parse(url);
@@ -907,7 +902,7 @@ class NetworkUtil {
       var stream = ByteStream(DelegatingStream(file.openRead()));
       var length = await file.length();
       var multipartFile =
-      MultipartFile(key, stream.cast(), length, filename: file.path);
+          MultipartFile(key, stream.cast(), length, filename: file.path);
       request.files.add(multipartFile);
 
       var response = await request.send();
@@ -943,16 +938,16 @@ class NetworkUtil {
 
   void showError(String message) {
     Widgets.showErrorDialog(
-      context: navigatorKey.currentState.overlay.context,
-      description: message,
-      onPressed: (){
-        if(message == 'Unauthorized'){
-         Navigator.pushNamed(navigatorKey.currentState.overlay.context, Routes.loginRoute,arguments: true);
-        }else{
-          Navigator.pop(navigatorKey.currentState.overlay.context);
-        }
-      }
-    );
+        context: navigatorKey.currentState.overlay.context,
+        description: message,
+        onPressed: () {
+          if (message == 'Unauthorized') {
+            Navigator.pushNamed(
+                navigatorKey.currentState.overlay.context, Routes.loginRoute,
+                arguments: true);
+          } else {
+            Navigator.pop(navigatorKey.currentState.overlay.context);
+          }
+        });
   }
 }
-
