@@ -78,14 +78,14 @@ class _CallPageState extends State<CallPage> {
     VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
     configuration.dimensions = VideoDimensions(1280, 720);
     await _engine.setVideoEncoderConfiguration(configuration);
-    final key = Encrypt.Key.fromLength(32);
-    final iv = Encrypt.IV.fromLength(16);
-    final encrypter = Encrypt.Encrypter(Encrypt.AES(key));
-    final encrypted = encrypter.encrypt('12345', iv: iv);
+    // final key = Encrypt.Key.fromLength(32);
+    // final iv = Encrypt.IV.fromLength(16);
+    // final encrypter = Encrypt.Encrypter(Encrypt.AES(key));
+    // final encrypted = encrypter.encrypt('12345', iv: iv);
 
-    EncryptionConfig encryptionConfig =
-        EncryptionConfig(EncryptionMode.AES128ECB, encrypted.base64.toString());
-    await _engine.enableEncryption(true, encryptionConfig);
+    // EncryptionConfig encryptionConfig =
+    //     EncryptionConfig(EncryptionMode.AES128ECB, encrypted.base64.toString());
+    // await _engine.enableEncryption(true, encryptionConfig);
     _engine.muteLocalVideoStream(mutedVideo);
     _engine.enableLocalVideo(!mutedVideo);
     _engine
