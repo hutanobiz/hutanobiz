@@ -28,6 +28,7 @@ class PushNotificationService {
 
         switch (notificationType) {
           case 'call':
+          case 'call_join':
             Widgets.showConfirmationDialog(
                 context: navigatorContext,
                 title: 'Call request',
@@ -65,7 +66,7 @@ class PushNotificationService {
                   }
                 });
             break;
-          case 'call_join':
+          case 'ready_to_join':
             bool isCurrent(String routeName) {
               var isCurrent = false;
               Navigator.popUntil(navigatorContext, (route) {
@@ -79,7 +80,7 @@ class PushNotificationService {
             if (Platform.isIOS
                 ? message['isUserJoin']
                 : message["data"]['isUserJoin'] == "true") {
-              Navigator.pop(navigatorContext);
+              // Navigator.pop(navigatorContext);
               Navigator.pushReplacementNamed(
                   navigatorContext, Routes.telemedicineTrackTreatmentScreen,
                   arguments: Platform.isIOS
@@ -173,6 +174,7 @@ class PushNotificationService {
 
     switch (notificationType) {
       case 'call':
+      case 'call_join':
         Map appointment = {};
         appointment["_appointmentStatus"] = "1";
         appointment["id"] = Platform.isIOS
@@ -183,7 +185,7 @@ class PushNotificationService {
           arguments: appointment,
         );
         break;
-      case 'call_join':
+      case 'ready_to_join':
         Navigator.pushNamed(
           navigatorContext,
           Routes.telemedicineTrackTreatmentScreen,
