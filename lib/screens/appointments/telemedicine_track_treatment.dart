@@ -88,6 +88,8 @@ class _TelemedicineTrackTreatmentScreenState
                   return new Text('Error: ${snapshot.error}');
                 } else if (snapshot.hasData) {
                   Map profileMap = snapshot.data;
+                  _container.providerResponse.clear();
+                  _container.setProviderData("providerData", profileMap);
                   return widgetList(profileMap);
                 } else {
                   return Center(

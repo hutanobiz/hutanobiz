@@ -63,7 +63,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
           rateMap["userType"] = response["response"]["type"].toString();
         });
       });
-       _reasonsFuture = api.getReviewReasons(token);
+      _reasonsFuture = api.getReviewReasons(token);
     });
   }
 
@@ -79,20 +79,21 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
 
     _container = InheritedContainer.of(context);
     _providerMap = _container.getProviderData();
-
-    if (_providerMap['providerData']["data"] != null) {
-      if (_providerMap['providerData']["data"]["doctor"] != null) {
-        _name =
-            _providerMap['providerData']["data"]["doctor"]["fullName"] ?? "---";
-        avatar = _providerMap['providerData']["data"]["doctor"]["avatar"];
+    if (_providerMap['providerData'] != null) {
+      if (_providerMap['providerData']["data"] != null) {
+        if (_providerMap['providerData']["data"]["doctor"] != null) {
+          _name = _providerMap['providerData']["data"]["doctor"]["fullName"] ??
+              "---";
+          avatar = _providerMap['providerData']["data"]["doctor"]["avatar"];
+        }
+      } else if (_providerMap['providerData'] != null) {
+        if (_providerMap['providerData']["doctor"] != null) {
+          _name = _providerMap['providerData']["doctor"]["fullName"] ?? "---";
+          avatar = _providerMap['providerData']["doctor"]["avatar"];
+        }
       }
-    } else if (_providerMap['providerData'] != null) {
-      if (_providerMap['providerData']["doctor"] != null) {
-        _name = _providerMap['providerData']["doctor"]["fullName"] ?? "---";
-        avatar = _providerMap['providerData']["doctor"]["avatar"];
-      }
+      _ratingText = "How was your experience with $_name ?";
     }
-    _ratingText = "How was your experience with $_name ?";
 
     rateMap["appointment"] = _container.appointmentIdMap["appointmentId"];
   }
