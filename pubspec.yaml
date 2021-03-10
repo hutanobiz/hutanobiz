@@ -78,6 +78,7 @@ dependencies:
   url_launcher: ^5.5.0
   wakelock: ^0.1.4
   xml: ^4.1.0
+  introduction_screen: ^1.0.9
 
 dev_dependencies:
   flutter_test:

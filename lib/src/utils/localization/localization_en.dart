@@ -713,8 +713,81 @@ class LocalizationEN implements Localization {
   @override
   String get healthInsurance => "Do you have health insurance?";
 
-
   @override
   String get selectBodyPart =>
       "Please select the part of the body that hurts from the front view or choose different view.";
+
+  @override
+  String get introTitle1 => "Flexible Scheduling";
+
+  @override
+  String get introSubTitle1 =>
+      "Easy self-scheduling from your \nmobile device. ";
+
+  @override
+  String get introTitle2 => "Health Records";
+
+  @override
+  String get introSubTitle4 =>
+      "Receive care by video or text using a \nmobile device or computer.";
+
+  @override
+  String get introSubTitle2 =>
+      "Store medical records in the cloud for easy access. ";
+
+  @override
+  String get introSubTitle3 =>
+      "Book an appointment to receive care \nin your home. ";
+
+  @override
+  String get introTitle3 => "Onsite Visits";
+
+  @override
+  String get introTitle4 => "Virtual Visits";
+
+  @override
+  String get swipeLeft => "Swipe Left";
+
+  @override
+  String get start => "Start";
+
+  @override
+  String get addInsurance => "Add Insurance";
+
+  @override
+  String get effectiveDate => "Effective Date";
+
+  @override
+  String get groupNumber => "Group Number:";
+
+  @override
+  String get healthPlan => "Health Plan";
+
+  @override
+  String get insuranceCompany => "Insurance Company";
+
+  @override
+  
+  String get insuranceMemberName => "Insured Member Name";
+
+  @override
+  String get memberId => "Member ID:";
+
+  @override
+  String get skipForLater => "Skip for later";
+
+  @override
+  String get uploadInsuranceCardImage => "Upload Insurance card image.";
+
+  @override
+  String get addCard => "ADD CARD";
+
+  @override
+  String get addCreditCard => "Add a credit card.";
+
+  @override
+  String get validThru => "Valid Thru";
+
+  @override
+  String get creditCardAdded => "Credit Card Added";
 }

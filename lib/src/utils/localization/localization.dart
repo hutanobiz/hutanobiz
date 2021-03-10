@@ -278,4 +278,27 @@ abstract class Localization {
   String get errorBodyPartSelect;
   String get healthInsurance;
   String get labelHealthInsurance;
+  String get introTitle1;
+  String get introSubTitle1;
+  String get introTitle2;
+  String get introSubTitle2;
+  String get introTitle3;
+  String get introSubTitle3;
+  String get introTitle4;
+  String get introSubTitle4;
+  String get swipeLeft;
+  String get start;
+  String get insuranceCompany;
+  String get insuranceMemberName;
+  String get memberId;
+  String get groupNumber;
+  String get healthPlan;
+  String get effectiveDate;
+  String get skipForLater;
+  String get addInsurance;
+  String get uploadInsuranceCardImage;
+  String get addCreditCard;
+  String get addCard;
+  String get validThru;
+  String get creditCardAdded;
 }

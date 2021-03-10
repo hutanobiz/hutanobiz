@@ -48,7 +48,7 @@ class HutanoHeaderInfo extends StatelessWidget {
           ),
           if (subTitle != null)
             Padding(
-              padding: const EdgeInsets.only(top: spacing7),
+              padding: const EdgeInsets.only(top: spacing15),
               child: Text(
                 subTitle,
                 textAlign: TextAlign.center,

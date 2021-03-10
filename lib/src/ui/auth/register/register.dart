@@ -359,12 +359,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       //TODO:
       //Note : Old register coded added
-      Map _insuranceMap = {};
-      _insuranceMap['isPayment'] = false;
-      _insuranceMap['isFromRegister'] = true;
+      // Map _insuranceMap = {};
+      // _insuranceMap['isPayment'] = false;
+      // _insuranceMap['isFromRegister'] = true;
 
-     //TODO:
-      //Code commented due to error
       // Navigator.of(context).pushNamedAndRemoveUntil(
       //   Routes.insuranceListScreen,
       //   (Route<dynamic> route) => false,

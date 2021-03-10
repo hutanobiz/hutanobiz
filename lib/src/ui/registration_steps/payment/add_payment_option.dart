@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:hutano/src/widgets/app_logo.dart';
 
 import '../../../apis/api_constants.dart';
 import '../../../apis/api_manager.dart';
@@ -82,52 +83,52 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
           child: Scaffold(
             body: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
                 child: Column(children: [
+                  AppLogo(),
+                  SizedBox(
+                    height: spacing10,
+                  ),
                   HutanoProgressBar(progressSteps: HutanoProgressSteps.two),
-                  HutanoHeader(
-                    spacing: 0,
-                    headerInfo: HutanoHeaderInfo(
-                      title: Localization.of(context).paymentOptions,
-                      subTitle: _isPaymentComplete
-                          ? Localization.of(context).complete
-                          : Localization.of(context).addCreditCardAndInsurance,
-                      subTitleFontSize: fontSize15,
-                    ),
-                  ),
-                  Visibility(
-                    visible: !_isPaymentComplete,
-                    child: HutanoStepsHeader(
-                      title: Localization.of(context).addPaymentOption,
-                      iconText: stepTwo,
-                    ),
-                  ),
-                  Visibility(
-                    visible: _isPaymentComplete,
-                    child: HutanoStepsHeader(
-                      isIcon: true,
-                      title: Localization.of(context).addPaymentOption,
-                      iconText: stepOne,
-                      icon: FileConstants.icComplete,
-                      bgColor: Colors.transparent,
-                      iconSize: spacing50,
-                      borderColor: Colors.transparent,
-                      alignment: CrossAxisAlignment.center,
-                    ),
-                  ),
-                  _getCreditCardField(),
-                  _getPaymentAndTcTextField(),
                   SizedBox(
-                    height: spacing20,
+                    height: spacing15,
                   ),
-                  _buildNextButton(context),
+                  HutanoHeaderInfo(
+                    title: Localization.of(context).paymentOptions,
+                    subTitle: _isPaymentComplete
+                        ? Localization.of(context).complete
+                        : Localization.of(context).addCreditCard,
+                    subTitleFontSize: fontSize15,
+                  ),
                   SizedBox(
-                    height: spacing20,
+                    height: spacing10,
                   ),
-                  _buildSkipTaskNowButton(context),
+                  _buildCard(),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadiusDirectional.circular(10)),
+                    padding: EdgeInsets.all(10),
+                    child: _getCreditCardField(),
+                  ),
                   SizedBox(
                     height: spacing50,
-                  )
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: HutanoButton(
+                      width: 55,
+                      height: 55,
+                      color: accentColor,
+                      iconSize: 20,
+                      buttonType: HutanoButtonType.onlyIcon,
+                      icon: FileConstants.icForward,
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
                 ]),
               ),
             ),
@@ -135,72 +136,60 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
         ));
   }
 
-  _buildSkipTaskNowButton(BuildContext context) => Padding(
-      padding: const EdgeInsets.only(
-          left: spacing20, right: spacing20, bottom: spacing20),
-      child: HutanoButton(
-        buttonType: HutanoButtonType.withIcon,
-        isIconButton: true,
-        iconSize: spacing20,
-        color: colorYellow,
-        icon: FileConstants.icSkip,
-        label: Localization.of(context).skipThisTask,
-        onPressed: _skipTaskNow,
-      ));
+  _buildCard() {
+    return Stack(
+      children: [
+        Image.asset(FileConstants.icCardBackground),
+        Positioned(
+          child: Text(
+            _nameController.text,
+            style: const TextStyle(color: colorBrown, fontSize: 12),
+          ),
+          bottom: 75,
+          left: 30,
+        ),
+        Positioned(
+          child: const Text(
+            "Valid Thru",
+            style: const TextStyle(color: colorBrown, fontSize: 12),
+          ),
+          bottom: 75,
+          right: 40,
+        ),
+        Positioned(
+          child: Text(
+            _cardNumberController.text,
+            style: const TextStyle(color: colorBrown, fontSize: 12),
+          ),
+          bottom: 50,
+          left: 30,
+        ),
+        Positioned(
+          child: Text(
+            _expiryController.text,
+            style: const TextStyle(color: colorBrown, fontSize: 12),
+          ),
+          bottom: 50,
+          right: 50,
+        ),
+      ],
+    );
+  }
 
   _skipTaskNow() {
-    Navigator.of(context).pushReplacementNamed( routeInviteFamilyMember);
+    Navigator.of(context).pushReplacementNamed(routeInviteFamilyMember);
   }
 
   Widget _getCreditCardField() {
-    return Stack(
-      children: <Widget>[
-        Container(
-          width: double.infinity,
-          margin: EdgeInsets.fromLTRB(25, 35, 35, 25),
-          padding: EdgeInsets.only(bottom: 10),
-          decoration: BoxDecoration(
-            border: Border.all(color: colorLightYellow, width: 0.5),
-            borderRadius: BorderRadius.circular(5),
-            shape: BoxShape.rectangle,
-            color: Colors.white,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              _getCardList(),
-              _addCardList(),
-              _getAdditionalCreditCardButton(),
-              _getSaveCreditCardButton()
-            ],
-          ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        _getCardList(),
+        _addCardList(),
+        SizedBox(
+          height: spacing20,
         ),
-        Positioned(
-          left: spacing40,
-          top: 24,
-          child: Container(
-              padding: EdgeInsets.only(left: spacing10, right: spacing10),
-              color: Colors.white,
-              child: RichText(
-                  text: TextSpan(
-                text: Localization.of(context).creditCard,
-                style: TextStyle(color: colorPurple100, fontSize: fontSize11),
-                children: <TextSpan>[
-                  TextSpan(
-                      text: '(',
-                      style: TextStyle(
-                          color: colorPurple100, fontSize: fontSize11)),
-                  TextSpan(
-                      text: Localization.of(context).required,
-                      style:
-                          TextStyle(color: Colors.red, fontSize: fontSize11)),
-                  TextSpan(
-                      text: ')',
-                      style: TextStyle(
-                          color: colorPurple100, fontSize: fontSize11)),
-                ],
-              ))),
-        ),
+        _getSaveCreditCardButton(),
       ],
     );
   }
@@ -217,6 +206,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
   Widget _addCardList() {
     return ListView.builder(
         shrinkWrap: true,
+        primary: false,
         itemCount: addList.length,
         itemBuilder: (context, index) {
           return _buildAddCard();
@@ -262,48 +252,28 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
 
   Widget _buildAddCard() {
     return Container(
-      padding: EdgeInsets.only(bottom: 5, right: 10, top: spacing10, left: 10),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Container(
-            padding: EdgeInsets.only(right: spacing5, left: spacing5),
-            child: getCardIcon(_paymentCard.type),
-          ),
-          Column(
-            children: [
-              _getNameOnCardTextField(),
-              SizedBox(
-                height: spacing10,
-              ),
-              _getTextFieldCardNumber(),
-              SizedBox(
-                height: spacing10,
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _getExpirationDateTextField(),
-                  _getCVVTextField(),
-                  SizedBox(
-                    height: spacing40,
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Container(
-            padding: EdgeInsets.only(left: spacing10, top: spacing10),
-            child: Image.asset(
-              FileConstants.icCardUncheck,
-              width: 16,
-              height: 16,
+        padding:
+            EdgeInsets.only(bottom: 5, right: 10, top: spacing10, left: 10),
+        child: Column(
+          children: [
+            _getNameOnCardTextField(),
+            SizedBox(
+              height: spacing15,
             ),
-          ),
-        ],
-      ),
-    );
+            _getTextFieldCardNumber(),
+            SizedBox(
+              height: spacing15,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _getExpirationDateTextField(),
+                _getCVVTextField(),
+              ],
+            ),
+          ],
+        ));
   }
 
   Widget _getNameOnCardTextField() {
@@ -311,37 +281,34 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
       autovalidate: true,
       key: _keyName,
       child: Container(
-          width: SizeConfig.screenWidth / 1.8,
           child: HutanoTextField(
-            textInputType: TextInputType.text,
-            textInputAction: TextInputAction.next,
-            controller: _nameController,
-            textSize: fontSize12,
-            floatingBehaviour: FloatingLabelBehavior.always,
-            focusedBorderColor: colorGrey20,
-            textInputFormatter: [
-              FilteringTextInputFormatter.allow(RegExp("[a-zA-Z -]"))
-            ],
-            labelText: Localization.of(context).nameOnCard,
-            contentPadding: EdgeInsets.all(10),
-          )),
+        textInputType: TextInputType.text,
+        textInputAction: TextInputAction.next,
+        controller: _nameController,
+        textSize: fontSize12,
+        floatingBehaviour: FloatingLabelBehavior.always,
+        focusedBorderColor: colorGrey20,
+        textInputFormatter: [
+          FilteringTextInputFormatter.allow(RegExp("[a-zA-Z -]"))
+        ],
+        labelText: Localization.of(context).nameOnCard,
+        contentPadding: EdgeInsets.all(10),
+      )),
     );
   }
 
   Widget _displayNameOnCardTextField(int index) {
     return Container(
-        width: SizeConfig.screenWidth / 1.8,
         child: HutanoTextField(
-          textInputType: TextInputType.text,
-          textSize: fontSize12,
-          isFieldEnable: false,
-          controller: TextEditingController()
-            ..text = mainList[index].nameOnCard,
-          floatingBehaviour: FloatingLabelBehavior.always,
-          focusedBorderColor: colorGrey20,
-          labelText: Localization.of(context).nameOnCard,
-          contentPadding: EdgeInsets.all(10),
-        ));
+      textInputType: TextInputType.text,
+      textSize: fontSize12,
+      isFieldEnable: false,
+      controller: TextEditingController()..text = mainList[index].nameOnCard,
+      floatingBehaviour: FloatingLabelBehavior.always,
+      focusedBorderColor: colorGrey20,
+      labelText: Localization.of(context).nameOnCard,
+      contentPadding: EdgeInsets.all(10),
+    ));
   }
 
   Widget _getTextFieldCardNumber() {
@@ -349,68 +316,61 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
       autovalidate: true,
       key: _keyNumber,
       child: Container(
-          width: SizeConfig.screenWidth / 1.8,
           child: HutanoTextField(
-            textInputAction: TextInputAction.next,
-            textInputType: TextInputType.number,
-            floatingBehaviour: FloatingLabelBehavior.always,
-            focusedBorderColor: colorGrey20,
-            controller: _cardNumberController,
-            textInputFormatter: [
-              maskFormatter,
-              BlacklistingTextInputFormatter(RegExp('[\\.]')),
-              LengthLimitingTextInputFormatter(19),
-            ],
-            labelText: Localization.of(context).cardNumber,
-            contentPadding: EdgeInsets.all(10),
-            validationMethod: (number) {
-              return validateCardNumber(number, context);
-            },
-          )),
+        textInputAction: TextInputAction.next,
+        textInputType: TextInputType.number,
+        floatingBehaviour: FloatingLabelBehavior.always,
+        focusedBorderColor: colorGrey20,
+        controller: _cardNumberController,
+        textInputFormatter: [
+          maskFormatter,
+          BlacklistingTextInputFormatter(RegExp('[\\.]')),
+          LengthLimitingTextInputFormatter(19),
+        ],
+        labelText: Localization.of(context).cardNumber,
+        contentPadding: EdgeInsets.all(10),
+        validationMethod: (number) {
+          return validateCardNumber(number, context);
+        },
+      )),
     );
   }
 
   Widget _displayTextFieldCardNumber(int index) {
     return Container(
-        width: SizeConfig.screenWidth / 1.8,
         child: HutanoTextField(
-          controller: TextEditingController()
-            ..text = mainList[index].cardNumber,
-          textInputAction: TextInputAction.next,
-          isFieldEnable: false,
-          textInputType: TextInputType.number,
-          floatingBehaviour: FloatingLabelBehavior.always,
-          focusedBorderColor: colorGrey20,
-          labelText: Localization.of(context).cardNumber,
-          contentPadding: EdgeInsets.all(10),
-        ));
+      controller: TextEditingController()..text = mainList[index].cardNumber,
+      textInputAction: TextInputAction.next,
+      isFieldEnable: false,
+      textInputType: TextInputType.number,
+      floatingBehaviour: FloatingLabelBehavior.always,
+      focusedBorderColor: colorGrey20,
+      labelText: Localization.of(context).cardNumber,
+      contentPadding: EdgeInsets.all(10),
+    ));
   }
 
   Widget _getCVVTextField() {
     return Form(
       autovalidate: true,
       key: _keyCVV,
-      child: Container(
-          width: spacing80,
-          padding: const EdgeInsets.only(
-            left: spacing20,
-          ),
-          child: HutanoTextField(
-            controller: _cvvController,
-            textInputType: TextInputType.number,
-            textInputAction: TextInputAction.next,
-            floatingBehaviour: FloatingLabelBehavior.always,
-            focusedBorderColor: colorGrey20,
-            textInputFormatter: [
-              WhitelistingTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(4),
-            ],
-            validationMethod: (number) {
-              return validateCVV(number, context);
-            },
-            labelText: Localization.of(context).cvv,
-            contentPadding: EdgeInsets.all(10),
-          )),
+      child: HutanoTextField(
+        width: SizeConfig.screenWidth / 2.6,
+        controller: _cvvController,
+        textInputType: TextInputType.number,
+        textInputAction: TextInputAction.next,
+        floatingBehaviour: FloatingLabelBehavior.always,
+        focusedBorderColor: colorGrey20,
+        textInputFormatter: [
+          WhitelistingTextInputFormatter.digitsOnly,
+          LengthLimitingTextInputFormatter(4),
+        ],
+        validationMethod: (number) {
+          return validateCVV(number, context);
+        },
+        labelText: Localization.of(context).cvv,
+        contentPadding: EdgeInsets.all(10),
+      ),
     );
   }
 
@@ -471,7 +431,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
       autovalidate: true,
       key: _keyExpiary,
       child: Container(
-          width: SizeConfig.screenWidth / 1.8 - spacing80,
+          width: SizeConfig.screenWidth / 2.6,
           child: HutanoTextField(
             controller: _expiryController,
             textInputAction: TextInputAction.next,
@@ -492,85 +452,21 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
     );
   }
 
-  Widget _getAdditionalCreditCardButton() {
-    return Visibility(
-      visible: _addCardVisible,
-      child: Center(
-        child: GestureDetector(
-          child: Padding(
-            padding: const EdgeInsets.only(left: spacing25),
-            child: Row(
-              children: [
-                Ink(
-                  child: Image.asset(
-                    FileConstants.icAdd,
-                    width: 50,
-                    height: 50,
-                  ),
-                ),
-                Text(
-                  Localization.of(context).additionalCreditCard,
-                  style: TextStyle(color: colorBlack85, fontSize: fontSize12),
-                )
-              ],
-            ),
-          ),
-          onTap: () => setState(() {
-            addList.add(CreditCard());
-            _addCardVisible = false;
-            _saveCardVisible = true;
-          }),
-        ),
-      ),
-    );
-  }
-
-  Widget _getSaveCreditCardButton() {
-    return Visibility(
-      visible: _saveCardVisible,
-      child: Center(
-        child: GestureDetector(
-          child: Padding(
-            padding: const EdgeInsets.only(left: spacing25),
-            child: Row(
-              children: [
-                Ink(
-                  child: Image.asset(
-                    FileConstants.icAdd,
-                    width: 50,
-                    height: 50,
-                  ),
-                ),
-                Text(
-                  Localization.of(context).saveCard,
-                  style: TextStyle(color: colorBlack85, fontSize: fontSize12),
-                )
-              ],
-            ),
-          ),
-          onTap: () => setState(() {
-            _saveCard();
-          }),
-        ),
-      ),
-    );
-  }
-
-  _buildNextButton(BuildContext context) => Padding(
-      padding: const EdgeInsets.only(left: spacing20, right: spacing20),
+  _getSaveCreditCardButton() => Padding(
+      padding: const EdgeInsets.only(left: 10, right: 10),
       child: HutanoButton(
-        buttonType: HutanoButtonType.withIcon,
-        isIconButton: true,
         icon: FileConstants.icNext,
-        color: colorDarkBlue,
+        color: colorPurple100,
         iconSize: 20,
-        label: Localization.of(context).next.toUpperCase(),
-        onPressed: _enableButton ? _nextClick : null,
+        label: Localization.of(context).addCard.toUpperCase(),
+        onPressed: () => setState(() {
+          _saveCard();
+        }),
       ));
 
   _nextClick() {
     if (mainList.length > 0) {
-      Navigator.of(context).pushReplacementNamed( routeInviteFamilyMember);
+      Navigator.of(context).pushReplacementNamed(routeInviteFamilyMember);
     } else {
       DialogUtils.showAlertDialog(
           context, Localization.of(context).addCardDetails.toUpperCase());

@@ -90,6 +90,7 @@ const String parkingScreen = 'parkingScreen';
 const String cancelAppointmentScreen = 'cancelAppointmentScreen';
 const String requestDetailScreen = 'requestDetailScreen';
 const String callPage = 'callPage';
+const String routeOnboarding = "routeOnboarding";
 
 const String apiToken = "apiToken";
 

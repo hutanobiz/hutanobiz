@@ -11,3 +11,5 @@ enum SetupScreenFrom { login }
 enum GenderType { transgender, female, male }
 
 enum RegisterError{firstName , lastName ,email ,password ,address, city,zipCode}
+
+

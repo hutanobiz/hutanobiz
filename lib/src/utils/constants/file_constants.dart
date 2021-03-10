@@ -109,4 +109,17 @@ class FileConstants {
   static const String svgFemaleFront = "assets/svg/female_front.svg";
   static const String svgMaleBack = "assets/svg/male_back.svg";
   static const String svgMaleFront = "assets/svg/male_front.svg";
+  
+  // static const String icIntro1 = "assets/svg/ic_intro1.svg";
+  // static const String icIntro2 = "assets/svg/ic_intro2.svg";
+  // static const String icIntro3 = "assets/svg/ic_intro3.svg";
+  // static const String icIntro4 = "assets/svg/ic_intro4.svg";
+  
+  static const String icIntro1 = "assets/images/ic_intro1.png";
+  static const String icIntro2 = "assets/images/ic_intro2.png";
+  static const String icIntro3 = "assets/images/ic_intro3.png";
+  static const String icIntro4 = "assets/images/ic_intro4.png";
+  static const String icCardBackground = "assets/images/ic_card_background.png";
+  static const String icForward = "assets/images/ic_forward.png";
+  static const String icCreditCard = "assets/images/ic_credit_card.png";
 }

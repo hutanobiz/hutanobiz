@@ -1,29 +1,27 @@
 import 'package:country_code_picker/country_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hutano/models/medicalHistory.dart';
-import 'package:hutano/routes.dart';
-import 'package:hutano/screens/appointments/medical_history.dart';
-import 'package:hutano/screens/dashboard/dashboardScreen.dart';
-import 'package:hutano/screens/home.dart';
-import 'package:hutano/screens/login.dart';
-import 'package:hutano/src/ui/auth/login_pin/login_pin.dart';
-import 'package:hutano/src/ui/auth/signin/signin_screen.dart';
-import 'package:hutano/src/ui/medical_history/my_medical_history.dart';
-import 'package:hutano/src/ui/medical_history/provider/appoinment_provider.dart';
-import 'package:hutano/src/ui/registration_steps/add_provider/add_provider.dart';
-import 'package:hutano/src/ui/registration_steps/home/home.dart';
-import 'package:hutano/src/ui/registration_steps/payment/provider/credit_card_provider.dart';
-import 'package:hutano/src/ui/welcome/welcome_screen.dart';
-import 'package:hutano/src/utils/localization/localization.dart';
-import 'package:hutano/src/utils/navigation.dart';
-import 'package:hutano/src/utils/preference_key.dart';
-import 'package:hutano/src/utils/preference_utils.dart';
-import 'package:hutano/src/utils/size_config.dart';
-import 'package:hutano/theme.dart';
-import 'package:hutano/utils/shared_prefrences.dart';
-import 'package:hutano/widgets/inherited_widget.dart';
+import 'package:hutano/screens/payment/insurance_list.dart';
+import 'package:hutano/src/ui/add_insurance/add_insruance.dart';
+import 'package:hutano/src/ui/medical_history/payment_methods.dart';
+import 'package:hutano/src/ui/onboarding/onboarding.dart';
+import 'package:hutano/src/ui/registration_steps/invite_family/invite_family.dart';
+import 'package:hutano/src/ui/registration_steps/payment/add_payment_option.dart';
+import 'package:hutano/src/ui/registration_steps/payment/card_complete/add_card_complete.dart';
 import 'package:provider/provider.dart';
+
+import 'routes.dart';
+import 'screens/home.dart';
+import 'src/ui/auth/login_pin/login_pin.dart';
+import 'src/ui/auth/signin/signin_screen.dart';
+import 'src/ui/medical_history/provider/appoinment_provider.dart';
+import 'src/ui/registration_steps/payment/provider/credit_card_provider.dart';
+import 'src/ui/welcome/welcome_screen.dart';
+import 'src/utils/localization/localization.dart';
+import 'src/utils/preference_key.dart';
+import 'src/utils/preference_utils.dart';
+import 'theme.dart';
+import 'widgets/inherited_widget.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -104,14 +102,25 @@ class MyApp extends StatelessWidget {
   }
 
   Widget _gotoNextScreen(context) {
-    
     var emailVerified = getBool(PreferenceKey.isEmailVerified, false);
     var phone = getString(PreferenceKey.phone);
     var token = getString(PreferenceKey.tokens);
     var skipStep = getBool(PreferenceKey.skipStep, false);
     var performedStep = getBool(PreferenceKey.perFormedSteps, false);
     var isSetupPin = getBool(PreferenceKey.setPin, false);
+    var isIntro = getBool(PreferenceKey.intro, false);
+    // return AddInsurance();
+    // return AddPaymentScreen();
+    // return AddCardComplete();
+    return InviteFamilyScreen();
+    if (!isIntro) {
+      return OnBoardingPage();
+    }
+    // Map _insuranceMap = {};
+    // _insuranceMap['isPayment'] = false;
+    // _insuranceMap['isFromRegister'] = true;
 
+    // return InsuranceListScreen(insuranceMap: _insuranceMap);
 
     if (token.isNotEmpty) {
       if (skipStep || performedStep) {
