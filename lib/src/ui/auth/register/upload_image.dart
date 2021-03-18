@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:hutano/src/utils/constants/constants.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -115,7 +116,11 @@ class _UploadImageState extends State<UploadImage> {
           onTap: showPickerDialog,
           child: Container(
             child: imageFile == null
-                ? Container(child: Image.asset(FileConstants.icUser))
+                ? Container(
+                    width: spacing40,
+                    height: spacing40,
+                    child: Image.asset(FileConstants.icUser),
+                  )
                 : ClipOval(
                     child: Image.file(
                       _file,
@@ -138,7 +143,7 @@ class _UploadImageState extends State<UploadImage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                FileConstants.icUploadPurple,
+                FileConstants.icUpload2,
                 height: spacing20,
                 width: spacing20,
               ),
@@ -147,8 +152,11 @@ class _UploadImageState extends State<UploadImage> {
               ),
               Text(
                 Localization.of(context).uploadPhoto,
-                style:
-                    const TextStyle(color: colorBlack85, fontSize: fontSize14),
+                style: TextStyle(
+                    color: colorPurple100.withOpacity(0.85),
+                    fontSize: fontSize14,
+                    fontFamily: gilroyMedium
+                    ),
               )
             ],
           ),

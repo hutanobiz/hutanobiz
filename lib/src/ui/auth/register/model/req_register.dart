@@ -18,6 +18,7 @@ class ReqRegister {
   String deviceToken;
   int gender;
   String fullName;
+  bool haveHealthInsurance;
   ReqRegister(
       {this.password,
       this.firstName,
@@ -35,6 +36,7 @@ class ReqRegister {
       this.referedBy,
       this.type,
       this.step,
+      this.haveHealthInsurance,
       this.deviceToken,
       this.gender,
       this.fullName});
@@ -50,6 +52,7 @@ class ReqRegister {
       'zipCode': zipCode,
       'state': state,
       'dob': dob,
+      'haveHealthInsurance':haveHealthInsurance,
       'city': city,
       'insuranceId': insuranceId,
       'mobileCountryCode': mobileCountryCode,
@@ -74,6 +77,7 @@ class ReqRegister {
       email: map['email'],
       zipCode: map['zipCode'],
       state: map['state'],
+      haveHealthInsurance:map['haveHealthInsurance'],
       deviceToken: map['deviceToken'],
       dob: map['dob'],
       city: map['city'],

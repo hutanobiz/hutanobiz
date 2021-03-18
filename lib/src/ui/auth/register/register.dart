@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:hutano/src/widgets/account_recover_dialog.dart';
 import 'package:hutano/src/widgets/text_with_image.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 
@@ -196,30 +197,43 @@ class _RegisterScreenState extends State<RegisterScreen> {
       setState(() {
         emailSuffixIcon = FileConstants.icCloseRed;
       });
-      DialogUtils.showOkCancelAlertDialog(
-          cancelButtonTitle: Localization.of(context).cancel,
-          okButtonTitle: Localization.of(context).recover,
-          okButtonAction: () {
-            _dialogOpen = false;
-            Navigator.of(context).pushReplacementNamed( routeForgotPassword,
-                arguments: {
-                  ArgumentConstant.verificationScreen:
-                      VerificationScreen.resetPassword
-                });
-          },
-          cancelButtonAction: () {
-            _dialogOpen = false;
-          },
-          message: Localization.of(context).errorEmailExists,
-          context: context);
+      showacountRecoverDialog(
+        context,
+        _emailController.text.toString(),
+        onRecover: () {
+          _dialogOpen = false;
+          Navigator.of(context).pushReplacementNamed(routeForgotPassword,
+              arguments: {
+                ArgumentConstant.verificationScreen:
+                    VerificationScreen.resetPassword
+              });
+        },
+        onCancel: () {
+          _dialogOpen = false;
+        },
+      );
+      // DialogUtils.showOkCancelAlertDialog(
+      //     cancelButtonTitle: Localization.of(context).cancel,
+      //     okButtonTitle: Localization.of(context).recover,
+      //     okButtonAction: () {
+      //       _dialogOpen = false;
+      //       Navigator.of(context).pushReplacementNamed(routeForgotPassword,
+      //           arguments: {
+      //             ArgumentConstant.verificationScreen:
+      //                 VerificationScreen.resetPassword
+      //           });
+      //     },
+      //     cancelButtonAction: () {
+      //       _dialogOpen = false;
+      //     },
+      //     message: Localization.of(context).errorEmailExists,
+      //     context: context);
     } catch (e) {
       print(e);
     }
   }
 
   _submitData() async {
-
-    
     FocusManager.instance.primaryFocus.unfocus();
     if (_registerModel.dob == null) {
       CustomErrorDialog.showOkCancelErrorDialog(
@@ -241,6 +255,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
       CustomErrorDialog.showOkCancelErrorDialog(
           context: context,
           message: Localization.of(context).errorSelectProfile);
+      return;
+    }
+
+    if (_registerModel.haveHealthInsurance == null) {
+      CustomErrorDialog.showOkCancelErrorDialog(
+          context: context,
+          message: Localization.of(context).errorHealthInsurance);
       return;
     }
     _verifyAddress();
@@ -369,8 +390,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       //   arguments: _insuranceMap,
       // );
 
-      Navigator.of(context).pushReplacementNamed( routeWelcomeScreen);
-
+      Navigator.of(context).pushReplacementNamed(
+          _registerModel.haveHealthInsurance
+              ? routeAddInsurance
+              : routeWelcomeScreen);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);
@@ -461,7 +484,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Text(
                       Localization.of(context).createAccount,
                       style: TextStyle(
-                        color: colorBlack85,
+                        color: colorBlack2.withOpacity(0.85),
+                        fontStyle: FontStyle.normal,
+                        fontSize: 13.0,
+                        fontWeight: FontWeight.w300,
+                        fontFamily: gilroyLight,
                       ),
                     ),
                     SizedBox(
@@ -530,10 +557,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     SizedBox(
                       height: spacing20,
                     ),
-                    InsuranceList(
-                        controller: _insuranceController,
-                        insuranceList: _insuranceList,
-                        onInsuranceSelected: _onInsuranceSelected),
+                    // InsuranceList(
+                    //     controller: _insuranceController,
+                    //     insuranceList: _insuranceList,
+                    //     onInsuranceSelected: _onInsuranceSelected),
                     SizedBox(
                       height: spacing20,
                     ),
@@ -857,14 +884,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-          color: colorGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(14)),
+          color: colorGrey.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(14)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           TextWithImage(
               size: spacing30,
-              textStyle: TextStyle(fontSize: fontSize16),
+              textStyle: const TextStyle(
+                fontSize: fontSize16,
+                color: colorBlack2,
+                fontFamily: gilroyMedium,
+                fontStyle: FontStyle.normal,
+              ),
               label: Localization.of(context).labelHealthInsurance,
               image: FileConstants.icInsuranceBlue),
           SizedBox(
@@ -873,7 +906,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
           Text(
             Localization.of(context).healthInsurance,
             textAlign: TextAlign.start,
-            style: TextStyle(fontSize: fontSize15),
+            style: TextStyle(
+              fontSize: fontSize14,
+              color: colorBlack2,
+              fontFamily: gilroyRegular,
+            ),
           ),
           SizedBox(
             height: 17,
@@ -882,7 +919,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
             children: [
               HutanoButton(
                 label: 'Yes',
-                onPressed: () {},
+                onPressed: () {
+                  _registerModel.haveHealthInsurance = true;
+                },
                 buttonType: HutanoButtonType.onlyLabel,
                 width: 80,
                 color: colorPurple,
@@ -894,7 +933,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               HutanoButton(
                 borderColor: colorGrey,
                 label: 'No',
-                onPressed: () {},
+                onPressed: () {
+                  _registerModel.haveHealthInsurance = false;
+                },
                 buttonType: HutanoButtonType.onlyLabel,
                 width: 80,
                 labelColor: colorBlack,
