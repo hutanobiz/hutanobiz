@@ -79,6 +79,7 @@ dependencies:
   wakelock: ^0.1.4
   xml: ^4.1.0
   introduction_screen: ^1.0.9
+  
 
 dev_dependencies:
   flutter_test:
@@ -101,6 +102,8 @@ flutter:
   fonts:
     - family: Gilroy
       fonts:
+        - asset: fonts/Gilroy-Light.ttf
+          weight: 300
         - asset: fonts/Gilroy-Regular.ttf
           weight: 400
         - asset: fonts/Gilroy-Medium.ttf
