@@ -122,4 +122,13 @@ class FileConstants {
   static const String icCardBackground = "assets/images/ic_card_background.png";
   static const String icForward = "assets/images/ic_forward.png";
   static const String icCreditCard = "assets/images/ic_credit_card.png";
+  static const String icNextBlack = "assets/images/ic_next_black.png";
+  static const String icSkipBlack = "assets/images/ic_skip_black.png";
+  static const String icInvite = "assets/images/ic_invite.png";
+  static const String icSuccessCheck = "assets/images/ic_success_check.png";
+  static const String icSearchBlack = "assets/images/ic_search_ios.png";
+  static const String icAddUser = "assets/images/ic_add_user.png";
+  static const String icSettingBlack = "assets/images/ic_setting_black.png";
+  static const String icRemoveBlack = "assets/images/ic_delete_black.png";
+  static const String icUpload2 = "assets/images/ic_upload2.png";
 }

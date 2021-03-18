@@ -301,4 +301,14 @@ abstract class Localization {
   String get addCard;
   String get validThru;
   String get creditCardAdded;
+  String get passwordReset;
+  String get newPinCreation;
+  String get searchPhoneContacts;
+  String get fasterLogin;
+  String get createPin;
+  String get addToExistinGroup;
+  String get errorHealthInsurance;
+  String get errorEnterField;
+  String get labelInsuranceOptions;
+  String get labelInsuranceAdded;
 }

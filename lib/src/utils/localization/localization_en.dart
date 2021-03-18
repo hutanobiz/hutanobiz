@@ -231,13 +231,13 @@ class LocalizationEN implements Localization {
   String get addProviderDesc => "To access your health team in one place.";
 
   @override
-  String get completeTask => "Complete these important tasks \n  now or later.";
+  String get completeTask => "Complete these important tasks now \nor later.";
 
   @override
   String get welcome => "Welcome!";
 
   @override
-  String get completeTaskNow => "COMPLETE TASKS NOW";
+  String get completeTaskNow => "Complete Tasks Now";
 
   @override
   String get skipTasks => "Skip for later";
@@ -322,7 +322,7 @@ class LocalizationEN implements Localization {
 
   @override
   String get assignPermisstion =>
-      "assign permissions to family to manage your account";
+      "Invite and assign permissions to family \nand manage your account.";
 
   @override
   String get enterEmailAddress => "enter email address";
@@ -457,10 +457,10 @@ class LocalizationEN implements Localization {
   String get add => "Add";
 
   @override
-  String get addCreateGroup => "Create new group";
+  String get addCreateGroup => "Add to new group";
 
   @override
-  String get addDoctorNetwork => "Add {{doctor}} to your network";
+  String get addDoctorNetwork => "Add {{doctor}} to your Provider Network.";
 
   @override
   String get selectNetwork => "Select Network";
@@ -585,7 +585,7 @@ class LocalizationEN implements Localization {
   String get inviteByPhone => "Invite by Phone Number";
 
   @override
-  String get refCode => "Referral Code (Optional)";
+  String get refCode => "Promo Code / Coupon";
 
   @override
   String get errorPasswordNotMatch =>
@@ -767,7 +767,6 @@ class LocalizationEN implements Localization {
   String get insuranceCompany => "Insurance Company";
 
   @override
-  
   String get insuranceMemberName => "Insured Member Name";
 
   @override
@@ -790,4 +789,34 @@ class LocalizationEN implements Localization {
 
   @override
   String get creditCardAdded => "Credit Card Added";
+
+  @override
+  String get passwordReset => "Password Reset";
+
+  @override
+  String get newPinCreation => "New Pin Creation";
+
+  @override
+  String get searchPhoneContacts => "Search my phone contacts";
+
+  @override
+  String get createPin => "Create a PIN";
+
+  @override
+  String get fasterLogin => "Faster Login";
+
+  @override
+  String get addToExistinGroup => "Add to my existing group";
+
+  @override
+  String get errorHealthInsurance => "Please select health insurance";
+
+  @override
+  String get errorEnterField => "Please enter detail.";
+
+  @override
+  String get labelInsuranceAdded => "Insurance Added";
+
+  @override
+  String get labelInsuranceOptions => "Insurance Options";
 }
