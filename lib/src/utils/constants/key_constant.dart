@@ -24,4 +24,5 @@ class ArgumentConstant{
   static const String insuranceId = "insuranceId"; 
   static const String card = "argsCard"; 
   static const String argsselectBodyPart = "argsselectBodyPart"; 
+  static const String argsinsuranceType= "argsinsuranceType"; 
 }

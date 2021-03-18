@@ -46,6 +46,8 @@ import 'package:hutano/screens/registration/forgot_password.dart';
 import 'package:hutano/screens/registration/register.dart';
 import 'package:hutano/screens/registration/register_email.dart';
 import 'package:hutano/screens/registration/verify_otp.dart';
+import 'package:hutano/src/ui/add_insurance/add_insruance.dart';
+import 'package:hutano/src/ui/add_insurance/add_insruance_complete.dart';
 import 'package:hutano/src/ui/appointments/my_appointments/my_appointments.dart';
 import 'package:hutano/src/ui/auth/forgotpassword/forgot_password.dart';
 import 'package:hutano/src/ui/auth/login_pin/login_pin.dart';
@@ -55,6 +57,7 @@ import 'package:hutano/src/ui/auth/register/register.dart';
 import 'package:hutano/src/ui/auth/register_phone/register_number.dart';
 import 'package:hutano/src/ui/auth/reset_pin.dart';
 import 'package:hutano/src/ui/auth/resetpassword/reset_password.dart';
+import 'package:hutano/src/ui/auth/resetpassword/reset_password_success.dart';
 import 'package:hutano/src/ui/auth/signin/signin_screen.dart';
 import 'package:hutano/src/ui/auth/signin/web_view.dart';
 import 'package:hutano/src/ui/auth/splash.dart';
@@ -87,7 +90,10 @@ import 'package:hutano/src/ui/registration_steps/email_verification/email_verifi
 import 'package:hutano/src/ui/registration_steps/email_verification/email_verification_complete.dart';
 import 'package:hutano/src/ui/registration_steps/home/home.dart';
 import 'package:hutano/src/ui/registration_steps/invite_family/invite_family.dart';
+import 'package:hutano/src/ui/registration_steps/invite_family/invite_family_success.dart';
 import 'package:hutano/src/ui/registration_steps/payment/add_payment_option.dart';
+import 'package:hutano/src/ui/registration_steps/payment/card_complete/add_card_complete.dart';
+import 'package:hutano/src/ui/registration_steps/setup_pin/pin_setup_success.dart';
 import 'package:hutano/src/ui/registration_steps/setup_pin/set_pin.dart';
 import 'package:hutano/src/ui/welcome/welcome_screen.dart';
 import 'package:hutano/src/utils/constants/key_constant.dart';
@@ -190,10 +196,27 @@ class Routes {
         return MaterialPageRoute(builder: (_) => LoginPin());
       case routeEmailVerification:
         return MaterialPageRoute(builder: (_) => EmailVerificationScreen());
-      case routeEmailVerificationComplete:
-        final String number = args[ArgumentConstant.verifyCode];
+      case routeResetPasswordSuccess:
+        return MaterialPageRoute(builder: (_) => ResetPasswordSuccess());
+      case routePinSetupSuccess:
+        return MaterialPageRoute(builder: (_) => PinSetupSuccess());
+      case routeAddInsuranceComplete:
+        return MaterialPageRoute(builder: (_) => AddInsuranceComplete());
+      case routeAddInsurance:
+        if (args == null) {
+          return MaterialPageRoute(builder: (_) => AddInsurance());
+        }
+        final insuranceType = args[ArgumentConstant.argsinsuranceType];
         return MaterialPageRoute(
-            builder: (_) => EmailVerifiCompleteScreen(number));
+            builder: (_) => AddInsurance(
+                  insuranceType: insuranceType,
+                ));
+      case routeInviteSuccess:
+        return MaterialPageRoute(builder: (_) => InviteFamilySuccess());
+      case routeEmailVerificationComplete:
+        return MaterialPageRoute(builder: (_) => EmailVerifiCompleteScreen());
+      case routeAddCardComplete:
+        return MaterialPageRoute(builder: (_) => AddCardComplete());
       case routeMyMedicalHistory:
         return MaterialPageRoute(builder: (_) => MyMedicalHistory());
       case routeBodySymptoms:
@@ -305,6 +328,9 @@ class Routes {
                   number: number,
                 ));
       case routeAddFamilyMember:
+        if (args == null) {
+          return MaterialPageRoute(builder: (_) => AddFamilyMember());
+        }
         final member = args[ArgumentConstant.member];
         return MaterialPageRoute(
             builder: (_) => AddFamilyMember(member: member));

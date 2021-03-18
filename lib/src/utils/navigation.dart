@@ -41,8 +41,11 @@ import 'package:hutano/screens/payment/insurance_list.dart';
 import 'package:hutano/screens/payment/payments_methods.dart';
 import 'package:hutano/screens/payment/saved_cards.dart';
 import 'package:hutano/screens/payment/upload_insurance_images.dart';
+import 'package:hutano/src/ui/auth/resetpassword/reset_password_success.dart';
 import 'package:hutano/src/ui/auth/signin/web_view.dart';
 import 'package:hutano/src/ui/medical_history/upload_insurance_image.dart';
+import 'package:hutano/src/ui/registration_steps/invite_family/invite_family_success.dart';
+import 'package:hutano/src/ui/registration_steps/setup_pin/pin_setup_success.dart';
 
 import '../../routes.dart';
 import '../ui/appointments/my_appointments/my_appointments.dart';
@@ -131,10 +134,17 @@ class NavigationUtils {
         return MaterialPageRoute(builder: (_) => LoginPin());
       case routeEmailVerification:
         return MaterialPageRoute(builder: (_) => EmailVerificationScreen());
+      case routeResetPasswordSuccess:
+        return MaterialPageRoute(builder: (_) => ResetPasswordSuccess());
       case routeEmailVerificationComplete:
-        final String number = args[ArgumentConstant.verifyCode];
         return MaterialPageRoute(
-            builder: (_) => EmailVerifiCompleteScreen(number));
+            builder: (_) => EmailVerifiCompleteScreen());
+      case routePinSetupSuccess:
+        return MaterialPageRoute(
+            builder: (_) => PinSetupSuccess());
+      case routeInviteSuccess:
+        return MaterialPageRoute(
+            builder: (_) => InviteFamilySuccess());
       case routeMyMedicalHistory:
         return MaterialPageRoute(builder: (_) => MyMedicalHistory());
       case routeBodySymptoms:
