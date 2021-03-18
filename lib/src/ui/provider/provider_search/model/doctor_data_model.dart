@@ -12,10 +12,14 @@ class DoctorData {
   bool isOfficeEnabled;
   bool isOnsiteEnabled;
   bool isVideoChatEnabled;
+  String averageRating;
   List<User> user;
   List<ProfessionalTitle> professionalTitle;
   List<Specialties> specialties;
   List<StateData> state;
+  List<CommomnConsultanceFee> vedioConsultanceFee;
+  List<CommomnConsultanceFee> onsiteConsultanceFee;
+  List<CommomnConsultanceFee> officeConsultanceFee;
 
   DoctorData(
       {this.sId,
@@ -31,8 +35,12 @@ class DoctorData {
       this.isOfficeEnabled,
       this.isOnsiteEnabled,
       this.isVideoChatEnabled,
+      this.averageRating,
       this.user,
       this.professionalTitle,
+      this.officeConsultanceFee,
+      this.onsiteConsultanceFee,
+      this.vedioConsultanceFee,
       this.specialties,
       this.state});
 
@@ -52,10 +60,29 @@ class DoctorData {
       });
     }
     distance = json['distance'];
+    averageRating = json['averageRating'].toString();
     if (json['followUpFee'] != null) {
       followUpFee = new List<FollowUpFee>();
       json['followUpFee'].forEach((v) {
         followUpFee.add(new FollowUpFee.fromJson(v));
+      });
+    }
+    if (json['officeConsultanceFee'] != null) {
+      officeConsultanceFee = new List<CommomnConsultanceFee>();
+      json['officeConsultanceFee'].forEach((v) {
+        officeConsultanceFee.add(new CommomnConsultanceFee.fromJson(v));
+      });
+    }
+    if (json['onsiteConsultanceFee'] != null) {
+      onsiteConsultanceFee = new List<CommomnConsultanceFee>();
+      json['onsiteConsultanceFee'].forEach((v) {
+        onsiteConsultanceFee.add(new CommomnConsultanceFee.fromJson(v));
+      });
+    }
+    if (json['vedioConsultanceFee'] != null) {
+      vedioConsultanceFee = new List<CommomnConsultanceFee>();
+      json['vedioConsultanceFee'].forEach((v) {
+        vedioConsultanceFee.add(new CommomnConsultanceFee.fromJson(v));
       });
     }
     isLiveTrackable = json['isLiveTrackable'];
@@ -97,10 +124,23 @@ class DoctorData {
       data['businessLocation'] = this.businessLocation.toJson();
     }
     data['practicingSince'] = this.practicingSince;
+    data['averageRating'] = this.averageRating;
     data['appointmentSetting'] = this.appointmentSetting;
     if (this.consultanceFee != null) {
       data['consultanceFee'] =
           this.consultanceFee.map((v) => v.toJson()).toList();
+    }
+    if (this.officeConsultanceFee != null) {
+      data['officeConsultanceFee'] =
+          this.officeConsultanceFee.map((v) => v.toJson()).toList();
+    }
+    if (this.onsiteConsultanceFee != null) {
+      data['onsiteConsultanceFee'] =
+          this.onsiteConsultanceFee.map((v) => v.toJson()).toList();
+    }
+    if (this.vedioConsultanceFee != null) {
+      data['vedioConsultanceFee'] =
+          this.vedioConsultanceFee.map((v) => v.toJson()).toList();
     }
     data['distance'] = this.distance;
     if (this.followUpFee != null) {
@@ -428,3 +468,24 @@ class FollowUpFee {
   }
 }
 
+class CommomnConsultanceFee {
+  int fee;
+  int duration;
+  String sId;
+
+  CommomnConsultanceFee({this.fee, this.duration, this.sId});
+
+  CommomnConsultanceFee.fromJson(Map<String, dynamic> json) {
+    fee = json['fee'];
+    duration = json['duration'];
+    sId = json['_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['fee'] = this.fee;
+    data['duration'] = this.duration;
+    data['_id'] = this.sId;
+    return data;
+  }
+}

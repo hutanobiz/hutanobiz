@@ -1,17 +1,14 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:hutano/src/ui/medical_history/provider/appoinment_provider.dart';
-import 'package:hutano/src/utils/preference_key.dart';
-import 'package:hutano/src/utils/preference_utils.dart';
-import 'package:provider/provider.dart';
+import 'package:hutano/utils/extensions.dart';
 
 import '../../../utils/color_utils.dart';
 import '../../../utils/constants/constants.dart';
 import '../../../utils/constants/file_constants.dart';
 import '../../../utils/constants/key_constant.dart';
 import '../../../utils/dimens.dart';
-import '../../../utils/extensions.dart';
 import '../../../utils/localization/localization.dart';
-import '../../../utils/navigation.dart';
 import '../../../widgets/custom_card.dart';
 import '../../../widgets/hutano_button.dart';
 import '../../../widgets/text_with_image.dart';
@@ -53,37 +50,20 @@ class ItemProviderDetail extends StatelessWidget {
                   name = 'Dr. $name , ${occupation.getInitials()}';
                 }
 
-                Navigator.of(context).pushNamed( routeProviderAddNetwork,
-                    arguments: {
-                      ArgumentConstant.doctorId: providerDetail.userId,
-                      ArgumentConstant.doctorName: name,
-                      ArgumentConstant.doctorAvatar:
-                          providerDetail.user[0].avatar
-                    });
+                Navigator.of(context)
+                    .pushNamed(routeProviderAddNetwork, arguments: {
+                  ArgumentConstant.doctorId: providerDetail.userId,
+                  ArgumentConstant.doctorName: name,
+                  ArgumentConstant.doctorAvatar: providerDetail.user[0].avatar
+                });
               },
               label: Localization.of(context).addToNetwork,
               height: 45,
               fontSize: fontSize12,
-              color: colorWhite,
-              labelColor: colorPurple,
+              labelColor: colorWhite,
+              color: colorPurple,
               buttonShape: _getBorder(bottomLeft: 14, bottomRight: 0),
             )),
-        Expanded(
-          flex: 1,
-          child: HutanoButton(
-            onPressed: () {
-              Provider.of<SymptomsInfoProvider>(context, listen: false)
-                  .setAppoinmentData(
-                      providerDetail.userId, getString(PreferenceKey.id));
-              Navigator.of(context).pushNamed( routeMyMedicalHistory);
-            },
-            label: Localization.of(context).bookAppointment,
-            height: 45,
-            fontSize: fontSize12,
-            color: colorPurple,
-            buttonShape: _getBorder(bottomLeft: 0, bottomRight: 14),
-          ),
-        )
       ],
     );
   }
@@ -91,7 +71,7 @@ class ItemProviderDetail extends StatelessWidget {
   _getProviderDetail() {
     final user = providerDetail.user[0];
     final avatar = user?.avatar ?? "";
-    final rating = "4";
+    final rating = providerDetail.averageRating ?? "0";
     var occupation = "";
     if (providerDetail?.professionalTitle?.length > 0) {
       occupation = providerDetail?.professionalTitle[0]?.title ?? "";
@@ -112,11 +92,39 @@ class ItemProviderDetail extends StatelessWidget {
   }
 
   _getFee() {
-    if (providerDetail.followUpFee != null &&
-        providerDetail.followUpFee.length > 0) {
-      return providerDetail?.followUpFee[0]?.fee ?? '0';
+    var fee = "0";
+    if (providerDetail.officeConsultanceFee != null &&
+        providerDetail.officeConsultanceFee.length > 0) {
+      fee = providerDetail.officeConsultanceFee[0].fee == null
+          ? '0.00'
+          : providerDetail.officeConsultanceFee[0].fee.toStringAsFixed(2) ??
+              '0.00';
     }
-    return '0';
+
+    if (providerDetail.onsiteConsultanceFee != null &&
+        providerDetail.onsiteConsultanceFee.length > 0) {
+      fee = providerDetail.onsiteConsultanceFee[0].fee == null
+          ? '0.00'
+          : min(
+              double.parse(fee),
+              double.parse(
+                providerDetail.onsiteConsultanceFee[0].fee.toStringAsFixed(2),
+              ),
+            ).toStringAsFixed(2);
+    }
+
+    if (providerDetail.vedioConsultanceFee != null &&
+        providerDetail.vedioConsultanceFee.length > 0) {
+      fee = providerDetail.vedioConsultanceFee[0].fee == null
+          ? '0.00'
+          : min(
+              double.parse(fee),
+              double.parse(
+                providerDetail.vedioConsultanceFee[0].fee.toStringAsFixed(2),
+              ),
+            ).toStringAsFixed(2);
+    }
+    return fee ?? '0';
   }
 
   Widget _buildProviderInfo(context) {
@@ -133,35 +141,62 @@ class ItemProviderDetail extends StatelessWidget {
             ),
             Container(
               height: spacing50,
-              width: spacing100,
-              margin: EdgeInsets.all(5),
+              margin: EdgeInsets.only(top: 20, right: 5),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
                     '\$${_getFee()}',
                     style: const TextStyle(
-                        color: colorLightBlack,
-                        fontSize: fontSize13,
-                        fontWeight: fontWeightBold),
+                        color: colorBlack2,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: gilroySemiBold,
+                        fontStyle: FontStyle.normal,
+                        fontSize: 16.0),
                   ),
                   Text(
                     Localization.of(context).consultationFee,
                     style: const TextStyle(
-                        color: colorLightBlack, fontSize: fontSize10),
+                      color: colorBlack2,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: gilroyRegular,
+                      fontStyle: FontStyle.normal,
+                    ),
                   ),
                 ],
-              ),
-              decoration: BoxDecoration(
-                color: colorLightPink,
-                border: Border.all(width: 1, color: colorBorder3),
-                borderRadius: BorderRadius.only(topRight: Radius.circular(10)),
               ),
             )
           ],
         )
       ],
     );
+  }
+
+  _getLocation() {
+    var address = "";
+    if (providerDetail.businessLocation != null) {
+      dynamic business = providerDetail.businessLocation;
+
+      var _state;
+
+      if (business.state is Map && business.state.length > 0) {
+        _state = business.state;
+      } else if (providerDetail.state != null &&
+          providerDetail.state.length > 0) {
+        _state = providerDetail.state[0].toJson();
+      }
+
+      address = Extensions.addressFormat(
+        business.address?.toString(),
+        business.street?.toString(),
+        business.city?.toString(),
+        _state,
+        business.zipCode?.toString(),
+      );
+    }
+    return address;
   }
 
   _buildLocationInfo(context) {
@@ -172,7 +207,7 @@ class ItemProviderDetail extends StatelessWidget {
           Expanded(
             child: TextWithImage(
               image: FileConstants.icMarker,
-              label: providerDetail.businessLocation?.street ?? "",
+              label: _getLocation(),
             ),
           ),
           IntrinsicWidth(

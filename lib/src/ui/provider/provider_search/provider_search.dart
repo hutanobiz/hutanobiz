@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hutano/routes.dart';
+import 'package:hutano/src/widgets/app_header.dart';
+import 'package:hutano/src/widgets/hutano_progressbar.dart';
+import 'package:hutano/src/widgets/skip_later.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../apis/api_manager.dart';
@@ -24,8 +28,7 @@ class ProviderSearch extends StatefulWidget {
   _ProviderSearchState createState() => _ProviderSearchState();
 }
 
-class _ProviderSearchState extends State<ProviderSearch>
-    with AutomaticKeepAliveClientMixin<ProviderSearch> {
+class _ProviderSearchState extends State<ProviderSearch> {
   final controller = TextEditingController();
 
   final PagingController<int, DoctorData> _pagingController =
@@ -57,7 +60,7 @@ class _ProviderSearchState extends State<ProviderSearch>
   }
 
   _searchProvider(int pageKey) async {
-    FocusManager.instance.primaryFocus.unfocus();
+    // FocusManager.instance.primaryFocus.unfocus();
 
     final locationData = LocationService().getLocationData();
     final param = <String, dynamic>{
@@ -86,26 +89,21 @@ class _ProviderSearchState extends State<ProviderSearch>
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 25, left: 0, right: 0, bottom: 0),
+    return Scaffold(
+      body: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              Localization.of(context).searchResults,
-              style: TextStyle(
-                  fontSize: fontSize18,
-                  color: colorDarkPurple,
-                  fontWeight: fontWeightSemiBold),
+            AppHeader(
+              progressSteps: HutanoProgressSteps.four,
+              title: Localization.of(context).addProviders,
+              subTitle: Localization.of(context).addProviderToNetwork,
             ),
             SizedBox(
-              height: spacing25,
+              height: spacing40,
             ),
             SearchBar(controller: controller, onSearch: _onSearch),
-            SizedBox(
-              height: spacing30,
-            ),
             Expanded(
               child: PagedListView<int, DoctorData>.separated(
                 pagingController: _pagingController,
@@ -119,13 +117,20 @@ class _ProviderSearchState extends State<ProviderSearch>
                 ),
                 separatorBuilder: (context, index) => const Divider(),
               ),
+            ),
+            Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.only(bottom: 5),
+              child: SkipLater(
+                onTap: () {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      Routes.dashboardScreen, (route) => false);
+                },
+              ),
             )
           ],
         ),
       ),
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

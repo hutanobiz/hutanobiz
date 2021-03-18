@@ -98,7 +98,7 @@ class ProviderGroupList {
     state = json['state'];
     avatar = json['avatar'];
     zipCode = json['zipCode'];
-    phoneNumber = json['phoneNumber'];
+    phoneNumber = json['phoneNumber'].toString();
     gender = json['gender'];
     providerNetwork = json['providerNetwork'] != null
         ? new ProviderNetwork.fromJson(json['providerNetwork'])
@@ -194,7 +194,7 @@ class Doctor {
     state = json['state'];
     avatar = json['avatar'];
     zipCode = json['zipCode'];
-    phoneNumber = json['phoneNumber'];
+    phoneNumber = json['phoneNumber'].toString();
     gender = json['gender'];
     language = json['language'].cast<String>();
     type = json['type'];

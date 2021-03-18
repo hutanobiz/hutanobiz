@@ -245,7 +245,7 @@ extension StringExtension on String {
     return template;
   }
 
-   String getInitials() {
+  String getInitials() {
     var names = split(" ");
     var initials = "";
     var numWords = names.length;
@@ -257,5 +257,11 @@ extension StringExtension on String {
       initials += '${names[i][0].toUpperCase()}';
     }
     return initials;
+  }
+
+  String getYearCount() {
+    var parsedDate = DateTime.parse(this);
+    var dur = DateTime.now().difference(parsedDate);
+    return (dur.inDays / 365).floor().toString();
   }
 }
