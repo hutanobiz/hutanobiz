@@ -8,6 +8,8 @@ import 'package:hutano/src/utils/dialog_utils.dart';
 import 'package:hutano/src/utils/preference_key.dart';
 import 'package:hutano/src/utils/preference_utils.dart';
 import 'package:hutano/src/utils/progress_dialog.dart';
+import 'package:hutano/src/widgets/app_header.dart';
+import 'package:hutano/src/widgets/skip_later.dart';
 import 'package:hutano/src/widgets/toast.dart';
 
 import '../../../utils/color_utils.dart';
@@ -53,22 +55,22 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  HutanoProgressBar(progressSteps: HutanoProgressSteps.one),
-                  HutanoHeader(
-                    headerInfo: HutanoHeaderInfo(
-                      title: Localization.of(context).emailVerification,
-                    ),
-                    spacing: 10,
+                  AppHeader(
+                    progressSteps: HutanoProgressSteps.one,
+                    title: Localization.of(context).emailVerification,
+                  ),
+                  SizedBox(
+                    height: 10,
                   ),
                   Text(
                     Localization.of(context)
                         .enterActivationCode
                         .format([getString(PreferenceKey.email, "")]),
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        color: colorBlack85,
-                        fontWeight: fontWeightMedium,
-                        fontSize: fontSize15),
+                    style: TextStyle(
+                        color: colorBlack2.withOpacity(0.85),
+                        fontFamily: gilroyRegular,
+                        fontSize: fontSize14),
                   ),
                   SizedBox(
                     height: spacing30,
@@ -86,7 +88,12 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               ),
             ),
             Spacer(),
-            _buildSkipTaskNowButton(context),
+            SkipLater(
+              onTap: _skipTaskNow,
+            ),
+            SizedBox(
+              height: spacing20,
+            ),
           ],
         ))));
   }
@@ -148,27 +155,10 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   _buildActivateEmailButton(BuildContext context) => Padding(
       padding: const EdgeInsets.only(left: spacing20, right: spacing20),
       child: HutanoButton(
-        buttonType: HutanoButtonType.withIcon,
-        isIconButton: true,
-        icon: FileConstants.icDone,
-        color: colorDarkBlue,
+        color: colorOrange,
         iconSize: spacing30,
-        label: Localization.of(context).activateMail,
+        label: Localization.of(context).verify,
         onPressed: _enableButton ? _activationEmail : null,
-      ));
-
-  _buildSkipTaskNowButton(BuildContext context) => Padding(
-      padding: const EdgeInsets.only(
-          left: spacing20, right: spacing20, bottom: spacing20),
-      child: HutanoButton(
-        buttonType: HutanoButtonType.withPrefixIcon,
-        isIconButton: true,
-        iconSize: spacing20,
-        labelColor: colorBlack,
-        color: Colors.transparent,
-                icon: FileConstants.icSkipLater,
-        label: Localization.of(context).skipTasks,
-        onPressed: _skipTaskNow,
       ));
 
   _resendCode() async {
@@ -194,13 +184,10 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
           .emailVerification(
               ReqEmail(step: 6, emailVerificationCode: _codeController.text))
           .then((value) {
-        DialogUtils.showAlertDialog(context, value.response);
         ProgressDialogUtils.dismissProgressDialog();
         setBool(PreferenceKey.isEmailVerified, true);
-        Navigator.of(context).pushReplacementNamed( routeEmailVerificationComplete,
-            arguments: {
-              ArgumentConstant.verifyCode: _codeController.text,
-            });
+        Navigator.of(context)
+            .pushReplacementNamed(routeEmailVerificationComplete);
       });
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
@@ -213,6 +200,6 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   }
 
   _skipTaskNow() {
-    Navigator.of(context).pushNamed( routeAddPaymentOption);
+    Navigator.of(context).pushNamed(routeAddPaymentOption);
   }
 }

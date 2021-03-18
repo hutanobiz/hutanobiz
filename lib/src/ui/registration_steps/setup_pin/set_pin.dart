@@ -4,6 +4,7 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/src/apis/api_manager.dart';
 import 'package:hutano/src/apis/error_model.dart';
 import 'package:hutano/src/ui/registration_steps/setup_pin/model/req_setup_pin.dart';
+import 'package:hutano/src/utils/color_utils.dart';
 import 'package:hutano/src/utils/constants/constants.dart';
 import 'package:hutano/src/utils/constants/file_constants.dart';
 import 'package:hutano/src/utils/dialog_utils.dart';
@@ -14,6 +15,8 @@ import 'package:hutano/src/utils/navigation.dart';
 import 'package:hutano/src/utils/preference_key.dart';
 import 'package:hutano/src/utils/preference_utils.dart';
 import 'package:hutano/src/utils/progress_dialog.dart';
+import 'package:hutano/src/widgets/app_header.dart';
+import 'package:hutano/src/widgets/skip_later.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:local_auth/local_auth.dart';
 
@@ -60,7 +63,7 @@ class _SetupPinState extends State<SetupPin> {
           localizedReason: Localization.of(context).labelAuthWithFingerPrint,
           useErrorDialogs: true);
       if (authenticated) {
-        Navigator.of(context).pushReplacementNamed( routeAddPaymentOption);
+        Navigator.of(context).pushReplacementNamed(routeAddPaymentOption);
         setBool(PreferenceKey.setPin, true);
       }
     } on PlatformException catch (e) {
@@ -89,9 +92,19 @@ class _SetupPinState extends State<SetupPin> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: TextStyle(fontSize: fontSize14),
+          Align(
+            alignment: Alignment.center,
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: fontSize14,
+                color: colorBlack2,
+                fontWeight: FontWeight.w400,
+                fontFamily: gilroyRegular,
+                fontStyle: FontStyle.normal,
+              ),
+            ),
           ),
           SizedBox(
             height: spacing10,
@@ -117,7 +130,7 @@ class _SetupPinState extends State<SetupPin> {
           onPressed: _authenticate,
         ),
       );
-
+  
   Future<void> _onUpdateClick() async {
     if (_confirmPinController.text == _newPinController.text) {
       try {
@@ -130,9 +143,9 @@ class _SetupPinState extends State<SetupPin> {
           ProgressDialogUtils.dismissProgressDialog();
           setBool(PreferenceKey.setPin, true);
           if (widget.setupScreen == SetupScreenFrom.login) {
-            Navigator.of(context).pushReplacementNamed( Routes.dashboardScreen);
+            Navigator.of(context).pushReplacementNamed(Routes.dashboardScreen);
           } else {
-            Navigator.of(context).pushReplacementNamed( routeAddPaymentOption);
+            Navigator.of(context).pushReplacementNamed(routeAddPaymentOption);
           }
         }).catchError((dynamic e) {
           ProgressDialogUtils.dismissProgressDialog();
@@ -154,7 +167,7 @@ class _SetupPinState extends State<SetupPin> {
     return Padding(
       padding: const EdgeInsets.only(left: spacing15, right: spacing15),
       child: HutanoButton(
-        label: Localization.of(context).update,
+        label: Localization.of(context).next,
         margin: spacing10,
         onPressed: _enableButton ? _onUpdateClick : null,
       ),
@@ -171,10 +184,12 @@ class _SetupPinState extends State<SetupPin> {
           body: SingleChildScrollView(
             child: Column(
               children: [
-                HutanoHeader(
-                  headerInfo: HutanoHeaderInfo(
-                    title: Localization.of(context).msgResetPin,
-                  ),
+                AppHeader(
+                  title: Localization.of(context).fasterLogin,
+                  subTitle: Localization.of(context).createPin,
+                ),
+                SizedBox(
+                  height: 50,
                 ),
                 _buildPinInput(context, Localization.of(context).newPin,
                     _newPinController, _onNewPinChange),
@@ -184,6 +199,13 @@ class _SetupPinState extends State<SetupPin> {
                   height: spacing20,
                 ),
                 _buildButton(context),
+                if (widget.setupScreen != SetupScreenFrom.login)
+                  SkipLater(
+                    onTap: () {
+                      Navigator.of(context)
+                          .pushReplacementNamed(routeAddPaymentOption);
+                    },
+                  ),
                 SizedBox(
                   height: spacing50,
                 ),
