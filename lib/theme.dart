@@ -9,6 +9,7 @@ class AppTheme {
         textTheme.bodyText2.copyWith(decorationColor: Colors.transparent);
 
     return ThemeData.light().copyWith(
+      
       brightness: Brightness.light,
       primaryColor: AppColors.goldenTainoi,
       accentColor: AppColors.accentColor,
@@ -18,9 +19,12 @@ class AppTheme {
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: Colors.cyan[300],
       ),
-      textTheme: textTheme.copyWith(
-        bodyText2: body1,
-      ),
+      // textTheme: textTheme.copyWith(
+      //   bodyText2: body1,
+      // ),
+      textTheme: textTheme.apply(
+        fontFamily: "Gilroy",
+      )
     );
   }
 }
