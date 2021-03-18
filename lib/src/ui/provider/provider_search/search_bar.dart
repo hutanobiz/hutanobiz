@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../../utils/color_utils.dart';
 import '../../../utils/constants/file_constants.dart';
-import '../../../utils/debouncer.dart';
-import '../../../utils/dimens.dart';
 import '../../../utils/localization/localization.dart';
 
 class SearchBar extends StatelessWidget {
   final TextEditingController controller;
   final Function onSearch;
-  final _debouncer = Debouncer();
   SearchBar({Key key, this.controller, this.onSearch}) : super(key: key);
 
   @override
@@ -24,20 +21,18 @@ class SearchBar extends StatelessWidget {
     return Container(
       child: TextField(
         controller: controller,
-        // onChanged: (s) => _debouncer(() {
-        //   _onSearch(s);
-        // }),
         decoration: InputDecoration(
           isDense: true,
+          fillColor: colorBlack2.withOpacity(0.05),
           suffixIconConstraints: BoxConstraints(),
           suffixIcon: InkWell(
             onTap: onSearch,
             child: Padding(
               padding: const EdgeInsets.only(right: 8),
               child: Image.asset(
-                FileConstants.icSearchYellow,
-                height: spacing30,
-                width: spacing30,
+                FileConstants.icSearchBlack,
+                height: 20,
+                width: 20,
               ),
             ),
           ),
@@ -50,5 +45,3 @@ class SearchBar extends StatelessWidget {
     );
   }
 }
-
-class _debouncer {}

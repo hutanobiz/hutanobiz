@@ -36,8 +36,7 @@ class _RelationPickerState extends State<RelationPicker> {
           itemBuilder: (context, pos) {
             return InkWell(
                 onTap: () {
-                  widget
-                      .onRelationSelected(widget.relationList[pos]);
+                  widget.onRelationSelected(widget.relationList[pos]);
                   Navigator.pop(context);
                 },
                 child: ListTile(
@@ -53,11 +52,24 @@ class _RelationPickerState extends State<RelationPicker> {
   Widget _getRelationField() {
     return Column(
       children: [
-        Text(
-          Localization.of(context)
-              .msgRelationToMember
-              .format([widget.member.fullName]),
-          style: TextStyle(color: colorPurple60, fontSize: fontSize13),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              widget.member != null
+                  ? Localization.of(context)
+                      .msgRelationToMember
+                      .format([widget.member.fullName])
+                  : "",
+              style: TextStyle(
+                color: colorBlack2,
+                fontSize: fontSize13,
+                fontWeight: FontWeight.w500,
+                fontStyle: FontStyle.normal,
+              ),
+            ),
+          ),
         ),
         SizedBox(height: spacing10),
         Container(

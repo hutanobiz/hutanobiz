@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/src/ui/familynetwork/my_contacts/my_contacts.dart';
+import 'package:hutano/src/widgets/app_header.dart';
+import 'package:hutano/src/widgets/hutano_progressbar.dart';
 
 import '../../../apis/api_manager.dart';
 import '../../../apis/error_model.dart';
@@ -45,9 +48,17 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
   @override
   void initState() {
     super.initState();
-    member = widget.member;
+    // member = widget.member;
+    //TODO :TEMP CODE
+    // _memberList.add(FamilyNetwork(
+    //     avatar: "",
+    //     fullName: "Hi",
+    //     userRelation: 1,
+    //     sId: "12",
+    //     phoneNumber: "12312312312",
+    //     relation: "Brother"));
     WidgetsBinding.instance.addPostFrameCallback((_) => {_getRelation()});
-    WidgetsBinding.instance.addPostFrameCallback((_) => {_getFamilyNetwork()});
+    // WidgetsBinding.instance.addPostFrameCallback((_) => {_getFamilyNetwork()});
   }
 
   _getFamilyNetwork() async {
@@ -101,7 +112,7 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
   }
 
   _onContinue() {
-    Navigator.of(context).pushNamed( routeFamilyCircle);
+    Navigator.of(context).pushNamed(routeFamilyCircle);
   }
 
   _onAdd(FamilyMember member) async {
@@ -133,31 +144,41 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildHeader(),
-            MemberRow(
-              member: member,
-              onAdd: _onAdd,
-            ),
-            Divider(
-              height: spacing25,
-              color: colorGrey,
-              thickness: 0.5,
-            ),
-            RelationPicker(
-              controller: _relationCotnroller,
-              relationList: _relationList,
-              onRelationSelected: _onRelationSelected,
-              member: member,
-            ),
-            SizedBox(height: spacing50),
-            FamilyMemberList(memberList: _memberList),
-            _buildButtons()
-          ],
+    SizeConfig().init(context);
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildHeader(),
+              Container(
+                height: 270,
+                child: MyContacts(),
+              ),
+              Divider(
+                height: spacing25,
+                color: colorGrey,
+                thickness: 0.5,
+              ),
+              RelationPicker(
+                controller: _relationCotnroller,
+                relationList: _relationList,
+                onRelationSelected: _onRelationSelected,
+                member: member,
+              ),
+              SizedBox(height: spacing20),
+              if (member != null)
+                MemberRow(
+                  member: member,
+                  onAdd: _onAdd,
+                ),
+              SizedBox(height: spacing20),
+              FamilyMemberList(memberList: _memberList),
+              _buildButtons()
+            ],
+          ),
         ),
       ),
     );
@@ -166,43 +187,33 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
   Widget _buildHeader() {
     return Column(
       children: [
-        SizedBox(height: spacing70),
-        Text(
-          Localization.of(context).inviteByNumber,
-          style: TextStyle(fontSize: fontSize20, color: colorBlack85),
+        AppHeader(
+          progressSteps: HutanoProgressSteps.three,
+          title: Localization.of(context).inviteFamilyAndFriends,
+          subTitle: Localization.of(context).searchPhoneContacts,
         ),
-        SizedBox(height: spacing30),
-        Text(
-          Localization.of(context).msgEnterPhoneNumber,
-          style: TextStyle(fontSize: fontSize11, color: colorBlack60),
-          textAlign: TextAlign.center,
-        ),
-        SizedBox(height: spacing60),
+        SizedBox(height: spacing15),
       ],
     );
   }
 
   Widget _buildButtons() {
-    return Column(
-      children: [
-        HutanoButton(
-          onPressed: _onAddMore,
-          buttonType: HutanoButtonType.withIcon,
-          icon: FileConstants.icAddGroup,
-          label: Localization.of(context).addMore,
-          width: SizeConfig.screenWidth / 2,
-          height: 40,
-          margin: 0,
-          iconPosition: 10,
-          color: colorPurple,
+    return Padding(
+      padding: const EdgeInsets.all(15),
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: HutanoButton(
+          width: 55,
+          height: 55,
+          color: accentColor,
+          iconSize: 20,
+          buttonType: HutanoButtonType.onlyIcon,
+          icon: FileConstants.icForward,
+          onPressed: () {
+            Navigator.of(context).pushNamed(routeProviderSearch);
+          },
         ),
-        SizedBox(height: spacing20),
-        HutanoButton(
-          onPressed: _onContinue,
-          label: Localization.of(context).continueLabel,
-        ),
-        SizedBox(height: spacing20),
-      ],
+      ),
     );
   }
 }

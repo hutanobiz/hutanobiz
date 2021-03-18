@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/src/widgets/app_header.dart';
+import 'package:hutano/src/widgets/hutano_progressbar.dart';
 
 import '../../../apis/api_manager.dart';
 import '../../../apis/error_model.dart';
@@ -42,6 +44,14 @@ class _FamilyCircleState extends State<FamilyCircle> {
         list = list;
       });
     });
+    //TODO :TEMP CODE
+    list.add(FamilyNetwork(
+        avatar: "",
+        fullName: "Hi",
+        userRelation: 1,
+        sId: "12",
+        phoneNumber: "12312312312",
+        relation: "Brother"));
   }
 
   _getFamilyNetwork() async {
@@ -110,33 +120,50 @@ class _FamilyCircleState extends State<FamilyCircle> {
     }
   }
 
+  _backButton() {
+    return GestureDetector(
+      onTap: () {
+        Navigator.pop(context);
+      },
+      child: Container(
+          margin: const EdgeInsets.only(top: 15, left: 15),
+          width: 32,
+          height: 32,
+          child: Icon(Icons.chevron_left_rounded),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(16)),
+              border: Border.all(color: const Color(0x12372786), width: 0.5),
+              boxShadow: [
+                BoxShadow(
+                    color: const Color(0x4f8b8b8b),
+                    offset: Offset(0, 2),
+                    blurRadius: 30,
+                    spreadRadius: 0)
+              ],
+              color: const Color(0xffffffff))),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _buildHeader(),
-          SizedBox(
-            height: spacing20,
-          ),
-          _buildList(),
-          _buildPermissionButton(),
-          SizedBox(
-            height: spacing20,
-          ),
-          HutanoButton(
-            label: Localization.of(context).next,
-            labelColor: colorBlack,
-            onPressed: () {
-              Navigator.of(context).pushNamed( routeAddProvider);
-            },
-          ),
-          SizedBox(
-            height: spacing50,
-          )
-        ],
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _backButton(),
+            _buildHeader(),
+            SizedBox(
+              height: spacing20,
+            ),
+            _buildList(),
+            // _buildPermissionButton(),
+            SizedBox(
+              height: spacing20,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -156,48 +183,30 @@ class _FamilyCircleState extends State<FamilyCircle> {
           SizedBox(
             width: spacing50,
           ),
-          Flexible(
-            flex: 1,
-            child: HutanoButton(
-              label: Localization.of(context).permissions,
-              labelColor: colorBlack,
-              onPressed: _enableButton ? _openPermissionSheet : null,
-            ),
-          ),
+          // Flexible(
+          //   flex: 1,
+          //   child: HutanoButton(
+          //     label: Localization.of(context).permissions,
+          //     labelColor: colorBlack,
+          //     onPressed: _enableButton ? _openPermissionSheet : null,
+          //   ),
+          // ),
         ],
       ),
     );
   }
 
   Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.only(top: spacing25),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            Localization.of(context).labelMyFamilyCircle,
-            style: const TextStyle(
-                color: colorDarkPurple,
-                fontWeight: fontWeightSemiBold,
-                fontSize: fontSize18),
-          ),
-          HutanoButton(
-            buttonType: HutanoButtonType.withPrefixIcon,
-            label: Localization.of(context).edit,
-            onPressed: _onEditClick,
-            color: colorWhite,
-            height: spacing45,
-            buttonRadius: 8,
-            borderColor: colorBorder28,
-            borderWidth: 0.5,
-            width: spacing100,
-            labelColor: colorDarkPurple,
-            icon: FileConstants.icEdit,
-            iconSize: spacing18,
-          )
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        AppHeader(
+          margin: 20,
+          title: Localization.of(context).labelMyFamilyCircle,
+          subTitle: Localization.of(context).assignPermisstion,
+        ),
+        SizedBox(height: spacing15),
+      ],
     );
   }
 
@@ -205,6 +214,7 @@ class _FamilyCircleState extends State<FamilyCircle> {
     return Expanded(
       flex: 1,
       child: ListView.separated(
+        padding: EdgeInsets.symmetric(horizontal: 15),
         separatorBuilder: (context, i) {
           return Divider(
             color: colorBorder,
@@ -214,19 +224,67 @@ class _FamilyCircleState extends State<FamilyCircle> {
         },
         itemCount: list.length,
         itemBuilder: (context, i) {
-          return IgnorePointer(
-            ignoring: !_enableButton,
-            child: CheckboxListTile(
-              activeColor: colorYellow,
+          return PopupMenuButton(
+            offset: Offset(300, 0),
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              PopupMenuItem<String>(
+                value: 'Value2',
+                textStyle: const TextStyle(
+                    color: colorBlack2,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: "Gilroy",
+                    fontStyle: FontStyle.normal,
+                    fontSize: 12.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      FileConstants.icSettingBlack,
+                      height: 20,
+                      width: 20,
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text("Manage Premissions")
+                  ],
+                ),
+              ),
+              PopupMenuItem<String>(
+                value: 'Value2',
+                textStyle: const TextStyle(
+                    color: colorBlack2,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: "Gilroy",
+                    fontStyle: FontStyle.normal,
+                    fontSize: 12.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      FileConstants.icRemoveBlack,
+                      height: 20,
+                      width: 20,
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text("Remove")
+                  ],
+                ),
+              ),
+            ],
+            child: ListTile(
               contentPadding: EdgeInsets.all(0),
-              onChanged: (value) {
-                list.forEach((element) {
-                  element.isSelected = false;
-                });
-                list[i].isSelected = value;
-                setState(() {});
-              },
-              value: list[i].isSelected,
+              // activeColor: colorYellow,
+              // onChanged: (value) {
+              //   list.forEach((element) {
+              //     element.isSelected = false;
+              //   });
+              //   list[i].isSelected = value;
+              //   setState(() {});
+              // },
+              // value: list[i].isSelected,
               title: MemberProfile(
                 member: FamilyMember(
                   image: list[i].avatar,
@@ -234,6 +292,7 @@ class _FamilyCircleState extends State<FamilyCircle> {
                   relation: list[i].relation,
                 ),
               ),
+              trailing: Icon(Icons.more_vert),
             ),
           );
         },

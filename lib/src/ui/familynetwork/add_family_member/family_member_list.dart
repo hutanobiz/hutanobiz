@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hutano/src/utils/constants/constants.dart';
 
 import '../../../utils/app_config.dart';
 import '../../../utils/color_utils.dart';
@@ -17,54 +18,132 @@ class FamilyMemberList extends StatelessWidget {
   const FamilyMemberList({Key key, this.memberList}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset(
-              FileConstants.icNetwork,
-              height: spacing20,
-              width: spacing20,
-            ),
-            SizedBox(width: spacing7),
-            Text(
+    return Container(
+      decoration: new BoxDecoration(
+        color: colorWhite,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+              color: Color(0x148b8b8b),
+              offset: Offset(0, 2),
+              blurRadius: 30,
+              spreadRadius: 0)
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            child: Text(
               Localization.of(context).myFamilyNetwork,
               style: TextStyle(
                   fontSize: fontSize14,
-                  fontWeight: fontWeightBold,
-                  color: colorPurple100),
-            )
-          ],
-        ),
-        Container(
-          height: 150,
-          padding: EdgeInsets.only(left: spacing15, top: spacing20),
-          child: (memberList.length == 0)
-              ? Center(child: NoDataFound(
-                msg: Localization.of(context).noMemberFound,
-              ))
-              : ListView.separated(
-                  separatorBuilder: (_, pos) {
-                    return SizedBox(width: SizeConfig.screenWidth / 5);
-                  },
-                  shrinkWrap: true,
-                  primary: false,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: memberList.length,
-                  itemBuilder: (context, pos) {
-                    return ItemFamilyMember(
-                        member: FamilyMember(
-                      avatar: memberList[pos].avatar,
-                      fullName: memberList[pos].fullName,
-                      relation: memberList[pos].relation,
-                    ));
-                  },
+                  fontWeight: FontWeight.w600,
+                  fontStyle: FontStyle.normal,
+                  color: colorBlack2),
+            ),
+          ),
+          Container(
+            height: 150,
+            padding: EdgeInsets.only(left: spacing20, top: spacing20),
+            child: (memberList.length == 0)
+                ? Center(
+                    child: NoDataFound(
+                    msg: Localization.of(context).noMemberFound,
+                  ))
+                : ListView.separated(
+                    separatorBuilder: (_, pos) {
+                      return SizedBox(width: SizeConfig.screenWidth / 5);
+                    },
+                    shrinkWrap: true,
+                    primary: false,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: memberList.length + 1,
+                    itemBuilder: (context, pos) {
+                      if (pos == memberList.length) {
+                        return AddMore();
+                      }
+                      return ItemFamilyMember(
+                          member: FamilyMember(
+                        avatar: memberList[pos].avatar,
+                        fullName: memberList[pos].fullName,
+                        relation: memberList[pos].relation,
+                      ));
+                    },
+                  ),
+          ),
+          Divider(
+            height: 2,
+            thickness: 1,
+          ),
+          if ((memberList.length != 0))
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed(routeFamilyCircle);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("View all members".toUpperCase(),
+                        style: TextStyle(
+                          color: colorPurple100,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          fontStyle: FontStyle.normal,
+                        )),
+                    Icon(
+                      Icons.keyboard_arrow_right,
+                      color: colorPurple100,
+                      size: 30,
+                    )
+                  ],
                 ),
-        ),
-      ],
+              ),
+            )
+        ],
+      ),
+    );
+  }
+}
+
+class AddMore extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 150,
+      child: Column(
+        children: [
+          Container(
+            height: 60,
+            width: 60,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                border: Border.all(
+                  width: 1,
+                  color: colorPurple100,
+                )),
+            child: Center(
+              child: Image.asset(FileConstants.icAddUser),
+            ),
+          ),
+          SizedBox(height: spacing10),
+          Text(
+            "Add \n More",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: fontSize13,
+              color: colorPurple100,
+              fontWeight: FontWeight.w500,
+              fontStyle: FontStyle.normal,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -96,15 +175,22 @@ class ItemFamilyMember extends StatelessWidget {
         SizedBox(height: spacing10),
         Text(
           member.fullName,
-          style: TextStyle(fontSize: fontSize13, color: colorBlack60),
+          style: TextStyle(
+            fontSize: fontSize13,
+            color: colorBlack2,
+            fontWeight: FontWeight.w500,
+            fontStyle: FontStyle.normal,
+          ),
         ),
         SizedBox(height: spacing5),
         Text(
           member.relation,
           style: TextStyle(
-              fontSize: fontSize13,
-              fontWeight: fontWeightBold,
-              color: colorBlack60),
+            fontSize: fontSize13,
+            color: colorBlack2,
+            fontWeight: FontWeight.w400,
+            fontStyle: FontStyle.normal,
+          ),
         )
       ],
     );
