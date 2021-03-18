@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:hutano/src/widgets/app_header.dart';
 import 'package:hutano/src/widgets/app_logo.dart';
 
 import '../../../apis/api_constants.dart';
@@ -74,9 +75,21 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
     });
   }
 
+  void validateField() {
+    if (_cardNumberController.text.isEmpty ||
+        _nameController.text.isEmpty ||
+        _cvvController.text.isEmpty ||
+        _expiryController.text.isEmpty) {
+      _enableButton = false;
+      return;
+    }
+    _enableButton = true;
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    validateField();
     return Container(
         color: Colors.white,
         child: SafeArea(
@@ -86,20 +99,12 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
                 child: Column(children: [
-                  AppLogo(),
-                  SizedBox(
-                    height: spacing10,
-                  ),
-                  HutanoProgressBar(progressSteps: HutanoProgressSteps.two),
-                  SizedBox(
-                    height: spacing15,
-                  ),
-                  HutanoHeaderInfo(
+                  AppHeader(
+                    progressSteps: HutanoProgressSteps.two,
                     title: Localization.of(context).paymentOptions,
                     subTitle: _isPaymentComplete
                         ? Localization.of(context).complete
                         : Localization.of(context).addCreditCard,
-                    subTitleFontSize: fontSize15,
                   ),
                   SizedBox(
                     height: spacing10,
@@ -125,7 +130,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
                       buttonType: HutanoButtonType.onlyIcon,
                       icon: FileConstants.icForward,
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        Navigator.of(context).pushReplacementNamed(routeInviteFamilyMember);
                       },
                     ),
                   ),
@@ -278,7 +283,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
 
   Widget _getNameOnCardTextField() {
     return Form(
-      autovalidate: true,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _keyName,
       child: Container(
           child: HutanoTextField(
@@ -291,6 +296,11 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
         textInputFormatter: [
           FilteringTextInputFormatter.allow(RegExp("[a-zA-Z -]"))
         ],
+        validationMethod: (value) {
+          if (value.isEmpty) {
+            return Localization.of(context).errorEnterField;
+          }
+        },
         labelText: Localization.of(context).nameOnCard,
         contentPadding: EdgeInsets.all(10),
       )),
@@ -313,7 +323,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
 
   Widget _getTextFieldCardNumber() {
     return Form(
-      autovalidate: true,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _keyNumber,
       child: Container(
           child: HutanoTextField(
@@ -352,7 +362,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
 
   Widget _getCVVTextField() {
     return Form(
-      autovalidate: true,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _keyCVV,
       child: HutanoTextField(
         width: SizeConfig.screenWidth / 2.6,
@@ -376,7 +386,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
 
   Widget _displayCVVTextField(int index) {
     return Form(
-      autovalidate: true,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Container(
           width: 100,
           padding: const EdgeInsets.only(
@@ -428,7 +438,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
 
   Widget _getExpirationDateTextField() {
     return Form(
-      autovalidate: true,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _keyExpiary,
       child: Container(
           width: SizeConfig.screenWidth / 2.6,
@@ -459,9 +469,11 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
         color: colorPurple100,
         iconSize: 20,
         label: Localization.of(context).addCard.toUpperCase(),
-        onPressed: () => setState(() {
-          _saveCard();
-        }),
+        onPressed: _enableButton
+            ? () => setState(() {
+                  _saveCard();
+                })
+            : null,
       ));
 
   _nextClick() {
@@ -528,8 +540,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
         if (value.id != null) {
           ApiManager().addCard(ReqAddCard(token: value.id)).then((value) {
             if (value.status == success) {
-              _isPaymentComplete = true;
-              _getCard();
+              Navigator.of(context).pushReplacementNamed(routeAddCardComplete);
             }
           }).catchError((dynamic e) {
             ProgressDialogUtils.dismissProgressDialog();

@@ -5,11 +5,13 @@ import 'package:hutano/src/apis/error_model.dart';
 import 'package:hutano/src/ui/registration_steps/payment/provider/credit_card_provider.dart';
 import 'package:hutano/src/ui/registration_steps/payment/utils/card_utils.dart';
 import 'package:hutano/src/utils/color_utils.dart';
+import 'package:hutano/src/utils/constants/constants.dart';
 import 'package:hutano/src/utils/constants/file_constants.dart';
 import 'package:hutano/src/utils/dialog_utils.dart';
 import 'package:hutano/src/utils/dimens.dart';
 import 'package:hutano/src/utils/localization/localization.dart';
 import 'package:hutano/src/utils/progress_dialog.dart';
+import 'package:hutano/src/widgets/app_header.dart';
 import 'package:hutano/src/widgets/app_logo.dart';
 import 'package:hutano/src/widgets/hutano_button.dart';
 import 'package:hutano/src/widgets/hutano_header_info.dart';
@@ -28,17 +30,14 @@ class _AddCardCompleteState extends State<AddCardComplete> {
   @override
   void initState() {
     super.initState();
-    // _getCard();
-    cardList.add(CreditCard(
-        cardNumber: "**** **** **** 4234",
-        cvv: "234",
-        customer: "TEST",
-        expiryDate: "11/22",
-        nameOnCard: "asd",
-        type: CardType.AmericanExpress));
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _getCard();
+    });
   }
 
   _getCard() {
+    ProgressDialogUtils.showProgressDialog(context);
     ApiManager().getCard().then((value) {
       if (value.status == success) {
         ProgressDialogUtils.dismissProgressDialog();
@@ -76,24 +75,15 @@ class _AddCardCompleteState extends State<AddCardComplete> {
           child: Scaffold(
             body: SingleChildScrollView(
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 18, vertical: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 18),
                 child: Column(children: [
-                  AppLogo(),
-                  SizedBox(
-                    height: spacing10,
-                  ),
-                  HutanoProgressBar(progressSteps: HutanoProgressSteps.two),
-                  SizedBox(
-                    height: spacing15,
-                  ),
-                  HutanoHeaderInfo(
+                  AppHeader(
+                    progressSteps: HutanoProgressSteps.two,
                     title: Localization.of(context).paymentOptions,
                     subTitle: Localization.of(context).creditCardAdded,
-                    subTitleFontSize: fontSize15,
                   ),
                   SizedBox(
-                    height: spacing10,
+                    height: spacing40,
                   ),
                   RoundSuccess(),
                   SizedBox(
@@ -113,13 +103,6 @@ class _AddCardCompleteState extends State<AddCardComplete> {
                   SizedBox(
                     height: spacing20,
                   ),
-                  TextWithImage(
-                      size: spacing30,
-                      imageSpacing: 13,
-                      textStyle: TextStyle(
-                          fontSize: fontSize15, fontWeight: fontWeightBold),
-                      label: Localization.of(context).labelHealthInsurance,
-                      image: FileConstants.icInsuranceBlue),
                   Align(
                     alignment: Alignment.centerRight,
                     child: HutanoButton(
@@ -130,9 +113,13 @@ class _AddCardCompleteState extends State<AddCardComplete> {
                       buttonType: HutanoButtonType.onlyIcon,
                       icon: FileConstants.icForward,
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        Navigator.of(context)
+                            .pushReplacementNamed(routeInviteFamilyMember);
                       },
                     ),
+                  ),
+                  SizedBox(
+                    height: 5,
                   ),
                 ]),
               ),
@@ -172,7 +159,7 @@ class _AddCardCompleteState extends State<AddCardComplete> {
                             height: 13,
                           ),
                           Text(
-                            cardList[index].customer,
+                            cardList[index].nameOnCard,
                             style: TextStyle(
                                 fontSize: fontSize14,
                                 color: colorBorder2,
