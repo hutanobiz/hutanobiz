@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:hutano/src/ui/add_insurance/model/req_add_insurace.dart';
+import 'package:hutano/src/ui/add_insurance/model/res_get_my_insurance.dart';
 
 import '../ui/appointments/my_appointments/model/req_appointment_list.dart';
 import '../ui/appointments/my_appointments/model/res_appointment_list.dart';
@@ -520,6 +522,32 @@ class ApiManager {
     }
   }
 
+  Future<CommonRes> addInsuranceDoc(File frontImage, ReqAddInsurance model,
+      {File backImage}) async {
+    try {
+      var formData = FormData.fromMap(model.toMap());
+      final fileName = frontImage.path.split('/').last;
+      var file = await MultipartFile.fromFile(frontImage.path,
+          filename: fileName, contentType: MediaType("image", fileName));
+      formData.files.add(MapEntry('insuranceDocumentFront', file));
+
+      if (backImage != null) {
+        final fileName = backImage.path.split('/').last;
+        var file = await MultipartFile.fromFile(backImage.path,
+            filename: fileName, contentType: MediaType("image", fileName));
+        formData.files.add(MapEntry('insuranceDocumentBack', file));
+      }
+      final response = await ApiService().multipartPost(
+        patient + apiAddInsuranceDoc,
+        data: formData,
+        options: Options(contentType: 'application/x-www-form-urlencoded'),
+      );
+      return CommonRes.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
   Future<ResInvite> getInviteMessage(Map<String, dynamic> model) async {
     try {
       final response =
@@ -558,6 +586,17 @@ class ApiManager {
       final response =
           await _googleService.get(googleAddressSuggetion, params: model);
       return ResGoogleAddressSuggetion.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+  Future<ResGetMyInsurance> getPatientInsurance() async {
+    try {
+      final response = await _apiService.get(
+        patient + apiGetPatientInsurance,
+      );
+      return ResGetMyInsurance.fromJson(response.data);
     } on DioError catch (error) {
       throw ErrorModel.fromJson(error.response.data);
     }

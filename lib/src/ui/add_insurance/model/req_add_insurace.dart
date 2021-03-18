@@ -7,23 +7,26 @@ class ReqAddInsurance {
   String healthPlan;
   String groupNumber;
   String effectiveDate;
+  bool isPrimary;
   ReqAddInsurance({
     this.insuranceCompany,
     this.insuranceMember,
     this.memberId,
     this.healthPlan,
+    this.isPrimary,
     this.groupNumber,
     this.effectiveDate,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'insuranceCompany': insuranceCompany,
-      'insuranceMember': insuranceMember,
+      'insuranceId': insuranceCompany,
+      'insuredMemberName': insuranceMember,
       'memberId': memberId,
       'healthPlan': healthPlan,
       'groupNumber': groupNumber,
       'effectiveDate': effectiveDate,
+      'isPrimary': isPrimary,
     };
   }
 

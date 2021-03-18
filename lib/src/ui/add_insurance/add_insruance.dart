@@ -1,12 +1,20 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/src/apis/api_manager.dart';
 import 'package:hutano/src/ui/add_insurance/upload_insurance_screen.dart';
 import 'package:hutano/src/utils/constants/constants.dart';
 import 'package:hutano/src/utils/constants/file_constants.dart';
+import 'package:hutano/src/utils/constants/key_constant.dart';
+import 'package:hutano/src/utils/dialog_utils.dart';
 import 'package:hutano/src/utils/preference_key.dart';
 import 'package:hutano/src/utils/preference_utils.dart';
+import 'package:hutano/src/utils/progress_dialog.dart';
 import 'package:hutano/src/utils/size_config.dart';
+import 'package:hutano/src/widgets/custom_back_button.dart';
+import 'package:hutano/src/widgets/custom_number_formatter.dart';
 import 'package:hutano/src/widgets/hutano_button.dart';
 import 'package:hutano/src/widgets/text_with_image.dart';
 
@@ -21,11 +29,6 @@ import 'effective_date_picker.dart';
 import 'insurance_picker.dart';
 import 'model/req_add_insurace.dart';
 
-class AddInsurance extends StatefulWidget {
-  @override
-  _AddInsuranceState createState() => _AddInsuranceState();
-}
-
 enum AddInsuranceError {
   insuranceCompany,
   insuranceMember,
@@ -33,6 +36,16 @@ enum AddInsuranceError {
   groupNumber,
   healthPlan,
   effectiveDate
+}
+enum InsuranceType { primary, secondary }
+
+class AddInsurance extends StatefulWidget {
+  final InsuranceType insuranceType;
+
+  const AddInsurance({Key key, this.insuranceType = InsuranceType.primary})
+      : super(key: key);
+  @override
+  _AddInsuranceState createState() => _AddInsuranceState();
 }
 
 class _AddInsuranceState extends State<AddInsurance> {
@@ -42,6 +55,9 @@ class _AddInsuranceState extends State<AddInsurance> {
   final FocusNode _groupNumber = FocusNode();
   final FocusNode _healthPlan = FocusNode();
   final FocusNode _effectiveDate = FocusNode();
+
+  bool _enableButton = false;
+  bool showSecondaryInsurance = false;
 
   String _insuranceCompanyError;
   String _insuranceMemberError;
@@ -58,6 +74,9 @@ class _AddInsuranceState extends State<AddInsurance> {
   final _effectiveDateController = TextEditingController();
 
   final _addInsuranceModel = ReqAddInsurance();
+
+  File _backImage;
+  File _frontImage;
 
   final labelStyle = TextStyle(fontSize: fontSize14, color: colorGrey60);
 
@@ -80,8 +99,82 @@ class _AddInsuranceState extends State<AddInsurance> {
   List<Insurance> _insuranceList = [];
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _getInsuranceList();
+    });
+  }
+
+  _getInsuranceList() async {
+    try {
+      var res = await ApiManager().insuraceList();
+      setState(() {
+        _insuranceList = res.response;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  validateField() {
+    if (_companyController.text.isNotEmpty &&
+        _memberController.text.isNotEmpty &&
+        _groupNumberController.text.isNotEmpty &&
+        _healthPlanController.text.isNotEmpty &&
+        _memberIdController.text.isNotEmpty &&
+        _effectiveDateController.text.isNotEmpty) {
+      _enableButton = true;
+      return;
+    }
+    _enableButton = false;
+  }
+
+  _onUpload(frontImage, backImage) {
+    setState(() {
+      _backImage = backImage;
+      _frontImage = frontImage;
+    });
+  }
+
+  void uploadInsuranceData() {
+    if (_frontImage == null) {
+      DialogUtils.showAlertDialog(context, "Please select front image");
+    } else {
+      _addInsuranceModel.isPrimary =
+          (widget.insuranceType == InsuranceType.primary);
+      ProgressDialogUtils.showProgressDialog(context);
+      ApiManager()
+          .addInsuranceDoc(_frontImage, _addInsuranceModel,
+              backImage: _backImage)
+          .then((value) {
+        ProgressDialogUtils.dismissProgressDialog();
+
+        if (widget.insuranceType == InsuranceType.primary) {
+          setState(() {
+            showSecondaryInsurance = true;
+          });
+          DialogUtils.showOkCancelAlertDialog(
+            context: context,
+            message: "Insurance uploaded successfully",
+            okButtonAction: () {},
+            okButtonTitle: 'Ok',
+            isCancelEnable: false,
+          );
+        } else {
+          Navigator.pushReplacementNamed(context, routeAddCardComplete);
+        }
+      }, onError: (e) {
+        ProgressDialogUtils.dismissProgressDialog();
+        DialogUtils.showAlertDialog(context, e.response);
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    validateField();
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20),
       color: Colors.white,
@@ -91,13 +184,19 @@ class _AddInsuranceState extends State<AddInsurance> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  if (widget.insuranceType == InsuranceType.secondary)
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: CustomBackButton()),
                   SizedBox(
                     height: spacing30,
                   ),
                   HutanoHeaderInfo(
                     showLogo: true,
                     title: Localization.of(context).welcome,
-                    subTitle: Localization.of(context).addInsurance,
+                    subTitle: (widget.insuranceType == InsuranceType.primary)
+                        ? Localization.of(context).addInsurance
+                        : Localization.of(context).addSecondaryInsurance,
                     subTitleFontSize: fontSize15,
                   ),
                   SizedBox(
@@ -156,7 +255,7 @@ class _AddInsuranceState extends State<AddInsurance> {
                     ),
                   ),
                   SizedBox(height: 15),
-                  UploadInsuranceScreen(),
+                  UploadInsuranceScreen(onUpload: _onUpload),
                   SizedBox(
                     height: spacing20,
                   ),
@@ -164,7 +263,32 @@ class _AddInsuranceState extends State<AddInsurance> {
                   SizedBox(
                     height: spacing20,
                   ),
-                  _buildSkipTaskNowButton(context),
+                  if (showSecondaryInsurance)
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pushNamed(routeAddInsurance,
+                            arguments: {
+                              ArgumentConstant.argsinsuranceType:
+                                  InsuranceType.secondary
+                            });
+                      },
+                      child: Text(
+                          Localization.of(context)
+                              .addSecondaryInsurance
+                              .toUpperCase(),
+                          style: const TextStyle(
+                              color: colorPurple100,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: "Poppins",
+                              fontStyle: FontStyle.normal,
+                              fontSize: 14.0),
+                          textAlign: TextAlign.center),
+                    ),
+                  SizedBox(
+                    height: spacing15,
+                  ),
+                  if (widget.insuranceType == InsuranceType.primary)
+                    _buildSkipTaskNowButton(context),
                 ],
               ),
             ),
@@ -180,23 +304,48 @@ class _AddInsuranceState extends State<AddInsurance> {
         icon: FileConstants.icDone,
         color: colorYellow,
         iconSize: spacing30,
-        label: Localization.of(context).addInsurance,
-        onPressed: () {},
+        label: (widget.insuranceType == InsuranceType.primary)
+            ? Localization.of(context).addInsurance
+            : Localization.of(context).addSecondaryInsurance,
+        onPressed: _enableButton ? uploadInsuranceData : null,
       );
 
   _buildSkipTaskNowButton(BuildContext context) => Padding(
-      padding: const EdgeInsets.only(
-          left: spacing20, right: spacing20, bottom: spacing20),
-      child: HutanoButton(
-        buttonType: HutanoButtonType.withPrefixIcon,
-        isIconButton: true,
-        labelColor: colorBlack,
-        iconSize: spacing20,
-        color: Colors.transparent,
-        icon: FileConstants.icSkipLater,
-        label: Localization.of(context).skipTasks,
-        onPressed: _skipTaskNow,
-      ));
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            HutanoButton(
+              buttonType: HutanoButtonType.withPrefixIcon,
+              isIconButton: true,
+              labelColor: colorBlack,
+              iconSize: spacing20,
+              color: Colors.transparent,
+              icon: FileConstants.icSkipBlack,
+              label: Localization.of(context).skipTasks,
+              onPressed: _skipTaskNow,
+            ),
+            if (showSecondaryInsurance) ...[
+              Spacer(),
+              HutanoButton(
+                width: 55,
+                height: 55,
+                color: accentColor,
+                iconSize: 20,
+                buttonType: HutanoButtonType.onlyIcon,
+                icon: FileConstants.icForward,
+                onPressed: () {
+                  (widget.insuranceType == InsuranceType.primary)
+                      ? Navigator.of(context)
+                          .pushReplacementNamed(routeAddInsuranceComplete)
+                      : Navigator.of(context)
+                          .pushReplacementNamed(routeWelcomeScreen);
+                },
+              )
+            ],
+          ],
+        ),
+      );
 
   _skipTaskNow() {
     Navigator.of(context)
@@ -279,9 +428,10 @@ class _AddInsuranceState extends State<AddInsurance> {
           showError(AddInsuranceError.memberId.index);
         },
         textInputFormatter: [
-          FilteringTextInputFormatter.allow(RegExp("[a-zA-Z -]"))
+          FilteringTextInputFormatter.digitsOnly,
+          CustomInputFormatter()
         ],
-        textInputType: TextInputType.name,
+        textInputType: TextInputType.number,
         textInputAction: TextInputAction.next);
   }
 
@@ -306,9 +456,10 @@ class _AddInsuranceState extends State<AddInsurance> {
           showError(AddInsuranceError.groupNumber.index);
         },
         textInputFormatter: [
-          FilteringTextInputFormatter.allow(RegExp("[a-zA-Z -]"))
+          FilteringTextInputFormatter.digitsOnly,
+          CustomInputFormatter()
         ],
-        textInputType: TextInputType.name,
+        textInputType: TextInputType.number,
         textInputAction: TextInputAction.next);
   }
 
@@ -350,7 +501,7 @@ class _AddInsuranceState extends State<AddInsurance> {
           .isBlank(context, Localization.of(context).errorEnterFirstName);
     }
     if (index >= 1) {
-      _insuranceMemberError = _memberIdController.text
+      _insuranceMemberError = _memberController.text
           .toString()
           .isBlank(context, Localization.of(context).errorEnterLastName);
     }

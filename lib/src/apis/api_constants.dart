@@ -17,6 +17,7 @@ const String apiGenerateCardToken = "https://api.stripe.com/v1/tokens";
 const String apiCreatePin = "api/create-pin";
 const String apiAddCard = "api/add-card";
 const String apiGetCard = "api/stripe-card";
+const String apiGetPatientInsurance = "get-patient-insurance";
 const String success = "success";
 const String apiGetProviders = "get-providers";
 const String apiGetProvidersGroups = "get-provider-groups";
@@ -42,6 +43,7 @@ const String apiRemoveMedicalImages = "remove-medical-images";
 const String apiCustomerCharge = "customer-charge";
 const String apiAddInsurance = "add-my-insurance";
 const String apiUploadInsuranceImage = "upload-insurance-documents";
+const String apiAddInsuranceDoc = "add-patient-insurance";
 const String apiMyInsurance = "my-insurance";
 const String apiGetInviteMessage = "get-invitation-message";
 

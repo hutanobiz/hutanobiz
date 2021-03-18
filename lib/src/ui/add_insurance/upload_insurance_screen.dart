@@ -9,6 +9,9 @@ import '../../../widgets/dashed_border.dart';
 import '../../utils/size_config.dart';
 
 class UploadInsuranceScreen extends StatefulWidget {
+  final Function onUpload;
+
+  const UploadInsuranceScreen({Key key, this.onUpload}) : super(key: key);
   @override
   _UploadInsuranceScreenState createState() => _UploadInsuranceScreenState();
 }
@@ -16,6 +19,7 @@ class UploadInsuranceScreen extends StatefulWidget {
 class _UploadInsuranceScreenState extends State<UploadInsuranceScreen> {
   File croppedFile;
   String frontImagePath, backImagePath;
+  File _frontImageFile, _backImageFile;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -210,6 +214,9 @@ class _UploadInsuranceScreenState extends State<UploadInsuranceScreen> {
         ),
       );
       if (croppedFile != null) {
+        var frontPath = isFront ? croppedFile : _frontImageFile;
+        var backPath = !isFront ? croppedFile : _backImageFile;
+        widget.onUpload(frontPath, backPath);
         setState(
           () => isFront
               ? frontImagePath = croppedFile.path

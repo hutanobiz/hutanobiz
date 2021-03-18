@@ -23,9 +23,8 @@ class EffectiveDatePicker extends StatelessWidget {
       onTap: () async {
         var selectedDate = await showCustomDatePicker(
             context: context,
-            firstDate: DateTime(1900),
-            lastDate: DateTime(DateTime.now().year - 18, DateTime.now().month,
-                DateTime.now().day));
+            firstDate: DateTime.now(),
+                );
         if (selectedDate != null) {
           var date = formattedDate(selectedDate, ddMMMMyyyy);
           onDateSelected(date);
@@ -35,7 +34,7 @@ class EffectiveDatePicker extends StatelessWidget {
         child: HutanoTextField(
           width: SizeConfig.screenWidth / 2.4,
             focusNode: focusNode,
-            labelText: Localization.of(context).dob,
+            labelText: Localization.of(context).effectiveDate,
             controller: controller,
             labelTextStyle: TextStyle(fontSize: fontSize14, color: colorGrey60),
             isFieldEnable: false,
