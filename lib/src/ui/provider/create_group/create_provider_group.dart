@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/src/widgets/custom_back_button.dart';
 
 import '../../../apis/api_manager.dart';
 import '../../../apis/error_model.dart';
@@ -63,38 +64,42 @@ class _CreateProviderGroupState extends State<CreateProviderGroup> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      padding: EdgeInsets.only(
-          top: spacing25, left: spacing15, right: spacing15, bottom: spacing20),
-      child: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(height: spacing25),
-            Text(
-              Localization.of(context).addCreateGroup,
-              style: const TextStyle(
-                  color: colorDarkPurple,
-                  fontSize: fontSize20,
-                  fontWeight: fontWeightSemiBold),
-            ),
-            SizedBox(height: spacing50),
-            Form(
-              key: _key,
-              child: _buildEmailField(context),
-            ),
-            SizedBox(height: spacing20),
-            HutanoButton(
-              width: SizeConfig.screenWidth / 1.5,
-              onPressed: _enableButton ? _addGroup : null,
-              color: colorPurple,
-              icon: FileConstants.icAddGroup,
-              buttonType: HutanoButtonType.withPrefixIcon,
-              label: Localization.of(context).addCreateGroup,
-            ),
-            Spacer(),
-            _buildBottomButtons(),
-          ],
+    SizeConfig().init(context);
+    return Scaffold(
+      body: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomBackButton(margin: EdgeInsets.only(top : 20)),
+              SizedBox(height: spacing25),
+              Text(
+                Localization.of(context).addCreateGroup,
+                style: const TextStyle(
+                    color: colorDarkPurple,
+                    fontSize: fontSize20,
+                    fontWeight: fontWeightSemiBold),
+              ),
+              SizedBox(height: spacing60),
+              Form(
+                key: _key,
+                child: _buildEmailField(context),
+              ),
+              SizedBox(height: spacing20),
+              Align(
+                alignment: Alignment.center,
+                child: HutanoButton(
+                  width: SizeConfig.screenWidth / 1.5,
+                  onPressed: _enableButton ? _addGroup : null,
+                  color: colorPurple,
+                  icon: FileConstants.icAddGroup,
+                  buttonType: HutanoButtonType.withPrefixIcon,
+                  label: Localization.of(context).addCreateGroup,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

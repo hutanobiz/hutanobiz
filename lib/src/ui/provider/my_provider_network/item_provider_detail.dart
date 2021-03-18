@@ -40,14 +40,38 @@ class ItemProviderDetail extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ProviderInfo(
-                padding: EdgeInsets.all(0),
-                providerDetail: ProviderDetail(
-                    name: providerDetail.name,
-                    rating: providerDetail.rating,
-                    experience: providerDetail.experience,
-                    image: providerDetail.image,
-                    occupation: providerDetail.occupation),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: ProviderInfo(
+                      padding: EdgeInsets.all(0),
+                      providerDetail: ProviderDetail(
+                          name: providerDetail.name,
+                          rating: providerDetail.rating,
+                          experience: providerDetail.experience,
+                          image: providerDetail.image,
+                          occupation: providerDetail.occupation),
+                    ),
+                  ),
+                  RippleEffect(
+                    onTap: () {
+                      onShare(index, subIndex);
+                    },
+                    child: Container(
+                        padding: EdgeInsets.all(10),
+                        child: SizedBox(
+                          child: Image.asset(
+                            FileConstants.icShare,
+                            height: 15,
+                            width: 15,
+                          ),
+                        ),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(7)),
+                            color: colorBlack2.withOpacity(0.1))),
+                  )
+                ],
               ),
               Divider(
                 height: spacing20,
@@ -65,19 +89,7 @@ class ItemProviderDetail extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        IntrinsicWidth(
-            child: TextWithImage(
-                image: FileConstants.icAppointmentWhite,
-                label: Localization.of(context).makeAppointment)),
-        RippleEffect(
-          onTap: () {
-            onShare(index, subIndex);
-          },
-          child: IntrinsicWidth(
-              child: TextWithImage(
-                  image: FileConstants.icShareWhite,
-                  label: Localization.of(context).share)),
-        ),
+        Spacer(),
         RippleEffect(
           onTap: () {
             onRemove(index, subIndex);
@@ -88,7 +100,15 @@ class ItemProviderDetail extends StatelessWidget {
             label: Localization.of(context).remove,
             textStyle: TextStyle(color: colorRed, fontSize: fontSize12),
           )),
-        )
+        ),
+        SizedBox(
+          width: 15,
+        ),
+        IntrinsicWidth(
+          child: TextWithImage(
+              image: FileConstants.icAppointmentWhite,
+              label: Localization.of(context).makeAppointment),
+        ),
       ],
     );
   }

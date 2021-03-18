@@ -40,8 +40,8 @@ class ListItem extends StatelessWidget {
             ),
             Image.asset(
               _item.isSelected
-                  ? FileConstants.icCheckCircle
-                  : FileConstants.icUncheck,
+                  ? FileConstants.icCheck
+                  : FileConstants.icUncheckSquare,
               height: 22,
               fit: BoxFit.cover,
               width: 22,

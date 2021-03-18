@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/widgets/app_logo.dart';
 
 import '../../../apis/api_manager.dart';
 import '../../../apis/error_model.dart';
 import '../../../utils/color_utils.dart';
 import '../../../utils/constants/constants.dart';
-import '../../../utils/constants/file_constants.dart';
 import '../../../utils/dialog_utils.dart';
 import '../../../utils/dimens.dart';
 import '../../../utils/localization/localization.dart';
-import '../../../utils/navigation.dart';
 import '../../../utils/preference_key.dart';
 import '../../../utils/preference_utils.dart';
 import '../../../utils/progress_dialog.dart';
+
 import '../../../widgets/bottom_sheet.dart' as share_bottom_sheet;
 import '../../../widgets/bottom_sheet_remove.dart';
-import '../../../widgets/custom_scaffold.dart';
-import '../../../widgets/hutano_button.dart';
+import '../../../widgets/custom_back_button.dart';
 import '../../familynetwork/add_family_member/model/res_add_member.dart';
 import '../../familynetwork/familycircle/model/req_family_network.dart';
 import 'list_speciality.dart';
@@ -134,21 +133,25 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      padding: EdgeInsets.symmetric(vertical: spacing10, horizontal: spacing22),
-      child: Column(
-        children: [
-          SizedBox(height: spacing10),
-          _buildHeader(),
-          SizedBox(height: spacing25),
-          Expanded(
-            child: ListSpeciality(
-              providerGroupList: _providerGroupList,
-              onShare: onShare,
-              onRemove: onRemove,
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: spacing10),
+            CustomBackButton(),
+            AppLogo(),
+            _buildHeader(),
+            SizedBox(height: spacing25),
+            Expanded(
+              child: ListSpeciality(
+                providerGroupList: _providerGroupList,
+                onShare: onShare,
+                onRemove: onRemove,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -170,31 +173,18 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
   }
 
   Widget _buildHeader() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          Localization.of(context).myProviderNetwork,
-          style: const TextStyle(
-              color: colorDarkPurple,
-              fontWeight: fontWeightSemiBold,
-              fontSize: fontSize18),
-        ),
-        HutanoButton(
-          buttonType: HutanoButtonType.withPrefixIcon,
-          label: Localization.of(context).share,
-          onPressed: _onShareAll,
-          color: colorWhite,
-          height: spacing45,
-          buttonRadius: 8,
-          borderColor: colorBorder28,
-          borderWidth: 0.5,
-          width: spacing100,
-          labelColor: colorDarkPurple,
-          icon: FileConstants.icShare,
-          iconSize: spacing18,
-        )
-      ],
+    return Align(
+      alignment: Alignment.center,
+          child: Text(
+        Localization.of(context).myProviderNetwork,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+            color: colorBlack2,
+            fontWeight: FontWeight.w700,
+            fontFamily: gilroyBold,
+            fontStyle: FontStyle.normal,
+            fontSize: 20.0),
+      ),
     );
   }
 }

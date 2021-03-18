@@ -1,20 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hutano/routes.dart';
-import 'package:hutano/src/utils/constants/key_constant.dart';
-import 'package:hutano/src/utils/navigation.dart';
 
+import '../../../../routes.dart';
 import '../../../utils/color_utils.dart';
-import '../../../utils/constants/constants.dart';
 import '../../../utils/constants/file_constants.dart';
 import '../../../utils/dimens.dart';
 import '../../../utils/extensions.dart';
 import '../../../utils/localization/localization.dart';
+import '../../../widgets/app_header.dart';
 import '../../../widgets/hutano_button.dart';
-import '../../../widgets/hutano_header.dart';
-import '../../../widgets/hutano_header_info.dart';
 import '../../../widgets/hutano_progressbar.dart';
-import '../../../widgets/hutano_steps_header.dart';
 import '../../../widgets/hutano_textfield.dart';
 
 class AddProvider extends StatefulWidget {
@@ -46,24 +41,10 @@ class _AddProviderState extends State<AddProvider> {
           margin: EdgeInsets.all(0),
           child: Column(
             children: [
-              HutanoProgressBar(progressSteps: HutanoProgressSteps.four),
-              HutanoHeader(
-                headerInfo: HutanoHeaderInfo(
-                  title: Localization.of(context).addProviders,
-                  subTitleFontSize: fontSize15,
-                ),
-              ),
-              Text(
-                Localization.of(context).step4of4,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                    color: colorBlack,
-                    fontWeight: fontWeightMedium,
-                    fontSize: fontSize17),
-              ),
-              HutanoStepsHeader(
-                title: Localization.of(context).addProviderToNetwork,
-                iconText: stepFour,
+              AppHeader(
+                progressSteps: HutanoProgressSteps.four,
+                title: Localization.of(context).addProviders,
+                subTitle: Localization.of(context).addProviderToNetwork,
               ),
               SizedBox(
                 height: spacing20,
@@ -180,16 +161,20 @@ class _AddProviderState extends State<AddProvider> {
   _nextScreen() {
     FocusManager.instance.primaryFocus.unfocus();
 
-    //TODO : TEMPORARY CODE 
+    //TODO : TEMPORARY CODE
     //Chaning route to dashboard screen from home
     if (_phoneController.text.isNotEmpty) {
-      Navigator.of(context).pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false);
-      Navigator.of(context).pushNamed(Routes.dashboardSearchScreen,arguments: {'searchParam':_phoneController.text});
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false);
+      Navigator.of(context).pushNamed(Routes.dashboardSearchScreen,
+          arguments: {'searchParam': _phoneController.text});
       // Navigator.of(context).pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false,
       //     arguments: {ArgumentConstant.searchText: _phoneController.text});
     } else if (!_nameController.text.isEmpty) {
-      Navigator.of(context).pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false);
-      Navigator.of(context).pushNamed(Routes.dashboardSearchScreen,arguments: {'searchParam':_nameController.text});
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false);
+      Navigator.of(context).pushNamed(Routes.dashboardSearchScreen,
+          arguments: {'searchParam': _nameController.text});
       // Navigator.of(context).pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false,
       //     arguments: {ArgumentConstant.searchText: _nameController.text});
     } else {
@@ -199,7 +184,8 @@ class _AddProviderState extends State<AddProvider> {
   }
 
   _skipTaskNow() {
-    Navigator.of(context).pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false);
     // Navigator.of(context).pushNamed(Routes.dashboardSearchScreen,arguments: {'searchParam':'Test'});
   }
 }

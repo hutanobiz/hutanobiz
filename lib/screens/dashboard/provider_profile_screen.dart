@@ -255,7 +255,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
         _providerData['Specialties'] is List) {
       speaciltyList = _providerData['Specialties'];
     }
-
+  
     if (profileResponse['reviews'] != null) {
       reviewsList = profileResponse['reviews'];
     }

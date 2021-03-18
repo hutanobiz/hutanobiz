@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/src/widgets/app_header.dart';
+import 'package:hutano/src/widgets/hutano_progressbar.dart';
 
 import '../../../apis/api_manager.dart';
 import '../../../apis/error_model.dart';
@@ -52,10 +54,10 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
     try {
       var res = await ApiManager().getProviderGroups();
       ProgressDialogUtils.dismissProgressDialog();
-      if(res.response.data.providerNetwork != null){
-      setState(() {
-        specialityList = res.response.data.providerNetwork;
-      });
+      if (res.response.data.providerNetwork != null) {
+        setState(() {
+          specialityList = res.response.data.providerNetwork;
+        });
       }
       if (specialityList.length > 0) {
         _index = specialityList.length - 1;
@@ -101,7 +103,7 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
   }
 
   void _createGroup() async {
-    final res = await Navigator.of(context).pushNamed( routeCreateGroup);
+    final res = await Navigator.of(context).pushNamed(routeCreateGroup);
     if (res != null) {
       _getProvidersGroup();
     }
@@ -109,26 +111,34 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      padding: EdgeInsets.only(
-          top: spacing25, left: spacing15, right: spacing15, bottom: spacing20),
-      child: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildHeader(),
-            SizedBox(height: spacing25),
-            Text(
-              Localization.of(context).selectNetwork,
-              style: const TextStyle(
-                  color: colorDarkPurple,
+    return Scaffold(
+      body: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              AppHeader(
+                progressSteps: HutanoProgressSteps.four,
+              ),
+              _buildHeader(),
+              SizedBox(height: spacing25),
+              Text(
+                Localization.of(context).addToExistinGroup,
+                style: const TextStyle(
+                  color: colorBlack2,
                   fontSize: fontSize16,
-                  fontWeight: fontWeightSemiBold),
-            ),
-            SizedBox(height: spacing15),
-            _buildList(),
-            _buildBottomButtons(),
-          ],
+                  fontWeight: FontWeight.w600,
+                  fontFamily: gilroySemiBold,
+                  fontStyle: FontStyle.normal,
+                ),
+              ),
+              SizedBox(height: spacing15),
+              _buildList(),
+              _buildBottomButtons(),
+              SizedBox(height: spacing10),
+            ],
+          ),
         ),
       ),
     );
@@ -206,16 +216,6 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
       flex: 0,
       child: Row(
         children: [
-          HutanoButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: FileConstants.icBack,
-            buttonType: HutanoButtonType.onlyIcon,
-          ),
-          SizedBox(
-            width: spacing30,
-          ),
           Flexible(
             flex: 1,
             child: HutanoButton(
