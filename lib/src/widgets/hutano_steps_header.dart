@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/src/utils/constants/constants.dart';
 
 import '../utils/color_utils.dart';
 import '../utils/dimens.dart';
@@ -29,7 +30,9 @@ class HutanoStepsHeader extends StatelessWidget {
       this.bgColor,
       this.borderColor,
       this.alignment = CrossAxisAlignment.start,
-      this.subTitlePadding = true, this.titleStyle, this.subTitleStyle})
+      this.subTitlePadding = true,
+      this.titleStyle,
+      this.subTitleStyle})
       : assert(title != null),
         super(key: key);
 
@@ -59,24 +62,32 @@ class HutanoStepsHeader extends StatelessWidget {
                 child: Text(
                   title,
                   textAlign: TextAlign.start,
-                  style: titleStyle ??const TextStyle(
-                      color: colorDarkBlack,
-                      fontWeight: fontWeightSemiBold,
-                      fontSize: fontSize18),
+                  style: titleStyle ??
+                      const TextStyle(
+                          color: colorBlack2,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: gilroyMedium,
+                          fontStyle: FontStyle.normal,
+                          fontSize: 12),
                 ),
               ),
-              SizedBox(height: 5,),
+              SizedBox(
+                height: 5,
+              ),
               if (subTitle != null)
                 Padding(
                   padding: EdgeInsets.only(left: subTitlePadding ? 20 : 0),
                   child: Container(
                     child: Text(
                       subTitle,
-                      style:subTitleStyle ?? const TextStyle(
-                        fontWeight: fontWeightSemiBold,
-                        fontSize: fontSize10,
-                        color: colorLightGrey,
-                      ),
+                      style: subTitleStyle ??
+                          TextStyle(
+                            fontSize: 11,
+                            fontFamily: gilroyRegular,
+                            fontWeight: FontWeight.w400,
+                            fontStyle: FontStyle.normal,
+                            color: colorBlack2.withOpacity(0.85),
+                          ),
                     ),
                   ),
                 )

@@ -29,8 +29,8 @@ class HutanoHeaderInfo extends StatelessWidget {
               if (showLogo)
                 Image.asset(
                   FileConstants.icLogoBlack,
-                  height: 45,
-                  width: 45,
+                  height: 35,
+                  width: 35,
                 ),
               if (showLogo)
                 SizedBox(
@@ -41,6 +41,7 @@ class HutanoHeaderInfo extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                     color: colorBlack85,
+                    fontStyle: FontStyle.normal,
                     fontWeight: fontWeightBold,
                     fontSize: fontSize20),
               ),
@@ -53,8 +54,9 @@ class HutanoHeaderInfo extends StatelessWidget {
                 subTitle,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: subTitleFontSize,
+                  fontSize: 13,
                   color: colorBlack50,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
             )
