@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/src/widgets/app_header.dart';
 
 import '../../../apis/api_manager.dart';
 import '../../../apis/error_model.dart';
@@ -58,23 +59,14 @@ class _ResetPasswordState extends State<ResetPassword> {
       await ApiManager().resetPasswordStep3(request);
       ProgressDialogUtils.dismissProgressDialog();
 
-      DialogUtils.showOkCancelAlertDialog(
-          context: context,
-          message: Localization.of(context)
-              .passwordResetSuccess
-              .format(["Password"]),
-          isCancelEnable: false,
-          okButtonTitle: Localization.of(context).ok,
-          okButtonAction: () {
-            Navigator.of(context).pushReplacementNamed(
-              routeLogin,
-            );
-          });
+      Navigator.of(context).pushReplacementNamed(
+        routeResetPasswordSuccess,
+      );
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);
     }
-    Navigator.of(context).pushNamedAndRemoveUntil(routeLogin,(route) => false);
+    
   }
 
   @override
@@ -92,10 +84,12 @@ class _ResetPasswordState extends State<ResetPassword> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    HutanoHeader(
-                      headerInfo: HutanoHeaderInfo(
-                          title: Localization.of(context).msgResetPassword,
-                          subTitle: Localization.of(context).createNewPassowrd),
+                    AppHeader(
+                      title: Localization.of(context).msgResetPassword,
+                      subTitle: Localization.of(context).createNewPassowrd,
+                    ),
+                    SizedBox(
+                      height: spacing30,
                     ),
                     _buildNewPasswordField(),
                     SizedBox(
