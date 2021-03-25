@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/src/utils/constants/file_constants.dart';
 
 class AppLogo extends StatelessWidget {
   const AppLogo({this.appLogoText});
@@ -7,7 +8,7 @@ class AppLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AssetImage assetImage = AssetImage("images/hutano-logo.png");
+    AssetImage assetImage = AssetImage(FileConstants.icAppLogo);
     Image image = Image(
       image: assetImage,
       height: 43.0,

@@ -44,4 +44,9 @@ class SharedPref {
     bool present = prefs.containsKey(key);
     return present;
   }
+
+   Future<dynamic> setDoubleValue(String key, double value) async {
+    prefs = await SharedPreferences.getInstance();
+    prefs.setDouble(key, value);
+  }
 }

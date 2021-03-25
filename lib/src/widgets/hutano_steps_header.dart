@@ -63,12 +63,15 @@ class HutanoStepsHeader extends StatelessWidget {
                   title,
                   textAlign: TextAlign.start,
                   style: titleStyle ??
-                      const TextStyle(
+                      TextStyle(
                           color: colorBlack2,
                           fontWeight: FontWeight.w500,
                           fontFamily: gilroyMedium,
                           fontStyle: FontStyle.normal,
-                          fontSize: 12),
+                          fontSize:
+                              (MediaQuery.of(context).devicePixelRatio > 2)
+                                  ? 15
+                                  : 12),
                 ),
               ),
               SizedBox(
@@ -82,7 +85,10 @@ class HutanoStepsHeader extends StatelessWidget {
                       subTitle,
                       style: subTitleStyle ??
                           TextStyle(
-                            fontSize: 11,
+                            fontSize:
+                                (MediaQuery.of(context).devicePixelRatio > 2)
+                                    ? 13
+                                    : 11,
                             fontFamily: gilroyRegular,
                             fontWeight: FontWeight.w400,
                             fontStyle: FontStyle.normal,

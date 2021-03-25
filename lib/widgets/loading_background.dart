@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/src/utils/constants/file_constants.dart';
+import 'package:hutano/src/widgets/custom_back_button.dart';
 import 'package:hutano/widgets/arrow_button.dart';
 import 'package:hutano/widgets/bottom_arrows.dart';
 import 'package:hutano/widgets/circular_loader.dart';
@@ -20,10 +22,12 @@ class LoadingBackground extends StatelessWidget {
     this.onForwardTap,
     this.rightButtonText,
     this.onRightButtonTap,
+    this.addHeader = false,
   }) : super(key: key);
 
   final bool isLoading;
   final Widget child;
+  final bool addHeader;
   final bool isAddBack;
   final String title, rightButtonText;
   final EdgeInsets padding;
@@ -43,7 +47,38 @@ class LoadingBackground extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              isAddAppBar
+              if (addHeader)
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: CustomBackButton(
+                          margin: const EdgeInsets.all(0),
+                          size: 26,
+                        ),
+                      ),
+                      Spacer(),
+                      Image.asset(
+                        FileConstants.icHutanoHeader,
+                        height: 30,
+                        width: 90,
+                      ),
+                      Spacer(),
+                      Image.asset(
+                        FileConstants.icNotification,
+                        height: 22,
+                        width: 22,
+                      ),
+                    ],
+                  ),
+                ),
+              (isAddAppBar && !addHeader)
                   ? Padding(
                       padding: isAddBack
                           ? const EdgeInsets.fromLTRB(11.0, 17.0, 0.0, 17.0)
@@ -70,7 +105,8 @@ class LoadingBackground extends StatelessWidget {
                               : Container(),
                           isAddBack ? SizedBox(width: 10.0) : Container(),
                           Expanded(
-                            child: Text(
+                            child:
+                            Text(
                               title,
                               style: TextStyle(
                                 fontSize: 18.0,
@@ -78,6 +114,7 @@ class LoadingBackground extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
+
                           ),
                           if (rightButtonText != null &&
                               onRightButtonTap != null)
@@ -122,13 +159,9 @@ class LoadingBackground extends StatelessWidget {
                   : Container(),
               Expanded(
                 child: Container(
-                    padding: padding ?? const EdgeInsets.all(20.0),
+                    padding: padding ?? const EdgeInsets.all(15.0),
                     decoration: BoxDecoration(
                       color: color,
-                      borderRadius: BorderRadius.only(
-                        topLeft: const Radius.circular(22.0),
-                        topRight: const Radius.circular(22.0),
-                      ),
                     ),
                     child: child),
               ),

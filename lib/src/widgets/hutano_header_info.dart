@@ -39,7 +39,7 @@ class HutanoHeaderInfo extends StatelessWidget {
               Text(
                 title,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                     color: colorBlack85,
                     fontStyle: FontStyle.normal,
                     fontWeight: fontWeightBold,

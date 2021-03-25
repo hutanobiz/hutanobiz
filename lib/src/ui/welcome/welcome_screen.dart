@@ -45,7 +45,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 children: [
                   SizedBox(width: 35),
                   Image.asset(
-                    FileConstants.icEdit,
+                    FileConstants.icWelcomeNote,
                     height: 25,
                     width: 25,
                   ),
@@ -54,18 +54,21 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     child: Text(
                       Localization.of(context).completeTask,
                       maxLines: 2,
-                      style: const TextStyle(
+                      style: TextStyle(
                           color: colorBlack2,
                           fontFamily: gilroySemiBold,
                           fontWeight: FontWeight.w600,
                           fontStyle: FontStyle.normal,
-                          fontSize: 13),
+                          fontSize:
+                              (MediaQuery.of(context).devicePixelRatio > 2)
+                                  ? 16
+                                  : 13),
                     ),
                   ),
                 ],
               ),
               SizedBox(
-                height: spacing20,
+                height: (MediaQuery.of(context).devicePixelRatio > 2) ? 28 :spacing20 ,
               ),
               HutanoStepsHeader(
                 title: Localization.of(context).activateEmail,

@@ -480,7 +480,7 @@ class _AddInsuranceState extends State<AddInsurance> {
           setState(() {
             _healthPlanError = value
                 .toString()
-                .isBlank(context, Localization.of(context).errorZipCode);
+                .isBlank(context, Localization.of(context).errorHealthInsurance);
           });
         },
         errorText: _healthPlanError,
@@ -498,35 +498,35 @@ class _AddInsuranceState extends State<AddInsurance> {
     if (index >= 0) {
       _insuranceCompanyError = _companyController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorEnterFirstName);
+          .isBlank(context, Localization.of(context).errorEnterField);
     }
     if (index >= 1) {
       _insuranceMemberError = _memberController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorEnterLastName);
+          .isBlank(context, Localization.of(context).errorEnterField);
     }
     if (index >= 2) {
       _memberIdError = _memberIdController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorEnterLastName);
+          .isBlank(context, Localization.of(context).errorEnterField);
     }
 
     if (index >= 3) {
       _groupNumberError = _groupNumberController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorEnterLastName);
+          .isBlank(context, Localization.of(context).errorEnterField);
     }
 
     if (index >= 4) {
       _healthPlanError = _healthPlanController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorEnterAddress);
+          .isBlank(context, Localization.of(context).errorEnterField);
     }
 
     if (index >= 5) {
       _effectiveDateError = _effectiveDateController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorEnterCity);
+          .isBlank(context, Localization.of(context).errorEnterField);
     }
 
     setState(() {});

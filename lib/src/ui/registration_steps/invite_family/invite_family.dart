@@ -28,43 +28,41 @@ class _InviteFamilyScreenState extends State<InviteFamilyScreen> {
           key: _scaffoldKey,
           body: Container(
             margin: EdgeInsets.all(5),
-            child: Expanded(
-              child: Column(
-                children: [
-                  AppHeader(
-                    progressSteps: HutanoProgressSteps.three,
-                    title: Localization.of(context).inviteFamilyAndFriends,
-                    subTitle: Localization.of(context).assignPermisstion,
+            child: Column(
+              children: [
+                AppHeader(
+                  progressSteps: HutanoProgressSteps.three,
+                  title: Localization.of(context).inviteFamilyAndFriends,
+                  subTitle: Localization.of(context).assignPermisstion,
+                ),
+                SizedBox(
+                  height: spacing80,
+                ),
+                GestureDetector(onTap: () {
+                  Navigator.of(context).pushReplacementNamed(routeAddFamilyMember);
+                }, child: _buildInviteText()),
+                Spacer(),
+                Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Row(
+                    children: [
+                      SkipLater(
+                        onTap: _skipTaskNow,
+                      ),
+                      Spacer(),
+                      HutanoButton(
+                        width: 55,
+                        height: 55,
+                        color: accentColor,
+                        iconSize: 20,
+                        buttonType: HutanoButtonType.onlyIcon,
+                        icon: FileConstants.icForward,
+                        onPressed: _skipTaskNow,
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    height: spacing80,
-                  ),
-                  GestureDetector(onTap: () {
-                    Navigator.of(context).pushReplacementNamed(routeAddFamilyMember);
-                  }, child: _buildInviteText()),
-                  Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Row(
-                      children: [
-                        SkipLater(
-                          onTap: _skipTaskNow,
-                        ),
-                        Spacer(),
-                        HutanoButton(
-                          width: 55,
-                          height: 55,
-                          color: accentColor,
-                          iconSize: 20,
-                          buttonType: HutanoButtonType.onlyIcon,
-                          icon: FileConstants.icForward,
-                          onPressed: _skipTaskNow,
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                )
+              ],
             ),
           ),
         ),

@@ -27,6 +27,7 @@ class _UploadImageState extends State<UploadImage> {
 
   _openImageDialog(source) {
     PermissionUtils.requestPermission(
+      
         [source == ImageSource.gallery ? Permission.photos : Permission.camera],
         context, permissionGrant: () {
       _pickImage(source);
