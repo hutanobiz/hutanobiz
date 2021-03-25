@@ -121,16 +121,87 @@ class _SetupPinState extends State<SetupPin> {
   }
 
   _buildFingerPrint(BuildContext context) => Container(
-        child: FlatButton(
-          child: Image.asset(
-            FileConstants.icFingerPrint,
-            height: spacing40,
-            width: spacing40,
-          ),
-          onPressed: _authenticate,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 0.5,
+                      color: colorBlack2.withOpacity(0.3),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 3,
+                  ),
+                  Text('OR',
+                      style: TextStyle(
+                        color: colorBlack2.withOpacity(0.7),
+                        fontSize: fontSize15,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: gilroyMedium,
+                        fontStyle: FontStyle.normal,
+                      )),
+                  SizedBox(
+                    width: 3,
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: 0.5,
+                      color: colorBlack2.withOpacity(0.3),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Text('SETUP FINGER PRINT LOGIN',
+                  style: TextStyle(
+                    color: colorBlack2,
+                    fontSize: fontSize17,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: gilroyMedium,
+                    fontStyle: FontStyle.normal,
+                  )),
+            ),
+            SizedBox(
+              height: 25,
+            ),
+            FlatButton(
+              child: Image.asset(
+                FileConstants.icFingerPrint,
+                height: spacing60,
+                width: spacing60,
+              ),
+              onPressed: _authenticate,
+            ),
+            SizedBox(
+              height: 25,
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Text('Touch your finger print sensor',
+                  style: TextStyle(
+                    color: colorBlack2.withOpacity(0.7),
+                    fontSize: fontSize12,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: gilroyMedium,
+                    fontStyle: FontStyle.normal,
+                  )),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+          ],
         ),
       );
-  
+
   Future<void> _onUpdateClick() async {
     if (_confirmPinController.text == _newPinController.text) {
       try {
@@ -176,6 +247,7 @@ class _SetupPinState extends State<SetupPin> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Container(
       color: Colors.white,
       child: SafeArea(
@@ -198,6 +270,11 @@ class _SetupPinState extends State<SetupPin> {
                 SizedBox(
                   height: spacing20,
                 ),
+                if (widget.setupScreen != SetupScreenFrom.login)
+                  _buildFingerPrint(context),
+                SizedBox(
+                  height: spacing20,
+                ),
                 _buildButton(context),
                 if (widget.setupScreen != SetupScreenFrom.login)
                   SkipLater(
@@ -209,7 +286,6 @@ class _SetupPinState extends State<SetupPin> {
                 SizedBox(
                   height: spacing50,
                 ),
-                //_buildFingerPrint(context)
               ],
             ),
           ),
