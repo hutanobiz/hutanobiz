@@ -128,7 +128,7 @@ class _PainSymptomsState extends State<PainSymptoms> {
                       bodyImage: Provider.of<SymptomsInfoProvider>(context,
                               listen: false)
                           .bodySide,
-                      isClickable: false,
+                      isClickable: true,
                       bodyPartSelected: (bodyPart) {
                         setState(() {
                           _selectedBodyPart = bodyPart;

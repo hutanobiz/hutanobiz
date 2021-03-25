@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/main.dart';
 import 'package:hutano/widgets/app_logo.dart';
+import 'package:hutano/widgets/widgets.dart';
 
 import '../../../apis/api_manager.dart';
 import '../../../apis/error_model.dart';
@@ -24,6 +26,9 @@ import 'model/res_my_provider_network.dart';
 import 'share_provider.dart';
 
 class MyProviderNetwrok extends StatefulWidget {
+  final bool showBack;
+
+  const MyProviderNetwrok({Key key, this.showBack = true}) : super(key: key);
   @override
   _MyProviderNetwrokState createState() => _MyProviderNetwrokState();
 }
@@ -90,8 +95,17 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
         groupId: _providerGroupList[index].providerNetwork.sId,
         userId: getString(PreferenceKey.id));
 
-    showBottomSheetRemove(
-        context: context, onRemove: _onRemove, onCancel: _onCancel);
+    var name = _providerGroupList[index].doctor[0].fullName;
+
+    Widgets.showConfirmationDialog(
+        context: navigatorKey.currentState.overlay.context,
+        description: "Are you sure you want to remove \n Dr. ${name} ?",
+        title: "",
+        leftText: "Remove",
+        rightText: "Cancel",
+        onLeftPressed: _onRemove);
+    // showBottomSheetRemove(
+    //     context: context, onRemove: _onRemove, onCancel: _onCancel);
   }
 
   _onCancel() {
@@ -102,7 +116,7 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
     ProgressDialogUtils.showProgressDialog(context);
     try {
       var res = await ApiManager().removeProvider(_removeProvider);
-      Navigator.of(context).pop();
+      if (widget.showBack) Navigator.of(context).pop();
       _getMyProviderGroupList(showProgress: false);
       ProgressDialogUtils.dismissProgressDialog();
     } on ErrorModel catch (e) {
@@ -139,7 +153,7 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: spacing10),
-            CustomBackButton(),
+            if (widget.showBack) CustomBackButton(),
             AppLogo(),
             _buildHeader(),
             SizedBox(height: spacing25),
@@ -175,7 +189,7 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
   Widget _buildHeader() {
     return Align(
       alignment: Alignment.center,
-          child: Text(
+      child: Text(
         Localization.of(context).myProviderNetwork,
         textAlign: TextAlign.center,
         style: const TextStyle(

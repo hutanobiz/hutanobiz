@@ -96,9 +96,9 @@ class ItemProviderDetail extends StatelessWidget {
           },
           child: IntrinsicWidth(
               child: TextWithImage(
-            image: FileConstants.icDelete,
+            image: FileConstants.icRemoveBlack,
             label: Localization.of(context).remove,
-            textStyle: TextStyle(color: colorRed, fontSize: fontSize12),
+            textStyle: TextStyle(color: colorBlack2.withOpacity(0.85), fontSize: fontSize12),
           )),
         ),
         SizedBox(
@@ -106,7 +106,9 @@ class ItemProviderDetail extends StatelessWidget {
         ),
         IntrinsicWidth(
           child: TextWithImage(
-              image: FileConstants.icAppointmentWhite,
+            
+               textStyle: TextStyle(color: colorPurple100, fontSize: fontSize12),
+              image: FileConstants.icAppointmentBlue,
               label: Localization.of(context).makeAppointment),
         ),
       ],
