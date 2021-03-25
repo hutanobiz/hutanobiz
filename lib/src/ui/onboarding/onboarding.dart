@@ -53,16 +53,17 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
   }
 
   Widget _buildImage(assetName) {
+    final pixelRatio = MediaQuery.of(context).devicePixelRatio;
     return Align(
       child: Image.asset(assetName,
-          height: MediaQuery.of(context).size.width / 1.7,
-          width: MediaQuery.of(context).size.width / 1.7),
-      alignment: Alignment.bottomCenter,
+          height: MediaQuery.of(context).size.width / (1.8),
+          width: MediaQuery.of(context).size.width / (1.8)),
+      alignment: Alignment.center,
     );
   }
 
-  _goToLogin() {
-    setBool(PreferenceKey.intro, true);
+  _goToLogin() async {
+    await setBool(PreferenceKey.intro, true);
     NavigationUtils.pushReplacement(context, routeLogin);
   }
 
@@ -117,6 +118,8 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                 color: colorBlue2,
                 fontFamily: poppins,
                 fontSize: 16,
+                fontWeight: FontWeight.w400,
+                fontStyle: FontStyle.normal,
               ),
             ),
           )),
@@ -176,9 +179,6 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
     return PageViewModel(
         bodyWidget: Column(
           children: [
-            SizedBox(
-              height: 10,
-            ),
             Text(
               item["title"],
               style: TextStyle(
@@ -198,7 +198,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                     fontSize: 14,
                     fontWeight: fontWeightMedium)),
             SizedBox(
-              height: 30,
+              height: 24,
             ),
             _buildImage(item["image"])
           ],
