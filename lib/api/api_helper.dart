@@ -1,4 +1,4 @@
-import 'dart:convert';
+                                import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -18,9 +18,10 @@ import '../routes.dart';
 class ApiBaseHelper {
   NetworkUtil _netUtil = new NetworkUtil();
   // static const String base_url = "https://sa-staging.hutano.xyz/";
-  // static const String base_url = "https://api.stage.hutano.com/";
+  // static const String base_url = "https://ccd7c5c46cb7.ngrok.io/";
   static const String base_url = "https://api.stage.hutano.com/";
-  static const String imageUrl = base_url + "uploads/";
+  // static const String imageUrl = base_url + "uploads/";
+  static const String imageUrl = "https://hutano-assets.s3.amazonaws.com/";
 
   Future<dynamic> login(Map loginData) {
     return _netUtil
@@ -192,7 +193,7 @@ class ApiBaseHelper {
             base_url +
                 "api/patient/user-schedule-appointmnet?longitude"
                     "=${latLng.longitude.toStringAsFixed(2)}"
-                    "&lattitude=${latLng.latitude.toStringAsFixed(2)}",
+                    "&latitude=${latLng.latitude.toStringAsFixed(2)}",
             headers: headers)
         .then((res) {
       return res["response"];
