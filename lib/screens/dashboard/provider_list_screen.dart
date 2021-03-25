@@ -3,6 +3,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/src/utils/color_utils.dart';
+import 'package:hutano/src/utils/constants/file_constants.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/custom_loader.dart';
@@ -36,7 +38,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
     'Office',
     'Video',
     'Onsite',
-    'Filter'
+    // 'Filter'
   ];
 
   String _selectedAppointmentType;
@@ -111,8 +113,9 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
       body: LoadingBackground(
         title: "Providers List",
         color: AppColors.snow,
-        isAddBack: false,
-        addBackButton: true,
+        isAddBack: true,
+        addHeader: true,
+        isAddAppBar: true,
         padding: EdgeInsets.zero,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,32 +133,87 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
   Widget searchBar() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-      child: TextFormField(
-        key: _searchKey,
-        maxLines: 1,
-        keyboardType: TextInputType.text,
-        onChanged: (value) {
-          setState(() {
-            _searchText = value;
-          });
-          filterSearch(value);
-        },
-        decoration: InputDecoration(
-          floatingLabelBehavior: FloatingLabelBehavior.never,
-          filled: true,
-          fillColor: Colors.white,
-          labelStyle: TextStyle(fontSize: 13.0, color: Colors.grey),
-          labelText: "Search for providers",
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white),
-            borderRadius: BorderRadius.circular(8.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextFormField(
+              key: _searchKey,
+              maxLines: 1,
+              keyboardType: TextInputType.text,
+              onChanged: (value) {
+                setState(() {
+                  _searchText = value;
+                });
+                filterSearch(value);
+              },
+              decoration: InputDecoration(
+                floatingLabelBehavior: FloatingLabelBehavior.never,
+                filled: true,
+                fillColor: colorBlack2.withOpacity(0.06),
+                labelStyle: TextStyle(fontSize: 13.0, color: Colors.grey),
+                labelText: "Search for providers",
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                prefixIconConstraints:
+                    BoxConstraints(maxHeight: 40, maxWidth: 40),
+                prefixIcon: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Image.asset(FileConstants.icSearchBlack),
+                ),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                contentPadding: EdgeInsets.fromLTRB(12.0, 15.0, 14.0, 14.0),
+              ),
+            ),
           ),
-          border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white),
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          contentPadding: EdgeInsets.fromLTRB(12.0, 15.0, 14.0, 14.0),
-        ),
+          SizedBox(width: 10),
+          InkWell(
+            onTap: () {
+              FocusScope.of(context).requestFocus(FocusNode());
+
+              if (filterMap == null || filterMap.isEmpty) {
+                filterMap = _projectResponse;
+              }
+
+              Navigator.of(context)
+                  .pushNamed(
+                Routes.providerFiltersScreen,
+                arguments: filterMap,
+              )
+                  .then((value) {
+                if (value != null) {
+                  setState(() {
+                    filterMap = value;
+                  });
+
+                  if (filterMap.length > 0) {
+                    setState(() {
+                      _providerFuture = api.providerFilter(token, filterMap);
+                    });
+                  }
+                }
+              });
+            },
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              width: 40,
+              height: 40,
+              child: Image.asset(
+                FileConstants.icFilterWhite,
+                width: 20,
+                height: 20,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+                color: const Color(0xffffc059),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -390,9 +448,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
         width: title.toLowerCase().contains('all') ? 64 : 96,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: isSelected
-              ? AppColors.windsor.withOpacity(0.10)
-              : Colors.transparent,
+          color: isSelected ? colorOrange : Colors.transparent,
           borderRadius: BorderRadius.circular(28),
           border: isSelected
               ? null
@@ -415,7 +471,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
             Text(
               title,
               style: TextStyle(
-                color: AppColors.windsor.withOpacity(0.85),
+                color: isSelected ? colorWhite : colorBlack70,
                 fontWeight: FontWeight.w600,
                 fontSize: 13,
               ),

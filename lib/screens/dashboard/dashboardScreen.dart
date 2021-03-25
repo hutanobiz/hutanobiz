@@ -1,13 +1,21 @@
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/dashboard/location_dialog/location_dailog.dart';
+import 'package:hutano/src/utils/color_utils.dart';
+import 'package:hutano/src/utils/constants/constants.dart';
+import 'package:hutano/src/utils/constants/file_constants.dart';
 import 'package:hutano/src/utils/size_config.dart';
+import 'package:hutano/src/widgets/blue_button.dart';
+import 'package:hutano/src/widgets/common_header.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/circular_loader.dart';
@@ -42,9 +50,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   bool _isLoading = false;
   List<String> _topProvidersList = [
-    'Office Appointment',
-    'Video Appointment',
-    'Onsite Appointment'
+    'Office Care',
+    'Video Chat',
+    'Onsite Visit'
   ];
 
   Future<List<dynamic>> _myDoctorsFuture;
@@ -91,13 +99,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
-      backgroundColor: AppColors.white_smoke,
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Stack(
           children: <Widget>[
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                CommonHeader(
+                  backgroundColor: colorYellow100,
+                ),
                 Padding(
                   padding: _edgeInsetsGeometry,
                   child: adressBar(),
@@ -105,6 +116,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Padding(
                   padding: _edgeInsetsGeometry,
                   child: searchBar(),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                      border: Border.all(color: colorGreyBorder, width: 0.5),
+                      boxShadow: [
+                        BoxShadow(
+                            color: const Color(0x148b8b8b),
+                            offset: Offset(0, 2),
+                            blurRadius: 30,
+                            spreadRadius: 0)
+                      ],
+                      color: colorWhite),
+                  margin: _edgeInsetsGeometry,
+                  child: _showInsuranceSwitch(),
                 ),
                 Expanded(
                   child: Container(
@@ -123,18 +149,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         Padding(
                           padding: const EdgeInsets.only(left: 20),
                           child: Text(
-                            'Find Top Providers',
+                            'What are you looking for?',
                             style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
+                                color: colorBlack2,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: gilroyBold,
+                                fontStyle: FontStyle.normal,
+                                fontSize: 16.0),
                           ),
                         ),
                         topProviderWidget(),
-                        myDoctorsWidget(),
                         professionalTitleWidget(),
+                        myDoctorsWidget(),
                         specialtiesWidget(),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: Text(
+                            'Refer and Earn',
+                            style: TextStyle(
+                                color: colorBlack2,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: gilroyBold,
+                                fontStyle: FontStyle.normal,
+                                fontSize: 16.0),
+                          ),
+                        ),
+                        _referAndEarn(),
+                        _inviteFreinds()
                       ],
                     ),
                   ),
@@ -145,6 +186,210 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  _inviteFreinds() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+      margin: const EdgeInsets.all(20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            FileConstants.icInvitePoints,
+            height: 40,
+            width: 40,
+          ),
+          SizedBox(width: 10),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Invite Friends",
+                  style: const TextStyle(
+                      color: colorBlack2,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: gilroySemiBold,
+                      fontStyle: FontStyle.normal,
+                      fontSize: 14.0),
+                  textAlign: TextAlign.left),
+              SizedBox(
+                height: 4,
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text("Earn more points".toUpperCase(),
+                      style: const TextStyle(
+                          color: colorDarkBlue3,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: gilroyMedium,
+                          fontStyle: FontStyle.normal,
+                          fontSize: 12.0),
+                      textAlign: TextAlign.left),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 15.0,
+                    color: colorDarkBlue3,
+                  )
+                ],
+              )
+            ],
+          )
+        ],
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        border: Border.all(color: colorGreyBorder, width: 0.5),
+        boxShadow: [
+          BoxShadow(
+              color: const Color(0x148b8b8b),
+              offset: Offset(0, 2),
+              blurRadius: 30,
+              spreadRadius: 0)
+        ],
+        color: colorWhite,
+      ),
+    );
+  }
+
+  _points() {
+    return Padding(
+      padding: const EdgeInsets.all(15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(
+                FileConstants.icStarPoints,
+                height: 25,
+                width: 25,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text("0",
+                  style: const TextStyle(
+                      color: colorBlack2,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: gilroyMedium,
+                      fontStyle: FontStyle.normal,
+                      fontSize: 26.0),
+                  textAlign: TextAlign.left),
+              Spacer(),
+              Image.asset(
+                FileConstants.icInfoCircle,
+                height: 25,
+                width: 25,
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          Text("STAR BALANCE",
+              style: const TextStyle(
+                  color: colorBlack2,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: gilroyMedium,
+                  fontStyle: FontStyle.normal,
+                  fontSize: 12.0),
+              textAlign: TextAlign.left)
+        ],
+      ),
+    );
+  }
+
+  Widget _referAndEarn() {
+    return Container(
+      margin: _edgeInsetsGeometry,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _points(),
+          Divider(
+            color: colorWhite,
+            thickness: 1,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Row(
+                children: [
+                  Image.asset(
+                    FileConstants.icReferPoints,
+                    height: 70,
+                    width: 70,
+                  ),
+                  Spacer(),
+                  BlueButton(
+                    onPress: () {
+                      LocationDialog().showLocationDialog(true, context);
+                    },
+                    title: 'Redeem Points',
+                  )
+                ],
+              ))
+        ],
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+              color: colorLightBlue2.withOpacity(0.6),
+              offset: Offset(0, 2),
+              blurRadius: 30,
+              spreadRadius: 0)
+        ],
+        color: const Color(0xffe7e5ff),
+      ),
+    );
+  }
+
+  Widget _showInsuranceSwitch() {
+    return Row(
+      children: [
+        SizedBox(
+          width: 4,
+        ),
+        Image.asset(
+          FileConstants.icInsuranceBlue,
+          height: 20,
+          width: 20,
+        ),
+        SizedBox(
+          width: 7,
+        ),
+        Text("Show providers who take my insurance",
+            maxLines: 2,
+            softWrap: true,
+            style: const TextStyle(
+                color: colorBlack2,
+                fontWeight: FontWeight.w500,
+                fontFamily: gilroyMedium,
+                fontStyle: FontStyle.normal,
+                fontSize: 13.0),
+            textAlign: TextAlign.left),
+        Spacer(),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Transform.scale(
+            scale: 0.6,
+            child: CupertinoSwitch(
+              activeColor: colorYellow100,
+              value: true,
+              onChanged: (newValue) {},
+            ),
+          ),
+        )
+      ],
     );
   }
 
@@ -204,16 +449,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ],
                 ),
               ),
-        Expanded(
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: Image(
-              width: 20.0,
-              height: 20.0,
-              image: AssetImage("images/ic_notification.png"),
-            ),
-          ),
-        ),
       ],
     );
   }
@@ -223,14 +458,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Text(
-          "What are you looking for?",
-          style: TextStyle(
-            color: AppColors.midnight_express,
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
         SizedBox(height: 6.0),
         InkWell(
           onTap: () {
@@ -245,10 +472,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
             padding: const EdgeInsets.fromLTRB(12.0, 15.0, 14.0, 14.0),
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("images/ic_search.png"),
-                alignment: Alignment.centerRight,
-              ),
-              color: Colors.white,
+                  scale: 2,
+                  image: AssetImage(FileConstants.icSearchBlack),
+                  alignment: Alignment(0.9, 0.0)),
+              color: colorBlack2.withOpacity(0.06),
               borderRadius: BorderRadius.all(
                 Radius.circular(
                   8.0,
@@ -352,11 +579,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Padding(
                 padding: const EdgeInsets.only(left: 20),
                 child: Text(
-                  'My Doctors',
+                  'My Providers',
                   style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                    color: colorBlack2,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: gilroyBold,
+                    fontStyle: FontStyle.normal,
+                    fontSize: 16.0,
                   ),
                 ),
               ),
@@ -541,16 +770,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Padding(
                 padding: const EdgeInsets.only(left: 20),
                 child: Text(
-                  'Professional titles',
+                  'Speciality Care',
                   style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
+                      color: colorBlack2,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: gilroyBold,
+                      fontStyle: FontStyle.normal,
+                      fontSize: 16.0),
                 ),
               ),
               Container(
-                height: 130,
+                height: 132,
                 margin: const EdgeInsets.only(top: 20, bottom: 25),
                 child: ListView.separated(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -589,9 +819,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           Text(
                             professionalTitle['title']?.toString() ?? '---',
                             style: TextStyle(
-                              color: Colors.black,
                               fontSize: 12,
+                              color: colorBlack2,
                               fontWeight: FontWeight.w600,
+                              fontFamily: gilroySemiBold,
+                              fontStyle: FontStyle.normal,
                             ),
                           ),
                         ],
@@ -638,6 +870,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         if (snapshot.hasData) {
           if (snapshot.data != null && snapshot.data.length > 0) {
             for (dynamic specialty in snapshot.data) {
+              //TODO : TEMP COMMENT FOR FEATURED
+              _topSpecialtiesList.add(specialty);
+
               if (specialty['isFeatured'] != null) {
                 if (specialty['isFeatured']) {
                   _topSpecialtiesList.add(specialty);
@@ -656,23 +891,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Padding(
                 padding: const EdgeInsets.only(left: 20),
                 child: Text(
-                  'Top Specialities',
+                  'Popular Specialties',
                   style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                    color: colorBlack2,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: gilroyBold,
+                    fontStyle: FontStyle.normal,
+                    fontSize: 16.0,
                   ),
                 ),
               ),
               Container(
-                height: 137,
-                margin: const EdgeInsets.only(top: 20, bottom: 30),
-                child: ListView.separated(
+                height: 200,
+                margin: const EdgeInsets.only(top: 10, bottom: 30),
+                child: GridView.builder(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                  separatorBuilder: (BuildContext context, int index) =>
-                      SizedBox(width: 13),
+                  // separatorBuilder: (BuildContext context, int index) =>
+                  //     SizedBox(width: 13),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      childAspectRatio: 3 / 4, crossAxisCount: 2),
+
                   scrollDirection: Axis.horizontal,
                   itemCount: _topSpecialtiesList.length,
+                  shrinkWrap: true,
                   itemBuilder: (context, index) {
                     if (_topSpecialtiesList == null ||
                         _topSpecialtiesList.isEmpty) {
@@ -684,36 +925,47 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     return Container(
                       height: 100,
                       width: 132,
+                      margin: EdgeInsets.only(top: 10, left: 10),
+                      padding: EdgeInsets.only(
+                          left: 10, right: 0, top: 2, bottom: 2),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(color: Colors.grey[100]),
                       ),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          ClipRRect(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(14),
-                              topRight: Radius.circular(14),
-                            ),
-                            child: Image(
-                              image: specialty['image'] == null
-                                  ? AssetImage('images/dummy_title_image.png')
-                                  : NetworkImage(
-                                      ApiBaseHelper.imageUrl +
-                                          specialty['image'],
-                                    ),
-                              width: 132,
-                              height: 100,
-                              fit: BoxFit.cover,
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                              child: Image(
+                                image: specialty['image'] == null
+                                    ? AssetImage('images/dummy_title_image.png')
+                                    : NetworkImage(
+                                        ApiBaseHelper.imageUrl +
+                                            specialty['image'],
+                                      ),
+                                width: 35,
+                                height: 35,
+                                fit: BoxFit.cover,
+                                
+                              ),
                             ),
                           ),
-                          SizedBox(height: 10.0),
+                          Spacer(),
                           Text(
                             specialty['title']?.toString() ?? '---',
                             style: TextStyle(
-                              color: Colors.black,
                               fontSize: 12,
-                              fontWeight: FontWeight.w600,
+                              color: colorBlack2,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: gilroyMedium,
+                              fontStyle: FontStyle.normal,
                             ),
                           ),
                           SizedBox(height: 10.0),
@@ -791,7 +1043,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
             getLocationAddress(locationData.latitude, locationData.longitude);
 
-            _latLng = LatLng(locationData.latitude??0.00, locationData.longitude??0.00);
+            _latLng = LatLng(
+                locationData.latitude ?? 0.00, locationData.longitude ?? 0.00);
 
             SharedPref().getToken().then((token) {
               _myDoctorsFuture = _api.getMyDoctors(token, _latLng);

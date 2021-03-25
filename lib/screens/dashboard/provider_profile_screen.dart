@@ -6,7 +6,11 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' hide MapType;
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/src/utils/color_utils.dart';
+import 'package:hutano/src/utils/constants/constants.dart';
+import 'package:hutano/src/utils/dimens.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/fancy_button.dart';
@@ -57,6 +61,14 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     setSourceAndDestinationIcons();
   }
 
+  Map _providerData;
+
+  int _radioValue = 0;
+  String _selectedAppointmentType = '1', _appointmentTypeKey;
+  List<Services> servicesList;
+  Map<String, Services> _selectedServicesMap = Map();
+  List _serviceList;
+  Map profileMap = Map();
   @override
   void didChangeDependencies() {
     _container = InheritedContainer.of(context);
@@ -74,6 +86,50 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
 
     _profileFuture =
         api.getProviderProfile(_providerData["providerId"], locMap);
+
+    _container.setProjectsResponse("serviceType", "1");
+
+    _providerData = _container.getProviderData();
+
+    if (_container.projectsResponse != null) {
+      _selectedAppointmentType =
+          _container.projectsResponse['serviceType']?.toString() ?? '0';
+
+      switch (_selectedAppointmentType) {
+        case '1':
+          _appointmentTypeKey = 'officeConsultanceFee';
+          break;
+        case '2':
+          _appointmentTypeKey = 'vedioConsultanceFee';
+          break;
+        case '3':
+          _appointmentTypeKey = 'onsiteConsultanceFee';
+          break;
+        default:
+      }
+    }
+
+    if (_providerData["providerData"]["subServices"] != null) {
+      if (_providerData["providerData"]["subServices"] is List) {
+        _serviceList = _providerData["providerData"]["subServices"];
+      }
+    } else if (_providerData["providerData"]["services"] != null) {
+      if (_providerData["providerData"]["services"] is List) {
+        _serviceList = _providerData["providerData"]["services"];
+      }
+    } else if (_providerData["subServices"] != null) {
+      if (_providerData["subServices"] is List) {
+        _serviceList = _providerData["subServices"];
+      }
+    }
+
+    if (_serviceList != null) {
+      _serviceList = _serviceList
+          .where((e) => e['serviceType'].toString() == _selectedAppointmentType)
+          .toList();
+
+      servicesList = _serviceList.map((m) => Services.fromJson(m)).toList();
+    }
 
     super.didChangeDependencies();
   }
@@ -133,7 +189,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                       title: name,
                       color: Colors.white,
                       isAddBack: false,
-                      addBackButton: true,
+                      addHeader: true,
                       padding: const EdgeInsets.only(bottom: 20),
                       child: Column(children: <Widget>[
                         Expanded(
@@ -146,42 +202,13 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                             ),
                           ),
                         ),
-                        Divider(height: 0.5),
-                        Align(
-                          alignment: FractionalOffset.bottomRight,
-                          child: Container(
-                            height: 55.0,
-                            width: MediaQuery.of(context).size.width - 76.0,
-                            margin: const EdgeInsets.only(top: 10),
-                            padding:
-                                const EdgeInsets.only(right: 20.0, left: 40.0),
-                            child: FancyButton(
-                              title: "Schedule Appointment",
-                              onPressed: () {
-                                Map _appointentTypeMap = {};
-
-                                dynamic response =
-                                    profileMapResponse["data"][0];
-
-                                _appointentTypeMap["isOfficeEnabled"] =
-                                    response["isOfficeEnabled"];
-                                _appointentTypeMap["isVideoChatEnabled"] =
-                                    response["isVideoChatEnabled"];
-                                _appointentTypeMap["isOnsiteEnabled"] =
-                                    response["isOnsiteEnabled"];
-                                _container.providerResponse.clear();
-
-                                _container.setProviderData(
-                                    "providerData", profileMapResponse);
-
-                                Navigator.of(context).pushNamed(
-                                  Routes.appointmentTypeScreen,
-                                  arguments: _appointentTypeMap,
-                                );
-                              },
-                            ),
-                          ),
-                        )
+                        // Expanded(
+                        //   child: ListView(
+                        //     shrinkWrap: true,
+                        //     padding: const EdgeInsets.only(bottom: 70.0),
+                        //     children: _widgetList(),
+                        //   ),
+                        // ),
                       ]));
                 } else if (snapshot.hasError) {
                   return Text("${snapshot.error}");
@@ -231,6 +258,15 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
       }
     }
 
+    var practicingSince = _providerData["practicingSince"] != null
+        ? ((DateTime.now()
+                    .difference(
+                        DateTime.parse(_providerData["practicingSince"]))
+                    .inDays /
+                366))
+            .toStringAsFixed(1)
+        : "---";
+
     if (_providerData["legalDocuments"] != null &&
         _providerData["legalDocuments"]["boardCertification"] != null) {
       List boardCerfication =
@@ -255,11 +291,12 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
         _providerData['Specialties'] is List) {
       speaciltyList = _providerData['Specialties'];
     }
-  
+
     if (profileResponse['reviews'] != null) {
       reviewsList = profileResponse['reviews'];
     }
-
+    DateTime todayFromTime;
+    DateTime todayToTime;
     if (_providerData['schedules'] != null &&
         _providerData['schedules'].length > 0) {
       scheduleList = _providerData['schedules'];
@@ -292,6 +329,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
           //'${toTime.toLocal().hour}:${toTime.toLocal().minute}';
 
           if (now.weekday.toString() == day) {
+            todayFromTime = fromTime;
+            todayToTime = toTime;
             todaysTimings = todaysTimings + from + " - " + to + " ; ";
           }
 
@@ -350,13 +389,114 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     );
 
     formWidget.add(Padding(
-      padding: const EdgeInsets.only(left: 20, top: 0, bottom: 12, right: 20),
+      padding: const EdgeInsets.only(left: 20, top: 16, right: 20),
       child: Text(
-        "About $name",
+        "Specialties",
         style: TextStyle(
-          fontSize: 14.0,
-          fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w600,
+            color: colorBlack.withOpacity(0.9),
+            fontFamily: gilroySemiBold,
+            fontStyle: FontStyle.normal,
+            fontSize: 14.0),
+      ),
+    ));
+
+    formWidget.add(SizedBox(height: 12.0));
+
+    formWidget.add(
+      speaciltyList.length > 0
+          ? SizedBox(
+              height: 100,
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: ClampingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                itemCount: speaciltyList.length,
+                padding: const EdgeInsets.only(left: 20, bottom: 16),
+                itemBuilder: (context, index) {
+                  return appoCard('images/office_appointment.png',
+                      speaciltyList[index]["title"]?.toString() ?? "---");
+                  return _chipWidget(
+                      speaciltyList[index]["title"]?.toString() ?? "---");
+                },
+              ),
+            )
+          : Padding(
+              padding: const EdgeInsets.only(left: 20, bottom: 16),
+              child: Text(
+                "NO languages available",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 13.0,
+                    fontWeight: FontWeight.w400),
+              ),
+            ),
+    );
+
+    formWidget.add(divider());
+
+    formWidget.add(Padding(
+      padding: const EdgeInsets.only(left: 20, top: 16, right: 20),
+      child: Text(
+        "Experience",
+        style: TextStyle(
+            fontWeight: FontWeight.w600,
+            color: colorBlack.withOpacity(0.9),
+            fontFamily: gilroySemiBold,
+            fontStyle: FontStyle.normal,
+            fontSize: 14.0),
+      ),
+    ));
+
+    formWidget.add(SizedBox(height: 12.0));
+
+    formWidget.add(Padding(
+      padding: const EdgeInsets.only(left: 20, top: 8, right: 20),
+      child: _rowCard("Professional Experience", "images/dummy_title_image.png",
+          "${practicingSince} years of experience."),
+    ));
+
+    formWidget.add(SizedBox(height: 12.0));
+
+    formWidget.add(divider());
+
+    formWidget.add(
+      Padding(
+        padding: const EdgeInsets.only(left: 20, top: 16, bottom: 12),
+        child: Text(
+          "Education",
+          style: TextStyle(
+            fontSize: 14.0,
+            fontWeight: FontWeight.w600,
+          ),
         ),
+      ),
+    );
+
+    formWidget.add(
+      Padding(
+        padding: const EdgeInsets.only(left: 20, bottom: 16),
+        child: doctorEducation.isEmpty
+            ? Text(
+                "No education available",
+                style: TextStyle(
+                  fontSize: 13.0,
+                ),
+              )
+            : _addEducationList(_providerData["education"]),
+      ),
+    );
+
+    formWidget.add(Padding(
+      padding: const EdgeInsets.only(left: 20, top: 15, bottom: 12, right: 20),
+      child: Text(
+        "About",
+        style: TextStyle(
+            fontWeight: FontWeight.w600,
+            color: colorBlack.withOpacity(0.9),
+            fontFamily: gilroySemiBold,
+            fontStyle: FontStyle.normal,
+            fontSize: 14.0),
       ),
     ));
 
@@ -366,8 +506,11 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
         child: Text(
           _providerData['about'] ?? "---",
           style: TextStyle(
-            fontSize: 13.0,
-          ),
+              fontWeight: FontWeight.w400,
+              fontFamily: gilroyMedium,
+              fontStyle: FontStyle.normal,
+              color: colorBlack2.withOpacity(0.85),
+              fontSize: 13.0),
         ),
       ),
     );
@@ -378,68 +521,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
       Padding(
         padding: const EdgeInsets.only(left: 20, top: 16, bottom: 12),
         child: Text(
-          "Medical Education",
-          style: TextStyle(
-            fontSize: 14.0,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-    );
-
-    formWidget.add(
-      Padding(
-        padding: const EdgeInsets.only(left: 20, bottom: 16),
-        child: Text(
-          doctorEducation == ""
-              ? "No education available"
-              : doctorEducation?.substring(0, doctorEducation.length - 2),
-          style: TextStyle(
-            fontSize: 13.0,
-          ),
-        ),
-      ),
-    );
-
-    formWidget.add(divider());
-
-    formWidget.add(
-      Padding(
-        padding: const EdgeInsets.only(left: 20, top: 16, bottom: 12),
-        child: Text(
-          "Board Certifications",
-          style: TextStyle(
-            fontSize: 14.0,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-    );
-
-    formWidget.add(
-      Padding(
-        padding: const EdgeInsets.only(left: 20, bottom: 16),
-        child: Text(
-          boardCerficationText == null ||
-                  boardCerficationText == '---' ||
-                  boardCerficationText.isEmpty
-              ? "No board certifications available"
-              : boardCerficationText?.substring(
-                  0, boardCerficationText.length - 2),
-          style: TextStyle(
-            fontSize: 13.0,
-          ),
-        ),
-      ),
-    );
-
-    formWidget.add(divider());
-
-    formWidget.add(
-      Padding(
-        padding: const EdgeInsets.only(left: 20, top: 16, bottom: 12),
-        child: Text(
-          "Languages",
+          "Speak",
           style: TextStyle(
             fontSize: 14.0,
             fontWeight: FontWeight.w600,
@@ -490,59 +572,60 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
       ),
     );
 
+    if (scheduleList != null && scheduleList.length > 0)
+      formWidget.add(
+        Padding(
+            padding: const EdgeInsets.only(left: 20, top: 16, bottom: 12),
+            child: _setSchedule(scheduleList)),
+      );
+
+    formWidget.add(
+      Padding(
+        padding: const EdgeInsets.only(left: 20, top: 16, bottom: 12),
+        child: Text(
+          "Availibility",
+          style: TextStyle(
+            fontSize: 14.0,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+
+    if (todayFromTime != null)
+      formWidget.add(Padding(
+        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _chipWidget(
+                DateFormat('hh:mm a').format(todayFromTime.toLocal()) ?? "---"),
+            SizedBox(
+              width: 5,
+            ),
+            Text("to ",
+                style: const TextStyle(
+                    color: const Color(0xff0c0b52),
+                    fontWeight: FontWeight.w500,
+                    fontFamily: "Gilroy",
+                    fontStyle: FontStyle.normal,
+                    fontSize: 14.0),
+                textAlign: TextAlign.left),
+            SizedBox(
+              width: 5,
+            ),
+            _chipWidget(
+                DateFormat('hh:mm a').format(todayToTime.toLocal()) ?? "---"),
+          ],
+        ),
+      ));
+
     formWidget.add(
       Padding(
         padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            RichText(
-              text: TextSpan(
-                style: TextStyle(
-                  fontSize: 13.0,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                ),
-                children: <TextSpan>[
-                  TextSpan(
-                      text: DateFormat('EEEE').format(DateTime.now()) + " "),
-                  TextSpan(
-                    text: todaysTimings != null && todaysTimings != ""
-                        ? todaysTimings.substring(0, todaysTimings.length - 3)
-                        : "Unavailable for today",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                style: TextStyle(
-                  fontSize: 13.0,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                ),
-                children: <TextSpan>[
-                  TextSpan(
-                      text: DateFormat('EEEE')
-                              .format(DateTime.now().add(Duration(days: 1))) +
-                          " "),
-                  TextSpan(
-                    text: tomorrowsTimings != null && tomorrowsTimings != ""
-                        ? tomorrowsTimings.substring(
-                            0, tomorrowsTimings.length - 3)
-                        : "Unavailable",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 5),
             RawMaterialButton(
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               onPressed: () {
@@ -556,12 +639,14 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                   Padding(
                     padding: const EdgeInsets.only(right: 20),
                     child: Text(
-                      "View schedule",
+                      "View Entire schedule",
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        color: AppColors.windsor,
-                        fontSize: 12.0,
+                        fontSize: 13.0,
                         fontWeight: FontWeight.w500,
+                        fontFamily: gilroyMedium,
+                        color: colorDarkBlue3,
+                        fontStyle: FontStyle.normal,
                       ),
                     ),
                   ),
@@ -652,59 +737,50 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
       ),
     ));
 
-    formWidget.add(divider());
+    formWidget.add(Align(
+      alignment: FractionalOffset.center,
+      child: Container(
+        height: 55.0,
+        width: MediaQuery.of(context).size.width,
+        margin: const EdgeInsets.only(top: 10),
+        padding: const EdgeInsets.only(right: 20.0, left: 20.0),
+        child: FancyButton(
+          title: "Book Appointment",
+          onPressed: () {
+            Map _appointentTypeMap = {};
 
-    formWidget.add(Padding(
-      padding: const EdgeInsets.only(left: 20, top: 16, right: 20),
-      child: Text(
-        "$name is a specialist in the following areas:",
-        style: TextStyle(
-          fontSize: 14.0,
-          fontWeight: FontWeight.w600,
+            dynamic response = profileMapResponse["data"][0];
+
+            _appointentTypeMap["isOfficeEnabled"] = response["isOfficeEnabled"];
+            _appointentTypeMap["isVideoChatEnabled"] =
+                response["isVideoChatEnabled"];
+            _appointentTypeMap["isOnsiteEnabled"] = response["isOnsiteEnabled"];
+            _container.providerResponse.clear();
+
+            _container.setProviderData("providerData", profileMapResponse);
+
+            Navigator.of(context).pushNamed(
+              Routes.appointmentTypeScreen,
+              arguments: _appointentTypeMap,
+            );
+          },
         ),
       ),
     ));
 
-    formWidget.add(SizedBox(height: 12.0));
-
-    formWidget.add(
-      speaciltyList.length > 0
-          ? SizedBox(
-              height: 50,
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: ClampingScrollPhysics(),
-                scrollDirection: Axis.horizontal,
-                itemCount: speaciltyList.length,
-                padding: const EdgeInsets.only(left: 20, bottom: 16),
-                itemBuilder: (context, index) {
-                  return _chipWidget(
-                      speaciltyList[index]["title"]?.toString() ?? "---");
-                },
-              ),
-            )
-          : Padding(
-              padding: const EdgeInsets.only(left: 20, bottom: 16),
-              child: Text(
-                "NO languages available",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 13.0,
-                    fontWeight: FontWeight.w400),
-              ),
-            ),
-    );
-
-    formWidget.add(divider());
-
+    formWidget.add(SizedBox(
+      height: 15,
+    ));
     formWidget.add(
       Padding(
         padding: const EdgeInsets.only(left: 20, bottom: 16, top: 16),
         child: Text(
-          "Feedback for ${_providerData["User"][0]["fullName"]}",
+          "Feedback",
           style: TextStyle(
             fontSize: 14.0,
             fontWeight: FontWeight.w600,
+            fontFamily: gilroySemiBold,
+            fontStyle: FontStyle.normal,
           ),
         ),
       ),
@@ -838,82 +914,43 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
           SizedBox(height: 12.0),
           Column(
             children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  "ic_location_grey".imageIcon(),
-                  SizedBox(width: 8.0),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    child: Text(
-                      location,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                        fontSize: 14.0,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 5.0),
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: FlatButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: latLng == LatLng(0.0, 0.0)
-                            ? null
-                            : latLng.launchMaps,
+              GestureDetector(
+                onTap: () {
+                  (latLng == LatLng(0.0, 0.0)) ? null : latLng.launchMaps();
+                },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      border: Border.all(
+                          color: const Color(0xff06082a), width: 0.5),
+                      color: colorWhite),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(width: 8.0),
+                      "ic_location_grey".imageIcon(height: 40, width: 40),
+                      SizedBox(width: 8.0),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.6,
                         child: Text(
-                          "Get Directions",
+                          location,
+                          maxLines: 3,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            color: AppColors.windsor,
-                            fontSize: 12.0,
                             fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                            fontSize: 14.0,
                           ),
                         ),
                       ),
-                    ),
+                      SizedBox(width: 5.0),
+                    ],
                   ),
-                ],
+                ),
               ),
-              Container(
-                height: 155.0,
-                margin: const EdgeInsets.only(top: 10.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(14.0),
-                  border: Border.all(color: Colors.grey[300]),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(14.0),
-                  child: GoogleMap(
-                    myLocationEnabled: false,
-                    compassEnabled: false,
-                    rotateGesturesEnabled: false,
-                    markers: _markers,
-                    initialCameraPosition: CameraPosition(
-                      target: latLng,
-                      zoom: 9.0,
-                    ),
-                    onMapCreated: (GoogleMapController controller) {
-                      _controller.complete(controller);
-
-                      setState(() {
-                        _markers.add(
-                          Marker(
-                            markerId: MarkerId(latLng.toString()),
-                            position: latLng,
-                            icon: sourceIcon,
-                          ),
-                        );
-                      });
-                    },
-                  ),
-                ),
-              )
             ],
           ),
         ],
@@ -921,18 +958,82 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     );
   }
 
+  _rowCard(title, image, subTitle) {
+    return Row(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(35),
+          child: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(35),
+                border: Border.all(color: const Color(0x12372786), width: 0.5),
+                boxShadow: [
+                  BoxShadow(
+                      color: const Color(0x148b8b8b),
+                      offset: Offset(0, 2),
+                      blurRadius: 30,
+                      spreadRadius: 0)
+                ],
+                color: const Color(0xffffffff)),
+            child: Image(
+              image: AssetImage(image),
+              height: 70,
+              width: 70,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        SizedBox(width: spacing25),
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: fontSize14,
+                  color: colorBlack.withOpacity(0.9),
+                  fontWeight: FontWeight.w600,
+                  fontFamily: gilroySemiBold,
+                  fontStyle: FontStyle.normal,
+                ),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Text(
+                subTitle,
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontStyle: FontStyle.normal,
+                  fontSize: 12.0,
+                  color: colorBlue3,
+                  fontFamily: gilroyRegular,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _chipWidget(String title) {
     return Container(
+      alignment: Alignment.center,
       height: 50,
       margin: const EdgeInsets.only(right: 10.0),
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
       decoration: BoxDecoration(
         color: AppColors.windsor.withOpacity(0.05),
         shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.circular(14.0),
+        borderRadius: BorderRadius.circular(25.0),
       ),
       child: Text(
         title ?? "---",
+        textAlign: TextAlign.center,
         style: TextStyle(
             color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
       ),
@@ -950,19 +1051,26 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
       ),
       child: Row(
         children: <Widget>[
-          Image(
-            image: AssetImage(image),
-            height: 54.0,
-            width: 54.0,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image(
+              image: AssetImage(image),
+              height: 60,
+              width: 60,
+            ),
           ),
           SizedBox(width: 12.0),
-          Text(
-            cardText,
-            maxLines: 2,
-            style: TextStyle(
-              color: AppColors.midnight_express,
-              fontWeight: FontWeight.w500,
-              fontSize: 12.0,
+          Expanded(
+            child: Text(
+              cardText,
+              softWrap: true,
+              maxLines: 2,
+              style: TextStyle(
+                  color: const Color(0xff160f3b),
+                  fontWeight: FontWeight.w500,
+                  fontFamily: gilroyMedium,
+                  fontStyle: FontStyle.normal,
+                  fontSize: 12.0),
             ),
           ),
         ],
@@ -988,5 +1096,375 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
         curve: Curves.easeOut,
       );
     });
+  }
+
+  _addEducationList(data) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: data.length,
+      itemBuilder: (context, index) {
+        return Container(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _rowCard(data[index]['degree'], 'images/ic_education.png',
+                        data[index]['institute'])
+                  ],
+                ),
+              )
+            ],
+          ),
+          width: double.infinity,
+        );
+      },
+    );
+  }
+
+  _setSchedule(scheduleList) {
+    return SizedBox(
+      height: 85,
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: ClampingScrollPhysics(),
+        scrollDirection: Axis.horizontal,
+        itemCount: 5,
+        // padding: const EdgeInsets.only(left: 20, bottom: 16),
+        itemBuilder: (context, index) {
+          return Container(
+            height: 60,
+            width: 65,
+            margin: const EdgeInsets.only(right: 15),
+            decoration: BoxDecoration(
+              border: Border.all(
+                  color: colorBlack.withOpacity(0.7),
+                  width: (index == 0) ? 0 : 0.5),
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              color: (index == 0) ? const Color(0xfffebf58) : colorWhite,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text(
+                  index == 0
+                      ? "Today"
+                      : DateFormat('EEEE')
+                          .format(DateTime.now().add(Duration(days: index)))
+                          .toString()
+                          .substring(0, 3),
+                  style: TextStyle(
+                      color: (index == 0)
+                          ? colorWhite
+                          : colorBlack.withOpacity(0.7),
+                      fontWeight: FontWeight.w500,
+                      fontFamily: gilroyMedium,
+                      fontStyle: FontStyle.normal,
+                      fontSize: 13.0),
+                ),
+                Text(
+                  DateTime.now().add(Duration(days: index)).day.toString(),
+                  style: TextStyle(
+                      color: (index == 0)
+                          ? colorWhite
+                          : colorBlack.withOpacity(0.7),
+                      fontWeight: FontWeight.w500,
+                      fontFamily: gilroyRegular,
+                      fontStyle: FontStyle.normal,
+                      fontSize: 13.0),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  List<Widget> _widgetList() {
+    List<Widget> formWidget = new List();
+    String averageRating = "0";
+
+    if (_providerData["providerData"]["data"] != null) {
+      if (_providerData["providerData"]["data"] is List) {
+        _providerData["providerData"]["data"].map((f) {
+          profileMap.addAll(f);
+        }).toList();
+      } else {
+        profileMap = _providerData["providerData"]["data"];
+      }
+
+      averageRating =
+          _providerData["providerData"]["averageRating"]?.toStringAsFixed(2) ??
+              "0";
+    } else {
+      profileMap = _providerData["providerData"];
+      averageRating = profileMap["averageRating"]?.toStringAsFixed(2) ?? "0";
+    }
+
+    formWidget.add(ProviderWidget(
+      data: profileMap,
+      selectedAppointment:
+          _container.projectsResponse['serviceType'].toString(),
+      isOptionsShow: false,
+      averageRating: averageRating,
+    ));
+
+    formWidget.add(SizedBox(height: 26));
+
+    formWidget.add(consultancyFeeWidget());
+
+    formWidget.add(SizedBox(height: 26));
+
+    formWidget
+        .add(_selectedAppointmentType == '2' ? SizedBox() : servicesWidget());
+
+    return formWidget;
+  }
+
+  Widget consultancyFeeWidget() {
+    String fee = "0.00", duration = "0";
+
+    if (profileMap[_appointmentTypeKey] != null &&
+        profileMap[_appointmentTypeKey].length > 0) {
+      fee = profileMap[_appointmentTypeKey][0]['fee'].toStringAsFixed(2) ??
+          '0.00';
+      duration =
+          profileMap[_appointmentTypeKey][0]['duration'].toString() ?? '0';
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14.0),
+        border: Border.all(
+          color: Colors.grey[100],
+        ),
+      ),
+      child: Row(
+        children: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                "Consultation",
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              SizedBox(height: 7),
+              RichText(
+                text: TextSpan(
+                  style: TextStyle(
+                    fontSize: 13.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  children: <TextSpan>[
+                    TextSpan(text: 'Fee \$ '),
+                    TextSpan(
+                      text: '$fee \u2022 ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    TextSpan(text: 'Duration '),
+                    TextSpan(
+                      text: '$duration min',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Radio(
+                activeColor: AppColors.persian_blue,
+                groupValue: _radioValue,
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                value: 0,
+                onChanged: _handleRadioValueChange,
+              ),
+            ),
+          )
+        ],
+      ),
+    ).onClick(
+      onTap: () => _handleRadioValueChange(0),
+    );
+  }
+
+  Widget servicesWidget() {
+    return Container(
+      padding: const EdgeInsets.all(2.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14.0),
+        border: Border.all(
+          color: Colors.grey[100],
+        ),
+      ),
+      child: Column(
+        children: <Widget>[
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: _radioValue == 0 ? Colors.white : Colors.grey[100],
+              borderRadius: BorderRadius.circular(14.0),
+            ),
+            child: Row(
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      "Services",
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SizedBox(height: 7),
+                    Text(
+                      "Choose offered services",
+                      style: TextStyle(
+                        fontSize: 13.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Radio(
+                      activeColor: AppColors.persian_blue,
+                      groupValue: _radioValue,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      value: 1,
+                      onChanged: _handleRadioValueChange,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ).onClick(
+            onTap: () => _handleRadioValueChange(1),
+          ),
+          _radioValue == 0
+              ? Container()
+              : servicesList != null && servicesList.length > 0
+                  ? ListView.separated(
+                      separatorBuilder: (BuildContext context, int index) =>
+                          Divider(),
+                      physics: ClampingScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: servicesList.length,
+                      itemBuilder: (context, index) {
+                        if (servicesList != null && servicesList.length > 0) {
+                          Services services = servicesList[index];
+                          return serviceSlotWidget(services);
+                        }
+
+                        return Container();
+                      })
+                  : Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.all(20),
+                      child: Text("NO services available"),
+                    ),
+        ],
+      ),
+    );
+  }
+
+  Widget serviceSlotWidget(Services services) {
+    return CheckboxListTile(
+      dense: false,
+      controlAffinity: ListTileControlAffinity.trailing,
+      value: _selectedServicesMap.containsKey(services.subServiceId),
+      activeColor: AppColors.goldenTainoi,
+      onChanged: (value) {
+        value
+            ? _selectedServicesMap[services.subServiceId] = services
+            : _selectedServicesMap.remove(services.subServiceId);
+
+        setState(() {});
+      },
+      title: Text(
+        services.subServiceName ?? "---",
+        style: TextStyle(
+          fontSize: 14.0,
+          fontWeight: FontWeight.w600,
+          color: Colors.black,
+        ),
+      ),
+      subtitle: RichText(
+        text: TextSpan(
+          style: TextStyle(
+            fontSize: 13.0,
+            color: Colors.black,
+            fontWeight: FontWeight.w400,
+          ),
+          children: <TextSpan>[
+            TextSpan(
+              text: 'Amount \$ ',
+              style: TextStyle(
+                fontSize: 13.0,
+                fontWeight: FontWeight.w500,
+                color: Colors.black.withOpacity(0.85),
+              ),
+            ),
+            TextSpan(
+              text: '${services.amount.toStringAsFixed(2)} \u2022 ',
+              style: TextStyle(
+                fontSize: 13.0,
+                fontWeight: FontWeight.w600,
+                color: Colors.black.withOpacity(0.85),
+              ),
+            ),
+            TextSpan(
+              text: 'Duration ',
+              style: TextStyle(
+                fontSize: 13.0,
+                fontWeight: FontWeight.w500,
+                color: Colors.black.withOpacity(0.85),
+              ),
+            ),
+            TextSpan(
+              text: '${services.duration} min',
+              style: TextStyle(
+                fontSize: 13.0,
+                fontWeight: FontWeight.w600,
+                color: Colors.black.withOpacity(0.85),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _handleRadioValueChange(int value) {
+    setState(() => _radioValue = value);
+
+    if (value == 0) {
+      _selectedServicesMap.clear();
+    }
   }
 }
