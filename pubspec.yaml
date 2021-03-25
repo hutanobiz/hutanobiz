@@ -79,7 +79,10 @@ dependencies:
   wakelock: ^0.1.4
   xml: ^4.1.0
   introduction_screen: ^1.0.9
-  
+  fancy_bottom_navigation:
+    git:
+      url: https://github.com/skquark/fancy_bottom_navigation.git
+  # flutter_branch_sdk: ^1.4.0
 
 dev_dependencies:
   flutter_test:

@@ -4,6 +4,10 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:hutano/src/ui/provider/my_provider_network/my_provider_network.dart';
+import 'package:hutano/src/utils/constants/file_constants.dart';
+import 'package:permission_handler/permission_handler.dart' as Permission;
+
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/dashboard/appointments_screen.dart';
@@ -11,7 +15,7 @@ import 'package:hutano/screens/dashboard/dashboardScreen.dart';
 import 'package:hutano/screens/dashboard/requests_appointments_screen.dart';
 import 'package:hutano/screens/dashboard/setting.dart';
 import 'package:hutano/widgets/widgets.dart';
-import 'package:permission_handler/permission_handler.dart' as Permission;
+import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 
 import 'all_appointments/all_appointments.dart';
 
@@ -32,6 +36,10 @@ class _HomeScreenState extends State<HomeScreen> {
     AllAppointments(),
     // AppointmentsScreen(),
     // RequestAppointmentsScreen(),
+    MyProviderNetwrok(
+      showBack: false,
+    ),
+    SettingScreen(),
     SettingScreen(),
   ];
 
@@ -165,7 +173,6 @@ class _HomeScreenState extends State<HomeScreen> {
     var platformChannelSpecifics = new NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
-      
         0,
         Platform.isAndroid
             ? message['notification']['title'].toString()
@@ -246,6 +253,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
+  GlobalKey bottomNavigationKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -253,6 +262,8 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: bottomnavigationBar(),
     );
   }
+
+  final double imageSize = 24;
 
   Widget bottomnavigationBar() {
     return Container(
@@ -265,55 +276,164 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         border: Border.all(width: 0.5, color: Colors.grey[300]),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(14.0),
-          topLeft: Radius.circular(14.0),
-        ),
-        child: BottomNavigationBar(
-          onTap: onTabTapped,
-          backgroundColor: Colors.white,
-          showUnselectedLabels: true,
-          showSelectedLabels: true,
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: AppColors.persian_indigo,
-          unselectedItemColor: Colors.grey[400],
-          currentIndex: _currentIndex,
-          items: [
-            BottomNavigationBarItem(
-              icon: ImageIcon(
-                AssetImage("images/ic_home.png"),
+      child: FancyBottomNavigation(
+        key: bottomNavigationKey,
+        inactiveIconSize: 24,
+        activeIconColor: Colors.white,
+        circleHeight: 60,
+        arcHeight: 60,
+        shadowAllowance: 0,
+        
+        shadowBlur:0 ,
+        inactiveIconColor: Colors.grey,
+        tabs: [
+          TabData(
+
+              icon: Padding(
+                padding: EdgeInsets.all(_currentIndex != 0 ? 0 : 8.0),
+                child: Image.asset(
+                  _currentIndex != 0
+                      ? FileConstants.icHomeGrey
+                      : FileConstants.icHomeWhite,
+                  height: imageSize,
+                  width: imageSize,
+                ),
               ),
-              activeIcon: ImageIcon(
-                AssetImage("images/ic_active_home.png"),
+              onclick: () {
+                // final FancyBottomNavigationState fState =
+                //     bottomNavigationKey.currentState;
+                // fState.setPage(0);
+              },
+              // iconData: Icons.home,
+              title: "Home"),
+          TabData(
+              icon: Padding(
+                padding: EdgeInsets.all(_currentIndex != 1 ? 0 : 8.0),
+                child: Image.asset(
+                  _currentIndex != 1
+                      ? FileConstants.icCalendarGrey
+                      : FileConstants.icCalendarWhite,
+                  height: imageSize,
+                  width: imageSize,
+                ),
               ),
-              title: Text('Home'),
-            ),
-            BottomNavigationBarItem(
-              icon: ImageIcon(
-                AssetImage("images/ic_appointments.png"),
+              onclick: () {
+                // final FancyBottomNavigationState fState =
+                //     bottomNavigationKey.currentState;
+                // fState.setPage(1);
+              },
+              // iconData: Icons.home,
+              title: "Appointments"),
+          TabData(
+              icon: Padding(
+                padding: EdgeInsets.all(_currentIndex != 2 ? 0 : 8.0),
+                child: Image.asset(
+                  _currentIndex != 2
+                      ? FileConstants.icTeamGrey
+                      : FileConstants.icTeamWhite,
+                  height: imageSize,
+                  width: imageSize,
+                ),
               ),
-              activeIcon: ImageIcon(
-                AssetImage("images/ic_active_appointments.png"),
+              onclick: () {
+                final FancyBottomNavigationState fState =
+                    bottomNavigationKey.currentState;
+                fState.setPage(2);
+              },
+              // iconData: Icons.home,
+              title: "Team"),
+          TabData(
+              icon: Padding(
+                padding: EdgeInsets.all(_currentIndex != 3 ? 0 : 8.0),
+                child: Image.asset(
+                  _currentIndex != 3
+                      ? FileConstants.icChatGrey
+                      : FileConstants.icChatWhite,
+                  height: imageSize,
+                  width: imageSize,
+                ),
               ),
-              title: Text('Appointments'),
-            ),
-            // BottomNavigationBarItem(
-            //   icon: Icon(Icons.receipt),
-            //   title: Text('Requests'),
-            // ),
-            BottomNavigationBarItem(
-              icon: ImageIcon(
-                AssetImage("images/ic_settings.png"),
+              onclick: () {
+                final FancyBottomNavigationState fState =
+                    bottomNavigationKey.currentState;
+                fState.setPage(3);
+              },
+              // iconData: Icons.home,
+              title: "Chat"),
+          TabData(
+              icon: Padding(
+                padding: EdgeInsets.all(_currentIndex != 4 ? 0 : 8.0),
+                child: Image.asset(
+                  _currentIndex != 4
+                      ? FileConstants.icUserGrey
+                      : FileConstants.icUserWhite,
+                  height: imageSize,
+                  width: imageSize,
+                ),
               ),
-              activeIcon: ImageIcon(
-                AssetImage("images/ic_active_settings.png"),
-              ),
-              title: Text('Settings'),
-            )
-          ],
-        ),
+              onclick: () {
+                final FancyBottomNavigationState fState =
+                    bottomNavigationKey.currentState;
+                fState.setPage(4);
+              },
+              // iconData: Icons.home,
+              title: "Settings"),
+        ],
+        onTabChangedListener: (position) {
+          setState(() {
+            
+          });
+          onTabTapped(position);
+        },
       ),
+      // ClipRRect(
+      //   borderRadius: BorderRadius.only(
+      //     topRight: Radius.circular(14.0),
+      //     topLeft: Radius.circular(14.0),
+      //   ),
+      //   child: BottomNavigationBar(
+      //     onTap: onTabTapped,
+      //     backgroundColor: Colors.white,
+      //     showUnselectedLabels: true,
+      //     showSelectedLabels: true,
+      //     type: BottomNavigationBarType.fixed,
+      //     selectedItemColor: AppColors.persian_indigo,
+      //     unselectedItemColor: Colors.grey[400],
+      //     currentIndex: _currentIndex,
+      //     items: [
+      //       BottomNavigationBarItem(
+      //         icon: ImageIcon(
+      //           AssetImage("images/ic_home.png"),
+      //         ),
+      //         activeIcon: ImageIcon(
+      //           AssetImage("images/ic_active_home.png"),
+      //         ),
+      //         title: Text('Home'),
+      //       ),
+      //       BottomNavigationBarItem(
+      //         icon: ImageIcon(
+      //           AssetImage("images/ic_appointments.png"),
+      //         ),
+      //         activeIcon: ImageIcon(
+      //           AssetImage("images/ic_active_appointments.png"),
+      //         ),
+      //         title: Text('Appointments'),
+      //       ),
+      //       // BottomNavigationBarItem(
+      //       //   icon: Icon(Icons.receipt),
+      //       //   title: Text('Requests'),
+      //       // ),
+      //       BottomNavigationBarItem(
+      //         icon: ImageIcon(
+      //           AssetImage("images/ic_settings.png"),
+      //         ),
+      //         activeIcon: ImageIcon(
+      //           AssetImage("images/ic_active_settings.png"),
+      //         ),
+      //         title: Text('Settings'),
+      //       )
+      //     ],
+      //   ),
     );
   }
 

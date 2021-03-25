@@ -110,11 +110,6 @@ class FileConstants {
   static const String svgMaleBack = "assets/svg/male_back.svg";
   static const String svgMaleFront = "assets/svg/male_front.svg";
   
-  // static const String icIntro1 = "assets/svg/ic_intro1.svg";
-  // static const String icIntro2 = "assets/svg/ic_intro2.svg";
-  // static const String icIntro3 = "assets/svg/ic_intro3.svg";
-  // static const String icIntro4 = "assets/svg/ic_intro4.svg";
-  
   static const String icIntro1 = "assets/images/ic_intro1.png";
   static const String icIntro2 = "assets/images/ic_intro2.png";
   static const String icIntro3 = "assets/images/ic_intro3.png";
@@ -130,5 +125,22 @@ class FileConstants {
   static const String icAddUser = "assets/images/ic_add_user.png";
   static const String icSettingBlack = "assets/images/ic_setting_black.png";
   static const String icRemoveBlack = "assets/images/ic_delete_black.png";
+  static const String icAppointmentBlue = "assets/images/ic_appointment_blue.png";
   static const String icUpload2 = "assets/images/ic_upload2.png";
+  static const String icStarPoints = "assets/images/ic_start_points.png";
+  static const String icInvitePoints = "assets/images/ic_invite_earn.png";
+  static const String icReferPoints = "assets/images/ic_refer_points.png";
+  static const String icInfoCircle = "assets/images/ic_info_circle.png";
+  static const String icHutanoHeader = "assets/images/ic_hutano_header.png";
+  static const String icFilterWhite = "assets/images/ic_filter_white.png";
+  static const String icHomeWhite = "assets/images/ic_home_white.png";
+  static const String icHomeGrey = "assets/images/ic_home_grey.png";
+  static const String icCalendarWhite = "assets/images/ic_calendar_white.png";
+  static const String icCalendarGrey = "assets/images/ic_calendar_grey.png";
+  static const String icTeamWhite = "assets/images/ic_team_white.png";
+  static const String icTeamGrey = "assets/images/ic_team_grey.png";
+  static const String icChatWhite = "assets/images/ic_chat_white.png";
+  static const String icChatGrey = "assets/images/ic_chat_grey.png";
+  static const String icUserWhite = "assets/images/ic_user_white.png";
+  static const String icUserGrey = "assets/images/ic_user_grey.png";
 }

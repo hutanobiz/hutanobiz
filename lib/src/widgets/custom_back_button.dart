@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class CustomBackButton extends StatelessWidget {
   final EdgeInsets margin;
+  final double size;
 
-  const CustomBackButton({Key key, this.margin}) : super(key: key);
+  const CustomBackButton({Key key, this.margin, this.size=32}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -12,8 +13,8 @@ class CustomBackButton extends StatelessWidget {
       },
       child: Container(
           margin: margin ?? const EdgeInsets.only(top: 15, left: 15),
-          width: 32,
-          height: 32,
+          width: size,
+          height: size,
           child: Icon(Icons.chevron_left_rounded),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(16)),

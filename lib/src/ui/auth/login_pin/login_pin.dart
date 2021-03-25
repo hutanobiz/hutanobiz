@@ -161,8 +161,8 @@ class _LoginPinState extends State<LoginPin> {
             child: FlatButton(
               child: Image.asset(
                 FileConstants.icFingerPrint,
-                height: spacing40,
-                width: spacing40,
+                height: spacing60,
+                width: spacing60,
               ),
               onPressed: _authenticate,
             ),
