@@ -18,7 +18,7 @@ import '../routes.dart';
 class ApiBaseHelper {
   NetworkUtil _netUtil = new NetworkUtil();
   // static const String base_url = "https://sa-staging.hutano.xyz/";
-  // static const String base_url = "https://ccd7c5c46cb7.ngrok.io/";
+  // static const String base_url = "https://2d81a0edc1e2.ngrok.io/";
   static const String base_url = "https://api.stage.hutano.com/";
   // static const String imageUrl = base_url + "uploads/";
   static const String imageUrl = "https://hutano-assets.s3.amazonaws.com/";

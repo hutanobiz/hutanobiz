@@ -8,8 +8,12 @@ import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/dashboard/model/res_provider_packages.dart';
+import 'package:hutano/src/apis/api_manager.dart';
+import 'package:hutano/src/apis/error_model.dart';
 import 'package:hutano/src/utils/color_utils.dart';
 import 'package:hutano/src/utils/constants/constants.dart';
+import 'package:hutano/src/utils/dialog_utils.dart';
 import 'package:hutano/src/utils/dimens.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/custom_loader.dart';
@@ -66,13 +70,13 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
   int _radioValue = 0;
   String _selectedAppointmentType = '1', _appointmentTypeKey;
   List<Services> servicesList;
-  Map<String, Services> _selectedServicesMap = Map();
+  Map<String, ServiceData> _selectedServicesMap = Map();
   List _serviceList;
   Map profileMap = Map();
   @override
   void didChangeDependencies() {
     _container = InheritedContainer.of(context);
-    Map _providerData = _container.providerIdMap;
+    _providerData = _container.providerIdMap;
 
     ApiBaseHelper api = ApiBaseHelper();
     Map<String, String> locMap = {};
@@ -84,140 +88,214 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     locMap['lattitude'] = _userLocation.latitude.toStringAsFixed(2);
     locMap['longitude'] = _userLocation.longitude.toStringAsFixed(2);
 
+    _getProviderPackage();
     _profileFuture =
         api.getProviderProfile(_providerData["providerId"], locMap);
 
     _container.setProjectsResponse("serviceType", "1");
 
-    _providerData = _container.getProviderData();
-
-    if (_container.projectsResponse != null) {
-      _selectedAppointmentType =
-          _container.projectsResponse['serviceType']?.toString() ?? '0';
-
-      switch (_selectedAppointmentType) {
-        case '1':
-          _appointmentTypeKey = 'officeConsultanceFee';
-          break;
-        case '2':
-          _appointmentTypeKey = 'vedioConsultanceFee';
-          break;
-        case '3':
-          _appointmentTypeKey = 'onsiteConsultanceFee';
-          break;
-        default:
-      }
-    }
-
-    if (_providerData["providerData"]["subServices"] != null) {
-      if (_providerData["providerData"]["subServices"] is List) {
-        _serviceList = _providerData["providerData"]["subServices"];
-      }
-    } else if (_providerData["providerData"]["services"] != null) {
-      if (_providerData["providerData"]["services"] is List) {
-        _serviceList = _providerData["providerData"]["services"];
-      }
-    } else if (_providerData["subServices"] != null) {
-      if (_providerData["subServices"] is List) {
-        _serviceList = _providerData["subServices"];
-      }
-    }
-
-    if (_serviceList != null) {
-      _serviceList = _serviceList
-          .where((e) => e['serviceType'].toString() == _selectedAppointmentType)
-          .toList();
-
-      servicesList = _serviceList.map((m) => Services.fromJson(m)).toList();
-    }
-
     super.didChangeDependencies();
+  }
+
+  Office officeData;
+
+  _getProviderPackage() async {
+    final param = <String, dynamic>{
+      'providerId': _providerData["providerId"],
+    };
+    try {
+      var res = await ApiManager().getProviderPackages(param);
+      if (res != null) {
+        officeData = res.response.consultation.office;
+        setState(() {});
+      }
+
+      print(res);
+    } on ErrorModel catch (e) {
+      DialogUtils.showAlertDialog(context, e.response);
+    } catch (e) {
+      debugPrint(e);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.goldenTainoi,
-      body: FutureBuilder(
-          future: _profileFuture,
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.none:
-                return Text("NO data available");
-                break;
-              case ConnectionState.waiting:
-                return Container(
-                  color: AppColors.snow,
-                  child: Center(
-                    child: CustomLoader(),
-                  ),
-                );
-                break;
-              case ConnectionState.active:
-                break;
-              case ConnectionState.done:
-                if (snapshot.hasData) {
-                  profileMapResponse = snapshot.data;
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        backgroundColor: AppColors.goldenTainoi,
+        body: FutureBuilder(
+            future: _profileFuture,
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                  return Text("NO data available");
+                  break;
+                case ConnectionState.waiting:
+                  return Container(
+                    color: AppColors.snow,
+                    child: Center(
+                      child: CustomLoader(),
+                    ),
+                  );
+                  break;
+                case ConnectionState.active:
+                  break;
+                case ConnectionState.done:
+                  if (snapshot.hasData) {
+                    profileMapResponse = snapshot.data;
 
-                  if (profileMapResponse.isEmpty ||
-                      profileMapResponse["data"] == null) {
-                    return Container();
-                  }
-
-                  Map _providerData = profileMapResponse["data"][0];
-                  String nameTitle = "Dr. ", name = "---";
-                  if (_providerData['userId'] is Map) {
-                    if (_providerData["userId"] != null) {
-                      nameTitle =
-                          _providerData["userId"]["title"]?.toString() ??
-                              'Dr. ';
-                      name = nameTitle +
-                              _providerData["userId"]["fullName"]?.toString() ??
-                          "---";
+                    if (profileMapResponse.isEmpty ||
+                        profileMapResponse["data"] == null) {
+                      return Container();
                     }
-                  } else if (_providerData["User"] != null &&
-                      _providerData["User"].length > 0) {
-                    nameTitle =
-                        (_providerData["User"][0]["title"]?.toString() ??
-                            'Dr. ');
-                    name = '$nameTitle ' +
-                        (_providerData["User"][0]["fullName"]?.toString() ??
-                            "---");
-                  }
 
-                  return LoadingBackground(
-                      title: name,
-                      color: Colors.white,
-                      isAddBack: false,
-                      addHeader: true,
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: Column(children: <Widget>[
-                        Expanded(
-                          child: SingleChildScrollView(
-                            controller: _scrollController,
-                            padding: const EdgeInsets.only(bottom: 10),
+                    Map _providerData = profileMapResponse["data"][0];
+                    String nameTitle = "Dr. ", name = "---";
+                    if (_providerData['userId'] is Map) {
+                      if (_providerData["userId"] != null) {
+                        nameTitle =
+                            _providerData["userId"]["title"]?.toString() ??
+                                'Dr. ';
+                        name = nameTitle +
+                                _providerData["userId"]["fullName"]
+                                    ?.toString() ??
+                            "---";
+                      }
+                    } else if (_providerData["User"] != null &&
+                        _providerData["User"].length > 0) {
+                      nameTitle =
+                          (_providerData["User"][0]["title"]?.toString() ??
+                              'Dr. ');
+                      name = '$nameTitle ' +
+                          (_providerData["User"][0]["fullName"]?.toString() ??
+                              "---");
+                    }
+
+                    return LoadingBackground(
+                        title: name,
+                        color: Colors.white,
+                        isAddBack: false,
+                        addHeader: true,
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: Column(children: <Widget>[
+                          // Expanded(
+                          //   child: SingleChildScrollView(
+                          //     controller: _scrollController,
+                          //     padding: const EdgeInsets.only(bottom: 10),
+                          //     child: Column(
+                          //       crossAxisAlignment: CrossAxisAlignment.start,
+                          //       children:
+                          //           // widgetList(profileMapResponse),
+                          //           _buildProivderidget(profileMapResponse),
+                          //     ),
+                          //   ),
+                          // ),
+
+                          Expanded(
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: widgetList(profileMapResponse),
+                              children: _buildProivderidget(profileMapResponse),
                             ),
                           ),
-                        ),
-                        // Expanded(
-                        //   child: ListView(
-                        //     shrinkWrap: true,
-                        //     padding: const EdgeInsets.only(bottom: 70.0),
-                        //     children: _widgetList(),
-                        //   ),
-                        // ),
-                      ]));
-                } else if (snapshot.hasError) {
-                  return Text("${snapshot.error}");
-                }
-                break;
-            }
-            return null;
-          }),
+                          // Expanded(
+                          //   child: ListView(
+                          //     shrinkWrap: true,
+                          //     padding: const EdgeInsets.only(bottom: 70.0),
+                          //     children: _widgetList(),
+                          //   ),
+                          // ),
+                        ]));
+                  } else if (snapshot.hasError) {
+                    return Text("${snapshot.error}");
+                  }
+                  break;
+              }
+              return null;
+            }),
+      ),
     );
+  }
+
+  _buildProivderidget(profileResponse) {
+    Map _providerData = profileResponse["data"][0];
+    String nameTitle = "Dr. ", name = "---";
+    if (_providerData['userId'] is Map) {
+      if (_providerData["userId"] != null) {
+        nameTitle = _providerData["userId"]["title"]?.toString() ?? 'Dr. ';
+        name = nameTitle + _providerData["userId"]["fullName"]?.toString() ??
+            "---";
+      }
+    } else if (_providerData["User"] != null &&
+        _providerData["User"].length > 0) {
+      nameTitle = (_providerData["User"][0]["title"]?.toString() ?? 'Dr. ');
+      name = '$nameTitle ' +
+          (_providerData["User"][0]["fullName"]?.toString() ?? "---");
+    }
+
+    String doctorEducation = "",
+        averageRating = "---",
+        boardCerficationText = '';
+
+    averageRating = profileResponse['averageRating']?.toStringAsFixed(2) ?? "0";
+
+    List<Widget> formWidget = List();
+
+    formWidget.add(
+      Padding(
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+        child: ProviderWidget(
+          data: _providerData,
+          selectedAppointment: widget.selectedAppointmentType,
+          averageRating: averageRating,
+          isOptionsShow: false,
+          isProverPicShow: true,
+          onLocationClick: () =>
+              Scrollable.ensureVisible(_adddressColumnKey.currentContext),
+          onRatingClick: () =>
+              _scrollListView(_scrollController.position.maxScrollExtent),
+        ),
+      ),
+    );
+
+    formWidget.add(Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 50),
+      child: TabBar(
+        unselectedLabelColor: Colors.grey,
+        labelColor: colorYellow100,
+        indicatorColor: colorYellow100,
+        tabs: [
+          Tab(
+            text: "Profile",
+          ),
+          Tab(
+            text: "Packages",
+          )
+        ],
+        // controller: _tabController,
+        indicatorSize: TabBarIndicatorSize.tab,
+      ),
+    ));
+
+    formWidget.add(
+      Expanded(
+        child: TabBarView(
+          children: [
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: widgetList(profileMapResponse),
+              ),
+            ),
+            SingleChildScrollView(
+                child: Column(
+              children: officeData != null ? _widgetList() : [Container()],
+            )),
+          ],
+        ),
+      ),
+    );
+
+    return formWidget;
   }
 
   List<Widget> widgetList(Map profileResponse) {
@@ -370,23 +448,6 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     }
 
     List<Widget> formWidget = List();
-
-    formWidget.add(
-      Padding(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-        child: ProviderWidget(
-          data: _providerData,
-          selectedAppointment: widget.selectedAppointmentType,
-          averageRating: averageRating,
-          isOptionsShow: false,
-          isProverPicShow: true,
-          onLocationClick: () =>
-              Scrollable.ensureVisible(_adddressColumnKey.currentContext),
-          onRatingClick: () =>
-              _scrollListView(_scrollController.position.maxScrollExtent),
-        ),
-      ),
-    );
 
     formWidget.add(Padding(
       padding: const EdgeInsets.only(left: 20, top: 16, right: 20),
@@ -1188,32 +1249,6 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
 
   List<Widget> _widgetList() {
     List<Widget> formWidget = new List();
-    String averageRating = "0";
-
-    if (_providerData["providerData"]["data"] != null) {
-      if (_providerData["providerData"]["data"] is List) {
-        _providerData["providerData"]["data"].map((f) {
-          profileMap.addAll(f);
-        }).toList();
-      } else {
-        profileMap = _providerData["providerData"]["data"];
-      }
-
-      averageRating =
-          _providerData["providerData"]["averageRating"]?.toStringAsFixed(2) ??
-              "0";
-    } else {
-      profileMap = _providerData["providerData"];
-      averageRating = profileMap["averageRating"]?.toStringAsFixed(2) ?? "0";
-    }
-
-    formWidget.add(ProviderWidget(
-      data: profileMap,
-      selectedAppointment:
-          _container.projectsResponse['serviceType'].toString(),
-      isOptionsShow: false,
-      averageRating: averageRating,
-    ));
 
     formWidget.add(SizedBox(height: 26));
 
@@ -1221,22 +1256,15 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
 
     formWidget.add(SizedBox(height: 26));
 
-    formWidget
-        .add(_selectedAppointmentType == '2' ? SizedBox() : servicesWidget());
+    if (officeData.services != null && officeData.services.length > 0)
+      formWidget.add(servicesWidget());
 
     return formWidget;
   }
 
   Widget consultancyFeeWidget() {
-    String fee = "0.00", duration = "0";
-
-    if (profileMap[_appointmentTypeKey] != null &&
-        profileMap[_appointmentTypeKey].length > 0) {
-      fee = profileMap[_appointmentTypeKey][0]['fee'].toStringAsFixed(2) ??
-          '0.00';
-      duration =
-          profileMap[_appointmentTypeKey][0]['duration'].toString() ?? '0';
-    }
+    String fee = officeData.fee.toString(),
+        duration = officeData.duration.toString();
 
     return Container(
       padding: const EdgeInsets.all(16.0),
@@ -1368,20 +1396,16 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
           ),
           _radioValue == 0
               ? Container()
-              : servicesList != null && servicesList.length > 0
+              : officeData.services != null && officeData.services.length> 0
                   ? ListView.separated(
                       separatorBuilder: (BuildContext context, int index) =>
                           Divider(),
                       physics: ClampingScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: servicesList.length,
+                      itemCount: officeData.services.length,
                       itemBuilder: (context, index) {
-                        if (servicesList != null && servicesList.length > 0) {
-                          Services services = servicesList[index];
-                          return serviceSlotWidget(services);
-                        }
-
-                        return Container();
+                        ServiceData services = officeData.services[index];
+                        return serviceSlotWidget(services);
                       })
                   : Container(
                       alignment: Alignment.centerLeft,
@@ -1393,7 +1417,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     );
   }
 
-  Widget serviceSlotWidget(Services services) {
+  Widget serviceSlotWidget(ServiceData services) {
     return CheckboxListTile(
       dense: false,
       controlAffinity: ListTileControlAffinity.trailing,
@@ -1407,7 +1431,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
         setState(() {});
       },
       title: Text(
-        services.subServiceName ?? "---",
+        services.subServiceTitle ?? "---",
         style: TextStyle(
           fontSize: 14.0,
           fontWeight: FontWeight.w600,

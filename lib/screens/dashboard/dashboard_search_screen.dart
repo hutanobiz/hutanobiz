@@ -339,6 +339,8 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
                     }
 
                     _container.setProviderId(tempList[index]["_id"].toString());
+
+
                     Navigator.of(context)
                         .pushNamed(Routes.providerProfileScreen);
                   },

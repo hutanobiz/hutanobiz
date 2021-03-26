@@ -384,7 +384,8 @@ class ProviderWidget extends StatelessWidget {
                                 selectedAppointment != '0'
                             ? Container()
                             : Text(
-                                "Starting from",
+                                // "Starting from",
+                                "",
                                 style: TextStyle(
                                   fontSize: 13.0,
                                   color: Colors.grey[600],

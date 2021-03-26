@@ -46,6 +46,7 @@ const String apiUploadInsuranceImage = "upload-insurance-documents";
 const String apiAddInsuranceDoc = "add-patient-insurance";
 const String apiMyInsurance = "my-insurance";
 const String apiGetInviteMessage = "get-invitation-message";
+const String apiGetProviderPackages = "get-provider-packages";
 
 const String googlePlaceSuggetion="textsearch/json";
 const String googlePlaceDetail="details/json";
