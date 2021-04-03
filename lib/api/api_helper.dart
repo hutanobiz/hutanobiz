@@ -1,4 +1,4 @@
-                                import 'dart:convert';
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -20,6 +20,7 @@ class ApiBaseHelper {
   // static const String base_url = "https://sa-staging.hutano.xyz/";
   // static const String base_url = "https://2d81a0edc1e2.ngrok.io/";
   static const String base_url = "https://api.stage.hutano.com/";
+  // static const String base_url = "https://80c99af3fc2f.ngrok.io/";
   // static const String imageUrl = base_url + "uploads/";
   static const String imageUrl = "https://hutano-assets.s3.amazonaws.com/";
 
@@ -157,10 +158,16 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> searchDoctors(String string) {
+  Future<dynamic> searchDoctors(String string) async {
+    var token = await SharedPref().getToken();
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
     return _netUtil
-        .get(Uri.encodeFull(
-            base_url + "api/patient/name/specialty/service?search=$string"))
+        .get(
+            Uri.encodeFull(
+                base_url + "api/patient/name/specialty/service?search=$string"),
+            headers: headers)
         .then((res) {
       return res["response"];
     });
@@ -387,19 +394,23 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> providerFilter(String token, Map filterMap) {
-    Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
-    };
+    try {
+      Map<String, String> headers = {
+        HttpHeaders.authorizationHeader: token,
+      };
 
-    return _netUtil
-        .post(
-      base_url + "api/search",
-      body: filterMap,
-      headers: headers,
-    )
-        .then((res) {
-      return res;
-    });
+      return _netUtil
+          .post(
+        base_url + "api/search",
+        body: filterMap,
+        headers: headers,
+      )
+          .then((res) {
+        return res;
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<dynamic> getDistanceAndTime(
@@ -777,9 +788,9 @@ class NetworkUtil {
 
         if (en["response"] is String) {
           if (statusCode == 401) {
-            showError(en["response"].toString() ,onPressed: (){
+            showError(en["response"].toString(), onPressed: () {
               _logout();
-              });
+            });
           } else {
             showError(en["response"].toString());
           }
@@ -819,9 +830,9 @@ class NetworkUtil {
 
         if (en["response"] is String) {
           if (statusCode == 401) {
-            showError(en["response"].toString() ,onPressed: (){
+            showError(en["response"].toString(), onPressed: () {
               _logout();
-              });
+            });
           } else {
             showError(en["response"].toString());
           }

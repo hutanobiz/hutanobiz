@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/dashboard/location_dialog/location_dailog.dart';
 import 'package:hutano/src/utils/color_utils.dart';
 import 'package:hutano/src/utils/constants/file_constants.dart';
 import 'package:hutano/utils/extensions.dart';
@@ -254,6 +255,10 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                         });
 
                         if (filterMap.length > 0) {
+                          filterMap["distance"] =
+                              LocationDialog().radius;
+                          //TODO :set dynamic when provider changes done from backend
+                          // filterMap["isInsuranceAccepted"] = true;
                           setState(() {
                             _providerFuture =
                                 api.providerFilter(token, filterMap);
@@ -322,6 +327,10 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                     }
 
                     SharedPref().getToken().then((token) {
+                      _appointmentFilterMap["distance"] =
+                          LocationDialog().radius;
+                      //TODO :set dynamic when provider changes done from backend
+                      // _appointmentFilterMap["isInsuranceAccepted"] = true;
                       setState(() {
                         _providerFuture =
                             api.providerFilter(token, _appointmentFilterMap);

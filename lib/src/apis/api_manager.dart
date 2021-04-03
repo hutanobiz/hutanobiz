@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:hutano/screens/dashboard/model/res_provider_packages.dart';
+import 'package:hutano/screens/payment/model/res_reward_points.dart';
 import 'package:hutano/src/ui/add_insurance/model/req_add_insurace.dart';
 import 'package:hutano/src/ui/add_insurance/model/res_get_my_insurance.dart';
 
@@ -354,10 +355,11 @@ class ApiManager {
     }
   }
 
-  Future<ResProviderPacakges> getProviderPackages(Map<String, dynamic> param) async {
+  Future<ResProviderPacakges> getProviderPackages(
+      Map<String, dynamic> param) async {
     try {
-      final response =
-          await _apiService.get(patient + apiGetProviderPackages, params: param);
+      final response = await _apiService.get(patient + apiGetProviderPackages,
+          params: param);
       return ResProviderPacakges.fromJson(response.data);
     } on DioError catch (error) {
       throw ErrorModel.fromJson(error.response.data);
@@ -608,6 +610,17 @@ class ApiManager {
         patient + apiGetPatientInsurance,
       );
       return ResGetMyInsurance.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+  Future<ResRewardPoints> getHutanoCash() async {
+    try {
+      final response = await _apiService.get(
+        patient + apiRewardPoints,
+      );
+      return ResRewardPoints.fromJson(response.data);
     } on DioError catch (error) {
       throw ErrorModel.fromJson(error.response.data);
     }

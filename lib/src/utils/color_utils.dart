@@ -82,3 +82,4 @@ const Color colorDarkBlue2 =Color(0xff001d9f);
 const Color colorDarkBlue3 =Color(0xff372786);
 const Color colorGrey4 =Color(0xff979797);
 const Color colorBlue3 =Color(0xff160f3b);
+const Color colorGolden =Color(0xfff7b500);

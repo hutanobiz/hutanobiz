@@ -16,6 +16,14 @@ import 'package:http/http.dart' as http;
 import 'package:google_maps_webservice/places.dart';
 
 class LocationDialog {
+  static final LocationDialog _singleton = LocationDialog._internal();
+
+  factory LocationDialog() {
+    return _singleton;
+  }
+
+  LocationDialog._internal();
+
   final _addressController = TextEditingController();
   String _sessionToken;
   List<dynamic> _placeList = [];
@@ -28,14 +36,14 @@ class LocationDialog {
   CameraPosition _myLocation;
   GoogleMapController controller;
   GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: googleApiKey);
-  String _currentddress;
+  String _currentddress = "";
   Loc.LocationData geoLocation;
   var uuid = new Uuid();
 
   EdgeInsetsGeometry _edgeInsetsGeometry =
       const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0);
 
-  LatLng _latLng = new LatLng(0.00, 0.00);
+  LatLng latLng = new LatLng(0.00, 0.00);
 
   bool _isLocLoading = false;
 
@@ -45,9 +53,23 @@ class LocationDialog {
   Map insuranceMap = Map();
   String selectedType = '1', selectedPlace = '1', selectedInsurance = '1';
   String avatar;
-  String radius = '---';
 
+  String radius = '---';
   bool _isLoading = false;
+
+  init() async {
+    _currentddress = await SharedPref().getValue('address');
+    if (_currentddress == null) {
+      _currentddress = "";
+    }
+    radius = await SharedPref().getValue('radius');
+
+    if (radius == null) {
+      radius = "10";
+    } else {
+      radiuscontroller.text = radius + ' Miles';
+    }
+  }
 
   getLocation() async {
     var lat = await SharedPref().getValue('lat');
@@ -59,17 +81,17 @@ class LocationDialog {
       target: LatLng(lat ?? 0.00, lng ?? 0.00),
     );
 
-    _latLng = new LatLng(lat ?? 0.00, lng ?? 0.00);
+    latLng = new LatLng(lat ?? 0.00, lng ?? 0.00);
     SharedPref().getToken().then((token) {
-      // _myDoctorsFuture = _api.getMyDoctors(token, _latLng);
+      // _myDoctorsFuture = _api.getMyDoctors(token, latLng);
     });
     conatiner?.setUserLocation(
-        "latLng", LatLng(_latLng.latitude, _latLng.longitude));
+        "latLng", LatLng(latLng.latitude, latLng.longitude));
   }
 
-  void showLocationDialog(isFilter, context)async {
+  dynamic showLocationDialog(isFilter, context) async {
     await getLocation();
-    showDialog(
+    await showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
@@ -206,7 +228,7 @@ class LocationDialog {
                                     fontFamily: 'Montserrat',
                                     color: Colors.white),
                               ),
-                              onPressed: () {
+                              onPressed: () async {
                                 if (_addressController.text == '') {
                                   Widgets.showErrorDialog(
                                     context: context,
@@ -220,16 +242,17 @@ class LocationDialog {
                                     // isError: true
                                   );
                                 } else {
-                                  SharedPref().setDoubleValue(
+                                  await SharedPref().setDoubleValue(
                                       'lat', _myLocation.target.latitude);
-                                  SharedPref().setDoubleValue(
+                                  await SharedPref().setDoubleValue(
                                       'lng', _myLocation.target.longitude);
-                                  SharedPref().setValue(
+                                  await SharedPref().setValue(
                                       'address', _addressController.text);
-                                  SharedPref().setValue('radius',
+                                  await SharedPref().setValue('radius',
                                       radiuscontroller.text.split(' ')[0]);
-                                  getLocation();
+                                  await getLocation();
                                   Navigator.pop(context, true);
+                                  return;
                                   if (isFilter) {
                                     conatiner.setUserLocation(
                                         "latLng",
@@ -245,8 +268,8 @@ class LocationDialog {
                                     conatiner.setProjectsResponse(
                                         "maximumDistance",
                                         radiuscontroller.text.split(' ')[0]);
-                                    Navigator.pushNamed(context,
-                                        Routes.allTitlesSpecialtesScreen);
+                                    // Navigator.pushNamed(context,
+                                    //     Routes.allTitlesSpecialtesScreen);
                                   }
                                 }
                               },

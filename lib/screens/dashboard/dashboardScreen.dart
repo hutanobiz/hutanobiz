@@ -55,6 +55,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     'Onsite Visit'
   ];
 
+  var _miles = "0";
+
   Future<List<dynamic>> _myDoctorsFuture;
   Future<List<dynamic>> _specialtiesFuture;
   Future<List<dynamic>> _professionalTitleFuture;
@@ -68,6 +70,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     _professionalTitleFuture = _api.getProfessionalTitle();
     _specialtiesFuture = _api.getSpecialties();
+    _initLocationDialog();
+  }
+
+  _initLocationDialog() async {
+    await LocationDialog().init();
+    setState(() {
+      _miles = LocationDialog().radius;
+    });
   }
 
   @override
@@ -330,8 +340,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   Spacer(),
                   BlueButton(
-                    onPress: () {
-                      LocationDialog().showLocationDialog(true, context);
+                    onPress: () async {
+                      var asd = await LocationDialog()
+                          .showLocationDialog(true, context);
+                      print(LocationDialog().radius);
+                      var latlng = LocationDialog().latLng;
+                      if (latlng != null) {
+                        getLocationAddress(latlng.latitude, latlng.longitude);
+                      }
+                      setState(() {
+                        _miles = LocationDialog().radius;
+                      });
                     },
                     title: 'Redeem Points',
                   )
@@ -416,7 +435,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   children: <Widget>[
                     _currentddress != null && _currentddress.length > 45
                         ? SizedBox(
-                            width: 250,
+                          width: 180,
                             child: Text(
                               _currentddress,
                               maxLines: 1,
@@ -441,6 +460,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     _currentddress.length > 45
                         ? Container()
                         : SizedBox(width: 5),
+                    Text(
+                      '(${_miles} miles)',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: AppColors.midnight_express,
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     Image(
                       width: 8.0,
                       height: 4.0,
@@ -953,7 +982,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 width: 35,
                                 height: 35,
                                 fit: BoxFit.cover,
-                                
                               ),
                             ),
                           ),
