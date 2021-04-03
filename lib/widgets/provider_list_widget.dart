@@ -9,6 +9,7 @@ import 'package:hutano/src/utils/constants/constants.dart';
 import 'package:hutano/src/utils/constants/file_constants.dart';
 import 'package:hutano/src/utils/constants/key_constant.dart';
 import 'package:hutano/src/utils/localization/localization.dart';
+import 'package:hutano/src/widgets/text_with_image.dart';
 import 'package:hutano/utils/extensions.dart';
 
 class ProviderWidget extends StatelessWidget {
@@ -23,6 +24,8 @@ class ProviderWidget extends StatelessWidget {
     this.margin,
     this.onRatingClick,
     this.onLocationClick,
+    this.showPaymentProcced = false,
+    this.appointmentTime,
   })  : assert(data != null),
         super(key: key);
 
@@ -32,6 +35,10 @@ class ProviderWidget extends StatelessWidget {
   final bool isOptionsShow, isProverPicShow;
   final EdgeInsets margin;
   final Function onRatingClick, onLocationClick;
+
+  // Show extra details in confirm and pay screen
+  final bool showPaymentProcced;
+  final String appointmentTime;
 
   @override
   Widget build(BuildContext context) {
@@ -239,62 +246,9 @@ class ProviderWidget extends StatelessWidget {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            // Padding(
-                            //   padding: const EdgeInsets.only(
-                            //     top: 5.0,
-                            //     bottom: 5.0,
-                            //     right: 5.0,
-                            //   ),
-                            //   child: Row(
-                            //     children: <Widget>[
-                            //       Image(
-                            //         image: AssetImage(
-                            //           "images/ic_experience.png",
-                            //         ),
-                            //         height: 14.0,
-                            //         width: 11.0,
-                            //       ),
-                            //       SizedBox(width: 3.0),
-                            //       Expanded(
-                            //         child: Text(
-                            //           practicingSince + " yrs experience",
-                            //           style: TextStyle(
-                            //             color: Colors.black.withOpacity(0.7),
-                            //             fontSize: 12,
-                            //             fontWeight: FontWeight.w400,
-                            //           ),
-                            //         ),
-                            //       ),
-                            //     ],
-                            //   ),
-                            // ),
                             SizedBox(height: 3),
                             Row(
                               children: <Widget>[
-                                // Row(
-                                //   mainAxisSize: MainAxisSize.min,
-                                //   children: <Widget>[
-                                //     "ic_rating_golden"
-                                //         .imageIcon(width: 12, height: 12),
-                                //     SizedBox(
-                                //       width: 2,
-                                //     ),
-                                //     Text(
-                                //       averageRating ?? "0",
-                                //       style: TextStyle(
-                                //         decoration: onRatingClick != null
-                                //             ? TextDecoration.underline
-                                //             : TextDecoration.none,
-                                //         fontWeight: FontWeight.w500,
-                                //         fontSize: 12,
-                                //         color: Colors.black.withOpacity(0.7),
-                                //       ),
-                                //     ),
-                                //   ],
-                                // ).onClick(
-                                //   onTap:
-                                //       onRatingClick != null ? onRatingClick : null,
-                                // ),
                                 Image(
                                   image: AssetImage(
                                     "images/ic_experience.png",
@@ -324,40 +278,55 @@ class ProviderWidget extends StatelessWidget {
                                 bottom: 5.0,
                                 right: 5.0,
                               ),
-                              child: Row(
-                                children: <Widget>[
-                                  data['isOfficeEnabled']
-                                      ? Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 8),
-                                          child: 'ic_provider_office'.imageIcon(
-                                            width: 20,
-                                            height: 20,
-                                          ),
-                                        )
-                                      : Container(),
-                                  data['isVideoChatEnabled']
-                                      ? Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 8),
-                                          child: 'ic_provider_video'.imageIcon(
-                                            width: 20,
-                                            height: 20,
-                                          ),
-                                        )
-                                      : Container(),
-                                  data['isOnsiteEnabled']
-                                      ? Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 8),
-                                          child: 'ic_provider_onsite'.imageIcon(
-                                            width: 20,
-                                            height: 20,
-                                          ),
-                                        )
-                                      : Container(),
-                                ],
-                              ),
+                              child: showPaymentProcced
+                                  ? TextWithImage(
+                                      size: 16,
+                                      imageSpacing: 5,
+                                      textStyle: TextStyle(
+                                          color: colorDarkBlue3,
+                                          fontWeight: FontWeight.w600,
+                                          fontFamily: gilroySemiBold,
+                                          fontStyle: FontStyle.normal,
+                                          fontSize: 12.0),
+                                      label: "Payment Processed",
+                                      image: FileConstants.icCreditCard)
+                                  : Row(
+                                      children: <Widget>[
+                                        data['isOfficeEnabled']
+                                            ? Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 8),
+                                                child: 'ic_provider_office'
+                                                    .imageIcon(
+                                                  width: 20,
+                                                  height: 20,
+                                                ),
+                                              )
+                                            : Container(),
+                                        data['isVideoChatEnabled']
+                                            ? Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 8),
+                                                child: 'ic_provider_video'
+                                                    .imageIcon(
+                                                  width: 20,
+                                                  height: 20,
+                                                ),
+                                              )
+                                            : Container(),
+                                        data['isOnsiteEnabled']
+                                            ? Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 8),
+                                                child: 'ic_provider_onsite'
+                                                    .imageIcon(
+                                                  width: 20,
+                                                  height: 20,
+                                                ),
+                                              )
+                                            : Container(),
+                                      ],
+                                    ),
                             )
                           ],
                         ),
@@ -369,13 +338,14 @@ class ProviderWidget extends StatelessWidget {
                         SizedBox(
                           height: 25,
                         ),
-                        Text(
-                          "\$$fee",
-                          style: TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.w600,
+                        if (appointmentTime == null)
+                          Text(
+                            "\$$fee",
+                            style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
                         selectedAppointment != null &&
                                 selectedAppointment != '0'
                             ? Container()
@@ -398,13 +368,6 @@ class ProviderWidget extends StatelessWidget {
                               ? 20
                               : 5,
                         ),
-
-                        // isOptionsShow
-                        //     ? 'ic_forward'.imageIcon(
-                        //         width: 9,
-                        //         height: 15,
-                        //       )
-                        //     : Container(),
                       ],
                     ),
                   ],
@@ -417,32 +380,66 @@ class ProviderWidget extends StatelessWidget {
                   color: Colors.grey[300],
                 ),
               ),
+              if (appointmentTime != null)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 3.0, 8.0, 15.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Appointment Details",
+                      style: const TextStyle(
+                          color: const Color(0xff000000),
+                          fontWeight: FontWeight.w600,
+                          fontFamily: "Gilroy",
+                          fontStyle: FontStyle.normal,
+                          fontSize: 13.0),
+                    ),
+                  ),
+                ),
               Padding(
                 padding: isOptionsShow
                     ? const EdgeInsets.only(left: 12.0, right: 12.0)
                     : const EdgeInsets.only(
-                        left: 12.0, right: 12.0, bottom: 18.0),
+                        left: 12.0, right: 12.0, bottom: 10.0),
                 child: Row(
                   children: <Widget>[
-                    'ic_location_grey'.imageIcon(height: 14.0, width: 11.0),
-                    SizedBox(width: 3.0),
-                    Expanded(
-                      child: Text(
-                        address,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          decoration: onLocationClick != null
-                              ? TextDecoration.underline
-                              : TextDecoration.none,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 12,
-                          color: Colors.black.withOpacity(0.6),
+                    if (appointmentTime == null) ...[
+                      'ic_location_grey'.imageIcon(height: 14.0, width: 11.0),
+                      SizedBox(width: 3.0),
+                      Expanded(
+                        child: Text(
+                          address,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            decoration: onLocationClick != null
+                                ? TextDecoration.underline
+                                : TextDecoration.none,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12,
+                            color: Colors.black.withOpacity(0.6),
+                          ),
+                        ).onClick(
+                          onTap:
+                              onLocationClick != null ? onLocationClick : null,
                         ),
-                      ).onClick(
-                        onTap: onLocationClick != null ? onLocationClick : null,
+                      )
+                    ],
+                    if (appointmentTime != null) ...[
+                      Expanded(
+                        child: TextWithImage(
+                            size: 20,
+                            imageSpacing: 3,
+                            textStyle: TextStyle(
+                                color: colorBlack.withOpacity(0.7),
+                                fontWeight: FontWeight.w400,
+                                fontFamily: gilroyRegular,
+                                fontStyle: FontStyle.normal,
+                                fontSize: 12.0),
+                            label: appointmentTime,
+                            image: FileConstants.icCalendarGrey),
                       ),
-                    ),
+                    ],
                     SizedBox(width: 15),
                     Align(
                       alignment: Alignment.centerRight,
@@ -459,9 +456,38 @@ class ProviderWidget extends StatelessWidget {
                         ],
                       ),
                     ),
+                    if (appointmentTime != null) SizedBox(width: 35),
                   ],
                 ),
               ),
+              if (appointmentTime != null)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 8.0, 15.0),
+                  child: Row(
+                    children: [
+                      'ic_location_grey'.imageIcon(height: 14.0, width: 11.0),
+                      SizedBox(width: 3.0),
+                      Expanded(
+                        child: Text(
+                          address,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            decoration: onLocationClick != null
+                                ? TextDecoration.underline
+                                : TextDecoration.none,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12,
+                            color: Colors.black.withOpacity(0.6),
+                          ),
+                        ).onClick(
+                          onTap:
+                              onLocationClick != null ? onLocationClick : null,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
               isOptionsShow
                   ? Row(
                       children: [
@@ -556,7 +582,7 @@ class ProviderWidget extends StatelessWidget {
         Positioned(
           right: 0,
           child: Container(
-            padding: EdgeInsets.all(8),
+              padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
                   color: colorPurple100,
                   borderRadius: BorderRadius.only(
@@ -567,10 +593,10 @@ class ProviderWidget extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment :MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Image.asset(
-                    FileConstants.icStarPoints ,
+                    FileConstants.icStarPoints,
                     height: 14,
                     width: 14,
                   ),

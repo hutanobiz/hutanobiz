@@ -3,6 +3,10 @@ import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/src/apis/api_constants.dart';
+import 'package:hutano/src/apis/api_manager.dart';
+import 'package:hutano/src/apis/error_model.dart';
+import 'package:hutano/src/utils/dialog_utils.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/custom_loader.dart';
@@ -45,6 +49,31 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   bool isPayment = false;
 
   bool insuranceAdded = false;
+  int hutanoCash = 0;
+  int _huntaoCashRadioValue = 1;
+  int _huntaoCashRadioGrupValue = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _getHutanoCash();
+  }
+
+  _getHutanoCash() {
+    ApiManager().getHutanoCash().then((value) {
+      if (value.status == success) {
+        setState(() {
+          hutanoCash = value.response;
+        });
+      }
+    }).catchError((dynamic e) {
+      if (e is ErrorModel) {
+        if (e.response != null) {
+          DialogUtils.showAlertDialog(context, e.response);
+        }
+      }
+    });
+  }
 
   @override
   void didChangeDependencies() {
@@ -250,6 +279,13 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
       "ic_cash_payment",
       "Cash/Check",
       2,
+    ));
+
+    var hutanoCashTitle = 'Hutano Cash (\$${hutanoCash.toString()})';
+    _widgetList.add(hutanoCashWidget(
+      "ic_cash_payment",
+      hutanoCashTitle,
+      0,
     ));
 
     return _widgetList;
@@ -570,6 +606,54 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         }
         return Container();
       },
+    );
+  }
+
+  Widget hutanoCashWidget(String imageIcon, String title, int value) {
+    return GestureDetector(
+      onTap: () {
+        var value = (_huntaoCashRadioGrupValue == 0) ? 1 : 0;
+        setState(() {
+          _huntaoCashRadioGrupValue = value;
+        });
+        _container.setConsentToTreatData("hutanoCashApplied", value);
+        _container.setConsentToTreatData("hutanoCash", hutanoCash);
+      },
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(14.0)),
+          border: Border.all(color: Colors.grey[100]),
+        ),
+        child: Row(
+          children: <Widget>[
+            imageIcon.imageIcon(width: 70, height: 70),
+            SizedBox(width: 17.0),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 14.0,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            isPayment == false
+                ? Container()
+                : Expanded(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Radio(
+                          activeColor: AppColors.persian_blue,
+                          value: _huntaoCashRadioValue,
+                          groupValue: _huntaoCashRadioGrupValue,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          onChanged: (val) {}),
+                    ),
+                  )
+          ],
+        ),
+      ),
     );
   }
 

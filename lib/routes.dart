@@ -15,6 +15,7 @@ import 'package:hutano/screens/appointments/treatment_summary.dart';
 import 'package:hutano/screens/appointments/upload_documents.dart';
 import 'package:hutano/screens/appointments/upload_images.dart';
 import 'package:hutano/screens/appointments/video_call.dart';
+import 'package:hutano/screens/book_appointment/confirm_book_appointment.dart';
 import 'package:hutano/screens/book_appointment/onsite_address.dart';
 import 'package:hutano/screens/book_appointment/onsite_edit_address.dart';
 import 'package:hutano/screens/book_appointment/review_appointment.dart';
@@ -455,7 +456,7 @@ class Routes {
         );
         break;
       case reviewAppointmentScreen:
-        return _buildRoute(settings, ReviewAppointmentScreen());
+        return _buildRoute(settings, ConfirmBookAppointmentScreen());
         break;
       case providerProfileScreen:
         return _buildRoute(
