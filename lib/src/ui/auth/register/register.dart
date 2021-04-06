@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:hutano/src/ui/auth/register/model/referral_code.dart';
 import 'package:hutano/src/widgets/account_recover_dialog.dart';
 import 'package:hutano/src/widgets/text_with_image.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
@@ -125,6 +126,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _registerModel.mobileCountryCode = widget.countryCode;
     _registerModel.isAgreeTermsAndCondition = 1;
     _registerModel.phoneNumber = widget.number;
+
+    if (Referral().referralCode.isNotEmpty) {
+      _registerModel.referedBy = Referral().referralCode;
+      _refCodeController.text = Referral().referralCode;
+    }
   }
 
   _onImagePicked(file) => _imageFile = file;
@@ -842,6 +848,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             onValueChanged: (value) {
               _registerModel.referedBy = value;
             },
+            isFieldEnable: Referral().referralCode.isEmpty,
             onFieldTap: () {
               showError(RegisterError.zipCode.index);
             },
@@ -921,10 +928,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 label: 'Yes',
                 onPressed: () {
                   _registerModel.haveHealthInsurance = true;
+                  setState(() {});
                 },
                 buttonType: HutanoButtonType.onlyLabel,
                 width: 80,
-                color: colorPurple,
+                labelColor: (_registerModel.haveHealthInsurance != null &&
+                        _registerModel.haveHealthInsurance)
+                    ? colorWhite
+                    : colorBlack,
+                color: (_registerModel.haveHealthInsurance != null &&
+                        _registerModel.haveHealthInsurance)
+                    ? colorPurple
+                    : Colors.white,
                 height: 40,
               ),
               SizedBox(
@@ -935,11 +950,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 label: 'No',
                 onPressed: () {
                   _registerModel.haveHealthInsurance = false;
+                  setState(() {});
                 },
                 buttonType: HutanoButtonType.onlyLabel,
                 width: 80,
-                labelColor: colorBlack,
-                color: colorWhite,
+                labelColor: (_registerModel.haveHealthInsurance != null &&
+                        !_registerModel.haveHealthInsurance)
+                    ? colorWhite
+                    : colorBlack,
+                color: (_registerModel.haveHealthInsurance != null &&
+                        !_registerModel.haveHealthInsurance)
+                    ? colorPurple
+                    : colorWhite,
                 borderWidth: 1,
                 height: 40,
               )

@@ -48,6 +48,7 @@ const String apiMyInsurance = "my-insurance";
 const String apiGetInviteMessage = "get-invitation-message";
 const String apiGetProviderPackages = "get-provider-packages";
 const String apiRewardPoints = "reward-points";
+const String apiInviteMember = "invite-member";
 
 const String googlePlaceSuggetion="textsearch/json";
 const String googlePlaceDetail="details/json";

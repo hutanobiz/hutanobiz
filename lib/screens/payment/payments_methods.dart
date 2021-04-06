@@ -612,6 +612,12 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   Widget hutanoCashWidget(String imageIcon, String title, int value) {
     return GestureDetector(
       onTap: () {
+        if (hutanoCash == 0) {
+          _container.setConsentToTreatData("hutanoCashApplied", false);
+          Widgets.showErrorDialog(
+              context: context, description: 'Insufficient Points');
+          return;
+        }
         var value = (_huntaoCashRadioGrupValue == 0) ? 1 : 0;
         setState(() {
           _huntaoCashRadioGrupValue = value;
