@@ -1,20 +1,18 @@
+import 'dart:async';
+
 import 'package:country_code_picker/country_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hutano/screens/payment/insurance_list.dart';
-import 'package:hutano/src/ui/add_insurance/add_insruance.dart';
-import 'package:hutano/src/ui/medical_history/payment_methods.dart';
-import 'package:hutano/src/ui/onboarding/onboarding.dart';
-import 'package:hutano/src/ui/registration_steps/invite_family/invite_family.dart';
-import 'package:hutano/src/ui/registration_steps/payment/add_payment_option.dart';
-import 'package:hutano/src/ui/registration_steps/payment/card_complete/add_card_complete.dart';
+import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:provider/provider.dart';
 
 import 'routes.dart';
 import 'screens/home.dart';
 import 'src/ui/auth/login_pin/login_pin.dart';
+import 'src/ui/auth/register/model/referral_code.dart';
 import 'src/ui/auth/signin/signin_screen.dart';
 import 'src/ui/medical_history/provider/appoinment_provider.dart';
+import 'src/ui/onboarding/onboarding.dart';
 import 'src/ui/registration_steps/payment/provider/credit_card_provider.dart';
 import 'src/ui/welcome/welcome_screen.dart';
 import 'src/utils/localization/localization.dart';
@@ -29,29 +27,22 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await init();
   runApp(MyApp());
+  FlutterBranchSdk.validateSDKIntegration();
+  listnerData();
+}
 
-  // bool _result = await SharedPref().checkValue("token");
-  // if (_result) {
-  //   _defaultHome = HomeScreen();
-  // }
-
-  // SystemChrome.setPreferredOrientations([
-  //   DeviceOrientation.portraitDown,
-  //   DeviceOrientation.portraitUp,
-  // ]).whenComplete(() {
-  //   runApp(
-  //     InheritedContainer(
-  //       child: MaterialApp(
-  //         title: "Flutter Home",
-  //         debugShowCheckedModeBanner: false,
-  //         theme: AppTheme.theme,
-  //         home: _defaultHome,
-  //         onGenerateRoute: Routes.generateRoute,
-  //         navigatorKey: navigatorKey,
-  //       ),
-  //     ),
-  //   );
-  // });
+listnerData() {
+  StreamSubscription<Map> streamSubscription =
+      FlutterBranchSdk.initSession().listen((data) {
+    if (data.containsKey("referralCode")) {
+      Referral().referralCode = data["referralCode"];
+      print('Custom string: ${data["custom_string"]}');
+    }
+  }, onError: (error) {
+    PlatformException platformException = error as PlatformException;
+    print(
+        'InitSession error: ${platformException.code} - ${platformException.message}');
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -61,6 +52,9 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //   statusBarColor: colorYellow100 //or set color with: Color(0xFF0000FF)
+    // ));
 
     return MultiProvider(
       providers: [
@@ -71,6 +65,12 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'Hutano',
           theme: AppTheme.theme,
+          builder: (context, child) {
+            return MediaQuery(
+              child: child,
+              data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+            );
+          },
           // theme: ThemeData(
           //   primarySwatch: Colors.indigo,
           //   fontFamily: 'Gilroy',
@@ -109,19 +109,11 @@ class MyApp extends StatelessWidget {
     var performedStep = getBool(PreferenceKey.perFormedSteps, false);
     var isSetupPin = getBool(PreferenceKey.setPin, false);
     var isIntro = getBool(PreferenceKey.intro, false);
-    // return AddInsurance();
-    // return AddPaymentScreen();
-    // return AddCardComplete();
-    return InviteFamilyScreen();
+ 
+
     if (!isIntro) {
       return OnBoardingPage();
     }
-    // Map _insuranceMap = {};
-    // _insuranceMap['isPayment'] = false;
-    // _insuranceMap['isFromRegister'] = true;
-
-    // return InsuranceListScreen(insuranceMap: _insuranceMap);
-
     if (token.isNotEmpty) {
       if (skipStep || performedStep) {
         if (isSetupPin) {
