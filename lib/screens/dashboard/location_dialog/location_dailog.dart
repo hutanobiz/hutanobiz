@@ -65,7 +65,7 @@ class LocationDialog {
     radius = await SharedPref().getValue('radius');
 
     if (radius == null) {
-      radius = "10";
+      radius = "1000";
     } else {
       radiuscontroller.text = radius + ' Miles';
     }
@@ -83,7 +83,6 @@ class LocationDialog {
 
     latLng = new LatLng(lat ?? 0.00, lng ?? 0.00);
     SharedPref().getToken().then((token) {
-      // _myDoctorsFuture = _api.getMyDoctors(token, latLng);
     });
     conatiner?.setUserLocation(
         "latLng", LatLng(latLng.latitude, latLng.longitude));

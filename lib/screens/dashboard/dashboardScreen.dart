@@ -10,9 +10,14 @@ import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/dashboard/location_dialog/location_dailog.dart';
+import 'package:hutano/src/apis/api_constants.dart';
+import 'package:hutano/src/apis/api_manager.dart';
+import 'package:hutano/src/apis/error_model.dart';
 import 'package:hutano/src/utils/color_utils.dart';
 import 'package:hutano/src/utils/constants/constants.dart';
 import 'package:hutano/src/utils/constants/file_constants.dart';
+import 'package:hutano/src/utils/dialog_utils.dart';
+import 'package:hutano/src/utils/progress_dialog.dart';
 import 'package:hutano/src/utils/size_config.dart';
 import 'package:hutano/src/widgets/blue_button.dart';
 import 'package:hutano/src/widgets/common_header.dart';
@@ -23,6 +28,7 @@ import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:location/location.dart';
+import 'package:share/share.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key key}) : super(key: key);
@@ -55,7 +61,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     'Onsite Visit'
   ];
 
-  var _miles = "0";
+  var _miles = "1000";
+  int hutanoCash = 0;
 
   Future<List<dynamic>> _myDoctorsFuture;
   Future<List<dynamic>> _specialtiesFuture;
@@ -71,6 +78,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _professionalTitleFuture = _api.getProfessionalTitle();
     _specialtiesFuture = _api.getSpecialties();
     _initLocationDialog();
+    _getHutanoCash();
   }
 
   _initLocationDialog() async {
@@ -199,69 +207,104 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
+  void _inviteMember() async {
+    ProgressDialogUtils.showProgressDialog(context);
+    try {
+      var res = await ApiManager().inviteMember();
+      ProgressDialogUtils.dismissProgressDialog();
+      Share.share(res.response.url);
+    } on ErrorModel catch (e) {
+      ProgressDialogUtils.dismissProgressDialog();
+      DialogUtils.showAlertDialog(context, e.response);
+    } catch (e) {
+      ProgressDialogUtils.dismissProgressDialog();
+    }
+  }
+
+  _getHutanoCash() {
+    ApiManager().getHutanoCash().then((value) {
+      if (value.status == success) {
+        setState(() {
+          hutanoCash = value.response;
+        });
+      }
+    }).catchError((dynamic e) {
+      if (e is ErrorModel) {
+        if (e.response != null) {
+          DialogUtils.showAlertDialog(context, e.response);
+        }
+      }
+    });
+  }
+
   _inviteFreinds() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-      margin: const EdgeInsets.all(20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Image.asset(
-            FileConstants.icInvitePoints,
-            height: 40,
-            width: 40,
-          ),
-          SizedBox(width: 10),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Invite Friends",
-                  style: const TextStyle(
-                      color: colorBlack2,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: gilroySemiBold,
-                      fontStyle: FontStyle.normal,
-                      fontSize: 14.0),
-                  textAlign: TextAlign.left),
-              SizedBox(
-                height: 4,
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text("Earn more points".toUpperCase(),
-                      style: const TextStyle(
-                          color: colorDarkBlue3,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: gilroyMedium,
-                          fontStyle: FontStyle.normal,
-                          fontSize: 12.0),
-                      textAlign: TextAlign.left),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    size: 15.0,
-                    color: colorDarkBlue3,
-                  )
-                ],
-              )
-            ],
-          )
-        ],
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(8)),
-        border: Border.all(color: colorGreyBorder, width: 0.5),
-        boxShadow: [
-          BoxShadow(
-              color: const Color(0x148b8b8b),
-              offset: Offset(0, 2),
-              blurRadius: 30,
-              spreadRadius: 0)
-        ],
-        color: colorWhite,
+    return InkWell(
+      onTap: () {
+        _inviteMember();
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        margin: const EdgeInsets.all(20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              FileConstants.icInvitePoints,
+              height: 40,
+              width: 40,
+            ),
+            SizedBox(width: 10),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Invite Friends",
+                    style: const TextStyle(
+                        color: colorBlack2,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: gilroySemiBold,
+                        fontStyle: FontStyle.normal,
+                        fontSize: 14.0),
+                    textAlign: TextAlign.left),
+                SizedBox(
+                  height: 4,
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text("Earn more points".toUpperCase(),
+                        style: const TextStyle(
+                            color: colorDarkBlue3,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: gilroyMedium,
+                            fontStyle: FontStyle.normal,
+                            fontSize: 12.0),
+                        textAlign: TextAlign.left),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 15.0,
+                      color: colorDarkBlue3,
+                    )
+                  ],
+                )
+              ],
+            )
+          ],
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+          border: Border.all(color: colorGreyBorder, width: 0.5),
+          boxShadow: [
+            BoxShadow(
+                color: const Color(0x148b8b8b),
+                offset: Offset(0, 2),
+                blurRadius: 30,
+                spreadRadius: 0)
+          ],
+          color: colorWhite,
+        ),
       ),
     );
   }
@@ -283,7 +326,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               SizedBox(
                 width: 10,
               ),
-              Text("0",
+              Text(hutanoCash.toString(),
                   style: const TextStyle(
                       color: colorBlack2,
                       fontWeight: FontWeight.w500,
@@ -340,18 +383,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   Spacer(),
                   BlueButton(
-                    onPress: () async {
-                      var asd = await LocationDialog()
-                          .showLocationDialog(true, context);
-                      print(LocationDialog().radius);
-                      var latlng = LocationDialog().latLng;
-                      if (latlng != null) {
-                        getLocationAddress(latlng.latitude, latlng.longitude);
-                      }
-                      setState(() {
-                        _miles = LocationDialog().radius;
-                      });
-                    },
+                    onPress: () async {},
                     title: 'Redeem Points',
                   )
                 ],
@@ -403,7 +435,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             scale: 0.6,
             child: CupertinoSwitch(
               activeColor: colorYellow100,
-              value: true,
+              value: false,
               onChanged: (newValue) {},
             ),
           ),
@@ -430,12 +462,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               )
             : InkWell(
-                onTap: () => _navigateToMap(context),
+                onTap: () async {
+                  var locationRes =
+                      await LocationDialog().showLocationDialog(true, context);
+                  print(LocationDialog().radius);
+                  var latlng = LocationDialog().latLng;
+                  if (latlng != null) {
+                    getLocationAddress(latlng.latitude, latlng.longitude);
+                  }
+                  setState(() {
+                    _miles = LocationDialog().radius;
+                  });
+                  // _navigateToMap(context);
+                },
                 child: Row(
                   children: <Widget>[
                     _currentddress != null && _currentddress.length > 45
                         ? SizedBox(
-                          width: 180,
+                            width: 220,
                             child: Text(
                               _currentddress,
                               maxLines: 1,
@@ -447,14 +491,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ),
                             ),
                           )
-                        : Text(
-                            _currentddress,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: AppColors.midnight_express,
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
+                        : SizedBox(
+                            width: 220,
+                            child: Text(
+                              _currentddress,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: AppColors.midnight_express,
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                     _currentddress.length > 45
