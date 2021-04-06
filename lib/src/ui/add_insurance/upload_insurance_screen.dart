@@ -92,6 +92,10 @@ class _UploadInsuranceScreenState extends State<UploadInsuranceScreen> {
                 width: 22,
                 child: RawMaterialButton(
                   onPressed: () {
+                    var frontPath = isFront ? null : _frontImageFile;
+                    var backPath = !isFront ? null : _backImageFile;
+
+                    widget.onUpload(frontPath, backPath);
                     setState(
                       () => isFront
                           ? frontImagePath = null
@@ -217,6 +221,11 @@ class _UploadInsuranceScreenState extends State<UploadInsuranceScreen> {
         var frontPath = isFront ? croppedFile : _frontImageFile;
         var backPath = !isFront ? croppedFile : _backImageFile;
         widget.onUpload(frontPath, backPath);
+        if (isFront) {
+          _frontImageFile = frontPath;
+        } else {
+          _backImageFile = backPath;
+        }
         setState(
           () => isFront
               ? frontImagePath = croppedFile.path
