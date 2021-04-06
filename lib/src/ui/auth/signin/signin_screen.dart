@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/src/ui/auth/register/model/referral_code.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:local_auth/local_auth.dart';
@@ -57,9 +60,7 @@ class _SignInScreenState extends State<SignInScreen> {
   void initState() {
     super.initState();
     //TODO
-    //Verify : New code added
     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-
     if (Platform.isIOS) {
       _firebaseMessaging.requestNotificationPermissions(
           const IosNotificationSettings(
@@ -332,7 +333,7 @@ class _SignInScreenState extends State<SignInScreen> {
           setString(PreferenceKey.tokens, value.response.tokens[0].token);
           setString(PreferenceKey.phone, value.response.phoneNumber.toString());
           setInt(PreferenceKey.gender, value.response.gender);
-
+          setBool(PreferenceKey.intro, true);
           //TODO
           //Note : Duplication of pref code
           SharedPref().saveToken(value.response.tokens[0].token);

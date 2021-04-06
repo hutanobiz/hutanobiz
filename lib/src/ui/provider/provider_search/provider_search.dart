@@ -22,8 +22,9 @@ import 'search_bar.dart';
 
 class ProviderSearch extends StatefulWidget {
   final String serachText;
+  bool showSkip=true;
 
-  const ProviderSearch({Key key, this.serachText}) : super(key: key);
+  ProviderSearch({Key key, this.serachText, this.showSkip = true}) : super(key: key);
   @override
   _ProviderSearchState createState() => _ProviderSearchState();
 }
@@ -118,16 +119,17 @@ class _ProviderSearchState extends State<ProviderSearch> {
                 separatorBuilder: (context, index) => const Divider(),
               ),
             ),
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.only(bottom: 5),
-              child: SkipLater(
-                onTap: () {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      Routes.dashboardScreen, (route) => false);
-                },
-              ),
-            )
+            if (widget.showSkip)
+              Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.only(bottom: 5),
+                child: SkipLater(
+                  onTap: () {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        Routes.dashboardScreen, (route) => false);
+                  },
+                ),
+              )
           ],
         ),
       ),

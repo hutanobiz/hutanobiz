@@ -22,13 +22,13 @@ void setEnvironment(Environment env) {
 
 dynamic get apiBaseUrl {
   // _config = devConstants;
-  // return "https://2d81a0edc1e2.ngrok.io/";
+  // return "https://80c99af3fc2f.ngrok.io/";
   return "https://api.stage.hutano.com/";
 }
-
+ 
 dynamic get imageUrl {
   // return "https://api.dev.hutano.com/";
-    // return "https://ccd7c5c46cb7.ngrok.io/";
+    // return "https://80c99af3fc2f.ngrok.io/";
     // return "https://api.stage.hutano.com/";
     return "https://hutano-assets.s3.amazonaws.com/";
 }

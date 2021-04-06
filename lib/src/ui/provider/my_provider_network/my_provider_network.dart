@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/main.dart';
+import 'package:hutano/src/ui/provider/provider_search/provider_search.dart';
 import 'package:hutano/widgets/app_logo.dart';
 import 'package:hutano/widgets/widgets.dart';
 
@@ -38,11 +39,15 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
   List<FamilyNetwork> _memberList = [];
   ReqRemoveProvider _removeProvider;
   String _shareMessage;
+  // chnage flow when coming from home screen
+  bool fromHome = false;
+  bool isInitlized = false;
 
   @override
   void initState() {
     super.initState();
-
+    //from home screen then change show provider screen
+    fromHome = !widget.showBack;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _getMyProviderGroupList();
     });
@@ -134,6 +139,7 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
     try {
       var res = await ApiManager().getMyProviderNetwork();
       ProgressDialogUtils.dismissProgressDialog();
+      isInitlized = true;
       setState(() {
         _providerGroupList = res.response.data;
       });
@@ -147,6 +153,19 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
 
   @override
   Widget build(BuildContext context) {
+    return !fromHome ? _mynetworkScreen() : _getRoute();
+  }
+
+  _getRoute() {
+    if (!isInitlized) {
+      return Container();
+    }
+    return _providerGroupList.isEmpty
+        ? ProviderSearch(showSkip: false)
+        : _mynetworkScreen();
+  }
+
+  _mynetworkScreen() {
     return Scaffold(
       body: SafeArea(
         child: Column(
