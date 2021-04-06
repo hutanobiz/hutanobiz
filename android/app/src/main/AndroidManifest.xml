@@ -23,7 +23,7 @@
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTop"
+             android:launchMode="singleTask"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
@@ -31,6 +31,23 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+                        <!-- Branch URI Scheme -->
+            <intent-filter>
+                <data android:scheme="hutano" android:host="open" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+
+                   <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="alnf4.test-app.link" />
+                <!-- example-alternate domain is required for App Links when the Journeys/Web SDK and Deepviews are used inside your website.  -->
+                <data android:scheme="https" android:host="alnf4-alternate.test-app.link" />
             </intent-filter>
 
                     <!-- <meta-data
@@ -69,5 +86,9 @@
 
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyAkq7DnUBTkddWXddoHAX02Srw6570ktx8"/>
+
+               <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_id5jMpmPsGVWaPIXTAelsahkDEhutoMs" />
+        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_ap0nRdpVqVM5eHLXQDpoVfimArayscMM" />
+        <meta-data android:name="io.branch.sdk.TestMode" android:value="true" />
     </application>
 </manifest>

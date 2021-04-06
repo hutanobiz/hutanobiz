@@ -12,6 +12,21 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>hutano</string>
+	 <key>CFBundleTypeRole</key>
+ <string>Editor</string>
+ <key>CFBundleURLName</key>
+ <string>xyz.appening.hutano</string>
+ <key>CFBundleURLSchemes</key>
+ <array>
+ <string>https</string>
+ </array>
+ <key>branch_key</key>
+ <string>key_test_ap0nRdpVqVM5eHLXQDpoVfimArayscMM</string>
+ <key>branch_universal_link_domains</key>
+ <array>
+ <string>alnf4.test-app.link</string>
+ <string>alnf4-alternate.test-app.link</string>
+ </array>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
