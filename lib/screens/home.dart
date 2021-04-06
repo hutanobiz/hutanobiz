@@ -5,7 +5,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hutano/src/ui/provider/my_provider_network/my_provider_network.dart';
+import 'package:hutano/src/utils/color_utils.dart';
 import 'package:hutano/src/utils/constants/file_constants.dart';
+import 'package:hutano/src/widgets/bottom_bar/fancy_bottom_navigation.dart';
 import 'package:permission_handler/permission_handler.dart' as Permission;
 
 import 'package:hutano/colors.dart';
@@ -15,7 +17,6 @@ import 'package:hutano/screens/dashboard/dashboardScreen.dart';
 import 'package:hutano/screens/dashboard/requests_appointments_screen.dart';
 import 'package:hutano/screens/dashboard/setting.dart';
 import 'package:hutano/widgets/widgets.dart';
-import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 
 import 'all_appointments/all_appointments.dart';
 
@@ -254,11 +255,16 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   GlobalKey bottomNavigationKey = GlobalKey();
+  PageController _pageController = new PageController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _children[_currentIndex],
+      // body: PageView(
+      //   controller: _pageController,
+      //   children: _children,
+      // ),
       bottomNavigationBar: bottomnavigationBar(),
     );
   }
@@ -280,12 +286,17 @@ class _HomeScreenState extends State<HomeScreen> {
         key: bottomNavigationKey,
         inactiveIconSize: 24,
         activeIconColor: Colors.white,
-        circleHeight: 60,
+        circleHeight: 50,
         arcHeight: 60,
-        shadowAllowance: 0,
-        
-        shadowBlur:0 ,
+        shadowAllowance: 25,
+
+        titleStyle: TextStyle(
+          color: colorYellow100
+        ),
+        shadowColor: Colors.transparent,
+        shadowBlur: 20,
         inactiveIconColor: Colors.grey,
+        initialSelection: _currentIndex,
         tabs: [
           TabData(
 
@@ -300,9 +311,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               onclick: () {
-                // final FancyBottomNavigationState fState =
-                //     bottomNavigationKey.currentState;
-                // fState.setPage(0);
+                final FancyBottomNavigationState fState =
+                    bottomNavigationKey.currentState;
+                fState.setPage(0);
+                _pageController.jumpToPage(0);
+                setState(() {});
               },
               // iconData: Icons.home,
               title: "Home"),
@@ -318,9 +331,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               onclick: () {
-                // final FancyBottomNavigationState fState =
-                //     bottomNavigationKey.currentState;
-                // fState.setPage(1);
+                final FancyBottomNavigationState fState =
+                    bottomNavigationKey.currentState;
+                fState.setPage(1);
+                _pageController.jumpToPage(1);
+                setState(() {});
               },
               // iconData: Icons.home,
               title: "Appointments"),
@@ -339,9 +354,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 final FancyBottomNavigationState fState =
                     bottomNavigationKey.currentState;
                 fState.setPage(2);
+                _pageController.jumpToPage(2);
+                setState(() {});
               },
               // iconData: Icons.home,
-              title: "Team"),
+              title: "My Team"),
           TabData(
               icon: Padding(
                 padding: EdgeInsets.all(_currentIndex != 3 ? 0 : 8.0),
@@ -357,6 +374,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 final FancyBottomNavigationState fState =
                     bottomNavigationKey.currentState;
                 fState.setPage(3);
+                setState(() {});
               },
               // iconData: Icons.home,
               title: "Chat"),
@@ -375,14 +393,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 final FancyBottomNavigationState fState =
                     bottomNavigationKey.currentState;
                 fState.setPage(4);
+                setState(() {});
               },
               // iconData: Icons.home,
               title: "Settings"),
         ],
         onTabChangedListener: (position) {
-          setState(() {
-            
-          });
+          setState(() {});
           onTabTapped(position);
         },
       ),
