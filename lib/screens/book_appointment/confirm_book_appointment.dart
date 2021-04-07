@@ -73,7 +73,7 @@ class _ConfirmBookAppointmentScreenState
   String paymentType, insuranceName, insuranceImage, insuranceId;
 
   List<dynamic> _consultaceList = List();
-  double _totalAmount=0;
+  double _totalAmount = 0;
 
   setPolylines() async {
     PolylineResult polylineResult =
@@ -199,7 +199,8 @@ class _ConfirmBookAppointmentScreenState
         _servicesList = _servicesMap["services"];
 
         for (int i = 0; i < _servicesList.length; i++) {
-          _totalAmount = double.parse(_servicesList[i].amount.toString())+ _totalAmount;
+          _totalAmount =
+              double.parse(_servicesList[i].amount.toString()) + _totalAmount;
           _reviewAppointmentData["services[${i.toString()}][subServiceId]"] =
               _servicesList[i].subServiceId;
           _reviewAppointmentData["services[${i.toString()}][amount]"] =
@@ -210,7 +211,8 @@ class _ConfirmBookAppointmentScreenState
       _consultaceList = _servicesMap["consultaceFee"];
 
       for (int i = 0; i < _consultaceList.length; i++) {
-        _totalAmount = double.parse(_consultaceList[i]["fee"].toString())+ _totalAmount;
+        _totalAmount =
+            double.parse(_consultaceList[i]["fee"].toString()) + _totalAmount;
         _reviewAppointmentData["consultanceFee[${i.toString()}][fee]"] =
             _consultaceList[i]["fee"].toString();
       }
@@ -306,36 +308,11 @@ class _ConfirmBookAppointmentScreenState
           color: AppColors.snow,
           isLoading: _isLoading,
           isAddAppBar: true,
+          addHeader: true,
           padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
           child: SingleChildScrollView(
             child: _confirmAndPay(),
           )
-          // Stack(
-          //   children: <Widget>[
-          //     Padding(
-          //       padding: const EdgeInsets.only(bottom: 60),
-          //       child: SingleChildScrollView(
-          //         child: Column(
-          //           crossAxisAlignment: CrossAxisAlignment.start,
-          //           children: widgetList(),
-          //         ),
-          //       ),
-          //     ),
-          //     Align(
-          //       alignment: FractionalOffset.bottomRight,
-          //       child: Container(
-          //         height: 55.0,
-          //         width: MediaQuery.of(context).size.width - 76.0,
-          //         padding: const EdgeInsets.only(right: 20.0, left: 20.0),
-          //         child: FancyButton(
-          //           title: "Book Appointment",
-          //           buttonIcon: "ic_send_request",
-          //           onPressed: _bookAppointment,
-          //         ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
           ),
     );
   }
@@ -466,6 +443,22 @@ class _ConfirmBookAppointmentScreenState
                     ],
                   ),
                 ),
+                Spacer(),
+                InkWell(
+                  onTap: () {
+                    Navigator.popUntil(context ,
+                     ModalRoute.withName(Routes.paymentMethodScreen)
+                    );
+                  },
+                  child: Text("Change",
+                      style: const TextStyle(
+                          color: const Color(0xff1e36ba),
+                          fontWeight: FontWeight.w500,
+                          fontFamily: gilroyMedium,
+                          fontStyle: FontStyle.normal,
+                          fontSize: 13.0),
+                      textAlign: TextAlign.right),
+                )
               ],
             ),
             margin: EdgeInsets.symmetric(vertical: spacing5),
@@ -1212,8 +1205,7 @@ class _ConfirmBookAppointmentScreenState
                 ),
                 (_servicesList != null && _servicesList.length > 0)
                     ? consultationSlotWidget(
-                        "Total", '\$ ${_totalAmount.toString()}',
-                        isBold: true)
+                        "Total", '\$ ${_totalAmount.toString()}', isBold: true)
                     : consultationSlotWidget(
                         "Total", '\$ ${_totalAmount.toString()}',
                         isBold: true)
@@ -1463,7 +1455,10 @@ class _ConfirmBookAppointmentScreenState
                     padding: const EdgeInsets.only(right: 14, left: 20.0),
                     child: FancyButton(
                       title: "OK",
-                      onPressed: _bookAppointment,
+                      onPressed: (){
+                        _bookAppointment();
+                        Navigator.pop(context);
+                      },
                     ),
                   ),
                 )

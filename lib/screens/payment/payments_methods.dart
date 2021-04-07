@@ -6,9 +6,12 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/src/apis/api_constants.dart';
 import 'package:hutano/src/apis/api_manager.dart';
 import 'package:hutano/src/apis/error_model.dart';
+import 'package:hutano/src/utils/color_utils.dart';
+import 'package:hutano/src/utils/constants/constants.dart';
 import 'package:hutano/src/utils/dialog_utils.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/widgets/arrow_button.dart';
 import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
@@ -139,10 +142,10 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
       resizeToAvoidBottomInset: true,
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackground(
+        addHeader: true,
         isLoading: _isLoading,
         title: isPayment ? "Select Payment Methods" : "Payment Methods",
         isAddBack: !isPayment,
-        addBackButton: isPayment,
         color: Colors.white,
         child: Stack(
           children: <Widget>[
@@ -160,45 +163,48 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                 : Align(
                     alignment: FractionalOffset.bottomRight,
                     child: Container(
-                      height: 55.0,
-                      width: MediaQuery.of(context).size.width - 76.0,
-                      padding: const EdgeInsets.only(right: 20.0, left: 40.0),
-                      child: FancyButton(
-                        title: "Continue",
-                        onPressed: () {
-                          Map _paymentMap = new Map();
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 10.0),
+                        child: ArrowButton(
+                          iconData: Icons.arrow_forward,
+                          buttonColor: colorYellow100,
+                          onTap: () {
+                            Map _paymentMap = new Map();
 
-                          if (_radioValue != null) {
-                            _paymentMap["paymentType"] = "3";
+                            if (_radioValue != null) {
+                              _paymentMap["paymentType"] = "3";
 
-                            _container.setConsentToTreatData(
-                                "paymentMap", _paymentMap);
+                              _container.setConsentToTreatData(
+                                  "paymentMap", _paymentMap);
 
-                            Navigator.of(context)
-                                .pushNamed(Routes.reviewAppointmentScreen);
-                          } else if (_cardListRadioValue != null) {
-                            _paymentMap["paymentType"] = "1";
-                            _paymentMap["selectedCard"] = selectedCard;
+                              Navigator.of(context)
+                                  .pushNamed(Routes.reviewAppointmentScreen);
+                            } else if (_cardListRadioValue != null) {
+                              _paymentMap["paymentType"] = "1";
+                              _paymentMap["selectedCard"] = selectedCard;
 
-                            _container.setConsentToTreatData(
-                                "paymentMap", _paymentMap);
-                            Navigator.of(context)
-                                .pushNamed(Routes.reviewAppointmentScreen);
-                          } else if (_listRadioValue != null) {
-                            _paymentMap["paymentType"] = "2";
-                            _paymentMap["insuranceId"] = insuranceId;
-                            _paymentMap["insuranceName"] = insuranceName;
-                            _paymentMap["insuranceImage"] = insuranceImage;
+                              _container.setConsentToTreatData(
+                                  "paymentMap", _paymentMap);
+                              Navigator.of(context)
+                                  .pushNamed(Routes.reviewAppointmentScreen);
+                            } else if (_listRadioValue != null) {
+                              _paymentMap["paymentType"] = "2";
+                              _paymentMap["insuranceId"] = insuranceId;
+                              _paymentMap["insuranceName"] = insuranceName;
+                              _paymentMap["insuranceImage"] = insuranceImage;
 
-                            _container.setConsentToTreatData(
-                                "paymentMap", _paymentMap);
+                              _container.setConsentToTreatData(
+                                  "paymentMap", _paymentMap);
 
-                            Navigator.of(context)
-                                .pushNamed(Routes.reviewAppointmentScreen);
-                          } else {
-                            Widgets.showToast("Please select a payment method");
-                          }
-                        },
+                              Navigator.of(context)
+                                  .pushNamed(Routes.reviewAppointmentScreen);
+                            } else {
+                              Widgets.showToast(
+                                  "Please select a payment method");
+                            }
+                          },
+                        ),
                       ),
                     ),
                   ),
@@ -210,6 +216,18 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
   List<Widget> _widgetList() {
     List<Widget> _widgetList = List();
+
+    _widgetList.add(Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: Text("Select Payment Methods",
+          style: TextStyle(
+              color: colorDarkBlack,
+              fontWeight: FontWeight.w600,
+              fontFamily: gilroySemiBold,
+              fontStyle: FontStyle.normal,
+              fontSize: 17.0),
+          textAlign: TextAlign.left),
+    ));
 
     _widgetList.add(
       Text(
