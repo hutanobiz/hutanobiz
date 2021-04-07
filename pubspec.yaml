@@ -61,7 +61,7 @@ dependencies:
   infinite_scroll_pagination: ^2.2.1
   intl: ^0.16.1
   keyboard_actions: ^3.3.0
-  local_auth: ^0.6.3+1
+  local_auth: ^0.6.2+3
   location: ^3.0.2
   map_launcher: ^0.10.0
   package_info: ^0.4.0+18
@@ -81,7 +81,7 @@ dependencies:
   introduction_screen: ^1.0.9
   vector_math: ^2.0.8
   share: ^0.6.5+4
-  flutter_branch_sdk: ^1.4.0
+  flutter_branch_sdk: ^1.0.0
 
 dev_dependencies:
   flutter_test:
