@@ -65,7 +65,7 @@ class LocationDialog {
     radius = await SharedPref().getValue('radius');
 
     if (radius == null) {
-      radius = "1000";
+      radius = "10";
     } else {
       radiuscontroller.text = radius + ' Miles';
     }

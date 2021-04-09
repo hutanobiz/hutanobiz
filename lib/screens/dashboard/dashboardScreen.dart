@@ -61,7 +61,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     'Onsite Visit'
   ];
 
-  var _miles = "1000";
+  var _miles = "10";
   int hutanoCash = 0;
 
   Future<List<dynamic>> _myDoctorsFuture;
@@ -478,37 +478,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Row(
                   children: <Widget>[
                     _currentddress != null && _currentddress.length > 45
-                        ? SizedBox(
-                            width: 220,
-                            child: Text(
-                              _currentddress,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: AppColors.midnight_express,
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.bold,
-                              ),
+                        ? Text(
+                            _currentddress,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: AppColors.midnight_express,
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
                             ),
                           )
-                        : SizedBox(
-                            width: 220,
-                            child: Text(
-                              _currentddress,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: AppColors.midnight_express,
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.bold,
-                              ),
+                        : Text(
+                            _currentddress,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: AppColors.midnight_express,
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                     _currentddress.length > 45
                         ? Container()
                         : SizedBox(width: 5),
                     Text(
-                      '(${_miles} miles)',
+                      '\u2022',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -517,6 +511,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    Text(
+                      ' Within ${_miles} miles',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: AppColors.midnight_express,
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(width: 20),
                     Image(
                       width: 8.0,
                       height: 4.0,
@@ -1156,7 +1161,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
           await Geocoder.local.findAddressesFromCoordinates(coordinates);
       conatiner.setUserLocation("latLng", LatLng(latitude, longitude));
 
-      var first = addresses.first.addressLine?.toString();
+      var first = "addresses.first.addressLine?.toString()";
+
+      if (addresses[0].locality != null) {
+        first = addresses[0].locality;
+      } else {
+        first = addresses[0].subLocality;
+      }
 
       if (mounted) {
         setState(() {
