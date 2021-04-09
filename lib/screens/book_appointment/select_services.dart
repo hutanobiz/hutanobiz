@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/src/utils/color_utils.dart';
+import 'package:hutano/src/utils/constants/constants.dart';
+import 'package:hutano/src/utils/constants/file_constants.dart';
+import 'package:hutano/src/widgets/hutano_button.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
@@ -82,9 +86,21 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
         title: "Select Services",
         color: AppColors.snow,
         isAddBack: false,
-        addBackButton: true,
+        addHeader: true,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 25),
+              child: Text("Services Options",
+                  style: const TextStyle(
+                      color: colorDarkBlack,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: gilroySemiBold,
+                      fontStyle: FontStyle.normal,
+                      fontSize: 18.0),
+                  textAlign: TextAlign.left),
+            ),
             Expanded(
               child: ListView(
                 shrinkWrap: true,
@@ -92,41 +108,40 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
                 children: widgetList(),
               ),
             ),
-            Divider(height: 0.5),
             Align(
-              alignment: FractionalOffset.bottomRight,
-              child: Container(
-                height: 55.0,
-                width: MediaQuery.of(context).size.width - 76.0,
-                margin: const EdgeInsets.only(top: 10),
-                padding: const EdgeInsets.only(right: 0.0, left: 40.0),
-                child: FancyButton(
-                  title: "Continue",
-                  onPressed: () {
-                    if (_radioValue == 1) {
-                      if (_selectedServicesMap.values.toList().length > 0) {
-                        _container.setServicesData("status", "1");
-                        _container.setServicesData(
-                            "services", _selectedServicesMap.values.toList());
-
-                        Navigator.of(context)
-                            .pushNamed(Routes.selectAppointmentTimeScreen);
-                      } else {
-                        Widgets.showToast("Please choose at least one service");
-                      }
-                    } else {
-                      _container.setServicesData("status", "0");
+              alignment: Alignment.centerRight,
+              child: HutanoButton(
+                width: 55,
+                height: 55,
+                color: accentColor,
+                iconSize: 20,
+                buttonType: HutanoButtonType.onlyIcon,
+                icon: FileConstants.icForward,
+                onPressed: () {
+                  if (_radioValue == 1) {
+                    if (_selectedServicesMap.values.toList().length > 0) {
+                      _container.setServicesData("status", "1");
                       _container.setServicesData(
-                          "consultaceFee", profileMap[_appointmentTypeKey]);
-                      Navigator.of(context).pushNamed(
-                        Routes.selectAppointmentTimeScreen,
-                        arguments: false,
-                      );
+                          "services", _selectedServicesMap.values.toList());
+
+                      Navigator.of(context)
+                          .pushNamed(Routes.selectAppointmentTimeScreen);
+                    } else {
+                      Widgets.showToast("Please choose at least one service");
                     }
-                  },
-                ),
+                  } else {
+                    _container.setServicesData("status", "0");
+                    _container.setServicesData(
+                        "consultaceFee", profileMap[_appointmentTypeKey]);
+                    Navigator.of(context).pushNamed(
+                      Routes.selectAppointmentTimeScreen,
+                      arguments: false,
+                    );
+                  }
+                },
               ),
-            )
+            ),
+     
           ],
         ),
       ),

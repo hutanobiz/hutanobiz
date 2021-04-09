@@ -5,6 +5,8 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/models/schedule.dart';
 import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/src/utils/color_utils.dart';
+import 'package:hutano/src/utils/constants/constants.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/fancy_button.dart';
@@ -193,13 +195,25 @@ class _SelectAppointmentTimeScreenState
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackground(
-        title: "Select an Appointment Time",
+        title: "",
+        addHeader: true,
         color: AppColors.snow,
         isAddBack: false,
         addBottomArrows: false,
-        addBackButton: true,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 25),
+              child: Text("Select an Appointment Time",
+                  style: const TextStyle(
+                      color: colorDarkBlack,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: gilroySemiBold,
+                      fontStyle: FontStyle.normal,
+                      fontSize: 18.0),
+                  textAlign: TextAlign.left),
+            ),
             Expanded(
               child: ListView(
                 shrinkWrap: true,
@@ -209,12 +223,11 @@ class _SelectAppointmentTimeScreenState
             ),
             Divider(height: 0.5),
             Align(
-              alignment: FractionalOffset.bottomRight,
+              alignment: FractionalOffset.center,
               child: Container(
                 height: 55.0,
                 width: MediaQuery.of(context).size.width - 76.0,
                 margin: const EdgeInsets.only(top: 10),
-                padding: const EdgeInsets.only(right: 0.0, left: 40.0),
                 child: FancyButton(
                   title: "Book now",
                   onPressed: () {

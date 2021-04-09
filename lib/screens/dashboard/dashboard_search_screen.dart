@@ -96,6 +96,7 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackground(
         title: "Find a provider",
+        addHeader: true,
         isLoading: _isLoading,
         color: Colors.white,
         padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
