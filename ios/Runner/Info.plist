@@ -12,10 +12,16 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>hutano</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
 	<key>CFBundleTypeRole</key>
- 	<string>Editor</string>
- 	<key>CFBundleURLName</key>
- 	<string>xyz.appening.hutano</string>
+	<string>Editor</string>
+	<key>CFBundleURLName</key>
+	<string>xyz.appening.hutano</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -23,10 +29,10 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
- 				<string>hutano</string>
- 			</array>
+				<string>hutano</string>
+			</array>
 		</dict>
-				<dict>
+		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
@@ -37,20 +43,6 @@
 			</array>
 		</dict>
 	</array>
-
- 	<key>branch_key</key>
- 	<string>key_test_ap0nRdpVqVM5eHLXQDpoVfimArayscMM</string>
- 	<key>branch_universal_link_domains</key>
- 	<array>
- 		<string>alnf4.test-app.link</string>
- 		<string>alnf4-alternate.test-app.link</string>
- 	</array>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>$(MARKETING_VERSION)</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
@@ -59,14 +51,14 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>This app requires access to the camera.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>This app requires contacts access to function properly.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Application wants to use your location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Application wants to use your location</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app requires access to the photo library.</string>
-	<key>NSContactsUsageDescription</key>  
-	<string>This app requires contacts access to function properly.</string>  
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
@@ -93,6 +85,13 @@
 	<string>Light</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>branch_key</key>
+	<string>key_test_ap0nRdpVqVM5eHLXQDpoVfimArayscMM</string>
+	<key>branch_universal_link_domains</key>
+	<array>
+		<string>alnf4.test-app.link</string>
+		<string>alnf4-alternate.test-app.link</string>
+	</array>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
 </dict>
