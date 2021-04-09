@@ -41,7 +41,8 @@ class _AllTitlesSpecialtesScreenState extends State<AllTitlesSpecialtesScreen> {
         padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
         color: AppColors.snow,
         isAddBack: false,
-        addBackButton: true,
+        addHeader: true,
+        addTitle:true,
         child: column(),
       ),
     );

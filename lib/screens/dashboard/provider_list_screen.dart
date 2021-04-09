@@ -6,6 +6,8 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/screens/dashboard/location_dialog/location_dailog.dart';
 import 'package:hutano/src/utils/color_utils.dart';
 import 'package:hutano/src/utils/constants/file_constants.dart';
+import 'package:hutano/src/utils/preference_key.dart';
+import 'package:hutano/src/utils/preference_utils.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/custom_loader.dart';
@@ -47,11 +49,11 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
   Map _containerMap;
   InheritedContainerState _container;
 
-  Map filterMap = {};
+  Map<dynamic, dynamic> filterMap = {};
 
-  Map _projectResponse = {};
+  Map<dynamic, dynamic> _projectResponse = {};
 
-  Map _appointmentFilterMap = {};
+  Map<dynamic, dynamic> _appointmentFilterMap = {};
 
   String token = '';
 
@@ -70,7 +72,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
       this._containerMap = _projectResponse;
     }
 
-    Map _providerMap = {};
+    Map<dynamic, dynamic> _providerMap = {};
 
     _providerMap.clear();
     _providerMap.addAll(_projectResponse);
@@ -255,10 +257,11 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                         });
 
                         if (filterMap.length > 0) {
-                          filterMap["distance"] =
-                              LocationDialog().radius;
-                          //TODO :set dynamic when provider changes done from backend
-                          // filterMap["isInsuranceAccepted"] = true;
+                          filterMap["distance"] = LocationDialog().radius;
+                          var isInsuranceAccepted = getBool(
+                              PreferenceKey.showProviderWithInsurance, false);
+                          filterMap["isInsuranceAccepted"] =
+                              isInsuranceAccepted ? "1" : "0";
                           setState(() {
                             _providerFuture =
                                 api.providerFilter(token, filterMap);
@@ -326,11 +329,13 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                         _appointmentFilterMap.remove('isOfficeEnabled');
                     }
 
-                    SharedPref().getToken().then((token) {
+                    SharedPref().getToken().then((token) async {
                       _appointmentFilterMap["distance"] =
                           LocationDialog().radius;
-                      //TODO :set dynamic when provider changes done from backend
-                      // _appointmentFilterMap["isInsuranceAccepted"] = true;
+                      var isInsuranceAccepted = getBool(
+                          PreferenceKey.showProviderWithInsurance, false);
+                      _appointmentFilterMap["isInsuranceAccepted"] =
+                          isInsuranceAccepted ? "1" : "0";
                       setState(() {
                         _providerFuture =
                             api.providerFilter(token, _appointmentFilterMap);
@@ -363,6 +368,9 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
               if (snapshot.hasData) {
                 _responseData = snapshot.data["response"]['providerData'];
 
+                if (_responseData.isEmpty) {
+                  return Center(child: Text("No data available"));
+                }
                 if (snapshot.data["degree"] != null)
                   _degreeMap = snapshot.data["degree"];
 

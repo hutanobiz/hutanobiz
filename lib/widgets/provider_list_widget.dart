@@ -412,9 +412,7 @@ class ProviderWidget extends StatelessWidget {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            decoration: onLocationClick != null
-                                ? TextDecoration.underline
-                                : TextDecoration.none,
+                            decoration: TextDecoration.none,
                             fontWeight: FontWeight.w400,
                             fontSize: 12,
                             color: Colors.black.withOpacity(0.6),

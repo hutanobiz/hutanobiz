@@ -17,6 +17,8 @@ import 'package:hutano/src/utils/color_utils.dart';
 import 'package:hutano/src/utils/constants/constants.dart';
 import 'package:hutano/src/utils/constants/file_constants.dart';
 import 'package:hutano/src/utils/dialog_utils.dart';
+import 'package:hutano/src/utils/preference_key.dart';
+import 'package:hutano/src/utils/preference_utils.dart';
 import 'package:hutano/src/utils/progress_dialog.dart';
 import 'package:hutano/src/utils/size_config.dart';
 import 'package:hutano/src/widgets/blue_button.dart';
@@ -68,6 +70,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Future<List<dynamic>> _specialtiesFuture;
   Future<List<dynamic>> _professionalTitleFuture;
 
+  bool _showProviderWithInsurance = false;
+
   @override
   void initState() {
     super.initState();
@@ -79,6 +83,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _specialtiesFuture = _api.getSpecialties();
     _initLocationDialog();
     _getHutanoCash();
+
+    _showProviderWithInsurance =
+        getBool(PreferenceKey.showProviderWithInsurance, false);
+    setState(() {});
   }
 
   _initLocationDialog() async {
@@ -435,8 +443,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
             scale: 0.6,
             child: CupertinoSwitch(
               activeColor: colorYellow100,
-              value: false,
-              onChanged: (newValue) {},
+              value: _showProviderWithInsurance,
+              onChanged: (newValue) {
+                setState(() {
+                  _showProviderWithInsurance = newValue;
+                });
+                setBool(PreferenceKey.showProviderWithInsurance, newValue);
+              },
             ),
           ),
         )

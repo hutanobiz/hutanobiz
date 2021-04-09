@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/src/utils/color_utils.dart';
+import 'package:hutano/src/utils/constants/constants.dart';
 import 'package:hutano/src/utils/constants/file_constants.dart';
 import 'package:hutano/src/widgets/custom_back_button.dart';
 import 'package:hutano/widgets/arrow_button.dart';
@@ -23,11 +25,13 @@ class LoadingBackground extends StatelessWidget {
     this.rightButtonText,
     this.onRightButtonTap,
     this.addHeader = false,
+    this.addTitle = false,
   }) : super(key: key);
 
   final bool isLoading;
   final Widget child;
   final bool addHeader;
+  final bool addTitle;
   final bool isAddBack;
   final String title, rightButtonText;
   final EdgeInsets padding;
@@ -63,12 +67,25 @@ class LoadingBackground extends StatelessWidget {
                           size: 26,
                         ),
                       ),
-                      Spacer(),
-                      Image.asset(
-                        FileConstants.icHutanoHeader,
-                        height: 30,
-                        width: 90,
-                      ),
+                      if (!addTitle) ...[
+                        Spacer(),
+                        Image.asset(
+                          FileConstants.icHutanoHeader,
+                          height: 30,
+                          width: 90,
+                        )
+                      ] else
+                        Padding(
+                          padding: const EdgeInsets.only(left: 12),
+                          child: Text(title,
+                              style: const TextStyle(
+                                  color: colorBlack2,
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: gilroyBold,
+                                  fontStyle: FontStyle.normal,
+                                  fontSize: 18.0),
+                              textAlign: TextAlign.left),
+                        ),
                       Spacer(),
                       Image.asset(
                         FileConstants.icNotification,
@@ -105,8 +122,7 @@ class LoadingBackground extends StatelessWidget {
                               : Container(),
                           isAddBack ? SizedBox(width: 10.0) : Container(),
                           Expanded(
-                            child:
-                            Text(
+                            child: Text(
                               title,
                               style: TextStyle(
                                 fontSize: 18.0,
@@ -114,7 +130,6 @@ class LoadingBackground extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-
                           ),
                           if (rightButtonText != null &&
                               onRightButtonTap != null)

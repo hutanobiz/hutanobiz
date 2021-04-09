@@ -47,6 +47,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
   Completer<GoogleMapController> _controller = Completer();
   List scheduleList = List();
 
+  int _selectedScheduleIndex = 0;
   ScrollController _scrollController = new ScrollController();
 
   final _adddressColumnKey = GlobalKey();
@@ -73,6 +74,16 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
   Map<String, ServiceData> _selectedServicesMap = Map();
   List _serviceList;
   Map profileMap = Map();
+
+  String mondayTimings,
+      tuesdayTimings,
+      wednesdayTimings,
+      thursdayTimings,
+      fridayTimings,
+      saturdayTimings,
+      sundayTimings;
+
+  List<dynamic> _timings = List(7);
   @override
   void didChangeDependencies() {
     _container = InheritedContainer.of(context);
@@ -298,6 +309,9 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     return formWidget;
   }
 
+  DateTime todayFromTime;
+  DateTime todayToTime;
+
   List<Widget> widgetList(Map profileResponse) {
     Map _providerData = profileResponse["data"][0];
     String nameTitle = "Dr. ", name = "---";
@@ -373,11 +387,12 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     if (profileResponse['reviews'] != null) {
       reviewsList = profileResponse['reviews'];
     }
-    DateTime todayFromTime;
-    DateTime todayToTime;
+
     if (_providerData['schedules'] != null &&
         _providerData['schedules'].length > 0) {
       scheduleList = _providerData['schedules'];
+
+      setTimings(scheduleList);
 
       DateTime now = DateTime.now();
 
@@ -1205,41 +1220,59 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
             decoration: BoxDecoration(
               border: Border.all(
                   color: colorBlack.withOpacity(0.7),
-                  width: (index == 0) ? 0 : 0.5),
+                  width: (index == _selectedScheduleIndex) ? 0 : 0.5),
               borderRadius: BorderRadius.all(Radius.circular(10)),
-              color: (index == 0) ? const Color(0xfffebf58) : colorWhite,
+              color: (index == _selectedScheduleIndex)
+                  ? const Color(0xfffebf58)
+                  : colorWhite,
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                  index == 0
-                      ? "Today"
-                      : DateFormat('EEEE')
-                          .format(DateTime.now().add(Duration(days: index)))
-                          .toString()
-                          .substring(0, 3),
-                  style: TextStyle(
-                      color: (index == 0)
-                          ? colorWhite
-                          : colorBlack.withOpacity(0.7),
-                      fontWeight: FontWeight.w500,
-                      fontFamily: gilroyMedium,
-                      fontStyle: FontStyle.normal,
-                      fontSize: 13.0),
-                ),
-                Text(
-                  DateTime.now().add(Duration(days: index)).day.toString(),
-                  style: TextStyle(
-                      color: (index == 0)
-                          ? colorWhite
-                          : colorBlack.withOpacity(0.7),
-                      fontWeight: FontWeight.w500,
-                      fontFamily: gilroyRegular,
-                      fontStyle: FontStyle.normal,
-                      fontSize: 13.0),
-                ),
-              ],
+            child: InkWell(
+              onTap: () {
+                int _day = DateTime.now().add(Duration(days: index)).weekday;
+                _selectedScheduleIndex = index;
+                try {
+                  todayFromTime = _timings[_day - 1]['fromTime'];
+                  todayToTime = _timings[_day - 1]['toTime'];
+
+                  setState(() {});
+                } catch (e) {
+                  todayFromTime = null;
+                  todayToTime = null;
+                  setState(() {});
+                }
+              },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    index == 0
+                        ? "Today"
+                        : DateFormat('EEEE')
+                            .format(DateTime.now().add(Duration(days: index)))
+                            .toString()
+                            .substring(0, 3),
+                    style: TextStyle(
+                        color: (index == _selectedScheduleIndex)
+                            ? colorWhite
+                            : colorBlack.withOpacity(0.7),
+                        fontWeight: FontWeight.w500,
+                        fontFamily: gilroyMedium,
+                        fontStyle: FontStyle.normal,
+                        fontSize: 13.0),
+                  ),
+                  Text(
+                    DateTime.now().add(Duration(days: index)).day.toString(),
+                    style: TextStyle(
+                        color: (index == _selectedScheduleIndex)
+                            ? colorWhite
+                            : colorBlack.withOpacity(0.7),
+                        fontWeight: FontWeight.w500,
+                        fontFamily: gilroyRegular,
+                        fontStyle: FontStyle.normal,
+                        fontSize: 13.0),
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -1396,7 +1429,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
           ),
           _radioValue == 0
               ? Container()
-              : officeData.services != null && officeData.services.length> 0
+              : officeData.services != null && officeData.services.length > 0
                   ? ListView.separated(
                       separatorBuilder: (BuildContext context, int index) =>
                           Divider(),
@@ -1489,6 +1522,94 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
 
     if (value == 0) {
       _selectedServicesMap.clear();
+    }
+  }
+
+  void setTimings(List _scheduleList) {
+    if (_scheduleList != null && _scheduleList.length > 0) {
+      mondayTimings = "";
+      tuesdayTimings = "";
+      wednesdayTimings = "";
+      thursdayTimings = "";
+      fridayTimings = "";
+      saturdayTimings = "";
+      sundayTimings = "";
+
+      int i = 0;
+      int j = 0;
+
+      while (i < _scheduleList.length) {
+        List _scheduleDaysList = _scheduleList[i]["day"];
+        if (j < _scheduleDaysList.length) {
+          String day = _scheduleDaysList[j].toString();
+          var fromTime = DateTime.utc(
+              DateTime.now().year,
+              DateTime.now().month,
+              9,
+              int.parse(_scheduleList[i]['fromTime'].toString().split(':')[0]),
+              int.parse(_scheduleList[i]['fromTime'].toString().split(':')[1]));
+          var toTime = DateTime.utc(
+              DateTime.now().year,
+              DateTime.now().month,
+              9,
+              int.parse(_scheduleList[i]['toTime'].toString().split(':')[0]),
+              int.parse(_scheduleList[i]['toTime'].toString().split(':')[1]));
+
+          String from = DateFormat('HH:mm').format(fromTime.toLocal());
+          // '${fromTime.toLocal().hour}:${fromTime.toLocal().minute}';
+          String to = DateFormat('HH:mm').format(toTime.toLocal());
+          //'${toTime.toLocal().hour}:${toTime.toLocal().minute}';
+
+          switch (day) {
+            case "1":
+              Map _time = {};
+              _time['fromTime'] = fromTime;
+              _time['toTime'] = toTime;
+              _timings[0] = _time;
+              break;
+            case "2":
+              Map _time = {};
+              _time['fromTime'] = fromTime;
+              _time['toTime'] = toTime;
+              _timings[1] = _time;
+              break;
+            case "3":
+              Map _time = {};
+              _time['fromTime'] = fromTime;
+              _time['toTime'] = toTime;
+              _timings[2] = _time;
+              break;
+            case "4":
+              Map _time = {};
+              _time['fromTime'] = fromTime;
+              _time['toTime'] = toTime;
+              _timings[3] = _time;
+              break;
+            case "5":
+              Map _time = {};
+              _time['fromTime'] = fromTime;
+              _time['toTime'] = toTime;
+              _timings[4] = _time;
+              break;
+            case "6":
+              Map _time = {};
+              _time['fromTime'] = fromTime;
+              _time['toTime'] = toTime;
+              _timings[5] = _time;
+              break;
+            case "7":
+              Map _time = {};
+              _time['fromTime'] = fromTime;
+              _time['toTime'] = toTime;
+              _timings[6] = _time;
+              break;
+          }
+          j++;
+        } else {
+          i++;
+          j = 0;
+        }
+      }
     }
   }
 }

@@ -13,5 +13,5 @@ class PreferenceKey {
   static const String email="email";
   static const String intro="intro";
   static const String isMyTeamEmpty="isMyTeamEmpty";
-
+  static const String showProviderWithInsurance="showProviderWithInsurance";
 }
