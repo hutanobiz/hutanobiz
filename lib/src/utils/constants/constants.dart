@@ -15,6 +15,7 @@ const String routePinSetupSuccess = "routePinSetupSuccess";
 const String routeAddInsuranceComplete = "routeAddInsuranceComplete";
 const String routeAddInsurance = "routeAddInsurance";
 const String routeInviteSuccess = "routeInviteSuccess";
+const String routeAddProviderSuccess = "routeAddProviderSuccess";
 const String routeMyMedicalHistory = "routeMyMedicalHistory";
 const String routeBodySymptoms = "routeBodySymptoms";
 const String routePainSymptoms = "routePainSymptoms";

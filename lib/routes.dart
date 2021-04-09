@@ -79,6 +79,7 @@ import 'package:hutano/src/ui/medical_history/test_documents_list.dart';
 import 'package:hutano/src/ui/medical_history/upload_insurance_image.dart';
 import 'package:hutano/src/ui/medical_history/upload_symptoms_images.dart';
 import 'package:hutano/src/ui/medical_history/upload_test_documents.dart';
+import 'package:hutano/src/ui/provider/add_provider_complete.dart';
 import 'package:hutano/src/ui/provider/create_group/create_provider_group.dart';
 import 'package:hutano/src/ui/provider/my_provider_network/my_provider_network.dart';
 import 'package:hutano/src/ui/provider/provider_add_network/provider_add_network.dart';
@@ -214,6 +215,8 @@ class Routes {
                 ));
       case routeInviteSuccess:
         return MaterialPageRoute(builder: (_) => InviteFamilySuccess());
+      case routeAddProviderSuccess:
+        return MaterialPageRoute(builder: (_) => AddProviderComplete());
       case routeEmailVerificationComplete:
         return MaterialPageRoute(builder: (_) => EmailVerifiCompleteScreen());
       case routeAddCardComplete:

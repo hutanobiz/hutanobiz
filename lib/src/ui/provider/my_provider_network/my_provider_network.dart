@@ -153,7 +153,9 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
 
   @override
   Widget build(BuildContext context) {
-    return !fromHome ? _mynetworkScreen() : _getRoute();
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: !fromHome ? _mynetworkScreen() : _getRoute());
   }
 
   _getRoute() {

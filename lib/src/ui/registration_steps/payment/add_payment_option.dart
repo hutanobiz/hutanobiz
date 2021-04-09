@@ -84,6 +84,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
       return;
     }
     _enableButton = true;
+    setState(() {});
   }
 
   @override
@@ -130,7 +131,8 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
                       buttonType: HutanoButtonType.onlyIcon,
                       icon: FileConstants.icForward,
                       onPressed: () {
-                        Navigator.of(context).pushReplacementNamed(routeInviteFamilyMember);
+                        Navigator.of(context)
+                            .pushReplacementNamed(routeInviteFamilyMember);
                       },
                     ),
                   ),
@@ -377,6 +379,9 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
         ],
         validationMethod: (number) {
           return validateCVV(number, context);
+        },
+        onValueChanged: (s) {
+          setState(() {});
         },
         labelText: Localization.of(context).cvv,
         contentPadding: EdgeInsets.all(10),

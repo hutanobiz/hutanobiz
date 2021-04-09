@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/src/widgets/app_header.dart';
+import 'package:hutano/src/widgets/custom_back_button.dart';
 import 'package:hutano/src/widgets/hutano_progressbar.dart';
 
 import '../../../apis/api_manager.dart';
@@ -91,7 +92,7 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
           okButtonTitle: Localization.of(context).ok,
           okButtonAction: () {
             Navigator.of(context).pushNamed(
-              routeMyProviderNetwork,
+              routeAddProviderSuccess,
             );
           });
     } on ErrorModel catch (e) {
@@ -116,8 +117,9 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              CustomBackButton(),
               AppHeader(
                 progressSteps: HutanoProgressSteps.four,
               ),
