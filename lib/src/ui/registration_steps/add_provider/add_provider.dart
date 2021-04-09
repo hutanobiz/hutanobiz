@@ -41,6 +41,7 @@ class _AddProviderState extends State<AddProvider> {
           margin: EdgeInsets.all(0),
           child: Column(
             children: [
+              
               AppHeader(
                 progressSteps: HutanoProgressSteps.four,
                 title: Localization.of(context).addProviders,

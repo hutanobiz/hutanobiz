@@ -154,13 +154,8 @@ class _AddInsuranceState extends State<AddInsurance> {
           setState(() {
             showSecondaryInsurance = true;
           });
-          DialogUtils.showOkCancelAlertDialog(
-            context: context,
-            message: "Insurance uploaded successfully",
-            okButtonAction: () {},
-            okButtonTitle: 'Ok',
-            isCancelEnable: false,
-          );
+          DialogUtils.showAlertDialog(context, "Insurance updated successfully",
+              title: "");
         } else {
           Navigator.pushReplacementNamed(context, routeAddCardComplete);
         }
@@ -478,9 +473,8 @@ class _AddInsuranceState extends State<AddInsurance> {
         onValueChanged: (value) {
           _addInsuranceModel.healthPlan = value;
           setState(() {
-            _healthPlanError = value
-                .toString()
-                .isBlank(context, Localization.of(context).errorHealthInsurance);
+            _healthPlanError = value.toString().isBlank(
+                context, Localization.of(context).errorHealthInsurance);
           });
         },
         errorText: _healthPlanError,
