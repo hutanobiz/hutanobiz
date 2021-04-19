@@ -49,6 +49,7 @@ const String apiGetInviteMessage = "get-invitation-message";
 const String apiGetProviderPackages = "get-provider-packages";
 const String apiRewardPoints = "reward-points";
 const String apiInviteMember = "invite-member";
+const String apiOfficeAppointmentStatus = "office-appointment-tracking-details";
 
 const String googlePlaceSuggetion="textsearch/json";
 const String googlePlaceDetail="details/json";

@@ -143,4 +143,10 @@ class FileConstants {
   static const String icChatGrey = "assets/images/ic_chat_grey.png";
   static const String icUserWhite = "assets/images/ic_user_white.png";
   static const String icUserGrey = "assets/images/ic_user_grey.png";
+  static const String icTimeBlue = "assets/images/ic_watch.png";
+  static const String icOffice = "assets/images/ic_office.png";
+  static const String icRatingBlue = "assets/images/ic_rating_blue.png";
+  static const String icNavigation = "assets/images/ic_navigation_blue.png";
+  static const String icDrive = "assets/images/ic_drive.png";
+  static const String icReschedule = "assets/images/ic_reschedule.png";
 }

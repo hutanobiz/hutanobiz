@@ -10,6 +10,7 @@ import 'package:hutano/screens/appointments/medical_history.dart';
 import 'package:hutano/screens/appointments/rate_doctor_screen.dart';
 import 'package:hutano/screens/appointments/request_detail_screen.dart';
 import 'package:hutano/screens/appointments/seeking_cure.dart';
+import 'package:hutano/screens/appointments/track_appointment/track_appointment.dart';
 import 'package:hutano/screens/appointments/track_treatment.dart';
 import 'package:hutano/screens/appointments/treatment_summary.dart';
 import 'package:hutano/screens/appointments/upload_documents.dart';
@@ -316,6 +317,8 @@ class Routes {
                 ));
       case routeReedmPoints:
         return MaterialPageRoute(builder: (_) => ReedomPointsScreen());
+      case routeTrackAppointment:
+        return MaterialPageRoute(builder: (_) => TrackAppointment());
       case routeMyAppointments:
         return MaterialPageRoute(builder: (_) => MyAppointments());
       case routeAddProvider:

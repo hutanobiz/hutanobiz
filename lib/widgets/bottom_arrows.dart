@@ -14,10 +14,11 @@ class BottomArrows extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          ArrowButton(
-            iconData: Icons.arrow_back,
-            onTap: () => Navigator.pop(context),
-          ),
+          // ArrowButton(
+          //   iconData: Icons.arrow_back,
+          //   onTap: () => Navigator.pop(context),
+          // ),
+          Spacer(),
           ArrowButton(
             iconData: Icons.arrow_forward,
             onTap: onForwardTap,

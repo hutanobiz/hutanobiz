@@ -127,9 +127,12 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
           isBottomButtonsShow ? AppColors.goldenTainoi : Colors.white,
       body: LoadingBackground(
         title: "Medical History",
+        addHeader: true,
+        addTitle: true,
+        isAddBack: false,
+        addBackButton: false,
         isLoading: _isLoading,
-        isAddAppBar: isBottomButtonsShow,
-        isAddBack: !isBottomButtonsShow,
+        
         addBottomArrows: isBottomButtonsShow,
         onForwardTap: saveMedicalHistory,
         color: Colors.white,

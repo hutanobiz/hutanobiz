@@ -20,7 +20,7 @@ class ApiBaseHelper {
   // static const String base_url = "https://sa-staging.hutano.xyz/";
   // static const String base_url = "https://2d81a0edc1e2.ngrok.io/";
   static const String base_url = "https://api.stage.hutano.com/";
-  // static const String base_url = "https://80c99af3fc2f.ngrok.io/";
+  // static const String base_url = "https://76c9d26b0227.ngrok.io/";
   // static const String imageUrl = base_url + "uploads/";
   static const String imageUrl = "https://hutano-assets.s3.amazonaws.com/";
 

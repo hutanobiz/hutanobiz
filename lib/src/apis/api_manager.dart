@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:hutano/screens/appointments/track_appointment/model/res_tracking_appointment.dart';
 import 'package:hutano/screens/dashboard/model/res_invite_friends.dart';
 import 'package:hutano/screens/dashboard/model/res_provider_packages.dart';
 import 'package:hutano/screens/payment/model/res_reward_points.dart';
@@ -633,6 +634,18 @@ class ApiManager {
         patient + apiInviteMember,
       );
       return ResInviteFriends.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+  
+  Future<ResTrackingAppointment> getOfficeAppointmentStatus(Map<String, dynamic> param) async {
+    try {
+      final response = await _apiService.get(
+        patient + apiOfficeAppointmentStatus,
+        params: param,
+      );
+      return ResTrackingAppointment.fromJson(response.data);
     } on DioError catch (error) {
       throw ErrorModel.fromJson(error.response.data);
     }

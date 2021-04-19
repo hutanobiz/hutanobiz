@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/src/utils/constants/file_constants.dart';
 import 'package:hutano/src/widgets/app_header.dart';
+import 'package:hutano/src/widgets/hutano_button.dart';
 import 'package:hutano/src/widgets/hutano_progressbar.dart';
 import 'package:hutano/src/widgets/skip_later.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -22,9 +24,10 @@ import 'search_bar.dart';
 
 class ProviderSearch extends StatefulWidget {
   final String serachText;
-  bool showSkip=true;
+  bool showSkip = true;
 
-  ProviderSearch({Key key, this.serachText, this.showSkip = true}) : super(key: key);
+  ProviderSearch({Key key, this.serachText, this.showSkip = true})
+      : super(key: key);
   @override
   _ProviderSearchState createState() => _ProviderSearchState();
 }
@@ -120,16 +123,40 @@ class _ProviderSearchState extends State<ProviderSearch> {
               ),
             ),
             if (widget.showSkip)
-              Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.only(bottom: 5),
-                child: SkipLater(
-                  onTap: () {
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        Routes.dashboardScreen, (route) => false);
-                  },
+              Padding(
+                padding: const EdgeInsets.all(7),
+                child: Row(
+                  children: [
+                    SkipLater(onTap: () {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          Routes.dashboardScreen, (route) => false);
+                    }),
+                    Spacer(),
+                    HutanoButton(
+                      width: 55,
+                      height: 55,
+                      color: accentColor,
+                      iconSize: 20,
+                      buttonType: HutanoButtonType.onlyIcon,
+                      icon: FileConstants.icForward,
+                      onPressed: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            Routes.dashboardScreen, (route) => false);
+                      },
+                    ),
+                  ],
                 ),
               )
+            // Container(
+            //   alignment: Alignment.center,
+            //   padding: const EdgeInsets.only(bottom: 5),
+            //   child: SkipLater(
+            //     onTap: () {
+            //       Navigator.of(context).pushNamedAndRemoveUntil(
+            //           Routes.dashboardScreen, (route) => false);
+            //     },
+            //   ),
+            // )
           ],
         ),
       ),

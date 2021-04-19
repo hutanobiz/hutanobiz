@@ -38,6 +38,7 @@ const String routeProviderAddNetwork = "routeProviderAddNetwork";
 const String routeInviteByEmail = "routeInviteByEmail";
 const String routeInviteByText = "routeInviteByText";
 const String routeReedmPoints = "routeRedeempoints";
+const String routeTrackAppointment = "routeTrackAppointment";
 const String routeMyAppointments = "routeMyAppointments";
 const String routeAddProvider = "routeAddProvider";
 const String routeSearch = "routeSearch";

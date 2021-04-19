@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/src/widgets/custom_back_button.dart';
+import 'package:hutano/widgets/widgets.dart';
 
 import '../../../apis/api_manager.dart';
 import '../../../apis/error_model.dart';
@@ -46,14 +47,22 @@ class _CreateProviderGroupState extends State<CreateProviderGroup> {
     try {
       var res = await ApiManager().addProviderNetwork(request);
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showOkCancelAlertDialog(
+
+      Widgets.showErrorDialog(
           context: context,
-          message: res.response.toString(),
-          isCancelEnable: false,
-          okButtonTitle: Localization.of(context).ok,
-          okButtonAction: () {
-            Navigator.of(context).pop({ArgumentConstant.number: ""});
+          description: res.response.toString(),
+          onPressed: () {
+            Navigator.of(context).pop();
+           Navigator.of(context).pop({ArgumentConstant.number: ""});
           });
+      // DialogUtils.showOkCancelAlertDialog(
+      //     context: context,
+      //     message: res.response.toString(),
+      //     isCancelEnable: false,
+      //     okButtonTitle: Localization.of(context).ok,
+      //     okButtonAction: () {
+      //       Navigator.of(context).pop({ArgumentConstant.number: ""});
+      //     });
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);

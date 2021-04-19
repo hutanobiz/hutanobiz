@@ -1146,7 +1146,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                   fontWeight: FontWeight.w500,
                   fontFamily: gilroyMedium,
                   fontStyle: FontStyle.normal,
-                  fontSize: 12.0),
+                  fontSize: 11.0),
             ),
           ),
         ],

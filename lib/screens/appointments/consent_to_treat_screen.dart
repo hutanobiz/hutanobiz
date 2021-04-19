@@ -58,6 +58,8 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
       body: LoadingBackground(
         title: "Consent to Treat",
         isAddBack: false,
+        addHeader: true,
+        addTitle: true,
         addBottomArrows: true,
         onForwardTap: () {
           //TODO : REFACTOR CODE. COMMENTING CURRNET API AND USING ANOTHER

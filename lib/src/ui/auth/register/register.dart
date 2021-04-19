@@ -242,32 +242,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
   _submitData() async {
     FocusManager.instance.primaryFocus.unfocus();
     if (_registerModel.dob == null) {
-      CustomErrorDialog.showOkCancelErrorDialog(
-          context: context, message: Localization.of(context).errorDob);
+      DialogUtils.showAlertDialog(context, Localization.of(context).errorDob);
       return;
     }
     if (_registerModel.gender == null) {
-      CustomErrorDialog.showOkCancelErrorDialog(
-          context: context, message: Localization.of(context).errorGender);
+      DialogUtils.showAlertDialog(
+          context, Localization.of(context).errorGender);
       return;
     }
     if (_registerModel.state == null) {
-      CustomErrorDialog.showOkCancelErrorDialog(
-          context: context, message: Localization.of(context).errorState);
+      DialogUtils.showAlertDialog(context, Localization.of(context).errorState);
       return;
     }
 
     if (_imageFile == null) {
-      CustomErrorDialog.showOkCancelErrorDialog(
-          context: context,
-          message: Localization.of(context).errorSelectProfile);
+      DialogUtils.showAlertDialog(
+          context, Localization.of(context).errorSelectProfile);
       return;
     }
 
     if (_registerModel.haveHealthInsurance == null) {
-      CustomErrorDialog.showOkCancelErrorDialog(
-          context: context,
-          message: Localization.of(context).errorHealthInsurance);
+      DialogUtils.showAlertDialog(
+          context, Localization.of(context).errorHealthInsurance);
       return;
     }
     _verifyAddress();
