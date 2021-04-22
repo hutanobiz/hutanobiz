@@ -80,6 +80,7 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
                 child: FancyButton(
                   title: "Proceed to payment",
                   onPressed: () {
+                    _container.setProjectsResponse("serviceType", '3');
                     if (_selectedParking != null && _parkingFee == null) {
                       Widgets.showErrorDialog(
                         context: context,
