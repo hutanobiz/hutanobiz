@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:hutano/src/ui/auth/register/model/res_insurance_list.dart';
 import 'package:hutano/src/utils/color_utils.dart';
 import 'package:hutano/src/utils/constants/file_constants.dart';
@@ -47,6 +48,84 @@ class _InsuranceListState extends State<InsuranceList> {
         context: context);
   }
 
+    Widget _buildAddressField() {
+    return TypeAheadFormField(
+      textFieldConfiguration: TextFieldConfiguration(
+          controller: widget.controller,
+          textInputAction: TextInputAction.next,
+          maxLines: 1,
+          onTap: () {
+            // showError(RegisterError.password.index);
+          },
+          onChanged: (value) {
+            // _registerModel.address = value;
+            // setState(() {
+            //   addressError = value
+            //       .toString()
+            //       .isBlank(context, Localization.of(context).errorEnterAddress);
+            // });
+          },
+          decoration: InputDecoration(
+              // errorText: addressError,
+              suffixIconConstraints: BoxConstraints(),
+              suffixIcon: GestureDetector(
+                onTap: () {
+                  // _registerModel.address = "";
+                  // _addressController.text = "";
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(14.0),
+                  child: Image.asset(
+                    FileConstants.icClose,
+                    width: 30,
+                    height: 30,
+                  ),
+                ),
+              ),
+              labelText: Localization.of(context).address,
+              hintText: "",
+              isDense: true,
+              hintStyle: TextStyle(color: colorBlack60, fontSize: fontSize14),
+              border: OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: colorBlack20, width: 1)),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: colorBlack20, width: 1)),
+              disabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: colorBlack20, width: 1)),
+              labelStyle: TextStyle(fontSize: fontSize14, color: colorGrey60))),
+      suggestionsCallback: (pattern) async {
+        return pattern.length > 0 ? _getFilteredInsuranceList() : [];
+      },
+      errorBuilder: (_, object) {
+        return Container();
+      },
+      itemBuilder: (context, suggestion) {
+        return ListTile(
+          title: Text(suggestion.title),
+        );
+      },
+      transitionBuilder: (context, suggestionsBox, controller) {
+        return suggestionsBox;
+      },
+      onSuggestionSelected: (suggestion) {
+        // _addressController.text = suggestion.structuredFormatting.mainText;
+        // _getPlaceDetail(suggestion.placeId);
+        // widget.onInsuranceSelected(pos);
+      },
+      hideOnError: true,
+      hideSuggestionsOnKeyboardHide: true,
+      hideOnEmpty: true,
+    );
+  }
+  _getFilteredInsuranceList(){
+  return widget.insuranceList.where((element) => element.title.toLowerCase().contains(widget.controller.text.toLowerCase()));
+  }
+
+
   Widget _getEmailTextField() {
     return Container(
         child: GestureDetector(
@@ -68,6 +147,7 @@ class _InsuranceListState extends State<InsuranceList> {
   Widget build(BuildContext context) {
     return Container(
       child: _getEmailTextField(),
+      // child: _buildAddressField(),
     );
   }
 }
