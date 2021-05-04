@@ -30,8 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
     RequestAppointmentsScreen(),
     SettingScreen(),
   ];
-
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 

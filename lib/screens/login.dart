@@ -22,8 +22,8 @@ import 'package:hutano/widgets/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({Key key,this.isBack=false}) : super(key: key);
-bool isBack;
+  LoginScreen({Key key, this.isBack = false}) : super(key: key);
+  bool isBack;
   @override
   _LoginState createState() => _LoginState();
 }
@@ -57,18 +57,9 @@ class _LoginState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-    if (Platform.isIOS) {
-      _firebaseMessaging.requestNotificationPermissions(
-          const IosNotificationSettings(
-              sound: true, badge: true, alert: true, provisional: true));
-      _firebaseMessaging.onIosSettingsRegistered
-          .listen((IosNotificationSettings settings) {
-        print("Settings registered: $settings");
-      });
-    }
-    _firebaseMessaging.getToken().then((String token) {
+     _firebaseMessaging.getToken().then((String token) {
       SharedPref().setValue("deviceToken", token);
       print(token);
     });
@@ -85,7 +76,7 @@ class _LoginState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: true,
+      resizeToAvoidBottomInset: true,
       body: LoadingView(
         isLoading: isLoading,
         child: ListView(
@@ -111,7 +102,7 @@ class _LoginState extends State<LoginScreen> {
     )));
     formWidget.add(Widgets.sizedBox(height: 32.0));
 
-     formWidget.add(
+    formWidget.add(
       Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -373,19 +364,16 @@ class _LoginState extends State<LoginScreen> {
     api.login(_loginDataMap).then((dynamic response) {
       Widgets.showToast(Strings.loggedIn);
 
-      
-
       SharedPref().saveToken(response["tokens"][0]["token"].toString());
       SharedPref().setValue("fullName", response["fullName"].toString());
       SharedPref().setValue("isEmailVerified", response["isEmailVerified"]);
-setLoading(false);
-      if(widget.isBack){
-Navigator.pop(context);
-Navigator.pop(context);
-      }else{
-
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          Routes.homeMain, (Route<dynamic> route) => false);
+      setLoading(false);
+      if (widget.isBack) {
+        Navigator.pop(context);
+        Navigator.pop(context);
+      } else {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            Routes.homeMain, (Route<dynamic> route) => false);
       }
     }).futureError((error) {
       setLoading(false);

@@ -11,20 +11,48 @@ import 'package:hutano/widgets/widgets.dart';
 import 'package:permission_handler/permission_handler.dart' as Permission;
 
 class PushNotificationService {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  // FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  //     FlutterLocalNotificationsPlugin();
   ApiBaseHelper api = ApiBaseHelper();
 
   Future initialise() async {
     configLocalNotification();
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
+
+    NotificationSettings settings = await _firebaseMessaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User granted permission');
+    } else if (settings.authorizationStatus ==
+        AuthorizationStatus.provisional) {
+      print('User granted provisional permission');
+    } else {
+      print('User declined or has not accepted permission');
+    }
+
+    FirebaseMessaging.instance
+        .getInitialMessage()
+        .then((RemoteMessage message) {
+      if (message != null) {
+        navigateUser(message);
+      }
+    });
+
+    FirebaseMessaging.onMessage.listen(
+      (RemoteMessage message) {
         print("onMessage: $message");
 
         String notificationType = Platform.isIOS
-            ? message['notification_type'] ?? ""
-            : message["data"]['notification_type'] ?? "";
+            ? message.data['notification_type'] ?? ""
+            : message.data['notification_type'] ?? "";
 
         switch (notificationType) {
           case 'call':
@@ -48,8 +76,8 @@ class PushNotificationService {
                       (statuses[Permission.Permission.microphone].isGranted)) {
                     var map = {};
                     map['_id'] = Platform.isIOS
-                        ? message['appointmentId']
-                        : message["data"]['appointmentId'];
+                        ? message.data['appointmentId']
+                        : message.data['appointmentId'];
                     map['name'] = "---";
                     map['address'] = 'a';
                     map['dateTime'] = 't';
@@ -78,14 +106,14 @@ class PushNotificationService {
               return isCurrent;
             }
             if (Platform.isIOS
-                ? message['isUserJoin']
-                : message["data"]['isUserJoin'] == "true") {
+                ? message.data['isUserJoin']
+                : message.data['isUserJoin'] == "true") {
               // Navigator.pop(navigatorContext);
               Navigator.pushReplacementNamed(
                   navigatorContext, Routes.telemedicineTrackTreatmentScreen,
                   arguments: Platform.isIOS
-                      ? message['appointmentId']
-                      : message["data"]['appointmentId']);
+                      ? message.data['appointmentId']
+                      : message.data['appointmentId']);
             } else {
               Widgets.showConfirmationDialog(
                   context: navigatorContext,
@@ -101,24 +129,24 @@ class PushNotificationService {
                       SharedPref().getToken().then((token) {
                         var appointmentId = {};
                         appointmentId['appointmentId'] = Platform.isIOS
-                            ? message['appointmentId']
-                            : message["data"]['appointmentId'];
+                            ? message.data['appointmentId']
+                            : message.data['appointmentId'];
                         api
                             .patientAvailableForCall(token, appointmentId)
                             .then((value) {
                           Navigator.of(navigatorContext).popAndPushNamed(
                               Routes.telemedicineTrackTreatmentScreen,
                               arguments: Platform.isIOS
-                                  ? message['appointmentId']
-                                  : message["data"]['appointmentId']);
+                                  ? message.data['appointmentId']
+                                  : message.data['appointmentId']);
                         });
                       });
                     } else {
                       SharedPref().getToken().then((token) {
                         var appointmentId = {};
                         appointmentId['appointmentId'] = Platform.isIOS
-                            ? message['appointmentId']
-                            : message["data"]['appointmentId'];
+                            ? message.data['appointmentId']
+                            : message.data['appointmentId'];
                         api
                             .patientAvailableForCall(token, appointmentId)
                             .then((value) {
@@ -126,8 +154,8 @@ class PushNotificationService {
                           Navigator.pushReplacementNamed(navigatorContext,
                               Routes.telemedicineTrackTreatmentScreen,
                               arguments: Platform.isIOS
-                                  ? message['appointmentId']
-                                  : message["data"]['appointmentId']);
+                                  ? message.data['appointmentId']
+                                  : message.data['appointmentId']);
                         });
                       });
                     }
@@ -138,19 +166,11 @@ class PushNotificationService {
             showNotification(message);
         }
       },
-      onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-
-        navigateUser(message);
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-        Navigator.popUntil(
-            navigatorContext, (Route<dynamic> route) => route is PageRoute);
-        navigateUser(message);
-      },
     );
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+      navigateUser(message);
+    });
   }
 
   void configLocalNotification() {
@@ -158,7 +178,7 @@ class PushNotificationService {
         new AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationSettingsIOS = new IOSInitializationSettings();
     var initializationSettings = new InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: (String payload) async {
       print(payload);
@@ -167,10 +187,36 @@ class PushNotificationService {
     });
   }
 
-  navigateUser(message) {
+  void showNotification(RemoteMessage message) async {
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+      Platform.isAndroid ? 'xyz.appening.hutano' : 'xyz.appening.hutano',
+      'Hutano Patient',
+      'your channel description',
+      playSound: true,
+      enableVibration: true,
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    var platformChannelSpecifics = new NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+        0,
+        Platform.isAndroid
+            ? message.notification.title
+            : message.notification.title,
+        Platform.isAndroid
+            ? message.notification.body
+            : message.notification.body,
+        platformChannelSpecifics,
+        payload: json.encode(message));
+  }
+
+  navigateUser(RemoteMessage message) {
     String notificationType = Platform.isIOS
-        ? message['notification_type'] ?? ""
-        : message["data"]['notification_type'] ?? "";
+        ? message.data['notification_type'] ?? ""
+        : message.data['notification_type'] ?? "";
 
     switch (notificationType) {
       case 'call':
@@ -178,8 +224,8 @@ class PushNotificationService {
         Map appointment = {};
         appointment["_appointmentStatus"] = "1";
         appointment["id"] = Platform.isIOS
-            ? message['appointmentId']
-            : message["data"]['appointmentId'];
+            ? message.data['appointmentId']
+            : message.data['appointmentId'];
         Navigator.of(navigatorContext).pushNamed(
           Routes.appointmentDetailScreen,
           arguments: appointment,
@@ -190,16 +236,16 @@ class PushNotificationService {
           navigatorContext,
           Routes.telemedicineTrackTreatmentScreen,
           arguments: Platform.isIOS
-              ? message['appointmentId']
-              : message["data"]['appointmentId'],
+              ? message.data['appointmentId']
+              : message.data['appointmentId'],
         );
         break;
       case 'call-reminder':
         Map appointment = {};
         appointment["_appointmentStatus"] = "1";
         appointment["id"] = Platform.isIOS
-            ? message['appointmentId']
-            : message["data"]['appointmentId'];
+            ? message.data['appointmentId']
+            : message.data['appointmentId'];
         Navigator.of(navigatorContext).pushNamed(
           Routes.appointmentDetailScreen,
           arguments: appointment,
@@ -210,34 +256,34 @@ class PushNotificationService {
         Map appointment = {};
         appointment["_appointmentStatus"] = "1";
         appointment["id"] = Platform.isIOS
-            ? message['appointmentId']
-            : message["data"]['appointmentId'];
+            ? message.data['appointmentId']
+            : message.data['appointmentId'];
         Navigator.of(navigatorContext).pushNamed(
           Routes.trackTreatmentScreen,
           arguments: Platform.isIOS
-              ? message['appointmentType']
-              : message["data"]['appointmentType'],
+              ? message.data['appointmentType']
+              : message.data['appointmentType'],
         );
         break;
 
       case 'request_status':
         var appointmentType = Platform.isIOS
-            ? message['appointmentType']
-            : message["data"]['appointmentType'];
+            ? message.data['appointmentType']
+            : message.data['appointmentType'];
         if (appointmentType == "2") {
           Navigator.pushNamed(
             navigatorContext,
             Routes.telemedicineTrackTreatmentScreen,
             arguments: Platform.isIOS
-                ? message['appointmentId']
-                : message["data"]['appointmentId'],
+                ? message.data['appointmentId']
+                : message.data['appointmentId'],
           );
         } else {
           Map appointment = {};
           appointment["_appointmentStatus"] = "1";
           appointment["id"] = Platform.isIOS
-              ? message['appointmentId']
-              : message["data"]['appointmentId'];
+              ? message.data['appointmentId']
+              : message.data['appointmentId'];
           Navigator.of(navigatorContext).pushNamed(
             Routes.appointmentDetailScreen,
             arguments: appointment,
@@ -249,8 +295,8 @@ class PushNotificationService {
         Map appointment = {};
         appointment["_appointmentStatus"] = "1";
         appointment["id"] = Platform.isIOS
-            ? message['appointmentId']
-            : message["data"]['appointmentId'];
+            ? message.data['appointmentId']
+            : message.data['appointmentId'];
         Navigator.of(navigatorContext).pushNamed(
           Routes.appointmentDetailScreen,
           arguments: appointment,
@@ -258,21 +304,21 @@ class PushNotificationService {
         break;
       default:
         String isTrack = Platform.isIOS
-            ? message['isTrack'] ?? "false"
-            : message["data"]['isTrack'] ?? "false";
+            ? message.data['isTrack'] ?? "false"
+            : message.data['isTrack'] ?? "false";
 
         Map appointment = {};
         appointment["_appointmentStatus"] = "1";
         appointment["id"] = Platform.isIOS
-            ? message['appointmentId']
-            : message["data"]['appointmentId'];
+            ? message.data['appointmentId']
+            : message.data['appointmentId'];
 
         if (isTrack == "true") {
           Navigator.of(navigatorContext).pushNamed(
             Routes.trackTreatmentScreen,
             arguments: Platform.isIOS
-                ? message['appointmentType']
-                : message["data"]['appointmentType'],
+                ? message.data['appointmentType']
+                : message.data['appointmentType'],
           );
         } else {
           Navigator.of(navigatorContext).pushNamed(
@@ -281,40 +327,5 @@ class PushNotificationService {
           );
         }
     }
-  }
-
-  void showNotification(message) async {
-    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-      Platform.isAndroid ? 'xyz.appening.hutano' : 'xyz.appening.hutano',
-      'Hutano Patient',
-      'your channel description',
-      playSound: true,
-      enableVibration: true,
-      importance: Importance.Max,
-      priority: Priority.High,
-    );
-    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
-    var platformChannelSpecifics = new NotificationDetails(
-        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.show(
-        0,
-        Platform.isAndroid
-            ? message['notification']['title'].toString()
-            : message['aps']['alert']['title'].toString(),
-        Platform.isAndroid
-            ? message['notification']['body'].toString()
-            : message['aps']['alert']['body'].toString(),
-        platformChannelSpecifics,
-        payload: json.encode(message));
-  }
-}
-
-Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
-  if (message.containsKey('data')) {
-    final dynamic data = message['data'];
-  }
-
-  if (message.containsKey('notification')) {
-    final dynamic notification = message['notification'];
   }
 }
