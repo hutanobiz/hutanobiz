@@ -79,6 +79,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
     switch (_permission) {
       case PermissionStatus.granted:
+      case PermissionStatus.grantedLimited:
         bool serviceStatus = await _location.serviceEnabled();
         print("Service status: $serviceStatus");
 

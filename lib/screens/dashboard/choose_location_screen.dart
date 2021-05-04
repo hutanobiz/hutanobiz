@@ -56,6 +56,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
 
     switch (_permission) {
       case PermissionStatus.granted:
+      case PermissionStatus.grantedLimited:
         bool serviceStatus = await _location.serviceEnabled();
         print("Service status: $serviceStatus");
 

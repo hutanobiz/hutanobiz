@@ -11,7 +11,7 @@ import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/colors.dart';
 
 class VerifyEmailOTP extends StatefulWidget {
-  final  Map args;
+  final Map args;
 
   const VerifyEmailOTP({Key key, @required this.args}) : super(key: key);
 
@@ -26,13 +26,12 @@ class _VerifyEmailOTPState extends State<VerifyEmailOTP> {
   @override
   Widget build(BuildContext context) {
     email = widget.args['email'];
-    phoneNumber=widget.args['phoneNumber'];
+    phoneNumber = widget.args['phoneNumber'];
 
     String emailText;
-    emailText =
-        email.substring(0, email.length);
+    emailText = email.substring(0, email.length);
     return Scaffold(
-      resizeToAvoidBottomPadding: true,
+      resizeToAvoidBottomInset: true,
       body: LoadingBackground(
         padding: EdgeInsets.all(0),
         title: "",
@@ -47,6 +46,7 @@ class _VerifyEmailOTPState extends State<VerifyEmailOTP> {
       ),
     );
   }
+
   List<Widget> getFormWidget(String phoneText) {
     List<Widget> formWidget = new List();
     formWidget.add(AppLogo());
@@ -90,7 +90,7 @@ class _VerifyEmailOTPState extends State<VerifyEmailOTP> {
                 borderSide: BorderSide(color: Colors.grey[300]),
                 borderRadius: BorderRadius.circular(14.0)),
             border:
-            OutlineInputBorder(borderRadius: BorderRadius.circular(14.0))),
+                OutlineInputBorder(borderRadius: BorderRadius.circular(14.0))),
         submit: (String pin) {
           if (pin.length == 6) {
             setState(() {
@@ -111,26 +111,28 @@ class _VerifyEmailOTPState extends State<VerifyEmailOTP> {
             title: "Verify",
             onPressed: otp != null
                 ? () {
-              ApiBaseHelper api = new ApiBaseHelper();
-              Map<String, String> verifyEmail = Map();
+                    ApiBaseHelper api = new ApiBaseHelper();
+                    Map<String, String> verifyEmail = Map();
 
-              verifyEmail["email"] = email;
-              verifyEmail["otp"] = otp;
-              verifyEmail['phoneNumber']=phoneNumber;
+                    verifyEmail["email"] = email;
+                    verifyEmail["otp"] = otp;
+                    verifyEmail['phoneNumber'] = phoneNumber;
 
-              api.verifyEmailOtp(context, verifyEmail).then((dynamic user) {
-                Map _insuranceMap = {};
-                _insuranceMap['isPayment'] = false;
-                _insuranceMap['isFromRegister'] = true;
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  Routes.insuranceListScreen,
-                      (Route<dynamic> route) => false,
-                  arguments: _insuranceMap,
-                );
-                // Navigator.of(context).pushNamedAndRemoveUntil(
-                //     Routes.registerEducation, (Route<dynamic> route) => false);
-              });
-            }
+                    api
+                        .verifyEmailOtp(context, verifyEmail)
+                        .then((dynamic user) {
+                      Map _insuranceMap = {};
+                      _insuranceMap['isPayment'] = false;
+                      _insuranceMap['isFromRegister'] = true;
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        Routes.insuranceListScreen,
+                        (Route<dynamic> route) => false,
+                        arguments: _insuranceMap,
+                      );
+                      // Navigator.of(context).pushNamedAndRemoveUntil(
+                      //     Routes.registerEducation, (Route<dynamic> route) => false);
+                    });
+                  }
                 : null,
             buttonHeight: Dimens.buttonHeight,
           )),
@@ -144,10 +146,10 @@ class _VerifyEmailOTPState extends State<VerifyEmailOTP> {
           ApiBaseHelper api = new ApiBaseHelper();
           Map<String, String> verifyEmail = Map();
           verifyEmail["email"] = email;
-          verifyEmail['phoneNumber']=phoneNumber;
-          api.sendEmailOtp(context, verifyEmail).then((dynamic response){
+          verifyEmail['phoneNumber'] = phoneNumber;
+          api.sendEmailOtp(context, verifyEmail).then((dynamic response) {
             Widgets.showToast(response["verificationCode"].toString());
-          }).futureError((onError){
+          }).futureError((onError) {
             Widgets.showErrorialog(
                 title: "Error", context: context, description: "Error!");
           });

@@ -205,7 +205,7 @@ class _SignUpFormState extends State<Register> {
         'https://maps.googleapis.com/maps/api/place/autocomplete/json';
     String request =
         '$baseURL?input=$input&rankby=distance&location=31.45,77.1120762&key=$kPLACES_API_KEY&sessiontoken=$_sessionToken';
-    var response = await http.get(request);
+    var response = await http.get(Uri.parse(request));
     if (response.statusCode == 200) {
       setState(() {
         _placeList = json.decode(response.body)['predictions'];

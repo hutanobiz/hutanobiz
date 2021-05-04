@@ -447,13 +447,13 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
   }
 
   void getDocumentType() async {
-    File file = await FilePicker.getFile(
+    FilePickerResult file = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
     );
 
     if (file != null) {
-      uploadDocsBottomSheet(file);
+      uploadDocsBottomSheet(File(file.files.first.path));
     }
   }
 

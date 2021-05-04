@@ -51,7 +51,7 @@ class _RegisterEmailState extends State<RegisterEmail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       body: LoadingView(
         isLoading: isLoading,
         child: ListView(

@@ -1273,7 +1273,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       request =
           '$baseURL?input=$input&key=$kPLACES_API_KEY&sessiontoken=$_sessionToken';
     }
-    var response = await http.get(request);
+    var response = await http.get(Uri.parse(request));
     if (response.statusCode == 200) {
       setModalState(() {
         _placeList = json.decode(response.body)['predictions'];
@@ -1717,6 +1717,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     switch (_permission) {
       case Loc.PermissionStatus.granted:
+      case Loc.PermissionStatus.grantedLimited:
         bool serviceStatus = await _location.serviceEnabled();
         print("Service status: $serviceStatus");
 

@@ -38,7 +38,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       body: LoadingView(
         isLoading: isLoading,
         child: ListView(
@@ -97,13 +97,13 @@ class _VerifyOTPState extends State<VerifyOTP> {
                 OutlineInputBorder(borderRadius: BorderRadius.circular(14.0))),
         submit: (String pin) {
           setState(() {
-            if(pin.length == 6){
- otp = pin;
-            }else{
-               otp = null;
+            if (pin.length == 6) {
+              otp = pin;
+            } else {
+              otp = null;
             }
           });
-         
+
           print(pin);
         }));
 
@@ -112,51 +112,52 @@ class _VerifyOTPState extends State<VerifyOTP> {
           padding: EdgeInsets.only(top: 40),
           child: FancyButton(
             title: "Verify",
-            onPressed: otp != null? () {
-                setLoading(true);
+            onPressed: otp != null
+                ? () {
+                    setLoading(true);
 
-                ApiBaseHelper api = new ApiBaseHelper();
-                Map<String, String> loginData = Map();
+                    ApiBaseHelper api = new ApiBaseHelper();
+                    Map<String, String> loginData = Map();
 
-                if (isForgot) {
-                  loginData["phoneNumber"] = cleanedPhoneNumber;
-                  loginData["step"] = "2";
-                  loginData["verificationCode"] = otp;
-                  api.resetPassword(loginData).then((dynamic user) {
-                    setLoading(false);
+                    if (isForgot) {
+                      loginData["phoneNumber"] = cleanedPhoneNumber;
+                      loginData["step"] = "2";
+                      loginData["verificationCode"] = otp;
+                      api.resetPassword(loginData).then((dynamic user) {
+                        setLoading(false);
 
-                    Widgets.showToast(user.toString());
+                        Widgets.showToast(user.toString());
 
-                    Navigator.pushNamed(
-                      context,
-                      Routes.resetPasswordRoute,
-                      arguments: RegisterArguments(phoneNumber, false),
-                    );
-                  }).futureError((error) {
-                    setLoading(false);
-                    error.toString().debugLog();
-                  });
-                } else {
-                  loginData["phoneNumber"] = cleanedPhoneNumber;
-                  loginData["type"] = "1";
-                  loginData["step"] = "2";
-                  loginData["fullName"] = "user";
-                  loginData["verificationCode"] = otp;
+                        Navigator.pushNamed(
+                          context,
+                          Routes.resetPasswordRoute,
+                          arguments: RegisterArguments(phoneNumber, false),
+                        );
+                      }).futureError((error) {
+                        setLoading(false);
+                        error.toString().debugLog();
+                      });
+                    } else {
+                      loginData["phoneNumber"] = cleanedPhoneNumber;
+                      loginData["type"] = "1";
+                      loginData["step"] = "2";
+                      loginData["fullName"] = "user";
+                      loginData["verificationCode"] = otp;
 
-                  api.register(loginData).then((dynamic user) {
-                    setLoading(false);
-                    Widgets.showToast("Verified successfully");
+                      api.register(loginData).then((dynamic user) {
+                        setLoading(false);
+                        Widgets.showToast("Verified successfully");
 
-                    Navigator.pushReplacementNamed(
-                        context, Routes.registerRoute,
-                        arguments: RegisterArguments(phoneNumber, false));
-                  }).futureError((error) {
-                    setLoading(false);
-                    error.toString().debugLog();
-                  });
-                }
-              }
-            :null,
+                        Navigator.pushReplacementNamed(
+                            context, Routes.registerRoute,
+                            arguments: RegisterArguments(phoneNumber, false));
+                      }).futureError((error) {
+                        setLoading(false);
+                        error.toString().debugLog();
+                      });
+                    }
+                  }
+                : null,
             buttonHeight: Dimens.buttonHeight,
           )),
     );

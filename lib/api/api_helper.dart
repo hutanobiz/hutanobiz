@@ -852,7 +852,7 @@ class NetworkUtil {
   Future<dynamic> post(String url, {Map headers, body, encoding}) async {
     var responseJson;
     try {
-      final response = await http.post(url,
+      final response = await http.post(Uri.parse(url),
           body: body, headers: headers, encoding: encoding);
       final int statusCode = response.statusCode;
       log("Status code: $statusCode");
