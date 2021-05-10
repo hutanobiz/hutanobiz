@@ -57,7 +57,7 @@ class _SignUpFormState extends State<Register> {
   String _genderGroup = "";
 
   ApiBaseHelper api = new ApiBaseHelper();
-  List stateList;
+  List stateList = [];
 
   final GlobalKey<FormFieldState> _passwordKey = GlobalKey<FormFieldState>();
   final _passwordController = TextEditingController();
