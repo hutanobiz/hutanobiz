@@ -353,6 +353,24 @@ class _SettingsScreenState extends State<SettingScreen> {
                   );
                 },
               ),
+              customListButton(
+                "My Providers",
+                "images/profile_payment_method.png",
+                () {
+                  Navigator.of(context).pushNamed(
+                    Routes.myProviders,
+                  );
+                },
+              ),
+              customListButton(
+                "Payment History",
+                "images/profile_payment_method.png",
+                () {
+                  Navigator.of(context).pushNamed(
+                    Routes.paymentHistory
+                  );
+                },
+              ),
             ],
           )),
     ));
