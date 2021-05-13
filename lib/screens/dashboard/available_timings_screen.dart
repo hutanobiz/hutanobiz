@@ -144,49 +144,56 @@ class _AvailableTimingsScreenState extends State<AvailableTimingsScreen> {
         List _scheduleDaysList = _scheduleList[i]["day"];
         if (j < _scheduleDaysList.length) {
           String day = _scheduleDaysList[j].toString();
-          var fromTime = DateTime.utc(
-              DateTime.now().year,
-              DateTime.now().month,
-              9,
-              int.parse(_scheduleList[i]['fromTime'].toString().split(':')[0]),
-              int.parse(_scheduleList[i]['fromTime'].toString().split(':')[1]));
-          var toTime = DateTime.utc(
-              DateTime.now().year,
-              DateTime.now().month,
-              9,
-              int.parse(_scheduleList[i]['toTime'].toString().split(':')[0]),
-              int.parse(_scheduleList[i]['toTime'].toString().split(':')[1]));
+          for (int ii = 0; ii < _scheduleList[i]['session'].length; ii++) {
+            var fromTime = DateTime.utc(
+                DateTime.now().year,
+                DateTime.now().month,
+                9,
+                int.parse(_scheduleList[i]['session'][ii]['fromTime']
+                    .toString()
+                    .split(':')[0]),
+                int.parse(_scheduleList[i]['session'][ii]['fromTime']
+                    .toString()
+                    .split(':')[1]));
+            var toTime = DateTime.utc(
+                DateTime.now().year,
+                DateTime.now().month,
+                9,
+                int.parse(_scheduleList[i]['session'][ii]['toTime']
+                    .toString()
+                    .split(':')[0]),
+                int.parse(_scheduleList[i]['session'][ii]['toTime']
+                    .toString()
+                    .split(':')[1]));
 
-          String from = DateFormat('HH:mm')
-                .format(fromTime.toLocal());
-              // '${fromTime.toLocal().hour}:${fromTime.toLocal().minute}';
-          String to = 
-          DateFormat('HH:mm')
-                .format(toTime.toLocal());
-                //'${toTime.toLocal().hour}:${toTime.toLocal().minute}';
+            String from = DateFormat('HH:mm').format(fromTime.toLocal());
+            // '${fromTime.toLocal().hour}:${fromTime.toLocal().minute}';
+            String to = DateFormat('HH:mm').format(toTime.toLocal());
+            //'${toTime.toLocal().hour}:${toTime.toLocal().minute}';
 
-          switch (day) {
-            case "1":
-              mondayTimings = mondayTimings + from + " - " + to + "\n";
-              break;
-            case "2":
-              tuesdayTimings = tuesdayTimings + from + " - " + to + "\n";
-              break;
-            case "3":
-              wednesdayTimings = wednesdayTimings + from + " - " + to + "\n";
-              break;
-            case "4":
-              thursdayTimings = thursdayTimings + from + " - " + to + "\n";
-              break;
-            case "5":
-              fridayTimings = fridayTimings + from + " - " + to + "\n";
-              break;
-            case "6":
-              saturdayTimings = saturdayTimings + from + " - " + to + "\n";
-              break;
-            case "7":
-              sundayTimings = sundayTimings + from + " - " + to + "\n";
-              break;
+            switch (day) {
+              case "1":
+                mondayTimings = mondayTimings + from + " - " + to + "\n";
+                break;
+              case "2":
+                tuesdayTimings = tuesdayTimings + from + " - " + to + "\n";
+                break;
+              case "3":
+                wednesdayTimings = wednesdayTimings + from + " - " + to + "\n";
+                break;
+              case "4":
+                thursdayTimings = thursdayTimings + from + " - " + to + "\n";
+                break;
+              case "5":
+                fridayTimings = fridayTimings + from + " - " + to + "\n";
+                break;
+              case "6":
+                saturdayTimings = saturdayTimings + from + " - " + to + "\n";
+                break;
+              case "7":
+                sundayTimings = sundayTimings + from + " - " + to + "\n";
+                break;
+            }
           }
           j++;
         } else {
