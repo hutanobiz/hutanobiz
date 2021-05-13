@@ -115,16 +115,10 @@ class _RegisterEmailState extends State<RegisterEmail> {
 
                         hideMainText: true,
                         showFlagMain: true,
-                        // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
                         initialSelection: 'US',
                         favorite: ['+1', 'US'],
 
-                        // optional. Shows only country name and flag
                         showCountryOnly: false,
-                        // optional. Shows only country name and flag when popup is closed.
-                        //  showOnlyCountryWhenClosed: false,
-
-                        // optional. aligns the flag and the Text left
                         alignLeft: true,
                       ),
                     ),
@@ -156,7 +150,6 @@ class _RegisterEmailState extends State<RegisterEmail> {
               decoration: InputDecoration(
                   isDense: true,
                   counterText: "",
-                  // prefixText: countryCode,
                   labelText: "Phone Number",
                   enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey[300]),
@@ -243,9 +236,7 @@ class _RegisterEmailState extends State<RegisterEmail> {
                 loginData["phoneNumber"] = Validations.getCleanedNumber(
                     _phoneNumberController.text.toString());
                 loginData["type"] = "1";
-                loginData["step"] = "1";
-                loginData["fullName"] = "user";
-                api.register(loginData).then((dynamic user) {
+                api.sendPhoneOtp(context, loginData).then((dynamic user) {
                   setLoading(false);
 
                   if (user is String) {
@@ -259,23 +250,14 @@ class _RegisterEmailState extends State<RegisterEmail> {
                       );
                     }
                   } else {
-                    if (user['isContactInformationVerified']) {
-                      Navigator.pushNamed(
-                        context,
-                        Routes.registerRoute,
-                        arguments: RegisterArguments(
-                            _phoneNumberController.text, false),
-                      );
-                    } else {
-                      Widgets.showToast(
-                          'A 6-digit verification number has been sent to your phone.');
-                      Navigator.pushNamed(
-                        context,
-                        Routes.verifyOtpRoute,
-                        arguments: RegisterArguments(
-                            _phoneNumberController.text, false),
-                      );
-                    }
+                    Widgets.showToast(
+                        'A 6-digit verification number has been sent to your phone.');
+                    Navigator.pushNamed(
+                      context,
+                      Routes.verifyOtpRoute,
+                      arguments:
+                          RegisterArguments(_phoneNumberController.text, false),
+                    );
                   }
                 }).futureError((error) {
                   setLoading(false);

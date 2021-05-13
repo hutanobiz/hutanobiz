@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:hutano/strings.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:async/async.dart';
@@ -47,7 +48,7 @@ class _SignUpFormState extends State<Register> {
   final _stateController = TextEditingController();
   final _phoneController = TextEditingController();
   final _zipController = TextEditingController();
-  GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
+  GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: Strings.kGoogleApiKey);
   String stateId = "";
   var uuid = new Uuid();
   String _sessionToken;
@@ -73,6 +74,7 @@ class _SignUpFormState extends State<Register> {
   DateTime _selectedDate;
   bool isUpdateProfile = false;
   PlacesDetailsResponse detail;
+  double longitude, latitude;
 
   final _dobController = new TextEditingController();
 
@@ -199,7 +201,7 @@ class _SignUpFormState extends State<Register> {
   }
 
   void getSuggestion(String input) async {
-    String kPLACES_API_KEY = kGoogleApiKey;
+    String kPLACES_API_KEY = Strings.kGoogleApiKey;
     String type = '(regions)';
     String baseURL =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json';
@@ -542,8 +544,8 @@ class _SignUpFormState extends State<Register> {
                   PlacesDetailsResponse aa = detail;
                   print(aa);
                   List<double> coordinates = List();
-                  coordinates.add(aa.result.geometry.location.lng);
-                  coordinates.add(aa.result.geometry.location.lat);
+                  longitude = aa.result.geometry.location.lng;
+                  latitude = aa.result.geometry.location.lat;
                   print(aa.result.adrAddress);
                   if (aa.result.adrAddress.contains('locality')) {
                     final startIndex =
@@ -738,6 +740,7 @@ class _SignUpFormState extends State<Register> {
 
   _register() async {
     Map<String, String> loginData = Map();
+
     loginData["email"] = _emailController.text;
     loginData["fullName"] =
         "${_firstNameController.text.trim()} ${_lastNameController.text.trim()}";
@@ -748,16 +751,24 @@ class _SignUpFormState extends State<Register> {
       loginData["type"] = "1";
       loginData["step"] = "3";
       loginData["password"] = _passwordController.text;
+      loginData["confirmPassword"] = _passwordController.text;
       loginData["deviceToken"] = deviceToken;
+      loginData["addressTitle"] = 'My Address';
+      loginData["address"] = _addressController.text;
+      loginData["city"] = _cityController.text;
+      loginData["zipCode"] = _zipController.text;
+      loginData["state"] = stateId;
+      loginData["isEdit"] = 'false';
+      loginData["addresstype"] = '1';
+      loginData['addressNumber'] = '112';
+
+      loginData["isAgreeTermsAndCondition"] = '1';
+      loginData["lattitude"] = latitude.toString();
+      loginData["longitude"] = longitude.toString();
     }
 
-    loginData["address"] = _addressController.text;
-    loginData["city"] = _cityController.text;
-    loginData["state"] = _stateController.text;
-    loginData["zipCode"] = _zipController.text;
     loginData["phoneNumber"] = Validations.getCleanedNumber(phoneNumber);
     loginData["gender"] = _genderGroup.trim().toString() == "male" ? "1" : "2";
-    loginData["state"] = stateId;
 
     if (isUpdateProfile) {
       loginData["dob"] =
@@ -770,7 +781,7 @@ class _SignUpFormState extends State<Register> {
     try {
       setLoading(true);
       Uri uri = Uri.parse(ApiBaseHelper.base_url +
-          (isUpdateProfile ? "api/profile/update" : "auth/api/register"));
+          (isUpdateProfile ? "api/profile/update" : "auth/api/set-password"));
       http.MultipartRequest request = http.MultipartRequest('POST', uri);
       token.toString().debugLog();
 
@@ -822,12 +833,8 @@ class _SignUpFormState extends State<Register> {
               .saveToken(responseJson["response"]["tokens"][0]["token"]);
           SharedPref()
               .setValue("fullName", responseJson["response"]["fullName"]);
-          SharedPref().setValue("complete", "0");
 
-          // Widgets.showToast(
-          //     "Congratulations! Your profile as been successfully created");
           var verifyEmail = Map();
-          //var phone=int.parse(widget.args.email);
           String phonenumber = widget.args.phoneNumber.substring(1, 4) +
               "" +
               widget.args.phoneNumber.substring(6, 9) +
@@ -835,32 +842,12 @@ class _SignUpFormState extends State<Register> {
               widget.args.phoneNumber.substring(10, 14);
           verifyEmail["email"] = _emailController.text;
           verifyEmail["phoneNumber"] = phonenumber;
-
-          api.sendEmailOtp(context, verifyEmail).then((dynamic response) {
-            setLoading(false);
-            //verifyEmail["otp"]= response["verificationCode"].toString();
-            Widgets.showToast(response["verificationCode"].toString());
-
-            Navigator.pushNamed(
-              context,
-              Routes.verifyEmailOtpRoute,
-              arguments: verifyEmail,
-            );
-            // Navigator.of(context).pushNamedAndRemoveUntil(
-            //     Routes.registerEducation, (Route<dynamic> route) => false);
-          }).futureError((onError) {
-            Widgets.showErrorialog(
-                title: "Error", context: context, description: "Error!");
-          });
-          // Map _insuranceMap = {};
-          // _insuranceMap['isPayment'] = false;
-          // _insuranceMap['isFromRegister'] = true;
-          //
-          // Navigator.of(context).pushNamedAndRemoveUntil(
-          //   Routes.insuranceListScreen,
-          //   (Route<dynamic> route) => false,
-          //   arguments: _insuranceMap,
-          // );
+          setLoading(false);
+          Navigator.pushNamed(
+            context,
+            Routes.verifyEmailOtpRoute,
+            arguments: verifyEmail,
+          );
         }
 
         setLoading(false);
@@ -897,88 +884,6 @@ class _SignUpFormState extends State<Register> {
         );
       },
     );
-  }
-
-  Future<void> _onLocationTap() async {
-    Prediction p = await PlacesAutocomplete.show(
-        context: context,
-        apiKey: kGoogleApiKey,
-        mode: Mode.fullscreen,
-        language: "en");
-    if (p != null) {
-      detail = await _places.getDetailsByPlaceId(p.placeId);
-      final lat = detail.result.geometry.location.lat;
-      final lng = detail.result.geometry.location.lng;
-      print(detail.result.adrAddress.toString());
-      PlacesDetailsResponse aa = detail;
-      print(aa);
-      List<double> coordinates = List();
-      coordinates.add(aa.result.geometry.location.lng);
-      coordinates.add(aa.result.geometry.location.lat);
-      // businessLocation.coordinates = coordinates;
-      print(aa.result.adrAddress);
-      if (aa.result.adrAddress.contains('locality')) {
-        final startIndex = aa.result.adrAddress.indexOf('"locality">');
-        final endIndex = aa.result.adrAddress
-            .indexOf('</span>', startIndex + '"locality">'.length);
-        // businessLocation.city = aa.result.adrAddress
-        // .substring(startIndex + '"locality">'.length, endIndex);
-        _cityController.text = aa.result.adrAddress
-            .substring(startIndex + '"locality">'.length, endIndex);
-        print(aa.result.adrAddress
-            .substring(startIndex + '"locality">'.length, endIndex));
-      } else {
-        // businessLocation.city = "";
-        _cityController.text = "";
-      }
-
-      if (aa.result.adrAddress.contains('postal-code')) {
-        final startIndex = aa.result.adrAddress.indexOf('"postal-code">');
-        final endIndex = aa.result.adrAddress
-            .indexOf('</span>', startIndex + '"postal-code">'.length);
-        // businessLocation.zipCode = aa.result.adrAddress
-        // .substring(startIndex + '"postal-code">'.length, endIndex)
-        // .substring(0, 5);
-        _zipController.text = aa.result.adrAddress
-            .substring(startIndex + '"postal-code">'.length, endIndex)
-            .substring(0, 5);
-        print(aa.result.adrAddress
-            .substring(startIndex + '"postal-code">'.length, endIndex));
-      } else {
-        // businessLocation.zipCode = "";
-        _zipController.text = "";
-      }
-
-      if (aa.result.adrAddress.contains('region')) {
-        final startIndex = aa.result.adrAddress.indexOf('"region">');
-        final endIndex = aa.result.adrAddress
-            .indexOf('</span>', startIndex + '"region">'.length);
-        print(aa.result.adrAddress
-            .substring(startIndex + '"region">'.length, endIndex));
-
-        for (dynamic state in stateList) {
-          if (state['title'] ==
-                  aa.result.adrAddress
-                      .substring(startIndex + '"region">'.length, endIndex) ||
-              state['stateCode'] ==
-                  aa.result.adrAddress
-                      .substring(startIndex + '"region">'.length, endIndex)) {
-            _stateController.text = state['title'];
-            stateId = state["_id"]?.toString();
-
-            // _stateController.text = res["state"]["title"]?.toString();
-            //     stateId = res["state"]["_id"]?.toString();
-            // businessLocation.state = state["_id"];
-          }
-        }
-      } else {
-        // businessLocation.state = "";
-        _stateController.text = "";
-      }
-      // businessLocation.street = aa.result.name ?? "";
-      // _stateController.text = aa.result.name ?? "";
-      _addressController.text = aa.result.name;
-    }
   }
 
   Future getImage(int source) async {

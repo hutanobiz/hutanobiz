@@ -140,11 +140,11 @@ class _VerifyOTPState extends State<VerifyOTP> {
                     } else {
                       loginData["phoneNumber"] = cleanedPhoneNumber;
                       loginData["type"] = "1";
-                      loginData["step"] = "2";
-                      loginData["fullName"] = "user";
                       loginData["verificationCode"] = otp;
 
-                      api.register(loginData).then((dynamic user) {
+                      api
+                          .verifyPhoneOtp(context, loginData)
+                          .then((dynamic user) {
                         setLoading(false);
                         Widgets.showToast("Verified successfully");
 
@@ -184,9 +184,7 @@ class _VerifyOTPState extends State<VerifyOTP> {
           } else {
             loginData["phoneNumber"] = cleanedPhoneNumber;
             loginData["type"] = "1";
-            loginData["step"] = "4";
-            loginData["fullName"] = "user";
-            api.register(loginData).then((dynamic user) {
+            api.resendPhoneOtp(context, loginData).then((dynamic user) {
               setLoading(false);
 
               Widgets.showToast(

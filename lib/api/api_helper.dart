@@ -16,8 +16,8 @@ import 'package:hutano/widgets/widgets.dart';
 class ApiBaseHelper {
   NetworkUtil _netUtil = new NetworkUtil();
   static const String imageUrl = "https://hutano-assets.s3.amazonaws.com/";
-  // static const String base_url = "https://dev.hutano.com/";
-  static const String base_url = "https://staging.hutano.com/";
+  static const String base_url = "https://dev.hutano.com/";
+  // static const String base_url = "https://staging.hutano.com/";
   static const String image_base_url =
       "https://hutano-assets.s3.amazonaws.com/";
 
@@ -31,7 +31,7 @@ class ApiBaseHelper {
 
   Future<dynamic> sendEmailOtp(BuildContext context, Map verifyEmail) {
     return _netUtil
-        .post(base_url + "auth/api/email-sendotp", body: verifyEmail)
+        .post(base_url + "auth/api/resend-email-verification-code", body: verifyEmail)
         .then((res) {
       return res;
     });
@@ -40,9 +40,46 @@ class ApiBaseHelper {
   Future<dynamic> verifyEmailOtp(
       BuildContext context, Map<String, String> loginData) {
     return _netUtil
-        .post(base_url + "auth/api/email-verify", body: loginData)
+        .post(base_url + "auth/api/verify-email-verification-code", body: loginData)
         .then((res) {
       return res["response"];
+    });
+  }
+
+  Future<dynamic> sendPhoneOtp(BuildContext context, Map verifyEmail) {
+    return _netUtil
+        .post(base_url + "auth/api/send-phone-verification-code",
+            body: verifyEmail)
+        .then((res) {
+      return res["response"];
+    });
+  }
+
+  Future<dynamic> verifyPhoneOtp(
+      BuildContext context, Map<String, String> loginData) {
+    return _netUtil
+        .post(base_url + "auth/api/verify-phone-verification-code",
+            body: loginData)
+        .then((res) {
+      return res["response"];
+    });
+  }
+
+ Future<dynamic> resendPhoneOtp(BuildContext context, Map verifyEmail) {
+    return _netUtil
+        .post(base_url + "auth/api/resend-phone-verification-code",
+            body: verifyEmail)
+        .then((res) {
+      return res["response"];
+    });
+  }
+  
+
+  Future<dynamic> registerPassword(Map<String, String> map) {
+    return _netUtil
+        .post(base_url + "auth/api/set-password", body: map)
+        .then((res) {
+      return (res["response"]);
     });
   }
 
@@ -54,7 +91,7 @@ class ApiBaseHelper {
 
   Future<dynamic> resetPassword(Map<String, String> map) {
     return _netUtil
-        .post(base_url + "auth/api/reset-password", body: map)
+        .post(base_url + "auth/api/phone-reset-password", body: map)
         .then((res) {
       return (res["response"]);
     });
@@ -153,7 +190,7 @@ class ApiBaseHelper {
 
   Future<List<Schedule>> getScheduleList(String providerId, Map doctorData) {
     return _netUtil
-        .post(Uri.encodeFull(base_url + "api/schedule/$providerId"),
+        .post(Uri.encodeFull(base_url + 'api/doctor-slots/$providerId'),
             body: doctorData)
         .then((res) {
       List responseJson = res["response"];
@@ -187,11 +224,11 @@ class ApiBaseHelper {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
-
+// user-notification
     return _netUtil
         .get(
       base_url +
-          "api/patient/user-notification?longitude=${latLng.longitude.toStringAsFixed(2)}"
+          "api/patient/user-schedule-appointmnet-pending?longitude=${latLng.longitude.toStringAsFixed(2)}"
               "&lattitude=${latLng.latitude.toStringAsFixed(2)}",
       headers: headers,
     )
@@ -228,6 +265,57 @@ class ApiBaseHelper {
     )
         .then((res) {
       return res["response"];
+    });
+  }
+
+  Future<dynamic> getProviderAddress(String token, String providerId) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    return _netUtil
+        .get(
+      Uri.encodeFull(base_url +
+          'api/patient/doctor-location-address?doctorId=$providerId'),
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
+
+  Future<Map> getAllNotifications(BuildContext context, token) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    return _netUtil
+        .get(base_url + "api/patient/notification-list", headers: headers)
+        .then((res) {
+      print(res.toString());
+      return res;
+    });
+  }
+
+  Future<Map> readNotifications(BuildContext context, token) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    return _netUtil
+        .get(base_url + "api/patient/notification-read", headers: headers)
+        .then((res) {
+      print(res.toString());
+      return res;
+    });
+  }
+
+  Future<Map> getStripeStatements(BuildContext context, token) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    return _netUtil
+        .get(base_url + "api/patient/stripe-statements", headers: headers)
+        .then((res) {
+      print(res.toString());
+      return res;
     });
   }
 
@@ -611,6 +699,40 @@ class ApiBaseHelper {
     });
   }
 
+  Future<List<dynamic>> getOnDemandDoctors(
+      String token, LatLng latLng, String radius, String timeZone) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .get(
+      base_url +
+          "api/patient/ondemand-available-doctors?longitude=${latLng.longitude.toStringAsFixed(2)}&latitude=${latLng.latitude.toStringAsFixed(2)}&radius=$radius&timeZone=$timeZone",
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
+
+  Future<List<dynamic>> getSavedDoctors(
+      String token, LatLng latLng, String radius, String timeZone) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .get(
+      base_url +
+          "api/patient/saved-doctors?longitude=${latLng.longitude.toStringAsFixed(2)}&latitude=${latLng.latitude.toStringAsFixed(2)}&radius=$radius",
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
+
   Future<List<dynamic>> getServices({String specialityId}) {
     return _netUtil
         .get(
@@ -648,7 +770,7 @@ class ApiBaseHelper {
       headers: headers,
     )
         .then((res) {
-      return res["response"]['userAddress'];
+      return res["response"];
     });
   }
 
@@ -673,11 +795,12 @@ class ApiBaseHelper {
   Future<dynamic> addAddress(String token, Map addressMap) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
+      HttpHeaders.contentTypeHeader: "application/json"
     };
     return _netUtil
         .post(
       base_url + "api/patient/address",
-      body: addressMap,
+      body: json.encode(addressMap),
       headers: headers,
     )
         .then((res) {
@@ -688,11 +811,12 @@ class ApiBaseHelper {
   Future<dynamic> editAddress(String token, Map addressMap) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
+      HttpHeaders.contentTypeHeader: "application/json"
     };
     return _netUtil
         .post(
       base_url + "api/patient/edit-address",
-      body: addressMap,
+      body: json.encode(addressMap),
       headers: headers,
     )
         .then((res) {
@@ -820,7 +944,7 @@ class NetworkUtil {
   Future<dynamic> get(url, {Map headers}) async {
     var responseJson;
     try {
-      final response = await http.get(url, headers: headers);
+      final response = await http.get(Uri.parse(url), headers: headers);
       final int statusCode = response.statusCode;
       log("Status code: $statusCode");
 
