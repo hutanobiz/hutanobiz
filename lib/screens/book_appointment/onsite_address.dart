@@ -158,7 +158,7 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
       state = '---';
     }
 
-    String _icon = 'ic_onsite_app', _roomNumb = '---', _addresstype = '1';
+    String _icon = 'ic_onsite_app', _roomNumb = '', _addresstype = '1';
 
     if (address['addresstype'] != null) {
       _addresstype = address['addresstype'].toString();
@@ -166,6 +166,7 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
       switch (_addresstype) {
         case '1':
           _icon = 'ic_onsite_app';
+          _roomNumb = 'room# ';
           break;
         case '2':
           _icon = 'ic_apartment';
@@ -211,13 +212,10 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
                   ),
                 ],
               ),
-              _addresstype == '1' ? Container() : SizedBox(height: 10),
-              _addresstype == '1'
-                  ? Container()
-                  : Text(
-                      _roomNumb?.toString() ?? '---',
-                      style: style,
-                    ),
+              Text(
+                _roomNumb,
+                style: style,
+              ),
               SizedBox(height: 10),
               Text(
                 address['address']?.toString() ?? '---',
@@ -225,16 +223,12 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
               ),
               SizedBox(height: 10),
               Text(
-                address['street']?.toString() ?? '---',
+                (address['city']?.toString() ?? '---'),
                 style: style,
               ),
               SizedBox(height: 10),
               Text(
-                state +
-                    ', ' +
-                    (address['city']?.toString() ?? '---') +
-                    ', ' +
-                    (address['zipCode']?.toString() ?? '---'),
+                state + ', ' + (address['zipCode']?.toString() ?? '---'),
                 style: style,
               ),
               SizedBox(height: 20),
