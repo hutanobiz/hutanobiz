@@ -22,14 +22,13 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   ApiBaseHelper _api = ApiBaseHelper();
 
   List<dynamic> _closedAppointmentsList = List();
+  List<dynamic> ondemandAppointmentsList = List();
   List<dynamic> _activeAppointmentsList = List();
 
   Future<dynamic> _requestsFuture;
   InheritedContainerState _container;
 
   var _userLocation = LatLng(0.00, 0.00);
-
-  Map _appointmentData = {};
 
   @override
   void initState() {
@@ -82,12 +81,14 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
               child: Text('No appointments.'),
             );
           } else {
+            ondemandAppointmentsList = snapshot.data["ondemandAppointments"];
             _activeAppointmentsList = snapshot.data["presentRequest"];
             _closedAppointmentsList = snapshot.data["pastRequest"];
           }
 
           if (_activeAppointmentsList.isEmpty &&
-              _closedAppointmentsList.isEmpty)
+              _closedAppointmentsList.isEmpty &&
+              ondemandAppointmentsList.isEmpty)
             return Center(
               child: Text("No appointments."),
             );
@@ -97,6 +98,10 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  heading("On-demand", ondemandAppointmentsList, 0),
+                  ondemandAppointmentsList.isNotEmpty
+                      ? _listWidget(ondemandAppointmentsList, 0)
+                      : Container(),
                   heading("Active", _activeAppointmentsList, 1),
                   _activeAppointmentsList.isNotEmpty
                       ? _listWidget(_activeAppointmentsList, 1)
@@ -198,22 +203,43 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
     name = response["doctorName"]?.toString() ?? "---";
 
     if (response["doctor"] != null) {
-      avatar = response["doctor"]["avatar"].toString();
+      if (listType == 0) {
+        avatar = response["doctor"][0]["avatar"].toString();
+      } else {
+        avatar = response["doctor"]["avatar"].toString();
+      }
     }
 
     if (response["doctorData"] != null) {
-      for (dynamic detail in response["doctorData"]) {
+      if (listType == 0) {
         List providerInsuranceList = List();
 
-        if (detail["insuranceId"] != null) {
-          providerInsuranceList = detail["insuranceId"];
+        if (response["doctorData"]["insuranceId"] != null) {
+          providerInsuranceList = response["doctorData"]["insuranceId"];
         }
 
         _container.setProviderInsuranceMap(providerInsuranceList);
 
-        if (detail["professionalTitle"] != null) {
-          professionalTitle =
-              detail["professionalTitle"]["title"]?.toString() ?? "---";
+        if (response["doctorData"]["professionalTitle"] != null) {
+          professionalTitle = response["doctorData"]["professionalTitle"][0]
+                      ["title"]
+                  ?.toString() ??
+              "---";
+        }
+      } else {
+        List providerInsuranceList = List();
+
+        if (response["doctorData"][0]["insuranceId"] != null) {
+          providerInsuranceList = response["doctorData"][0]["insuranceId"];
+        }
+
+        _container.setProviderInsuranceMap(providerInsuranceList);
+
+        if (response["doctorData"][0]["professionalTitle"] != null) {
+          professionalTitle = response["doctorData"][0]["professionalTitle"]
+                      ["title"]
+                  ?.toString() ??
+              "---";
         }
       }
     }
@@ -231,25 +257,21 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           borderRadius: BorderRadius.circular(14.0),
           splashColor: Colors.grey[200],
           onTap: () {
-            _container.setAppointmentId(response["_id"].toString());
-            _appointmentData["_appointmentStatus"] = _appointmentStatus;
-            _appointmentData["id"] = response["_id"];
-            _appointmentData["listType"] = listType;
             if (response['type'] != 2) {
               Navigator.of(context)
                   .pushNamed(
                     Routes.appointmentDetailScreen,
-                    arguments: _appointmentData,
+                    arguments: response["_id"],
                   )
                   .whenComplete(() => appointmentsFuture(_userLocation));
             } else {
               if (_appointmentStatus == '4') {
                 Navigator.of(context)
-                  .pushNamed(
-                    Routes.appointmentDetailScreen,
-                    arguments: _appointmentData,
-                  )
-                  .whenComplete(() => appointmentsFuture(_userLocation));
+                    .pushNamed(
+                      Routes.appointmentDetailScreen,
+                      arguments: response["_id"],
+                    )
+                    .whenComplete(() => appointmentsFuture(_userLocation));
               } else {
                 Navigator.pushNamed(
                         context, Routes.telemedicineTrackTreatmentScreen,
@@ -474,14 +496,11 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                           userRating == null
                       ? rightButton(listType, "Rate Now", () {
                           _container.setProviderData("providerData", response);
-                          _container
-                              .setAppointmentId(response["_id"].toString());
                           Navigator.of(context)
-                              .pushNamed(
-                                Routes.rateDoctorScreen,
-                                arguments: "1",
-                              )
-                              .whenComplete(
+                              .pushNamed(Routes.rateDoctorScreen, arguments: {
+                            'rateFrom': "1",
+                            'appointmentId': response["_id"],
+                          }).whenComplete(
                                   () => appointmentsFuture(_userLocation));
                         })
                       : Container(),

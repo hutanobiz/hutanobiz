@@ -26,6 +26,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
 
   List<dynamic> _closedRequestsList = List();
   List<dynamic> _activeRequestsList = List();
+  List<dynamic> ondemandAppointmentsList = List();
 
   Future<dynamic> _requestsFuture;
 
@@ -36,7 +37,8 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
     var _container = InheritedContainer.of(context);
 
     if (_container.userLocationMap.isNotEmpty) {
-      _userLocation = _container.userLocationMap['latLng']??LatLng(0.00, 0.00);
+      _userLocation =
+          _container.userLocationMap['latLng'] ?? LatLng(0.00, 0.00);
     }
 
     SharedPref().getToken().then((token) {
@@ -83,11 +85,13 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
             break;
           case ConnectionState.done:
             if (snapshot.hasData) {
-              _activeRequestsList = snapshot.data["activeRequest"];
-              _closedRequestsList = snapshot.data["closedRequest"];
+              ondemandAppointmentsList = snapshot.data['ondemandAppointments'];
+              _activeRequestsList = snapshot.data["presentRequest"];
+              _closedRequestsList = snapshot.data["pastRequest"];
 
               if (_activeRequestsList.length == 0 &&
-                  _closedRequestsList.length == 0)
+                  _closedRequestsList.length == 0 &&
+                  ondemandAppointmentsList.length == 0)
                 return Center(
                   child: Text("No Requests."),
                 );
@@ -97,6 +101,10 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
+                      heading("On-Demand", ondemandAppointmentsList, 0),
+                      ondemandAppointmentsList.isNotEmpty
+                          ? _listWidget(ondemandAppointmentsList, 0)
+                          : Container(),
                       heading("Active", _activeRequestsList, 1),
                       _activeRequestsList.isNotEmpty
                           ? _listWidget(_activeRequestsList, 1)
@@ -179,8 +187,13 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
       }
 
     if (response["doctor"] != null) {
-      name = response["doctor"]["fullName"]?.toString() ?? "---";
-      avatar = response["doctor"]["avatar"].toString();
+      if (listType == 0) {
+        name = response["doctor"][0]["fullName"]?.toString() ?? "---";
+        avatar = response["doctor"][0]["avatar"].toString();
+      } else {
+        name = response["doctor"]["fullName"]?.toString() ?? "---";
+        avatar = response["doctor"]["avatar"].toString();
+      }
     }
 
     if (response["DoctorProfessionalDetail"] != null) {
@@ -284,7 +297,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                             SizedBox(
                               height: 5.0,
                             ),
-                            listType == 1
+                            listType == 1 || listType == 0
                                 ? Text(
                                     professionalTitle,
                                     overflow: TextOverflow.ellipsis,
@@ -381,10 +394,10 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                         //             DateTime.parse(response['date']))
                         //         .toString() +
                         //     " " +
-                            DateFormat('EEEE, dd MMMM, HH:mm')
+                        DateFormat('EEEE, dd MMMM, HH:mm')
                                 .format(DateTime.utc(
                                         DateTime.parse(response['date']).year,
-                                       DateTime.parse(response['date']).month,
+                                        DateTime.parse(response['date']).month,
                                         DateTime.parse(response['date']).day,
                                         int.parse(
                                             response['fromTime'].split(':')[0]),
@@ -412,57 +425,60 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                   ],
                 ),
               ),
-              address.trim() == '---, ,'?SizedBox(height: 8,):
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 12.0, right: 12.0, bottom: 18.0),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
+              address.trim() == '---, ,'
+                  ? SizedBox(
+                      height: 8,
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.only(
+                          left: 12.0, right: 12.0, bottom: 18.0),
                       child: Row(
                         children: <Widget>[
-                          Image(
-                            image: AssetImage(
-                              "images/ic_location_grey.png",
-                            ),
-                            height: 14.0,
-                            width: 11.0,
-                          ),
-                          SizedBox(width: 5.0),
                           Expanded(
-                            child: Text(
-                              "$address",
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: Colors.black.withOpacity(0.5),
-                              ),
+                            child: Row(
+                              children: <Widget>[
+                                Image(
+                                  image: AssetImage(
+                                    "images/ic_location_grey.png",
+                                  ),
+                                  height: 14.0,
+                                  width: 11.0,
+                                ),
+                                SizedBox(width: 5.0),
+                                Expanded(
+                                  child: Text(
+                                    "$address",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: Colors.black.withOpacity(0.5),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Image(
+                                image: AssetImage(
+                                  "images/ic_distance.png",
+                                ),
+                                height: 14.0,
+                                width: 14.0,
+                              ),
+                              SizedBox(width: 5.0),
+                              Text(
+                                Extensions.getDistance(response['distance']),
+                                style: TextStyle(
+                                  color: Colors.black.withOpacity(0.5),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ),
-                    Row(
-                      children: <Widget>[
-                        Image(
-                          image: AssetImage(
-                            "images/ic_distance.png",
-                          ),
-                          height: 14.0,
-                          width: 14.0,
-                        ),
-                        SizedBox(width: 5.0),
-                        Text(
-                          Extensions.getDistance(response['distance']),
-                          style: TextStyle(
-                            color: Colors.black.withOpacity(0.5),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              listType == 1
+              listType == 1 || listType == 0
                   ? InkWell(
                       onTap: () {
                         Widgets.showAlertDialog(
