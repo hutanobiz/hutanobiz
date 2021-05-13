@@ -336,20 +336,14 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
         return InkWell(
           onTap: () {
             FocusScope.of(context).requestFocus(FocusNode());
-
-            if (_provider["userId"] != null && _provider["userId"] is Map) {
-              _container.setProviderId(_provider["userId"]["_id"]);
-            } else if (_provider["User"] != null &&
-                _provider["User"].length > 0) {
-              _container.setProviderId(_provider["User"][0]["_id"]);
-            }
-
             _container.setProjectsResponse(
                 "serviceType", _selectedAppointmentType);
 
             Navigator.of(context).pushNamed(
               Routes.providerProfileScreen,
-              arguments: _selectedAppointmentType,
+              arguments:_provider["userId"] != null && _provider["userId"] is Map?_provider["userId"]["_id"]: _provider["User"] != null &&
+                 _provider["User"].length > 0?_provider["User"][0]["_id"]:_provider["_id"]
+              //  _selectedAppointmentType,
             );
           },
           child: ProviderWidget(
@@ -359,22 +353,23 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                 _provider['averageRating']?.toStringAsFixed(2) ?? "0",
             bookAppointment: () {
               FocusScope.of(context).requestFocus(FocusNode());
-              _container.providerResponse.clear();
+              Navigator.of(context).pushNamed(Routes.providerProfileScreen,arguments: _provider["_id"]);
+              // _container.providerResponse.clear();
 
-              _container.setProviderData("providerData", _provider);
-              _container.setProviderData("subServices", subServices);
+              // _container.setProviderData("providerData", _provider);
+              // _container.setProviderData("subServices", subServices);
 
-              if (_selectedAppointmentType == '0') {
-                Navigator.of(context).pushNamed(
-                  Routes.appointmentTypeScreen,
-                  arguments: _appointentTypeMap,
-                );
-              } else {
-                _container.setProjectsResponse(
-                    "serviceType", _selectedAppointmentType);
+              // if (_selectedAppointmentType == '0') {
+              //   Navigator.of(context).pushNamed(
+              //     Routes.appointmentTypeScreen,
+              //     arguments: _appointentTypeMap,
+              //   );
+              // } else {
+              //   _container.setProjectsResponse(
+              //       "serviceType", _selectedAppointmentType);
 
-                Navigator.of(context).pushNamed(Routes.selectServicesScreen);
-              }
+              //   Navigator.of(context).pushNamed(Routes.selectServicesScreen);
+              // }
             },
           ),
         );

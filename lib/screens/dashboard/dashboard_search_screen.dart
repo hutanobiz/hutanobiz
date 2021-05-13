@@ -329,10 +329,8 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
                       SharedPref().setValue(
                           'recentSearches', jsonEncode(_recentSearchesList));
                     }
-
-                    _container.setProviderId(tempList[index]["_id"].toString());
                     Navigator.of(context)
-                        .pushNamed(Routes.providerProfileScreen);
+                        .pushNamed(Routes.providerProfileScreen,arguments: tempList[index]["_id"].toString());
                   },
                 )
               : ListTile(
@@ -424,9 +422,8 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
                     _container.projectsResponse.clear();
 
                     if (_searchType == 2) {
-                      _container.setProviderId(_list[index]["_id"].toString());
                       Navigator.of(context)
-                          .pushNamed(Routes.providerProfileScreen);
+                          .pushNamed(Routes.providerProfileScreen,arguments: _list[index]["_id"].toString());
                     } else {
                       if (_searchType == 1) {
                         _container.setProjectsResponse(

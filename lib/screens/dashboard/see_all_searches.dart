@@ -62,11 +62,8 @@ class _SeeAllSearchScreeenState extends State<SeeAllSearchScreeen> {
                       name: _list[index]["fullName"],
                       profession: professionalTitle,
                       onTap: () {
-                        _container.providerIdMap.clear();
-                        _container
-                            .setProviderId(_list[index]["_id"].toString());
                         Navigator.of(context)
-                            .pushNamed(Routes.providerProfileScreen);
+                            .pushNamed(Routes.providerProfileScreen,arguments: _list[index]["_id"].toString());
                       },
                     )
                   : ListTile(

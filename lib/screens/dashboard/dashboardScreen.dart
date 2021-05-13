@@ -10,6 +10,7 @@ import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/dashboard/choose_location_screen.dart';
+import 'package:hutano/strings.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/utils/validations.dart';
@@ -20,10 +21,7 @@ import 'package:hutano/widgets/provider_tile_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:location/location.dart' as Loc;
 import 'package:uuid/uuid.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:http/http.dart' as http;
-import 'package:hutano/screens/dashboard/choose_location_screen.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -37,7 +35,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ApiBaseHelper _api = new ApiBaseHelper();
   bool isEmailVerified = false;
-  GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
+  GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: Strings.kGoogleApiKey);
   var uuid = new Uuid();
   String _sessionToken;
   List<dynamic> _placeList = [];
@@ -88,12 +86,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Future<List<dynamic>> _myDoctorsFuture;
   Future<List<dynamic>> _specialtiesFuture;
   Future<List<dynamic>> _professionalTitleFuture;
+  Future<List<dynamic>> _ondemandDoctorsFuture;
 
   getLocation() async {
     var lat = await SharedPref().getValue('lat');
     var lng = await SharedPref().getValue('lng');
     _currentddress = await SharedPref().getValue('address');
-    radius = await SharedPref().getValue('radius');
+    radius = await SharedPref().getValue('radius') ?? '100';
 
     _myLocation = CameraPosition(
       target: LatLng(lat ?? 0.00, lng ?? 0.00),
@@ -103,19 +102,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
     SharedPref().getToken().then((token) {
       _myDoctorsFuture = _api.getMyDoctors(token, _latLng);
     });
-     conatiner.setUserLocation(
-                                                "latLng",
-                                                LatLng(
-                                                    _latLng.latitude,
-                                                    _latLng
-                                                        .longitude));
+    SharedPref().getToken().then((token) {
+      _ondemandDoctorsFuture =
+          _api.getOnDemandDoctors(token, _latLng, radius, 'Asia/Kolkata');
+    });
+
+    conatiner.setUserLocation(
+        "latLng", LatLng(_latLng.latitude, _latLng.longitude));
     setState(() {});
   }
 
   @override
   Future<void> initState() {
     super.initState();
-    
+
     initPlatformState();
 
     _professionalTitleFuture = _api.getProfessionalTitle();
@@ -155,7 +155,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     });
     _container = InheritedContainer.of(context);
     getLocation();
-   
 
     super.didChangeDependencies();
   }
@@ -303,7 +302,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                     _myLocation.target.latitude,
                                                     _myLocation
                                                         .target.longitude));
-                                                         conatiner.setUserLocation("userAddress", _currentddress);
+                                            conatiner.setUserLocation(
+                                                "userAddress", _currentddress);
 
                                             conatiner.setProjectsResponse(
                                                 "serviceType", selectedType);
@@ -323,10 +323,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                   Routes
                                                       .allTitlesSpecialtesScreen);
                                             }
-
-// selectedType
-// selectedPlace
-// selectedInsurance
                                           }),
                                       SizedBox(height: 20),
                                       // Text(
@@ -338,6 +334,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       //   ),
                                       // ),
                                       // topProviderWidget(),
+                                      onDemandDoctorsWidget(),
                                       myDoctorsWidget(),
                                       // professionalTitleWidget(),
                                       // specialtiesWidget(),
@@ -842,9 +839,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     //       'recentSearches', jsonEncode(_recentSearchesList));
                     // }
 
-                    _container.setProviderId(tempList[index]["_id"].toString());
                     Navigator.of(context)
-                        .pushNamed(Routes.providerProfileScreen);
+                        .pushNamed(Routes.providerProfileScreen,arguments: tempList[index]["_id"].toString());
                   },
                 )
               : ListTile(
@@ -1121,7 +1117,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         "latLng",
                                         LatLng(_myLocation.target.latitude,
                                             _myLocation.target.longitude));
-                                             conatiner.setUserLocation("userAddress", _addressController.text);
+                                    conatiner.setUserLocation(
+                                        "userAddress", _addressController.text);
                                     conatiner.setProjectsResponse(
                                         "serviceType", selectedType);
                                     conatiner.setProjectsResponse(
@@ -1199,8 +1196,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           : SizedBox(),
                       isShowRadiusList
                           ? Container(
-                            margin: const EdgeInsets.only(bottom:80.0),
-                            child: Column(
+                              margin: const EdgeInsets.only(bottom: 80.0),
+                              child: Column(
                                 children: [
                                   SizedBox(height: 200),
                                   Expanded(
@@ -1225,7 +1222,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                 ],
                               ),
-                          )
+                            )
                           : SizedBox(),
                     ],
                   )),
@@ -1261,7 +1258,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void getSuggestion(String input, StateSetter setModalState) async {
-    String kPLACES_API_KEY = kGoogleApiKey;
+    String kPLACES_API_KEY = Strings.kGoogleApiKey;
     String type = '(cities)';
     String baseURL =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json';
@@ -1283,14 +1280,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
-  Widget myDoctorsWidget() {
+  Widget onDemandDoctorsWidget() {
     return FutureBuilder<List<dynamic>>(
-      future: _myDoctorsFuture,
+      future: _ondemandDoctorsFuture,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          List _myDoctorsList = snapshot.data;
+          List _onDemandDoctorsList = snapshot.data;
 
-          if (_myDoctorsList == null || _myDoctorsList.isEmpty) {
+          if (_onDemandDoctorsList == null || _onDemandDoctorsList.isEmpty) {
             return Container();
           }
 
@@ -1298,7 +1295,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                'Top Providers',
+                'On demand providers',
                 style: TextStyle(
                   color: AppColors.midnight_express,
                   fontSize: 14,
@@ -1306,44 +1303,47 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
               Container(
-                height: 158,
+                height: 156,
                 margin: const EdgeInsets.only(top: 20, bottom: 30),
                 child: ListView.separated(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                   separatorBuilder: (BuildContext context, int index) =>
                       SizedBox(width: 13),
                   scrollDirection: Axis.horizontal,
-                  itemCount: _myDoctorsList.length,
+                  itemCount: _onDemandDoctorsList.length,
                   itemBuilder: (context, index) {
-                    if (_myDoctorsList == null || _myDoctorsList.isEmpty) {
+                    if (_onDemandDoctorsList == null ||
+                        _onDemandDoctorsList.isEmpty) {
                       return Text('No my doctors available');
                     }
 
                     String professionalTitle = '---';
 
-                    dynamic doctor = _myDoctorsList[index]['doctorData'];
-                    dynamic subServices = _myDoctorsList[index]['subServices'];
-                    dynamic doctorData = doctor['userId'];
+                    dynamic doctor = _onDemandDoctorsList[index];
+                    // dynamic subServices =
+                    //     _onDemandDoctorsList[index]['subServices'];
+                    dynamic doctorData = doctor['doctor'];
 
                     String avatar = doctorData['avatar']?.toString();
 
                     Map _appointentTypeMap = {};
 
                     _appointentTypeMap["isOfficeEnabled"] =
-                        doctor["isOfficeEnabled"];
+                        doctor['doctorData']["isOfficeEnabled"];
                     _appointentTypeMap["isVideoChatEnabled"] =
-                        doctor["isVideoChatEnabled"];
+                        doctor['doctorData']["isVideoChatEnabled"];
                     _appointentTypeMap["isOnsiteEnabled"] =
-                        doctor["isOnsiteEnabled"];
+                        doctor['doctorData']["isOnsiteEnabled"];
 
-                    if (doctor['professionalTitle'] != null) {
-                      professionalTitle =
-                          doctor['professionalTitle']['title']?.toString() ??
-                              '---';
+                    if (doctor['doctorData']['professionalTitle'] != null) {
+                      professionalTitle = doctor['doctorData']
+                                  ['professionalTitle'][0]['title']
+                              ?.toString() ??
+                          '---';
                     }
 
                     return Container(
-                      height: 156,
+                      // height: 156,
                       width: 130,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(14),
@@ -1382,6 +1382,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               (doctorData['title']?.toString() ?? 'Dr.') +
                                   ' ' +
                                   (doctorData['fullName']?.toString() ?? '---'),
+                              maxLines: 1,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 13,
@@ -1392,6 +1393,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               padding: const EdgeInsets.only(top: 3, bottom: 6),
                               child: Text(
                                 professionalTitle ?? '---',
+                                maxLines: 1,
                                 style: TextStyle(
                                   color: Colors.black.withOpacity(0.6),
                                   fontSize: 12,
@@ -1399,10 +1401,202 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 ),
                               ),
                             ),
+                            Spacer(),
                             Container(
                               width: 160,
                               height: 36,
-                              padding: const EdgeInsets.only(top: 9.0),
+                              padding:
+                                  const EdgeInsets.only(top: 9.0, bottom: 4),
+                              child: FlatButton(
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
+                                color: AppColors.persian_indigo,
+                                splashColor: Colors.grey[100],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    bottomRight: Radius.circular(14.0),
+                                    bottomLeft: Radius.circular(14.0),
+                                  ),
+                                ),
+                                child: Text(
+                                  "BOOK APPT.",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  // doctor['distance'] =
+                                  //     _onDemandDoctorsList[index]['distance'];
+                                  // conatiner.providerResponse.clear();
+                                  // conatiner.setProviderData(
+                                  //   "providerData",
+                                  //   doctor,
+                                  // );
+
+                                  // conatiner.setProviderData(
+                                  //     "subServices", subServices);
+
+                                  // Navigator.of(context).pushNamed(
+                                  //   Routes.appointmentTypeScreen,
+                                  //   arguments: _appointentTypeMap,
+                                  // );
+                                  Navigator.of(context)
+                                      .pushNamed(Routes.providerProfileScreen,arguments: doctorData["_id"]);
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                        onTap: () {
+                          Navigator.of(context)
+                              .pushNamed(Routes.providerProfileScreen,arguments: doctorData["_id"]);
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        } else if (snapshot.hasError) {
+          return Container();
+        }
+        return Padding(
+          padding: const EdgeInsets.all(20),
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget myDoctorsWidget() {
+    return FutureBuilder<List<dynamic>>(
+      future: _myDoctorsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          List _myDoctorsList = snapshot.data;
+
+          if (_myDoctorsList == null || _myDoctorsList.isEmpty) {
+            return Container();
+          }
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Top Providers',
+                style: TextStyle(
+                  color: AppColors.midnight_express,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              Container(
+                height: 156,
+                margin: const EdgeInsets.only(top: 20, bottom: 30),
+                child: ListView.separated(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  separatorBuilder: (BuildContext context, int index) =>
+                      SizedBox(width: 13),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _myDoctorsList.length,
+                  itemBuilder: (context, index) {
+                    if (_myDoctorsList == null || _myDoctorsList.isEmpty) {
+                      return Text('No my doctors available');
+                    }
+
+                    String professionalTitle = '---';
+
+                    dynamic doctor = _myDoctorsList[index]['doctorData'];
+                    dynamic subServices = _myDoctorsList[index]['subServices'];
+                    dynamic doctorData = doctor['userId'];
+
+                    String avatar = doctorData['avatar']?.toString();
+
+                    Map _appointentTypeMap = {};
+
+                    _appointentTypeMap["isOfficeEnabled"] =
+                        doctor["isOfficeEnabled"];
+                    _appointentTypeMap["isVideoChatEnabled"] =
+                        doctor["isVideoChatEnabled"];
+                    _appointentTypeMap["isOnsiteEnabled"] =
+                        doctor["isOnsiteEnabled"];
+
+                    if (doctor['professionalTitle'] != null) {
+                      professionalTitle =
+                          doctor['professionalTitle']['title']?.toString() ??
+                              '---';
+                    }
+
+                    return Container(
+                      // height: 156,
+                      width: 130,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: Colors.grey[100]),
+                      ),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: Column(
+                          children: <Widget>[
+                            Container(
+                              margin: const EdgeInsets.all(12),
+                              width: 52.0,
+                              height: 52.0,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.grey),
+                              ),
+                              child: avatar == null || avatar == "null"
+                                  ? Image(
+                                      image:
+                                          AssetImage('images/profile_user.png'),
+                                      height: 52.0,
+                                      width: 52.0,
+                                    )
+                                  : ClipOval(
+                                      child: Image.network(
+                                        ApiBaseHelper.imageUrl + avatar,
+                                        width: 52.0,
+                                        height: 52.0,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                            ),
+                            Text(
+                              (doctorData['title']?.toString() ?? 'Dr.') +
+                                  ' ' +
+                                  (doctorData['fullName']?.toString() ?? '---'),
+                              maxLines: 1,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 3, bottom: 6),
+                              child: Text(
+                                professionalTitle ?? '---',
+                                maxLines: 1,
+                                style: TextStyle(
+                                  color: Colors.black.withOpacity(0.6),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                            Spacer(),
+                            Container(
+                              width: 160,
+                              height: 36,
+                              padding:
+                                  const EdgeInsets.only(top: 9.0, bottom: 4),
                               child: FlatButton(
                                 materialTapTargetSize:
                                     MaterialTapTargetSize.shrinkWrap,
@@ -1423,30 +1617,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                 ),
                                 onPressed: () {
-                                  doctor['distance'] =
-                                      _myDoctorsList[index]['distance'];
-                                  conatiner.providerResponse.clear();
-                                  conatiner.setProviderData(
-                                    "providerData",
-                                    doctor,
-                                  );
+                                  // doctor['distance'] =
+                                  //     _myDoctorsList[index]['distance'];
+                                  // conatiner.providerResponse.clear();
+                                  // conatiner.setProviderData(
+                                  //   "providerData",
+                                  //   doctor,
+                                  // );
 
-                                  conatiner.setProviderData(
-                                      "subServices", subServices);
+                                  // conatiner.setProviderData(
+                                  //     "subServices", subServices);
 
-                                  Navigator.of(context).pushNamed(
-                                    Routes.appointmentTypeScreen,
-                                    arguments: _appointentTypeMap,
-                                  );
+                                  // Navigator.of(context).pushNamed(
+                                  //   Routes.appointmentTypeScreen,
+                                  //   arguments: _appointentTypeMap,
+                                  // );
+                                  Navigator.of(context)
+                                      .pushNamed(Routes.providerProfileScreen,arguments: doctorData["_id"]);
                                 },
                               ),
                             )
                           ],
                         ),
                         onTap: () {
-                          conatiner.setProviderId(doctorData["_id"]);
                           Navigator.of(context)
-                              .pushNamed(Routes.providerProfileScreen);
+                              .pushNamed(Routes.providerProfileScreen,arguments: doctorData["_id"]);
                         },
                       ),
                     );
