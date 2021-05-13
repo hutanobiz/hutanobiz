@@ -306,7 +306,9 @@ class _SettingsScreenState extends State<SettingScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               customListButton(
-                  "Notifications", "images/profile_notification.png", () {}),
+                  "Notifications", "images/profile_notification.png", () {
+                Navigator.pushNamed(context, Routes.activityNotification);
+              }),
               Padding(
                 padding: const EdgeInsets.only(left: 28.0),
                 child: Divider(
@@ -379,9 +381,8 @@ class _SettingsScreenState extends State<SettingScreen> {
                 if (v.toString().toLowerCase() == 'logout') {
                   SharedPref().clearSharedPref();
                   Navigator.of(context).pushNamedAndRemoveUntil(
-                    Routes.loginRoute,
-                    (Route<dynamic> route) => false,arguments: false
-                  );
+                      Routes.loginRoute, (Route<dynamic> route) => false,
+                      arguments: false);
                 } else {
                   Widgets.showErrorDialog(
                     context: context,
