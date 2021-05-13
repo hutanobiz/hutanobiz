@@ -109,8 +109,9 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
                         _container.setServicesData(
                             "services", _selectedServicesMap.values.toList());
 
-                        Navigator.of(context)
-                            .pushNamed(Routes.selectAppointmentTimeScreen);
+                        Navigator.of(context).pushNamed(
+                            Routes.selectAppointmentTimeScreen,
+                            arguments: SelectDateTimeArguments(fromScreen: 0));
                       } else {
                         Widgets.showToast("Please choose at least one service");
                       }
@@ -120,7 +121,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
                           "consultaceFee", profileMap[_appointmentTypeKey]);
                       Navigator.of(context).pushNamed(
                         Routes.selectAppointmentTimeScreen,
-                        arguments: 0,
+                        arguments: SelectDateTimeArguments(fromScreen: 0),
                       );
                     }
                   },

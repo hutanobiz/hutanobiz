@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/utils/validations.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
@@ -16,7 +15,7 @@ class SelectParkingScreen extends StatefulWidget {
 
 class _SelectParkingScreenState extends State<SelectParkingScreen> {
   String _selectedParking;
-  double _parkingFee = 30;
+  double _parkingFee;
 
   InheritedContainerState _container;
 
@@ -85,13 +84,6 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
                       );
                       return;
                     }
-                    if (_parkingFee == null) {
-                      Widgets.showErrorDialog(
-                        context: context,
-                        description: 'Please select parking fee',
-                      );
-                      return;
-                    }
                     if (_selectedParking == '3' &&
                         _bayNumberController.text.isEmpty) {
                       Widgets.showErrorDialog(
@@ -104,7 +96,7 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
                     Map _paymentMap = new Map();
 
                     _paymentMap["parkingType"] = _selectedParking;
-                    _paymentMap["parkingFee"] = _parkingFee;
+                    _paymentMap["parkingFee"] = _parkingFee ?? 0;
                     _paymentMap["parkingBay"] = _bayNumberController.text;
 
                     if (_instructionsController.text != null ||
@@ -166,8 +158,6 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
                   Expanded(
                     flex: 1,
                     child: TextFormField(
-                      validator: Validations.validateEmpty,
-                      autovalidateMode: AutovalidateMode.always,
                       keyboardType: TextInputType.number,
                       initialValue:
                           _parkingFee == null ? "" : _parkingFee.toString(),
@@ -177,7 +167,11 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
                           color: Colors.black87),
                       onChanged: (fee) {
                         setState(() {
-                          _parkingFee = double.parse(fee);
+                          if (fee == '') {
+                            _parkingFee = 0;
+                          } else {
+                            _parkingFee = double.parse(fee);
+                          }
                         });
                       },
                       decoration: InputDecoration(
@@ -209,63 +203,6 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
                 ],
               ),
             ),
-            // SliderTheme(
-            //   data: SliderTheme.of(context).copyWith(
-            //     activeTrackColor: AppColors.goldenTainoi,
-            //     inactiveTrackColor: Colors.grey[300],
-            //     thumbColor: AppColors.goldenTainoi,
-            //     thumbShape: RoundSliderThumbShape(
-            //       enabledThumbRadius: 12,
-            //       disabledThumbRadius: 12,
-            //     ),
-            //     showValueIndicator: ShowValueIndicator.always,
-            //     valueIndicatorColor: Colors.transparent,
-            //     valueIndicatorTextStyle: TextStyle(
-            //       color: Colors.black.withOpacity(0.90),
-            //       fontWeight: FontWeight.w500,
-            //       fontSize: 13.0,
-            //     ),
-            //   ),
-            //   child: Slider.adaptive(
-            //     value: _parkingFee,
-            //     min: 0,
-            //     max: 100,
-            //     label: "\$${_parkingFee.round().toString()}",
-            //     onChanged: (v) {
-            //       setState(() {
-            //         _parkingFee = v;
-            //       });
-            //     },
-            //   ),
-            // ),
-            // Padding(
-            //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-            //   child: Row(
-            //     children: [
-            //       Text(
-            //         'Free',
-            //         style: TextStyle(
-            //           color: Colors.black.withOpacity(0.67),
-            //           fontWeight: FontWeight.w500,
-            //           fontSize: 12.0,
-            //         ),
-            //       ),
-            //       Expanded(
-            //         child: Align(
-            //           alignment: Alignment.centerRight,
-            //           child: Text(
-            //             "\$100",
-            //             style: TextStyle(
-            //               color: Colors.black.withOpacity(0.67),
-            //               fontWeight: FontWeight.w500,
-            //               fontSize: 12.0,
-            //             ),
-            //           ),
-            //         ),
-            //       )
-            //     ],
-            //   ),
-            // )
           ],
         ),
       ),

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:hutano/api/api_helper.dart';
@@ -16,9 +18,10 @@ import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 
 class SelectAppointmentTimeScreen extends StatefulWidget {
-  final int fromScreen; //0-services,1-edit datetime,2-reschedule
+  final SelectDateTimeArguments
+      arguments; // fromScreen: 0-services,1-edit datetime,2-reschedule
 
-  const SelectAppointmentTimeScreen({Key key, this.fromScreen = 0})
+  const SelectAppointmentTimeScreen({Key key, this.arguments})
       : super(key: key);
 
   @override
@@ -45,7 +48,10 @@ class _SelectAppointmentTimeScreenState
   Map profileMap = new Map();
   String currentDate;
   String averageRating = "0";
-
+  dynamic selectedAddress;
+  bool firstLoad = true;
+  Future<dynamic> _addressFuture;
+  String providerId = '';
   List<int> _scheduleDaysList = [];
   int _initialDay = 1;
   DateTime newDate;
@@ -86,6 +92,34 @@ class _SelectAppointmentTimeScreenState
 
     _container = InheritedContainer.of(context);
     _providerData = _container.getProviderData();
+
+    if (_providerData["providerData"]["data"] != null) {
+      averageRating =
+          _providerData["providerData"]["averageRating"]?.toStringAsFixed(2) ??
+              "0";
+
+      _providerData["providerData"]["data"].map((f) {
+        profileMap.addAll(f);
+      }).toList();
+    } else {
+      profileMap = _providerData["providerData"];
+      averageRating = profileMap["averageRating"]?.toStringAsFixed(2) ?? "0";
+    }
+
+    if (profileMap["userId"] != null && profileMap["userId"] is Map) {
+      providerId = profileMap["userId"]["_id"].toString();
+    } else if (profileMap["User"] != null is Map) {
+      providerId = profileMap["User"][0]["_id"].toString();
+    }
+
+    if (_container.projectsResponse['serviceType'] == '1') {
+      SharedPref().getToken().then((token) {
+        setState(() {
+          _addressFuture = _apiBaseHelper.getProviderAddress(token, providerId);
+        });
+      });
+    }
+
     Map _servicesMap = _container.selectServiceMap;
 
     if (_container.projectsResponse != null) {
@@ -106,25 +140,13 @@ class _SelectAppointmentTimeScreenState
       }
     }
 
-    if (_providerData["providerData"]["data"] != null) {
-      averageRating =
-          _providerData["providerData"]["averageRating"]?.toStringAsFixed(2) ??
-              "0";
-
-      _providerData["providerData"]["data"].map((f) {
-        profileMap.addAll(f);
-      }).toList();
-    } else {
-      profileMap = _providerData["providerData"];
-      averageRating = profileMap["averageRating"]?.toStringAsFixed(2) ?? "0";
-    }
-
     _getScheduleDaysList();
     _scheduleDaysList.sort();
     if (_scheduleDaysList.length > 0) {
       if (_scheduleDaysList.contains(DateTime.now().weekday)) {
         _dayDateMap["day"] = DateTime.now().weekday.toString();
         _dayDateMap["date"] = currentDate;
+
         startDate = DateTime.now();
       } else {
         for (int i = 0; i < 7; i++) {
@@ -135,19 +157,15 @@ class _SelectAppointmentTimeScreenState
             _dayDateMap["date"] = DateFormat('MM/dd/yyyy')
                 .format(DateTime.now().add(Duration(days: i + 1)));
             startDate = DateTime.now().add(Duration(days: i + 1));
+            _selectedDate = DateTime.now().add(Duration(days: i + 1));
             break;
           }
         }
       }
-      try {
-        _timezone = await FlutterNativeTimezone.getLocalTimezone();
-      } catch (e) {
-        print('Could not get the local timezone');
-      }
-      if (mounted) {
-        setState(() {});
-      }
-      _dayDateMap["timezone"] = _timezone;
+
+      // if (mounted) {
+      //   setState(() {});
+      // }
 
       while (true) {
         if (_scheduleDaysList.contains(newDate.weekday)) {
@@ -166,25 +184,27 @@ class _SelectAppointmentTimeScreenState
         }
       }
     }
-
+    try {
+      _timezone = await FlutterNativeTimezone.getLocalTimezone();
+    } catch (e) {
+      print('Could not get the local timezone');
+    }
+    _dayDateMap["timezone"] = _timezone;
     _selectedDate.toString().debugLog();
 
-    String providerId = '';
+    if (_container.projectsResponse['serviceType'] != '1') {
+      if (mounted) {
+        setState(() {});
+      }
+      _scheduleFuture = _apiBaseHelper
+          .getScheduleList(
+            providerId,
+            _dayDateMap,
+          )
+          .timeout(Duration(seconds: 10));
 
-    if (profileMap["userId"] != null && profileMap["userId"] is Map) {
-      providerId = profileMap["userId"]["_id"].toString();
-    } else if (profileMap["User"] != null is Map) {
-      providerId = profileMap["User"][0]["_id"].toString();
+      _selectedTiming = null;
     }
-
-    _scheduleFuture = _apiBaseHelper
-        .getScheduleList(
-          providerId,
-          _dayDateMap,
-        )
-        .timeout(Duration(seconds: 10));
-
-    _selectedTiming = null;
   }
 
   @override
@@ -195,9 +215,9 @@ class _SelectAppointmentTimeScreenState
         isLoading: isLoading,
         title: "Select an Appointment Time",
         color: AppColors.snow,
-        isAddBack: widget.fromScreen == 2,
+        isAddBack: widget.arguments.fromScreen == 2,
         addBottomArrows: false,
-        addBackButton: widget.fromScreen == 2 ? false : true,
+        addBackButton: widget.arguments.fromScreen == 2 ? false : true,
         child: Column(
           children: [
             Expanded(
@@ -214,23 +234,25 @@ class _SelectAppointmentTimeScreenState
               alignment: FractionalOffset.bottomRight,
               child: Container(
                 height: 55.0,
-                width: widget.fromScreen == 2
+                width: widget.arguments.fromScreen == 2
                     ? MediaQuery.of(context).size.width
                     : MediaQuery.of(context).size.width - 76.0,
                 margin: const EdgeInsets.only(top: 10),
                 padding: EdgeInsets.only(
-                    right: 0.0, left: widget.fromScreen == 2 ? 0 : 40.0),
+                    right: 0.0,
+                    left: widget.arguments.fromScreen == 2 ? 0 : 40.0),
                 child: FancyButton(
-                  title: widget.fromScreen == 2 ? "Reschedule" : "Book now",
+                  title: widget.arguments.fromScreen == 2
+                      ? "Reschedule"
+                      : "Book now",
                   onPressed: () {
                     if (_selectedDate != null && _selectedTiming != null) {
-                      if (widget.fromScreen == 2) {
+                      if (widget.arguments.fromScreen == 2) {
                         setState(() {
                           isLoading = true;
                         });
                         var map = {};
-                        map['appointmentId'] =
-                            _container.appointmentIdMap['appointmentId'];
+                        map['appointmentId'] = widget.arguments.appointmentId;
                         map['date'] = DateFormat("MM/dd/yyyy")
                             .format(_selectedDate)
                             .toString();
@@ -253,14 +275,6 @@ class _SelectAppointmentTimeScreenState
                                       Routes.dashboardScreen,
                                       (Route<dynamic> route) => false,
                                       arguments: 1);
-                                  // Map appointment = {};
-                                  // appointment["_appointmentStatus"] = "1";
-                                  // appointment["id"] = _container
-                                  //     .appointmentIdMap['appointmentId'];
-                                  // Navigator.of(context).pushNamed(
-                                  //   Routes.appointmentDetailScreen,
-                                  //   arguments: appointment,
-                                  // );
                                 });
                           }).futureError((onError) {
                             setState(() {
@@ -271,8 +285,12 @@ class _SelectAppointmentTimeScreenState
                       } else {
                         _container.setAppointmentData("date", _selectedDate);
                         _container.setAppointmentData("time", _selectedTiming);
-
-                        if (widget.fromScreen == 1) {
+                        _container.setAppointmentData("isOndemand", '0');
+                        if (selectedAddress != null) {
+                          _container.setAppointmentData(
+                              'officeId', selectedAddress['_id']);
+                        }
+                        if (widget.arguments.fromScreen == 1) {
                           Navigator.pop(context, _container.appointmentData);
                         } else {
                           Navigator.of(context)
@@ -312,8 +330,87 @@ class _SelectAppointmentTimeScreenState
     }
   }
 
+  onDemandWidget() {
+    return _providerData["providerData"]["data"][0]
+                ['ondemandavailabledoctor'] !=
+            null
+        ? _providerData["providerData"]["data"][0]['ondemandavailabledoctor']
+                ['isOnline']
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text('On-demand Service',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          )),
+                      SizedBox(
+                        width: 4,
+                      ),
+                      Image.asset(
+                        'images/info.png',
+                        height: 16,
+                      ),
+                      Spacer(),
+                      Text(
+                        'ACTIVE',
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.emerald),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 12),
+                  Container(
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(14.0)),
+                        border: Border.all(color: Colors.grey[300], width: 0.5),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: Text(
+                            'Instant Appointment',
+                            style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.windsor),
+                          )),
+                          Icon(Icons.arrow_forward_ios_outlined,
+                              size: 12, color: AppColors.windsor)
+                        ],
+                      )).onClick(onTap: () {
+                    _container.setAppointmentData("date", DateTime.now());
+                    _container.setAppointmentData("time", '00:00');
+                    _container.setAppointmentData("isOndemand", '1');
+                    if (selectedAddress != null) {
+                      _container.setAppointmentData(
+                          'officeId', selectedAddress['_id']);
+                    }
+
+                    if (widget.arguments.fromScreen == 1) {
+                      Navigator.pop(context, _container.appointmentData);
+                    } else {
+                      Navigator.of(context)
+                          .pushNamed(Routes.consentToTreatScreen);
+                    }
+                  }),
+                  SizedBox(height: 20)
+                ],
+              )
+            : SizedBox()
+        : SizedBox();
+  }
+
   List<Widget> noScheduleAdded() {
     List<Widget> formWidget = new List();
+
+    formWidget.add(onDemandWidget());
 
     formWidget.add(SizedBox(height: 20.0));
 
@@ -341,36 +438,19 @@ class _SelectAppointmentTimeScreenState
       averageRating: averageRating,
     ));
 
-    formWidget.add(ScrollingDayCalendar(
-      startDate: startDate,
-      endDate: DateTime(DateTime.now().year + 2),
-      selectedDate: DateTime.now(),
-      displayDateFormat: "EEEE, dd MMMM",
-      scheduleDaysList: _scheduleDaysList,
-      onDateChange: (DateTime selectedDate) {
-        _dayDateMap["day"] = selectedDate.weekday.toString();
-        _dayDateMap["date"] =
-            DateFormat("MM/dd/yyyy").format(selectedDate).toString();
-        _dayDateMap["timezone"] = _timezone;
+    formWidget.add(onDemandWidget());
 
-        setState(() {
-          _scheduleFuture = _apiBaseHelper
-              .getScheduleList(
-                providerId,
-                _dayDateMap,
-              )
-              .futureError(
-                (error) => error.toString().debugLog(),
-              );
-        });
+    formWidget.add(
+      _container.projectsResponse['serviceType'].toString() == '1'
+          ? address()
+          : SizedBox(),
+    );
 
-        _selectedDate = selectedDate;
-      },
-    ));
-
-    formWidget.add(SizedBox(height: 20.0));
-
-    formWidget.add(_futureWidget());
+    formWidget.add(_container.projectsResponse['serviceType'].toString() == '1'
+        ? SizedBox(
+            height: 0,
+          )
+        : _futureWidget());
 
     return formWidget;
   }
@@ -381,8 +461,8 @@ class _SelectAppointmentTimeScreenState
       builder: (_, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
-            return Text("NO data available");
-            break;
+          // return Text("NO data available");
+          // break;
           case ConnectionState.waiting:
             return Center(
               child: CircularProgressIndicator(),
@@ -445,6 +525,35 @@ class _SelectAppointmentTimeScreenState
 
               return Column(
                 children: <Widget>[
+                  ScrollingDayCalendar(
+                    startDate: startDate,
+                    endDate: DateTime(DateTime.now().year + 2),
+                    selectedDate: _selectedDate,
+                    displayDateFormat: "EEEE, dd MMMM",
+                    scheduleDaysList: _scheduleDaysList,
+                    onDateChange: (DateTime selectedDate) {
+                      _dayDateMap["day"] = selectedDate.weekday.toString();
+                      _dayDateMap["date"] = DateFormat("MM/dd/yyyy")
+                          .format(selectedDate)
+                          .toString();
+                      _selectedDate = selectedDate;
+                      _dayDateMap["timezone"] = _timezone;
+
+                      setState(() {
+                        _scheduleFuture = _apiBaseHelper
+                            .getScheduleList(
+                              providerId,
+                              _dayDateMap,
+                            )
+                            .futureError(
+                              (error) => error.toString().debugLog(),
+                            );
+                      });
+
+                      _selectedDate = selectedDate;
+                    },
+                  ),
+                  SizedBox(height: 20.0),
                   _timingWidget("Morning", "ic_morning", _morningList),
                   SizedBox(height: 40.0),
                   _timingWidget("Afternoon", "ic_afternoon", _afternoonList),
@@ -459,6 +568,142 @@ class _SelectAppointmentTimeScreenState
               );
             }
 
+            break;
+        }
+        return Container();
+      },
+    );
+  }
+
+  Widget address() {
+    return FutureBuilder<dynamic>(
+      future: _addressFuture,
+      builder: (_, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return Container();
+            break;
+          case ConnectionState.waiting:
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+            break;
+          case ConnectionState.active:
+            break;
+          case ConnectionState.done:
+            if (snapshot.hasData) {
+              if (snapshot.data == null) {
+                return Container();
+              }
+              List _addressList = snapshot.data;
+              if (_addressList == null || _addressList.isEmpty) {
+                return Container();
+              } else {
+                if (firstLoad == true) {
+                  selectedAddress = _addressList.first;
+                  _dayDateMap['addressid'] = selectedAddress['_id'];
+
+                  _scheduleFuture = _apiBaseHelper.getScheduleList(
+                    providerId,
+                    _dayDateMap,
+                  );
+
+                  _selectedTiming = null;
+                  firstLoad = false;
+                }
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Select address',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        )),
+                    SizedBox(height: 12),
+                    Container(
+                      height: 92,
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        physics: ScrollPhysics(),
+                        itemCount: _addressList.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedAddress = _addressList[index];
+                              });
+                            },
+                            child: Container(
+                              width: 182,
+                              padding: EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: selectedAddress == _addressList[index]
+                                    ? AppColors.windsor.withOpacity(0.07)
+                                    : Colors.white,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(14.0)),
+                                border: Border.all(
+                                    color:
+                                        selectedAddress == _addressList[index]
+                                            ? AppColors.windsor
+                                            : Colors.grey[300],
+                                    width: 0.5),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    _addressList[index]['saveAs'] ?? "",
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  SizedBox(
+                                    height: 7,
+                                  ),
+                                  Text(
+                                    _addressList[index]['address'] ?? "",
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                  SizedBox(
+                                    height: 7,
+                                  ),
+                                  Text(
+                                    (_addressList[index]['city'] ?? "") +
+                                        ", " +
+                                        (_addressList[index]['zipCode'] ?? ""),
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                        separatorBuilder: (BuildContext context, int index) {
+                          return SizedBox(
+                            width: 20,
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    _futureWidget()
+                  ],
+                );
+              }
+            } else if (snapshot.hasError) {
+              return Container();
+            }
             break;
         }
         return Container();

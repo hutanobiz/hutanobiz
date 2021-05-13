@@ -11,10 +11,9 @@ import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/screens/dashboard/choose_location_screen.dart';
 import 'package:hutano/screens/home.dart';
-import 'package:hutano/screens/stripe/payment_intent.dart';
 import 'package:hutano/screens/stripe/stripe_payment.dart';
+import 'package:hutano/strings.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
@@ -67,7 +66,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   setPolylines() async {
     PolylineResult polylineResult =
         await _polylinePoints?.getRouteBetweenCoordinates(
-      kGoogleApiKey,
+      Strings.kGoogleApiKey,
       PointLatLng(_initialPosition.latitude, _initialPosition.longitude),
       PointLatLng(_desPosition.latitude, _desPosition.longitude),
     );
@@ -145,8 +144,11 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     _initialPosition = _userLocationMap["latLng"];
 
     if (_container.projectsResponse["serviceType"].toString() == '3') {
-      _desPosition = LatLng(_consentToTreatMap["userAddress"]['coordinates'][1],
-          _consentToTreatMap["userAddress"]['coordinates'][0]);
+      _desPosition = LatLng(
+          double.parse(
+              _consentToTreatMap["userAddress"]['coordinates'][1].toString()),
+          double.parse(
+              _consentToTreatMap["userAddress"]['coordinates'][0].toString()));
       if (_profileMap["businessLocation"] != null) {
         if (_profileMap["businessLocation"]["coordinates"].length > 0) {
           _initialPosition = LatLng(
@@ -349,7 +351,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
       SharedPref().getToken().then((token) async {
         _loading(true);
         Uri uri = Uri.parse(
-            ApiBaseHelper.base_url + "api/patient/appointment-booking");
+            ApiBaseHelper.base_url + "api/patient/appointment-booking-web");
         http.MultipartRequest request = http.MultipartRequest('POST', uri);
         request.headers['authorization'] = token;
 
@@ -370,6 +372,12 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         _reviewAppointmentData["fromTime"] = _bookedTime;
         _reviewAppointmentData["timeZonePlace"] = _timezone;
         _reviewAppointmentData["doctor"] = doctorId;
+
+        _reviewAppointmentData["isOndemand"] = _appointmentData["isOndemand"];
+
+        if (_appointmentData["officeId"] != null) {
+          _reviewAppointmentData["officeId"] = _appointmentData["officeId"];
+        }
 
         request.fields.addAll(_reviewAppointmentData);
 
@@ -487,7 +495,9 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             Widgets.showAppDialog(
                 isError: true,
                 context: context,
-                buttonText: responseJson["response"].contains('already')?'Go to Requests':'Close',
+                buttonText: responseJson["response"].contains('already')
+                    ? 'Go to Requests'
+                    : 'Close',
                 description: responseJson["response"],
                 onPressed: () {
                   if (responseJson["response"].contains('already')) {
@@ -897,7 +907,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   void getDistanceAndTime(LatLng initialPosition, LatLng desPosition) {
     ApiBaseHelper _apiHelper = ApiBaseHelper();
     _apiHelper
-        .getDistanceAndTime(initialPosition, desPosition, kGoogleApiKey)
+        .getDistanceAndTime(initialPosition, desPosition, Strings.kGoogleApiKey)
         .then((value) {
       _totalDistance =
           value["rows"][0]["elements"][0]["distance"]["text"].toString();
@@ -1042,7 +1052,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                             Navigator.of(context)
                                 .pushNamed(
                               Routes.selectAppointmentTimeScreen,
-                              arguments: 1,
+                              arguments:SelectDateTimeArguments(fromScreen:1),
                             )
                                 .then((value) {
                               if (value != null) {
