@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
-import 'package:hutano/routes.dart';
-import 'package:hutano/strings.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
-import 'package:hutano/widgets/widgets.dart';
-import 'package:intl/intl.dart';
+import 'package:hutano/widgets/request_list_widget.dart';
 
 class RequestAppointmentsScreen extends StatefulWidget {
   const RequestAppointmentsScreen({Key key}) : super(key: key);
@@ -85,9 +82,12 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
             break;
           case ConnectionState.done:
             if (snapshot.hasData) {
+              _closedRequestsList.clear();
               ondemandAppointmentsList = snapshot.data['ondemandAppointments'];
               _activeRequestsList = snapshot.data["presentRequest"];
-              _closedRequestsList = snapshot.data["pastRequest"];
+              _closedRequestsList.addAll(snapshot.data["pastRequest"]);
+              _closedRequestsList
+                  .addAll(snapshot.data["ondemandExpiredAppointments"]);
 
               if (_activeRequestsList.length == 0 &&
                   _closedRequestsList.length == 0 &&
@@ -101,15 +101,16 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      heading("On-Demand", ondemandAppointmentsList, 0),
+                      heading(
+                          "On Demand Requests", ondemandAppointmentsList, 0),
                       ondemandAppointmentsList.isNotEmpty
                           ? _listWidget(ondemandAppointmentsList, 0)
                           : Container(),
-                      heading("Active", _activeRequestsList, 1),
+                      heading("Active Requests", _activeRequestsList, 1),
                       _activeRequestsList.isNotEmpty
                           ? _listWidget(_activeRequestsList, 1)
                           : Container(),
-                      heading("Closed", _closedRequestsList, 2),
+                      heading("Past Requests", _closedRequestsList, 2),
                       _closedRequestsList.isNotEmpty
                           ? _listWidget(_closedRequestsList, 2)
                           : Container(),
@@ -138,9 +139,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                   fontStyle: FontStyle.italic,
                 ),
               ),
-              SizedBox(height: 8.0),
               Divider(),
-              SizedBox(height: 24.0),
             ],
           )
         : Container();
@@ -158,386 +157,46 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
   }
 
   Widget _requestList(Map response, int listType) {
-    String name = "---",
-        avatar,
-        address = "---",
-        appointmentType = "---",
-        fee = "---",
-        status = "---",
-        professionalTitle = "---",
-        feeKey;
-
-    status = response["status"].toString();
-
-    if (response["type"] != null)
-      switch (response["type"]) {
-        case 1:
-          appointmentType = "Office Appt.";
-          feeKey = "officeConsultanceFee";
-          break;
-        case 2:
-          appointmentType = "Video Chat Appt.";
-          feeKey = "vedioConsultanceFee";
-          break;
-        case 3:
-          appointmentType = "Onsite Appt.";
-          feeKey = "onsiteConsultanceFee";
-          break;
-        default:
-      }
+    String name = "---", avatar, professionalTitle = '';
 
     if (response["doctor"] != null) {
-      if (listType == 0) {
+      if (response["isOndemand"] == true) {
         name = response["doctor"][0]["fullName"]?.toString() ?? "---";
         avatar = response["doctor"][0]["avatar"].toString();
+        if (response['doctorData'] != null) {
+          if (response['doctorData']["professionalTitle"] != null) {
+            professionalTitle = response['doctorData']["professionalTitle"][0]
+                        ["title"]
+                    ?.toString() ??
+                "---";
+          }
+        }
       } else {
         name = response["doctor"]["fullName"]?.toString() ?? "---";
         avatar = response["doctor"]["avatar"].toString();
+        if (response['doctorData'] != null) {
+          if (response['doctorData'][0]["professionalTitle"] != null) {
+            professionalTitle = response['doctorData'][0]["professionalTitle"]
+                        ["title"]
+                    ?.toString() ??
+                "---";
+          }
+        }
       }
     }
 
-    if (response["DoctorProfessionalDetail"] != null) {
-      if (response["DoctorProfessionalDetail"]["professionalTitle"] != null) {
-        professionalTitle = response["DoctorProfessionalDetail"]
-                    ["professionalTitle"]["title"]
-                ?.toString() ??
-            "---";
-      }
-
-      if (response["DoctorProfessionalDetail"][feeKey] != null &&
-          response["DoctorProfessionalDetail"][feeKey].length > 0) {
-        fee = response["DoctorProfessionalDetail"][feeKey][0]["fee"]
-                ?.toStringAsFixed(2) ??
-            "0.00";
-      }
-
-      if (response["DoctorProfessionalDetail"]["businessLocation"] != null) {
-        dynamic business =
-            response["DoctorProfessionalDetail"]["businessLocation"];
-
-        address = Extensions.addressFormat(
-          business["address"]?.toString(),
-          business["street"]?.toString(),
-          business["city"]?.toString(),
-          business["state"],
-          business["zipCode"]?.toString(),
-        );
-      }
+    String averageRating = "";
+    if (response["averageRating"] != null) {
+      averageRating =
+          "${response["averageRating"].toStringAsFixed(1)} (${response["totalRating"]})";
     }
 
-    if (response["type"].toString() == '3') {
-      address = Extensions.addressFormat(
-        response["userAddress"]["address"]?.toString(),
-        response["userAddress"]["street"]?.toString(),
-        response["userAddress"]["city"]?.toString(),
-        response["userAddress"]["state"] is Map
-            ? response["userAddress"]["state"]
-            : response["userAddress"]["stateCode"],
-        response["userAddress"]["zipCode"]?.toString(),
-      );
-    }
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 22.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14.0),
-        border: Border.all(color: Colors.grey[300]),
-      ),
-      child: Material(
-        type: MaterialType.transparency,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(14.0),
-          splashColor: Colors.grey[200],
-          onTap: () {
-            Navigator.of(context).pushNamed(
-              Routes.requestDetailScreen,
-              arguments: response,
-            );
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(top: 18, left: 12, right: 12),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      width: 58.0,
-                      height: 58.0,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: avatar == null
-                              ? AssetImage('images/profile_user.png')
-                              : NetworkImage(ApiBaseHelper.imageUrl + avatar),
-                          fit: BoxFit.cover,
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                        border: Border.all(
-                          color: Colors.grey[300],
-                          width: 1.0,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              name,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 5.0,
-                            ),
-                            listType == 1 || listType == 0
-                                ? Text(
-                                    professionalTitle,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      color: Colors.black.withOpacity(0.6),
-                                    ),
-                                  )
-                                : status?.appointmentStatus(
-                                    isAddBackground: false),
-                            SizedBox(
-                              height: 4.0,
-                            ),
-                            Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(right: 4.0),
-                                    child: RichText(
-                                      text: TextSpan(
-                                        style: TextStyle(
-                                          fontSize: 13.0,
-                                          color: Colors.black.withOpacity(0.7),
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                        children: <TextSpan>[
-                                          TextSpan(
-                                              text: listType == 2
-                                                  ? "$professionalTitle "
-                                                  : null),
-                                          TextSpan(
-                                            text: "\$$fee",
-                                            style: TextStyle(
-                                              fontSize: 13.0,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.black
-                                                  .withOpacity(0.80),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            color: AppColors.goldenTainoi,
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: Text(
-                            appointmentType,
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 13.0),
-                        'ic_forward'.imageIcon(
-                          width: 8,
-                          height: 14,
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8.0, 3.0, 8.0, 10.0),
-                child: Divider(
-                  color: Colors.grey[300],
-                  thickness: 0.5,
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 8.0),
-                child: Row(
-                  children: <Widget>[
-                    "ic_appointment_time".imageIcon(height: 12.0, width: 12.0),
-                    SizedBox(width: 5.0),
-                    Expanded(
-                      child: Text(
-                        // DateFormat('EEEE, dd MMMM,')
-                        //         .format(
-                        //             DateTime.parse(response['date']))
-                        //         .toString() +
-                        //     " " +
-                        DateFormat('EEEE, dd MMMM, HH:mm')
-                                .format(DateTime.utc(
-                                        DateTime.parse(response['date']).year,
-                                        DateTime.parse(response['date']).month,
-                                        DateTime.parse(response['date']).day,
-                                        int.parse(
-                                            response['fromTime'].split(':')[0]),
-                                        int.parse(
-                                            response['fromTime'].split(':')[1]))
-                                    .toLocal())
-                                .toString() +
-                            ' to ' +
-                            DateFormat('HH:mm')
-                                .format(DateTime.utc(
-                                        DateTime.parse(response['date']).year,
-                                        DateTime.parse(response['date']).month,
-                                        DateTime.parse(response['date']).day,
-                                        int.parse(
-                                            response['toTime'].split(':')[0]),
-                                        int.parse(
-                                            response['toTime'].split(':')[1]))
-                                    .toLocal())
-                                .toString(),
-                        style: TextStyle(
-                          color: Colors.black.withOpacity(0.5),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              address.trim() == '---, ,'
-                  ? SizedBox(
-                      height: 8,
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.only(
-                          left: 12.0, right: 12.0, bottom: 18.0),
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Row(
-                              children: <Widget>[
-                                Image(
-                                  image: AssetImage(
-                                    "images/ic_location_grey.png",
-                                  ),
-                                  height: 14.0,
-                                  width: 11.0,
-                                ),
-                                SizedBox(width: 5.0),
-                                Expanded(
-                                  child: Text(
-                                    "$address",
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      color: Colors.black.withOpacity(0.5),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Row(
-                            children: <Widget>[
-                              Image(
-                                image: AssetImage(
-                                  "images/ic_distance.png",
-                                ),
-                                height: 14.0,
-                                width: 14.0,
-                              ),
-                              SizedBox(width: 5.0),
-                              Text(
-                                Extensions.getDistance(response['distance']),
-                                style: TextStyle(
-                                  color: Colors.black.withOpacity(0.5),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-              listType == 1 || listType == 0
-                  ? InkWell(
-                      onTap: () {
-                        Widgets.showAlertDialog(
-                          context,
-                          "Cancel Appointment",
-                          "Are you sure you want to cancel this appointment?",
-                          () {
-                            SharedPref().getToken().then((token) {
-                              Map appointmentIdAmp = Map();
-
-                              if (response["_id"].toString() != null) {
-                                appointmentIdAmp["appointmentId"] =
-                                    response["_id"].toString();
-                                appointmentIdAmp["status"] = "5";
-
-                                _api
-                                    .cancelRequest(token, appointmentIdAmp)
-                                    .then((deleteResponse) {
-                                  Widgets.showToast(
-                                      "Appointment cancelled successfully");
-
-                                  setState(() {
-                                    _requestsFuture = _api.appointmentRequests(
-                                      token,
-                                      _userLocation,
-                                    );
-                                  });
-                                }).futureError((onError) =>
-                                        onError.toString().debugLog());
-                              }
-                            });
-                          },
-                        );
-                      },
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                        decoration: BoxDecoration(
-                          color: AppColors.tundora.withOpacity(0.05),
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(14.0),
-                            bottomRight: Radius.circular(14.0),
-                          ),
-                        ),
-                        child: Text(
-                          "Cancel Request",
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    )
-                  : Container(),
-            ],
-          ),
-        ),
-      ),
-    );
+    return RequestListWidget(
+        context: context,
+        response: response,
+        avatar: avatar,
+        name: name,
+        averageRating: averageRating,
+        professionalTitle: professionalTitle);
   }
 }

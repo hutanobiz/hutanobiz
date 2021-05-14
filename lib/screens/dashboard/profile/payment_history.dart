@@ -152,14 +152,4 @@ dateTime(response) {
   return date;
 }
 
-// "_id" -> "609d2cade2bca71f0ea27e0d"
-// 1:"description" -> "609d2cade2bca71f0ea27e0b"
-// 2:"amount" -> "0.1"
-// 3:"closingBalance" -> "1071.2800000000004"
-// 4:"type" -> 2
-// 5:"isStripeSubscription" -> false
-// 6:"userId" -> "6098d061cabdc0260f2c1b62"
-// 7:"providerId" -> "609b7577576f2f76cf4ec90d"
-// 8:"createdAt" -> "2021-05-13T13:42:05.844Z"
-// 9:"updatedAt" -> "2021-05-13T13:42:05.844Z"
-// 12:"appointmentType" -> 2
+
