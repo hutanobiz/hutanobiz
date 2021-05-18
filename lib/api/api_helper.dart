@@ -31,7 +31,8 @@ class ApiBaseHelper {
 
   Future<dynamic> sendEmailOtp(BuildContext context, Map verifyEmail) {
     return _netUtil
-        .post(base_url + "auth/api/resend-email-verification-code", body: verifyEmail)
+        .post(base_url + "auth/api/resend-email-verification-code",
+            body: verifyEmail)
         .then((res) {
       return res;
     });
@@ -40,7 +41,8 @@ class ApiBaseHelper {
   Future<dynamic> verifyEmailOtp(
       BuildContext context, Map<String, String> loginData) {
     return _netUtil
-        .post(base_url + "auth/api/verify-email-verification-code", body: loginData)
+        .post(base_url + "auth/api/verify-email-verification-code",
+            body: loginData)
         .then((res) {
       return res["response"];
     });
@@ -65,7 +67,7 @@ class ApiBaseHelper {
     });
   }
 
- Future<dynamic> resendPhoneOtp(BuildContext context, Map verifyEmail) {
+  Future<dynamic> resendPhoneOtp(BuildContext context, Map verifyEmail) {
     return _netUtil
         .post(base_url + "auth/api/resend-phone-verification-code",
             body: verifyEmail)
@@ -73,7 +75,6 @@ class ApiBaseHelper {
       return res["response"];
     });
   }
-  
 
   Future<dynamic> registerPassword(Map<String, String> map) {
     return _netUtil
@@ -307,7 +308,7 @@ class ApiBaseHelper {
     });
   }
 
-  Future<Map> getStripeStatements(BuildContext context, token) {
+  Future<List<dynamic>> getStripeStatements(BuildContext context, token) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
@@ -315,7 +316,7 @@ class ApiBaseHelper {
         .get(base_url + "api/patient/stripe-statements", headers: headers)
         .then((res) {
       print(res.toString());
-      return res;
+      return res['response'];
     });
   }
 
