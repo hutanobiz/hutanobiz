@@ -12,6 +12,7 @@ class SimpleCountDownTimer extends StatefulWidget {
   final int duration;
   final bool isReverse, isReverseAnimation;
   final Function onComplete;
+  final double fontSize;
 
   /// Controller to control (i.e Pause, Resume, Restart) the Countdown
   final SimpleCountDownController controller;
@@ -23,6 +24,7 @@ class SimpleCountDownTimer extends StatefulWidget {
       this.isReverseAnimation = false,
       this.onComplete,
       this.textStyle,
+      this.fontSize,
       this.key,
       this.controller})
       : assert(duration != null),
@@ -124,7 +126,7 @@ class SimpleCountDownTimerState extends State<SimpleCountDownTimer>
             widget.text + time,
             style: widget.textStyle ??
                 TextStyle(
-                  fontSize: 16.0,
+                  fontSize:widget.fontSize?? 16.0,
                   color: Colors.black,
                 ),
           );

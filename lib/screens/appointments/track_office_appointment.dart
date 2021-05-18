@@ -158,6 +158,7 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                 ? appointmentTime.difference(currentTime).inSeconds - 86400
                 : 0,
             text: '',
+            fontSize: 0.0,
             onComplete: () {
               setState(() {
                 _profileFuture = api.getAppointmentDetails(
