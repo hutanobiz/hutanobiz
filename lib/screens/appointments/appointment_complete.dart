@@ -133,7 +133,11 @@ class AppointmentCompleteConfirmation extends StatelessWidget {
                       Navigator.pushNamed(
                         context,
                         Routes.rateDoctorScreen,
-                        arguments: "3",
+                        arguments: {
+                          'rateFrom': "3",
+                          'appointmentId':
+                              appointmentCompleteMap["appointmentId"]
+                        },
                       );
                     },
                   )),
@@ -166,7 +170,8 @@ class AppointmentCompleteConfirmation extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pushNamedAndRemoveUntil(
                           Routes.dashboardScreen,
-                          (Route<dynamic> route) => false,arguments: 0);
+                          (Route<dynamic> route) => false,
+                          arguments: 0);
                     },
                   )),
             )
