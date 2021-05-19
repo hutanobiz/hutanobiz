@@ -11,6 +11,8 @@ import 'package:hutano/screens/appointments/rate_doctor_screen.dart';
 import 'package:hutano/screens/appointments/request_detail_screen.dart';
 import 'package:hutano/screens/appointments/seeking_cure.dart';
 import 'package:hutano/screens/appointments/telemedicine_track_treatment.dart';
+import 'package:hutano/screens/appointments/track_office_appointment.dart';
+import 'package:hutano/screens/appointments/track_onsite_appointment.dart';
 import 'package:hutano/screens/appointments/track_treatment.dart';
 import 'package:hutano/screens/appointments/treatment_summary.dart';
 import 'package:hutano/screens/appointments/upload_documents.dart';
@@ -31,6 +33,9 @@ import 'package:hutano/screens/dashboard/available_timings_screen.dart';
 import 'package:hutano/screens/dashboard/choose_location_screen.dart';
 import 'package:hutano/screens/dashboard/choose_specialities.dart';
 import 'package:hutano/screens/dashboard/dashboard_search_screen.dart';
+import 'package:hutano/screens/dashboard/profile/activity_notification.dart';
+import 'package:hutano/screens/dashboard/profile/my_providers.dart';
+import 'package:hutano/screens/dashboard/profile/payment_history.dart';
 import 'package:hutano/screens/dashboard/provider_filters.dart';
 import 'package:hutano/screens/dashboard/provider_list_screen.dart';
 import 'package:hutano/screens/dashboard/provider_profile_image.dart';
@@ -88,7 +93,8 @@ class Routes {
   static const String treatmentSummaryScreen = '/treatmentSummaryScreen';
   static const String appointmentsScreen = '/appointmentsScreen';
   static const String trackTreatmentScreen = '/trackTreatmentScreen';
-  static const String telemedicineTrackTreatmentScreen = '/telemedicineTrackTreatmentScreen';
+  static const String telemedicineTrackTreatmentScreen =
+      '/telemedicineTrackTreatmentScreen';
   static const String virtualWaitingRoom = '/virtualWaitingRoom';
   static const String appointmentCompleteConfirmation =
       '/appointmentCompleteConfirmation';
@@ -104,28 +110,35 @@ class Routes {
   static const String cancelAppointmentScreen = '/cancelAppointmentScreen';
   static const String requestDetailScreen = '/requestDetailScreen';
   static const String callPage = '/callPage';
-  static const String officeTrackTreatmentScreen = '/officeTrackTreatmentScreen';
+  static const String officeTrackTreatmentScreen =
+      '/officeTrackTreatmentScreen';
   static const String homeMain = '/homeMain';
+  static const String activityNotification = '/activityNotification';
+  static const String myProviders = '/myProviders';
+  static const String paymentHistory = '/paymentHistory';
+  static const String trackOfficeAppointment = '/trackOfficeAppointment';
+   static const String trackOnsiteAppointment = '/trackOnsiteAppointment';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
 
     switch (settings.name) {
       case loginRoute:
-      if (args is bool) {
+        if (args is bool) {
           return _buildRoute(settings, LoginScreen(isBack: args));
         }
         return _errorRoute();
         break;
       case dashboardScreen:
-      if (args is int) {
+        if (args is int) {
           return _buildRoute(settings, HomeScreen(currentIndex: args));
         }
         return _errorRoute();
         break;
-       case homeMain:
-          return _buildRoute(settings, HomeMain());
+      case homeMain:
+        return _buildRoute(settings, HomeMain());
         break;
+
       case forgotPasswordRoute:
         return _buildRoute(settings, ForgetPassword());
         break;
@@ -138,7 +151,7 @@ class Routes {
         }
         return _errorRoute();
         break;
-       case verifyEmailOtpRoute:
+      case verifyEmailOtpRoute:
         if (args is Map) {
           return _buildRoute(settings, VerifyEmailOTP(args: args));
         }
@@ -190,14 +203,13 @@ class Routes {
           return _buildRoute(settings, SeeAllSearchScreeen(arguments: args));
         }
         return _errorRoute();
-
+        break;
       case selectAppointmentTimeScreen:
-        return _buildRoute(
-          settings,
-          SelectAppointmentTimeScreen(
-            fromScreen: args,
-          ),
-        );
+        if (args is SelectDateTimeArguments) {
+          return _buildRoute(
+              settings, SelectAppointmentTimeScreen(arguments: args));
+        }
+        return _errorRoute();
         break;
       case reviewAppointmentScreen:
         return _buildRoute(settings, ReviewAppointmentScreen());
@@ -206,23 +218,23 @@ class Routes {
         return _buildRoute(
             settings,
             ProviderProfileScreen(
-              selectedAppointmentType: args,
+              providerId: args,
             ));
         break;
       case appointmentDetailScreen:
         return _buildRoute(
           settings,
           AppointmentDetailScreen(
-            args: args,
+            appointmentId: args,
           ),
         );
         break;
       case rateDoctorScreen:
-        if (args is String) {
+        if (args is Map) {
           return _buildRoute(
             settings,
             RateDoctorScreen(
-              rateFrom: args,
+              rateFromAppointmentId: args,
             ),
           );
         }
@@ -291,10 +303,10 @@ class Routes {
         return _buildRoute(settings, AppointmentsScreen());
         break;
       case officeTrackTreatmentScreen:
-      return _buildRoute(
+        return _buildRoute(
           settings,
           OfficeTrackTreatmentScreen(
-            appointmentType: args,
+            appointmentId: args,
           ),
         );
         break;
@@ -302,27 +314,27 @@ class Routes {
         return _buildRoute(
           settings,
           TrackTreatmentScreen(
-            appointmentType: args,
+            appointmentId: args,
           ),
         );
         break;
 
       case telemedicineTrackTreatmentScreen:
-      return _buildRoute(
+        return _buildRoute(
           settings,
           TelemedicineTrackTreatmentScreen(
             appointmentId: args,
           ),
         );
-        break; 
+        break;
       case virtualWaitingRoom:
-      return _buildRoute(
+        return _buildRoute(
           settings,
           VirtualWaingRoom(
             appointmentId: args,
           ),
         );
-        break; 
+        break;
       case appointmentCompleteConfirmation:
         if (args is Map) {
           return _buildRoute(
@@ -407,8 +419,37 @@ class Routes {
         );
         break;
       case callPage:
-        return _buildRoute(settings, CallPage(channelName: args,));
+        return _buildRoute(
+            settings,
+            CallPage(
+              channelName: args,
+            ));
         break;
+      case activityNotification:
+        return _buildRoute(settings, ActivityNotifications());
+        break;
+      case myProviders:
+        return _buildRoute(settings, MyProviders());
+        break;
+      case paymentHistory:
+        return _buildRoute(settings, PaymentHistory());
+        break;
+      case trackOfficeAppointment:
+        return _buildRoute(
+            settings,
+            TrackOfficeAppointment(
+              appointmentId: args,
+            ));
+        break;
+      case trackOnsiteAppointment:
+        return _buildRoute(
+            settings,
+            TrackOnsiteAppointment(
+              appointmentId: args,
+            ));
+        break;
+
+        
       default:
         return _errorRoute();
     }
@@ -451,4 +492,11 @@ class SearchArguments {
   final int type;
 
   SearchArguments({this.list, this.title, this.type});
+}
+
+class SelectDateTimeArguments {
+  final String appointmentId;
+  final int fromScreen;
+
+  SelectDateTimeArguments({this.fromScreen, this.appointmentId});
 }
