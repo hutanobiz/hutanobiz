@@ -173,6 +173,7 @@ class _CallPageState extends State<CallPage> {
     api.stopVideoCall(context, token, stopMap).then((value) {
       Navigator.pop(context);
       widget.channelName['type'] = '2';
+      widget.channelName['appointmentId'] = widget.channelName['_id'];
       Navigator.of(context).pushReplacementNamed(
         Routes.appointmentCompleteConfirmation,
         arguments: widget.channelName,
@@ -253,6 +254,8 @@ class _CallPageState extends State<CallPage> {
                               onRightPressed: () {
                                 Navigator.pop(context);
                                 widget.channelName['type'] = '2';
+                                widget.channelName['appointmentId'] =
+                                    widget.channelName['_id'];
                                 Navigator.of(context).pushReplacementNamed(
                                   Routes.appointmentCompleteConfirmation,
                                   arguments: widget.channelName,
