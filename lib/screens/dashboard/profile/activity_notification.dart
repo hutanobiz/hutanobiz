@@ -171,7 +171,7 @@ class _ActivityNotificationsState extends State<ActivityNotifications> {
                         padding:
                             EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                            color: AppColors.accentColor,
+                            color: AppColors.goldenTainoi.withOpacity(0.3),
                             borderRadius: BorderRadius.all(Radius.circular(8))),
                         child: appointmentType(response["appointmentType"]),
                       ),
