@@ -95,20 +95,9 @@ class PushNotificationService {
                 });
             break;
           case 'ready_to_join':
-            bool isCurrent(String routeName) {
-              var isCurrent = false;
-              Navigator.popUntil(navigatorContext, (route) {
-                if (route.settings.name == routeName) {
-                  isCurrent = true;
-                }
-                return true;
-              });
-              return isCurrent;
-            }
             if (Platform.isIOS
                 ? message.data['isUserJoin']
                 : message.data['isUserJoin'] == "true") {
-              // Navigator.pop(navigatorContext);
               Navigator.pushReplacementNamed(
                   navigatorContext, Routes.telemedicineTrackTreatmentScreen,
                   arguments: Platform.isIOS
@@ -125,7 +114,8 @@ class PushNotificationService {
                   },
                   rightText: 'Waiting Room',
                   onRightPressed: () {
-                    if (!isCurrent(Routes.telemedicineTrackTreatmentScreen)) {
+                    if (!isCurrent(Routes.telemedicineTrackTreatmentScreen,
+                        message.data['appointmentId'])) {
                       SharedPref().getToken().then((token) {
                         var appointmentId = {};
                         appointmentId['appointmentId'] = Platform.isIOS
@@ -134,7 +124,7 @@ class PushNotificationService {
                         api
                             .patientAvailableForCall(token, appointmentId)
                             .then((value) {
-                          Navigator.of(navigatorContext).popAndPushNamed(
+                          Navigator.of(navigatorContext).pushNamed(
                               Routes.telemedicineTrackTreatmentScreen,
                               arguments: Platform.isIOS
                                   ? message.data['appointmentId']
