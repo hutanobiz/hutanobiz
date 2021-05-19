@@ -159,11 +159,6 @@ class _AllTitlesSpecialtesScreenState extends State<AllTitlesSpecialtesScreen> {
                           ),
                         ).onClick(
                           onTap: () {
-                            conatiner.projectsResponse.removeWhere(
-                              (key, value) {
-                                return !(key.toString().contains('serviceType') || key.toString().contains('insuranceType') || key.toString().contains('maximumDistance'));
-                              },
-                            );
 
                             conatiner.setProjectsResponse(
                                 "specialtyId[${index.toString()}]",
