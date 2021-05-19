@@ -10,8 +10,8 @@ import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 
 class RateDoctorScreen extends StatefulWidget {
-  final String rateFrom;
-  RateDoctorScreen({Key key, this.rateFrom}) : super(key: key);
+  final dynamic rateFromAppointmentId;
+  RateDoctorScreen({Key key, this.rateFromAppointmentId}) : super(key: key);
 
   @override
   _RateDoctorScreenState createState() => _RateDoctorScreenState();
@@ -95,7 +95,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
       _ratingText = "How was your experience with $_name ?";
     }
 
-    rateMap["appointment"] = _container.appointmentIdMap["appointmentId"];
+    rateMap["appointment"] = widget.rateFromAppointmentId["appointmentId"];
   }
 
   @override
@@ -121,10 +121,18 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Image.asset(
-                          'images/doctorImage.png',
-                          height: 70,
-                        ),
+                        avatar == null
+                            ? Image.asset(
+                                'images/doctorImage.png',
+                                height: 70,
+                              )
+                            : ClipRRect(
+                                borderRadius: BorderRadius.circular(35),
+                                child: Image.network(
+                                  ApiBaseHelper.image_base_url + avatar,
+                                  height: 70,
+                                ),
+                              ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -355,62 +363,62 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
     }
   }
 
-  List<Widget> widgetList() {
-    //Map _providerData) {
-    List<Widget> widgetList = List();
+  // List<Widget> widgetList() {
+  //   //Map _providerData) {
+  //   List<Widget> widgetList = List();
 
-    // widgetList.add(profileWidget(_providerData);
+  //   // widgetList.add(profileWidget(_providerData);
 
-    widgetList.add(rateWidget());
+  //   widgetList.add(rateWidget());
 
-    widgetList.add(_rating.round() >= 1
-        ? Text(
-            _rating.round() >= 5
-                ? "Tell us what went right"
-                : "Tell us what went wrong",
-            style: TextStyle(
-              fontSize: 14.0,
-              fontWeight: FontWeight.w700,
-            ),
-          )
-        : Container());
+  //   widgetList.add(_rating.round() >= 1
+  //       ? Text(
+  //           _rating.round() >= 5
+  //               ? "Tell us what went right"
+  //               : "Tell us what went wrong",
+  //           style: TextStyle(
+  //             fontSize: 14.0,
+  //             fontWeight: FontWeight.w700,
+  //           ),
+  //         )
+  //       : Container());
 
-    widgetList.add(_rating.round() >= 1 ? _selectWrongWidget() : Container());
+  //   widgetList.add(_rating.round() >= 1 ? _selectWrongWidget() : Container());
 
-    widgetList.add(Text(
-      "Leave a Review",
-      style: TextStyle(
-        fontSize: 14.0,
-        fontWeight: FontWeight.w700,
-      ),
-    ));
+  //   widgetList.add(Text(
+  //     "Leave a Review",
+  //     style: TextStyle(
+  //       fontSize: 14.0,
+  //       fontWeight: FontWeight.w700,
+  //     ),
+  //   ));
 
-    widgetList.add(SizedBox(height: 14.0));
+  //   widgetList.add(SizedBox(height: 14.0));
 
-    widgetList.add(Container(
-      height: 150.0,
-      child: TextField(
-        controller: _reviewController,
-        keyboardType: TextInputType.multiline,
-        maxLines: 10,
-        textInputAction: TextInputAction.newline,
-        onChanged: (text) {
-          if (text.isNotEmpty)
-            rateMap["review"] = text.toString();
-          else
-            rateMap.remove("review");
-        },
-        decoration: InputDecoration(
-          labelStyle: TextStyle(color: Colors.grey),
-          labelText: "Type something here...",
-          alignLabelWithHint: true,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(14.0)),
-        ),
-      ),
-    ));
+  //   widgetList.add(Container(
+  //     height: 150.0,
+  //     child: TextField(
+  //       controller: _reviewController,
+  //       keyboardType: TextInputType.multiline,
+  //       maxLines: 10,
+  //       textInputAction: TextInputAction.newline,
+  //       onChanged: (text) {
+  //         if (text.isNotEmpty)
+  //           rateMap["review"] = text.toString();
+  //         else
+  //           rateMap.remove("review");
+  //       },
+  //       decoration: InputDecoration(
+  //         labelStyle: TextStyle(color: Colors.grey),
+  //         labelText: "Type something here...",
+  //         alignLabelWithHint: true,
+  //         border: OutlineInputBorder(borderRadius: BorderRadius.circular(14.0)),
+  //       ),
+  //     ),
+  //   ));
 
-    return widgetList;
-  }
+  //   return widgetList;
+  // }
 
   Widget profileWidget(Map _providerData) {
     String professionalTitle = "---", practisingSince = "---";
@@ -709,8 +717,8 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                       int count = 0;
                       FocusScope.of(context).requestFocus(FocusNode());
 
-                      if (widget.rateFrom != null) {
-                        switch (widget.rateFrom) {
+                      if (widget.rateFromAppointmentId['rateFrom'] != null) {
+                        switch (widget.rateFromAppointmentId['rateFrom']) {
                           case "1":
                             Navigator.of(context).popUntil((_) => count++ >= 2);
                             break;
