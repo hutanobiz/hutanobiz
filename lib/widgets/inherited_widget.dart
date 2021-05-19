@@ -20,8 +20,8 @@ class InheritedContainerState extends State<InheritedContainer> {
   Map projectsResponse = Map();
   Map providerResponse = Map();
   Map appointmentData = Map();
-  Map appointmentIdMap = Map();
-  Map providerIdMap = Map();
+  // Map appointmentIdMap = Map();
+  // Map providerIdMap = Map();
   Map userLocationMap = Map();
   Map consentToTreatMap = Map();
   Map selectServiceMap = Map();
@@ -49,13 +49,13 @@ class InheritedContainerState extends State<InheritedContainer> {
     appointmentData[key] = data;
   }
 
-  void setProviderId(String providerId) {
-    providerIdMap["providerId"] = providerId;
-  }
+  // void setProviderId(String providerId) {
+  //   providerIdMap["providerId"] = providerId;
+  // }
 
-  void setAppointmentId(String appointmentId) {
-    appointmentIdMap["appointmentId"] = appointmentId;
-  }
+  // void setAppointmentId(String appointmentId) {
+  //   appointmentIdMap["appointmentId"] = appointmentId;
+  // }
 
   void setUserLocation(String key, dynamic data) {
     userLocationMap[key] = data;
