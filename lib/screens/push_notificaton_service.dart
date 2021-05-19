@@ -50,9 +50,7 @@ class PushNotificationService {
       (RemoteMessage message) {
         print("onMessage: $message");
 
-        String notificationType = Platform.isIOS
-            ? message.data['notification_type'] ?? ""
-            : message.data['notification_type'] ?? "";
+        String notificationType = message.data['notification_type'] ?? "";
 
         switch (notificationType) {
           case 'call':
@@ -75,9 +73,7 @@ class PushNotificationService {
                   if ((statuses[Permission.Permission.camera].isGranted) &&
                       (statuses[Permission.Permission.microphone].isGranted)) {
                     var map = {};
-                    map['_id'] = Platform.isIOS
-                        ? message.data['appointmentId']
-                        : message.data['appointmentId'];
+                    map['_id'] = message.data['appointmentId'];
                     map['name'] = "---";
                     map['address'] = 'a';
                     map['dateTime'] = 't';
@@ -95,14 +91,10 @@ class PushNotificationService {
                 });
             break;
           case 'ready_to_join':
-            if (Platform.isIOS
-                ? message.data['isUserJoin']
-                : message.data['isUserJoin'] == "true") {
+            if (message.data['isUserJoin'] == "true") {
               Navigator.pushReplacementNamed(
                   navigatorContext, Routes.telemedicineTrackTreatmentScreen,
-                  arguments: Platform.isIOS
-                      ? message.data['appointmentId']
-                      : message.data['appointmentId']);
+                  arguments: message.data['appointmentId']);
             } else {
               Widgets.showConfirmationDialog(
                   context: navigatorContext,
@@ -118,34 +110,28 @@ class PushNotificationService {
                         message.data['appointmentId'])) {
                       SharedPref().getToken().then((token) {
                         var appointmentId = {};
-                        appointmentId['appointmentId'] = Platform.isIOS
-                            ? message.data['appointmentId']
-                            : message.data['appointmentId'];
+                        appointmentId['appointmentId'] =
+                            message.data['appointmentId'];
                         api
                             .patientAvailableForCall(token, appointmentId)
                             .then((value) {
                           Navigator.of(navigatorContext).pushNamed(
                               Routes.telemedicineTrackTreatmentScreen,
-                              arguments: Platform.isIOS
-                                  ? message.data['appointmentId']
-                                  : message.data['appointmentId']);
+                              arguments: message.data['appointmentId']);
                         });
                       });
                     } else {
                       SharedPref().getToken().then((token) {
                         var appointmentId = {};
-                        appointmentId['appointmentId'] = Platform.isIOS
-                            ? message.data['appointmentId']
-                            : message.data['appointmentId'];
+                        appointmentId['appointmentId'] =
+                            message.data['appointmentId'];
                         api
                             .patientAvailableForCall(token, appointmentId)
                             .then((value) {
                           Navigator.pop(navigatorContext);
                           Navigator.pushReplacementNamed(navigatorContext,
                               Routes.telemedicineTrackTreatmentScreen,
-                              arguments: Platform.isIOS
-                                  ? message.data['appointmentId']
-                                  : message.data['appointmentId']);
+                              arguments: message.data['appointmentId']);
                         });
                       });
                     }
@@ -170,9 +156,7 @@ class PushNotificationService {
             } else if (message.data['appointmentType'] == '2') {
               Navigator.of(navigatorContext).pushNamed(
                 Routes.appointmentDetailScreen,
-                arguments: Platform.isIOS
-                    ? message.data['appointmentId']
-                    : message.data['appointmentId'],
+                arguments: message.data['appointmentId'],
               );
             } else {
               if (!isCurrent(Routes.trackOnsiteAppointment,
@@ -230,48 +214,33 @@ class PushNotificationService {
         android: androidPlatformChannelSpecifics,
         iOS: iOSPlatformChannelSpecifics);
 
-    await flutterLocalNotificationsPlugin.show(
-        0,
-        Platform.isAndroid
-            ? message.notification.title
-            : message.notification.title,
-        Platform.isAndroid
-            ? message.notification.body
-            : message.notification.body,
-        platformChannelSpecifics,
+    await flutterLocalNotificationsPlugin.show(0, message.notification.title,
+        message.notification.body, platformChannelSpecifics,
         payload: json.encode(message.data));
   }
 
   navigateUser(RemoteMessage message) {
-    String notificationType = Platform.isIOS
-        ? message.data['notification_type'] ?? ""
-        : message.data['notification_type'] ?? "";
+    String notificationType = message.data['notification_type'] ?? "";
 
     switch (notificationType) {
       case 'call':
       case 'call_join':
         Navigator.of(navigatorContext).pushNamed(
           Routes.appointmentDetailScreen,
-          arguments: Platform.isIOS
-              ? message.data['appointmentId']
-              : message.data['appointmentId'],
+          arguments: message.data['appointmentId'],
         );
         break;
       case 'ready_to_join':
         Navigator.pushNamed(
           navigatorContext,
           Routes.telemedicineTrackTreatmentScreen,
-          arguments: Platform.isIOS
-              ? message.data['appointmentId']
-              : message.data['appointmentId'],
+          arguments: message.data['appointmentId'],
         );
         break;
       case 'call-reminder':
         Navigator.of(navigatorContext).pushNamed(
           Routes.appointmentDetailScreen,
-          arguments: Platform.isIOS
-              ? message.data['appointmentId']
-              : message.data['appointmentId'],
+          arguments: message.data['appointmentId'],
         );
         break;
 
@@ -307,23 +276,17 @@ class PushNotificationService {
         break;
 
       case 'request_status':
-        var appointmentType = Platform.isIOS
-            ? message.data['appointmentType']
-            : message.data['appointmentType'];
+        var appointmentType = message.data['appointmentType'];
         if (appointmentType == "2") {
           Navigator.pushNamed(
             navigatorContext,
             Routes.telemedicineTrackTreatmentScreen,
-            arguments: Platform.isIOS
-                ? message.data['appointmentId']
-                : message.data['appointmentId'],
+            arguments: message.data['appointmentId'],
           );
         } else {
           Navigator.of(navigatorContext).pushNamed(
             Routes.appointmentDetailScreen,
-            arguments: Platform.isIOS
-                ? message.data['appointmentId']
-                : message.data['appointmentId'],
+            arguments: message.data['appointmentId'],
           );
         }
         break;
@@ -345,9 +308,7 @@ class PushNotificationService {
         } else if (message.data['appointmentType'] == '2') {
           Navigator.of(navigatorContext).pushNamed(
             Routes.appointmentDetailScreen,
-            arguments: Platform.isIOS
-                ? message.data['appointmentId']
-                : message.data['appointmentId'],
+            arguments: message.data['appointmentId'],
           );
         } else {
           if (!isCurrent(
@@ -366,25 +327,10 @@ class PushNotificationService {
 
         break;
       default:
-        String isTrack = Platform.isIOS
-            ? message.data['isTrack'] ?? "false"
-            : message.data['isTrack'] ?? "false";
-
-        if (isTrack == "true") {
-          Navigator.of(navigatorContext).pushNamed(
-            Routes.trackTreatmentScreen,
-            arguments: Platform.isIOS
-                ? message.data['appointmentId']
-                : message.data['appointmentId'],
-          );
-        } else {
-          Navigator.of(navigatorContext).pushNamed(
-            Routes.appointmentDetailScreen,
-            arguments: Platform.isIOS
-                ? message.data['appointmentId']
-                : message.data['appointmentId'],
-          );
-        }
+        Navigator.of(navigatorContext).pushNamed(
+          Routes.appointmentDetailScreen,
+          arguments: message.data['appointmentId'],
+        );
     }
   }
 
