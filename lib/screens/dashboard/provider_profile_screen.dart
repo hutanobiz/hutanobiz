@@ -16,10 +16,9 @@ import 'package:hutano/widgets/review_widget.dart';
 import 'package:intl/intl.dart';
 
 class ProviderProfileScreen extends StatefulWidget {
-  ProviderProfileScreen({Key key, this.selectedAppointmentType})
-      : super(key: key);
+  ProviderProfileScreen({Key key, this.providerId}) : super(key: key);
 
-  final String selectedAppointmentType;
+  final String providerId;
 
   @override
   _ProviderProfileScreenState createState() => _ProviderProfileScreenState();
@@ -57,7 +56,6 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
   @override
   void didChangeDependencies() {
     _container = InheritedContainer.of(context);
-    Map _providerData = _container.providerIdMap;
 
     ApiBaseHelper api = ApiBaseHelper();
     Map<String, String> locMap = {};
@@ -69,8 +67,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     locMap['lattitude'] = _userLocation.latitude.toStringAsFixed(2);
     locMap['longitude'] = _userLocation.longitude.toStringAsFixed(2);
 
-    _profileFuture =
-        api.getProviderProfile(_providerData["providerId"], locMap);
+    _profileFuture = api.getProviderProfile(widget.providerId, locMap);
 
     super.didChangeDependencies();
   }
@@ -170,22 +167,10 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
 
                                 _container.setProviderData(
                                     "providerData", profileMapResponse);
-
-                                dynamic projectResponse =
-                                    _container.getProjectsResponse();
-
-                                String serviceType =
-                                    projectResponse['serviceType'] ?? '0';
-
-                                if (serviceType == '0') {
-                                  Navigator.of(context).pushNamed(
-                                    Routes.appointmentTypeScreen,
-                                    arguments: _appointentTypeMap,
-                                  );
-                                } else {
-                                  Navigator.of(context)
-                                      .pushNamed(Routes.selectServicesScreen);
-                                }
+                                Navigator.of(context).pushNamed(
+                                  Routes.appointmentTypeScreen,
+                                  arguments: _appointentTypeMap,
+                                );
                               },
                             ),
                           ),
@@ -285,19 +270,25 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
               DateTime.now().year,
               DateTime.now().month,
               9,
-              int.parse(scheduleList[i]['fromTime'].toString().split(':')[0]),
-              int.parse(scheduleList[i]['fromTime'].toString().split(':')[1]));
+              int.parse(scheduleList[i]['session'][0]['fromTime']
+                  .toString()
+                  .split(':')[0]),
+              int.parse(scheduleList[i]['session'][0]['fromTime']
+                  .toString()
+                  .split(':')[1]));
           var toTime = DateTime.utc(
               DateTime.now().year,
               DateTime.now().month,
               9,
-              int.parse(scheduleList[i]['toTime'].toString().split(':')[0]),
-              int.parse(scheduleList[i]['toTime'].toString().split(':')[1]));
+              int.parse(scheduleList[i]['session'][0]['toTime']
+                  .toString()
+                  .split(':')[0]),
+              int.parse(scheduleList[i]['session'][0]['toTime']
+                  .toString()
+                  .split(':')[1]));
 
           String from = DateFormat('HH:mm').format(fromTime.toLocal());
-          // '${fromTime.toLocal().hour}:${fromTime.toLocal().minute}';
           String to = DateFormat('HH:mm').format(toTime.toLocal());
-          //'${toTime.toLocal().hour}:${toTime.toLocal().minute}';
 
           if (now.weekday.toString() == day) {
             todaysTimings = todaysTimings + from + " - " + to + " ; ";
@@ -345,7 +336,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
         child: ProviderWidget(
           data: _providerData,
-          selectedAppointment: widget.selectedAppointmentType,
+          selectedAppointment: null,
           averageRating: averageRating,
           isOptionsShow: false,
           isProverPicShow: true,
