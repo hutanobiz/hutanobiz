@@ -112,12 +112,10 @@ class _RegisterEmailState extends State<RegisterEmail> {
                         onChanged: ((country) {
                           countryCode = country.dialCode;
                         }),
-
                         hideMainText: true,
                         showFlagMain: true,
                         initialSelection: 'US',
                         favorite: ['+1', 'US'],
-
                         showCountryOnly: false,
                         alignLeft: true,
                       ),
@@ -180,7 +178,7 @@ class _RegisterEmailState extends State<RegisterEmail> {
                       decoration: TextDecoration.underline,
                     ),
                   ).onClick(onTap: () async {
-                    var url = 'https://staging.hutano.xyz/';
+                    var url = 'https://staging.hutano.com/';
                     if (await canLaunch(url)) {
                       await launch(url);
                     } else {
@@ -196,7 +194,7 @@ class _RegisterEmailState extends State<RegisterEmail> {
                   decoration: TextDecoration.underline,
                 ),
               ).onClick(onTap: () async {
-                var url = 'https://staging.hutano.xyz/';
+                var url = 'https://staging.hutano.com/';
                 if (await canLaunch(url)) {
                   await launch(url);
                 } else {
@@ -271,7 +269,7 @@ class _RegisterEmailState extends State<RegisterEmail> {
     formWidget.add(Widgets.sizedBox(height: 42.0));
     formWidget.add(Center(
         child: Text('Help Signing in?').onClick(onTap: () async {
-      var url = 'https://staging.hutano.xyz/';
+      var url = 'https://staging.hutano.com/';
       if (await canLaunch(url)) {
         await launch(url);
       } else {
@@ -281,7 +279,7 @@ class _RegisterEmailState extends State<RegisterEmail> {
     formWidget.add(Widgets.sizedBox(height: 16.0));
     formWidget.add(Center(
         child: Text('Hutano data security statement').onClick(onTap: () async {
-      var url = 'https://staging.hutano.xyz/';
+      var url = 'https://staging.hutano.com/';
       if (await canLaunch(url)) {
         await launch(url);
       } else {

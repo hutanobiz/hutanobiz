@@ -57,9 +57,9 @@ class _LoginState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-     _firebaseMessaging.getToken().then((String token) {
+    _firebaseMessaging.getToken().then((String token) {
       SharedPref().setValue("deviceToken", token);
       print(token);
     });
@@ -241,7 +241,7 @@ class _LoginState extends State<LoginScreen> {
                       decoration: TextDecoration.underline,
                     ),
                   ).onClick(onTap: () async {
-                    var url = 'https://staging.hutano.xyz/';
+                    var url = 'https://staging.hutano.com/';
                     if (await canLaunch(url)) {
                       await launch(url);
                     } else {
@@ -257,7 +257,7 @@ class _LoginState extends State<LoginScreen> {
                   decoration: TextDecoration.underline,
                 ),
               ).onClick(onTap: () async {
-                var url = 'https://staging.hutano.xyz/';
+                var url = 'https://staging.hutano.com/';
                 if (await canLaunch(url)) {
                   await launch(url);
                 } else {
@@ -313,7 +313,7 @@ class _LoginState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              "Don't have an account.",
+              "Don't have an account?",
               style: TextStyle(
                   fontWeight: FontWeight.normal,
                   color: Colors.black,
@@ -335,7 +335,7 @@ class _LoginState extends State<LoginScreen> {
     formWidget.add(Widgets.sizedBox(height: 42.0));
     formWidget.add(Center(
         child: Text('Help Signing in?').onClick(onTap: () async {
-      var url = 'https://staging.hutano.xyz/';
+      var url = 'https://staging.hutano.com/';
       if (await canLaunch(url)) {
         await launch(url);
       } else {
@@ -345,7 +345,7 @@ class _LoginState extends State<LoginScreen> {
     formWidget.add(Widgets.sizedBox(height: 16.0));
     formWidget.add(Center(
         child: Text('Hutano data security statement').onClick(onTap: () async {
-      var url = 'https://staging.hutano.xyz/';
+      var url = 'https://staging.hutano.com/';
       if (await canLaunch(url)) {
         await launch(url);
       } else {
