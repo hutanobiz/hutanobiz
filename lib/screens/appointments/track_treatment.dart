@@ -33,10 +33,9 @@ const PATIENT_ARRIVED = 'patientArrived';
 const PROVIDER_ARRIVED = 'providerArrived';
 
 class TrackTreatmentScreen extends StatefulWidget {
-  const TrackTreatmentScreen({Key key, this.appointmentType = 0})
-      : super(key: key);
+  const TrackTreatmentScreen({Key key, this.appointmentId}) : super(key: key);
 
-  final int appointmentType;
+  final String appointmentId;
 
   @override
   _TrackTreatmentScreenState createState() => _TrackTreatmentScreenState();
@@ -46,7 +45,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
   Future<dynamic> _profileFuture;
 
   bool _isLoading = false;
-  InheritedContainerState _container;
+  // InheritedContainerState _container;
 
   final Set<Marker> _markers = {};
   final Set<Polyline> _polyline = {};
@@ -94,7 +93,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
   setPolylines(LatLng _initialPosition, LatLng _desPosition) async {
     PolylineResult polylineResult = await polylinePoints
         .getRouteBetweenCoordinates(
-          "AIzaSyAkq7DnUBTkddWXddoHAX02Srw6570ktx8",
+          Strings.kGoogleApiKey,
           PointLatLng(_initialPosition.latitude, _initialPosition.longitude),
           PointLatLng(_desPosition.latitude, _desPosition.longitude),
         )
@@ -128,17 +127,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
   void initState() {
     super.initState();
 
-    _appointmentType = widget.appointmentType;
-
-    if (_appointmentType == 3) {
-      _trackStatusKey = TRACK_STATUS_PROVIDER;
-      _startDrivingStatusKey = PROVIDER_START_DRIVING;
-      _arrivedStatusKey = PROVIDER_ARRIVED;
-    } else {
-      _trackStatusKey = TRACK_STATUS;
-      _startDrivingStatusKey = PATIENT_START_DRIVING;
-      _arrivedStatusKey = PATIENT_ARRIVED;
-    }
+    // _appointmentType = widget.appointmentType;
 
     setSourceAndDestinationIcons();
     setInitialLocation();
@@ -193,18 +182,13 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    _container = InheritedContainer.of(context);
-
-    if (_container.userLocationMap != null &&
-        _container.userLocationMap.isNotEmpty) {
-      _userLocation = _container.userLocationMap['latLng']?? LatLng(0.00, 0.00);
-    }
+    _userLocation = LatLng(0.00, 0.00);
 
     SharedPref().getToken().then((token) {
       setState(() {
         _profileFuture = api.getAppointmentDetails(
           token,
-          _container.appointmentIdMap["appointmentId"],
+          widget.appointmentId,
           _userLocation,
         );
       });
@@ -240,7 +224,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
               if (_initialPosition != null) {
                 api
                     .getDistanceAndTime(
-                        _initialPosition, _desPosition, kGoogleApiKey)
+                        _initialPosition, _desPosition, Strings.kGoogleApiKey)
                     .then((value) {
                   _totalDistance = value["rows"][0]["elements"][0]["distance"]
                           ["text"]
@@ -296,10 +280,22 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
         address = "---",
         appointmentType = "---",
         dateTime;
+    _appointmentType = response["type"];
+    if (_appointmentType == 3) {
+      _trackStatusKey = TRACK_STATUS_PROVIDER;
+      _startDrivingStatusKey = PROVIDER_START_DRIVING;
+      _arrivedStatusKey = PROVIDER_ARRIVED;
+    } else {
+      _trackStatusKey = TRACK_STATUS;
+      _startDrivingStatusKey = PATIENT_START_DRIVING;
+      _arrivedStatusKey = PATIENT_ARRIVED;
+    }
 
     appointmentType = response["type"] == 1
         ? "Office response"
-        : response["type"] == 2 ? "Video response" : "Onsite response";
+        : response["type"] == 2
+            ? "Video response"
+            : "Onsite response";
 
     rating = appointment["averageRating"]?.toStringAsFixed(2) ?? "0";
 
@@ -593,8 +589,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
           int status = response[_trackStatusKey]["status"] ?? 0;
           switch (status) {
             case 0:
-              changeRequestStatus(
-                  _container.appointmentIdMap["appointmentId"], "1");
+              changeRequestStatus(widget.appointmentId, "1");
 
               IsolateNameServer.registerPortWithName(
                   port.sendPort, _isolateName);
@@ -629,8 +624,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
 
               break;
             case 1:
-              changeRequestStatus(
-                  _container.appointmentIdMap["appointmentId"], "2");
+              changeRequestStatus(widget.appointmentId, "2");
 
               IsolateNameServer.removePortNameMapping(_isolateName);
               BackgroundLocator.unRegisterLocationUpdate();
@@ -641,7 +635,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
               break;
             case 5:
               Map _map = {};
-              _map['id'] = _container.appointmentIdMap["appointmentId"];
+              _map['id'] = widget.appointmentId;
               _map['appointmentType'] = _appointmentType;
               _map['latLng'] = _userLocation;
 
@@ -676,7 +670,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
                     break;
                   case 5:
                     Map _map = {};
-                    _map['id'] = _container.appointmentIdMap["appointmentId"];
+                    _map['id'] = widget.appointmentId;
                     _map['appointmentType'] = _appointmentType;
                     _map['latLng'] = _userLocation;
 
@@ -707,7 +701,6 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
           //autoStop: false,
           //interval: 5,
         ),
-
       ),
     );
   }
@@ -933,8 +926,7 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
 
     SharedPref().getToken().then((token) {
       api
-          .updateAppointmentCoordinates(
-              token, map, _container.appointmentIdMap["appointmentId"])
+          .updateAppointmentCoordinates(token, map, widget.appointmentId)
           .then((value) {
         value.toString().debugLog();
       }).futureError((error) {
@@ -1032,14 +1024,12 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
 
                             if (_appointmentType == 3) {
                               onsiteChangeRequestStatus(
-                                  _container.appointmentIdMap["appointmentId"],
-                                  "5");
+                                  widget.appointmentId, "5");
                             } else {
-                              changeRequestStatus(
-                                  _container.appointmentIdMap["appointmentId"],
-                                  "5");
+                              changeRequestStatus(widget.appointmentId, "5");
                             }
-
+                            appointmentCompleteMap['appointmentId'] =
+                                widget.appointmentId;
                             Navigator.of(context).pushNamed(
                               Routes.appointmentCompleteConfirmation,
                               arguments: appointmentCompleteMap,
