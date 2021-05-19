@@ -34,10 +34,10 @@ const PATIENT_START_DRIVING = 'patientStartDriving';
 const PATIENT_ARRIVED = 'patientArrived';
 
 class OfficeTrackTreatmentScreen extends StatefulWidget {
-  const OfficeTrackTreatmentScreen({Key key, this.appointmentType = 0})
+  const OfficeTrackTreatmentScreen({Key key, this.appointmentId})
       : super(key: key);
 
-  final int appointmentType;
+  final String appointmentId;
 
   @override
   _OfficeTrackTreatmentScreenState createState() =>
@@ -50,14 +50,14 @@ class _OfficeTrackTreatmentScreenState extends State<OfficeTrackTreatmentScreen>
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool _isLoading = false;
-  InheritedContainerState _container;
 
   final Set<Marker> _markers = {};
   final Set<Polyline> _polyline = {};
 
   PolylinePoints polylinePoints = PolylinePoints();
   CountDownController _countDownController = CountDownController();
-  SimpleCountDownController _simpleCountDownController = SimpleCountDownController();
+  SimpleCountDownController _simpleCountDownController =
+      SimpleCountDownController();
 
   List<LatLng> _polyLineLatlngList = [];
   LatLng _initialPosition;
@@ -85,7 +85,7 @@ class _OfficeTrackTreatmentScreenState extends State<OfficeTrackTreatmentScreen>
   static const String _isolateName = "LocatorIsolate";
   ReceivePort port = ReceivePort();
 
-  int _appointmentType = 0;
+  int _appointmentType = 1;
   AnimationController _animationcontroller;
   String _trackStatusKey = TRACK_STATUS;
   String _startDrivingStatusKey = PATIENT_START_DRIVING;
@@ -101,7 +101,7 @@ class _OfficeTrackTreatmentScreenState extends State<OfficeTrackTreatmentScreen>
   setPolylines(LatLng _initialPosition, LatLng _desPosition) async {
     PolylineResult polylineResult = await polylinePoints
         .getRouteBetweenCoordinates(
-          "AIzaSyAkq7DnUBTkddWXddoHAX02Srw6570ktx8",
+          Strings.kGoogleApiKey,
           PointLatLng(_initialPosition.latitude, _initialPosition.longitude),
           PointLatLng(_desPosition.latitude, _desPosition.longitude),
         )
@@ -135,7 +135,6 @@ class _OfficeTrackTreatmentScreenState extends State<OfficeTrackTreatmentScreen>
   void initState() {
     super.initState();
 
-    _appointmentType = widget.appointmentType;
     _trackStatusKey = TRACK_STATUS;
     _startDrivingStatusKey = PATIENT_START_DRIVING;
     _arrivedStatusKey = PATIENT_ARRIVED;
@@ -204,19 +203,13 @@ class _OfficeTrackTreatmentScreenState extends State<OfficeTrackTreatmentScreen>
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    _container = InheritedContainer.of(context);
-
-    if (_container.userLocationMap != null &&
-        _container.userLocationMap.isNotEmpty) {
-      _userLocation =
-          _container.userLocationMap['latLng'] ?? LatLng(0.00, 0.00);
-    }
+    _userLocation = LatLng(0.00, 0.00);
 
     SharedPref().getToken().then((token) {
       setState(() {
         _profileFuture = api.getAppointmentDetails(
           token,
-          _container.appointmentIdMap["appointmentId"],
+          widget.appointmentId,
           _userLocation,
         );
       });
@@ -253,7 +246,7 @@ class _OfficeTrackTreatmentScreenState extends State<OfficeTrackTreatmentScreen>
               if (_initialPosition != null) {
                 api
                     .getDistanceAndTime(
-                        _initialPosition, _desPosition, kGoogleApiKey)
+                        _initialPosition, _desPosition, Strings.kGoogleApiKey)
                     .then((value) {
                   _totalDistance = value["rows"][0]["elements"][0]["distance"]
                           ["text"]
@@ -395,10 +388,10 @@ class _OfficeTrackTreatmentScreenState extends State<OfficeTrackTreatmentScreen>
       }
     }
 
-    return (status == 1 
-    // &&
-    //         appointmentTime.difference(DateTime.now()).inHours > 24
-            )
+    return (status == 1
+        // &&
+        //         appointmentTime.difference(DateTime.now()).inHours > 24
+        )
         ? previousDayWidget(avatar, name, rating, professionalTitle, doctorData,
             response, address, appointmentTime)
         : (status == 0 || status == 1)
@@ -596,7 +589,11 @@ class _OfficeTrackTreatmentScreenState extends State<OfficeTrackTreatmentScreen>
                                     Icon(Icons.exit_to_app),
                                     SizedBox(width: 12),
 
-                                    SimpleCountDownTimer(controller: _simpleCountDownController,duration: 1000, text: 'Your appointment starts in', ),
+                                    SimpleCountDownTimer(
+                                      controller: _simpleCountDownController,
+                                      duration: 1000,
+                                      text: 'Your appointment starts in',
+                                    ),
                                     // Text(
                                     //     'Your appointment starts in 00:20 min.'),
                                   ],
@@ -666,9 +663,7 @@ class _OfficeTrackTreatmentScreenState extends State<OfficeTrackTreatmentScreen>
                                               ],
                                             )).onClick(onTap: () {
                                             changeRequestStatus(
-                                                _container.appointmentIdMap[
-                                                    "appointmentId"],
-                                                "1");
+                                                widget.appointmentId, "1");
 
                                             IsolateNameServer
                                                 .registerPortWithName(
@@ -725,9 +720,7 @@ class _OfficeTrackTreatmentScreenState extends State<OfficeTrackTreatmentScreen>
                                               ],
                                             )).onClick(onTap: () {
                                             changeRequestStatus(
-                                                _container.appointmentIdMap[
-                                                    "appointmentId"],
-                                                "2");
+                                                widget.appointmentId, "2");
 
                                             IsolateNameServer
                                                 .removePortNameMapping(
@@ -1504,8 +1497,7 @@ class _OfficeTrackTreatmentScreenState extends State<OfficeTrackTreatmentScreen>
           int status = response[_trackStatusKey]["status"] ?? 0;
           switch (status) {
             case 0:
-              changeRequestStatus(
-                  _container.appointmentIdMap["appointmentId"], "1");
+              changeRequestStatus(widget.appointmentId, "1");
 
               IsolateNameServer.registerPortWithName(
                   port.sendPort, _isolateName);
@@ -1540,8 +1532,7 @@ class _OfficeTrackTreatmentScreenState extends State<OfficeTrackTreatmentScreen>
 
               break;
             case 1:
-              changeRequestStatus(
-                  _container.appointmentIdMap["appointmentId"], "2");
+              changeRequestStatus(widget.appointmentId, "2");
 
               IsolateNameServer.removePortNameMapping(_isolateName);
               BackgroundLocator.unRegisterLocationUpdate();
@@ -1552,7 +1543,7 @@ class _OfficeTrackTreatmentScreenState extends State<OfficeTrackTreatmentScreen>
               break;
             case 5:
               Map _map = {};
-              _map['id'] = _container.appointmentIdMap["appointmentId"];
+              _map['id'] = widget.appointmentId;
               _map['appointmentType'] = _appointmentType;
               _map['latLng'] = _userLocation;
 
@@ -1584,10 +1575,10 @@ class _OfficeTrackTreatmentScreenState extends State<OfficeTrackTreatmentScreen>
           //autoStop: false,
           //interval: 5,
         ),
-
       ),
     );
   }
+
   void showPinsOnMap(LatLng _initialPosition) {
     var pinPosition =
         LatLng(_initialPosition.latitude, _initialPosition.longitude);
@@ -1788,8 +1779,7 @@ class _OfficeTrackTreatmentScreenState extends State<OfficeTrackTreatmentScreen>
 
     SharedPref().getToken().then((token) {
       api
-          .updateAppointmentCoordinates(
-              token, map, _container.appointmentIdMap["appointmentId"])
+          .updateAppointmentCoordinates(token, map, widget.appointmentId)
           .then((value) {
         value.toString().debugLog();
       }).futureError((error) {
@@ -1884,10 +1874,9 @@ class _OfficeTrackTreatmentScreenState extends State<OfficeTrackTreatmentScreen>
                           ),
                           onPressed: () {
                             Navigator.of(context).pop();
-                            changeRequestStatus(
-                                _container.appointmentIdMap["appointmentId"],
-                                "5");
-
+                            changeRequestStatus(widget.appointmentId, "5");
+                            appointmentCompleteMap['appointmentId'] =
+                                widget.appointmentId;
                             Navigator.of(context).pushNamed(
                               Routes.appointmentCompleteConfirmation,
                               arguments: appointmentCompleteMap,
