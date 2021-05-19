@@ -265,15 +265,9 @@ class _TelemedicineTrackTreatmentScreenState
                         height: 55,
                         child: Center(child: Text('Detail')),
                       ).onClick(onTap: () {
-                        _container.setAppointmentId(widget.appointmentId);
-                        var _appointmentData = {};
-                        _appointmentData["_appointmentStatus"] =
-                            appointment['data']['status'].toString();
-                        _appointmentData["id"] = widget.appointmentId;
-                        _appointmentData["listType"] = 2;
                         Navigator.of(context).pushNamed(
                           Routes.appointmentDetailScreen,
-                          arguments: _appointmentData,
+                          arguments: widget.appointmentId,
                         );
                         // .whenComplete(() => appointmentsFuture(_userLocation));
                       })),
@@ -339,8 +333,6 @@ class _TelemedicineTrackTreatmentScreenState
                           .then((value) {
                         _container.setProviderData("providerData", value);
 
-                        _container.setAppointmentId(appointment['data']['_id']);
-
                         _container.setProjectsResponse('serviceType',
                             appointment['data']['type'].toString());
                         setState(() {
@@ -353,13 +345,13 @@ class _TelemedicineTrackTreatmentScreenState
 
                           Navigator.of(context).pushNamed(
                               Routes.selectAppointmentTimeScreen,
-                              arguments: 2);
+                              arguments: SelectDateTimeArguments(fromScreen: 2,appointmentId: widget.appointmentId ));
                         } else {
                           _container.setServicesData("status", "0");
                           _container.setServicesData("consultaceFee", '10');
                           Navigator.of(context).pushNamed(
                             Routes.selectAppointmentTimeScreen,
-                            arguments: 2,
+                            arguments:SelectDateTimeArguments(fromScreen: 2,appointmentId: widget.appointmentId )
                           );
                         }
                       });
@@ -793,15 +785,9 @@ class _TelemedicineTrackTreatmentScreenState
                           child: Center(
                             child: Text('Detail'),
                           )).onClick(onTap: () {
-                        _container.setAppointmentId(widget.appointmentId);
-                        var _appointmentData = {};
-                        _appointmentData["_appointmentStatus"] =
-                            appointment['data']['status'].toString();
-                        _appointmentData["id"] = widget.appointmentId;
-                        _appointmentData["listType"] = 2;
                         Navigator.of(context).pushNamed(
                           Routes.appointmentDetailScreen,
-                          arguments: _appointmentData,
+                          arguments: widget.appointmentId,
                         );
                       })),
                   SizedBox(
@@ -932,15 +918,9 @@ class _TelemedicineTrackTreatmentScreenState
                           child: Center(
                             child: Text('Detail'),
                           )).onClick(onTap: () {
-                        _container.setAppointmentId(widget.appointmentId);
-                        var _appointmentData = {};
-                        _appointmentData["_appointmentStatus"] =
-                            appointment['data']['status'].toString();
-                        _appointmentData["id"] = widget.appointmentId;
-                        _appointmentData["listType"] = 2;
                         Navigator.of(context).pushNamed(
                           Routes.appointmentDetailScreen,
-                          arguments: _appointmentData,
+                          arguments: widget.appointmentId,
                         );
                       })),
                   SizedBox(
@@ -1220,15 +1200,9 @@ class _TelemedicineTrackTreatmentScreenState
                   child: Center(
                     child: Text('Detail'),
                   )).onClick(onTap: () {
-                _container.setAppointmentId(widget.appointmentId);
-                var _appointmentData = {};
-                _appointmentData["_appointmentStatus"] =
-                    appointment['data']['status'].toString();
-                _appointmentData["id"] = widget.appointmentId;
-                _appointmentData["listType"] = 2;
                 Navigator.of(context).pushNamed(
                   Routes.appointmentDetailScreen,
-                  arguments: _appointmentData,
+                  arguments: widget.appointmentId,
                 );
               }),
               SizedBox(height: 24),
@@ -1302,15 +1276,9 @@ class _TelemedicineTrackTreatmentScreenState
                   child: Center(
                     child: Text('Detail'),
                   )).onClick(onTap: () {
-                _container.setAppointmentId(widget.appointmentId);
-                var _appointmentData = {};
-                _appointmentData["_appointmentStatus"] =
-                    appointment['data']['status'].toString();
-                _appointmentData["id"] = widget.appointmentId;
-                _appointmentData["listType"] = 2;
                 Navigator.of(context).pushNamed(
                   Routes.appointmentDetailScreen,
-                  arguments: _appointmentData,
+                  arguments: widget.appointmentId,
                 );
               }),
               SizedBox(height: 24),
