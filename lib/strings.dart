@@ -10,6 +10,6 @@ class Strings {
   static const String loggedIn = "Logged in successfully";
   static const String datePattern = 'MMMM dd, yyyy';
   static const String dateTimePattern = 'MMMM dd, yyyy, HH:mm';
+  static const String timePattern = 'hh:mm a';
   static const String kGoogleApiKey = "AIzaSyAkq7DnUBTkddWXddoHAX02Srw6570ktx8";
-  
 }
