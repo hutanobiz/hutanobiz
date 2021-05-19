@@ -567,17 +567,12 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
           appointmentCompleteMap['appointmentId'] = widget.appointmentId;
           appointmentCompleteMap['type'] =
               appointmentResponse['data']['type'].toString();
-          appointmentCompleteMap['name'] =
+          appointmentCompleteMap['name'] = appointmentResponse["data"]['doctor']
+                  ['title'] +
+              ' ' +
               appointmentResponse["data"]['doctor']['fullName'];
-          appointmentCompleteMap["address"] = appointmentResponse["data"]
-                  ['doctorAddress']['address'] +
-              ', ' +
-              appointmentResponse["data"]['doctorAddress']['city'] +
-              ', ' +
-              appointmentResponse["data"]['doctorAddress']['zipCode'];
-
           appointmentCompleteMap["dateTime"] =
-              DateFormat('yyyy-MM-dd, hh:mm a').format(DateTime.now());
+              DateFormat('dd MMM yyyy, HH:mm').format(DateTime.now());
 
           Navigator.of(context)
               .pushNamed(
