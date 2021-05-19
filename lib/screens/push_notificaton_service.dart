@@ -162,6 +162,44 @@ class PushNotificationService {
                   });
             }
             break;
+          case 'treatment_summary':
+          case 'tracking':
+            if (message.data['appointmentType'] == '1') {
+              if (!isCurrent(Routes.trackOfficeAppointment,
+                  message.data['appointmentId'])) {
+                Navigator.of(navigatorContext).pushNamed(
+                  Routes.trackOfficeAppointment,
+                  arguments: message.data['appointmentId'],
+                );
+              } else {
+                Navigator.of(navigatorContext).pushReplacementNamed(
+                  Routes.trackOfficeAppointment,
+                  arguments: message.data['appointmentId'],
+                );
+              }
+            } else if (message.data['appointmentType'] == '2') {
+              Navigator.of(navigatorContext).pushNamed(
+                Routes.appointmentDetailScreen,
+                arguments: Platform.isIOS
+                    ? message.data['appointmentId']
+                    : message.data['appointmentId'],
+              );
+            } else {
+              if (!isCurrent(Routes.trackOnsiteAppointment,
+                  message.data['appointmentId'])) {
+                Navigator.of(navigatorContext).pushNamed(
+                  Routes.trackOnsiteAppointment,
+                  arguments: message.data['appointmentId'],
+                );
+              } else {
+                Navigator.of(navigatorContext).pushReplacementNamed(
+                  Routes.trackOnsiteAppointment,
+                  arguments: message.data['appointmentId'],
+                );
+              }
+            }
+
+            break;
           default:
             showNotification(message);
         }
@@ -182,7 +220,7 @@ class PushNotificationService {
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: (String payload) async {
       print(payload);
-      var data = jsonDecode(payload);
+      RemoteMessage data = RemoteMessage(data: jsonDecode(payload));
       navigateUser(data);
     });
   }
@@ -201,6 +239,7 @@ class PushNotificationService {
     var platformChannelSpecifics = new NotificationDetails(
         android: androidPlatformChannelSpecifics,
         iOS: iOSPlatformChannelSpecifics);
+
     await flutterLocalNotificationsPlugin.show(
         0,
         Platform.isAndroid
@@ -210,7 +249,7 @@ class PushNotificationService {
             ? message.notification.body
             : message.notification.body,
         platformChannelSpecifics,
-        payload: json.encode(message));
+        payload: json.encode(message.data));
   }
 
   navigateUser(RemoteMessage message) {
@@ -221,14 +260,11 @@ class PushNotificationService {
     switch (notificationType) {
       case 'call':
       case 'call_join':
-        Map appointment = {};
-        appointment["_appointmentStatus"] = "1";
-        appointment["id"] = Platform.isIOS
-            ? message.data['appointmentId']
-            : message.data['appointmentId'];
         Navigator.of(navigatorContext).pushNamed(
           Routes.appointmentDetailScreen,
-          arguments: appointment,
+          arguments: Platform.isIOS
+              ? message.data['appointmentId']
+              : message.data['appointmentId'],
         );
         break;
       case 'ready_to_join':
@@ -241,29 +277,43 @@ class PushNotificationService {
         );
         break;
       case 'call-reminder':
-        Map appointment = {};
-        appointment["_appointmentStatus"] = "1";
-        appointment["id"] = Platform.isIOS
-            ? message.data['appointmentId']
-            : message.data['appointmentId'];
         Navigator.of(navigatorContext).pushNamed(
           Routes.appointmentDetailScreen,
-          arguments: appointment,
+          arguments: Platform.isIOS
+              ? message.data['appointmentId']
+              : message.data['appointmentId'],
         );
         break;
 
       case 'tracking':
-        Map appointment = {};
-        appointment["_appointmentStatus"] = "1";
-        appointment["id"] = Platform.isIOS
-            ? message.data['appointmentId']
-            : message.data['appointmentId'];
-        Navigator.of(navigatorContext).pushNamed(
-          Routes.trackTreatmentScreen,
-          arguments: Platform.isIOS
-              ? message.data['appointmentType']
-              : message.data['appointmentType'],
-        );
+        if (message.data['appointmentType'] == '1') {
+          if (!isCurrent(
+              Routes.trackOfficeAppointment, message.data['appointmentId'])) {
+            Navigator.of(navigatorContext).pushNamed(
+              Routes.trackOfficeAppointment,
+              arguments: message.data['appointmentId'],
+            );
+          } else {
+            Navigator.of(navigatorContext).pushReplacementNamed(
+              Routes.trackOfficeAppointment,
+              arguments: message.data['appointmentId'],
+            );
+          }
+        } else {
+          if (!isCurrent(
+              Routes.trackOnsiteAppointment, message.data['appointmentId'])) {
+            Navigator.of(navigatorContext).pushNamed(
+              Routes.trackOnsiteAppointment,
+              arguments: message.data['appointmentId'],
+            );
+          } else {
+            Navigator.of(navigatorContext).pushReplacementNamed(
+              Routes.trackOnsiteAppointment,
+              arguments: message.data['appointmentId'],
+            );
+          }
+        }
+
         break;
 
       case 'request_status':
@@ -279,53 +329,85 @@ class PushNotificationService {
                 : message.data['appointmentId'],
           );
         } else {
-          Map appointment = {};
-          appointment["_appointmentStatus"] = "1";
-          appointment["id"] = Platform.isIOS
-              ? message.data['appointmentId']
-              : message.data['appointmentId'];
           Navigator.of(navigatorContext).pushNamed(
             Routes.appointmentDetailScreen,
-            arguments: appointment,
+            arguments: Platform.isIOS
+                ? message.data['appointmentId']
+                : message.data['appointmentId'],
           );
         }
         break;
 
       case 'treatment_summary':
-        Map appointment = {};
-        appointment["_appointmentStatus"] = "1";
-        appointment["id"] = Platform.isIOS
-            ? message.data['appointmentId']
-            : message.data['appointmentId'];
-        Navigator.of(navigatorContext).pushNamed(
-          Routes.appointmentDetailScreen,
-          arguments: appointment,
-        );
+        if (message.data['appointmentType'] == '1') {
+          if (!isCurrent(
+              Routes.trackOfficeAppointment, message.data['appointmentId'])) {
+            Navigator.of(navigatorContext).pushNamed(
+              Routes.trackOfficeAppointment,
+              arguments: message.data['appointmentId'],
+            );
+          } else {
+            Navigator.of(navigatorContext).pushReplacementNamed(
+              Routes.trackOfficeAppointment,
+              arguments: message.data['appointmentId'],
+            );
+          }
+        } else if (message.data['appointmentType'] == '2') {
+          Navigator.of(navigatorContext).pushNamed(
+            Routes.appointmentDetailScreen,
+            arguments: Platform.isIOS
+                ? message.data['appointmentId']
+                : message.data['appointmentId'],
+          );
+        } else {
+          if (!isCurrent(
+              Routes.trackOnsiteAppointment, message.data['appointmentId'])) {
+            Navigator.of(navigatorContext).pushNamed(
+              Routes.trackOnsiteAppointment,
+              arguments: message.data['appointmentId'],
+            );
+          } else {
+            Navigator.of(navigatorContext).pushReplacementNamed(
+              Routes.trackOnsiteAppointment,
+              arguments: message.data['appointmentId'],
+            );
+          }
+        }
+
         break;
       default:
         String isTrack = Platform.isIOS
             ? message.data['isTrack'] ?? "false"
             : message.data['isTrack'] ?? "false";
 
-        Map appointment = {};
-        appointment["_appointmentStatus"] = "1";
-        appointment["id"] = Platform.isIOS
-            ? message.data['appointmentId']
-            : message.data['appointmentId'];
-
         if (isTrack == "true") {
           Navigator.of(navigatorContext).pushNamed(
             Routes.trackTreatmentScreen,
             arguments: Platform.isIOS
-                ? message.data['appointmentType']
-                : message.data['appointmentType'],
+                ? message.data['appointmentId']
+                : message.data['appointmentId'],
           );
         } else {
           Navigator.of(navigatorContext).pushNamed(
             Routes.appointmentDetailScreen,
-            arguments: appointment,
+            arguments: Platform.isIOS
+                ? message.data['appointmentId']
+                : message.data['appointmentId'],
           );
         }
     }
+  }
+
+  bool isCurrent(String routeName, args) {
+    bool isCurrent = false;
+    Navigator.popUntil(navigatorContext, (route) {
+      if (route.settings.name == routeName) {
+        if (route.settings.arguments == args) {
+          isCurrent = true;
+        }
+      }
+      return true;
+    });
+    return isCurrent;
   }
 }
