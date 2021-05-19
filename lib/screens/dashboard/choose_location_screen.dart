@@ -8,14 +8,15 @@ import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart' hide Location;
 import 'package:hutano/colors.dart';
+import 'package:hutano/strings.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:location/location.dart';
 
-const kGoogleApiKey = "AIzaSyAkq7DnUBTkddWXddoHAX02Srw6570ktx8";
+
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
+GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: Strings.kGoogleApiKey);
 
 class ChooseLocationScreen extends StatefulWidget {
   ChooseLocationScreen({Key key, @required this.latLng}) : super(key: key);
@@ -266,7 +267,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
   Future<void> _handlePressButton() async {
     Prediction p = await PlacesAutocomplete.show(
         context: context,
-        apiKey: kGoogleApiKey,
+        apiKey: Strings.kGoogleApiKey,
         mode: Mode.fullscreen,
         language: "en");
     if (p != null) {
