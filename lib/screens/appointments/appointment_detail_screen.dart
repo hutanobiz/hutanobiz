@@ -21,9 +21,10 @@ import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart' as Permission;
 
 class AppointmentDetailScreen extends StatefulWidget {
-  const AppointmentDetailScreen({Key key, this.args}) : super(key: key);
+  const AppointmentDetailScreen({Key key, this.appointmentId})
+      : super(key: key);
 
-  final Map args;
+  final String appointmentId;
 
   @override
   _AppointmentDetailScreenState createState() =>
@@ -41,7 +42,6 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
   Map _medicalHistoryMap = {};
 
-  int _appointmentListType = 1;
   ApiBaseHelper api = ApiBaseHelper();
   String token = '';
 
@@ -60,14 +60,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   @override
   void initState() {
     super.initState();
-
     setSourceAndDestinationIcons();
-
-    if (widget.args['listType'] != null) {
-      _appointmentListType = widget.args['listType'];
-    }
-
-    _appointmentStatus = widget.args["_appointmentStatus"] ?? "---";
   }
 
   initPlatformState() async {
@@ -137,7 +130,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
       setState(() {
         _profileFuture =
-            api.getAppointmentDetails(userToken, widget.args["id"], latLng);
+            api.getAppointmentDetails(userToken, widget.appointmentId, latLng);
       });
     });
   }
@@ -169,7 +162,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 profileMap = snapshot.data;
-
+                _appointmentStatus = profileMap['data']["status"].toString();
                 return Column(
                   children: [
                     Expanded(
@@ -178,103 +171,66 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         child: profileWidget(profileMap),
                       ),
                     ),
-                    profileMap['data']["type"] == 2?SizedBox():
                     Align(
                       alignment: FractionalOffset.bottomRight,
                       child: Container(
-                        height: 55.0,
-                        width: 200.0,
-                        margin: const EdgeInsets.only(top: 10),
-                        padding: const EdgeInsets.only(right: 20.0),
-                        child: FancyButton(
-                          title: profileMap['data']["type"] == 2
-                              ? _appointmentStatus == '4'
-                                  ? 'Treatment Summary'
-                                  : "Join Call"
-                              : "Show status",
-                          onPressed: _appointmentStatus == "2" ||
-                                  _appointmentStatus == "6"
-                              ? null
-                              : profileMap['data']["type"] == 2
-                                  ? _appointmentStatus == '4'
-                                      ? () {
-                                          Map _map = {};
-                                          _map['id'] = profileMap['data']["_id"]
-                                              .toString();
-                                          _map['appointmentType'] =
-                                              profileMap['data']["type"];
-                                          _map['latLng'] = _userLocation;
+                          height: 55.0,
+                          width: 200.0,
+                          margin: const EdgeInsets.only(top: 10),
+                          padding: const EdgeInsets.only(right: 20.0),
+                          child: _appointmentStatus == '4'
+                              ? FancyButton(
+                                  title: 'Treatment Summary',
+                                  onPressed: () {
+                                    Map _map = {};
+                                    _map['id'] =
+                                        profileMap['data']["_id"].toString();
+                                    _map['appointmentType'] =
+                                        profileMap['data']["type"];
+                                    _map['latLng'] = _userLocation;
 
-                                          Navigator.of(context).pushNamed(
-                                            Routes.treatmentSummaryScreen,
-                                            arguments: _map,
-                                          );
-                                        }
-                                      : ()
-                                      // { var map = {};
-                                      //   map['appointmentId'] =
-                                      //       profileMap["data"]["_id"];
-                                      //   api
-                                      //       .checkTimeToStartVideo(
-                                      //           context, token, map)
-                                      //       .then((value)
-                                      // async {
-                                      //     Map<Permission.Permission,
-                                      //             Permission.PermissionStatus>
-                                      //         statuses = await [
-                                      //       Permission.Permission.camera,
-                                      //       Permission.Permission.microphone
-                                      //     ].request();
-                                      //     if ((statuses[Permission
-                                      //                 .Permission.camera]
-                                      //             .isGranted) &&
-                                      //         (statuses[Permission
-                                      //                 .Permission.microphone]
-                                      //             .isGranted)) {
-                                      //       var map = {};
-                                      //       map['_id'] =
-                                      //           profileMap["data"]["_id"];
-                                      //       map['name'] = profileMap['data']
-                                      //                   ["doctor"]["fullName"]
-                                      //               ?.toString() ??
-                                      //           "---";
-                                      //       map['address'] = 'a';
-                                      //       map['dateTime'] = 't';
-                                      //       return Navigator.of(context).pushNamed(
-                                      //           Routes.callPage,
-                                      //           // arguments: profileMap["data"]["_id"],
-                                      //           arguments: map);
-                                      //       // }).futureError((onError) {
-                                      //       //   Widgets.showErrorialog(
-                                      //       //       context: context, description: onError);
-                                      //       // });
-
-                                      //     } else {
-                                      //       Widgets.showErrorialog(
-                                      //           context: context,
-                                      //           description:
-                                      //               'Camera & Microphone permission Requied');
-                                      //     }
-                                      //   }
-                                      {
-                                          Navigator.pushNamed(
+                                    Navigator.of(context).pushNamed(
+                                      Routes.treatmentSummaryScreen,
+                                      arguments: _map,
+                                    );
+                                  })
+                              : _appointmentStatus == "2" ||
+                                      _appointmentStatus == "6"
+                                  ? SizedBox()
+                                  : profileMap['data']["type"] == 1
+                                      ? FancyButton(
+                                          title: "Show status",
+                                          onPressed: () {
+                                            Navigator.pushNamed(
                                               context,
-                                              Routes
-                                                  .telemedicineTrackTreatmentScreen,
-                                              arguments: profileMap['data']
-                                                  ["_id"]);
-                                        }
-                                  : () => Navigator.of(context)
-                                      .pushNamed(
-                                        Routes.trackTreatmentScreen,
-                                        arguments: profileMap["data"]["type"],
-                                      )
-                                      .whenComplete(
-                                        () => appointmentDetailsFuture(
-                                            _userLocation),
-                                      ),
-                        ),
-                      ),
+                                              Routes.trackOfficeAppointment,
+                                              arguments: profileMap["data"]
+                                                  ["_id"],
+                                            ).whenComplete(() =>
+                                                appointmentDetailsFuture(
+                                                    _userLocation));
+                                          })
+                                      : profileMap['data']["type"] == 2
+                                          ? SizedBox()
+                                          : profileMap['data']["type"] == 3
+                                              ? FancyButton(
+                                                  title: 'Show status',
+                                                  onPressed: () {
+                                                    Navigator.of(context)
+                                                        .pushNamed(
+                                                          Routes
+                                                              .trackOnsiteAppointment,
+                                                          arguments:
+                                                              profileMap["data"]
+                                                                  ["_id"],
+                                                        )
+                                                        .whenComplete(
+                                                          () =>
+                                                              appointmentDetailsFuture(
+                                                                  _userLocation),
+                                                        );
+                                                  })
+                                              : SizedBox()),
                     )
                   ],
                 );
@@ -307,7 +263,6 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
   Widget profileWidget(Map _data) {
     Map _providerData = _data["data"];
-    _container.setAppointmentId(_providerData["_id"].toString());
 
     int paymentType = 0;
 
@@ -627,13 +582,14 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         size: 20.0,
                       ),
                       padding: const EdgeInsets.all(5.0),
-                      onPressed: () => Navigator.of(context)
-                          .pushNamed(
-                            Routes.rateDoctorScreen,
-                            arguments: "2",
-                          )
-                          .whenComplete(
-                              () => appointmentDetailsFuture(_userLocation)),
+                      onPressed: () => Navigator.of(context).pushNamed(
+                        Routes.rateDoctorScreen,
+                        arguments: {
+                          'rateFrom': "2",
+                          'appointmentId': widget.appointmentId
+                        },
+                      ).whenComplete(
+                          () => appointmentDetailsFuture(_userLocation)),
                       label: Text(
                         "Rate Now",
                         style: TextStyle(
@@ -735,14 +691,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               ),
             ],
           ),
-          _appointmentListType == 2 ||
-                  _appointmentStatus == "2" ||
-                  _appointmentStatus == "6"
+          _appointmentStatus == "2" || _appointmentStatus == "6"
               ? Container()
               : SizedBox(height: 5.0),
-          _appointmentListType == 2 ||
-                  _appointmentStatus == "2" ||
-                  _appointmentStatus == "6"
+          _appointmentStatus == "2" || _appointmentStatus == "6"
               ? Container()
               : Padding(
                   padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
