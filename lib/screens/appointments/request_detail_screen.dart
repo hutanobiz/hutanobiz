@@ -197,8 +197,13 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
     }
 
     if (_data["doctor"] != null) {
-      name = _data["doctor"]["fullName"]?.toString() ?? "---";
-      avatar = _data["doctor"]["avatar"];
+      if (_data['isOndemand'] ?? false) {
+        name = _data["doctor"][0]["fullName"]?.toString() ?? "---";
+        avatar = _data["doctor"][0]["avatar"];
+      } else {
+        name = _data["doctor"]["fullName"]?.toString() ?? "---";
+        avatar = _data["doctor"]["avatar"];
+      }
     }
 
     if (_data["parking"] != null) {
@@ -307,29 +312,29 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
         _data["type"] == 2 ? recordingInfoWidget() : SizedBox(),
         divider(topPadding: 18.0),
         dateTimeWidget(
-          // DateFormat('EEEE, dd MMMM,')
-          //       .format(DateTime.parse(_data['date']))
-          //       .toString() +
-          //   " " +
+            // DateFormat('EEEE, dd MMMM,')
+            //       .format(DateTime.parse(_data['date']))
+            //       .toString() +
+            //   " " +
             DateFormat('EEEE, dd MMMM, HH:mm')
-                .format(DateTime.utc(
-                        DateTime.parse(_data['date']).year,
-                        DateTime.parse(_data['date']).month,
-                        DateTime.parse(_data['date']).day,
-                        int.parse(_data['fromTime'].split(':')[0]),
-                        int.parse(_data['fromTime'].split(':')[1]))
-                    .toLocal())
-                .toString() +
-            ' to ' +
-            DateFormat('HH:mm')
-                .format(DateTime.utc(
-                        DateTime.parse(_data['date']).year,
-                        DateTime.parse(_data['date']).month,
-                        DateTime.parse(_data['date']).day,
-                        int.parse(_data['toTime'].split(':')[0]),
-                        int.parse(_data['toTime'].split(':')[1]))
-                    .toLocal())
-                .toString()),
+                    .format(DateTime.utc(
+                            DateTime.parse(_data['date']).year,
+                            DateTime.parse(_data['date']).month,
+                            DateTime.parse(_data['date']).day,
+                            int.parse(_data['fromTime'].split(':')[0]),
+                            int.parse(_data['fromTime'].split(':')[1]))
+                        .toLocal())
+                    .toString() +
+                ' to ' +
+                DateFormat('HH:mm')
+                    .format(DateTime.utc(
+                            DateTime.parse(_data['date']).year,
+                            DateTime.parse(_data['date']).month,
+                            DateTime.parse(_data['date']).day,
+                            int.parse(_data['toTime'].split(':')[0]),
+                            int.parse(_data['toTime'].split(':')[1]))
+                        .toLocal())
+                    .toString()),
         _data["type"] == 2 ? SizedBox() : divider(topPadding: 8.0),
         _data["type"] == 2
             ? SizedBox()
