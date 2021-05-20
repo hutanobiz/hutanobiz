@@ -200,30 +200,30 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         averageRating: averageRating,
         professionalTitle: professionalTitle,
         onTap: () {
-          if (response['type'] != 2) {
-            Navigator.of(context)
-                .pushNamed(
-              Routes.appointmentDetailScreen,
-              arguments: response["_id"],
-            )
-                .then((val) {
-              appointmentsFuture(_userLocation);
-            });
-          } else {
-            if (response["status"] == 4) {
-              Navigator.of(context)
-                  .pushNamed(
-                    Routes.appointmentDetailScreen,
-                    arguments: response["_id"],
-                  )
-                  .whenComplete(() => appointmentsFuture(_userLocation));
-            } else {
-              Navigator.pushNamed(
-                      context, Routes.telemedicineTrackTreatmentScreen,
-                      arguments: response["_id"])
-                  .whenComplete(() => appointmentsFuture(_userLocation));
-            }
-          }
+          // if (response['type'] != 2) {
+          Navigator.of(context)
+              .pushNamed(
+            Routes.appointmentDetailScreen,
+            arguments: response["_id"],
+          )
+              .then((val) {
+            appointmentsFuture(_userLocation);
+          });
+          // } else {
+          //   if (response["status"] == 4) {
+          //     Navigator.of(context)
+          //         .pushNamed(
+          //           Routes.appointmentDetailScreen,
+          //           arguments: response["_id"],
+          //         )
+          //         .whenComplete(() => appointmentsFuture(_userLocation));
+          //   } else {
+          //     Navigator.pushNamed(
+          //             context, Routes.telemedicineTrackTreatmentScreen,
+          //             arguments: response["_id"])
+          //         .whenComplete(() => appointmentsFuture(_userLocation));
+          //   }
+          // }
         });
   }
 }
