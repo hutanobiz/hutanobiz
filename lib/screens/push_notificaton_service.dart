@@ -55,16 +55,10 @@ class PushNotificationService {
         switch (notificationType) {
           case 'call':
           case 'call_join':
-            Widgets.showConfirmationDialog(
+            Widgets.showCallDialog(
                 context: navigatorContext,
-                title: 'Call request',
-                description: 'Do you want to join call again?',
-                leftText: 'Cancel',
-                onLeftPressed: () {
-                  Navigator.pop(navigatorContext);
-                },
-                rightText: 'Join',
-                onRightPressed: () async {
+                isRejoin: true,
+                onEnterCall: (bool record, bool video) async {
                   Map<Permission.Permission, Permission.PermissionStatus>
                       statuses = await [
                     Permission.Permission.camera,
@@ -74,53 +68,49 @@ class PushNotificationService {
                       (statuses[Permission.Permission.microphone].isGranted)) {
                     var map = {};
                     map['_id'] = message.data['appointmentId'];
-                    map['name'] = "---";
-                    map['address'] = 'a';
-                    map['dateTime'] = 't';
-                    map['video'] = true;
-                    map['record'] = true;
-                    return Navigator.of(navigatorContext)
-                        .popAndPushNamed(Routes.callPage,
-                            // arguments: profileMap["data"]["_id"],
-                            arguments: map);
+                    map['video'] = video;
+                    map['record'] = record;
+                    Navigator.pop(navigatorContext);
+                    Navigator.of(navigatorContext)
+                        .pushReplacementNamed(Routes.callPage, arguments: map);
                   } else {
                     Widgets.showErrorialog(
                         context: navigatorContext,
                         description: 'Camera & Microphone permission Requied');
                   }
+                },
+                onCancelCall: () {
+                  Navigator.pop(navigatorContext);
                 });
+
             break;
           case 'ready_to_join':
             if (message.data['isUserJoin'] == "true") {
-              Navigator.pushReplacementNamed(
-                  navigatorContext, Routes.telemedicineTrackTreatmentScreen,
-                  arguments: message.data['appointmentId']);
+              if (!isCurrent(Routes.trackTelemedicineAppointment,
+                  message.data['appointmentId'])) {
+                Navigator.of(navigatorContext).pushNamed(
+                  Routes.trackTelemedicineAppointment,
+                  arguments: message.data['appointmentId'],
+                );
+              } else {
+                Navigator.of(navigatorContext).pushReplacementNamed(
+                  Routes.trackTelemedicineAppointment,
+                  arguments: message.data['appointmentId'],
+                );
+              }
             } else {
-              Widgets.showConfirmationDialog(
-                  context: navigatorContext,
-                  title: 'Call request',
-                  description: 'Do you want to enter to waiting room?',
-                  leftText: 'Cancel',
-                  onLeftPressed: () {
-                    Navigator.pop(navigatorContext);
-                  },
-                  rightText: 'Waiting Room',
-                  onRightPressed: () {
-                    if (!isCurrent(Routes.telemedicineTrackTreatmentScreen,
-                        message.data['appointmentId'])) {
-                      SharedPref().getToken().then((token) {
-                        var appointmentId = {};
-                        appointmentId['appointmentId'] =
-                            message.data['appointmentId'];
-                        api
-                            .patientAvailableForCall(token, appointmentId)
-                            .then((value) {
-                          Navigator.of(navigatorContext).pushNamed(
-                              Routes.telemedicineTrackTreatmentScreen,
-                              arguments: message.data['appointmentId']);
-                        });
-                      });
-                    } else {
+              if (!isCurrent(Routes.trackTelemedicineAppointment,
+                  message.data['appointmentId'])) {
+                Widgets.showConfirmationDialog(
+                    context: navigatorContext,
+                    title: 'Call request',
+                    description: 'Do you want to enter to waiting room?',
+                    leftText: 'Cancel',
+                    onLeftPressed: () {
+                      Navigator.pop(navigatorContext);
+                    },
+                    rightText: 'Waiting Room',
+                    onRightPressed: () {
                       SharedPref().getToken().then((token) {
                         var appointmentId = {};
                         appointmentId['appointmentId'] =
@@ -129,13 +119,27 @@ class PushNotificationService {
                             .patientAvailableForCall(token, appointmentId)
                             .then((value) {
                           Navigator.pop(navigatorContext);
-                          Navigator.pushReplacementNamed(navigatorContext,
-                              Routes.telemedicineTrackTreatmentScreen,
+                          Navigator.of(navigatorContext).pushNamed(
+                              Routes.trackTelemedicineAppointment,
                               arguments: message.data['appointmentId']);
                         });
                       });
-                    }
+                    });
+              } else {
+                SharedPref().getToken().then((token) {
+                  var appointmentId = {};
+                  appointmentId['appointmentId'] =
+                      message.data['appointmentId'];
+                  api
+                      .patientAvailableForCall(token, appointmentId)
+                      .then((value) {
+                    Navigator.of(navigatorContext).pushReplacementNamed(
+                      Routes.trackTelemedicineAppointment,
+                      arguments: message.data['appointmentId'],
+                    );
                   });
+                });
+              }
             }
             break;
           case 'treatment_summary':
@@ -230,7 +234,7 @@ class PushNotificationService {
       case 'ready_to_join':
         Navigator.pushNamed(
           navigatorContext,
-          Routes.telemedicineTrackTreatmentScreen,
+          Routes.trackTelemedicineAppointment,
           arguments: message.data['appointmentId'],
         );
         break;
@@ -273,19 +277,11 @@ class PushNotificationService {
         break;
 
       case 'request_status':
-        var appointmentType = message.data['appointmentType'];
-        if (appointmentType == "2") {
-          Navigator.pushNamed(
-            navigatorContext,
-            Routes.telemedicineTrackTreatmentScreen,
-            arguments: message.data['appointmentId'],
-          );
-        } else {
-          Navigator.of(navigatorContext).pushNamed(
-            Routes.appointmentDetailScreen,
-            arguments: message.data['appointmentId'],
-          );
-        }
+        Navigator.of(navigatorContext).pushNamed(
+          Routes.appointmentDetailScreen,
+          arguments: message.data['appointmentId'],
+        );
+
         break;
 
       case 'treatment_summary':
