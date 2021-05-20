@@ -13,6 +13,7 @@ import 'package:hutano/screens/appointments/seeking_cure.dart';
 import 'package:hutano/screens/appointments/telemedicine_track_treatment.dart';
 import 'package:hutano/screens/appointments/track_office_appointment.dart';
 import 'package:hutano/screens/appointments/track_onsite_appointment.dart';
+import 'package:hutano/screens/appointments/track_telemedicine_appointment.dart';
 import 'package:hutano/screens/appointments/track_treatment.dart';
 import 'package:hutano/screens/appointments/treatment_summary.dart';
 import 'package:hutano/screens/appointments/upload_documents.dart';
@@ -117,7 +118,9 @@ class Routes {
   static const String myProviders = '/myProviders';
   static const String paymentHistory = '/paymentHistory';
   static const String trackOfficeAppointment = '/trackOfficeAppointment';
-   static const String trackOnsiteAppointment = '/trackOnsiteAppointment';
+  static const String trackOnsiteAppointment = '/trackOnsiteAppointment';
+  static const String trackTelemedicineAppointment =
+      '/trackTelemedicineAppointment';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -448,8 +451,13 @@ class Routes {
               appointmentId: args,
             ));
         break;
-
-        
+      case trackTelemedicineAppointment:
+        return _buildRoute(
+            settings,
+            TrackTelemedicineAppointment(
+              appointmentId: args,
+            ));
+        break;
       default:
         return _errorRoute();
     }
