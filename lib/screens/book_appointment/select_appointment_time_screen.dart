@@ -66,12 +66,14 @@ class _SelectAppointmentTimeScreenState
     // }
 
     currentDate = DateFormat('MM/dd/yyyy').format(DateTime.now());
-    _selectedDate = DateTime.now();
+    _selectedDate = DateTime.utc(DateTime.now().year, DateTime.now().month,
+        DateTime.now().day, 0, 0, 0, 0, 0);
 
     _dayDateMap["day"] = DateTime.now().weekday.toString();
     _dayDateMap["date"] = currentDate;
 
-    newDate = DateTime.now();
+    newDate = DateTime.utc(DateTime.now().year, DateTime.now().month,
+        DateTime.now().day, 0, 0, 0, 0, 0);
     // _initData();
   }
 
@@ -147,7 +149,8 @@ class _SelectAppointmentTimeScreenState
         _dayDateMap["day"] = DateTime.now().weekday.toString();
         _dayDateMap["date"] = currentDate;
 
-        startDate = DateTime.now();
+        startDate = DateTime.utc(DateTime.now().year, DateTime.now().month,
+            DateTime.now().day, 0, 0, 0, 0, 0);
       } else {
         for (int i = 0; i < 7; i++) {
           if (_scheduleDaysList
@@ -156,8 +159,8 @@ class _SelectAppointmentTimeScreenState
                 DateTime.now().add(Duration(days: i + 1)).weekday.toString();
             _dayDateMap["date"] = DateFormat('MM/dd/yyyy')
                 .format(DateTime.now().add(Duration(days: i + 1)));
-            startDate = DateTime.now().add(Duration(days: i + 1));
-            _selectedDate = DateTime.now().add(Duration(days: i + 1));
+            startDate = startDate.add(Duration(days: i + 1));
+            _selectedDate = startDate.add(Duration(days: i + 1));
             break;
           }
         }
@@ -601,7 +604,7 @@ class _SelectAppointmentTimeScreenState
               } else {
                 if (firstLoad == true) {
                   selectedAddress = _addressList.first;
-                  _dayDateMap['addressid'] = selectedAddress['_id'];
+                  _dayDateMap['officeId'] = selectedAddress['_id'];
 
                   _scheduleFuture = _apiBaseHelper.getScheduleList(
                     providerId,
@@ -632,6 +635,16 @@ class _SelectAppointmentTimeScreenState
                             onTap: () {
                               setState(() {
                                 selectedAddress = _addressList[index];
+                                _dayDateMap['officeId'] =
+                                    selectedAddress['_id'];
+
+                                _scheduleFuture =
+                                    _apiBaseHelper.getScheduleList(
+                                  providerId,
+                                  _dayDateMap,
+                                );
+
+                                _selectedTiming = null;
                               });
                             },
                             child: Container(

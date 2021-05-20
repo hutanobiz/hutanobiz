@@ -96,7 +96,8 @@ class _ScrollingDayCalendarState extends State<ScrollingDayCalendar> {
                         Duration(days: _addDays),
                       );
 
-                      if (widget.startDate.isBefore(newDate)) {
+                      if (widget.startDate.isBefore(newDate) ||
+                          widget.startDate.isAtSameMomentAs(newDate)) {
                         setState(() {
                           isLeftButtonEnable = true;
                           leftButtonColor = Colors.black;
@@ -202,7 +203,8 @@ class _ScrollingDayCalendarState extends State<ScrollingDayCalendar> {
       showDatePicker(
         context: context,
         initialDate: _selectedDate,
-        firstDate: DateTime.now().subtract(Duration(days: 1)),
+        firstDate: DateTime.utc(DateTime.now().year, DateTime.now().month,
+            DateTime.now().day, 0, 0, 0, 0, 0),
         lastDate: DateTime(DateTime.now().year + 2),
         selectableDayPredicate: (DateTime val) =>
             scheduleDaysList.contains(val.weekday) ? true : false,
