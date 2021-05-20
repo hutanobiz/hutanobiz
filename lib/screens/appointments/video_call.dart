@@ -5,11 +5,13 @@ import 'package:encrypt/encrypt.dart' as Encrypt;
 import 'package:flutter/material.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/widgets.dart';
+import 'package:intl/intl.dart';
 
 const APP_ID = '1dba38a531814b9f823d4d1c4e0c9a89';
 
@@ -34,7 +36,7 @@ class _CallPageState extends State<CallPage> {
   var sid = '';
   var token = '';
   var appid = '1dba38a531814b9f823d4d1c4e0c9a89';
-
+  dynamic appointmentResponse;
   bool remoteAudio = true, remoteVideo = true;
 
   @override
@@ -52,6 +54,15 @@ class _CallPageState extends State<CallPage> {
     super.initState();
     SharedPref().getToken().then((usertoken) {
       token = usertoken;
+      api
+          .getAppointmentDetails(
+        token,
+        widget.channelName['_id'],
+        LatLng(0, 0),
+      )
+          .then((value) {
+        appointmentResponse = value;
+      });
     });
     mutedVideo = !widget.channelName['video'];
     // String plainCredentials =
@@ -172,8 +183,15 @@ class _CallPageState extends State<CallPage> {
     stopMap['appointmentId'] = widget.channelName['_id'];
     api.stopVideoCall(context, token, stopMap).then((value) {
       Navigator.pop(context);
-      widget.channelName['type'] = '2';
-      widget.channelName['appointmentId'] = widget.channelName['_id'];
+      var appointmentCompleteMap = {};
+      appointmentCompleteMap['type'] = '2';
+      appointmentCompleteMap['appointmentId'] = widget.channelName['_id'];
+      appointmentCompleteMap['name'] = appointmentResponse["data"]['doctor']
+              ['title'] +
+          ' ' +
+          appointmentResponse["data"]['doctor']['fullName'];
+      appointmentCompleteMap["dateTime"] =
+          DateFormat('dd MMM yyyy, HH:mm').format(DateTime.now());
       Navigator.of(context).pushReplacementNamed(
         Routes.appointmentCompleteConfirmation,
         arguments: widget.channelName,
@@ -253,9 +271,19 @@ class _CallPageState extends State<CallPage> {
                               rightText: 'Yes',
                               onRightPressed: () {
                                 Navigator.pop(context);
-                                widget.channelName['type'] = '2';
-                                widget.channelName['appointmentId'] =
+                                var appointmentCompleteMap = {};
+                                appointmentCompleteMap['type'] = '2';
+                                appointmentCompleteMap['appointmentId'] =
                                     widget.channelName['_id'];
+                                appointmentCompleteMap['name'] =
+                                    appointmentResponse["data"]['doctor']
+                                            ['title'] +
+                                        ' ' +
+                                        appointmentResponse["data"]['doctor']
+                                            ['fullName'];
+                                appointmentCompleteMap["dateTime"] =
+                                    DateFormat('dd MMM yyyy, HH:mm')
+                                        .format(DateTime.now());
                                 Navigator.of(context).pushReplacementNamed(
                                   Routes.appointmentCompleteConfirmation,
                                   arguments: widget.channelName,
