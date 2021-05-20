@@ -95,30 +95,34 @@ class TrackingProviderWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(
-                  padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                  decoration: BoxDecoration(
-                    color: AppColors.windsor,
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(16),
-                      bottomLeft: Radius.circular(16),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.star,
-                        color: AppColors.goldenTainoi,
-                        size: 18,
+              appointment['averageRating'] != null
+                  ? Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                      decoration: BoxDecoration(
+                        color: AppColors.windsor,
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(16),
+                          bottomLeft: Radius.circular(16),
+                        ),
                       ),
-                      SizedBox(width: 4),
-                      Text(
-                        appointment['averageRating'].toStringAsFixed(1),
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.w500),
-                      ),
-                    ],
-                  ))
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.star,
+                            color: AppColors.goldenTainoi,
+                            size: 18,
+                          ),
+                          SizedBox(width: 4),
+                          Text(
+                            appointment['averageRating'].toStringAsFixed(1),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ))
+                  : SizedBox()
             ],
           ),
           Padding(
