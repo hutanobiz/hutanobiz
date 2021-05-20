@@ -213,7 +213,19 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                                     _userLocation));
                                           })
                                       : profileMap['data']["type"] == 2
-                                          ? SizedBox()
+                                          ? FancyButton(
+                                              title: "Show status",
+                                              onPressed: () {
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  Routes
+                                                      .trackTelemedicineAppointment,
+                                                  arguments: profileMap["data"]
+                                                      ["_id"],
+                                                ).whenComplete(() =>
+                                                    appointmentDetailsFuture(
+                                                        _userLocation));
+                                              })
                                           : profileMap['data']["type"] == 3
                                               ? FancyButton(
                                                   title: 'Show status',
