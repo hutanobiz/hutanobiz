@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hutano/colors.dart';
 
+import 'package:hutano/utils/extensions.dart';
+
 class Widgets {
   static void showSnackBar(
       GlobalKey<ScaffoldState> _scaffoldKey, Widget value, int duration) {
@@ -23,8 +25,7 @@ class Widgets {
     );
   }
 
-
-static void showErrorialog({
+  static void showErrorialog({
     @required BuildContext context,
     String title,
     @required String description,
@@ -74,7 +75,7 @@ static void showErrorialog({
     );
   }
 
-    static void showAppDialog(
+  static void showAppDialog(
       {@required BuildContext context,
       String title,
       @required String description,
@@ -87,10 +88,9 @@ static void showErrorialog({
       barrierDismissible: false,
       builder: (context) {
         return Dialog(
-            shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(20.0)), //this right here
-            // child: Center(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0)), //this right here
+          // child: Center(
           child: Container(
               padding: EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
@@ -109,7 +109,7 @@ static void showErrorialog({
                       ? Text(
                           'Opps!',
                           style: TextStyle(
-                            fontFamily: 'Montserrat',
+                              fontFamily: 'Montserrat',
                               color: Colors.black,
                               fontSize: 20,
                               fontWeight: FontWeight.w700),
@@ -118,7 +118,7 @@ static void showErrorialog({
                           ? Text(
                               'Congratulations!',
                               style: TextStyle(
-                                fontFamily: 'Montserrat',
+                                  fontFamily: 'Montserrat',
                                   color: Colors.black,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w700),
@@ -126,7 +126,7 @@ static void showErrorialog({
                           : Text(
                               title ?? 'Message',
                               style: TextStyle(
-                                fontFamily: 'Montserrat',
+                                  fontFamily: 'Montserrat',
                                   color: Colors.black,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w700),
@@ -158,7 +158,8 @@ static void showErrorialog({
                     height: 40,
                     child: Text(
                       buttonText ?? 'Close',
-                      style: TextStyle(fontFamily: 'Montserrat',color: Colors.white),
+                      style: TextStyle(
+                          fontFamily: 'Montserrat', color: Colors.white),
                     ),
                     onPressed: onPressed ??
                         () {
@@ -348,5 +349,194 @@ static void showErrorialog({
 
   static SizedBox sizedBox({@required double height}) {
     return SizedBox(height: height);
+  }
+
+  static void showCallDialog(
+      {@required BuildContext context,
+      @required Function onEnterCall,
+      onCancelCall,
+      @required bool isRejoin}) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          bool video = true;
+          bool record = true;
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return Dialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0)),
+                child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(14),
+                        )),
+                    width: MediaQuery.of(context).size.width / 1.3,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          height: 24,
+                        ),
+                        Text(
+                          isRejoin ? 'Call request' : 'Call Setting',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700),
+                        ),
+                        SizedBox(
+                          height: isRejoin ? 12 : 0,
+                        ),
+                        isRejoin
+                            ? Text(
+                                'Do you want to join call again?',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500),
+                              )
+                            : SizedBox(),
+                        SizedBox(
+                          height: 24,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              record
+                                  ? 'images/checkedCheck.png'
+                                  : 'images/uncheckedCheck.png',
+                              height: 20,
+                            ),
+                            Text(
+                              '  Record meeting',
+                              style: TextStyle(
+                                  fontSize: 13, fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ).onClick(onTap: () {
+                          setState(() {
+                            record = !record;
+                          });
+                        }),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Divider(),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Row(
+                              children: [
+                                video
+                                    ? Icon(
+                                        Icons.radio_button_checked,
+                                        color: Color(0xFF1E36BA),
+                                      )
+                                    : Icon(Icons.radio_button_unchecked,
+                                        color: Colors.grey[300]),
+                                Text(
+                                  '  Video & Audio',
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ).onClick(onTap: () {
+                              setState(() {
+                                video = true;
+                              });
+                            }),
+                            Row(
+                              children: [
+                                video
+                                    ? Icon(Icons.radio_button_unchecked,
+                                        color: Colors.grey[300])
+                                    : Icon(Icons.radio_button_checked,
+                                        color: Color(0xFF1E36BA)),
+                                Text(
+                                  '  Audio Only',
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ).onClick(onTap: () {
+                              setState(() {
+                                video = false;
+                              });
+                            }),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 24,
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            isRejoin
+                                ? Expanded(
+                                    child: OutlinedButton(
+                                    style: ButtonStyle(
+                                      shape: MaterialStateProperty.all(
+                                          RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0))),
+                                    ),
+                                    child: Text(
+                                      'Cancel',
+                                      style: TextStyle(
+                                          color: AppColors.goldenTainoi,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    onPressed: () {
+                                      onCancelCall();
+                                    },
+                                  ))
+                                : SizedBox(width: 50),
+                            SizedBox(width: isRejoin ? 12 : 0),
+                            Expanded(
+                              child: TextButton(
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          AppColors.goldenTainoi),
+                                  padding: MaterialStateProperty.all<
+                                          EdgeInsetsGeometry>(
+                                      EdgeInsets.symmetric(horizontal: 16)),
+                                  shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0))),
+                                ),
+                                child: Text(
+                                  isRejoin ? 'Join' : 'Enter call',
+                                  style: TextStyle(
+                                      color: AppColors.windsor,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                onPressed: () {
+                                  onEnterCall(record, video);
+                                },
+                              ),
+                            ),
+                            SizedBox(width: isRejoin ? 0 : 50),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 16,
+                        )
+                      ],
+                    )),
+              );
+            },
+          );
+        });
   }
 }
