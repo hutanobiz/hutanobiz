@@ -137,7 +137,7 @@ class TrackingProviderWidget extends StatelessWidget {
                     : appointment['data']['type'] == 2
                         ? 'images/ic_video_app.png'
                         : 'images/ic_onsite_app.png',
-                height: 24,
+                width: 20,
               ),
               SizedBox(width: 4),
               Text(appointment['data']['type'] == 1
