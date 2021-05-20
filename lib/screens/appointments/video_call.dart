@@ -142,7 +142,7 @@ class _CallPageState extends State<CallPage> {
     }, userJoined: (uid, elapsed) {
       //aquire();
       //updateSubscriptionList();
-      // startCall();
+      startCall();
       setState(() {
         final info = 'userJoined: $uid';
         _infoStrings.add(info);

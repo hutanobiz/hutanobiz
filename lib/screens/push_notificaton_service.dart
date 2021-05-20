@@ -153,12 +153,7 @@ class PushNotificationService {
                   arguments: message.data['appointmentId'],
                 );
               }
-            } else if (message.data['appointmentType'] == '2') {
-              Navigator.of(navigatorContext).pushNamed(
-                Routes.appointmentDetailScreen,
-                arguments: message.data['appointmentId'],
-              );
-            } else {
+            } else if (message.data['appointmentType'] == '3') {
               if (!isCurrent(Routes.trackOnsiteAppointment,
                   message.data['appointmentId'])) {
                 Navigator.of(navigatorContext).pushNamed(
@@ -171,6 +166,8 @@ class PushNotificationService {
                   arguments: message.data['appointmentId'],
                 );
               }
+            } else {
+              showNotification(message);
             }
 
             break;
