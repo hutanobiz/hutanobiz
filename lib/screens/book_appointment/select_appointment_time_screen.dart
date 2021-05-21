@@ -624,7 +624,7 @@ class _SelectAppointmentTimeScreenState
                         )),
                     SizedBox(height: 12),
                     Container(
-                      height: 92,
+                      height: 98,
                       child: ListView.separated(
                         shrinkWrap: true,
                         scrollDirection: Axis.horizontal,
