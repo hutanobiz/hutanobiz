@@ -263,7 +263,7 @@ class _CallPageState extends State<CallPage> {
                           Widgets.showConfirmationDialog(
                               context: context,
                               title: 'End Call',
-                              description: 'Are You Sure to end Call',
+                              description: 'Are you sure to end Call?',
                               leftText: 'No',
                               onLeftPressed: () {
                                 Navigator.pop(context);

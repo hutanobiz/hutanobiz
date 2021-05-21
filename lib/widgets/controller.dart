@@ -219,7 +219,7 @@ class Widgets {
               ],
             )
           : AlertDialog(
-              title: Text(title ?? "Are You Sure"),
+              title: Text(title ?? "Are you sure?"),
               content: Text(description),
               actions: <Widget>[
                 FlatButton(

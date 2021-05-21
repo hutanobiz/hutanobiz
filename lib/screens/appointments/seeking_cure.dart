@@ -146,7 +146,7 @@ class _SeekingCureScreenState extends State<SeekingCureScreen> {
     _widgetList.add(SizedBox(height: 30));
 
     _widgetList.add(Text(
-      "How long have you had this problem.",
+      "How long have you had this problem?",
       style: TextStyle(
         fontSize: 14.0,
         fontWeight: FontWeight.w500,
@@ -211,7 +211,7 @@ class _SeekingCureScreenState extends State<SeekingCureScreen> {
     _widgetList.add(SizedBox(height: 30));
 
     _widgetList.add(YesNoCheckWidget(
-        labelValue: "Is the problem improving.",
+        labelValue: "Is the problem improving?",
         value: isProblemImproving,
         onYesTap: (value) {
           FocusScope.of(context).requestFocus(FocusNode());
@@ -229,7 +229,7 @@ class _SeekingCureScreenState extends State<SeekingCureScreen> {
 
     _widgetList.add(YesNoCheckWidget(
         labelValue:
-            "Have you received treatment for this condition in the past 3 months.",
+            "Have you received treatment for this condition in the past 3 months?",
         value: isReceivedTreatment,
         onYesTap: (value) {
           FocusScope.of(context).requestFocus(FocusNode());
