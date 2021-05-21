@@ -10,6 +10,7 @@ import 'package:hutano/strings.dart';
 import 'package:hutano/utils/dimens.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/utils/validations.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/textform_widget.dart';
@@ -26,7 +27,6 @@ class OnsiteEditAddress extends StatefulWidget {
 }
 
 class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
-
   ApiBaseHelper api = new ApiBaseHelper();
 
   List stateList = List();
@@ -312,6 +312,7 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
                   getSuggestion(val);
                 }),
                 // enabled: false,
+                validator: Validations.requiredValue,
                 decoration: InputDecoration(
                   labelText: "Address",
                   hintText: 'Enter your address',
@@ -332,6 +333,7 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
             children: [
               Expanded(
                 child: CustomTextField(
+                    validator: Validations.requiredValue,
                     labelText: "City",
                     controller: _cityController,
                     onChanged: (city) {
@@ -353,6 +355,7 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
           ),
           Widgets.sizedBox(height: 29.0),
           CustomTextField(
+              validator: Validations.requiredValue,
               controller: _titleController,
               labelText: "Save as",
               onChanged: (v) {
@@ -363,6 +366,7 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
             children: <Widget>[
               Expanded(
                 child: CustomTextField(
+                    validator: Validations.requiredValue,
                     inputType: TextInputType.number,
                     maxLength: 5,
                     controller: _zipController,
@@ -374,6 +378,7 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
               SizedBox(width: 20.0),
               Expanded(
                 child: CustomTextField(
+                    validator: Validations.requiredValue,
                     controller: _roomNoController,
                     inputType: TextInputType.number,
                     labelText: "Appt or unit number",
@@ -445,8 +450,7 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
 
   bool isFormFilled() {
     if (_titleController.text.isEmpty) {
-      Widgets.showErrorialog(
-          context: context, description: "Enter Location Title");
+      Widgets.showErrorialog(context: context, description: "Enter Save as");
 
       return false;
     } else if (_residenceTypeController.text.isEmpty ||
@@ -455,28 +459,25 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
           context: context, description: "Select Residence type");
 
       return false;
-    } else if (_addressMap != null && _addressMap['address'] == null) {
-      Widgets.showErrorialog(context: context, description: "Enter Suite");
+    } else if (_roomNoController.text.isEmpty) {
+      Widgets.showErrorialog(
+          context: context, description: "Enter Appt or unit");
 
       return false;
     } else if (_cityController.text.isEmpty) {
-      Widgets.showErrorialog(
-          context: context, description: "Enter Business City");
+      Widgets.showErrorialog(context: context, description: "Enter City");
 
       return false;
     } else if (_addressController.text.isEmpty) {
-      Widgets.showErrorialog(
-          context: context, description: "Select Business Location");
+      Widgets.showErrorialog(context: context, description: "Select Location");
 
       return false;
     } else if (_businessstateController.text.isEmpty) {
-      Widgets.showErrorialog(
-          context: context, description: "Enter Business State");
+      Widgets.showErrorialog(context: context, description: "Select State");
 
       return false;
     } else if (_zipController.text.isEmpty) {
-      Widgets.showErrorialog(
-          context: context, description: "Enter Business Postal Code");
+      Widgets.showErrorialog(context: context, description: "Enter Zip Code");
 
       return false;
     } else {
