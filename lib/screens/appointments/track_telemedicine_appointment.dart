@@ -6,7 +6,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/strings.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
@@ -17,7 +16,6 @@ import 'package:hutano/widgets/tracking_button.dart';
 import 'package:hutano/widgets/tracking_provider_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
-import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart' as Permission;
 
 const TRACK_STATUS_PROVIDER = 'trackingStatusProvider';
@@ -367,13 +365,12 @@ class _TrackTelemedicineAppointmentState
                                                 .patientAvailableForCall(
                                                     token, appointmentId)
                                                 .then((value) {
-                                              setState(() {
-                                                _profileFuture =
-                                                    api.getAppointmentDetails(
-                                                        token,
-                                                        widget.appointmentId,
-                                                        _userLocation);
-                                              });
+                                              _profileFuture =
+                                                  api.getAppointmentDetails(
+                                                      token,
+                                                      widget.appointmentId,
+                                                      _userLocation);
+                                                      setState(() {});
                                             });
                                           })
                                       : TrackingButton(
@@ -385,6 +382,7 @@ class _TrackTelemedicineAppointmentState
                                                 isRejoin: false,
                                                 onEnterCall: (bool record,
                                                     bool video) async {
+                                                  Navigator.pop(context);
                                                   print('$record $video');
                                                   Map<
                                                           Permission.Permission,
@@ -407,23 +405,23 @@ class _TrackTelemedicineAppointmentState
                                                     Map appointment = {};
                                                     appointment["_id"] =
                                                         widget.appointmentId;
-                                                    appointment['video'] = true;
+                                                    appointment['video'] =
+                                                        video;
                                                     appointment['record'] =
-                                                        true;
+                                                        record;
                                                     Navigator.of(context)
                                                         .pushNamed(
                                                       Routes.callPage,
                                                       arguments: appointment,
                                                     )
                                                         .then((value) {
-                                                      setState(() {
-                                                        _profileFuture = api
-                                                            .getAppointmentDetails(
-                                                                token,
-                                                                widget
-                                                                    .appointmentId,
-                                                                _userLocation);
-                                                      });
+                                                      _profileFuture = api
+                                                          .getAppointmentDetails(
+                                                              token,
+                                                              widget
+                                                                  .appointmentId,
+                                                              _userLocation);
+                                                      setState(() {});
                                                     });
                                                   } else {
                                                     Widgets.showErrorialog(
@@ -534,13 +532,12 @@ class _TrackTelemedicineAppointmentState
                                               .patientAvailableForCall(
                                                   token, appointmentId)
                                               .then((value) {
-                                            setState(() {
-                                              _profileFuture =
-                                                  api.getAppointmentDetails(
-                                                      token,
-                                                      widget.appointmentId,
-                                                      _userLocation);
-                                            });
+                                            _profileFuture =
+                                                api.getAppointmentDetails(
+                                                    token,
+                                                    widget.appointmentId,
+                                                    _userLocation);
+                                                    setState(() {});
                                           });
                                         })
                                     : SizedBox()

@@ -336,7 +336,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     }
 
     if (_data["insuranceData"] != null) {
-      insuranceName = _data["insuranceData"]["insuranceName"];
+      insuranceName = _data["insuranceData"]["title"];
       insuranceImage = _data["insuranceData"]["insuranceDocumentFront"];
     }
 

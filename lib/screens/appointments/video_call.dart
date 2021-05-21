@@ -194,7 +194,7 @@ class _CallPageState extends State<CallPage> {
           DateFormat('dd MMM yyyy, HH:mm').format(DateTime.now());
       Navigator.of(context).pushReplacementNamed(
         Routes.appointmentCompleteConfirmation,
-        arguments: widget.channelName,
+        arguments: appointmentCompleteMap,
       );
     });
   }
@@ -286,7 +286,7 @@ class _CallPageState extends State<CallPage> {
                                         .format(DateTime.now());
                                 Navigator.of(context).pushReplacementNamed(
                                   Routes.appointmentCompleteConfirmation,
-                                  arguments: widget.channelName,
+                                  arguments: appointmentCompleteMap,
                                 );
                               });
                         },
