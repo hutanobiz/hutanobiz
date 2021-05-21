@@ -95,7 +95,6 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
         stateId = _addressMap['state']['_id'];
         _addressMap['stateCode'] =
             widget.addressObject['state']['stateCode']?.toString();
-        _addressMap['state'] = stateId;
       }
       if (_addressMap['city'] != null) {
         _cityController.text = _addressMap['city'].toString();
@@ -239,7 +238,6 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
                                         endIndex)) {
                               _businessstateController.text = state['title'];
                               stateId = state["_id"]?.toString();
-                              _addressMap['state'] = stateId;
                             }
                           }
                         } else {
@@ -403,8 +401,11 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
   }
 
   void updateAddress() {
+    Map copyMap = _addressMap;
+    copyMap['state'] = stateId;
     Map map = {};
-    map['userAddress'] = _addressMap;
+
+    map['userAddress'] = copyMap;
 
 //     {userAddress: {title: "My Address", residencyType: "1", addressNumber: "",…}}
 // userAddress: {title: "My Address", residencyType: "1", addressNumber: "",…}
