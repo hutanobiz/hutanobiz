@@ -746,10 +746,13 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     _widgetList.add(
       container(
           "Date & Time",
-          "${DateFormat('EEEE, dd MMMM').format(_bookedDate).toString()} " +
-              TimeOfDay(
-                      hour: int.parse(_timeHours), minute: int.parse(_timeMins))
-                  .format(context),
+          _appointmentData["isOndemand"] == 1
+              ? "On-demand Appointment"
+              : "${DateFormat('EEEE, dd MMMM').format(_bookedDate).toString()} " +
+                  TimeOfDay(
+                          hour: int.parse(_timeHours),
+                          minute: int.parse(_timeMins))
+                      .format(context),
           "ic_calendar"),
     );
     _container.projectsResponse["serviceType"].toString() == '2'
@@ -1052,7 +1055,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                             Navigator.of(context)
                                 .pushNamed(
                               Routes.selectAppointmentTimeScreen,
-                              arguments:SelectDateTimeArguments(fromScreen:1),
+                              arguments: SelectDateTimeArguments(fromScreen: 1),
                             )
                                 .then((value) {
                               if (value != null) {
