@@ -474,108 +474,108 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
             ),
     );
 
-    formWidget.add(divider());
+    // formWidget.add(divider());
 
-    formWidget.add(
-      Padding(
-        padding: const EdgeInsets.only(left: 20, top: 16, bottom: 12),
-        child: Text(
-          "Schedule",
-          style: TextStyle(
-            fontSize: 14.0,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-    );
+    // formWidget.add(
+    //   Padding(
+    //     padding: const EdgeInsets.only(left: 20, top: 16, bottom: 12),
+    //     child: Text(
+    //       "Schedule",
+    //       style: TextStyle(
+    //         fontSize: 14.0,
+    //         fontWeight: FontWeight.w600,
+    //       ),
+    //     ),
+    //   ),
+    // );
 
-    formWidget.add(
-      Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            RichText(
-              text: TextSpan(
-                style: TextStyle(
-                  fontSize: 13.0,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                ),
-                children: <TextSpan>[
-                  TextSpan(
-                      text: DateFormat('EEEE').format(DateTime.now()) + " "),
-                  TextSpan(
-                    text: todaysTimings != null && todaysTimings != ""
-                        ? todaysTimings.substring(0, todaysTimings.length - 3)
-                        : "Unavailable for today",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                style: TextStyle(
-                  fontSize: 13.0,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                ),
-                children: <TextSpan>[
-                  TextSpan(
-                      text: DateFormat('EEEE')
-                              .format(DateTime.now().add(Duration(days: 1))) +
-                          " "),
-                  TextSpan(
-                    text: tomorrowsTimings != null && tomorrowsTimings != ""
-                        ? tomorrowsTimings.substring(
-                            0, tomorrowsTimings.length - 3)
-                        : "Unavailable",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 5),
-            RawMaterialButton(
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              onPressed: () {
-                _container.setProviderData("providerData", profileMapResponse);
-                Navigator.of(context).pushNamed(
-                  Routes.availableTimingsScreen,
-                );
-              },
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20),
-                    child: Text(
-                      "View schedule",
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: AppColors.windsor,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    size: 10.0,
-                    color: AppColors.windsor,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    // formWidget.add(
+    //   Padding(
+    //     padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+    //     child: Column(
+    //       crossAxisAlignment: CrossAxisAlignment.start,
+    //       children: <Widget>[
+    // RichText(
+    //   text: TextSpan(
+    //     style: TextStyle(
+    //       fontSize: 13.0,
+    //       color: Colors.black,
+    //       fontWeight: FontWeight.w600,
+    //     ),
+    //     children: <TextSpan>[
+    //       TextSpan(
+    //           text: DateFormat('EEEE').format(DateTime.now()) + " "),
+    //       TextSpan(
+    //         text: todaysTimings != null && todaysTimings != ""
+    //             ? todaysTimings.substring(0, todaysTimings.length - 3)
+    //             : "Unavailable for today",
+    //         style: TextStyle(
+    //           fontWeight: FontWeight.w400,
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // ),
+    // SizedBox(height: 8),
+    // RichText(
+    //   text: TextSpan(
+    //     style: TextStyle(
+    //       fontSize: 13.0,
+    //       color: Colors.black,
+    //       fontWeight: FontWeight.w600,
+    //     ),
+    //     children: <TextSpan>[
+    //       TextSpan(
+    //           text: DateFormat('EEEE')
+    //                   .format(DateTime.now().add(Duration(days: 1))) +
+    //               " "),
+    //       TextSpan(
+    //         text: tomorrowsTimings != null && tomorrowsTimings != ""
+    //             ? tomorrowsTimings.substring(
+    //                 0, tomorrowsTimings.length - 3)
+    //             : "Unavailable",
+    //         style: TextStyle(
+    //           fontWeight: FontWeight.w400,
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // ),
+    // SizedBox(height: 5),
+    // RawMaterialButton(
+    //   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    //   onPressed: () {
+    //     _container.setProviderData("providerData", profileMapResponse);
+    //     Navigator.of(context).pushNamed(
+    //       Routes.availableTimingsScreen,
+    //     );
+    //   },
+    //   child: Row(
+    //     children: <Widget>[
+    //       Padding(
+    //         padding: const EdgeInsets.only(right: 20),
+    //         child: Text(
+    //           "View schedule",
+    //           overflow: TextOverflow.ellipsis,
+    //           style: TextStyle(
+    //             color: AppColors.windsor,
+    //             fontSize: 12.0,
+    //             fontWeight: FontWeight.w500,
+    //           ),
+    //         ),
+    //       ),
+    //       Icon(
+    //         Icons.arrow_forward_ios,
+    //         size: 10.0,
+    //         color: AppColors.windsor,
+    //       ),
+    //     ],
+    //   ),
+    // ),
+    //   ],
+    // ),
+    // ),
+    // );
 
     (_providerData["isOfficeEnabled"] ?? false)
         ? formWidget.add(divider())
