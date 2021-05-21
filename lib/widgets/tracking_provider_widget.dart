@@ -140,12 +140,16 @@ class TrackingProviderWidget extends StatelessWidget {
                 width: 20,
               ),
               SizedBox(width: 4),
-              Text(appointment['data']['type'] == 1
-                  ? 'Office Appointment'
-                  : appointment['data']['type'] == 2
-                      ? 'Telemedicine Appointment'
-                      : 'Onsite Appointment'),
-              Spacer(),
+              Expanded(
+                child: Text(
+                  appointment['data']['type'] == 1
+                      ? 'Office Appointment'
+                      : appointment['data']['type'] == 2
+                          ? 'Telemedicine Appointment'
+                          : 'Onsite Appointment',
+                  maxLines: 1,
+                ),
+              ),
               Image.asset(
                 'images/watch.png',
                 height: 18,

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:hutano/text_style.dart';
 import 'package:hutano/widgets/country_code_picker.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/gestures.dart';
@@ -43,8 +44,6 @@ class _LoginState extends State<LoginScreen> {
   bool _obscureText = true;
   bool isLoading = false;
   bool isTermAccepted = false;
-
-  TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 14.0);
 
   @override
   void dispose() {
@@ -195,7 +194,7 @@ class _LoginState extends State<LoginScreen> {
       obscureText: _obscureText,
       labelText: Strings.passwordText,
       passwordController: _passwordController,
-      style: style,
+      style: AppTextStyle.regularStyle(fontSize: 14),
       prefixIcon: Padding(
         padding: const EdgeInsets.all(14.0),
         child: Image.asset('images/lock.png', height: 12),

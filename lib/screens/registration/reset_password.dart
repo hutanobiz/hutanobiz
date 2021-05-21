@@ -4,6 +4,7 @@ import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/strings.dart';
+import 'package:hutano/text_style.dart';
 import 'package:hutano/utils/dimens.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/app_logo.dart';
@@ -31,8 +32,6 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   bool _obscureText = true, _confirmObscureText = true;
   bool isLoading = false;
-
-  TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 14.0);
 
   @override
   void dispose() {
@@ -108,11 +107,12 @@ class _ResetPasswordState extends State<ResetPassword> {
       obscureText: _obscureText,
       labelText: Strings.passwordText,
       passwordController: _passwordController,
-      style: style,
-        prefixIcon: Padding(
+      style: AppTextStyle.regularStyle(fontSize: 14),
+      prefixIcon: Padding(
         padding: const EdgeInsets.all(14.0),
         child: Image.asset('images/lock.png', height: 12),
-      ),suffixIcon: GestureDetector(
+      ),
+      suffixIcon: GestureDetector(
         dragStartBehavior: DragStartBehavior.down,
         onTap: () {
           setState(() {
@@ -131,11 +131,12 @@ class _ResetPasswordState extends State<ResetPassword> {
       obscureText: _confirmObscureText,
       labelText: "Confirm Password",
       passwordController: _confirmPassController,
-      style: style,
-        prefixIcon: Padding(
+      style: AppTextStyle.regularStyle(fontSize: 14),
+      prefixIcon: Padding(
         padding: const EdgeInsets.all(14.0),
         child: Image.asset('images/lock.png', height: 12),
-      ), suffixIcon: GestureDetector(
+      ),
+      suffixIcon: GestureDetector(
         dragStartBehavior: DragStartBehavior.down,
         onTap: () {
           setState(() {
@@ -168,7 +169,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                   Widgets.showToast("Password reset successfully!");
 
                   Navigator.of(context).pushNamedAndRemoveUntil(
-                      Routes.loginRoute, (Route<dynamic> route) => false,arguments: false);
+                      Routes.loginRoute, (Route<dynamic> route) => false,
+                      arguments: false);
                 }).futureError((error) {
                   setLoading(false);
                   error.toString().debugLog();

@@ -107,7 +107,7 @@ class Widgets {
                       ? Text(
                           'Opps!',
                           style: TextStyle(
-                            fontFamily: 'Montserrat',
+                            fontFamily: 'Poppins',
                               color: Colors.black,
                               fontSize: 20,
                               fontWeight: FontWeight.w700),
@@ -116,7 +116,7 @@ class Widgets {
                           ? Text(
                               'Congratulations!',
                               style: TextStyle(
-                                fontFamily: 'Montserrat',
+                                fontFamily: 'Poppins',
                                   color: Colors.black,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w700),
@@ -124,7 +124,7 @@ class Widgets {
                           : Text(
                               title ?? 'Message',
                               style: TextStyle(
-                                fontFamily: 'Montserrat',
+                                fontFamily: 'Poppins',
                                   color: Colors.black,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w700),
@@ -136,7 +136,7 @@ class Widgets {
                       child: Text(
                     description ?? 'Description',
                     style: TextStyle(
-                      fontFamily: 'Montserrat',
+                      fontFamily: 'Poppins',
                       color: Colors.black,
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
@@ -156,7 +156,7 @@ class Widgets {
                     height: 40,
                     child: Text(
                       buttonText ?? 'Close',
-                      style: TextStyle(fontFamily: 'Montserrat',color: Colors.white),
+                      style: TextStyle(fontFamily: 'Poppins',color: Colors.white),
                     ),
                     onPressed: onPressed ??
                         () {

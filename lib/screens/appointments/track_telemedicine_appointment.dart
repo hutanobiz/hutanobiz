@@ -341,11 +341,17 @@ class _TrackTelemedicineAppointmentState
                           title: 'Give Feedback',
                           image: 'images/trackGiveFeedBack.png',
                           onTap: () {
-                            Navigator.pushNamed(
-                                context, Routes.rateDoctorScreen, arguments: {
-                              'rateFrom': "2",
-                              'appointmentId': widget.appointmentId
-                            });
+                            Widgets.showCallDialog(
+                                context: context,
+                                isRejoin: false,
+                                onEnterCall: (bool record, bool video) async {
+                                  print('$record $video');
+                                });
+                            // Navigator.pushNamed(
+                            //     context, Routes.rateDoctorScreen, arguments: {
+                            //   'rateFrom': "2",
+                            //   'appointmentId': widget.appointmentId
+                            // });
                           })
                       : SizedBox()
                   : index == 2

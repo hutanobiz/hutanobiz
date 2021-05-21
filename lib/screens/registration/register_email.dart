@@ -26,8 +26,6 @@ class _RegisterEmailState extends State<RegisterEmail> {
   final _phoneNumberController = TextEditingController();
 
   final _mobileFormatter = UsNumberTextInputFormatter();
-
-  TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 14.0);
   bool isLoading = false;
   String countryCode = '+1';
   bool isTermChecked = false;

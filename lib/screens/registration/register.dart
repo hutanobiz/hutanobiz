@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:hutano/strings.dart';
+import 'package:hutano/text_style.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:async/async.dart';
@@ -67,7 +68,6 @@ class _SignUpFormState extends State<Register> {
   bool _obscureText = true;
 
   final GlobalKey<FormFieldState> _emailKey = GlobalKey<FormFieldState>();
-  TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 14.0);
   String phoneNumber, token, deviceToken;
   File profileImage;
   bool isLoading = false;
@@ -391,7 +391,7 @@ class _SignUpFormState extends State<Register> {
         emailKey: _emailKey,
         autofocus: false,
         emailController: _emailController,
-        style: style,
+       style: AppTextStyle.regularStyle(fontSize: 14),
         prefixIcon: Icon(Icons.email, color: AppColors.windsor, size: 13.0),
         suffixIcon: Icon(
           Icons.check_circle,
@@ -487,7 +487,7 @@ class _SignUpFormState extends State<Register> {
               passwordController: _passwordController,
               passwordKey: _passwordKey,
               obscureText: _obscureText,
-              style: style,
+              style: AppTextStyle.regularStyle(fontSize: 14),
               suffixIcon: GestureDetector(
                 dragStartBehavior: DragStartBehavior.down,
                 onTap: () {

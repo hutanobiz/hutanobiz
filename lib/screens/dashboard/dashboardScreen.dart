@@ -11,6 +11,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/dashboard/choose_location_screen.dart';
 import 'package:hutano/strings.dart';
+import 'package:hutano/text_style.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/utils/validations.dart';
@@ -980,11 +981,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             children: [
                               Text(
                                 'Change Location',
-                                style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700),
+                                style: AppTextStyle.boldStyle(fontSize: 20),
                               ),
                               Spacer(),
                               InkWell(
@@ -1086,9 +1083,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               height: 40,
                               child: Text(
                                 'Confirm',
-                                style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    color: Colors.white),
+                                style: AppTextStyle.regularStyle(fontSize: 14,color:Colors.white),
                               ),
                               onPressed: () {
                                 if (_addressController.text == '') {

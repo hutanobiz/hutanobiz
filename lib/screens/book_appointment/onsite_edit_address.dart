@@ -26,7 +26,6 @@ class OnsiteEditAddress extends StatefulWidget {
 }
 
 class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
-  TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 14.0);
 
   ApiBaseHelper api = new ApiBaseHelper();
 

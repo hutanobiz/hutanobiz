@@ -22,7 +22,6 @@ class ForgetPassword extends StatefulWidget {
 class _ForgetPasswordState extends State<ForgetPassword> {
   final GlobalKey<FormFieldState> _phoneNumberKey = GlobalKey<FormFieldState>();
   final _phoneNumberController = TextEditingController();
-  TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 14.0);
 
   bool isLoading = false;
 
