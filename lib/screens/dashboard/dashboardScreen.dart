@@ -646,7 +646,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             filled: true,
             fillColor: AppColors.snow,
             labelStyle: TextStyle(fontSize: 13.0, color: Colors.grey),
-            hintText: "Search provider by name or phone no.",
+            hintText: "Search provider by name or specility",
             prefixIcon: Padding(
               padding: const EdgeInsets.all(13.0),
               child: Image.asset(
@@ -840,8 +840,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     //       'recentSearches', jsonEncode(_recentSearchesList));
                     // }
 
-                    Navigator.of(context)
-                        .pushNamed(Routes.providerProfileScreen,arguments: tempList[index]["_id"].toString());
+                    Navigator.of(context).pushNamed(
+                        Routes.providerProfileScreen,
+                        arguments: tempList[index]["_id"].toString());
                   },
                 )
               : ListTile(
@@ -1083,7 +1084,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               height: 40,
                               child: Text(
                                 'Confirm',
-                                style: AppTextStyle.regularStyle(fontSize: 14,color:Colors.white),
+                                style: AppTextStyle.regularStyle(
+                                    fontSize: 14, color: Colors.white),
                               ),
                               onPressed: () {
                                 if (_addressController.text == '') {
@@ -1437,16 +1439,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   //   Routes.appointmentTypeScreen,
                                   //   arguments: _appointentTypeMap,
                                   // );
-                                  Navigator.of(context)
-                                      .pushNamed(Routes.providerProfileScreen,arguments: doctorData["_id"]);
+                                  Navigator.of(context).pushNamed(
+                                      Routes.providerProfileScreen,
+                                      arguments: doctorData["_id"]);
                                 },
                               ),
                             )
                           ],
                         ),
                         onTap: () {
-                          Navigator.of(context)
-                              .pushNamed(Routes.providerProfileScreen,arguments: doctorData["_id"]);
+                          Navigator.of(context).pushNamed(
+                              Routes.providerProfileScreen,
+                              arguments: doctorData["_id"]);
                         },
                       ),
                     );
@@ -1627,16 +1631,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   //   Routes.appointmentTypeScreen,
                                   //   arguments: _appointentTypeMap,
                                   // );
-                                  Navigator.of(context)
-                                      .pushNamed(Routes.providerProfileScreen,arguments: doctorData["_id"]);
+                                  Navigator.of(context).pushNamed(
+                                      Routes.providerProfileScreen,
+                                      arguments: doctorData["_id"]);
                                 },
                               ),
                             )
                           ],
                         ),
                         onTap: () {
-                          Navigator.of(context)
-                              .pushNamed(Routes.providerProfileScreen,arguments: doctorData["_id"]);
+                          Navigator.of(context).pushNamed(
+                              Routes.providerProfileScreen,
+                              arguments: doctorData["_id"]);
                         },
                       ),
                     );
