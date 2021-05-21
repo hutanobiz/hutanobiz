@@ -19,7 +19,7 @@ class TrackingButton extends StatelessWidget {
           children: [
             Image.asset(
               image,
-              height: 18,
+              width: 17,
             ),
             SizedBox(width: 4),
             Text(
