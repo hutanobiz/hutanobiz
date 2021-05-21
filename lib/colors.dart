@@ -22,4 +22,5 @@ class AppColors {
   static const seashell = Color(0xFFF1F1F1);
   static const haiti = Color(0xFF1C1235);
   static const containerBorderColor=Color(0x8B8B8B80);
+  static const errorColor = Color(0xFFE22D2D);
 }

@@ -9,6 +9,7 @@ class PasswordTextField extends StatelessWidget {
       @required this.style,
       @required this.labelText,
       @required this.passwordController,
+      this.autoValidate,
       this.isDense,
       this.prefixIcon,
       this.validator});
@@ -22,12 +23,13 @@ class PasswordTextField extends StatelessWidget {
   final bool isDense;
   final String labelText;
   final String Function(String) validator;
+  final AutovalidateMode autoValidate;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       key: passwordKey,
-      autovalidate: true,
+      autovalidateMode: autoValidate ?? AutovalidateMode.onUserInteraction,
       maxLines: 1,
       keyboardType: TextInputType.visiblePassword,
       obscureText: obscureText,
@@ -36,7 +38,7 @@ class PasswordTextField extends StatelessWidget {
       controller: passwordController,
       decoration: InputDecoration(
         isDense: isDense ?? false,
-        labelStyle: TextStyle(color: Colors.grey),
+        labelStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
         labelText: labelText,
         suffixIcon: suffixIcon,
         prefixIcon: prefixIcon != null ? prefixIcon : null,

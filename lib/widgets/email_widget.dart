@@ -13,6 +13,7 @@ class EmailTextField extends StatelessWidget {
     this.isEnabled = true,
     this.initialValue,
     this.autofocus = true,
+    this.autoValidate,
   });
 
   final TextStyle style;
@@ -22,6 +23,7 @@ class EmailTextField extends StatelessWidget {
   final GlobalKey<FormFieldState> emailKey;
   final bool isEnabled, autofocus;
   final String initialValue;
+  final AutovalidateMode autoValidate;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class EmailTextField extends StatelessWidget {
       key: emailKey,
       initialValue: initialValue,
       autofocus: autofocus,
-      autovalidate: true,
+      autovalidateMode: autoValidate ?? AutovalidateMode.onUserInteraction,
       maxLines: 1,
       enabled: isEnabled,
       keyboardType: TextInputType.emailAddress,
@@ -37,7 +39,7 @@ class EmailTextField extends StatelessWidget {
       validator: Validations.validateEmail,
       controller: emailController,
       decoration: InputDecoration(
-        labelStyle: TextStyle(color: Colors.grey),
+        labelStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
         labelText: Strings.emailText,
         suffixIcon: emailController.text.isNotEmpty &&
                 emailKey.currentState != null &&

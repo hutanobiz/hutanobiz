@@ -246,14 +246,21 @@ class _RegisterEmailState extends State<RegisterEmail> {
                       );
                     }
                   } else {
-                    Widgets.showToast(
-                        'A 6-digit verification number has been sent to your phone.');
-                    Navigator.pushNamed(
-                      context,
-                      Routes.verifyOtpRoute,
-                      arguments:
-                          RegisterArguments(_phoneNumberController.text, false),
-                    );
+                    if (user['message'] != null) {
+                      Widgets.showToast(
+                          'A 6-digit verification number has been sent to your phone.');
+                      Navigator.pushNamed(
+                        context,
+                        Routes.verifyOtpRoute,
+                        arguments: RegisterArguments(
+                            _phoneNumberController.text, false),
+                      );
+                    } else {
+                      Navigator.pushReplacementNamed(
+                          context, Routes.registerRoute,
+                          arguments: RegisterArguments(
+                              _phoneNumberController.text, false));
+                    }
                   }
                 }).futureError((error) {
                   setLoading(false);

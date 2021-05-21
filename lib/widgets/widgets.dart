@@ -98,9 +98,9 @@ class Widgets {
                   borderRadius: BorderRadius.all(
                     Radius.circular(14),
                   )),
-              height: 200,
               width: MediaQuery.of(context).size.width / 1.3,
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   SizedBox(
                     height: 20,
@@ -134,8 +134,7 @@ class Widgets {
                   SizedBox(
                     height: 12,
                   ),
-                  Expanded(
-                      child: Text(
+                  Text(
                     description ?? 'Description',
                     style: TextStyle(
                       fontFamily: 'Poppins',
@@ -144,9 +143,7 @@ class Widgets {
                       fontWeight: FontWeight.w400,
                     ),
                     textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 3,
-                  )),
+                  ),
                   SizedBox(
                     height: 20,
                   ),
@@ -158,8 +155,8 @@ class Widgets {
                     height: 40,
                     child: Text(
                       buttonText ?? 'Close',
-                      style: TextStyle(
-                          fontFamily: 'Poppins', color: Colors.white),
+                      style:
+                          TextStyle(fontFamily: 'Poppins', color: Colors.white),
                     ),
                     onPressed: onPressed ??
                         () {
