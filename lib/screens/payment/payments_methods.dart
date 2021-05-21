@@ -412,8 +412,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                       _cardListRadioValue = null;
                       _listRadioValue = _insuranceList.length - 1;
 
-                      insuranceId =
-                          _insuranceList[_insuranceList.length - 1]["_id"];
+                      insuranceId = _insuranceList[_insuranceList.length - 1]
+                          ["insuranceId"];
                       insuranceName = _insuranceList[_insuranceList.length - 1]
                           ["insuranceName"];
                       insuranceImage = _insuranceList[_insuranceList.length - 1]
@@ -496,7 +496,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
                                                 insuranceId =
                                                     _insuranceList[index]
-                                                        ["_id"];
+                                                        ["insuranceId"];
                                                 insuranceName =
                                                     _insuranceList[index]
                                                         ["insuranceName"];
