@@ -240,7 +240,7 @@ class _LoginState extends State<LoginScreen> {
                       decoration: TextDecoration.underline,
                     ),
                   ).onClick(onTap: () async {
-                    var url = 'https://staging.hutano.com/';
+                    var url = 'https://staging.hutano.com/terms-and-conditions';
                     if (await canLaunch(url)) {
                       await launch(url);
                     } else {
@@ -256,7 +256,7 @@ class _LoginState extends State<LoginScreen> {
                   decoration: TextDecoration.underline,
                 ),
               ).onClick(onTap: () async {
-                var url = 'https://staging.hutano.com/';
+                var url = 'https://staging.hutano.com/privacy-policy';
                 if (await canLaunch(url)) {
                   await launch(url);
                 } else {
