@@ -32,6 +32,9 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
         _requestsConsent = api.getConsentContent(token);
       });
     });
+    SharedPref()
+        .getValue("fullName")
+        .then((value) => setState(() => _name = value ?? "---"));
     super.initState();
   }
 
@@ -83,10 +86,6 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
   }
 
   List<Widget> widgetList() {
-    SharedPref()
-        .getValue("fullName")
-        .then((value) => setState(() => _name = value ?? "---"));
-
     // String text =
     //     _responseData['textString'].toString().replaceAll("\$_name", _name);
     List<Widget> formWidget = new List();
@@ -98,8 +97,10 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
       // text,
       "This is to certify that I, $_name, as an adult participant give my consent to a provider on Hutano’s platform and its medical representative to provide medical care for the medical condition stated here. I certify that all the information provided here is true and provided by me or a representative under my direction. I certify that I am at least 18 years of age. I understand and agree that I am financially responsible for the care provided by the Hutano provider. I understand that medical services provided by the may qualify for insurance reimbursement. I understand that it will be my responsibility and provider to file insurance claims with my insurance company. I agree to have Hutano LLC charge my credit card on behalf of the provider for services that are not covered by my insurance provider for the amount agreed upon.",
       style: TextStyle(
+        height: 1.5,
         fontSize: 14.0,
       ),
+      textAlign: TextAlign.justify,
     ));
 
     formWidget.add(SizedBox(height: 45));
