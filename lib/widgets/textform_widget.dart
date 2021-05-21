@@ -30,7 +30,7 @@ class CustomTextField extends StatelessWidget {
       key: key,
       initialValue: initialValue ?? null,
       autofocus: autoFocus ?? false,
-      autovalidate: autoValidate ?? false,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: validator ?? null,
       onChanged: onChanged,
       controller: controller ?? null,
