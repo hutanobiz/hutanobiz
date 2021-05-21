@@ -36,7 +36,7 @@ class _PaymentHistoryState extends State<PaymentHistory> {
       backgroundColor: AppColors.goldenTainoi,
       resizeToAvoidBottomInset: true,
       body: LoadingBackground(
-        title: "Payment Jistory",
+        title: "Payment History",
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
         isAddBack: true,
         isAddAppBar: true,
@@ -61,8 +61,8 @@ class _PaymentHistoryState extends State<PaymentHistory> {
           }
 
           return ListView.separated(
-              separatorBuilder: (BuildContext context, int index) => Divider(
-                    color: AppColors.haiti.withOpacity(0.20),
+              separatorBuilder: (BuildContext context, int index) => SizedBox(
+                    height: 16,
                   ),
               physics: ClampingScrollPhysics(),
               shrinkWrap: true,
@@ -124,13 +124,15 @@ class _PaymentHistoryState extends State<PaymentHistory> {
               children: [
                 Image.asset(
                   'images/ic_appointments.png',
-                  height: 16,
+                  height: 14,
                 ),
+                SizedBox(width: 4),
                 Text(
                   DateFormat('MMM, dd yyyy').format(dateTime(payment)),
                 ),
                 Spacer(),
-                Image.asset('images/ic_appointment_time.png', height: 16),
+                Image.asset('images/ic_appointment_time.png', height: 14),
+                SizedBox(width: 4),
                 Text(
                   DateFormat('hh:mm a').format(dateTime(payment)),
                 ),
@@ -151,5 +153,3 @@ dateTime(response) {
       .toLocal();
   return date;
 }
-
-
