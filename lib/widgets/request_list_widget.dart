@@ -92,7 +92,7 @@ class RequestListWidget extends StatelessWidget {
                                 ),
                                 Expanded(
                                   child: Text(
-                                    DateFormat('EEE, dd/MM/yyyy, HH:mm')
+                                    DateFormat('EEE, dd/MM/yyyy, hh:mm a')
                                         .format(DateTime.utc(
                                                 DateTime.parse(response['date'])
                                                     .year,
