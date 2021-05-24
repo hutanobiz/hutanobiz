@@ -499,7 +499,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
           ).onClick(onTap: _documentTypeBottomDialog),
           SizedBox(height: 25),
           textField(
-            'What is the body part',
+            'Name of the document',
             (value) {
               documentName = value;
             },
