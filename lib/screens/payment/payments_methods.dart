@@ -327,7 +327,31 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                             ),
                           ),
                           isPayment == false
-                              ? Container()
+                              ? Icon(Icons.delete, color: Colors.red).onClick(
+                                  onTap: () {
+                                  Widgets.showAlertDialog(
+                                      context,
+                                      "Delete Card",
+                                      "Are you sure you want to delete the Card?",
+                                      () {
+                                    setState(() {
+                                      _isLoading = true;
+                                    });
+                                    SharedPref().getToken().then((token) {
+                                      _api
+                                          .deleteStripeCard(
+                                              token, _cardList[index]['id'])
+                                          .then((value) {
+                                        setState(() {
+                                          _isLoading = false;
+                                          _cardFuture = _api
+                                              .getPatientCard(token)
+                                              .timeout(Duration(seconds: 10));
+                                        });
+                                      });
+                                    });
+                                  });
+                                })
                               : Radio(
                                   activeColor: AppColors.persian_blue,
                                   value: index,
@@ -469,11 +493,26 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                 child: Align(
                                   alignment: Alignment.centerRight,
                                   child: !isPayment
-                                      ? Icon(
-                                          Icons.arrow_forward_ios,
-                                          color: Colors.grey,
-                                          size: 16,
+                                      ? PopupMenuButton<String>(
+                                          onSelected: ((val) {
+                                            handleClick(
+                                                val, _insuranceList[index]);
+                                          }),
+                                          itemBuilder: (BuildContext context) {
+                                            return {'Edit', 'Remove'}
+                                                .map((String choice) {
+                                              return PopupMenuItem<String>(
+                                                value: choice,
+                                                child: Text(choice),
+                                              );
+                                            }).toList();
+                                          },
                                         )
+                                      // Icon(
+                                      //     Icons.arrow_forward_ios,
+                                      //     color: Colors.grey,
+                                      //     size: 16,
+                                      //   )
                                       : (!_providerInsuranceList.contains(
                                               _insuranceList[index]
                                                       ["insuranceId"]
@@ -574,6 +613,57 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         return Container();
       },
     );
+  }
+
+  void handleClick(String value, dynamic _insurance) {
+    switch (value) {
+      case 'Edit':
+        Map _insuranceViewMap = {};
+        _insuranceViewMap['isPayment'] = isPayment;
+        _insuranceViewMap['isViewDetail'] = true;
+        _insuranceViewMap['insurance'] = _insurance;
+
+        if (_container.insuranceDataMap != null) {
+          _container.insuranceDataMap.clear();
+        }
+
+        Navigator.of(context)
+            .pushNamed(
+          Routes.uploadInsuranceImagesScreen,
+          arguments: _insuranceViewMap,
+        )
+            .whenComplete(() {
+          SharedPref().getToken().then((token) {
+            setState(() {
+              _insuranceFuture =
+                  _api.getUserDetails(token).timeout(Duration(seconds: 10));
+            });
+          });
+        });
+        break;
+      case 'Remove':
+        Widgets.showAlertDialog(
+          context,
+          "Delete Insurance",
+          "Are you sure you want to delete the insurance?",
+          () {
+            setState(() {
+              _isLoading = true;
+            });
+
+            SharedPref().getToken().then((token) {
+              _api.insuranceRemove(token, _insurance['_id']).then((value) {
+                setState(() {
+                  _isLoading = false;
+                  _insuranceFuture =
+                      _api.getUserDetails(token).timeout(Duration(seconds: 10));
+                });
+              });
+            });
+          },
+        );
+        break;
+    }
   }
 
   Widget paymentCard(String imageIcon, String title, int value,

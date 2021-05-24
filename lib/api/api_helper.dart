@@ -532,6 +532,36 @@ class ApiBaseHelper {
     });
   }
 
+  Future<dynamic> insuranceRemove(String token, String insuranceId) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    return _netUtil
+        .post(
+      base_url + "api/patient/insurance-remove",
+      body: {'insuranceId' : insuranceId},
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
+
+  Future<dynamic> deleteStripeCard(String token, String cardId) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    return _netUtil
+        .post(
+      base_url + "api/delete-stripe-card",
+      body: {'cardId' : cardId},
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
+
   Future<dynamic> providerFilter(String token, Map filterMap) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
