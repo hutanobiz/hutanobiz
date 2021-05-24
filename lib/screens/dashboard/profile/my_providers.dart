@@ -30,7 +30,7 @@ class _MyProvidersState extends State<MyProviders> {
     SharedPref().getToken().then((token) {
       _token = token;
       setState(() {
-        _addressesFuture = api.getMyDoctors(token, LatLng(0, 0));
+        _addressesFuture = api.getSavedDoctors(token, LatLng(0, 0), '100');
       });
     });
   }
@@ -76,7 +76,7 @@ class _MyProvidersState extends State<MyProviders> {
                 return providerWidget(context, snapshot.data[index]);
               });
         } else if (snapshot.hasError) {
-          return Text('No address.');
+          return Text('No providers.');
         }
         return Center(
           child: CircularProgressIndicator(),
@@ -86,14 +86,7 @@ class _MyProvidersState extends State<MyProviders> {
   }
 
   Container providerWidget(BuildContext context, dynamic provider) {
-    var practicingSince = provider['doctorData']['practicingSince'] != null
-        ? ((DateTime.now()
-                    .difference(DateTime.parse(
-                        provider['doctorData']['practicingSince']))
-                    .inDays /
-                366))
-            .toStringAsFixed(0)
-        : "---";
+    var practicingSince = provider['experience'].toString() ?? '';
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -126,11 +119,10 @@ class _MyProvidersState extends State<MyProviders> {
                       height: 58.0,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: provider['doctorData']['userId']['avatar'] ==
-                                  null
+                          image: provider['avatar'] == null
                               ? AssetImage('images/profile_user.png')
-                              : NetworkImage(ApiBaseHelper.imageUrl +
-                                  provider['doctorData']['userId']['avatar']),
+                              : NetworkImage(
+                                  ApiBaseHelper.imageUrl + provider['avatar']),
                           fit: BoxFit.cover,
                         ),
                         borderRadius:
@@ -150,9 +142,7 @@ class _MyProvidersState extends State<MyProviders> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          provider['doctorData']['userId']['title'] +
-                              '. ' +
-                              provider['doctorData']['userId']['fullName'],
+                          provider['title'] + '. ' + provider['fullName'],
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 14.0,
@@ -212,9 +202,7 @@ class _MyProvidersState extends State<MyProviders> {
                             SizedBox(width: 3),
                             Expanded(
                               child: Text(
-                                '\u2022 ' +
-                                    provider['doctorData']['professionalTitle']
-                                        ['title'],
+                                '\u2022 ' + provider['professionalTitle'],
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -234,7 +222,7 @@ class _MyProvidersState extends State<MyProviders> {
                           ),
                           child: Row(
                             children: <Widget>[
-                              provider['doctorData']['isOfficeEnabled']
+                              provider['isOfficeEnabled']
                                   ? Padding(
                                       padding: const EdgeInsets.only(right: 8),
                                       child: 'ic_provider_office'.imageIcon(
@@ -243,7 +231,7 @@ class _MyProvidersState extends State<MyProviders> {
                                       ),
                                     )
                                   : Container(),
-                              provider['doctorData']['isVideoChatEnabled']
+                              provider['isVideoChatEnabled']
                                   ? Padding(
                                       padding: const EdgeInsets.only(right: 8),
                                       child: 'ic_provider_video'.imageIcon(
@@ -252,7 +240,7 @@ class _MyProvidersState extends State<MyProviders> {
                                       ),
                                     )
                                   : Container(),
-                              provider['doctorData']['isOnsiteEnabled']
+                              provider['isOnsiteEnabled']
                                   ? Padding(
                                       padding: const EdgeInsets.only(right: 8),
                                       child: 'ic_provider_onsite'.imageIcon(
@@ -276,7 +264,7 @@ class _MyProvidersState extends State<MyProviders> {
             ),
           ).onClick(onTap: () {
             Navigator.of(context).pushNamed(Routes.providerProfileScreen,
-                arguments: provider['doctorData']['userId']["_id"]);
+                arguments: provider["_id"]);
           }),
         ],
       ),
