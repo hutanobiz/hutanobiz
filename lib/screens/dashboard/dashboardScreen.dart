@@ -76,6 +76,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   String selectedType = '1', selectedPlace = '1', selectedInsurance = '1';
   String avatar;
   String radius = '---';
+  int unreadCount = 0;
+  String token;
 
   bool _isLoading = false;
   List<String> _topProvidersList = [
@@ -100,13 +102,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
 
     _latLng = new LatLng(lat ?? 0.00, lng ?? 0.00);
-    SharedPref().getToken().then((token) {
-      _myDoctorsFuture = _api.getMyDoctors(token, _latLng);
-    });
-    SharedPref().getToken().then((token) {
-      _ondemandDoctorsFuture =
-          _api.getOnDemandDoctors(token, _latLng, radius, 'Asia/Kolkata');
-    });
+
+    _myDoctorsFuture = _api.getMyDoctors(token, _latLng);
+
+    _ondemandDoctorsFuture =
+        _api.getOnDemandDoctors(token, _latLng, radius, 'Asia/Kolkata');
 
     conatiner.setUserLocation(
         "latLng", LatLng(_latLng.latitude, _latLng.longitude));
@@ -136,28 +136,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void didChangeDependencies() {
     conatiner = InheritedContainer.of(context);
-    SharedPref().getValue("isEmailVerified").then((value) {
-      if (value == null || value == false) {
-        SharedPref().getToken().then((value) {
-          _api.profile(value, Map()).then((value) {
-            setState(() {
-              isEmailVerified = value["response"]["isEmailVerified"] ?? false;
-              SharedPref().setBoolValue("isEmailVerified",
-                  value["response"]["isEmailVerified"] ?? false);
-              avatar = value['response']['avatar'].toString();
-            });
-          });
-        });
-      } else {
+    // SharedPref().getValue("isEmailVerified").then((value) {
+    //   if (value == null || value == false) {
+    SharedPref().getToken().then((value) {
+      token = value;
+      _api.profile(value, Map()).then((value) {
         setState(() {
-          isEmailVerified = value;
+          isEmailVerified = value["response"]["isEmailVerified"] ?? false;
+          SharedPref().setBoolValue(
+              "isEmailVerified", value["response"]["isEmailVerified"] ?? false);
+          avatar = value['response']['avatar'].toString();
         });
-      }
+      });
+      getUnreadNotification();
     });
+    // } else {
+    //   setState(() {
+    //     isEmailVerified = value;
+    //   });
+    // }
+    // });
     _container = InheritedContainer.of(context);
     getLocation();
 
     super.didChangeDependencies();
+  }
+
+  getUnreadNotification() {
+    _api.getUnreadNotifications(context, token).then((value) {
+      setState(() {
+        unreadCount = value['count'];
+      });
+    });
   }
 
   @override
@@ -183,11 +193,49 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         image: AssetImage("images/logo.png"),
                       ),
                       Spacer(),
-                      Image(
-                        width: 28.0,
-                        height: 28.0,
-                        image: AssetImage("images/ic_notification.png"),
-                      ),
+                      Container(
+                        height: 36,
+                        width: 36,
+                        child: Stack(
+                          children: [
+                            Center(
+                              child: Image(
+                                width: 28.0,
+                                height: 28.0,
+                                image: AssetImage("images/ic_notification.png"),
+                              ),
+                            ),
+                            unreadCount > 0
+                                ? Positioned(
+                                    right: 0,
+                                    top: 0,
+                                    child: Container(
+                                      height: 24,
+                                      width: 24,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 4, vertical: 2),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          color: Colors.red),
+                                      child: Center(
+                                        child: Text(
+                                            unreadCount > 9
+                                                ? '9+'
+                                                : unreadCount.toString(),
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12)),
+                                      ),
+                                    ))
+                                : SizedBox()
+                          ],
+                        ),
+                      ).onClick(
+                          onTap: () => Navigator.pushNamed(
+                                  context, Routes.activityNotification)
+                              .then((value) => getUnreadNotification())),
                       SizedBox(width: 16),
                       InkWell(
                         onTap: () {},

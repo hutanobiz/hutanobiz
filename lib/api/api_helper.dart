@@ -284,6 +284,19 @@ class ApiBaseHelper {
     });
   }
 
+  Future<Map> getUnreadNotifications(BuildContext context, token) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    return _netUtil
+        .get(base_url + "api/patient/unread-notification-list",
+            headers: headers)
+        .then((res) {
+      print(res.toString());
+      return res['response'];
+    });
+  }
+
   Future<Map> getAllNotifications(BuildContext context, token) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
