@@ -539,7 +539,7 @@ class ApiBaseHelper {
     return _netUtil
         .post(
       base_url + "api/patient/insurance-remove",
-      body: {'insuranceId' : insuranceId},
+      body: {'insuranceId': insuranceId},
       headers: headers,
     )
         .then((res) {
@@ -554,7 +554,7 @@ class ApiBaseHelper {
     return _netUtil
         .post(
       base_url + "api/delete-stripe-card",
-      body: {'cardId' : cardId},
+      body: {'cardId': cardId},
       headers: headers,
     )
         .then((res) {
@@ -761,7 +761,7 @@ class ApiBaseHelper {
   }
 
   Future<List<dynamic>> getSavedDoctors(
-      String token, LatLng latLng, String radius, String timeZone) {
+      String token, LatLng latLng, String radius) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
@@ -773,7 +773,7 @@ class ApiBaseHelper {
       headers: headers,
     )
         .then((res) {
-      return res["response"];
+      return res['response'];
     });
   }
 

@@ -358,7 +358,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    height: 72,
+                    height: 74,
                     width: 180,
                     padding: const EdgeInsets.all(10.0),
                     alignment: Alignment.centerLeft,
