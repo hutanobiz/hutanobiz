@@ -331,8 +331,23 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           _providerData['medicalDocuments'];
     }
 
-    if (_data["subServices"] != null) {
-      feeList = _data["subServices"];
+    feeList.clear();
+    feeList.add({
+      'serviceName': 'Provider Fee',
+      'amount': _data['data']['providerFees']
+    });
+    feeList.add({
+      'serviceName': 'Application Fee',
+      'amount': _data['data']['applicationFees']
+    });
+    if (_data['data']["type"].toString() == '3') {
+      if (_data['data']['parking'] != null &&
+          _data['data']['parking']['fee'] != null) {
+        feeList.add({
+          'serviceName': 'Parking Fee',
+          'amount': _data['data']['parking']['fee']
+        });
+      }
     }
 
     if (_data["insuranceData"] != null) {
@@ -353,59 +368,44 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         }
 
         _container.setProviderInsuranceMap(providerInsuranceList);
+      }
 
-        if (_data['data']["fees"] != null) {
-          // for (dynamic consultanceFee in _data['data']["fees"]) {
-          fee = _data['data']["fees"]?.toStringAsFixed(2) ?? "0.00";
-          // }
-        }
+      if (_providerData["type"].toString() == '3') {
+        address = Extensions.addressFormat(
+          _providerData["userAddress"]["address"]?.toString(),
+          _providerData["userAddress"]["street"]?.toString(),
+          _providerData["userAddress"]["city"]?.toString(),
+          _providerData["userAddress"]["state"],
+          _providerData["userAddress"]["zipCode"]?.toString(),
+        );
 
-        if (_providerData["type"].toString() == '3') {
-          if (_providerData['parking'] != null &&
-              _providerData['parking']['fee'] != null) {
-            parkingFee = _providerData['parking']['fee'].toStringAsFixed(2);
-          }
+        if (_providerData["userAddress"]["coordinates"] != null) {
+          List location = _providerData["userAddress"]["coordinates"];
 
-          address = Extensions.addressFormat(
-            _providerData["userAddress"]["address"]?.toString(),
-            _providerData["userAddress"]["street"]?.toString(),
-            _providerData["userAddress"]["city"]?.toString(),
-            _providerData["userAddress"]["state"],
-            _providerData["userAddress"]["zipCode"]?.toString(),
-          );
-
-          if (_providerData["userAddress"]["coordinates"] != null) {
-            List location = _providerData["userAddress"]["coordinates"];
-
-            if (location.length > 0) {
-              latLng = LatLng(
-                double.parse(location[1].toString()),
-                double.parse(location[0].toString()),
-              );
-            }
-          }
-        } else {
-          if (detail["businessLocation"] != null) {
-            dynamic business = detail["businessLocation"];
-
-            address = Extensions.addressFormat(
-              business["address"]?.toString(),
-              business["street"]?.toString(),
-              business["city"]?.toString(),
-              business["state"],
-              business["zipCode"]?.toString(),
+          if (location.length > 0) {
+            latLng = LatLng(
+              double.parse(location[1].toString()),
+              double.parse(location[0].toString()),
             );
+          }
+        }
+      } else {
+        address = Extensions.addressFormat(
+          _providerData["doctorAddress"]["address"]?.toString(),
+          _providerData["doctorAddress"]["street"]?.toString(),
+          _providerData["doctorAddress"]["city"]?.toString(),
+          _providerData["doctorAddress"]["state"],
+          _providerData["doctorAddress"]["zipCode"]?.toString(),
+        );
 
-            if (detail["businessLocation"]["coordinates"] != null) {
-              List location = detail["businessLocation"]["coordinates"];
+        if (_providerData["doctorAddress"]["coordinates"] != null) {
+          List location = _providerData["doctorAddress"]["coordinates"];
 
-              if (location.length > 0) {
-                latLng = LatLng(
-                  double.parse(location[1].toString()),
-                  double.parse(location[0].toString()),
-                );
-              }
-            }
+          if (location.length > 0) {
+            latLng = LatLng(
+              double.parse(location[1].toString()),
+              double.parse(location[0].toString()),
+            );
           }
         }
       }
@@ -414,11 +414,6 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     if (_providerData["doctor"] != null) {
       name = _providerData["doctor"]["fullName"]?.toString() ?? "---";
       avatar = _providerData["doctor"]["avatar"];
-    }
-
-    if (_providerData["parking"] != null) {
-      officeVisitFee =
-          _providerData["parking"]["fee"]?.toStringAsFixed(2) ?? "0.00";
     }
 
     return Column(
@@ -494,7 +489,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                       _appointmentStatus?.appointmentStatus(),
                       SizedBox(height: 5.0),
                       Text(
-                        "\$${double.parse(fee).toStringAsFixed(2)}",
+                        "\$${totalFee.toStringAsFixed(2)}",
                         style: TextStyle(
                           fontSize: 22.0,
                           fontWeight: FontWeight.w600,
@@ -562,10 +557,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         feeWidget(
             fee, officeVisitFee, parkingFee, _providerData["type"].toString()),
         divider(),
-        paymentType == 0
-            ? Container()
-            : paymentWidget(paymentType, insuranceName, insuranceImage),
-        paymentType == 0 ? Container() : divider(topPadding: 10.0),
+        paymentWidget(paymentType, insuranceName, insuranceImage),
+        divider(topPadding: 10.0),
       ],
     );
   }
@@ -934,18 +927,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
   Widget feeWidget(String generalFee, String officeVisitCharge,
       String parkingFee, String appType) {
-    if (feeList.length > 0) {
-      totalFee = feeList.fold(
-          0,
-          (sum, item) =>
-              sum + double.parse(item["subService"]["amount"].toString()));
-    } else {
-      totalFee = (double.parse(generalFee) + double.parse(officeVisitCharge));
-    }
-
-    if (appType == '3') {
-      totalFee += double.parse(officeVisitCharge);
-    }
+    totalFee = feeList.fold(
+        0, (sum, item) => sum + double.parse(item["amount"].toString()));
 
     _container.setProviderData("totalFee", totalFee.toStringAsFixed(2));
 
@@ -970,28 +953,13 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             ),
             child: Column(
               children: <Widget>[
-                feeList.length > 0
-                    ? ListView.builder(
-                        physics: ClampingScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: feeList.length,
-                        itemBuilder: (context, index) {
-                          return subServicesFeeWidget(feeList[index]);
-                        })
-                    : Column(
-                        children: <Widget>[
-                          subFeeWidget(
-                              "General Medicine Consult", "\$$generalFee"),
-                          officeVisitCharge == "0.00"
-                              ? Container()
-                              : subFeeWidget("Office Visit charge",
-                                  "\$$officeVisitCharge"),
-                        ],
-                      ),
-                appType != '3'
-                    ? Container()
-                    : subFeeWidget("Parking charge", "\$$parkingFee"),
-                SizedBox(height: 16),
+                ListView.builder(
+                    physics: ClampingScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: feeList.length,
+                    itemBuilder: (context, index) {
+                      return subServicesFeeWidget(feeList[index]);
+                    }),
                 Divider(),
                 subFeeWidget("Total", "\$" + totalFee.toStringAsFixed(2)),
                 SizedBox(height: 16),
@@ -1129,7 +1097,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       child: Row(
         children: <Widget>[
           Text(
-            feeMap["subServiceName"]?.toString() ?? "---",
+            feeMap["serviceName"]?.toString() ?? "---",
             style: TextStyle(
               fontSize: 14.0,
               fontWeight: FontWeight.w500,
@@ -1140,8 +1108,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             child: Align(
               alignment: Alignment.centerRight,
               child: Text(
-                "\$" + feeMap["subService"]["amount"]?.toStringAsFixed(2) ??
-                    "0.00",
+                "\$" + feeMap["amount"]?.toStringAsFixed(2) ?? "0.00",
                 style: TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.w700,

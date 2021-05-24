@@ -124,74 +124,68 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
       this._medicalHistoryMap['medicalDocuments'] = _data['medicalDocuments'];
     }
 
-    if (_data["services"] != null) {
-      feeList = _data["services"];
-    }
-
     if (_data["insuranceData"] != null) {
       insuranceName = _data["insuranceData"]["insuranceName"];
       insuranceImage = _data["insuranceData"]["insuranceDocumentFront"];
     }
+    feeList.clear();
+    feeList.add({'serviceId': 'Provider Fee', 'amount': _data['providerFees']});
+    feeList.add(
+        {'serviceId': 'Application Fee', 'amount': _data['applicationFees']});
+    if (_data["type"].toString() == '3') {
+      if (_data['parking'] != null && _data['parking']['fee'] != null) {
+        feeList.add(
+            {'serviceId': 'Parking Fee', 'amount': _data['parking']['fee']});
+      }
+    }
 
-    if (_data["DoctorProfessionalDetail"] != null) {
-      dynamic detail = _data["DoctorProfessionalDetail"];
+    if (_data["doctorData"][0] != null) {
+      dynamic detail = _data["doctorData"][0];
       if (detail["professionalTitle"] != null) {
         professionalTitle = detail["professionalTitle"]["title"] ?? "---";
       }
+    }
 
-      if (detail["consultanceFee"] != null) {
-        for (dynamic consultanceFee in detail["consultanceFee"]) {
-          fee = consultanceFee["fee"]?.toStringAsFixed(2) ?? "0.00";
+    if (_data["type"].toString() == '3') {
+      address = Extensions.addressFormat(
+        _data["userAddress"]["address"]?.toString(),
+        _data["userAddress"]["street"]?.toString(),
+        _data["userAddress"]["city"]?.toString(),
+        _data["userAddress"]["state"] is Map
+            ? _data["userAddress"]["state"]
+            : _data["userAddress"]["stateCode"],
+        _data["userAddress"]["zipCode"]?.toString(),
+      );
+
+      if (_data["userAddress"]["coordinates"] != null) {
+        List location = _data["userAddress"]["coordinates"];
+
+        if (location.length > 0) {
+          latLng = LatLng(
+            double.parse(location[1].toString()),
+            double.parse(location[0].toString()),
+          );
         }
       }
+    } else {
+      address = Extensions.addressFormat(
+        _data["doctorAddress"]["address"]?.toString(),
+        _data["doctorAddress"]["street"]?.toString(),
+        _data["doctorAddress"]["city"]?.toString(),
+        _data["doctorAddress"]["state"] is Map
+            ? _data["doctorAddress"]["state"]
+            : _data["doctorAddress"]["stateCode"],
+        _data["doctorAddress"]["zipCode"]?.toString(),
+      );
 
-      if (_data["type"].toString() == '3') {
-        if (_data['parking'] != null && _data['parking']['fee'] != null) {
-          parkingFee = _data['parking']['fee'].toStringAsFixed(2);
-        }
+      if (_data["doctorAddress"]["coordinates"] != null) {
+        List location = _data["doctorAddress"]["coordinates"];
 
-        address = Extensions.addressFormat(
-          _data["userAddress"]["address"]?.toString(),
-          _data["userAddress"]["street"]?.toString(),
-          _data["userAddress"]["city"]?.toString(),
-          _data["userAddress"]["state"] is Map
-              ? _data["userAddress"]["state"]
-              : _data["userAddress"]["stateCode"],
-          _data["userAddress"]["zipCode"]?.toString(),
-        );
-
-        if (_data["userAddress"]["coordinates"] != null) {
-          List location = _data["userAddress"]["coordinates"];
-
-          if (location.length > 0) {
-            latLng = LatLng(
-              double.parse(location[1].toString()),
-              double.parse(location[0].toString()),
-            );
-          }
-        }
-      } else {
-        if (detail["businessLocation"] != null) {
-          dynamic business = detail["businessLocation"];
-
-          address = Extensions.addressFormat(
-            business["address"]?.toString(),
-            business["street"]?.toString(),
-            business["city"]?.toString(),
-            business["state"],
-            business["zipCode"]?.toString(),
+        if (location.length > 0) {
+          latLng = LatLng(
+            double.parse(location[1].toString()),
+            double.parse(location[0].toString()),
           );
-
-          if (detail["businessLocation"]["coordinates"] != null) {
-            List location = detail["businessLocation"]["coordinates"];
-
-            if (location.length > 0) {
-              latLng = LatLng(
-                double.parse(location[1].toString()),
-                double.parse(location[0].toString()),
-              );
-            }
-          }
         }
       }
     }
@@ -526,16 +520,8 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
 
   Widget feeWidget(String generalFee, String officeVisitCharge,
       String parkingFee, String appType) {
-    if (feeList.length > 0) {
-      totalFee = feeList.fold(
-          0, (sum, item) => sum + double.parse(item["amount"].toString()));
-    } else {
-      totalFee = (double.parse(generalFee) + double.parse(officeVisitCharge));
-    }
-
-    if (appType == '3') {
-      totalFee += double.parse(officeVisitCharge);
-    }
+    totalFee = feeList.fold(
+        0, (sum, item) => sum + double.parse(item["amount"].toString()));
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
@@ -558,27 +544,13 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
             ),
             child: Column(
               children: <Widget>[
-                feeList.length > 0
-                    ? ListView.builder(
-                        physics: ClampingScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: feeList.length,
-                        itemBuilder: (context, index) {
-                          return subServicesFeeWidget(feeList[index]);
-                        })
-                    : Column(
-                        children: <Widget>[
-                          subFeeWidget(
-                              "General Medicine Consult", "\$$generalFee"),
-                          officeVisitCharge == "0.00"
-                              ? Container()
-                              : subFeeWidget("Office Visit charge",
-                                  "\$$officeVisitCharge"),
-                        ],
-                      ),
-                appType != '3'
-                    ? Container()
-                    : subFeeWidget("Parking charge", "\$$parkingFee"),
+                ListView.builder(
+                    physics: ClampingScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: feeList.length,
+                    itemBuilder: (context, index) {
+                      return subServicesFeeWidget(feeList[index]);
+                    }),
                 SizedBox(height: 16),
                 Divider(),
                 subFeeWidget("Total", "\$" + totalFee.toStringAsFixed(2)),
@@ -717,7 +689,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
       child: Row(
         children: <Widget>[
           Text(
-            feeMap["subServiceId"]?.toString() ?? "---",
+            feeMap["serviceId"]?.toString() ?? "---",
             style: TextStyle(
               fontSize: 14.0,
               fontWeight: FontWeight.w500,
