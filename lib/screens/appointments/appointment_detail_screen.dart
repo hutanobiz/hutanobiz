@@ -278,19 +278,19 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   Widget profileWidget(Map _data) {
     Map _providerData = _data["data"];
 
-    int paymentType = 0;
-
-    if (_providerData["insuranceId"] != null) {
-      paymentType = 2;
-    } else if (_providerData["cashPayment"] != null) {
-      paymentType = 1;
-    } else if (_providerData["cardPayment"] != null) {
-      if (_providerData["cardPayment"]["cardId"] != null &&
-          _providerData["cardPayment"]["cardNumber"] != null) {
-        paymentType = 3;
+    int paymentType = _data["data"]["paymentMethod"];
+    String insuranceName = '';
+    List<String> insuranceImages = List();
+    if (_data["insuranceData"] != null) {
+      if (_data["insuranceData"]["insuranceDocumentFront"] != null) {
+        insuranceImages.add(_data["insuranceData"]["insuranceDocumentFront"]);
       }
-    } else {
-      paymentType = 0;
+      if (_data["insuranceData"]["insuranceDocumentBack"] != null) {
+        insuranceImages.add(_data["insuranceData"]["insuranceDocumentBack"]);
+      }
+      if (_data["insuranceData"]["title"] != null) {
+        insuranceName = _data["insuranceData"]["title"];
+      }
     }
 
     _container.providerResponse.clear();
@@ -304,9 +304,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         parkingFee = "0.00",
         avatar,
         address = "---",
-        officeVisitFee = "0.00",
-        insuranceName = "---",
-        insuranceImage;
+        officeVisitFee = "0.00";
 
     LatLng latLng = new LatLng(0, 0);
 
@@ -350,10 +348,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       }
     }
 
-    if (_data["insuranceData"] != null) {
-      insuranceName = _data["insuranceData"]["title"];
-      insuranceImage = _data["insuranceData"]["insuranceDocumentFront"];
-    }
+    // if (_data["insuranceData"] != null) {
+    //   insuranceName = _data["insuranceData"]["title"];
+    //   insuranceImage = _data["insuranceData"]["insuranceDocumentFront"];
+    // }
     if (_providerData["doctor"] != null) {
       name = _providerData["doctor"]["fullName"]?.toString() ?? "---";
       avatar = _providerData["doctor"]["avatar"];
@@ -557,7 +555,12 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         feeWidget(
             fee, officeVisitFee, parkingFee, _providerData["type"].toString()),
         divider(),
-        paymentWidget(paymentType, insuranceName, insuranceImage),
+        paymentWidget(
+          paymentType,
+          insuranceImages: insuranceImages,
+          cardDetails: _data["data"]["cardDetails"],
+          insuranceName: insuranceName,
+        ),
         divider(topPadding: 10.0),
       ],
     );
@@ -698,10 +701,14 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               ),
             ],
           ),
-          _appointmentStatus == "2" || _appointmentStatus == "6"
+          _appointmentStatus == "2" ||
+                  _appointmentStatus == "6" ||
+                  _appointmentStatus == "4"
               ? Container()
               : SizedBox(height: 5.0),
-          _appointmentStatus == "2" || _appointmentStatus == "6"
+          _appointmentStatus == "2" ||
+                  _appointmentStatus == "6" ||
+                  _appointmentStatus == "4"
               ? Container()
               : Padding(
                   padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
@@ -1155,8 +1162,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     );
   }
 
-  Widget paymentWidget(
-      int paymentType, String insuranceName, String insuranceImage) {
+  Widget paymentWidget(int paymentType,
+      {List<String> insuranceImages,
+      dynamic cardDetails,
+      String insuranceName}) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
       child: Column(
@@ -1174,24 +1183,26 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               paymentType == 1
-                  ? Image.asset("images/ic_cash_payment.png",
-                      height: 42, width: 42)
-                  : insuranceImage == null
-                      ? Image.asset("images/insurancePlaceHolder.png",
-                          height: 42, width: 42)
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            ApiBaseHelper.imageUrl + insuranceImage,
-                            height: 42,
-                            width: 42,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                  ? Image.asset(
+                      cardDetails['card']['brand'] == 'visa'
+                          ? "images/ic_visa.png"
+                          : "images/profile_payment_setting.png",
+                      height: 42,
+                      width: 42)
+                  : Image.asset(
+                      paymentType == 2
+                          ? "images/payment_insurance.png"
+                          : "images/payment_cash.png",
+                      height: 42,
+                      width: 42),
               SizedBox(width: 14.0),
               Expanded(
                 child: Text(
-                  paymentType == 1 ? "Cash" : insuranceName,
+                  paymentType == 1
+                      ? '************${cardDetails['card']['last4']}'
+                      : paymentType == 2
+                          ? insuranceName
+                          : "Cash",
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(

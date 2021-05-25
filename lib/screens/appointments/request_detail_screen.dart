@@ -7,13 +7,14 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:intl/intl.dart';
 
 class RequestDetailScreen extends StatefulWidget {
-  const RequestDetailScreen({Key key, this.detailData}) : super(key: key);
+  const RequestDetailScreen({Key key, this.appointmentId}) : super(key: key);
 
-  final Map detailData;
+  final String appointmentId;
 
   @override
   _RequestDetailScreenState createState() => _RequestDetailScreenState();
@@ -23,12 +24,14 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
   List feeList = List();
   double totalFee = 0;
   String _appointmentStatus = "0";
+  Future<dynamic> _profileFuture;
 
   Map profileMap = {};
 
   Map _medicalHistoryMap = {};
 
   final Set<Marker> _markers = {};
+  ApiBaseHelper api = ApiBaseHelper();
   BitmapDescriptor sourceIcon;
   Completer<GoogleMapController> _controller = Completer();
 
@@ -43,10 +46,22 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
     super.initState();
 
     setSourceAndDestinationIcons();
+  }
 
-    if (widget.detailData != null) {
-      profileMap = widget.detailData;
-    }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    appointmentDetailsFuture(LatLng(0, 0));
+  }
+
+  void appointmentDetailsFuture(LatLng latLng) {
+    SharedPref().getToken().then((userToken) {
+      setState(() {
+        _profileFuture =
+            api.getAppointmentDetails(userToken, widget.appointmentId, latLng);
+      });
+    });
   }
 
   @override
@@ -71,9 +86,22 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
             );
           },
           padding: EdgeInsets.zero,
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(0, 20, 0, 75),
-            child: profileWidget(profileMap),
+          child: FutureBuilder(
+            future: _profileFuture,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                profileMap = snapshot.data;
+                _appointmentStatus = profileMap['data']["status"].toString();
+                return SingleChildScrollView(
+                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 75),
+                    child: profileWidget(profileMap));
+              } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            },
           ),
         ),
       ),
@@ -81,139 +109,127 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
   }
 
   Widget profileWidget(Map _data) {
-    int paymentType = 0;
+    Map _providerData = _data["data"];
 
-    if (_data["insuranceId"] != null) {
-      paymentType = 2;
-    } else if (_data["cashPayment"] != null) {
-      paymentType = 1;
-    } else if (_data["cardPayment"] != null) {
-      if (_data["cardPayment"]["cardId"] != null &&
-          _data["cardPayment"]["cardNumber"] != null) {
-        paymentType = 3;
+    int paymentType = _data["data"]["paymentMethod"];
+    String insuranceName = '';
+    List<String> insuranceImages = List();
+    if (_data["insuranceData"] != null) {
+      if (_data["insuranceData"]["insuranceDocumentFront"] != null) {
+        insuranceImages.add(_data["insuranceData"]["insuranceDocumentFront"]);
       }
-    } else {
-      paymentType = 0;
+      if (_data["insuranceData"]["insuranceDocumentBack"] != null) {
+        insuranceImages.add(_data["insuranceData"]["insuranceDocumentBack"]);
+      }
+      if (_data["insuranceData"]["title"] != null) {
+        insuranceName = _data["insuranceData"]["title"];
+      }
     }
 
     String name = "---",
         averageRating = "---",
+        userRating,
         professionalTitle = "---",
         fee = "0.00",
         parkingFee = "0.00",
         avatar,
         address = "---",
-        officeVisitFee = "0.00",
-        insuranceName = "---",
-        insuranceImage;
+        officeVisitFee = "0.00";
 
     LatLng latLng = new LatLng(0, 0);
 
-    _appointmentStatus = _data['status']?.toString() ?? '0';
+    if (_data["reason"] != null && _data["reason"].length > 0) {
+      userRating = _data["reason"][0]["rating"]?.toString();
+    }
 
     averageRating = _data["averageRating"]?.toStringAsFixed(2) ?? "0";
 
-    if (_data['medicalHistory'] != null && _data['medicalHistory'].length > 0) {
-      this._medicalHistoryMap['medicalHistory'] = _data['medicalHistory'];
+    if (_providerData['medicalHistory'] != null &&
+        _providerData['medicalHistory'].length > 0) {
+      this._medicalHistoryMap['medicalHistory'] =
+          _providerData['medicalHistory'];
     }
-    if (_data['medicalImages'] != null && _data['medicalImages'].length > 0) {
-      this._medicalHistoryMap['medicalImages'] = _data['medicalImages'];
+    if (_providerData['medicalImages'] != null &&
+        _providerData['medicalImages'].length > 0) {
+      this._medicalHistoryMap['medicalImages'] = _providerData['medicalImages'];
     }
-    if (_data['medicalDocuments'] != null &&
-        _data['medicalDocuments'].length > 0) {
-      this._medicalHistoryMap['medicalDocuments'] = _data['medicalDocuments'];
+    if (_providerData['medicalDocuments'] != null &&
+        _providerData['medicalDocuments'].length > 0) {
+      this._medicalHistoryMap['medicalDocuments'] =
+          _providerData['medicalDocuments'];
     }
 
-    if (_data["insuranceData"] != null) {
-      insuranceName = _data["insuranceData"]["insuranceName"];
-      insuranceImage = _data["insuranceData"]["insuranceDocumentFront"];
-    }
     feeList.clear();
-    feeList.add({'serviceId': 'Provider Fee', 'amount': _data['providerFees']});
-    feeList.add(
-        {'serviceId': 'Application Fee', 'amount': _data['applicationFees']});
-    if (_data["type"].toString() == '3') {
-      if (_data['parking'] != null && _data['parking']['fee'] != null) {
-        feeList.add(
-            {'serviceId': 'Parking Fee', 'amount': _data['parking']['fee']});
+    feeList.add({
+      'serviceName': 'Provider Fee',
+      'amount': _data['data']['providerFees']
+    });
+    feeList.add({
+      'serviceName': 'Application Fee',
+      'amount': _data['data']['applicationFees']
+    });
+    if (_data['data']["type"].toString() == '3') {
+      if (_data['data']['parking'] != null &&
+          _data['data']['parking']['fee'] != null) {
+        feeList.add({
+          'serviceName': 'Parking Fee',
+          'amount': _data['data']['parking']['fee']
+        });
       }
     }
-    if (_data["doctor"] != null) {
-      if (_data['isOndemand'] ?? false) {
-        name = _data["doctor"][0]["fullName"]?.toString() ?? "---";
-        avatar = _data["doctor"][0]["avatar"];
-      } else {
-        name = _data["doctor"]["fullName"]?.toString() ?? "---";
-        avatar = _data["doctor"]["avatar"];
-      }
+    if (_providerData["doctor"] != null) {
+      name = _providerData["doctor"]["fullName"]?.toString() ?? "---";
+      avatar = _providerData["doctor"]["avatar"];
     }
 
-    if (_data['isOndemand'] ?? false) {
-      if (_data["doctorData"] != null) {
-        dynamic detail = _data["doctorData"];
-        if (detail["professionalTitle"] != null) {
-          professionalTitle = detail["professionalTitle"][0]["title"] ?? "---";
-          name += Extensions.getSortProfessionTitle(professionalTitle);
-        }
-      }
-    } else {
-      if (_data["doctorData"][0] != null) {
-        dynamic detail = _data["doctorData"][0];
+    if (_data["doctorData"] != null) {
+      for (dynamic detail in _data["doctorData"]) {
         if (detail["professionalTitle"] != null) {
           professionalTitle = detail["professionalTitle"]["title"] ?? "---";
           name += Extensions.getSortProfessionTitle(professionalTitle);
         }
       }
-    }
 
-    if (_data["type"].toString() == '3') {
-      address = Extensions.addressFormat(
-        _data["userAddress"]["address"]?.toString(),
-        _data["userAddress"]["street"]?.toString(),
-        _data["userAddress"]["city"]?.toString(),
-        _data["userAddress"]["state"] is Map
-            ? _data["userAddress"]["state"]
-            : _data["userAddress"]["stateCode"],
-        _data["userAddress"]["zipCode"]?.toString(),
-      );
+      if (_providerData["type"].toString() == '3') {
+        address = Extensions.addressFormat(
+          _providerData["userAddress"]["address"]?.toString(),
+          _providerData["userAddress"]["street"]?.toString(),
+          _providerData["userAddress"]["city"]?.toString(),
+          _providerData["userAddress"]["state"],
+          _providerData["userAddress"]["zipCode"]?.toString(),
+        );
 
-      if (_data["userAddress"]["coordinates"] != null) {
-        List location = _data["userAddress"]["coordinates"];
+        if (_providerData["userAddress"]["coordinates"] != null) {
+          List location = _providerData["userAddress"]["coordinates"];
 
-        if (location.length > 0) {
-          latLng = LatLng(
-            double.parse(location[1].toString()),
-            double.parse(location[0].toString()),
-          );
+          if (location.length > 0) {
+            latLng = LatLng(
+              double.parse(location[1].toString()),
+              double.parse(location[0].toString()),
+            );
+          }
         }
-      }
-    } else {
-      address = Extensions.addressFormat(
-        _data["doctorAddress"]["address"]?.toString(),
-        _data["doctorAddress"]["street"]?.toString(),
-        _data["doctorAddress"]["city"]?.toString(),
-        _data["doctorAddress"]["state"] is Map
-            ? _data["doctorAddress"]["state"]
-            : _data["doctorAddress"]["stateCode"],
-        _data["doctorAddress"]["zipCode"]?.toString(),
-      );
+      } else {
+        address = Extensions.addressFormat(
+          _providerData["doctorAddress"]["address"]?.toString(),
+          _providerData["doctorAddress"]["street"]?.toString(),
+          _providerData["doctorAddress"]["city"]?.toString(),
+          _providerData["doctorAddress"]["state"],
+          _providerData["doctorAddress"]["zipCode"]?.toString(),
+        );
 
-      if (_data["doctorAddress"]["coordinates"] != null) {
-        List location = _data["doctorAddress"]["coordinates"];
+        if (_providerData["doctorAddress"]["coordinates"] != null) {
+          List location = _providerData["doctorAddress"]["coordinates"];
 
-        if (location.length > 0) {
-          latLng = LatLng(
-            double.parse(location[1].toString()),
-            double.parse(location[0].toString()),
-          );
+          if (location.length > 0) {
+            latLng = LatLng(
+              double.parse(location[1].toString()),
+              double.parse(location[0].toString()),
+            );
+          }
         }
       }
     }
-
-    if (_data["parking"] != null) {
-      officeVisitFee = _data["parking"]["fee"]?.toStringAsFixed(2) ?? "0.00";
-    }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -315,43 +331,40 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
         ),
         _data["type"] == 2 ? recordingInfoWidget() : SizedBox(),
         divider(topPadding: 18.0),
-        dateTimeWidget(
-            // DateFormat('EEEE, dd MMMM,')
-            //       .format(DateTime.parse(_data['date']))
-            //       .toString() +
-            //   " " +
-            DateFormat('EEEE, dd MMMM, HH:mm')
-                    .format(DateTime.utc(
-                            DateTime.parse(_data['date']).year,
-                            DateTime.parse(_data['date']).month,
-                            DateTime.parse(_data['date']).day,
-                            int.parse(_data['fromTime'].split(':')[0]),
-                            int.parse(_data['fromTime'].split(':')[1]))
-                        .toLocal())
-                    .toString() +
-                ' to ' +
-                DateFormat('HH:mm')
-                    .format(DateTime.utc(
-                            DateTime.parse(_data['date']).year,
-                            DateTime.parse(_data['date']).month,
-                            DateTime.parse(_data['date']).day,
-                            int.parse(_data['toTime'].split(':')[0]),
-                            int.parse(_data['toTime'].split(':')[1]))
-                        .toLocal())
-                    .toString()),
+        dateTimeWidget(DateFormat('EEEE, dd MMMM, HH:mm')
+                .format(DateTime.utc(
+                        DateTime.parse(_providerData['date']).year,
+                        DateTime.parse(_providerData['date']).month,
+                        DateTime.parse(_providerData['date']).day,
+                        int.parse(_providerData['fromTime'].split(':')[0]),
+                        int.parse(_providerData['fromTime'].split(':')[1]))
+                    .toLocal())
+                .toString() +
+            ' to ' +
+            DateFormat('HH:mm')
+                .format(DateTime.utc(
+                        DateTime.parse(_providerData['date']).year,
+                        DateTime.parse(_providerData['date']).month,
+                        DateTime.parse(_providerData['date']).day,
+                        int.parse(_providerData['toTime'].split(':')[0]),
+                        int.parse(_providerData['toTime'].split(':')[1]))
+                    .toLocal())
+                .toString()),
         _data["type"] == 2 ? SizedBox() : divider(topPadding: 8.0),
         _data["type"] == 2
             ? SizedBox()
             : locationWidget(address, latLng, _data['distance']),
         divider(),
-        seekingCareWidget(_data),
+        seekingCareWidget(_providerData),
         divider(),
         feeWidget(fee, officeVisitFee, parkingFee, _data["type"].toString()),
         divider(),
-        paymentType == 0
-            ? Container()
-            : paymentWidget(paymentType, insuranceName, insuranceImage),
-        paymentType == 0 ? Container() : divider(topPadding: 10.0),
+        paymentWidget(
+          paymentType,
+          insuranceImages: insuranceImages,
+          cardDetails: _data['data']["cardDetails"],
+          insuranceName: insuranceName,
+        ),
       ],
     );
   }
@@ -573,10 +586,10 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
     );
   }
 
-  Widget seekingCareWidget(dynamic _data) {
+  Widget seekingCareWidget(dynamic _providerData) {
     String timeSpan = "---";
-    if (_data["problemTimeSpan"] != null) {
-      timeSpan = _data["problemTimeSpan"].toString();
+    if (_providerData["problemTimeSpan"] != null) {
+      timeSpan = _providerData["problemTimeSpan"].toString();
     }
 
     return Padding(
@@ -592,7 +605,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
           ),
           SizedBox(height: 18.0),
           Text(
-            _data['description']?.toString() ?? '---',
+            _providerData['description']?.toString() ?? '---',
             style: TextStyle(
               fontWeight: FontWeight.w500,
               color: Colors.black,
@@ -657,7 +670,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                     SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        _data["isTreatmentReceived"]
+                        _providerData["isTreatmentReceived"]
                             ? "Treatment for this complaint is taken in the past 3 months."
                             : "No treatment for this complaint in the past 3 months.",
                         style: TextStyle(fontSize: 13),
@@ -678,7 +691,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                     ),
                     SizedBox(width: 8),
                     Text(
-                      _data["isProblemImproving"]
+                      _providerData["isProblemImproving"]
                           ? "The problem is NOT improving."
                           : "The problem is NOT improving.",
                       style: TextStyle(fontSize: 13),
@@ -699,7 +712,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
       child: Row(
         children: <Widget>[
           Text(
-            feeMap["serviceId"]?.toString() ?? "---",
+            feeMap["serviceName"]?.toString() ?? "---",
             style: TextStyle(
               fontSize: 14.0,
               fontWeight: FontWeight.w500,
@@ -757,8 +770,10 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
     );
   }
 
-  Widget paymentWidget(
-      int paymentType, String insuranceName, String insuranceImage) {
+  Widget paymentWidget(int paymentType,
+      {List<String> insuranceImages,
+      dynamic cardDetails,
+      String insuranceName}) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
       child: Column(
@@ -776,24 +791,26 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               paymentType == 1
-                  ? Image.asset("images/ic_cash_payment.png",
-                      height: 42, width: 42)
-                  : insuranceImage == null
-                      ? Image.asset("images/insurancePlaceHolder.png",
-                          height: 42, width: 42)
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            ApiBaseHelper.imageUrl + insuranceImage,
-                            height: 42,
-                            width: 42,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                  ? Image.asset(
+                      cardDetails['card']['brand'] == 'visa'
+                          ? "images/ic_visa.png"
+                          : "images/profile_payment_setting.png",
+                      height: 42,
+                      width: 42)
+                  : Image.asset(
+                      paymentType == 2
+                          ? "images/payment_insurance.png"
+                          : "images/payment_cash.png",
+                      height: 42,
+                      width: 42),
               SizedBox(width: 14.0),
               Expanded(
                 child: Text(
-                  paymentType == 1 ? "Cash" : insuranceName,
+                  paymentType == 1
+                      ? '************${cardDetails['card']['last4']}'
+                      : paymentType == 2
+                          ? insuranceName
+                          : "Cash",
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(

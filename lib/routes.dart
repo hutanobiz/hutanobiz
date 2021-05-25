@@ -417,7 +417,7 @@ class Routes {
         return _buildRoute(
           settings,
           RequestDetailScreen(
-            detailData: args,
+            appointmentId: args,
           ),
         );
         break;

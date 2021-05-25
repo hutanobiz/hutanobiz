@@ -42,7 +42,7 @@ class RequestListWidget extends StatelessWidget {
           onTap: () {
             Navigator.of(context).pushNamed(
               Routes.requestDetailScreen,
-              arguments: response,
+              arguments: response['_id'],
             );
           },
           child: Column(
