@@ -165,12 +165,18 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           '(${response['totalRating']})';
     }
 
-    name = response["doctorName"]?.toString() ?? "---";
-
     if (response["doctor"] != null) {
       if (response["isOndemand"] == true) {
+        name = (response["doctor"][0]["title"] ?? "---") +
+                ' ' +
+                response["doctor"][0]["fullName"] ??
+            "---";
         avatar = response["doctor"][0]["avatar"].toString();
       } else {
+        name = (response["doctor"]["title"] ?? "---") +
+                ' ' +
+                response["doctor"]["fullName"] ??
+            "---";
         avatar = response["doctor"]["avatar"].toString();
       }
     }

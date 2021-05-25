@@ -873,7 +873,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           return isDoctorList
               ? ProviderTileWidget(
                   avatar: tempList[index]['avatar'] ?? '',
-                  name: tempList[index][searchKey] +
+                  name: tempList[index]['title'] +
+                      ' ' +
+                      tempList[index][searchKey] +
                       Extensions.getSortProfessionTitle(professionalTitle),
                   profession: professionalTitle,
                   onTap: () {

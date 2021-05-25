@@ -257,7 +257,14 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
       }
 
     averageRating = response["averageRating"]?.toStringAsFixed(2) ?? "0";
-    name = _data["doctorName"]?.toString() ?? "---";
+    if (_data["doctor"] != null) {
+      avatar = _data["doctor"]["avatar"].toString();
+      name = (_data["doctor"]["title"] ?? "---") +
+              ' ' +
+              _data["doctor"]["fullName"] ??
+          "---";
+    }
+
     if (response["doctorData"] != null && response["doctorData"].length > 0) {
       dynamic detail = response["doctorData"][0];
 
@@ -287,10 +294,6 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
         _data["userAddress"]["state"],
         _data["userAddress"]["zipCode"]?.toString(),
       );
-    }
-
-    if (_data["doctor"] != null) {
-      avatar = _data["doctor"]["avatar"].toString();
     }
 
     return _container(

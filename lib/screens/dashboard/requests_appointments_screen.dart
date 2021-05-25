@@ -161,7 +161,8 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
 
     if (response["doctor"] != null) {
       if (response["isOndemand"] == true) {
-        name = response["doctor"][0]["fullName"]?.toString() ?? "---";
+        name = (response["doctor"][0]['title']?.toString() ?? 'Dr.') +
+                                  ' ' + response["doctor"][0]["fullName"]?.toString() ?? "---";
         avatar = response["doctor"][0]["avatar"].toString();
         if (response['doctorData'] != null) {
           if (response['doctorData']["professionalTitle"] != null) {
@@ -173,7 +174,8 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
           }
         }
       } else {
-        name = response["doctor"]["fullName"]?.toString() ?? "---";
+        name = (response["doctor"]['title']?.toString() ?? 'Dr.') +
+                                  ' ' + response["doctor"]["fullName"]?.toString() ?? "---";
         avatar = response["doctor"]["avatar"].toString();
         if (response['doctorData'] != null) {
           if (response['doctorData'][0]["professionalTitle"] != null) {

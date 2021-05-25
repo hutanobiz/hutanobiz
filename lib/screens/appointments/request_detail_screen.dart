@@ -178,7 +178,8 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
       }
     }
     if (_providerData["doctor"] != null) {
-      name = _providerData["doctor"]["fullName"]?.toString() ?? "---";
+      name =(_providerData["doctor"]['title']?.toString() ?? 'Dr.') +
+                                  ' ' + _providerData["doctor"]["fullName"]?.toString() ?? "---";
       avatar = _providerData["doctor"]["avatar"];
     }
 

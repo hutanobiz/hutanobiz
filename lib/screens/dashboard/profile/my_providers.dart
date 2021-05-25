@@ -143,7 +143,7 @@ class _MyProvidersState extends State<MyProviders> {
                       children: <Widget>[
                         Text(
                           provider['title'] +
-                              '. ' +
+                              ' ' +
                               provider['fullName'] +
                               Extensions.getSortProfessionTitle(
                                   provider['professionalTitle']),

@@ -353,7 +353,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     //   insuranceImage = _data["insuranceData"]["insuranceDocumentFront"];
     // }
     if (_providerData["doctor"] != null) {
-      name = _providerData["doctor"]["fullName"]?.toString() ?? "---";
+      name = (_providerData["doctor"]['title']?.toString() ?? 'Dr.') +
+              ' ' +
+              _providerData["doctor"]["fullName"]?.toString() ??
+          "---";
       avatar = _providerData["doctor"]["avatar"];
     }
 
