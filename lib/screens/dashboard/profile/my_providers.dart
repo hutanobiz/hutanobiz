@@ -142,7 +142,11 @@ class _MyProvidersState extends State<MyProviders> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          provider['title'] + '. ' + provider['fullName'],
+                          provider['title'] +
+                              '. ' +
+                              provider['fullName'] +
+                              Extensions.getSortProfessionTitle(
+                                  provider['professionalTitle']),
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 14.0,

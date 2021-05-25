@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/appointment_list_widget.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
@@ -181,6 +182,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                       ["title"]
                   ?.toString() ??
               "---";
+          name += Extensions.getSortProfessionTitle(professionalTitle);
         }
       } else {
         if (response["doctorData"][0]["professionalTitle"] != null) {
@@ -188,6 +190,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                       ["title"]
                   ?.toString() ??
               "---";
+          name += Extensions.getSortProfessionTitle(professionalTitle);
         }
       }
     }

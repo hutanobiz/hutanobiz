@@ -354,11 +354,16 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       insuranceName = _data["insuranceData"]["title"];
       insuranceImage = _data["insuranceData"]["insuranceDocumentFront"];
     }
+    if (_providerData["doctor"] != null) {
+      name = _providerData["doctor"]["fullName"]?.toString() ?? "---";
+      avatar = _providerData["doctor"]["avatar"];
+    }
 
     if (_data["doctorData"] != null) {
       for (dynamic detail in _data["doctorData"]) {
         if (detail["professionalTitle"] != null) {
           professionalTitle = detail["professionalTitle"]["title"] ?? "---";
+          name += Extensions.getSortProfessionTitle(professionalTitle);
         }
 
         List providerInsuranceList = List();
@@ -409,11 +414,6 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           }
         }
       }
-    }
-
-    if (_providerData["doctor"] != null) {
-      name = _providerData["doctor"]["fullName"]?.toString() ?? "---";
-      avatar = _providerData["doctor"]["avatar"];
     }
 
     return Column(

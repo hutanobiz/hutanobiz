@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/provider_tile_widget.dart';
@@ -59,11 +60,13 @@ class _SeeAllSearchScreeenState extends State<SeeAllSearchScreeen> {
               return title.toLowerCase().contains("provider")
                   ? ProviderTileWidget(
                       avatar: _list[index]["avatar"] ?? '',
-                      name: _list[index]["fullName"],
+                      name: _list[index]["fullName"] +
+                          Extensions.getSortProfessionTitle(professionalTitle),
                       profession: professionalTitle,
                       onTap: () {
-                        Navigator.of(context)
-                            .pushNamed(Routes.providerProfileScreen,arguments: _list[index]["_id"].toString());
+                        Navigator.of(context).pushNamed(
+                            Routes.providerProfileScreen,
+                            arguments: _list[index]["_id"].toString());
                       },
                     )
                   : ListTile(

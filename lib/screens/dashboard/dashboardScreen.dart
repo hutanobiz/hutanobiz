@@ -873,7 +873,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           return isDoctorList
               ? ProviderTileWidget(
                   avatar: tempList[index]['avatar'] ?? '',
-                  name: tempList[index][searchKey],
+                  name: tempList[index][searchKey] +
+                      Extensions.getSortProfessionTitle(professionalTitle),
                   profession: professionalTitle,
                   onTap: () {
                     // if (!_recentSearchesList.contains(tempList[index])) {
@@ -1426,7 +1427,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             Text(
                               (doctorData['title']?.toString() ?? 'Dr.') +
                                   ' ' +
-                                  (doctorData['fullName']?.toString() ?? '---'),
+                                  (doctorData['fullName']?.toString() ??
+                                      '---') +
+                                  Extensions.getSortProfessionTitle(
+                                      professionalTitle),
                               maxLines: 1,
                               style: TextStyle(
                                 color: Colors.black,
@@ -1618,7 +1622,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             Text(
                               (doctorData['title']?.toString() ?? 'Dr.') +
                                   ' ' +
-                                  (doctorData['fullName']?.toString() ?? '---'),
+                                  (doctorData['fullName']?.toString() ??
+                                      '---') +
+                                  Extensions.getSortProfessionTitle(
+                                      professionalTitle),
                               maxLines: 1,
                               style: TextStyle(
                                 color: Colors.black,

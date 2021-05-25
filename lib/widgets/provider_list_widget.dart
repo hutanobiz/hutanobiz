@@ -7,19 +7,19 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 
 class ProviderWidget extends StatelessWidget {
-  ProviderWidget({
-    Key key,
-    @required this.data,
-    this.selectedAppointment,
-    this.bookAppointment,
-    this.isOptionsShow = true,
-    this.averageRating,
-    this.isProverPicShow = false,
-    this.margin,
-    this.onRatingClick,
-    this.onLocationClick,
-    this.totalDistance
-  })  : assert(data != null),
+  ProviderWidget(
+      {Key key,
+      @required this.data,
+      this.selectedAppointment,
+      this.bookAppointment,
+      this.isOptionsShow = true,
+      this.averageRating,
+      this.isProverPicShow = false,
+      this.margin,
+      this.onRatingClick,
+      this.onLocationClick,
+      this.totalDistance})
+      : assert(data != null),
         super(key: key);
 
   final data;
@@ -83,28 +83,34 @@ class ProviderWidget extends StatelessWidget {
     } else {
       if (data["officeConsultanceFee"] != null &&
           data["officeConsultanceFee"].length > 0) {
-        fee = data["officeConsultanceFee"][0]['fee'] == null?'0.00':
-            data["officeConsultanceFee"][0]['fee'].toStringAsFixed(2) ?? '0.00';
+        fee = data["officeConsultanceFee"][0]['fee'] == null
+            ? '0.00'
+            : data["officeConsultanceFee"][0]['fee'].toStringAsFixed(2) ??
+                '0.00';
       }
 
       if (data["onsiteConsultanceFee"] != null &&
           data["onsiteConsultanceFee"].length > 0) {
-        fee =data["onsiteConsultanceFee"][0]['fee'] == null?'0.00': min(
-          double.parse(fee),
-          double.parse(
-            data["onsiteConsultanceFee"][0]['fee'].toStringAsFixed(2),
-          ),
-        ).toStringAsFixed(2);
+        fee = data["onsiteConsultanceFee"][0]['fee'] == null
+            ? '0.00'
+            : min(
+                double.parse(fee),
+                double.parse(
+                  data["onsiteConsultanceFee"][0]['fee'].toStringAsFixed(2),
+                ),
+              ).toStringAsFixed(2);
       }
 
       if (data["vedioConsultanceFee"] != null &&
           data["vedioConsultanceFee"].length > 0) {
-        fee = data["vedioConsultanceFee"][0]['fee']==null?'0.00': min(
-          double.parse(fee),
-          double.parse(
-            data["vedioConsultanceFee"][0]['fee'].toStringAsFixed(2),
-          ),
-        ).toStringAsFixed(2);
+        fee = data["vedioConsultanceFee"][0]['fee'] == null
+            ? '0.00'
+            : min(
+                double.parse(fee),
+                double.parse(
+                  data["vedioConsultanceFee"][0]['fee'].toStringAsFixed(2),
+                ),
+              ).toStringAsFixed(2);
       }
     }
 
@@ -120,10 +126,6 @@ class ProviderWidget extends StatelessWidget {
       avatar = data["User"][0]["avatar"]?.toString();
     }
 
-    if (data["education"] != null && data["education"].isNotEmpty) {
-      name += ', ' + data["education"][0]["degree"]?.toString() ?? '---̥';
-    }
-
     practicingSince = data["practicingSince"] != null
         ? ((DateTime.now()
                     .difference(DateTime.parse(data["practicingSince"]))
@@ -136,11 +138,13 @@ class ProviderWidget extends StatelessWidget {
       if (data['professionalTitle'] != null) {
         professionalTitle =
             data['professionalTitle']['title']?.toString() ?? "----";
+        name += Extensions.getSortProfessionTitle(professionalTitle);
       }
     } else if (data['ProfessionalTitle'] != null &&
         data["ProfessionalTitle"].length > 0) {
       professionalTitle =
           data['ProfessionalTitle'][0]['title']?.toString() ?? "----";
+      name += Extensions.getSortProfessionTitle(professionalTitle);
     }
 
     if (data["businessLocation"] != null) {
@@ -417,8 +421,8 @@ class ProviderWidget extends StatelessWidget {
                     children: <Widget>[
                       "ic_app_distance".imageIcon(),
                       SizedBox(width: 5.0),
-                      Text(totalDistance??
-                        distance,
+                      Text(
+                        totalDistance ?? distance,
                         style: TextStyle(
                           color: AppColors.windsor,
                         ),

@@ -138,11 +138,31 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
             {'serviceId': 'Parking Fee', 'amount': _data['parking']['fee']});
       }
     }
+    if (_data["doctor"] != null) {
+      if (_data['isOndemand'] ?? false) {
+        name = _data["doctor"][0]["fullName"]?.toString() ?? "---";
+        avatar = _data["doctor"][0]["avatar"];
+      } else {
+        name = _data["doctor"]["fullName"]?.toString() ?? "---";
+        avatar = _data["doctor"]["avatar"];
+      }
+    }
 
-    if (_data["doctorData"][0] != null) {
-      dynamic detail = _data["doctorData"][0];
-      if (detail["professionalTitle"] != null) {
-        professionalTitle = detail["professionalTitle"]["title"] ?? "---";
+    if (_data['isOndemand'] ?? false) {
+      if (_data["doctorData"] != null) {
+        dynamic detail = _data["doctorData"];
+        if (detail["professionalTitle"] != null) {
+          professionalTitle = detail["professionalTitle"][0]["title"] ?? "---";
+          name += Extensions.getSortProfessionTitle(professionalTitle);
+        }
+      }
+    } else {
+      if (_data["doctorData"][0] != null) {
+        dynamic detail = _data["doctorData"][0];
+        if (detail["professionalTitle"] != null) {
+          professionalTitle = detail["professionalTitle"]["title"] ?? "---";
+          name += Extensions.getSortProfessionTitle(professionalTitle);
+        }
       }
     }
 
@@ -187,16 +207,6 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
             double.parse(location[0].toString()),
           );
         }
-      }
-    }
-
-    if (_data["doctor"] != null) {
-      if (_data['isOndemand'] ?? false) {
-        name = _data["doctor"][0]["fullName"]?.toString() ?? "---";
-        avatar = _data["doctor"][0]["avatar"];
-      } else {
-        name = _data["doctor"]["fullName"]?.toString() ?? "---";
-        avatar = _data["doctor"]["avatar"];
       }
     }
 

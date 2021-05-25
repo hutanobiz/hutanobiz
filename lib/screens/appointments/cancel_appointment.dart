@@ -257,7 +257,7 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
       }
 
     averageRating = response["averageRating"]?.toStringAsFixed(2) ?? "0";
-
+    name = _data["doctorName"]?.toString() ?? "---";
     if (response["doctorData"] != null && response["doctorData"].length > 0) {
       dynamic detail = response["doctorData"][0];
 
@@ -275,6 +275,7 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
 
       if (detail["professionalTitle"] != null) {
         professionalTitle = detail["professionalTitle"]["title"] ?? "---";
+        name += Extensions.getSortProfessionTitle(professionalTitle);
       }
     }
 
@@ -287,8 +288,6 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
         _data["userAddress"]["zipCode"]?.toString(),
       );
     }
-
-    name = _data["doctorName"]?.toString() ?? "---";
 
     if (_data["doctor"] != null) {
       avatar = _data["doctor"]["avatar"].toString();
@@ -421,14 +420,14 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
                 SizedBox(width: 3.0),
                 Expanded(
                   child: Text(
-                      // DateFormat(
-                      // 'EEEE, dd MMMM,')
-                      //       .format(DateTime.parse(_data['date']))
-                      //       .toString() +
-                      //   " " +
-                        DateFormat('EEEE, dd MMMM, HH:mm')
+                    // DateFormat(
+                    // 'EEEE, dd MMMM,')
+                    //       .format(DateTime.parse(_data['date']))
+                    //       .toString() +
+                    //   " " +
+                    DateFormat('EEEE, dd MMMM, HH:mm')
                             .format(DateTime.utc(
-                                   DateTime.parse(_data['date']).year,
+                                    DateTime.parse(_data['date']).year,
                                     DateTime.parse(_data['date']).month,
                                     DateTime.parse(_data['date']).day,
                                     int.parse(_data['fromTime'].split(':')[0]),

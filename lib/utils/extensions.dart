@@ -64,6 +64,23 @@ class Extensions {
 
     return _distance;
   }
+
+
+  static String getSortProfessionTitle(String professionTitle) {
+    Map titleMap = {
+      'Medical Doctor': ' MD',
+      'Dentist': ' DT',
+      'Chiropractor': ' CP',
+      'Physical Therapist': ' PT'
+    };
+    String _titleSort;
+    if (titleMap.containsKey(professionTitle)) {
+      _titleSort = titleMap[professionTitle];
+    } else {
+      _titleSort = '';
+    }
+    return _titleSort;
+  }
 }
 
 extension ImageIcon on String {

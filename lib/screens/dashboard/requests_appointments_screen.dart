@@ -169,6 +169,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                         ["title"]
                     ?.toString() ??
                 "---";
+            name += Extensions.getSortProfessionTitle(professionalTitle);
           }
         }
       } else {
@@ -180,6 +181,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                         ["title"]
                     ?.toString() ??
                 "---";
+            name += Extensions.getSortProfessionTitle(professionalTitle);
           }
         }
       }
