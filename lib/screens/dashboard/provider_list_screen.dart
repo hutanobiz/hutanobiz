@@ -339,12 +339,15 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
             _container.setProjectsResponse(
                 "serviceType", _selectedAppointmentType);
 
-            Navigator.of(context).pushNamed(
-              Routes.providerProfileScreen,
-              arguments:_provider["userId"] != null && _provider["userId"] is Map?_provider["userId"]["_id"]: _provider["User"] != null &&
-                 _provider["User"].length > 0?_provider["User"][0]["_id"]:_provider["_id"]
-              //  _selectedAppointmentType,
-            );
+            Navigator.of(context).pushNamed(Routes.providerProfileScreen,
+                arguments: _provider["userId"] != null &&
+                        _provider["userId"] is Map
+                    ? _provider["userId"]["_id"]
+                    : _provider["User"] != null && _provider["User"].length > 0
+                        ? _provider["User"][0]["_id"]
+                        : _provider["_id"]
+                //  _selectedAppointmentType,
+                );
           },
           child: ProviderWidget(
             data: _provider,
@@ -353,7 +356,14 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                 _provider['averageRating']?.toStringAsFixed(2) ?? "0",
             bookAppointment: () {
               FocusScope.of(context).requestFocus(FocusNode());
-              Navigator.of(context).pushNamed(Routes.providerProfileScreen,arguments: _provider["_id"]);
+              Navigator.of(context).pushNamed(Routes.providerProfileScreen,
+                  arguments:
+                      _provider["userId"] != null && _provider["userId"] is Map
+                          ? _provider["userId"]["_id"]
+                          : _provider["User"] != null &&
+                                  _provider["User"].length > 0
+                              ? _provider["User"][0]["_id"]
+                              : _provider["_id"]);
               // _container.providerResponse.clear();
 
               // _container.setProviderData("providerData", _provider);
