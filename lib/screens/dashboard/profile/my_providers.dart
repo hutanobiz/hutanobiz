@@ -193,7 +193,9 @@ class _MyProvidersState extends State<MyProviders> {
                                   width: 2,
                                 ),
                                 Text(
-                                  provider['averageRating']?.toString() ?? "0",
+                                  provider['averageRating']
+                                          ?.toStringAsFixed(1) ??
+                                      "0",
                                   style: TextStyle(
                                     decoration: TextDecoration.none,
                                     fontWeight: FontWeight.w500,

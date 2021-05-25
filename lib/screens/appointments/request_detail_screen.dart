@@ -178,8 +178,10 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
       }
     }
     if (_providerData["doctor"] != null) {
-      name =(_providerData["doctor"]['title']?.toString() ?? 'Dr.') +
-                                  ' ' + _providerData["doctor"]["fullName"]?.toString() ?? "---";
+      name = (_providerData["doctor"]['title']?.toString() ?? 'Dr.') +
+              ' ' +
+              _providerData["doctor"]["fullName"]?.toString() ??
+          "---";
       avatar = _providerData["doctor"]["avatar"];
     }
 
@@ -328,9 +330,9 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
           ),
         ),
         appoCard(
-          _data["type"],
+          _providerData["type"],
         ),
-        _data["type"] == 2 ? recordingInfoWidget() : SizedBox(),
+        _providerData["type"] == 2 ? recordingInfoWidget() : SizedBox(),
         divider(topPadding: 18.0),
         dateTimeWidget(DateFormat('EEEE, dd MMMM, HH:mm')
                 .format(DateTime.utc(
@@ -351,14 +353,15 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                         int.parse(_providerData['toTime'].split(':')[1]))
                     .toLocal())
                 .toString()),
-        _data["type"] == 2 ? SizedBox() : divider(topPadding: 8.0),
-        _data["type"] == 2
+        _providerData["type"] == 2 ? SizedBox() : divider(topPadding: 8.0),
+        _providerData["type"] == 2
             ? SizedBox()
             : locationWidget(address, latLng, _data['distance']),
         divider(),
         seekingCareWidget(_providerData),
         divider(),
-        feeWidget(fee, officeVisitFee, parkingFee, _data["type"].toString()),
+        feeWidget(
+            fee, officeVisitFee, parkingFee, _providerData["type"].toString()),
         divider(),
         paymentWidget(
           paymentType,

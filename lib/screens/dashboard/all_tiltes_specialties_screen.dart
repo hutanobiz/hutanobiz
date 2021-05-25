@@ -133,13 +133,20 @@ class _AllTitlesSpecialtesScreenState extends State<AllTitlesSpecialtesScreen> {
                             children: <Widget>[
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(14),
-                                child: Image(
-                                  image: AssetImage(
-                                      'images/dummy_title_image.png'),
-                                  width: 60.0,
-                                  height: 60.0,
-                                  fit: BoxFit.cover,
-                                ),
+                                child: specialty['specialtyImage'] == null
+                                    ? Image.asset(
+                                        'images/dummy_title_image.png',
+                                        width: 60.0,
+                                        height: 60.0,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Image.network(
+                                        ApiBaseHelper.image_base_url +
+                                            specialty['specialtyImage'],
+                                        width: 60.0,
+                                        height: 60.0,
+                                        fit: BoxFit.cover,
+                                      ),
                               ),
                               SizedBox(width: 7),
                               Expanded(
@@ -159,7 +166,6 @@ class _AllTitlesSpecialtesScreenState extends State<AllTitlesSpecialtesScreen> {
                           ),
                         ).onClick(
                           onTap: () {
-
                             conatiner.setProjectsResponse(
                                 "specialtyId[${index.toString()}]",
                                 specialty["specialtyId"]);
