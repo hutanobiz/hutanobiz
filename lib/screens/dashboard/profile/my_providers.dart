@@ -270,7 +270,7 @@ class _MyProvidersState extends State<MyProviders> {
             ),
           ).onClick(onTap: () {
             Navigator.of(context).pushNamed(Routes.providerProfileScreen,
-                arguments: provider["_id"]);
+                arguments: provider["doctorId"]);
           }),
         ],
       ),
