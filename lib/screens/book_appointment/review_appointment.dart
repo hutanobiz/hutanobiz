@@ -130,7 +130,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
     if (_providerData["providerData"]["data"] != null) {
       averageRating =
-          _providerData["providerData"]["averageRating"]?.toStringAsFixed(2) ??
+          _providerData["providerData"]["averageRating"]?.toStringAsFixed(1) ??
               "0";
 
       _providerData["providerData"]["data"].map((f) {
@@ -138,7 +138,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
       }).toList();
     } else {
       _profileMap = _providerData["providerData"];
-      averageRating = _profileMap["averageRating"]?.toStringAsFixed(2) ?? "0";
+      averageRating = _profileMap["averageRating"]?.toStringAsFixed(1) ?? "0";
     }
 
     _initialPosition = _userLocationMap["latLng"];
@@ -746,7 +746,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     _widgetList.add(
       container(
           "Date & Time",
-          _appointmentData["isOndemand"] == 1
+          _appointmentData["isOndemand"] == '1'
               ? "On-demand Appointment"
               : "${DateFormat('EEEE, dd MMMM').format(_bookedDate).toString()} " +
                   TimeOfDay(
