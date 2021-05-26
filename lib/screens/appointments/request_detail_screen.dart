@@ -142,7 +142,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
       userRating = _data["reason"][0]["rating"]?.toString();
     }
 
-    averageRating = _data["averageRating"]?.toStringAsFixed(2) ?? "0";
+    averageRating = _data["averageRating"]?.toStringAsFixed(1) ?? "0";
 
     if (_providerData['medicalHistory'] != null &&
         _providerData['medicalHistory'].length > 0) {
@@ -192,6 +192,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
           name += Extensions.getSortProfessionTitle(professionalTitle);
         }
       }
+    }
 
       if (_providerData["type"].toString() == '3') {
         address = Extensions.addressFormat(
@@ -231,8 +232,10 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
             );
           }
         }
-      }
+      
     }
+     totalFee = feeList.fold(
+        0, (sum, item) => sum + double.parse(item["amount"].toString()));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -547,8 +550,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
 
   Widget feeWidget(String generalFee, String officeVisitCharge,
       String parkingFee, String appType) {
-    totalFee = feeList.fold(
-        0, (sum, item) => sum + double.parse(item["amount"].toString()));
+   
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),

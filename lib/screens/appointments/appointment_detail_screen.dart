@@ -312,7 +312,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       userRating = _data["reason"][0]["rating"]?.toString();
     }
 
-    averageRating = _data["averageRating"]?.toStringAsFixed(2) ?? "0";
+    averageRating = _data["averageRating"]?.toStringAsFixed(1) ?? "0";
 
     if (_providerData['medicalHistory'] != null &&
         _providerData['medicalHistory'].length > 0) {
@@ -375,44 +375,47 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
         _container.setProviderInsuranceMap(providerInsuranceList);
       }
+    }
 
-      if (_providerData["type"].toString() == '3') {
-        address = Extensions.addressFormat(
-          _providerData["userAddress"]["address"]?.toString(),
-          _providerData["userAddress"]["street"]?.toString(),
-          _providerData["userAddress"]["city"]?.toString(),
-          _providerData["userAddress"]["state"],
-          _providerData["userAddress"]["zipCode"]?.toString(),
-        );
+    totalFee = feeList.fold(
+        0, (sum, item) => sum + double.parse(item["amount"].toString()));
 
-        if (_providerData["userAddress"]["coordinates"] != null) {
-          List location = _providerData["userAddress"]["coordinates"];
+    if (_providerData["type"].toString() == '3') {
+      address = Extensions.addressFormat(
+        _providerData["userAddress"]["address"]?.toString(),
+        _providerData["userAddress"]["street"]?.toString(),
+        _providerData["userAddress"]["city"]?.toString(),
+        _providerData["userAddress"]["state"],
+        _providerData["userAddress"]["zipCode"]?.toString(),
+      );
 
-          if (location.length > 0) {
-            latLng = LatLng(
-              double.parse(location[1].toString()),
-              double.parse(location[0].toString()),
-            );
-          }
+      if (_providerData["userAddress"]["coordinates"] != null) {
+        List location = _providerData["userAddress"]["coordinates"];
+
+        if (location.length > 0) {
+          latLng = LatLng(
+            double.parse(location[1].toString()),
+            double.parse(location[0].toString()),
+          );
         }
-      } else {
-        address = Extensions.addressFormat(
-          _providerData["doctorAddress"]["address"]?.toString(),
-          _providerData["doctorAddress"]["street"]?.toString(),
-          _providerData["doctorAddress"]["city"]?.toString(),
-          _providerData["doctorAddress"]["state"],
-          _providerData["doctorAddress"]["zipCode"]?.toString(),
-        );
+      }
+    } else {
+      address = Extensions.addressFormat(
+        _providerData["doctorAddress"]["address"]?.toString(),
+        _providerData["doctorAddress"]["street"]?.toString(),
+        _providerData["doctorAddress"]["city"]?.toString(),
+        _providerData["doctorAddress"]["state"],
+        _providerData["doctorAddress"]["zipCode"]?.toString(),
+      );
 
-        if (_providerData["doctorAddress"]["coordinates"] != null) {
-          List location = _providerData["doctorAddress"]["coordinates"];
+      if (_providerData["doctorAddress"]["coordinates"] != null) {
+        List location = _providerData["doctorAddress"]["coordinates"];
 
-          if (location.length > 0) {
-            latLng = LatLng(
-              double.parse(location[1].toString()),
-              double.parse(location[0].toString()),
-            );
-          }
+        if (location.length > 0) {
+          latLng = LatLng(
+            double.parse(location[1].toString()),
+            double.parse(location[0].toString()),
+          );
         }
       }
     }
@@ -937,9 +940,6 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
   Widget feeWidget(String generalFee, String officeVisitCharge,
       String parkingFee, String appType) {
-    totalFee = feeList.fold(
-        0, (sum, item) => sum + double.parse(item["amount"].toString()));
-
     _container.setProviderData("totalFee", totalFee.toStringAsFixed(2));
 
     return Padding(

@@ -433,10 +433,6 @@ class _SignUpFormState extends State<Register> {
             : AutovalidateMode.onUserInteraction,
         style: AppTextStyle.regularStyle(fontSize: 14),
         prefixIcon: Icon(Icons.email, color: AppColors.windsor, size: 13.0),
-        suffixIcon: Icon(
-          Icons.check_circle,
-          color: Colors.green,
-        ),
       ),
     );
 
