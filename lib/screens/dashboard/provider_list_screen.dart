@@ -353,7 +353,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
             data: _provider,
             selectedAppointment: _selectedAppointmentType,
             averageRating:
-                _provider['averageRating']?.toStringAsFixed(2) ?? "0",
+                _provider['averageRating']?.toStringAsFixed(1) ?? "0",
             bookAppointment: () {
               FocusScope.of(context).requestFocus(FocusNode());
               Navigator.of(context).pushNamed(Routes.providerProfileScreen,

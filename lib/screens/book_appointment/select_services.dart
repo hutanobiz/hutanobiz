@@ -148,11 +148,11 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
       }
 
       averageRating =
-          _providerData["providerData"]["averageRating"]?.toStringAsFixed(2) ??
+          _providerData["providerData"]["averageRating"]?.toStringAsFixed(1) ??
               "0";
     } else {
       profileMap = _providerData["providerData"];
-      averageRating = profileMap["averageRating"]?.toStringAsFixed(2) ?? "0";
+      averageRating = profileMap["averageRating"]?.toStringAsFixed(1) ?? "0";
     }
 
     formWidget.add(ProviderWidget(

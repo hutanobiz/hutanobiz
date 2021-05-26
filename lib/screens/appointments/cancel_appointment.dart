@@ -256,7 +256,7 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
         default:
       }
 
-    averageRating = response["averageRating"]?.toStringAsFixed(2) ?? "0";
+    averageRating = response["averageRating"]?.toStringAsFixed(1) ?? "0";
     if (_data["doctor"] != null) {
       avatar = _data["doctor"]["avatar"].toString();
       name = (_data["doctor"]["title"] ?? "---") +

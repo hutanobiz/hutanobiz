@@ -358,7 +358,7 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
             ? "Video response"
             : "Onsite response";
 
-    rating = appointment["averageRating"]?.toStringAsFixed(2) ?? "0";
+    rating = appointment["averageRating"]?.toStringAsFixed(1) ?? "0";
 
     if (appointment["doctorData"] != null) {
       for (dynamic detail in appointment["doctorData"]) {

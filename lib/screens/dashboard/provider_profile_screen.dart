@@ -213,7 +213,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
 
     LatLng latLng = LatLng(0, 0);
 
-    averageRating = profileResponse['averageRating']?.toStringAsFixed(2) ?? "0";
+    averageRating = profileResponse['averageRating']?.toStringAsFixed(1) ?? "0";
 
     if (_providerData["education"] != null) {
       for (dynamic education in _providerData["education"]) {

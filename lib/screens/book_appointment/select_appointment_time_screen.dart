@@ -97,7 +97,7 @@ class _SelectAppointmentTimeScreenState
 
     if (_providerData["providerData"]["data"] != null) {
       averageRating =
-          _providerData["providerData"]["averageRating"]?.toStringAsFixed(2) ??
+          _providerData["providerData"]["averageRating"]?.toStringAsFixed(1) ??
               "0";
 
       _providerData["providerData"]["data"].map((f) {
@@ -105,7 +105,7 @@ class _SelectAppointmentTimeScreenState
       }).toList();
     } else {
       profileMap = _providerData["providerData"];
-      averageRating = profileMap["averageRating"]?.toStringAsFixed(2) ?? "0";
+      averageRating = profileMap["averageRating"]?.toStringAsFixed(1) ?? "0";
     }
 
     if (profileMap["userId"] != null && profileMap["userId"] is Map) {

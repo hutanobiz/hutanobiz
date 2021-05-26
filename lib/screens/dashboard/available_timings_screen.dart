@@ -57,7 +57,7 @@ class _AvailableTimingsScreenState extends State<AvailableTimingsScreen> {
 
     if (_providerData["providerData"] != null) {
       averageRating =
-          _providerData["providerData"]['averageRating']?.toStringAsFixed(2) ??
+          _providerData["providerData"]['averageRating']?.toStringAsFixed(1) ??
               "0";
 
       if (_providerData["providerData"]["data"] != null) {
