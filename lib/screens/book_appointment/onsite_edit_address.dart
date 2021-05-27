@@ -632,8 +632,9 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
                 onTap: () {
                   setState(() {
                     controller.text = list[index]["title"];
-                    _addressMap['state'] = list[index]["_id"];
+                    // _addressMap['state'] = list[index]["_id"];
                     _addressMap['stateCode'] = list[index]["stateCode"];
+                    stateId = list[index]["_id"];
 
                     Navigator.pop(context);
                   });
