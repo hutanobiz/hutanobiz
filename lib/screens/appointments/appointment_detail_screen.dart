@@ -445,59 +445,59 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      name,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Icon(
-                          Icons.star,
-                          color: AppColors.goldenTainoi,
-                          size: 12.0,
-                        ),
-                        SizedBox(width: 4.0),
-                        Text(
-                          "$averageRating \u2022 $professionalTitle",
-                          style: TextStyle(
-                            fontSize: 12.0,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black.withOpacity(0.7),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
               Expanded(
-                child: Align(
-                  alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      _appointmentStatus?.appointmentStatus(),
-                      SizedBox(height: 5.0),
-                      Text(
-                        "\$${totalFee.toStringAsFixed(2)}",
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              name,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                          _appointmentStatus?.appointmentStatus(),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 5.0,
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.star,
+                            color: AppColors.goldenTainoi,
+                            size: 12.0,
+                          ),
+                          SizedBox(width: 4.0),
+                          Expanded(
+                            child: Text(
+                              "$averageRating \u2022 $professionalTitle",
+                              maxLines: 3,
+                              style: TextStyle(
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black.withOpacity(0.7),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            "\$${totalFee.toStringAsFixed(2)}",
+                            style: TextStyle(
+                              fontSize: 22.0,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -638,7 +638,6 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
   Widget appoCard(int cardText) {
     return Container(
-      width: 172.0,
       margin: const EdgeInsets.only(left: 20.0, right: 20.0),
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
@@ -647,6 +646,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         border: Border.all(color: Colors.grey[100]),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Image(
             image: AssetImage(
@@ -697,12 +697,15 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             children: <Widget>[
               "ic_appointment_time".imageIcon(),
               SizedBox(width: 8.0),
-              Text(
-                dateTime,
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
-                  fontSize: 14.0,
+              Expanded(
+                child: Text(
+                  dateTime,
+                  maxLines: 2,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                    fontSize: 14.0,
+                  ),
                 ),
               ),
             ],
@@ -720,14 +723,17 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                   padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                   child: Row(
                     children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(right: 4.0),
-                        child: Text(
-                          "I need help with my Appiontment",
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: AppColors.windsor.withOpacity(0.85),
-                            fontSize: 13.0,
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 4.0),
+                          child: Text(
+                            "I need help with my Appiontment",
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: AppColors.windsor.withOpacity(0.85),
+                              fontSize: 13.0,
+                            ),
                           ),
                         ),
                       ),
@@ -1085,11 +1091,13 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                       ),
                     ),
                     SizedBox(width: 8),
-                    Text(
-                      _providerData["isProblemImproving"]
-                          ? "The problem is NOT improving."
-                          : "The problem is NOT improving.",
-                      style: TextStyle(fontSize: 13),
+                    Expanded(
+                      child: Text(
+                        _providerData["isProblemImproving"]
+                            ? "The problem is NOT improving."
+                            : "The problem is NOT improving.",
+                        style: TextStyle(fontSize: 13),
+                      ),
                     ),
                   ],
                 ),

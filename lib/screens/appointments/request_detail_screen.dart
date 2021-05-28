@@ -194,47 +194,46 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
       }
     }
 
-      if (_providerData["type"].toString() == '3') {
-        address = Extensions.addressFormat(
-          _providerData["userAddress"]["address"]?.toString(),
-          _providerData["userAddress"]["street"]?.toString(),
-          _providerData["userAddress"]["city"]?.toString(),
-          _providerData["userAddress"]["state"],
-          _providerData["userAddress"]["zipCode"]?.toString(),
-        );
+    if (_providerData["type"].toString() == '3') {
+      address = Extensions.addressFormat(
+        _providerData["userAddress"]["address"]?.toString(),
+        _providerData["userAddress"]["street"]?.toString(),
+        _providerData["userAddress"]["city"]?.toString(),
+        _providerData["userAddress"]["state"],
+        _providerData["userAddress"]["zipCode"]?.toString(),
+      );
 
-        if (_providerData["userAddress"]["coordinates"] != null) {
-          List location = _providerData["userAddress"]["coordinates"];
+      if (_providerData["userAddress"]["coordinates"] != null) {
+        List location = _providerData["userAddress"]["coordinates"];
 
-          if (location.length > 0) {
-            latLng = LatLng(
-              double.parse(location[1].toString()),
-              double.parse(location[0].toString()),
-            );
-          }
+        if (location.length > 0) {
+          latLng = LatLng(
+            double.parse(location[1].toString()),
+            double.parse(location[0].toString()),
+          );
         }
-      } else {
-        address = Extensions.addressFormat(
-          _providerData["doctorAddress"]["address"]?.toString(),
-          _providerData["doctorAddress"]["street"]?.toString(),
-          _providerData["doctorAddress"]["city"]?.toString(),
-          _providerData["doctorAddress"]["state"],
-          _providerData["doctorAddress"]["zipCode"]?.toString(),
-        );
+      }
+    } else {
+      address = Extensions.addressFormat(
+        _providerData["doctorAddress"]["address"]?.toString(),
+        _providerData["doctorAddress"]["street"]?.toString(),
+        _providerData["doctorAddress"]["city"]?.toString(),
+        _providerData["doctorAddress"]["state"],
+        _providerData["doctorAddress"]["zipCode"]?.toString(),
+      );
 
-        if (_providerData["doctorAddress"]["coordinates"] != null) {
-          List location = _providerData["doctorAddress"]["coordinates"];
+      if (_providerData["doctorAddress"]["coordinates"] != null) {
+        List location = _providerData["doctorAddress"]["coordinates"];
 
-          if (location.length > 0) {
-            latLng = LatLng(
-              double.parse(location[1].toString()),
-              double.parse(location[0].toString()),
-            );
-          }
+        if (location.length > 0) {
+          latLng = LatLng(
+            double.parse(location[1].toString()),
+            double.parse(location[0].toString()),
+          );
         }
-      
+      }
     }
-     totalFee = feeList.fold(
+    totalFee = feeList.fold(
         0, (sum, item) => sum + double.parse(item["amount"].toString()));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -261,59 +260,59 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      name,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Icon(
-                          Icons.star,
-                          color: AppColors.goldenTainoi,
-                          size: 12.0,
-                        ),
-                        SizedBox(width: 4.0),
-                        Text(
-                          "$averageRating \u2022 $professionalTitle",
-                          style: TextStyle(
-                            fontSize: 12.0,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black.withOpacity(0.7),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
               Expanded(
-                child: Align(
-                  alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      _appointmentStatus?.appointmentStatus(),
-                      SizedBox(height: 5.0),
-                      Text(
-                        "\$${totalFee.toStringAsFixed(2)}",
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              name,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                          _appointmentStatus?.appointmentStatus(),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 5.0,
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.star,
+                            color: AppColors.goldenTainoi,
+                            size: 12.0,
+                          ),
+                          SizedBox(width: 4.0),
+                          Expanded(
+                            child: Text(
+                              "$averageRating \u2022 $professionalTitle",
+                              maxLines: 3,
+                              style: TextStyle(
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black.withOpacity(0.7),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            "\$${totalFee.toStringAsFixed(2)}",
+                            style: TextStyle(
+                              fontSize: 22.0,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -378,7 +377,6 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
 
   Widget appoCard(int cardText) {
     return Container(
-      width: 172.0,
       margin: const EdgeInsets.only(left: 20.0, right: 20.0),
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
@@ -387,6 +385,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
         border: Border.all(color: Colors.grey[100]),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Image(
             image: AssetImage(
@@ -437,12 +436,15 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
             children: <Widget>[
               "ic_appointment_time".imageIcon(),
               SizedBox(width: 8.0),
-              Text(
-                dateTime,
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
-                  fontSize: 14.0,
+              Expanded(
+                child: Text(
+                  dateTime,
+                  maxLines: 2,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                    fontSize: 14.0,
+                  ),
                 ),
               ),
             ],
@@ -550,8 +552,6 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
 
   Widget feeWidget(String generalFee, String officeVisitCharge,
       String parkingFee, String appType) {
-   
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
       child: Column(
@@ -696,11 +696,13 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                       ),
                     ),
                     SizedBox(width: 8),
-                    Text(
-                      _providerData["isProblemImproving"]
-                          ? "The problem is NOT improving."
-                          : "The problem is NOT improving.",
-                      style: TextStyle(fontSize: 13),
+                    Expanded(
+                      child: Text(
+                        _providerData["isProblemImproving"]
+                            ? "The problem is NOT improving."
+                            : "The problem is NOT improving.",
+                        style: TextStyle(fontSize: 13),
+                      ),
                     ),
                   ],
                 ),

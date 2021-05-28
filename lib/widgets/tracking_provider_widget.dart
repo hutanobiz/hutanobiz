@@ -79,12 +79,14 @@ class TrackingProviderWidget extends StatelessWidget {
                             SizedBox(
                               width: 4,
                             ),
-                            Text(
-                              stringStatus,
-                              style: TextStyle(
-                                fontSize: 12.0,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black.withOpacity(0.70),
+                            Expanded(
+                              child: Text(
+                                stringStatus,
+                                style: TextStyle(
+                                  fontSize: 12.0,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.black.withOpacity(0.70),
+                                ),
                               ),
                             ),
                           ],

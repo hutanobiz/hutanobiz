@@ -298,7 +298,7 @@ class _TrackTelemedicineAppointmentState
                 : index == 2
                     ? userRating != null
                         ? Container(
-                            height: 35,
+                            height: 45,
                             width: 1,
                             color: Colors.green,
                           )

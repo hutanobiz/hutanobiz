@@ -321,7 +321,7 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                 ? SizedBox()
                 : index == 5 && userRating != null
                     ? Container(
-                        height: 35,
+                        height: 45,
                         width: 1,
                         color: Colors.green,
                       )
@@ -489,6 +489,7 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
         ),
         timing != ''
             ? Container(
+                margin: EdgeInsets.only(top: 10),
                 height: 20,
                 width: 1,
                 color: Colors.grey[600],
