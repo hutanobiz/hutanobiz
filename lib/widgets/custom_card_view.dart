@@ -38,11 +38,15 @@ class CustomCardView extends StatelessWidget {
               ),
             ),
             SizedBox(width: 23.0),
-            Text(
-              cardText,
-              style: TextStyle(
-                color: AppColors.midnight_express,
-                fontWeight: fontWeight ?? FontWeight.normal,
+            Expanded(
+              child: Text(
+                cardText,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: AppColors.midnight_express,
+                  fontWeight: fontWeight ?? FontWeight.normal,
+                ),
               ),
             ),
             widget ?? Container(),

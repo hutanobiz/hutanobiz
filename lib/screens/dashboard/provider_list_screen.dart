@@ -401,7 +401,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
       onTap: onClick,
       child: Container(
         height: 42,
-        width: title.toLowerCase().contains('all') ? 64 : 96,
+        width: title.toLowerCase().contains('all') ? 64 : 104,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: isSelected
