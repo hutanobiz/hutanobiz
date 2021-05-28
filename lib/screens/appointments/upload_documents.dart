@@ -355,72 +355,79 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                               ),
                             ),
                           ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    height: 74,
-                    width: 180,
-                    padding: const EdgeInsets.all(10.0),
-                    alignment: Alignment.centerLeft,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(14.0),
-                      border: Border.all(
-                        color: Colors.grey[100],
+                // Align(
+                //   alignment: Alignment.bottomCenter,
+                //   child:
+                Column(
+                  children: [
+                    Spacer(),
+                    Container(
+                      // height: 108,
+                      width: 180,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 4),
+                      alignment: Alignment.centerLeft,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(14.0),
+                        border: Border.all(
+                          color: Colors.grey[100],
+                        ),
                       ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Text(
-                          content['name'],
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
-                            color: Colors.black.withOpacity(0.85),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(
+                            content['name'],
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: Colors.black.withOpacity(0.85),
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 5.0),
-                        Text(
-                          'Type - ' + content['type'],
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12,
-                            color: Colors.black.withOpacity(0.60),
+                          SizedBox(width: 3.0),
+                          Text(
+                            'Type - ' + content['type'],
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12,
+                              color: Colors.black.withOpacity(0.60),
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 5.0),
-                        Text(
-                          'Date - ' + content['date'],
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12,
-                            color: Colors.black.withOpacity(0.60),
+                          SizedBox(width: 3.0),
+                          Text(
+                            'Date - ' + content['date'],
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12,
+                              color: Colors.black.withOpacity(0.60),
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 5.0),
-                      ],
-                    ),
-                  ).onClick(
-                    onTap: () {
-                      _selectedDocsList.toString().debugLog();
+                          SizedBox(width: 3.0),
+                        ],
+                      ),
+                    ).onClick(
+                      onTap: () {
+                        _selectedDocsList.toString().debugLog();
 
-                      if (!_selectedDocsList.contains(content)) {
-                        setState(() {
-                          _selectedDocsList.add(content);
-                        });
-                      } else {
-                        setState(() {
-                          _selectedDocsList.remove(content);
-                        });
-                      }
-                    },
-                  ),
-                ),
+                        if (!_selectedDocsList.contains(content)) {
+                          setState(() {
+                            _selectedDocsList.add(content);
+                          });
+                        } else {
+                          setState(() {
+                            _selectedDocsList.remove(content);
+                          });
+                        }
+                      },
+                    ),
+                  ],
+                )
+                // ),
               ],
             ),
           ).onClick(

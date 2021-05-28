@@ -61,7 +61,7 @@ class _UpdateMedicalHistoryState extends State<UpdateMedicalHistory>
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: new Container(
-            height: 44,
+            height: 50,
             decoration: BoxDecoration(
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.circular(14.0),
@@ -79,7 +79,7 @@ class _UpdateMedicalHistoryState extends State<UpdateMedicalHistory>
               ),
               tabs: [
                 Container(
-                  height: 40,
+                  height: 50,
                   alignment: Alignment.center,
                   child: Text(
                     'Medical History',
@@ -91,7 +91,7 @@ class _UpdateMedicalHistoryState extends State<UpdateMedicalHistory>
                   ),
                 ),
                 Container(
-                  height: 40,
+                  height: 50,
                   alignment: Alignment.center,
                   child: Text(
                     'Medical Images',
@@ -100,7 +100,7 @@ class _UpdateMedicalHistoryState extends State<UpdateMedicalHistory>
                   ),
                 ),
                 Container(
-                  height: 40,
+                  height: 50,
                   alignment: Alignment.center,
                   child: Text(
                     'Medical Documents',

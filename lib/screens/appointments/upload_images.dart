@@ -136,7 +136,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                           child: SizedBox(
                             height: 55.0,
                             child: FancyButton(
-                              title: "Please Upload images",
+                              title: "Upload images",
                               buttonIcon: "ic_upload",
                               buttonColor: AppColors.windsor,
                               onPressed: showPickerDialog,
@@ -311,8 +311,9 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    height: 46,
-                    padding: const EdgeInsets.all(10.0),
+                    height: 50,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 4, horizontal: 8.0),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -324,7 +325,9 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        "ic_image".imageIcon(width: 20, height: 15),
+                        "ic_image".imageIcon(
+                          width: 20,
+                        ),
                         SizedBox(width: 5.0),
                         Expanded(
                           child: Text(

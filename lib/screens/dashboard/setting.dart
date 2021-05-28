@@ -150,7 +150,7 @@ class _SettingsScreenState extends State<SettingScreen> {
             height: 120,
             width: MediaQuery.of(context).size.width,
             child: Padding(
-              padding: const EdgeInsets.only(left: 20.0, top: 30.0),
+              padding: const EdgeInsets.only(left: 20.0, top: 16.0),
               child: Text(
                 "My profile",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
@@ -366,9 +366,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                 "Payment History",
                 "images/profile_payment_method.png",
                 () {
-                  Navigator.of(context).pushNamed(
-                    Routes.paymentHistory
-                  );
+                  Navigator.of(context).pushNamed(Routes.paymentHistory);
                 },
               ),
             ],
@@ -471,6 +469,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                   Expanded(
                     child: Text(
                       text,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
