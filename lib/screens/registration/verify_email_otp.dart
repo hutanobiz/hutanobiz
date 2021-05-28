@@ -156,8 +156,8 @@ class _VerifyEmailOTPState extends State<VerifyEmailOTP> {
 
           //send otp on email again
         },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Wrap(
+          runAlignment: WrapAlignment.center,
           children: <Widget>[
             Text(
               "Didn't receive code? ",

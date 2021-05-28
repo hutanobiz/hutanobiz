@@ -227,28 +227,28 @@ class _LoginState extends State<LoginScreen> {
     formWidget.add(Row(
       children: [
         Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Wrap(
+            // crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Text('I agree to Hutano '),
-                  Text(
-                    'Terms & Conditions',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ).onClick(onTap: () async {
-                    var url = 'https://staging.hutano.com/terms-and-conditions';
-                    if (await canLaunch(url)) {
-                      await launch(url);
-                    } else {
-                      throw 'Could not launch $url';
-                    }
-                  }),
-                ],
-              ),
+              // Row(
+              //   children: [
+              Text('I agree to Hutano '),
+              Text(
+                'Terms & Conditions',
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  decoration: TextDecoration.underline,
+                ),
+              ).onClick(onTap: () async {
+                var url = 'https://staging.hutano.com/terms-and-conditions';
+                if (await canLaunch(url)) {
+                  await launch(url);
+                } else {
+                  throw 'Could not launch $url';
+                }
+              }),
+              //   ],
+              // ),
               Text(
                 '& Privacy Policy',
                 style: TextStyle(
@@ -308,8 +308,8 @@ class _LoginState extends State<LoginScreen> {
         onPressed: () {
           Navigator.pushNamed(context, Routes.registerEmailRoute);
         },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Wrap(
+          runAlignment: WrapAlignment.center,
           children: <Widget>[
             Text(
               "Don't have an account?",

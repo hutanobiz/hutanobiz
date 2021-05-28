@@ -93,7 +93,7 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
             : "Insurances",
         color: Colors.white,
         padding: EdgeInsets.zero,
-        rightButtonText: 'I do not have insurance',
+        rightButtonText: 'Skip',
         onRightButtonTap: !_insuranceViewMap['isPayment'] && isFromRegister
             ? () {
                 Navigator.of(context).pushNamedAndRemoveUntil(

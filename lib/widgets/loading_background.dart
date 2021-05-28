@@ -83,7 +83,7 @@ class LoadingBackground extends StatelessWidget {
                               onRightButtonTap != null)
                             InkWell(
                               onTap: onRightButtonTap,
-                              child: rightButtonText.contains('do not')
+                              child: rightButtonText.contains('Skip')
                                   ? Container(
                                       margin: EdgeInsets.only(right: 10),
                                       decoration: BoxDecoration(

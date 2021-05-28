@@ -195,8 +195,8 @@ class _VerifyOTPState extends State<VerifyOTP> {
             });
           }
         },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Wrap(
+          runAlignment: WrapAlignment.center,
           children: <Widget>[
             Text(
               "Didn't receive code? ",
