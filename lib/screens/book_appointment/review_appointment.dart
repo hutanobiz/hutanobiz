@@ -921,8 +921,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           .debugLog();
     }).futureError((error) {
       setState(() {
-        _totalDuration = "NO duration available";
-        _totalDistance = "NO distance available";
+        _totalDuration = "---";
+        _totalDistance = "---";
       });
       error.toString().debugLog();
     });
@@ -1277,7 +1277,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
   Widget appoCard(String cardText) {
     return Container(
-      width: 172.0,
+      // width: 172.0,
       margin: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 10),
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
@@ -1286,6 +1286,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         border: Border.all(color: Colors.grey[100]),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Image(
             image: AssetImage(

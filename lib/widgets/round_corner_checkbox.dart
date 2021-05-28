@@ -21,7 +21,8 @@ class RoundCornerCheckBox extends StatelessWidget {
     return InkWell(
       onTap: () => onCheck(!value),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        // mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(4.0),
@@ -36,13 +37,15 @@ class RoundCornerCheckBox extends StatelessWidget {
           title == null ? Container() : SizedBox(width: textPadding),
           title == null
               ? Container()
-              : Text(
-                  title,
-                  style: textStyle ??
-                      TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w600,
-                      ),
+              : Flexible(
+                  child: Text(
+                    title,
+                    style: textStyle ??
+                        TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
                 ),
         ],
       ),

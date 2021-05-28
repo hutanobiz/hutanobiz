@@ -150,7 +150,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                             padding:
                                 const EdgeInsets.only(right: 20.0, left: 40.0),
                             child: FancyButton(
-                              title: "Schedule Appointment",
+                              title: "Schedule",
                               onPressed: () {
                                 Map _appointentTypeMap = {};
 
@@ -924,23 +924,24 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     return Container(
       height: 50,
       margin: const EdgeInsets.only(right: 10.0),
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       decoration: BoxDecoration(
         color: AppColors.windsor.withOpacity(0.05),
         shape: BoxShape.rectangle,
         borderRadius: BorderRadius.circular(14.0),
       ),
-      child: Text(
-        title ?? "---",
-        style: TextStyle(
-            color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+      child: Center(
+        child: Text(
+          title ?? "---",
+          style: TextStyle(
+              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+        ),
       ),
     );
   }
 
   Widget appoCard(String image, cardText) {
     return Container(
-      width: 160.0,
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -948,6 +949,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
         border: Border.all(color: Colors.grey[100]),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Image(
             image: AssetImage(image),

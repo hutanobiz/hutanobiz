@@ -247,20 +247,22 @@ class _SeekingCureScreenState extends State<SeekingCureScreen> {
   Widget checkWidget(String title, bool isSelected, Function onTap) {
     return Container(
       height: 30,
-      padding: const EdgeInsets.all(15.0),
+      padding: const EdgeInsets.symmetric(horizontal: 15.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(6.0)),
         border: Border.all(
             color: isSelected ? AppColors.goldenTainoi : Colors.grey[100]),
       ),
-      child: Text(
-        title,
-        style: TextStyle(
-          fontSize: 12.0,
-          color: isSelected
-              ? AppColors.goldenTainoi
-              : Colors.black.withOpacity(0.5),
+      child: Center(
+        child: Text(
+          title,
+          style: TextStyle(
+            fontSize: 12.0,
+            color: isSelected
+                ? AppColors.goldenTainoi
+                : Colors.black.withOpacity(0.5),
+          ),
         ),
       ),
     ).onClick(onTap: () {

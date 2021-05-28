@@ -222,19 +222,31 @@ class ProviderWidget extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(
-                          name,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w600,
-                          ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                name,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              "\$$fee",
+                              style: TextStyle(
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
                         ),
                         Padding(
                           padding: const EdgeInsets.only(
                             top: 5.0,
                             bottom: 5.0,
-                            right: 5.0,
                           ),
                           child: Row(
                             children: <Widget>[
@@ -256,6 +268,24 @@ class ProviderWidget extends StatelessWidget {
                                   ),
                                 ),
                               ),
+                              selectedAppointment != null &&
+                                      selectedAppointment != '0'
+                                  ? Container()
+                                  : SizedBox(width: 12),
+                              selectedAppointment != null &&
+                                      selectedAppointment != '0'
+                                  ? Container()
+                                  : Expanded(
+                                      child: Text(
+                                        "Starting from",
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                          fontSize: 13.0,
+                                          color: Colors.grey[600],
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ),
                             ],
                           ),
                         ),
@@ -335,49 +365,19 @@ class ProviderWidget extends StatelessWidget {
                                       ),
                                     )
                                   : Container(),
+                              Spacer(),
+                              isOptionsShow
+                                  ? 'ic_forward'.imageIcon(
+                                      width: 9,
+                                      height: 15,
+                                    )
+                                  : Container(),
                             ],
                           ),
                         )
                       ],
                     ),
                   ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    Text(
-                      "\$$fee",
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    selectedAppointment != null && selectedAppointment != '0'
-                        ? Container()
-                        : SizedBox(height: 5),
-                    selectedAppointment != null && selectedAppointment != '0'
-                        ? Container()
-                        : Text(
-                            "Starting from",
-                            style: TextStyle(
-                              fontSize: 13.0,
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                    SizedBox(
-                      height: selectedAppointment != null &&
-                              selectedAppointment != '0'
-                          ? 40
-                          : 25,
-                    ),
-                    isOptionsShow
-                        ? 'ic_forward'.imageIcon(
-                            width: 9,
-                            height: 15,
-                          )
-                        : Container(),
-                  ],
                 ),
               ],
             ),
@@ -392,7 +392,7 @@ class ProviderWidget extends StatelessWidget {
           Padding(
             padding: isOptionsShow
                 ? const EdgeInsets.only(left: 12.0, right: 12.0)
-                : const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 18.0),
+                : const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 12.0),
             child: Row(
               children: <Widget>[
                 'ic_location_grey'.imageIcon(height: 14.0, width: 11.0),
@@ -400,7 +400,7 @@ class ProviderWidget extends StatelessWidget {
                 Expanded(
                   child: Text(
                     address,
-                    maxLines: 2,
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       decoration: onLocationClick != null
@@ -415,20 +415,14 @@ class ProviderWidget extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 15),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Row(
-                    children: <Widget>[
-                      "ic_app_distance".imageIcon(),
-                      SizedBox(width: 5.0),
-                      Text(
-                        totalDistance ?? distance,
-                        style: TextStyle(
-                          color: AppColors.windsor,
-                        ),
-                      ),
-                    ],
+                "ic_app_distance".imageIcon(),
+                SizedBox(width: 5.0),
+                Text(
+                  totalDistance ?? distance,
+                  style: TextStyle(
+                    color: AppColors.windsor,
                   ),
+                  // ),
                 ),
               ],
             ),

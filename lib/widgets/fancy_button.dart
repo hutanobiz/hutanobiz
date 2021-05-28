@@ -58,9 +58,14 @@ class FancyButton extends StatelessWidget {
                 ],
               ),
             ),
-            Text(
-              title,
-              style: TextStyle(color: Colors.white, fontSize: 16.0),
+            Expanded(
+              child: Text(
+                title,
+                maxLines: 1,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.clip,
+                style: TextStyle(color: Colors.white, fontSize: 16.0),
+              ),
             ),
           ],
         ),

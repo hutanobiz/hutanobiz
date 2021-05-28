@@ -112,6 +112,7 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
         onCheck: (value) => setState(() => isAgree = !isAgree),
       ),
     ));
+    formWidget.add(SizedBox(height: 60));
 
     return formWidget;
   }

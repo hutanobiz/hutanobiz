@@ -532,7 +532,7 @@ class _SelectAppointmentTimeScreenState
                     startDate: startDate,
                     endDate: DateTime(DateTime.now().year + 2),
                     selectedDate: _selectedDate,
-                    displayDateFormat: "EEEE, dd MMMM",
+                    displayDateFormat: "EEE, dd MMM",
                     scheduleDaysList: _scheduleDaysList,
                     onDateChange: (DateTime selectedDate) {
                       _dayDateMap["day"] = selectedDate.weekday.toString();
@@ -747,12 +747,15 @@ class _SelectAppointmentTimeScreenState
               ),
             ),
             SizedBox(width: 6.0),
-            Text(
-              "${list.length.toString()} available time slots",
-              style: TextStyle(
-                fontSize: 11.0,
-                color: AppColors.goldenTainoi,
-                fontWeight: FontWeight.w600,
+            Expanded(
+              child: Text(
+                "${list.length.toString()} available time slots",
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 11.0,
+                  color: AppColors.goldenTainoi,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ],
@@ -804,7 +807,7 @@ class _SelectAppointmentTimeScreenState
       child: Container(
         alignment: Alignment.center,
         margin: const EdgeInsets.only(right: 14.0),
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.symmetric(horizontal: 12.0),
         decoration: BoxDecoration(
           color: currentSchedule.isBlock
               ? Colors.grey.withOpacity(0.05)
