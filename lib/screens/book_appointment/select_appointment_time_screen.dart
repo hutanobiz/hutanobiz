@@ -340,9 +340,8 @@ class _SelectAppointmentTimeScreenState
         ? _providerData["providerData"]["data"][0]['ondemandavailabledoctor']
                 ['isOnline']
             ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
+                  Wrap(
                     children: [
                       Text('On-demand Service',
                           style: TextStyle(
@@ -355,8 +354,8 @@ class _SelectAppointmentTimeScreenState
                       Image.asset(
                         'images/info.png',
                         height: 16,
+                        alignment: Alignment.bottomCenter,
                       ),
-                      Spacer(),
                       Text(
                         'ACTIVE',
                         style: TextStyle(
@@ -624,7 +623,7 @@ class _SelectAppointmentTimeScreenState
                         )),
                     SizedBox(height: 12),
                     Container(
-                      height: 98,
+                      height: 100,
                       child: ListView.separated(
                         shrinkWrap: true,
                         scrollDirection: Axis.horizontal,
@@ -649,7 +648,7 @@ class _SelectAppointmentTimeScreenState
                             },
                             child: Container(
                               width: 182,
-                              padding: EdgeInsets.all(16),
+                              padding: EdgeInsets.symmetric(horizontal: 6),
                               decoration: BoxDecoration(
                                 color: selectedAddress == _addressList[index]
                                     ? AppColors.windsor.withOpacity(0.07)
@@ -664,6 +663,8 @@ class _SelectAppointmentTimeScreenState
                                     width: 0.5),
                               ),
                               child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
@@ -673,18 +674,12 @@ class _SelectAppointmentTimeScreenState
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600),
                                   ),
-                                  SizedBox(
-                                    height: 7,
-                                  ),
                                   Text(
                                     _addressList[index]['address'] ?? "",
                                     maxLines: 1,
                                     style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400),
-                                  ),
-                                  SizedBox(
-                                    height: 7,
                                   ),
                                   Text(
                                     (_addressList[index]['city'] ?? "") +
