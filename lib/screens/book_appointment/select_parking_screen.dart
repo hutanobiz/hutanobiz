@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/widgets/fancy_button.dart';
@@ -85,7 +86,7 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
                       return;
                     }
                     if (_selectedParking == '3' &&
-                        _bayNumberController.text.isEmpty) {
+                        _bayNumberController.text.trim() == '') {
                       Widgets.showErrorDialog(
                         context: context,
                         description: 'Please enter the bay number',
@@ -159,6 +160,7 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
                     flex: 1,
                     child: TextFormField(
                       keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       initialValue:
                           _parkingFee == null ? "" : _parkingFee.toString(),
                       style: TextStyle(
