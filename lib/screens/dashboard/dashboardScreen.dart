@@ -616,9 +616,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
           // SizedBox(
           //   width: (MediaQuery.of(context).size.width - 224),
           //   child:
-          Expanded(
+          Flexible(
             child: Text(
-              _currentddress == null ? '---' : _currentddress,
+              _currentddress == null
+                  ? '---'
+                  : _currentddress ,
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
               style: TextStyle(
