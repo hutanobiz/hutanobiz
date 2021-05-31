@@ -601,65 +601,57 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget adressBar() {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        Image(
-          width: 15.0,
-          height: 18.0,
-          image: AssetImage("images/ic_location.png"),
-        ),
-        SizedBox(width: 10),
-        InkWell(
-          onTap: () {
-            showLocationDialog(false);
-          }, // _navigateToMap(context),
-          child: Row(
-            children: <Widget>[
-              // SizedBox(
-              //   width: (MediaQuery.of(context).size.width - 224),
-              //   child:
-              Text(
-                _currentddress == null
-                    ? '---'
-                    : _currentddress.length > 14
-                        ? _currentddress.substring(0, 14)
-                        : _currentddress,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: TextStyle(
-                  color: AppColors.windsor,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              // ),
-              Text(
-                ' \u2022 ',
-                style: TextStyle(
-                  color: AppColors.windsor,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                'Within $radius Miles ',
-                style: TextStyle(
-                  color: AppColors.windsor,
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-              Image(
-                width: 10.0,
-                height: 5.0,
-                image: AssetImage("images/ic_arrow_down.png"),
-              ),
-            ],
+    return InkWell(
+      onTap: () {
+        showLocationDialog(false);
+      }, // _navigateToMap(context),
+      child: Row(
+        children: <Widget>[
+          Image(
+            width: 15.0,
+            height: 18.0,
+            image: AssetImage("images/ic_location.png"),
           ),
-        ),
-      ],
+          SizedBox(width: 10),
+          // SizedBox(
+          //   width: (MediaQuery.of(context).size.width - 224),
+          //   child:
+          Expanded(
+            child: Text(
+              _currentddress == null ? '---' : _currentddress,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              style: TextStyle(
+                color: AppColors.windsor,
+                fontSize: 15.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          // ),
+          Text(
+            ' \u2022 ',
+            style: TextStyle(
+              color: AppColors.windsor,
+              fontSize: 15.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            'Within $radius Miles ',
+            style: TextStyle(
+              color: AppColors.windsor,
+              fontSize: 14.0,
+              fontWeight: FontWeight.normal,
+            ),
+          ),
+          Image(
+            width: 10.0,
+            height: 5.0,
+            image: AssetImage("images/ic_arrow_down.png"),
+          ),
+        ],
+      ),
     );
   }
 
@@ -1031,11 +1023,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                           Row(
                             children: [
-                              Text(
-                                'Change Location',
-                                style: AppTextStyle.boldStyle(fontSize: 20),
+                              Expanded(
+                                child: Text(
+                                  'Change Location',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.clip,
+                                  style: AppTextStyle.boldStyle(fontSize: 20),
+                                ),
                               ),
-                              Spacer(),
                               InkWell(
                                 onTap: () {
                                   Navigator.pop(context);
@@ -1048,7 +1043,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ],
                           ),
                           SizedBox(
-                            height: 12,
+                            height: 8,
                           ),
                           TextFormField(
                             controller: _addressController,
@@ -1062,8 +1057,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               isShowRadiusList = false;
                               getSuggestion(val, setModalState);
                             }),
+                            style: const TextStyle(
+                                fontSize: 14.0, color: Colors.black87),
                             decoration: InputDecoration(
+                                isDense: true,
                                 labelText: "Address",
+                                labelStyle: TextStyle(
+                                    fontSize: 14.0, color: Colors.grey[500]),
                                 enabledBorder: OutlineInputBorder(
                                     borderSide:
                                         BorderSide(color: Colors.grey[300]),
@@ -1074,7 +1074,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             validator: Validations.validateEmpty,
                           ),
                           SizedBox(
-                            height: 20,
+                            height: 10,
                           ),
                           Material(
                             color: Colors.transparent,
@@ -1097,20 +1097,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   style: const TextStyle(
                                       fontSize: 14.0, color: Colors.black87),
                                   decoration: InputDecoration(
+                                    isDense: true,
                                     suffixIcon: Icon(
                                       Icons.keyboard_arrow_down,
                                       color: Colors.grey[400],
                                     ),
                                     labelText: 'Radius',
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
+                                    disabledBorder: OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.grey[300]),
+                                        borderRadius:
+                                            BorderRadius.circular(5.0)),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                          SizedBox(height: 20),
+                          SizedBox(height: 4),
                           Expanded(
                             child: GoogleMap(
                               initialCameraPosition: _myLocation,
@@ -1124,7 +1127,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               onCameraIdle: () {},
                             ),
                           ),
-                          SizedBox(height: 20),
+                          SizedBox(height: 4),
                           Align(
                             alignment: Alignment.centerRight,
                             child: FlatButton(
@@ -1184,7 +1187,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ),
                           ),
                           SizedBox(
-                            height: 16,
+                            height: 8,
                           )
                         ],
                       ),
@@ -1391,18 +1394,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     }
 
                     return Container(
-                      // height: 156,
+                      height: 156,
                       width: 130,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(color: Colors.grey[100]),
                       ),
-                      child: ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: Column(
+                      child: GestureDetector(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
+                            SizedBox(height: 6),
                             Container(
-                              margin: const EdgeInsets.all(12),
                               width: 52.0,
                               height: 52.0,
                               alignment: Alignment.center,
@@ -1434,30 +1438,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   Extensions.getSortProfessionTitle(
                                       professionalTitle),
                               maxLines: 1,
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 3, bottom: 6),
-                              child: Text(
-                                professionalTitle ?? '---',
-                                maxLines: 1,
-                                style: TextStyle(
-                                  color: Colors.black.withOpacity(0.6),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                ),
+                            Text(
+                              professionalTitle ?? '---',
+                              maxLines: 1,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.black.withOpacity(0.6),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
                             Spacer(),
                             Container(
-                              width: 160,
-                              height: 36,
-                              padding:
-                                  const EdgeInsets.only(top: 9.0, bottom: 4),
+                              width: 130,
+                              height: 32,
                               child: FlatButton(
                                 materialTapTargetSize:
                                     MaterialTapTargetSize.shrinkWrap,
@@ -1471,6 +1472,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 ),
                                 child: Text(
                                   "BOOK APPT.",
+                                  maxLines: 1,
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 12.0,
@@ -1586,18 +1589,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     }
 
                     return Container(
-                      // height: 156,
+                      height: 156,
                       width: 130,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(color: Colors.grey[100]),
                       ),
-                      child: ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: Column(
+                      child: GestureDetector(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
+                            SizedBox(height: 6),
                             Container(
-                              margin: const EdgeInsets.all(12),
                               width: 52.0,
                               height: 52.0,
                               alignment: Alignment.center,
@@ -1629,30 +1633,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   Extensions.getSortProfessionTitle(
                                       professionalTitle),
                               maxLines: 1,
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 3, bottom: 6),
-                              child: Text(
-                                professionalTitle ?? '---',
-                                maxLines: 1,
-                                style: TextStyle(
-                                  color: Colors.black.withOpacity(0.6),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                ),
+                            Text(
+                              professionalTitle ?? '---',
+                              maxLines: 1,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.black.withOpacity(0.6),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
                             Spacer(),
                             Container(
-                              width: 160,
-                              height: 36,
-                              padding:
-                                  const EdgeInsets.only(top: 9.0, bottom: 4),
+                              width: 130,
+                              height: 32,
                               child: FlatButton(
                                 materialTapTargetSize:
                                     MaterialTapTargetSize.shrinkWrap,
@@ -1660,12 +1661,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 splashColor: Colors.grey[100],
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.only(
-                                    bottomRight: Radius.circular(13.0),
-                                    bottomLeft: Radius.circular(13.0),
+                                    bottomRight: Radius.circular(14.0),
+                                    bottomLeft: Radius.circular(14.0),
                                   ),
                                 ),
                                 child: Text(
                                   "BOOK APPT.",
+                                  maxLines: 1,
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 12.0,
@@ -1674,7 +1677,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 ),
                                 onPressed: () {
                                   // doctor['distance'] =
-                                  //     _myDoctorsList[index]['distance'];
+                                  //     _onDemandDoctorsList[index]['distance'];
                                   // conatiner.providerResponse.clear();
                                   // conatiner.setProviderData(
                                   //   "providerData",
