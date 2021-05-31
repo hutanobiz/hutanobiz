@@ -75,9 +75,9 @@ class _SeekingCureScreenState extends State<SeekingCureScreen> {
                 ? _container.setConsentToTreatData("isTreatmentReceived", "1")
                 : _container.setConsentToTreatData("isTreatmentReceived", "0");
 
-            if (_descController.text.isNotEmpty) {
+            if (_descController.text.trim() != '') {
               _container.setConsentToTreatData(
-                  "description", _descController.text);
+                  "description", _descController.text.trim());
               Navigator.of(context).pushNamed(Routes.uploadImagesScreen);
               log(_container.consentToTreatMap.length.toString());
             } else
