@@ -460,6 +460,10 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                 _consentToTreatMap["medicalHistory"][i];
           }
         }
+        if (_consentToTreatMap["otherMedicalHistory"] != null) {
+          request.fields["otherMedicalHistory"] =
+              _consentToTreatMap["otherMedicalHistory"];
+        }
 
         request.fields.toString().debugLog();
 
