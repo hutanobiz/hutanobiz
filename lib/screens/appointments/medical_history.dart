@@ -23,7 +23,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
   ApiBaseHelper api = ApiBaseHelper();
 
   List<dynamic> _diseaseList = [];
-
+  dynamic otherMedicalHistory;
   bool isBottomButtonsShow = true;
   bool isFromAppointment = false;
 
@@ -75,6 +75,11 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
             if (response["medicalHistory"] != null) {
               setState(() {
                 _diseaseList = response["medicalHistory"];
+                if (response['otherMedicalHistory'] != null) {
+                  otherMedicalHistory = response['otherMedicalHistory'];
+                  _otherDiseaseController.text = otherMedicalHistory ?? '';
+                  _diseaseList.add('Other');
+                }
               });
             }
           }
@@ -319,10 +324,10 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
             _diseaseList.contains('Other'))) {
           _diseaseList.remove('Others');
           _diseaseList.remove('Other');
-        }
-
-        if (_otherDiseaseController.text.isNotEmpty) {
-          _diseaseList.add(_otherDiseaseController.text);
+          if (_otherDiseaseController.text.isNotEmpty) {
+            diseaseMap['otherMedicalHistory'] = _otherDiseaseController.text;
+            // _diseaseList.add(_otherDiseaseController.text);
+          }
         }
 
         setLoading(true);
@@ -347,6 +352,10 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
               if (_diseaseList != null && _diseaseList.length > 0) {
                 _container.setConsentToTreatData(
                     "medicalHistory", _diseaseList);
+                if (diseaseMap['otherMedicalHistory'] != null) {
+                  _container.setConsentToTreatData(
+                      'otherMedicalHistory', diseaseMap['otherMedicalHistory']);
+                }
               }
 
               Navigator.of(context).pushNamed(Routes.seekingCureScreen);
