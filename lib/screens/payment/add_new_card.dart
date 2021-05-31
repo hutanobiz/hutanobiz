@@ -116,29 +116,6 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   TextFormField(
-                                      key: _cardNameKey,
-                                      autovalidate:
-                                          _nameController.text.isNotEmpty,
-                                      validator: Validations.validateEmpty,
-                                      controller: _nameController,
-                                      decoration: InputDecoration(
-                                        labelText: "Name On Card",
-                                        enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.grey[300]),
-                                            borderRadius:
-                                                BorderRadius.circular(5.0)),
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5.0),
-                                        ),
-                                      ),
-                                      keyboardType: TextInputType.text,
-                                      onChanged: (text) {
-                                        setState(() {});
-                                      }),
-                                  SizedBox(height: 20.0),
-                                  TextFormField(
                                       controller: _cardController,
                                       key: _cardNumberKey,
                                       autovalidate: true,
@@ -162,6 +139,29 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                               BorderRadius.circular(5.0),
                                         ),
                                       ),
+                                      onChanged: (text) {
+                                        setState(() {});
+                                      }),
+                                  SizedBox(height: 20.0),
+                                  TextFormField(
+                                      key: _cardNameKey,
+                                      autovalidate:
+                                          _nameController.text.isNotEmpty,
+                                      validator: Validations.validateEmpty,
+                                      controller: _nameController,
+                                      decoration: InputDecoration(
+                                        labelText: "Name On Card",
+                                        enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colors.grey[300]),
+                                            borderRadius:
+                                                BorderRadius.circular(5.0)),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5.0),
+                                        ),
+                                      ),
+                                      keyboardType: TextInputType.text,
                                       onChanged: (text) {
                                         setState(() {});
                                       }),
