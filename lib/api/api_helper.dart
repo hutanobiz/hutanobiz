@@ -11,6 +11,7 @@ import 'package:hutano/main.dart';
 import 'package:hutano/models/schedule.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/strings.dart';
+import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/widgets.dart';
 
 class ApiBaseHelper {
@@ -1112,9 +1113,10 @@ class NetworkUtil {
         description: message,
         onPressed: () {
           if (message == 'Unauthorized') {
-            Navigator.pushNamed(
-                navigatorKey.currentState.overlay.context, Routes.loginRoute,
-                arguments: true);
+           SharedPref().clearSharedPref();
+                  Navigator.of(navigatorKey.currentState.overlay.context).pushNamedAndRemoveUntil(
+                      Routes.loginRoute, (Route<dynamic> route) => false,
+                      arguments: false);
           } else {
             Navigator.pop(navigatorKey.currentState.overlay.context);
           }
