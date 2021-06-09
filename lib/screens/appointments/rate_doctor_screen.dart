@@ -123,7 +123,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                       children: [
                         avatar == null
                             ? Image.asset(
-                                'images/doctorImage.png',
+                                'images/profile_user.png',
                                 height: 70,
                               )
                             : ClipRRect(
