@@ -44,6 +44,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
   ApiBaseHelper api = ApiBaseHelper();
   String token = '';
+  String name = "---", avatar;
 
   final Set<Marker> _markers = {};
   BitmapDescriptor sourceIcon;
@@ -296,13 +297,11 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     _container.providerResponse.clear();
     _container.setProviderData("providerData", _data);
 
-    String name = "---",
-        averageRating = "---",
+    String averageRating = "---",
         userRating,
         professionalTitle = "---",
         fee = "0.00",
         parkingFee = "0.00",
-        avatar,
         address = "---",
         officeVisitFee = "0.00";
 
@@ -602,7 +601,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         Routes.rateDoctorScreen,
                         arguments: {
                           'rateFrom': "2",
-                          'appointmentId': widget.appointmentId
+                          'appointmentId': widget.appointmentId,
+                          'name': name,
+                          'avatar': avatar,
                         },
                       ).whenComplete(
                           () => appointmentDetailsFuture(_userLocation)),

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:isolate';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -39,8 +38,6 @@ class _TrackTelemedicineAppointmentState
   bool _isLoading = false;
 
   String _trackStatusKey = TRACK_STATUS_PROVIDER;
-  String _startDrivingStatusKey = PROVIDER_START_DRIVING;
-  String _arrivedStatusKey = PROVIDER_ARRIVED;
 
   var _userLocation = LatLng(0.00, 0.00);
   ApiBaseHelper api = ApiBaseHelper();
@@ -52,6 +49,7 @@ class _TrackTelemedicineAppointmentState
       SimpleCountDownController();
   var appointmentTime;
   var currentTime;
+ String name = "---", avatar;
 
   @override
   void initState() {
@@ -130,11 +128,9 @@ class _TrackTelemedicineAppointmentState
             DateTime.parse(appointment['currentDate']).minute)
         .toLocal();
 
-    String name = "---", stringStatus = "", avatar;
+    String stringStatus = "";
 
     _trackStatusKey = TRACK_STATUS_PROVIDER;
-    _startDrivingStatusKey = PROVIDER_START_DRIVING;
-    _arrivedStatusKey = PROVIDER_ARRIVED;
 
     _appointmentType = appointment['data']["type"];
 
@@ -160,7 +156,7 @@ class _TrackTelemedicineAppointmentState
             ? 'Provider Ready'
             : "Appointment accepted";
 
-    name = appointment["data"]['doctor']['fullName'];
+    name = appointment["data"]['doctor']['title'] +appointment["data"]['doctor']['fullName'];
     avatar = appointment["data"]['doctor']['avatar'];
 
     return Container(
@@ -342,7 +338,9 @@ class _TrackTelemedicineAppointmentState
                             Navigator.pushNamed(
                                 context, Routes.rateDoctorScreen, arguments: {
                               'rateFrom': "2",
-                              'appointmentId': widget.appointmentId
+                              'appointmentId': widget.appointmentId,
+                              'name': name,
+                              'avatar': avatar,
                             });
                           })
                       : SizedBox()
@@ -628,10 +626,8 @@ class _TrackTelemedicineAppointmentState
         appointmentCompleteMap['appointmentId'] = widget.appointmentId;
         appointmentCompleteMap['type'] =
             appointmentResponse['data']['type'].toString();
-        appointmentCompleteMap['name'] = appointmentResponse["data"]['doctor']
-                ['title'] +
-            ' ' +
-            appointmentResponse["data"]['doctor']['fullName'];
+         appointmentCompleteMap['name'] = name;
+          appointmentCompleteMap['avatar'] = avatar;
         appointmentCompleteMap["dateTime"] =
             DateFormat('dd MMM yyyy, HH:mm').format(DateTime.now());
 
@@ -643,13 +639,6 @@ class _TrackTelemedicineAppointmentState
             .then((value) {
           _profileFuture = api.getAppointmentDetails(token, id, _userLocation);
         });
-        // Navigator.pushNamed(context, Routes.rateDoctorScreen, arguments: {
-        //   'rateFrom': "2",
-        //   'appointmentId': widget.appointmentId
-        // }).then((value) {
-        //   _profileFuture =
-        //       api.getAppointmentDetails(token, id, _userLocation);
-        // });
       } else {
         if (mounted) {
           setState(() {

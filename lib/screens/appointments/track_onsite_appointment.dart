@@ -52,6 +52,7 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
       SimpleCountDownController();
   var appointmentTime;
   var currentTime;
+  String name = "---", avatar;
 
   @override
   void initState() {
@@ -130,7 +131,7 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
             DateTime.parse(appointment['currentDate']).minute)
         .toLocal();
 
-    String name = "---", stringStatus = "", avatar;
+    String stringStatus = "";
 
     _trackStatusKey = TRACK_STATUS_PROVIDER;
     _startDrivingStatusKey = PROVIDER_START_DRIVING;
@@ -163,7 +164,7 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                 : status == 3
                     ? 'Treatment Started'
                     : 'Appointment Complete';
-    name = appointment["data"]['doctor']['fullName'];
+    name = appointment["data"]['doctor']['title'] +appointment["data"]['doctor']['fullName'];
     avatar = appointment["data"]['doctor']['avatar'];
 
     return Container(
@@ -395,7 +396,9 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                         Navigator.pushNamed(context, Routes.rateDoctorScreen,
                             arguments: {
                               'rateFrom': "2",
-                              'appointmentId': widget.appointmentId
+                              'appointmentId': widget.appointmentId,
+                              'name': name,
+                              'avatar': avatar,
                             });
                       })
                   : status == index
@@ -526,10 +529,8 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
         appointmentCompleteMap['appointmentId'] = widget.appointmentId;
         appointmentCompleteMap['type'] =
             appointmentResponse['data']['type'].toString();
-        appointmentCompleteMap['name'] = appointmentResponse["data"]['doctor']
-                ['title'] +
-            ' ' +
-            appointmentResponse["data"]['doctor']['fullName'];
+         appointmentCompleteMap['name'] = name;
+          appointmentCompleteMap['avatar'] = avatar;
         appointmentCompleteMap["dateTime"] =
             DateFormat('dd MMM yyyy, HH:mm').format(DateTime.now());
 
@@ -541,13 +542,6 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
             .then((value) {
           _profileFuture = api.getAppointmentDetails(token, id, _userLocation);
         });
-        // Navigator.pushNamed(context, Routes.rateDoctorScreen, arguments: {
-        //   'rateFrom': "2",
-        //   'appointmentId': widget.appointmentId
-        // }).then((value) {
-        //   _profileFuture =
-        //       api.getAppointmentDetails(token, id, _userLocation);
-        // });
       } else {
         if (mounted) {
           setState(() {

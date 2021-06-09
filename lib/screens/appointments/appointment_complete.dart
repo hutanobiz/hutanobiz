@@ -33,7 +33,7 @@ class AppointmentCompleteConfirmation extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                         color: AppColors.haiti)),
                 SizedBox(width: 8),
-                Text(appointmentCompleteMap["name"]??'',
+                Text(appointmentCompleteMap["name"] ?? '',
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w700,
@@ -45,7 +45,7 @@ class AppointmentCompleteConfirmation extends StatelessWidget {
               child: Text(
                 appointmentCompleteMap.containsKey('_id')
                     ? ''
-                    : appointmentCompleteMap["dateTime"]??'',
+                    : appointmentCompleteMap["dateTime"] ?? '',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -111,7 +111,9 @@ class AppointmentCompleteConfirmation extends StatelessWidget {
                         arguments: {
                           'rateFrom': "3",
                           'appointmentId':
-                              appointmentCompleteMap["appointmentId"]
+                              appointmentCompleteMap["appointmentId"],
+                          'name': appointmentCompleteMap["name"],
+                          'avatar': appointmentCompleteMap["avatar"],
                         },
                       );
                     },

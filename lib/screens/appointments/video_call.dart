@@ -190,6 +190,9 @@ class _CallPageState extends State<CallPage> {
               ['title'] +
           ' ' +
           appointmentResponse["data"]['doctor']['fullName'];
+
+      appointmentCompleteMap['avatar'] =
+          appointmentResponse["data"]['doctor']['avatar'];
       appointmentCompleteMap["dateTime"] =
           DateFormat('dd MMM yyyy, HH:mm').format(DateTime.now());
       Navigator.of(context).pushReplacementNamed(
@@ -281,6 +284,10 @@ class _CallPageState extends State<CallPage> {
                                         ' ' +
                                         appointmentResponse["data"]['doctor']
                                             ['fullName'];
+
+                                appointmentCompleteMap['avatar'] =
+                                    appointmentResponse["data"]['doctor']
+                                        ['avatar'];
                                 appointmentCompleteMap["dateTime"] =
                                     DateFormat('dd MMM yyyy, HH:mm')
                                         .format(DateTime.now());

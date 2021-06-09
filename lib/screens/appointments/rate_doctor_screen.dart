@@ -6,7 +6,6 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
-import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
 
 class RateDoctorScreen extends StatefulWidget {
@@ -18,8 +17,6 @@ class RateDoctorScreen extends StatefulWidget {
 }
 
 class _RateDoctorScreenState extends State<RateDoctorScreen> {
-  InheritedContainerState _container;
-  Map _providerMap = Map();
   double _rating = 0;
   String _ratingText, _name, avatar;
   ApiBaseHelper api = ApiBaseHelper();
@@ -76,24 +73,9 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
-    _container = InheritedContainer.of(context);
-    _providerMap = _container.getProviderData();
-    if (_providerMap['providerData'] != null) {
-      if (_providerMap['providerData']["data"] != null) {
-        if (_providerMap['providerData']["data"]["doctor"] != null) {
-          _name = _providerMap['providerData']["data"]["doctor"]["fullName"] ??
-              "---";
-          avatar = _providerMap['providerData']["data"]["doctor"]["avatar"];
-        }
-      } else if (_providerMap['providerData'] != null) {
-        if (_providerMap['providerData']["doctor"] != null) {
-          _name = _providerMap['providerData']["doctor"]["fullName"] ?? "---";
-          avatar = _providerMap['providerData']["doctor"]["avatar"];
-        }
-      }
-      _ratingText = "How was your experience with $_name ?";
-    }
+    _name = widget.rateFromAppointmentId['name'];
+    avatar = widget.rateFromAppointmentId['avatar'];
+    _ratingText = "How was your experience with $_name ?";
 
     rateMap["appointment"] = widget.rateFromAppointmentId["appointmentId"];
   }
@@ -121,35 +103,40 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        avatar == null
-                            ? Image.asset(
-                                'images/profile_user.png',
-                                height: 70,
-                              )
-                            : ClipRRect(
-                                borderRadius: BorderRadius.circular(35),
-                                child: Image.network(
-                                  ApiBaseHelper.image_base_url + avatar,
-                                  height: 70,
+                        ClipRRect(
+                            borderRadius: BorderRadius.circular(35),
+                            child: avatar == null
+                                ? Image.asset(
+                                    'images/profile_user.png',
+                                    height: 70,
+                                    width: 70,
+                                    fit: BoxFit.fill,
+                                  )
+                                : Image.network(
+                                    ApiBaseHelper.image_base_url + avatar,
+                                    height: 70,
+                                    width: 70,
+                                    fit: BoxFit.fill,
+                                  )),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                'Appointment Complete',
+                                style: TextStyle(
+                                  fontSize: 18,
                                 ),
                               ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Text(
-                              'Appointment Complete',
-                              style: TextStyle(
-                                fontSize: 18,
+                              SizedBox(
+                                height: 10,
                               ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              'How was your experience?',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ],
+                              Text(
+                                'How was your experience?',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
