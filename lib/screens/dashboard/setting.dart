@@ -346,29 +346,29 @@ class _SettingsScreenState extends State<SettingScreen> {
         child: Material(
           child: InkWell(
             onTap: () async {
-              setLoading(true);
+              // setLoading(true);
 
-              String deviceToken = await SharedPref().getValue("deviceToken");
+              // String deviceToken = await SharedPref().getValue("deviceToken");
               String token = await SharedPref().getValue("token");
 
-              api.logOUt(token, deviceToken).then((v) {
-                setLoading(false);
+              // api.logOUt(token, deviceToken).then((v) {
+              //   setLoading(false);
 
-                if (v.toString().toLowerCase() == 'logout') {
-                  SharedPref().clearSharedPref();
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      Routes.loginRoute, (Route<dynamic> route) => false,
-                      arguments: false);
-                } else {
-                  Widgets.showErrorDialog(
-                    context: context,
-                    description: v.toString(),
-                  );
-                }
-              }).futureError((e) {
-                setLoading(false);
-                e.toString().debugLog();
-              });
+              //   if (v.toString().toLowerCase() == 'logout') {
+              SharedPref().clearSharedPref();
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  Routes.loginRoute, (Route<dynamic> route) => false,
+                  arguments: false);
+              //   } else {
+              //     Widgets.showErrorDialog(
+              //       context: context,
+              //       description: v.toString(),
+              //     );
+              //   }
+              // }).futureError((e) {
+              //   setLoading(false);
+              //   e.toString().debugLog();
+              // });
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,

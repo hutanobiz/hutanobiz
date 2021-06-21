@@ -7,6 +7,7 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/screens/home.dart';
 import 'package:hutano/screens/home_main.dart';
 import 'package:hutano/screens/login.dart';
+import 'package:hutano/screens/registration/onboarding.dart';
 import 'package:hutano/theme.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
@@ -60,8 +61,14 @@ void main() async {
     sound: true,
   );
 
+
   bool _result = await SharedPref().checkValue("token");
-  if (_result) {
+  bool isIntro = await SharedPref().getValue("isIntro") ?? false;
+  
+  if (!isIntro) {
+       _defaultHome = OnBoardingPage();
+    }
+  else if (_result) {
     _defaultHome = HomeMain();
   }
 

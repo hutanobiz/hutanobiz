@@ -959,8 +959,7 @@ class _SignUpFormState extends State<Register> {
           Widgets.showToast("Profile updated successfully");
           Navigator.of(context).pop();
         } else {
-          SharedPref()
-              .saveToken(responseJson["response"]["tokens"][0]["token"]);
+          SharedPref().saveToken(responseJson["response"]["token"]);
           SharedPref()
               .setValue("fullName", responseJson["response"]["fullName"]);
 

@@ -17,8 +17,8 @@ import 'package:hutano/widgets/widgets.dart';
 class ApiBaseHelper {
   NetworkUtil _netUtil = new NetworkUtil();
   static const String imageUrl = "https://hutano-assets.s3.amazonaws.com/";
-  // static const String base_url = "https://dev.hutano.com/";
-  static const String base_url = "https://staging.hutano.com/";
+  static const String base_url = "https://dev.hutano.com/";
+  // static const String base_url = "https://staging.hutano.com/";
   static const String image_base_url =
       "https://hutano-assets.s3.amazonaws.com/";
 
@@ -1113,10 +1113,11 @@ class NetworkUtil {
         description: message,
         onPressed: () {
           if (message == 'Unauthorized') {
-           SharedPref().clearSharedPref();
-                  Navigator.of(navigatorKey.currentState.overlay.context).pushNamedAndRemoveUntil(
-                      Routes.loginRoute, (Route<dynamic> route) => false,
-                      arguments: false);
+            SharedPref().clearSharedPref();
+            Navigator.of(navigatorKey.currentState.overlay.context)
+                .pushNamedAndRemoveUntil(
+                    Routes.loginRoute, (Route<dynamic> route) => false,
+                    arguments: false);
           } else {
             Navigator.pop(navigatorKey.currentState.overlay.context);
           }

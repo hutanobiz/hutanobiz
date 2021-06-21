@@ -363,7 +363,7 @@ class _LoginState extends State<LoginScreen> {
     api.login(_loginDataMap).then((dynamic response) {
       Widgets.showToast(Strings.loggedIn);
 
-      SharedPref().saveToken(response["tokens"][0]["token"].toString());
+      SharedPref().saveToken(response["token"].toString());
       SharedPref().setValue("fullName", response["fullName"].toString());
       SharedPref().setValue("isEmailVerified", response["isEmailVerified"]);
       setLoading(false);
