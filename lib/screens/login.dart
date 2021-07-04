@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:hutano/text_style.dart';
+import 'package:hutano/utils/argument_const.dart';
+import 'package:hutano/utils/enum_utils.dart';
 import 'package:hutano/widgets/country_code_picker.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/gestures.dart';
@@ -16,15 +18,14 @@ import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/utils/validations.dart';
 import 'package:hutano/widgets/app_logo.dart';
-import 'package:hutano/widgets/fancy_button.dart';
+import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/loading_widget.dart';
 import 'package:hutano/widgets/password_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key key, this.isBack = false}) : super(key: key);
-  bool isBack;
+  final bool isBack;
   @override
   _LoginState createState() => _LoginState();
 }
@@ -43,7 +44,6 @@ class _LoginState extends State<LoginScreen> {
   bool checked = false;
   bool _obscureText = true;
   bool isLoading = false;
-  bool isTermAccepted = false;
 
   @override
   void dispose() {
@@ -88,18 +88,26 @@ class _LoginState extends State<LoginScreen> {
     );
   }
 
+  Widget _getSignInTextField() => Container(
+        padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+        child: Text(Strings.signInTitle,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 14,
+              color: AppColors.colorBlack85,
+            )),
+      );
+
   List<Widget> widgetList() {
     List<Widget> formWidget = new List();
 
-    formWidget.add(AppLogo());
-    formWidget.add(Widgets.sizedBox(height: 12.0));
-
-    formWidget.add(Center(
-        child: Text(
-      'Please sign in to continue.',
-      style: TextStyle(fontWeight: FontWeight.w600),
-    )));
-    formWidget.add(Widgets.sizedBox(height: 32.0));
+    formWidget.add(
+      AppLogo(),
+    );
+    formWidget.add(
+      _getSignInTextField(),
+    );
+    formWidget.add(SizedBox(height: 50));
 
     formWidget.add(
       Row(
@@ -160,7 +168,7 @@ class _LoginState extends State<LoginScreen> {
               controller: _phoneNumberController,
               autocorrect: true,
               validator: Validations.validatePhone,
-              autovalidate: true,
+              autovalidateMode: AutovalidateMode.always,
               inputFormatters: [
                 WhitelistingTextInputFormatter.digitsOnly,
                 _mobileFormatter,
@@ -177,9 +185,9 @@ class _LoginState extends State<LoginScreen> {
                   labelText: "Phone Number",
                   enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey[300]),
-                      borderRadius: BorderRadius.circular(5.0)),
+                      borderRadius: BorderRadius.circular(12.0)),
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0))),
+                      borderRadius: BorderRadius.circular(12.0))),
               keyboardType: TextInputType.phone,
             ),
           ),
@@ -215,8 +223,11 @@ class _LoginState extends State<LoginScreen> {
     formWidget.add(Align(
       alignment: Alignment.centerRight,
       child: FlatButton(
-          onPressed: () =>
-              Navigator.pushNamed(context, Routes.forgotPasswordRoute),
+          onPressed: () => Navigator.pushNamed(
+                  context, Routes.routeForgotPassword, arguments: {
+                ArgumentConstant.verificationScreen:
+                    VerificationScreen.resetPassword
+              }),
           child: Text(
             "Forgot Password?",
             style: TextStyle(color: AppColors.windsor, fontSize: 12.0),
@@ -224,63 +235,9 @@ class _LoginState extends State<LoginScreen> {
     ));
 
     formWidget.add(Widgets.sizedBox(height: 16.0));
-    formWidget.add(Row(
-      children: [
-        Expanded(
-          child: Wrap(
-            // crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Row(
-              //   children: [
-              Text('I agree to Hutano '),
-              Text(
-                'Terms & Conditions',
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  decoration: TextDecoration.underline,
-                ),
-              ).onClick(onTap: () async {
-                var url = 'https://staging.hutano.com/terms-and-conditions';
-                if (await canLaunch(url)) {
-                  await launch(url);
-                } else {
-                  throw 'Could not launch $url';
-                }
-              }),
-              //   ],
-              // ),
-              Text(
-                '& Privacy Policy',
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  decoration: TextDecoration.underline,
-                ),
-              ).onClick(onTap: () async {
-                var url = 'https://staging.hutano.com/privacy-policy';
-                if (await canLaunch(url)) {
-                  await launch(url);
-                } else {
-                  throw 'Could not launch $url';
-                }
-              })
-            ],
-          ),
-        ),
-        Switch(
-            value: isTermAccepted,
-            activeColor: AppColors.goldenTainoi,
-            onChanged: ((val) {
-              setState(() {
-                isTermAccepted = val;
-              });
-            }))
-      ],
-    ));
-
-    formWidget.add(Widgets.sizedBox(height: 16.0));
-    formWidget.add(FancyButton(
-      buttonHeight: Dimens.buttonHeight,
-      title: Strings.logIn,
+    formWidget.add(HutanoButton(
+      height: Dimens.buttonHeight,
+      label: Strings.logIn,
       onPressed: isButtonEnable()
           ? () {
               SharedPref().getValue("deviceToken").then((value) {
@@ -332,25 +289,6 @@ class _LoginState extends State<LoginScreen> {
     );
 
     formWidget.add(Widgets.sizedBox(height: 42.0));
-    formWidget.add(Center(
-        child: Text('Help Signing in?').onClick(onTap: () async {
-      var url = 'https://staging.hutano.com/';
-      if (await canLaunch(url)) {
-        await launch(url);
-      } else {
-        throw 'Could not launch $url';
-      }
-    })));
-    formWidget.add(Widgets.sizedBox(height: 16.0));
-    formWidget.add(Center(
-        child: Text('Hutano data security statement').onClick(onTap: () async {
-      var url = 'https://staging.hutano.com/';
-      if (await canLaunch(url)) {
-        await launch(url);
-      } else {
-        throw 'Could not launch $url';
-      }
-    })));
 
     return formWidget;
   }
@@ -365,7 +303,9 @@ class _LoginState extends State<LoginScreen> {
 
       SharedPref().saveToken(response["token"].toString());
       SharedPref().setValue("fullName", response["fullName"].toString());
+      SharedPref().setValue("id", response["_id"]);
       SharedPref().setValue("isEmailVerified", response["isEmailVerified"]);
+      SharedPref().setValue("phoneNumber", response["phoneNumber"].toString());
       setLoading(false);
       if (widget.isBack) {
         Navigator.pop(context);
@@ -387,9 +327,7 @@ class _LoginState extends State<LoginScreen> {
   }
 
   bool isButtonEnable() {
-    if (!isTermAccepted) {
-      return false;
-    } else if (_phoneNumberController.text.isEmpty ||
+    if (_phoneNumberController.text.isEmpty ||
         !_phoneNumberKey.currentState.validate()) {
       return false;
     } else if (_passwordController.text.isEmpty ||

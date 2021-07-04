@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:async/async.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart';
 
 import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
@@ -489,7 +492,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                 child: FancyButton(
                   title: 'Upload',
                   buttonColor: AppColors.windsor,
-                  onPressed: () {
+                  onPressed: () async {
                     if (imageName == null || imageName.isEmpty) {
                       Widgets.showToast("Image name can't be empty");
                     } else {
@@ -499,13 +502,21 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
 
                       setLoading(true);
 
+                      var stream =
+                          ByteStream(DelegatingStream(imageFile.openRead()));
+                      var length = await imageFile.length();
+                      var multipartFile = MultipartFile(
+                          'images', stream.cast(), length,
+                          filename: imageFile.path);
+
+                      List<MultipartFile> multipartList = [];
+                      multipartList.add(multipartFile);
                       _api
                           .multipartPost(
                         ApiBaseHelper.base_url + 'api/patient/images',
                         token,
-                        'images',
                         fileMap,
-                        imageFile,
+                        multipartList,
                       )
                           .then((value) {
                         setState(() {

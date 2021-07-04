@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/dimens.dart';
+import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/app_logo.dart';
 import 'package:hutano/widgets/controller.dart';
 import 'package:hutano/widgets/fancy_button.dart';
@@ -11,9 +12,11 @@ import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/colors.dart';
 
 class VerifyEmailOTP extends StatefulWidget {
-  final Map args;
+  // final Map args;
 
-  const VerifyEmailOTP({Key key, @required this.args}) : super(key: key);
+  const VerifyEmailOTP({
+    Key key,
+  }) : super(key: key);
 
   @override
   _VerifyEmailOTPState createState() => _VerifyEmailOTPState();
@@ -23,27 +26,71 @@ class _VerifyEmailOTPState extends State<VerifyEmailOTP> {
   String otp;
   String email;
   String phoneNumber;
+  ApiBaseHelper api = ApiBaseHelper();
+  Future<dynamic> _requestsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    SharedPref().getToken().then((token) {
+      setState(() {
+        _requestsFuture = api.profile(token, Map());
+      });
+      // api.profile(token, Map()).then((dynamic response) {
+      //   isLoading = false;
+      //   setState(() {
+      //     if (response['response'] != null) {
+      //       email = response['response']['email'].toString() ?? "---";
+      //       phoneNumber = response['response']['phoneNumber']?.toString();
+      //     }
+      //   });
+      // }).futureError((error) {
+      //   error.toString().debugLog();
+      // });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    email = widget.args['email'];
-    phoneNumber = widget.args['phoneNumber'];
+    // email = widget.args['email'];
+    // phoneNumber = widget.args['phoneNumber'];
 
-    String emailText;
-    emailText = email.substring(0, email.length);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: LoadingBackground(
-        padding: EdgeInsets.all(0),
-        title: "",
-        isAddBack: true,
-        child: Form(
-          child: ListView(
-            children: getFormWidget(emailText),
-            padding: const EdgeInsets.fromLTRB(
-                Dimens.padding, 31.0, Dimens.padding, Dimens.padding),
-          ),
-        ),
-      ),
+          padding: EdgeInsets.all(0),
+          title: "",
+          isAddBack: true,
+          child: FutureBuilder<dynamic>(
+            future: _requestsFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: new CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasError) {
+                return new Text('Error: ${snapshot.error}');
+              } else if (snapshot.hasData) {
+                email = snapshot.data['response']['email'].toString() ?? "---";
+                phoneNumber =
+                    snapshot.data['response']['phoneNumber']?.toString();
+                String emailText;
+                emailText = email.substring(0, email.length);
+
+                return Form(
+                  child: ListView(
+                    children: getFormWidget(emailText),
+                    padding: const EdgeInsets.fromLTRB(
+                        Dimens.padding, 31.0, Dimens.padding, Dimens.padding),
+                  ),
+                );
+              } else {
+                return Center(
+                  child: new CircularProgressIndicator(),
+                );
+              }
+            },
+          )),
     );
   }
 
@@ -121,17 +168,10 @@ class _VerifyEmailOTPState extends State<VerifyEmailOTP> {
                     api
                         .verifyEmailOtp(context, verifyEmail)
                         .then((dynamic user) {
-                      Map _insuranceMap = {};
-                      _insuranceMap['isPayment'] = false;
-                      _insuranceMap['isFromRegister'] = true;
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                        Routes.insuranceListScreen,
-                        (Route<dynamic> route) => false,
-                        arguments: _insuranceMap,
-                      );
-                      // Navigator.of(context).pushNamedAndRemoveUntil(
-                      //     Routes.registerEducation, (Route<dynamic> route) => false);
-                    });
+                      Navigator.of(context).pushReplacementNamed(
+                          Routes.emailVerificationComplete);
+
+                        });
                   }
                 : null,
             buttonHeight: Dimens.buttonHeight,

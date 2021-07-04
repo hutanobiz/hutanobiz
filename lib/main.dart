@@ -4,13 +4,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/familynetwork/add_family_member/add_family_member.dart';
+import 'package:hutano/screens/familynetwork/add_family_member/family_provider.dart';
 import 'package:hutano/screens/home.dart';
 import 'package:hutano/screens/home_main.dart';
 import 'package:hutano/screens/login.dart';
+import 'package:hutano/screens/payment/add_card_complete.dart';
+import 'package:hutano/screens/payment/add_insruance_complete.dart';
+import 'package:hutano/screens/payment/add_insurance.dart';
+import 'package:hutano/screens/payment/add_new_card.dart';
+import 'package:hutano/screens/payment/add_payment_option.dart';
+import 'package:hutano/screens/providercicle/my_provider_network/my_provider_network.dart';
+import 'package:hutano/screens/providercicle/provider_search/provider_search.dart';
+import 'package:hutano/screens/registration/email_verification_complete.dart';
+import 'package:hutano/screens/registration/invite_family/invite_family.dart';
+import 'package:hutano/screens/registration/login_pin/login_pin.dart';
 import 'package:hutano/screens/registration/onboarding.dart';
+import 'package:hutano/screens/registration/verify_email_otp.dart';
+import 'package:hutano/screens/registration/welcome_screen.dart';
 import 'package:hutano/theme.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
+import 'package:provider/provider.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 final navigatorContext = navigatorKey.currentContext;
@@ -61,23 +76,37 @@ void main() async {
     sound: true,
   );
 
-
   bool _result = await SharedPref().checkValue("token");
   bool isIntro = await SharedPref().getValue("isIntro") ?? false;
-  
+  bool skipStep = await SharedPref().getValue("skipStep") ?? false;
+  bool performedStep = await SharedPref().getValue("perFormedSteps") ?? false;
+  bool isSetupPin = await SharedPref().getValue("setPin") ?? false;
+
   if (!isIntro) {
-       _defaultHome = OnBoardingPage();
+    _defaultHome = OnBoardingPage();
+  } else if (_result) {
+    if (skipStep || performedStep) {
+      if (isSetupPin) {
+        _defaultHome = LoginPin();
+      } else {
+        _defaultHome = HomeMain();
+      }
+    } else if (!performedStep) {
+      _defaultHome = WelcomeScreen();
+    } else {
+      _defaultHome = LoginScreen();
     }
-  else if (_result) {
-    _defaultHome = HomeMain();
+  } else {
+    _defaultHome = LoginScreen();
   }
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitDown,
     DeviceOrientation.portraitUp,
   ]).whenComplete(() {
-    runApp(
-      InheritedContainer(
+    runApp(MultiProvider(
+      providers: [ListenableProvider(create: (_) => FamilyProvider())],
+      child: InheritedContainer(
         child: MaterialApp(
           title: "Hutano",
           debugShowCheckedModeBanner: false,
@@ -87,6 +116,6 @@ void main() async {
           navigatorKey: navigatorKey,
         ),
       ),
-    );
+    ));
   });
 }

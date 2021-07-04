@@ -10,15 +10,51 @@ import 'package:http/http.dart';
 import 'package:hutano/main.dart';
 import 'package:hutano/models/schedule.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/familynetwork/add_family_member/model/req_add_member.dart';
+import 'package:hutano/screens/familynetwork/add_family_member/model/res_add_member.dart';
+import 'package:hutano/screens/familynetwork/add_family_member/model/res_relation_list.dart';
+import 'package:hutano/screens/familynetwork/familycircle/model/req_add_permission.dart';
+import 'package:hutano/screens/familynetwork/familycircle/model/req_add_permission_model.dart';
+import 'package:hutano/screens/familynetwork/familycircle/model/req_family_network.dart';
+import 'package:hutano/screens/familynetwork/familycircle/model/res_family_circle.dart';
+import 'package:hutano/screens/familynetwork/familycircle/model/res_family_network.dart';
+import 'package:hutano/screens/familynetwork/familycircle/model/res_user_permission_model.dart';
+import 'package:hutano/screens/familynetwork/member_message/model/req_message_share.dart';
+import 'package:hutano/screens/familynetwork/member_message/model/res_message_share.dart';
+import 'package:hutano/screens/payment/model/res_get_card.dart';
+import 'package:hutano/screens/payment/req_add_insurace.dart';
+import 'package:hutano/screens/payment/res_get_my_insurance.dart';
+import 'package:hutano/screens/payment/res_insurance_list.dart';
+import 'package:hutano/screens/providercicle/my_provider_network/model/req_remove_provider.dart';
+import 'package:hutano/screens/providercicle/my_provider_network/model/req_share_provider.dart';
+import 'package:hutano/screens/providercicle/my_provider_network/model/res_my_provider_network.dart';
+import 'package:hutano/screens/providercicle/my_provider_network/model/res_remove_provider.dart';
+import 'package:hutano/screens/providercicle/my_provider_network/model/res_share_provider.dart';
+import 'package:hutano/screens/providercicle/provider_add_network/model/req_add_provider.dart';
+import 'package:hutano/screens/providercicle/provider_add_network/model/res_add_provider.dart';
+import 'package:hutano/screens/providercicle/provider_add_network/model/res_provider_group.dart';
+import 'package:hutano/screens/providercicle/provider_search/model/res_search_provider.dart';
+import 'package:hutano/screens/providercicle/search/model/req_search_number.dart';
+import 'package:hutano/screens/providercicle/search/model/res_search_number.dart';
+import 'package:hutano/screens/registration/forgotpassword/model/req_reset_password.dart';
+import 'package:hutano/screens/registration/forgotpassword/model/res_reset.dart';
+import 'package:hutano/screens/registration/forgotpassword/model/res_reset_password.dart';
+import 'package:hutano/screens/registration/login_pin/model/req_login_pin.dart';
+import 'package:hutano/screens/registration/login_pin/model/res_login_pin.dart';
+import 'package:hutano/screens/setup_pin/model/req_setup_pin.dart';
 import 'package:hutano/strings.dart';
+import 'package:hutano/utils/common_res.dart';
+import 'package:hutano/utils/progress_dialog.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/widgets.dart';
 
 class ApiBaseHelper {
   NetworkUtil _netUtil = new NetworkUtil();
   static const String imageUrl = "https://hutano-assets.s3.amazonaws.com/";
-  static const String base_url = "https://dev.hutano.com/";
-  // static const String base_url = "https://staging.hutano.com/";
+  // static const String base_url = "https://dev.hutano.com/";
+  // static const String base_u = "dev.hutano.com";
+  static const String base_u = "staging.hutano.com/";
+  static const String base_url = "https://staging.hutano.com/";
   static const String image_base_url =
       "https://hutano-assets.s3.amazonaws.com/";
 
@@ -91,11 +127,71 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> resetPassword(Map<String, String> map) {
+  Future<ResResetPassword> resetPassword(ReqResetPassword map) {
     return _netUtil
-        .post(base_url + "auth/api/phone-reset-password", body: map)
+        .post(base_url + "auth/api/reset-password-new", body: map.toMap())
         .then((res) {
-      return (res["response"]);
+      return ResResetPassword.fromJson(res);
+    });
+  }
+
+  // Future<ResResetPassword> resetPassword(ReqResetPassword map) {
+  //   return _netUtil
+  //       .post(base_url + "auth/api/phone-reset-password", body: map.toMap())
+  //       .then((res) {
+  //     return ResResetPassword.fromJson(res);
+  //   });
+  // }
+
+  Future<ResReset> resetPinStep3(ReqResetPassword model) async {
+    return _netUtil
+        .post(base_url + "auth/api/reset-pin", body: model.toMap())
+        .then((res) {
+      return ResReset.fromJson(res);
+    });
+  }
+
+  Future<ResResetPassword> resetPin(ReqResetPassword model) async {
+    return _netUtil
+        .post(
+      base_url + 'auth/api/reset-pin',
+      body: model.toMap(),
+    )
+        .then((res) {
+      return ResResetPassword.fromJson(res);
+    });
+  }
+
+  Future<dynamic> checkEmailExist(Map<String, String> request) async {
+    return _netUtil
+        .postNotHandleError(
+      base_url + 'api/check-user',
+      body: request,
+    )
+        .then((res) {
+      return res;
+    });
+  }
+
+  Future<dynamic> loginPin(ReqLoginPin model) async {
+    return _netUtil
+        .post(
+      base_url + 'auth/api/pin-login',
+      body: model.toMap(),
+    )
+        .then((res) {
+      return res;
+    });
+  }
+
+  Future<dynamic> otpOnCall(Map model) async {
+    return _netUtil
+        .post(
+      base_url + 'auth/api/otp-on-call',
+      body: model,
+    )
+        .then((res) {
+      return res;
     });
   }
 
@@ -468,6 +564,16 @@ class ApiBaseHelper {
     });
   }
 
+  Future<ResInsuranceList> insuraceList() {
+    return _netUtil
+        .get(
+      base_url + "api/insurance",
+    )
+        .then((res) {
+      return ResInsuranceList.fromJson(res);
+    });
+  }
+
   Future<dynamic> updateAppointmentCoordinates(
       String token, Map locationMap, String appointmentId) {
     Map<String, String> headers = {
@@ -607,15 +713,14 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> multipartPost(String url, String token, String key,
-      Map<String, String> fileMap, File file) {
+  Future<dynamic> multipartPost(String url, String token,
+      Map<String, String> fileMap, List<MultipartFile> files) {
     return _netUtil
         .multipartPost(
       url,
       token: token,
       fileMap: fileMap,
-      file: file,
-      key: key,
+      files: files,
     )
         .then((res) {
       return res;
@@ -934,6 +1039,287 @@ class ApiBaseHelper {
     });
   }
 
+  Future<ResGetMyInsurance> getPatientInsurance(
+    BuildContext context,
+    String token,
+  ) async {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .get(Uri.encodeFull(base_url + "api/patient/get-patient-insurance"),
+            headers: headers)
+        .then((res) {
+      return ResGetMyInsurance.fromJson(res);
+    });
+  }
+
+  Future<ResGetCard> getCard(
+    BuildContext context,
+    String token,
+  ) async {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .get(Uri.encodeFull(base_url + "api/stripe-card"), headers: headers)
+        .then((res) {
+      return ResGetCard.fromJson(res);
+    });
+  }
+
+  Future<ResAddMember> setMemberPermission(
+    BuildContext context,
+    String token,
+    ReqAddPermission model,
+  ) async {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .post(Uri.encodeFull(base_url + "api/patient/add-family-members"),
+            headers: headers, body: model.toMap())
+        .then((res) {
+      return ResAddMember.fromJson(res);
+    });
+  }
+
+  Future<CommonRes> setSpecificMemberPermission(BuildContext context,
+      String token, ReqAddUserPermissionModel model, String memberId) async {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .post(
+            Uri.encodeFull(base_url +
+                "api/patient/manage-family-member-permission/$memberId"),
+            headers: headers,
+            body: model.toJson())
+        .then((res) {
+      return CommonRes.fromJson(res);
+    });
+  }
+
+  Future<ResUserPermissionModel> getUserPermission(
+    BuildContext context,
+    String token,
+  ) async {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .get(Uri.encodeFull(base_url + "api/patient/user-permission"),
+            headers: headers)
+        .then((res) {
+      return ResUserPermissionModel.fromJson(res);
+    });
+  }
+
+  Future<ResFamilyCircle> getFamilyCircle(
+      BuildContext context, String token, ReqFamilyNetwork model) async {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .get(Uri.encodeFull(base_url + "api/patient/get-family-members"),
+            headers: headers)
+        .then((res) {
+      return ResFamilyCircle.fromJson(res);
+    });
+  }
+
+  Future<ResProviderSearch> searchProvider(
+      BuildContext context, String token, Map<String, dynamic> search) async {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+//Todo: aaaaaaaaaa
+
+    return _netUtil
+        .getUri(Uri.https(base_u, "/api/get-providers", search),
+            headers: headers)
+        .then((res) {
+      return ResProviderSearch.fromJson(res);
+    });
+  }
+
+  Future<ResProviderGroup> getProviderGroups(
+      BuildContext context, String token) async {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .get(Uri.encodeFull(base_url + "api/get-provider-groups"),
+            headers: headers)
+        .then((res) {
+      return ResProviderGroup.fromJson(res);
+    });
+  }
+
+  Future<ResAddProvider> addProviderNetwork(
+      BuildContext context, String token, ReqAddProvider model) async {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    print(model.toMap());
+
+    return _netUtil
+        .post(Uri.encodeFull(base_url + "api/add-edit-providers"),
+            headers: headers, body: model.toMap())
+        .then((res) {
+      return ResAddProvider.fromJson(res);
+    });
+  }
+
+  Future<ResMyProviderNetwork> getMyProviderNetwork(
+      BuildContext context, String token) async {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .get(Uri.encodeFull(base_url + "api/get-all-providers"),
+            headers: headers)
+        .then((res) {
+      return ResMyProviderNetwork.fromJson(res);
+    });
+  }
+
+  Future<ResRemoveProvider> removeProvider(
+      BuildContext context, String token, ReqRemoveProvider model) async {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .post(Uri.encodeFull(base_url + "api/delete-providers"),
+            headers: headers, body: model.toMap())
+        .then((res) {
+      return ResRemoveProvider.fromJson(res);
+    });
+  }
+
+  Future<ResShareProvider> shareProvider(
+      BuildContext context, String token, ReqShareProvider model) async {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .post(Uri.encodeFull(base_url + "api/patient/share-single-user"),
+            headers: headers, body: model.toMap())
+        .then((res) {
+      return ResShareProvider.fromJson(res);
+    });
+  }
+
+  Future<ResShareProvider> shareAllProvider(
+      BuildContext context, String token, ReqShareProvider model) async {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .post(Uri.encodeFull(base_url + "api/patient/share-all-providers"),
+            headers: headers, body: model.toMap())
+        .then((res) {
+      return ResShareProvider.fromJson(res);
+    });
+  }
+
+  Future<ResSearchNumber> searchContact(
+      BuildContext context, String token, ReqSearchNumber model) async {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .post(Uri.encodeFull(base_url + "api/patient/search-contacts"),
+            headers: headers, body: model.toMap())
+        .then((res) {
+      return ResSearchNumber.fromJson(res);
+    });
+  }
+
+  Future<ResFamilyNetwork> getFamilyNetowrk(
+      BuildContext context, String token, ReqFamilyNetwork model) async {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .post(Uri.encodeFull(base_url + "api/patient/get-family-members"),
+            headers: headers, body: model.toMap())
+        .then((res) {
+      return ResFamilyNetwork.fromJson(res);
+    });
+  }
+
+  Future<ResRelationList> getRelations(
+      BuildContext context, String token) async {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .get(Uri.encodeFull(base_url + "api/patient/user-relations"),
+            headers: headers)
+        .then((res) {
+      return ResRelationList.fromJson(res);
+    });
+  }
+
+  Future<ResAddMember> addMember(
+      BuildContext context, String token, ReqAddMember model) async {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.contentTypeHeader: "application/json"
+    };
+
+    return _netUtil
+        .post(Uri.encodeFull(base_url + "api/patient/add-family-members"),
+            headers: headers, body: jsonEncode(model)) //model.toJson())
+        .then((res) {
+      return ResAddMember.fromJson(res);
+    });
+  }
+
+  Future<ResMessageShare> shareMessage(
+      BuildContext context, String token, ReqMessageShare model) async {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .post(Uri.encodeFull(base_url + "api/patient/send-single-user"),
+            headers: headers, body: model.toMap())
+        .then((res) {
+      return ResMessageShare.fromJson(res);
+    });
+  }
+
+  Future<CommonRes> setPin(
+      BuildContext context, String token, ReqSetupPin model) async {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .post(Uri.encodeFull(base_url + "api/create-pin"),
+            headers: headers, body: model.toJson())
+        .then((res) {
+      return CommonRes.fromJson(res);
+    });
+  }
+
   Future<dynamic> checkTimeToStartVideo(
       BuildContext context, String token, Map locationMap) {
     Map<String, String> headers = {
@@ -975,6 +1361,73 @@ class ApiBaseHelper {
       return res["response"];
     });
   }
+
+  // Future<dynamic> multipartPost(String url, String token,
+  //     Map<String, String> fileMap, List<MultipartFile> files) {
+  //   return _netUtil
+  //       .multipartPost(
+  //     url,
+  //     token: token,
+  //     fileMap: fileMap,
+  //     files: files,
+  //   )
+  //       .then((res) {
+  //     return res;
+  //   });
+  // }
+
+  Future<CommonRes> addInsuranceDoc(
+      String token, File frontImage, ReqAddInsurance model,
+      {File backImage}) async {
+    // try {
+    // var formData = FormData.fromMap(model.toMap());
+    // final fileName = frontImage.path.split('/').last;
+    // var file = await MultipartFile.fromFile(frontImage.path,
+    //     filename: fileName, contentType: MediaType("image", fileName));
+    // formData.files.add(MapEntry('insuranceDocumentFront', file));
+    List<MultipartFile> multipartList = [];
+
+    var stream = ByteStream(DelegatingStream(frontImage.openRead()));
+    var length = await frontImage.length();
+    var multipartFile = MultipartFile(
+        'insuranceDocumentFront', stream.cast(), length,
+        filename: frontImage.path);
+    multipartList.add(multipartFile);
+    if (backImage != null) {
+      var stream1 = ByteStream(DelegatingStream(backImage.openRead()));
+      var length = await backImage.length();
+      var multipartFile1 = MultipartFile(
+          'insuranceDocumentBack', stream1.cast(), length,
+          filename: backImage.path);
+      multipartList.add(multipartFile1);
+
+      // final fileName = backImage.path.split('/').last;
+      // var file = await MultipartFile.fromFile(backImage.path,
+      //     filename: fileName, contentType: MediaType("image", fileName));
+      // formData.files.add(MapEntry('insuranceDocumentBack', file));
+    }
+    var map = model.toMap();
+
+    return _netUtil
+        .multipartPost(
+      base_url + 'api/patient/add-patient-insurance',
+      token: token,
+      fileMap: model.toMap(),
+      files: multipartList,
+    )
+        .then((res) {
+      return CommonRes.fromJson(res);
+    });
+    //   final response = await ApiService().multipartPost(
+    //     patient + apiAddInsuranceDoc,
+    //     data: formData,
+    //     options: Options(contentType: 'application/x-www-form-urlencoded'),
+    //   );
+    //   return CommonRes.fromJson(response.data);
+    // } on DioError catch (error) {
+    //   throw ErrorModel.fromJson(error.response.data);
+    // }
+  }
 }
 
 class NetworkUtil {
@@ -985,6 +1438,40 @@ class NetworkUtil {
   NetworkUtil.internal();
 
   final JsonDecoder _decoder = new JsonDecoder();
+
+  Future<dynamic> getUri(Uri url, {Map headers}) async {
+    var responseJson;
+    try {
+      final response = await http.get(url, headers: headers);
+      final int statusCode = response.statusCode;
+      log("Status code: $statusCode");
+
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        final en = json.decode(response.body);
+
+        if (en["response"] is String) {
+          showError(en["response"].toString());
+        } else if (en["response"] is Map) {
+          showError(en);
+        } else {
+          en["response"].map((m) => showError(m["msg"])).toList();
+        }
+
+        debugPrint(en["response"].toString(), wrapWidth: 1024);
+
+        throw Exception(en);
+      }
+
+      responseJson = _decoder.convert(response.body);
+
+      debugPrint(responseJson.toString(), wrapWidth: 1024);
+    } on SocketException {
+      showError(Strings.noInternet);
+      throw Exception(Strings.noInternet);
+    }
+
+    return responseJson;
+  }
 
   Future<dynamic> get(url, {Map headers}) async {
     var responseJson;
@@ -1029,6 +1516,7 @@ class NetworkUtil {
       log("Status code: $statusCode");
 
       if (statusCode < 200 || statusCode > 400 || json == null) {
+        ProgressDialogUtils.dismissProgressDialog();
         final en = json.decode(response.body);
 
         if (en["response"] is String) {
@@ -1054,11 +1542,39 @@ class NetworkUtil {
     return responseJson;
   }
 
-  Future<dynamic> multipartPost(String url,
-      {String token,
-      Map<String, String> fileMap,
-      File file,
-      String key}) async {
+  Future<dynamic> postNotHandleError(String url,
+      {Map headers, body, encoding}) async {
+    var responseJson;
+    try {
+      final response = await http.post(Uri.parse(url),
+          body: body, headers: headers, encoding: encoding);
+      final int statusCode = response.statusCode;
+
+      // if (statusCode < 200 || statusCode > 400 || json == null) {
+      //   final en = json.decode(response.body);
+
+      //   await errorDialog(context, en);
+
+      //   throw Exception(en);
+      // }
+
+      responseJson = response;
+
+      debugPrint(responseJson.toString(), wrapWidth: 1024);
+    } on SocketException {
+      showError(Strings.noInternet);
+      throw Exception(Strings.noInternet);
+    }
+
+    return responseJson;
+  }
+
+  Future<dynamic> multipartPost(
+    String url, {
+    String token,
+    Map<String, String> fileMap,
+    List<MultipartFile> files,
+  }) async {
     var responseJson;
     try {
       Uri uri = Uri.parse(url);
@@ -1070,11 +1586,11 @@ class NetworkUtil {
 
       request.fields.addAll(fileMap);
 
-      var stream = ByteStream(DelegatingStream(file.openRead()));
-      var length = await file.length();
-      var multipartFile =
-          MultipartFile(key, stream.cast(), length, filename: file.path);
-      request.files.add(multipartFile);
+      // var stream = ByteStream(DelegatingStream(file.openRead()));
+      // var length = await file.length();
+      // var multipartFile =
+      //     MultipartFile(key, stream.cast(), length, filename: file.path);
+      request.files.addAll(files);
 
       var response = await request.send();
       final int statusCode = response.statusCode;
@@ -1083,7 +1599,7 @@ class NetworkUtil {
       JsonDecoder _decoder = new JsonDecoder();
 
       String respStr = await response.stream.bytesToString();
-      var responseJson = _decoder.convert(respStr);
+      responseJson = _decoder.convert(respStr);
 
       if (statusCode < 200 || statusCode > 400 || json == null) {
         if (responseJson["response"] is String) {
@@ -1097,13 +1613,11 @@ class NetworkUtil {
         debugPrint(responseJson["response"].toString(), wrapWidth: 1024);
         throw Exception(responseJson);
       }
-
       debugPrint(responseJson.toString(), wrapWidth: 1024);
     } on SocketException {
       showError(Strings.noInternet);
       throw Exception(Strings.noInternet);
     }
-
     return responseJson;
   }
 

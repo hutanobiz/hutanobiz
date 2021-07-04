@@ -40,10 +40,10 @@ class CustomTextField extends StatelessWidget {
         counterText: "",
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey[300]),
-          borderRadius: BorderRadius.circular(5.0),
+          borderRadius: BorderRadius.circular(12.0),
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(5.0),
+          borderRadius: BorderRadius.circular(12.0),
         ),
       ),
       keyboardType: inputType ?? TextInputType.text,

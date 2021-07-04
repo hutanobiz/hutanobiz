@@ -34,7 +34,7 @@ class PasswordTextField extends StatelessWidget {
       keyboardType: TextInputType.visiblePassword,
       obscureText: obscureText,
       style: style,
-       validator: validator ?? Validations.validatePassword,
+      validator: validator ?? Validations.validatePassword,
       controller: passwordController,
       decoration: InputDecoration(
         isDense: isDense ?? false,
@@ -42,9 +42,10 @@ class PasswordTextField extends StatelessWidget {
         labelText: labelText,
         suffixIcon: suffixIcon,
         prefixIcon: prefixIcon != null ? prefixIcon : null,
-        enabledBorder:
-            OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300])),
-        border: OutlineInputBorder(),
+        enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey[300]),
+            borderRadius: BorderRadius.circular(12)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }

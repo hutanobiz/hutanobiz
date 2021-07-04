@@ -2,11 +2,13 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hutano/api/api_helper.dart';
+import 'package:hutano/api/error_model.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/registration/login_pin/model/req_login_pin.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/argument_const.dart';
+import 'package:hutano/utils/dialog_utils.dart';
 import 'package:hutano/utils/enum_utils.dart';
 import 'package:hutano/utils/file_constants.dart';
 import 'package:hutano/utils/progress_dialog.dart';
@@ -75,15 +77,18 @@ class _LoginPinState extends State<LoginPin> {
   Future<void> _onLoginClick() async {
     final request = ReqLoginPin(phoneNumber: number, pin: _otpController.text);
     ProgressDialogUtils.showProgressDialog(context);
-
-    await api.loginPin(request).then((value) {
+    try {
+      await api.loginPin(request);
       ProgressDialogUtils.dismissProgressDialog();
       Navigator.of(context).pushNamedAndRemoveUntil(
         Routes.dashboardScreen,
         (Route<dynamic> route) => false,
         arguments: 0,
       );
-    });
+    } on ErrorModel catch (e) {
+      ProgressDialogUtils.dismissProgressDialog();
+      DialogUtils.showAlertDialog(context, e.response);
+    }
   }
 
   void _onRegisterClick() =>

@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:async/async.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -556,7 +559,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                 child: FancyButton(
                   title: 'Upload',
                   buttonColor: AppColors.windsor,
-                  onPressed: () {
+                  onPressed: () async {
                     if (documentTypeController.text == null ||
                         documentTypeController.text.isEmpty) {
                       Widgets.showToast("Document type can't be empty");
@@ -576,15 +579,23 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                       fileMap['name'] = documentName;
                       fileMap['type'] = documentTypeController.text;
                       fileMap['date'] = documentDateController.text;
+                      var stream =
+                          ByteStream(DelegatingStream(file.openRead()));
+                      var length = await file.length();
+                      var multipartFile = MultipartFile(
+                          'medicalDocuments', stream.cast(), length,
+                          filename: file.path);
+
+                      List<MultipartFile> multipartList = [];
+                      multipartList.add(multipartFile);
 
                       _api
                           .multipartPost(
                         ApiBaseHelper.base_url +
                             'api/patient/medical-documents',
                         token,
-                        'medicalDocuments',
                         fileMap,
-                        file,
+                      multipartList
                       )
                           .then((value) {
                         documentTypeController.text = '';

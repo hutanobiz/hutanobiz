@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:hutano/api/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/registration/forgotpassword/model/req_reset_password.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/text_style.dart';
 import 'package:hutano/utils/dimens.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/app_logo.dart';
 import 'package:hutano/widgets/fancy_button.dart';
+import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/loading_widget.dart';
 import 'package:hutano/widgets/password_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
@@ -152,32 +154,32 @@ class _ResetPasswordState extends State<ResetPassword> {
     widgetList.add(Widgets.sizedBox(height: 30.0));
 
     widgetList.add(
-      FancyButton(
-        title: "Next",
+      HutanoButton(
+        label: "Next",
         onPressed: isButtonEnable()
             ? () {
                 setLoading(true);
-
                 ApiBaseHelper api = new ApiBaseHelper();
-                Map<String, String> loginData = Map();
-                loginData["phoneNumber"] = email;
-                loginData["step"] = "3";
-                loginData["password"] = _passwordController.text;
+                // Map<String, String> loginData = Map();
+                // loginData["phoneNumber"] = email;
+                // loginData["step"] = "3";
+                // loginData["password"] = _passwordController.text;
+                var loginData = ReqResetPassword(
+                    phoneNumber: email,
+                    step: 3,
+                    password: _passwordController.text);
                 api.resetPassword(loginData).then((dynamic user) {
                   setLoading(false);
-
                   Widgets.showToast("Password reset successfully!");
-
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      Routes.loginRoute, (Route<dynamic> route) => false,
-                      arguments: false);
+                  Navigator.of(context)
+                      .pushReplacementNamed(Routes.resetPasswordSuccess);
                 }).futureError((error) {
                   setLoading(false);
                   error.toString().debugLog();
                 });
               }
             : null,
-        buttonHeight: Dimens.buttonHeight,
+        height: Dimens.buttonHeight,
       ),
     );
 

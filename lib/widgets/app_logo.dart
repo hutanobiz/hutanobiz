@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/utils/file_constants.dart';
 
 class AppLogo extends StatelessWidget {
   const AppLogo({this.appLogoText});
@@ -7,17 +8,15 @@ class AppLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AssetImage assetImage = AssetImage("images/hutano-logo.png");
-    Image image = Image(
-      image: assetImage,
-      height: 43.0,
-      width: 135.0,
-    );
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        image,
-        SizedBox(height: 12.0),
+        Image.asset(
+          FileConstants.icAppLogo,
+          width: 150,
+          height: 43.0,
+        ),
+        SizedBox(height: appLogoText != null ? 12.0 : 4),
         appLogoText != null ? Text(appLogoText) : Container()
       ],
     );

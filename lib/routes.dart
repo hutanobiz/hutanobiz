@@ -43,27 +43,55 @@ import 'package:hutano/screens/dashboard/provider_profile_image.dart';
 import 'package:hutano/screens/dashboard/provider_profile_screen.dart';
 import 'package:hutano/screens/dashboard/see_all_searches.dart';
 import 'package:hutano/screens/dashboard/update_medical_history.dart';
+import 'package:hutano/screens/familynetwork/add_family_member/add_family_member.dart';
+import 'package:hutano/screens/familynetwork/add_family_member/invite_family_complete.dart';
+import 'package:hutano/screens/familynetwork/familycircle/family_circle.dart';
+import 'package:hutano/screens/familynetwork/member_message/member_message.dart';
 import 'package:hutano/screens/home.dart';
 import 'package:hutano/screens/home_main.dart';
 import 'package:hutano/screens/login.dart';
+import 'package:hutano/screens/payment/add_card_complete.dart';
+import 'package:hutano/screens/payment/add_insruance_complete.dart';
+import 'package:hutano/screens/payment/add_insurance.dart';
 import 'package:hutano/screens/payment/add_new_card.dart';
+import 'package:hutano/screens/payment/add_payment_option.dart';
 import 'package:hutano/screens/payment/insurance_list.dart';
 import 'package:hutano/screens/payment/payments_methods.dart';
 import 'package:hutano/screens/payment/saved_cards.dart';
 import 'package:hutano/screens/payment/upload_insurance_images.dart';
+import 'package:hutano/screens/providercicle/add_provider_complete.dart';
+import 'package:hutano/screens/providercicle/create_group/create_provider_group.dart';
+import 'package:hutano/screens/providercicle/my_provider_network/my_provider_network.dart';
+import 'package:hutano/screens/providercicle/provider_add_network/provider_add_network.dart';
+import 'package:hutano/screens/providercicle/provider_search/provider_search.dart';
+import 'package:hutano/screens/providercicle/search/search_screen.dart';
+import 'package:hutano/screens/providercicle/search_member/search_member.dart';
+import 'package:hutano/screens/registration/email_verification.dart';
+import 'package:hutano/screens/registration/email_verification_complete.dart';
 import 'package:hutano/screens/registration/forgot_password.dart';
+import 'package:hutano/screens/registration/forgotpassword/forgot_password.dart';
+import 'package:hutano/screens/registration/invite_family/invite_family.dart';
+import 'package:hutano/screens/registration/invite_family/invite_family_success.dart';
+import 'package:hutano/screens/registration/login_pin/login_pin.dart';
+import 'package:hutano/screens/registration/otp_verification/model/otp_verification.dart';
 import 'package:hutano/screens/registration/register.dart';
 import 'package:hutano/screens/registration/register_email.dart';
-import 'package:hutano/screens/registration/reset_password.dart';
+import 'package:hutano/screens/registration/reset_pin.dart';
+import 'package:hutano/screens/registration/resetpassword/reset_password.dart';
+import 'package:hutano/screens/registration/resetpassword/reset_password_success.dart';
 import 'package:hutano/screens/registration/verify_otp.dart';
 import 'package:hutano/screens/registration/verify_email_otp.dart';
+import 'package:hutano/screens/registration/welcome_screen.dart';
+import 'package:hutano/screens/setup_pin/set_pin.dart';
+import 'package:hutano/screens/setup_pin/set_pin_complete.dart';
+import 'package:hutano/utils/argument_const.dart';
 
 class Routes {
   static const String loginRoute = '/login';
   static const String dashboardScreen = '/dashboardScreen';
-  static const String forgotPasswordRoute = '/forgotPassword';
+  // static const String forgotPasswordRoute = '/forgotPassword';
   static const String registerEmailRoute = '/registerEmail';
-  static const String verifyOtpRoute = '/verifyOtp';
+  // static const String verifyOtpRoute = '/verifyOtp';
   static const String verifyEmailOtpRoute = '/verifyEmailOtp';
   static const String registerRoute = '/register';
   static const String resetPasswordRoute = '/resetPassword';
@@ -121,9 +149,38 @@ class Routes {
   static const String trackOnsiteAppointment = '/trackOnsiteAppointment';
   static const String trackTelemedicineAppointment =
       '/trackTelemedicineAppointment';
+  static const String welcome = '/welcome';
+  static const String addInsurance = '/addInsurance';
+  static const String addFamilyMember = '/addFamilyMember';
+  static const String providerSearch = '/providerSearch';
+  static const String myProviderNetwork = '/myProviderNetwork';
+  static const String memberMessage = '/memberMessage';
+  static const String providerAddNetwork = '/providerAddNetwork';
+  static const String createProviderGroup = '/createProviderGroup';
+
+  static const String inviteSuccess = '/inviteSuccess';
+  static const String addProviderSuccess = '/addProviderSuccess';
+  static const String emailVerificationComplete = '/emailVerificationComplete';
+  static const String addCardComplete = '/addCardComplete';
+  static const String loginPin = '/loginPin';
+  static const String resetPasswordSuccess = '/resetPasswordSuccess';
+  static const String pinSetupSuccess = '/pinSetupSuccess';
+  static const String addInsuranceComplete = '/addInsuranceComplete';
+  static const String familyCircle = '/familyCircle';
+  static const String inviteFamilyComplete = '/inviteFamilyComplete';
+  static const String inviteFamilyMember = '/inviteFamilyMember';
+  static const String searchMember = '/searchMember';
+  static const String routeSearch = '/routeSearch';
+  static const String setupPin = '/setupPin';
+  static const String addPaymentOption = '/addPaymentOption';
+  static const String setPinComplete = '/setPinComplete';
+  static const String routePinVerification = '/routePinVerification';
+  static const String routeForgotPassword = '/routeForgotPassword';
+  static const String routeResetPin = '/routeResetPin';
+  static const String routeResetPasswordSuccess = '/routeResetPasswordSuccess';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    final args = settings.arguments;
+    final dynamic args = settings.arguments;
 
     switch (settings.name) {
       case loginRoute:
@@ -142,23 +199,25 @@ class Routes {
         return _buildRoute(settings, HomeMain());
         break;
 
-      case forgotPasswordRoute:
-        return _buildRoute(settings, ForgetPassword());
-        break;
+      // case forgotPasswordRoute:
+      //   return _buildRoute(settings, ForgetPassword());
+      //   break;
       case registerEmailRoute:
         return _buildRoute(settings, RegisterEmail());
         break;
-      case verifyOtpRoute:
-        if (args is RegisterArguments) {
-          return _buildRoute(settings, VerifyOTP(args: args));
-        }
-        return _errorRoute();
-        break;
+      // case verifyOtpRoute:
+      //   if (args is RegisterArguments) {
+      //     return _buildRoute(settings, VerifyOTP(args: args));
+      //   }
+      //   return _errorRoute();
+      //   break;
       case verifyEmailOtpRoute:
-        if (args is Map) {
-          return _buildRoute(settings, VerifyEmailOTP(args: args));
-        }
-        return _errorRoute();
+        // if (args is Map) {
+        return _buildRoute(settings, EmailVerificationScreen());
+        break;
+      // }
+      // return _errorRoute();
+
       case registerRoute:
         if (args is RegisterArguments) {
           return _buildRoute(settings, Register(args: args));
@@ -166,11 +225,10 @@ class Routes {
         return _errorRoute();
         break;
       case resetPasswordRoute:
-        if (args is RegisterArguments) {
-          return _buildRoute(settings, ResetPassword(args: args));
-        }
-        return _errorRoute();
-        break;
+        final verificationModel = args[ArgumentConstant.verificationModel];
+        return MaterialPageRoute(
+            builder: (_) =>
+                ResetPassword(verificationModel: verificationModel));
       case chooseSpecialities:
         return _buildRoute(
           settings,
@@ -458,6 +516,144 @@ class Routes {
               appointmentId: args,
             ));
         break;
+      case welcome:
+        return _buildRoute(settings, WelcomeScreen());
+        break;
+      case addInsurance:
+        if (args == null) {
+          return _buildRoute(settings, AddInsurance());
+        }
+        final insuranceType = args[ArgumentConstant.argsinsuranceType];
+        return _buildRoute(
+            settings,
+            AddInsurance(
+              insuranceType: insuranceType,
+            ));
+        break;
+      case addFamilyMember:
+        return _buildRoute(settings, AddFamilyMember());
+        break;
+      case providerSearch:
+        if (args == null) {
+          return _buildRoute(settings, ProviderSearch());
+        }
+        final searchText = args[ArgumentConstant.searchText];
+        return _buildRoute(
+            settings,
+            ProviderSearch(
+              serachText: searchText,
+            ));
+        break;
+      case myProviderNetwork:
+        return _buildRoute(settings, MyProviderNetwrok());
+        break;
+      case memberMessage:
+        return _buildRoute(
+            settings,
+            MemberMessage(
+                member: args[ArgumentConstant.member],
+                message: args[ArgumentConstant.shareMessage]));
+        break;
+
+      case providerAddNetwork:
+        return MaterialPageRoute(
+            builder: (_) => ProivderAddNetwork(
+                doctorId: args[ArgumentConstant.doctorId],
+                doctorName: args[ArgumentConstant.doctorName],
+                doctorAvatar: args[ArgumentConstant.doctorAvatar]));
+        break;
+      case createProviderGroup:
+        return MaterialPageRoute(builder: (_) => CreateProviderGroup());
+        break;
+      case inviteSuccess:
+        return MaterialPageRoute(builder: (_) => InviteFamilySuccess());
+        break;
+      case addProviderSuccess:
+        return MaterialPageRoute(builder: (_) => AddProviderComplete());
+        break;
+      case emailVerificationComplete:
+        return MaterialPageRoute(builder: (_) => EmailVerifiCompleteScreen());
+        break;
+      case addCardComplete:
+        return MaterialPageRoute(builder: (_) => AddCardComplete());
+        break;
+      case routePinVerification:
+        final verificationModel = args[ArgumentConstant.verificationModel];
+        return MaterialPageRoute(
+            builder: (_) =>
+                OtpVerification(verificationModel: verificationModel));
+      case loginPin:
+        return MaterialPageRoute(builder: (_) => LoginPin());
+      case resetPasswordSuccess:
+        return MaterialPageRoute(builder: (_) => ResetPasswordSuccess());
+      // case pinSetupSuccess:
+      //   return MaterialPageRoute(builder: (_) => PinSetupSuccess());
+      case addInsuranceComplete:
+        return MaterialPageRoute(builder: (_) => AddInsuranceComplete());
+        break;
+      case familyCircle:
+        return MaterialPageRoute(builder: (_) => FamilyCircle());
+        break;
+      case inviteFamilyComplete:
+        return MaterialPageRoute(builder: (_) => InviteFamilyComplete());
+        break;
+      case inviteFamilyMember:
+        return MaterialPageRoute(builder: (_) => InviteFamilyScreen());
+        break;
+      case searchMember:
+        final shareMessage = args[ArgumentConstant.shareMessage];
+        final loadAllData = args.containsKey(ArgumentConstant.loadAllData)
+            ? args[ArgumentConstant.loadAllData]
+            : false;
+        return MaterialPageRoute(
+            builder: (_) => SearchMember(
+                  message: shareMessage,
+                  loadAllData: loadAllData,
+                ));
+        break;
+      case routeSearch:
+        if (args == null) {
+          return MaterialPageRoute(builder: (_) => SearchScreen());
+        }
+        final searchScreen = args[ArgumentConstant.searchScreen];
+        final number = args[ArgumentConstant.number];
+        return MaterialPageRoute(
+            builder: (_) => SearchScreen(
+                  searchScreen: searchScreen,
+                  number: number,
+                ));
+        break;
+
+      case setupPin:
+        if (args == null) {
+          return MaterialPageRoute(builder: (_) => SetupPin());
+        }
+        final setPinScreen = args[ArgumentConstant.setPinScreen];
+        return MaterialPageRoute(
+            builder: (_) => SetupPin(
+                  setupScreen: setPinScreen,
+                ));
+        break;
+
+      case addPaymentOption:
+        return MaterialPageRoute(builder: (_) => AddPaymentScreen());
+        break;
+      case setPinComplete:
+        return MaterialPageRoute(builder: (_) => SetPinComplete());
+        break;
+      case routeForgotPassword:
+        final verificationScreen = args[ArgumentConstant.verificationScreen];
+        return MaterialPageRoute(
+            builder: (_) => ForgotPasswordScreen(verificationScreen));
+      case routeResetPin:
+        final verificationModel = args[ArgumentConstant.verificationModel];
+        return MaterialPageRoute(
+            builder: (_) => ResetPin(verificationModel: verificationModel));
+          break;
+          case routeResetPasswordSuccess:
+          return MaterialPageRoute(
+            builder: (_) => ResetPasswordSuccess());
+
       default:
         return _errorRoute();
     }

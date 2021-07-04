@@ -2,8 +2,16 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:hutano/api/error_model.dart';
+import 'package:hutano/screens/registration/account_recover_dialog.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/text_style.dart';
+import 'package:hutano/utils/argument_const.dart';
+import 'package:hutano/utils/enum_utils.dart';
+import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/widgets/hutano_button.dart';
+import 'package:hutano/widgets/hutano_textfield.dart';
+import 'package:hutano/widgets/text_with_image.dart';
 import 'package:hutano/widgets/textform_widget.dart';
 import 'package:uuid/uuid.dart';
 
@@ -48,6 +56,7 @@ class _SignUpFormState extends State<Register> {
   final _stateController = TextEditingController();
   final _phoneController = TextEditingController();
   final _zipController = TextEditingController();
+  final _refCodeController = TextEditingController();
   GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: Strings.kGoogleApiKey);
   String stateId = "";
   var uuid = new Uuid();
@@ -75,6 +84,10 @@ class _SignUpFormState extends State<Register> {
   PlacesDetailsResponse detail;
   double longitude, latitude;
   bool isButtonTapped = false;
+  bool haveHealthInsurance;
+  String emailSuffixIcon;
+  String emailError;
+  bool _dialogOpen = false;
 
   final _dobController = new TextEditingController();
 
@@ -123,6 +136,9 @@ class _SignUpFormState extends State<Register> {
       setState(() {});
     });
     _zipController.addListener(() {
+      setState(() {});
+    });
+    _refCodeController.addListener(() {
       setState(() {});
     });
     _phoneController.addListener(() {
@@ -193,6 +209,7 @@ class _SignUpFormState extends State<Register> {
     _stateController.dispose();
     _cityController.dispose();
     _zipController.dispose();
+    _refCodeController.dispose();
     _phoneController.dispose();
     _passwordController.dispose();
     _dobController.dispose();
@@ -388,13 +405,14 @@ class _SignUpFormState extends State<Register> {
             style: AppTextStyle.regularStyle(fontSize: 14),
             autofocus: !isUpdateProfile,
             decoration: InputDecoration(
+                isDense: true,
                 labelStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
                 labelText: "First Name",
                 enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey[300]),
-                    borderRadius: BorderRadius.circular(5.0)),
+                    borderRadius: BorderRadius.circular(12.0)),
                 border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0))),
+                    borderRadius: BorderRadius.circular(12.0))),
             keyboardType: TextInputType.text,
           ),
         ),
@@ -408,35 +426,37 @@ class _SignUpFormState extends State<Register> {
                 : AutovalidateMode.onUserInteraction,
             style: AppTextStyle.regularStyle(fontSize: 14),
             decoration: InputDecoration(
+                isDense: true,
                 labelStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
                 labelText: "Last Name",
                 enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey[300]),
-                    borderRadius: BorderRadius.circular(5.0)),
+                    borderRadius: BorderRadius.circular(12.0)),
                 border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0))),
+                    borderRadius: BorderRadius.circular(12.0))),
             keyboardType: TextInputType.text,
           ),
         ),
       ],
     ));
 
-    formWidget.add(Widgets.sizedBox(height: 29.0));
+    formWidget.add(Widgets.sizedBox(height: 14.0));
 
     formWidget.add(
-      EmailTextField(
-        emailKey: _emailKey,
-        autofocus: false,
-        emailController: _emailController,
-        autoValidate: isButtonTapped
-            ? AutovalidateMode.always
-            : AutovalidateMode.onUserInteraction,
-        style: AppTextStyle.regularStyle(fontSize: 14),
-        prefixIcon: Icon(Icons.email, color: AppColors.windsor, size: 13.0),
-      ),
+      _getEmailTextField(),
+      // EmailTextField(
+      //   emailKey: _emailKey,
+      //   autofocus: false,
+      //   emailController: _emailController,
+      //   autoValidate: isButtonTapped
+      //       ? AutovalidateMode.always
+      //       : AutovalidateMode.onUserInteraction,
+      //   style: AppTextStyle.regularStyle(fontSize: 14),
+      //   prefixIcon: Icon(Icons.email, color: AppColors.windsor, size: 13.0),
+      // ),
     );
 
-    formWidget.add(Widgets.sizedBox(height: 29.0));
+    formWidget.add(Widgets.sizedBox(height: 20.0));
     formWidget.add(
       TextFormField(
         enabled: false,
@@ -447,6 +467,7 @@ class _SignUpFormState extends State<Register> {
             : AutovalidateMode.onUserInteraction,
         style: AppTextStyle.regularStyle(fontSize: 14),
         decoration: InputDecoration(
+          isDense: true,
           suffixIcon: Container(
             height: 16,
             width: 16,
@@ -463,7 +484,7 @@ class _SignUpFormState extends State<Register> {
                 color: _dobController.text.isEmpty && isButtonTapped
                     ? AppColors.errorColor
                     : Colors.grey[300]),
-            borderRadius: BorderRadius.circular(8.0),
+            borderRadius: BorderRadius.circular(12.0),
           ),
         ),
       ).onClick(onTap: () {
@@ -498,7 +519,7 @@ class _SignUpFormState extends State<Register> {
         );
       }),
     );
-    formWidget.add(Widgets.sizedBox(height: 29.0));
+    formWidget.add(Widgets.sizedBox(height: 20.0));
 
     formWidget.add(
       Padding(
@@ -508,6 +529,7 @@ class _SignUpFormState extends State<Register> {
           enabled: false,
           style: AppTextStyle.regularStyle(fontSize: 14),
           decoration: InputDecoration(
+              isDense: true,
               labelText: "Phone",
               prefix: Text(
                 "+1",
@@ -515,15 +537,15 @@ class _SignUpFormState extends State<Register> {
               ),
               enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey[300]),
-                  borderRadius: BorderRadius.circular(5.0)),
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
+                  borderRadius: BorderRadius.circular(12.0)),
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0))),
           keyboardType: TextInputType.phone,
         ),
       ),
     );
 
-    formWidget.add(Widgets.sizedBox(height: 29.0));
+    formWidget.add(Widgets.sizedBox(height: 20.0));
 
     formWidget.add(
       isUpdateProfile
@@ -533,6 +555,7 @@ class _SignUpFormState extends State<Register> {
               passwordController: _passwordController,
               passwordKey: _passwordKey,
               obscureText: _obscureText,
+              isDense: true,
               autoValidate: isButtonTapped
                   ? AutovalidateMode.always
                   : AutovalidateMode.onUserInteraction,
@@ -551,7 +574,7 @@ class _SignUpFormState extends State<Register> {
     );
 
     formWidget
-        .add(isUpdateProfile ? Container() : Widgets.sizedBox(height: 29.0));
+        .add(isUpdateProfile ? Container() : Widgets.sizedBox(height: 20.0));
 
     formWidget.add(
       TextFormField(
@@ -576,13 +599,14 @@ class _SignUpFormState extends State<Register> {
           getSuggestion(val);
         }),
         decoration: InputDecoration(
+            isDense: true,
             labelText: "Address",
             labelStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
             enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey[300]),
-                borderRadius: BorderRadius.circular(5.0)),
+                borderRadius: BorderRadius.circular(12.0)),
             border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
+                OutlineInputBorder(borderRadius: BorderRadius.circular(12.0))),
         keyboardType: TextInputType.text,
       ),
     );
@@ -667,7 +691,7 @@ class _SignUpFormState extends State<Register> {
           )
         : SizedBox());
 
-    formWidget.add(Widgets.sizedBox(height: 29.0));
+    formWidget.add(Widgets.sizedBox(height: 20.0));
 
     formWidget.add(
       TextFormField(
@@ -678,17 +702,19 @@ class _SignUpFormState extends State<Register> {
             : AutovalidateMode.onUserInteraction,
         style: AppTextStyle.regularStyle(fontSize: 14),
         decoration: InputDecoration(
+            isDense: true,
             labelText: "City",
             labelStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
             enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
                 borderSide: BorderSide(color: Colors.grey[300])),
             border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
+                OutlineInputBorder(borderRadius: BorderRadius.circular(12.0))),
         keyboardType: TextInputType.emailAddress,
       ),
     );
 
-    formWidget.add(Widgets.sizedBox(height: 29.0));
+    formWidget.add(Widgets.sizedBox(height: 20.0));
 
     formWidget.add(Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -712,13 +738,15 @@ class _SignUpFormState extends State<Register> {
             style: AppTextStyle.regularStyle(fontSize: 14),
             maxLength: 5,
             decoration: InputDecoration(
+              isDense: true,
               labelStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
               counterText: "",
               labelText: "Zip Code",
               enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
                   borderSide: BorderSide(color: Colors.grey[300])),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5.0),
+                borderRadius: BorderRadius.circular(12.0),
               ),
             ),
             keyboardType: TextInputType.number,
@@ -727,21 +755,47 @@ class _SignUpFormState extends State<Register> {
       ],
     ));
 
-    formWidget.add(Widgets.sizedBox(height: 29.0));
+    formWidget.add(Widgets.sizedBox(height: 20.0));
     log(_genderGroup);
 
     formWidget.add(
       genderWidget(),
     );
 
-    formWidget.add(Widgets.sizedBox(height: 29.0));
+    formWidget.add(Widgets.sizedBox(height: 20.0));
+
+    formWidget.add(
+      _buildHealthInsurance(),
+    );
+    formWidget.add(
+      SizedBox(
+        height: 20,
+      ),
+    );
+    // InsuranceList(
+    //     controller: _insuranceController,
+    //     insuranceList: _insuranceList,
+    //     onInsuranceSelected: _onInsuranceSelected),
+    formWidget.add(
+      SizedBox(
+        height: 20,
+      ),
+    );
+    formWidget.add(
+      _buildRefCodeField(),
+    );
+    formWidget.add(
+      SizedBox(
+        height: 20,
+      ),
+    );
 
     formWidget.add(
       Padding(
         padding: EdgeInsets.only(top: 10, bottom: 5),
-        child: FancyButton(
-            buttonHeight: Dimens.buttonHeight,
-            title: "Save",
+        child: HutanoButton(
+            height: Dimens.buttonHeight,
+            label: "Save",
             onPressed: isUpdateProfile
                 ? () {
                     setState(() {
@@ -775,10 +829,155 @@ class _SignUpFormState extends State<Register> {
     return formWidget;
   }
 
+// EmailTextField(
+//         emailKey: _emailKey,
+//         autofocus: false,
+//         emailController: _emailController,
+//         autoValidate: isButtonTapped
+//             ? AutovalidateMode.always
+//             : AutovalidateMode.onUserInteraction,
+//         style: AppTextStyle.regularStyle(fontSize: 14),
+//         prefixIcon: Icon(Icons.email, color: AppColors.windsor, size: 13.0),
+//       ),
+  Widget _getEmailTextField() {
+    return Container(
+        margin: EdgeInsets.only(top: 15),
+        child: HutanoTextField(
+            autovalidate: isButtonTapped
+                ? AutovalidateMode.always
+                : AutovalidateMode.onUserInteraction,
+            labelTextStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
+            controller: _emailController,
+            onValueChanged: (value) {
+              // _registerModel.email = value;
+              final isValidEmail = value.toString().isValidEmail(context);
+              setState(() {
+                emailError = isValidEmail;
+              });
+              if (isValidEmail == null) {
+                _callEmailVerifyApi();
+              } else {
+                emailSuffixIcon = null;
+              }
+            },
+            onFieldTap: () {
+              // showError(RegisterError.lastName.index);
+            },
+            suffixIcon: emailSuffixIcon,
+            suffixheight: 22,
+            suffixwidth: 22,
+            errorText: emailError,
+            focusedBorderColor: AppColors.colorBlack20,
+            labelText: Strings.email,
+            textInputType: TextInputType.emailAddress,
+            onFieldSubmitted: (s) {
+              // FocusScope.of(context).requestFocus(_passwordFocus);
+              // showError(RegisterError.email.index);
+            },
+            textInputAction: TextInputAction.next));
+  }
+
+  _buildHealthInsurance() {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+          color: AppColors.colorGrey.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(14)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          TextWithImage(
+              size: 30,
+              textStyle: AppTextStyle.regularStyle(
+                fontSize: 16,
+                color: AppColors.colorBlack2,
+              ),
+              label: Strings.labelHealthInsurance,
+              image: FileConstants.icInsuranceBlue),
+          SizedBox(
+            height: 14,
+          ),
+          Text(
+            Strings.healthInsurance,
+            textAlign: TextAlign.start,
+            style: AppTextStyle.regularStyle(
+              fontSize: 14,
+              color: AppColors.colorBlack2,
+            ),
+          ),
+          SizedBox(
+            height: 17,
+          ),
+          Row(
+            children: [
+              HutanoButton(
+                label: 'Yes',
+                onPressed: () {
+                  haveHealthInsurance = true;
+                  setState(() {});
+                },
+                buttonType: HutanoButtonType.onlyLabel,
+                width: 80,
+                labelColor: (haveHealthInsurance != null && haveHealthInsurance)
+                    ? AppColors.colorWhite
+                    : AppColors.colorBlack,
+                color: (haveHealthInsurance != null && haveHealthInsurance)
+                    ? AppColors.colorPurple
+                    : Colors.white,
+                height: 40,
+              ),
+              SizedBox(
+                width: 15,
+              ),
+              HutanoButton(
+                borderColor: AppColors.colorGrey,
+                label: 'No',
+                onPressed: () {
+                  haveHealthInsurance = false;
+                  setState(() {});
+                },
+                buttonType: HutanoButtonType.onlyLabel,
+                width: 80,
+                labelColor:
+                    (haveHealthInsurance != null && !haveHealthInsurance)
+                        ? AppColors.colorWhite
+                        : AppColors.colorBlack,
+                color: (haveHealthInsurance != null && !haveHealthInsurance)
+                    ? AppColors.colorPurple
+                    : AppColors.colorWhite,
+                borderWidth: 1,
+                height: 40,
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRefCodeField() {
+    return Container(
+        child: HutanoTextField(
+            focusedBorderColor: AppColors.colorBlack20,
+            labelTextStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
+            // focusNode: _refCodeFocus,
+            onValueChanged: (value) {
+              // _registerModel.referedBy = value;
+            },
+            isFieldEnable: true,
+            onFieldTap: () {
+              // showError(RegisterError.zipCode.index);
+            },
+            controller: _refCodeController,
+            labelText: Strings.refCode,
+            textInputAction: TextInputAction.done));
+  }
+
   genderWidget() {
     return Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5.0),
+          borderRadius: BorderRadius.circular(12.0),
           border: Border.all(
               color: _genderGroup == '' && isButtonTapped
                   ? AppColors.errorColor
@@ -787,41 +986,38 @@ class _SignUpFormState extends State<Register> {
       child: Row(
         children: <Widget>[
           Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(right: 5.0, top: 5, bottom: 5),
-              child: GestureDetector(
-                onTap: () => setState(() => _genderGroup = "male"),
-                child: Container(
-                    height: 56,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.0),
-                        border: Border.all(
-                            color: _genderGroup == "male"
-                                ? AppColors.female
-                                : Colors.grey[300],
-                            width: 1.0)),
-                    child: Row(children: <Widget>[
-                      Image(
-                        image: AssetImage('images/male.png'),
-                        height: 16.0,
-                        width: 16.0,
+            child: GestureDetector(
+              onTap: () => setState(() => _genderGroup = "male"),
+              child: Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12.0),
+                      border: Border.all(
+                          color: _genderGroup == "male"
+                              ? AppColors.female
+                              : Colors.grey[300],
+                          width: 1.0)),
+                  child: Row(children: <Widget>[
+                    Image(
+                      image: AssetImage('images/male.png'),
+                      height: 16.0,
+                      width: 16.0,
+                      color: _genderGroup == "male"
+                          ? AppColors.female
+                          : Colors.blue,
+                    ),
+                    SizedBox(
+                      width: 5.0,
+                    ),
+                    Text(
+                      "Male",
+                      style: TextStyle(
                         color: _genderGroup == "male"
                             ? AppColors.female
                             : Colors.blue,
                       ),
-                      SizedBox(
-                        width: 5.0,
-                      ),
-                      Text(
-                        "Male",
-                        style: TextStyle(
-                          color: _genderGroup == "male"
-                              ? AppColors.female
-                              : Colors.blue,
-                        ),
-                      ),
-                    ], mainAxisAlignment: MainAxisAlignment.center)),
-              ),
+                    ),
+                  ], mainAxisAlignment: MainAxisAlignment.center)),
             ),
           ),
           SizedBox(width: 20.0),
@@ -829,9 +1025,9 @@ class _SignUpFormState extends State<Register> {
             child: GestureDetector(
               onTap: () => setState(() => _genderGroup = "female"),
               child: Container(
-                height: 56,
+                height: 50,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5.0),
+                    borderRadius: BorderRadius.circular(12.0),
                     border: Border.all(
                       width: 1,
                       color: _genderGroup == "female"
@@ -887,6 +1083,7 @@ class _SignUpFormState extends State<Register> {
       loginData["address"] = _addressController.text;
       loginData["city"] = _cityController.text;
       loginData["zipCode"] = _zipController.text;
+      loginData["referedBy"] = _refCodeController.text;
       loginData["state"] = stateId;
       loginData["isEdit"] = 'false';
       loginData["addresstype"] = '1';
@@ -960,23 +1157,30 @@ class _SignUpFormState extends State<Register> {
           Navigator.of(context).pop();
         } else {
           SharedPref().saveToken(responseJson["response"]["token"]);
+          SharedPref().setValue("id", responseJson["response"]["_id"]);
           SharedPref()
               .setValue("fullName", responseJson["response"]["fullName"]);
+          SharedPref().setValue("phoneNumber",
+              responseJson["response"]["phoneNumber"].toString());
 
-          var verifyEmail = Map();
-          String phonenumber = widget.args.phoneNumber.substring(1, 4) +
-              "" +
-              widget.args.phoneNumber.substring(6, 9) +
-              "" +
-              widget.args.phoneNumber.substring(10, 14);
-          verifyEmail["email"] = _emailController.text;
-          verifyEmail["phoneNumber"] = phonenumber;
+          // var verifyEmail = Map();
+          // String phonenumber = widget.args.phoneNumber.substring(1, 4) +
+          //     "" +
+          //     widget.args.phoneNumber.substring(6, 9) +
+          //     "" +
+          //     widget.args.phoneNumber.substring(10, 14);
+          // verifyEmail["email"] = _emailController.text;
+          // verifyEmail["phoneNumber"] = phonenumber;
           setLoading(false);
-          Navigator.pushNamed(
-            context,
-            Routes.verifyEmailOtpRoute,
-            arguments: verifyEmail,
-          );
+
+          Navigator.of(context).pushReplacementNamed(
+              haveHealthInsurance ? Routes.addInsurance : Routes.welcome);
+
+          // Navigator.pushNamed(
+          //   context,
+          //   Routes.verifyEmailOtpRoute,
+          //   arguments: verifyEmail,
+          // );
         }
 
         setLoading(false);
@@ -1064,6 +1268,7 @@ class _SignUpFormState extends State<Register> {
           enabled: false,
           style: AppTextStyle.regularStyle(fontSize: 14),
           decoration: InputDecoration(
+            isDense: true,
             suffixIcon: Icon(
               Icons.keyboard_arrow_down,
               color: AppColors.nero,
@@ -1074,7 +1279,7 @@ class _SignUpFormState extends State<Register> {
                   color: controller.text.isEmpty && isButtonTapped
                       ? AppColors.errorColor
                       : Colors.grey[300]),
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(12.0),
             ),
           ),
         ),
@@ -1113,6 +1318,44 @@ class _SignUpFormState extends State<Register> {
             },
           );
         });
+  }
+
+  _callEmailVerifyApi() async {
+    if (_dialogOpen) return;
+
+    final request = {'email': _emailController.text};
+    try {
+      var response = await api.checkEmailExist(request);
+      if (response.statusCode < 200 ||
+          response.statusCode > 400 ||
+          json == null) {
+        _dialogOpen = true;
+        setState(() {
+          emailSuffixIcon = FileConstants.icCloseRed;
+        });
+        showacountRecoverDialog(
+          context,
+          _emailController.text.toString(),
+          onRecover: () {
+            _dialogOpen = false;
+            Navigator.of(context)
+                .pushReplacementNamed(Routes.routeForgotPassword, arguments: {
+              ArgumentConstant.verificationScreen:
+                  VerificationScreen.resetPassword
+            });
+          },
+          onCancel: () {
+            _dialogOpen = false;
+          },
+        );
+      } else {
+        setState(() {
+          emailSuffixIcon = FileConstants.icSuccess;
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   bool isValidatee() {
@@ -1212,6 +1455,11 @@ class _SignUpFormState extends State<Register> {
       // context: context,
       // description: "Password Contains atleat 6 Charaters");
       return false;
+    } else if (haveHealthInsurance == null) {
+      Widgets.showAppDialog(
+          context: context,
+          description: 'Please select insurance option.',
+          isError: true);
     } else
       return true;
   }

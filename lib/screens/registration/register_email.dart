@@ -1,3 +1,8 @@
+import 'package:hutano/colors.dart';
+import 'package:hutano/screens/registration/otp_verification/model/verification_model.dart';
+import 'package:hutano/utils/argument_const.dart';
+import 'package:hutano/utils/enum_utils.dart';
+import 'package:hutano/widgets/base_checkbox.dart';
 import 'package:hutano/widgets/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +14,7 @@ import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/validations.dart';
 import 'package:hutano/widgets/app_logo.dart';
 import 'package:hutano/widgets/fancy_button.dart';
+import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/loading_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -149,9 +155,9 @@ class _RegisterEmailState extends State<RegisterEmail> {
                   labelText: "Phone Number",
                   enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey[300]),
-                      borderRadius: BorderRadius.circular(5.0)),
+                      borderRadius: BorderRadius.circular(12.0)),
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0))),
+                      borderRadius: BorderRadius.circular(12.0))),
               keyboardType: TextInputType.phone,
             ),
           ),
@@ -202,26 +208,22 @@ class _RegisterEmailState extends State<RegisterEmail> {
             ],
           ),
         ),
-        InkWell(
-            onTap: () {
+        BaseCheckBox(
+            activeColor: AppColors.colorYellow,
+            value: isTermChecked,
+            onChanged: (val) {
               setState(() {
                 isTermChecked = !isTermChecked;
               });
-            },
-            child: Image.asset(
-              isTermChecked
-                  ? 'images/checkedCheck.png'
-                  : 'images/uncheckedCheck.png',
-              height: 32,
-            )),
+            })
       ],
     ));
 
     formWidget.add(Widgets.sizedBox(height: 42.0));
 
     formWidget.add(
-      FancyButton(
-        title: "Next",
+      HutanoButton(
+        label: "Next",
         onPressed: !isButtonEnable()
             ? () {
                 setLoading(true);
@@ -237,24 +239,52 @@ class _RegisterEmailState extends State<RegisterEmail> {
 
                   if (user is String) {
                     Widgets.showToast(user.toString());
-                    if (user != "User Already exist") {
-                      Navigator.pushNamed(
-                        context,
-                        Routes.verifyOtpRoute,
-                        arguments: RegisterArguments(
-                            _phoneNumberController.text, false),
-                      );
+                    if (user != "user already register with the system") {
+                      final args = {
+                        ArgumentConstant.verificationModel: VerificationModel(
+                            verificationType: VerificationType.phone,
+                            email: null,
+                            phone: Validations.getCleanedNumber(
+                                _phoneNumberController.text.toString()),
+                            countryCode: countryCode,
+                            verificationScreen:
+                                VerificationScreen.registration),
+                      };
+                      Navigator.of(context).pushNamed(
+                          Routes.routePinVerification,
+                          arguments: args);
+                      // Navigator.pushNamed(
+                      //   context,
+                      //   Routes.verifyOtpRoute,
+                      //   arguments: RegisterArguments(
+                      //       _phoneNumberController.text, false),
+                      // );
                     }
                   } else {
                     if (user['message'] != null) {
                       Widgets.showToast(
                           'A 6-digit verification number has been sent to your phone.');
-                      Navigator.pushNamed(
-                        context,
-                        Routes.verifyOtpRoute,
-                        arguments: RegisterArguments(
-                            _phoneNumberController.text, false),
-                      );
+
+                      final args = {
+                        ArgumentConstant.verificationModel: VerificationModel(
+                            verificationType: VerificationType.phone,
+                            email: null,
+                            phone: Validations.getCleanedNumber(
+                                _phoneNumberController.text.toString()),
+                            countryCode: countryCode,
+                            verificationScreen:
+                                VerificationScreen.registration),
+                      };
+                      Navigator.of(context).pushNamed(
+                          Routes.routePinVerification,
+                          arguments: args);
+
+                      // Navigator.pushNamed(
+                      //   context,
+                      //   Routes.verifyOtpRoute,
+                      //   arguments: RegisterArguments(
+                      //       _phoneNumberController.text, false),
+                      // );
                     } else {
                       Navigator.pushReplacementNamed(
                           context, Routes.registerRoute,
@@ -268,7 +298,7 @@ class _RegisterEmailState extends State<RegisterEmail> {
                 });
               }
             : null,
-        buttonHeight: Dimens.buttonHeight,
+        height: Dimens.buttonHeight,
       ),
     );
     formWidget.add(Widgets.sizedBox(height: 42.0));
