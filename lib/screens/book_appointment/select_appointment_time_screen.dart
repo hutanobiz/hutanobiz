@@ -74,6 +74,8 @@ class _SelectAppointmentTimeScreenState
 
     newDate = DateTime.utc(DateTime.now().year, DateTime.now().month,
         DateTime.now().day, 0, 0, 0, 0, 0);
+    startDate = DateTime.utc(DateTime.now().year, DateTime.now().month,
+        DateTime.now().day, 0, 0, 0, 0, 0);
     // _initData();
   }
 
@@ -148,9 +150,6 @@ class _SelectAppointmentTimeScreenState
       if (_scheduleDaysList.contains(DateTime.now().weekday)) {
         _dayDateMap["day"] = DateTime.now().weekday.toString();
         _dayDateMap["date"] = currentDate;
-
-        startDate = DateTime.utc(DateTime.now().year, DateTime.now().month,
-            DateTime.now().day, 0, 0, 0, 0, 0);
       } else {
         for (int i = 0; i < 7; i++) {
           if (_scheduleDaysList
