@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/strings.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/localization/localization.dart';
 import '../../../widgets/app_header.dart';
 import '../../../widgets/hutano_button.dart';
 import '../../../widgets/hutano_progressbar.dart';
@@ -28,7 +28,7 @@ class _InviteFamilyCompleteState extends State<InviteFamilyComplete> {
               AppHeader(
                 progressSteps: HutanoProgressSteps.three,
                 title: "Invite Family and Friends",
-                subTitle: Strings.taskComplete,
+                subTitle: Localization.of(context).taskComplete,
               ),
               Spacer(),
               RoundSuccess(),
@@ -49,7 +49,7 @@ class _InviteFamilyCompleteState extends State<InviteFamilyComplete> {
         child: HutanoButton(
           width: 55,
           height: 55,
-          color: AppColors.accentColor,
+          color: accentColor,
           iconSize: 20,
           buttonType: HutanoButtonType.onlyIcon,
           icon: FileConstants.icForward,

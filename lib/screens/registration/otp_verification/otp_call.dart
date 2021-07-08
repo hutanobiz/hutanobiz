@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/colors.dart';
-import 'package:hutano/strings.dart';
+import 'package:hutano/dimens.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/localization/localization.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 const int kDuration = 60000;
@@ -52,7 +53,7 @@ class _OtpCallState extends State<OtpCall> with TickerProviderStateMixin {
           child: animation
               ? LinearPercentIndicator(
                   lineHeight: 52,
-                  backgroundColor: AppColors.colorGrey33,
+                  backgroundColor: colorGrey33,
                   linearStrokeCap: LinearStrokeCap.butt,
                   animationDuration: kDuration,
                   animation: animation,
@@ -61,12 +62,12 @@ class _OtpCallState extends State<OtpCall> with TickerProviderStateMixin {
                   width: 150,
                   percent: 1,
                   center: Countdown(
-                      label: Strings.msgGetCode,
+                      label: Localization.of(context).msgGetCode,
                       animation: StepTween(
                         begin: 1000,
                         end: 0,
                       ).animate(_controller)),
-                  progressColor: AppColors.colorGrey48,
+                  progressColor: colorGrey48,
                 )
               : GestureDetector(
                   onTap: _onTap,
@@ -75,13 +76,13 @@ class _OtpCallState extends State<OtpCall> with TickerProviderStateMixin {
                     height: 52,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(14),
-                        color: AppColors.colorPurple100.withOpacity(0.04)),
+                        color: colorPurple100.withOpacity(0.04)),
                     child: Container(
                         alignment: Alignment.center,
                         child: Text(
-                          Strings.msgGetCode,
+                          Localization.of(context).msgGetCode,
                           style: TextStyle(
-                              color: AppColors.colorPurple100, fontSize: 13),
+                              color: colorPurple100, fontSize: fontSize13),
                         )),
                   ),
                 ),
@@ -112,8 +113,8 @@ class Countdown extends AnimatedWidget {
     return Text(
       "$label \n ${timerText}s",
       style: TextStyle(
-        fontSize: 13,
-        color: AppColors.colorDarkGrey,
+        fontSize: fontSize13,
+        color: colorDarkGrey,
       ),
       textAlign: TextAlign.center,
     );

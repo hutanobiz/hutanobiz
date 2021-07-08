@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/api/api_helper.dart';
-import 'package:hutano/api/error_model.dart';
+import 'package:hutano/apis/api_manager.dart';
+import 'package:hutano/apis/error_model.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/strings.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/widgets/app_header.dart';
 import '../../../utils/dialog_utils.dart';
 import '../../../utils/extensions.dart';
@@ -27,7 +28,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   final _confirmPasswordController = TextEditingController();
   final GlobalKey<FormState> _key = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  ApiBaseHelper api = ApiBaseHelper();
+
   final _newPasswordFocusNode = FocusNode();
   final _confirmPasswordFocusNode = FocusNode();
 
@@ -38,8 +39,9 @@ class _ResetPasswordState extends State<ResetPassword> {
   Future<void> _onUpdateClick() async {
     if (_newPasswordController.text != _confirmPasswordController.text) {
       _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text(
-              Strings.errorPasswordNotMatch.format(["Password", "Password"]))));
+          content: Text(Localization.of(context)
+              .errorPasswordNotMatch
+              .format(["Password", "Password"]))));
 
       return;
     }
@@ -52,7 +54,7 @@ class _ResetPasswordState extends State<ResetPassword> {
       // mobileCountryCode: widget.verificationModel.countryCode,
     );
     try {
-      await api.resetPassword(request);
+      await ApiManager().resetPasswordStep3(request);
       ProgressDialogUtils.dismissProgressDialog();
 
       Navigator.of(context).pushReplacementNamed(
@@ -61,7 +63,7 @@ class _ResetPasswordState extends State<ResetPassword> {
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);
-    }
+    }  
   }
 
   @override
@@ -72,7 +74,7 @@ class _ResetPasswordState extends State<ResetPassword> {
         child: Scaffold(
           key: _scaffoldKey,
           body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
+            padding: const EdgeInsets.symmetric(horizontal: spacing15),
             child: Form(
               key: _key,
               autovalidate: true,
@@ -80,19 +82,19 @@ class _ResetPasswordState extends State<ResetPassword> {
                 child: Column(
                   children: [
                     AppHeader(
-                      title: Strings.msgResetPassword,
-                      subTitle: Strings.createNewPassowrd,
+                      title: Localization.of(context).msgResetPassword,
+                      subTitle: Localization.of(context).createNewPassowrd,
                     ),
                     SizedBox(
-                      height: 30,
+                      height: spacing30,
                     ),
                     _buildNewPasswordField(),
                     SizedBox(
-                      height: 20,
+                      height: spacing20,
                     ),
                     _buildConfirmPasswordField(),
                     SizedBox(
-                      height: 40,
+                      height: spacing40,
                     ),
                     _buildButton(context)
                   ],
@@ -107,7 +109,7 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   Widget _buildNewPasswordField() {
     return HutanoTextField(
-        labelText: Strings.newPassword,
+        labelText: Localization.of(context).newPassword,
         prefixIcon: FileConstants.icLock,
         controller: _newPasswordController,
         focusNode: _newPasswordFocusNode,
@@ -117,8 +119,8 @@ class _ResetPasswordState extends State<ResetPassword> {
         },
         textInputAction: TextInputAction.next,
         isPasswordField: true,
-        prefixheight: 15,
-        prefixwidth: 15,
+        prefixheight: spacing15,
+        prefixwidth: spacing15,
         onValueChanged: (value) {
           setState(() {
             _enableButton = _key.currentState.validate();
@@ -135,15 +137,15 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   Widget _buildConfirmPasswordField() {
     return HutanoTextField(
-        labelText: Strings.confirmPassword,
+        labelText: Localization.of(context).confirmPassword,
         prefixIcon: FileConstants.icLock,
         controller: _confirmPasswordController,
         focusNode: _confirmPasswordFocusNode,
         textInputType: TextInputType.text,
         textInputAction: TextInputAction.done,
         isPasswordField: true,
-        prefixheight: 15,
-        prefixwidth: 15,
+        prefixheight: spacing15,
+        prefixwidth: spacing15,
         onValueChanged: (value) {
           setState(() {
             _enableButton = _key.currentState.validate();
@@ -160,7 +162,7 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   Widget _buildButton(BuildContext context) {
     return HutanoButton(
-      label: Strings.update,
+      label: Localization.of(context).update,
       margin: 0,
       onPressed: _enableButton ? _onUpdateClick : null,
     );

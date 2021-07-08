@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/api/api_helper.dart';
-import 'package:hutano/api/error_model.dart';
-import 'package:hutano/colors.dart';
+import 'package:hutano/apis/api_manager.dart';
+import 'package:hutano/apis/error_model.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/strings.dart';
-import 'package:hutano/text_style.dart';
-import 'package:hutano/utils/file_constants.dart';
-import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/constants.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/localization/localization.dart';
+import 'package:hutano/utils/preference_key.dart';
+import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/widgets/app_header.dart';
 import 'package:hutano/widgets/custom_back_button.dart';
 import 'package:hutano/widgets/hutano_progressbar.dart';
@@ -39,8 +41,6 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
   bool _enableButton = false;
   int _index = -1; //selected group index
   List<ProviderNetwork> specialityList = <ProviderNetwork>[];
-  ApiBaseHelper api = ApiBaseHelper();
-  String token;
   @override
   void initState() {
     super.initState();
@@ -51,69 +51,64 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
 
   _getProvidersGroup() async {
     ProgressDialogUtils.showProgressDialog(context);
-    SharedPref().getToken().then((value) async {
-      token = value;
-      try {
-        var res = await api.getProviderGroups(context, value);
-        ProgressDialogUtils.dismissProgressDialog();
-        if (res.response.data.providerNetwork != null) {
-          setState(() {
-            specialityList = res.response.data.providerNetwork;
-          });
-        }
-        if (specialityList.length > 0) {
-          _index = specialityList.length - 1;
-          setState(() {
-            specialityList[specialityList.length - 1].isSelected = true;
-            _enableButton = true;
-          });
-        }
-      } on ErrorModel catch (e) {
-        ProgressDialogUtils.dismissProgressDialog();
-        DialogUtils.showAlertDialog(context, e.response);
-      } catch (e) {
-        ProgressDialogUtils.dismissProgressDialog();
+    try {
+      var res = await ApiManager().getProviderGroups();
+      ProgressDialogUtils.dismissProgressDialog();
+      if (res.response.data.providerNetwork != null) {
+        setState(() {
+          specialityList = res.response.data.providerNetwork;
+        });
       }
-    });
+      if (specialityList.length > 0) {
+        _index = specialityList.length - 1;
+        setState(() {
+          specialityList[specialityList.length - 1].isSelected = true;
+          _enableButton = true;
+        });
+      }
+    } on ErrorModel catch (e) {
+      ProgressDialogUtils.dismissProgressDialog();
+      DialogUtils.showAlertDialog(context, e.response);
+    } catch (e) {
+      ProgressDialogUtils.dismissProgressDialog();
+    }
   }
 
   void _addGroup() async {
     if (_index == -1) return;
     ProgressDialogUtils.showProgressDialog(context);
-    SharedPref().getValue('id').then((value) async {
-      final request = ReqAddProvider(
-          doctorId: widget.doctorId,
-          userId: value,
-          groupId: specialityList[_index].sId);
-      try {
-        var res = await api.addProviderNetwork(context, token, request);
-        ProgressDialogUtils.dismissProgressDialog();
-        Widgets.showErrorDialog(
-            context: context,
-            description: res.response.toString(),
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pushNamed(
-                Routes.addProviderSuccess,
-              );
-            });
-        // DialogUtils.showOkCancelAlertDialog(
-        //     context: context,
-        //     message: res.response.toString(),
-        //     isCancelEnable: false,
-        //     okButtonTitle: Strings.ok,
-        //     okButtonAction: () {
-        //       Navigator.of(context).pushNamed(
-        //         routeAddProviderSuccess,
-        //       );
-        //     });
-      } on ErrorModel catch (e) {
-        ProgressDialogUtils.dismissProgressDialog();
-        DialogUtils.showAlertDialog(context, e.response);
-      } catch (e) {
-        ProgressDialogUtils.dismissProgressDialog();
-      }
-    });
+    final request = ReqAddProvider(
+        doctorId: widget.doctorId,
+        userId: getString(PreferenceKey.id),
+        groupId: specialityList[_index].sId);
+    try {
+      var res = await ApiManager().addProviderNetwork(request);
+      ProgressDialogUtils.dismissProgressDialog();
+      Widgets.showErrorDialog(
+          context: context,
+          description: res.response.toString(),
+          onPressed: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pushNamed(
+              Routes.addProviderSuccess,
+            );
+          });
+      // DialogUtils.showOkCancelAlertDialog(
+      //     context: context,
+      //     message: res.response.toString(),
+      //     isCancelEnable: false,
+      //     okButtonTitle: Localization.of(context).ok,
+      //     okButtonAction: () {
+      //       Navigator.of(context).pushNamed(
+      //         routeAddProviderSuccess,
+      //       );
+      //     });
+    } on ErrorModel catch (e) {
+      ProgressDialogUtils.dismissProgressDialog();
+      DialogUtils.showAlertDialog(context, e.response);
+    } catch (e) {
+      ProgressDialogUtils.dismissProgressDialog();
+    }
   }
 
   void _createGroup() async {
@@ -138,19 +133,21 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
                 progressSteps: HutanoProgressSteps.four,
               ),
               _buildHeader(),
-              SizedBox(height: 25),
+              SizedBox(height: spacing25),
               Text(
-                Strings.addToExistinGroup,
-                style: AppTextStyle.semiBoldStyle(
-                  color: AppColors.colorBlack2,
-                  fontSize: 16,
+                Localization.of(context).addToExistinGroup,
+                style: const TextStyle(
+                  color: colorBlack2,
+                  fontSize: fontSize16,
                   fontWeight: FontWeight.w600,
+                  fontFamily: gilroySemiBold,
+                  fontStyle: FontStyle.normal,
                 ),
               ),
-              SizedBox(height: 15),
+              SizedBox(height: spacing15),
               _buildList(),
               _buildBottomButtons(),
-              SizedBox(height: 10),
+              SizedBox(height: spacing10),
             ],
           ),
         ),
@@ -164,7 +161,7 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
         children: [
           ListView.separated(
               separatorBuilder: (_, pos) => Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
+                    padding: EdgeInsets.symmetric(vertical: spacing10),
                   ),
               shrinkWrap: true,
               itemCount: specialityList.length,
@@ -182,15 +179,15 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
                   child: ListItem(specialityList[index]),
                 );
               }),
-          SizedBox(height: 10),
+          SizedBox(height: spacing10),
           HutanoButton(
             onPressed: _createGroup,
-            color: AppColors.colorPurple,
+            color: colorPurple,
             icon: FileConstants.icAddGroup,
             buttonType: HutanoButtonType.withPrefixIcon,
-            label: Strings.addCreateGroup,
+            label: Localization.of(context).addCreateGroup,
           ),
-          SizedBox(height: 5),
+          SizedBox(height: spacing5),
         ],
       ),
     );
@@ -213,10 +210,12 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
         ),
         Flexible(
           child: Text(
-            Strings.addDoctorNetwork.format([widget.doctorName]),
+            Localization.of(context)
+                .addDoctorNetwork
+                .format([widget.doctorName]),
             softWrap: true,
             maxLines: 2,
-            style: const TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: fontSize16),
           ),
         )
       ],
@@ -231,8 +230,8 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
           Flexible(
             flex: 1,
             child: HutanoButton(
-              label: Strings.add,
-              labelColor: AppColors.colorBlack,
+              label: Localization.of(context).add,
+              labelColor: colorBlack,
               onPressed: _enableButton ? _addGroup : null,
             ),
           ),

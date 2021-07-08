@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/utils/color_utils.dart';
 
 class TextWithImage extends StatelessWidget {
   final String image;
@@ -30,7 +31,7 @@ class TextWithImage extends StatelessWidget {
           child: Text(
             label,
             style: textStyle ??
-                const TextStyle(color: AppColors.colorBlack70, fontSize: 12),
+                const TextStyle(color: colorBlack70, fontSize: 12),
             textAlign: TextAlign.start,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,

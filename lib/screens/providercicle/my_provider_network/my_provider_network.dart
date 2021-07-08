@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/api/api_helper.dart';
-import 'package:hutano/api/error_model.dart';
+import 'package:hutano/apis/api_manager.dart';
+import 'package:hutano/apis/error_model.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/main.dart';
 import 'package:hutano/screens/providercicle/provider_search/provider_search.dart';
-import 'package:hutano/strings.dart';
-import 'package:hutano/text_style.dart';
-import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/constants.dart';
+import 'package:hutano/utils/localization/localization.dart';
+import 'package:hutano/utils/preference_key.dart';
+import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/widgets/app_logo.dart';
-import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/widgets.dart';
 
 import '../../../utils/dialog_utils.dart';
-import '../../../utils/dimens.dart';
 import '../../../utils/progress_dialog.dart';
 
 import '../../../widgets/bottom_sheet.dart' as share_bottom_sheet;
@@ -42,43 +43,35 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
   // chnage flow when coming from home screen
   bool fromHome = false;
   bool isInitlized = false;
-  ApiBaseHelper api = ApiBaseHelper();
-  String token, userId;
 
   @override
   void initState() {
     super.initState();
     //from home screen then change show provider screen
     fromHome = !widget.showBack;
-    SharedPref().getToken().then((value) {
-      token = value;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _getMyProviderGroupList();
-      });
-      WidgetsBinding.instance
-          .addPostFrameCallback((_) => {_getFamilyNetwork()});
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _getMyProviderGroupList();
     });
+    WidgetsBinding.instance.addPostFrameCallback((_) => {_getFamilyNetwork()});
   }
 
   _getFamilyNetwork() async {
-    SharedPref().getValue('id').then((value) async {
-      userId = value;
-      final request = ReqFamilyNetwork(id: value, limit: 20, page: 1);
-      try {
-        var res = await api.getFamilyNetowrk(context, token, request);
-        setState(() {
-          _memberList = res.response.familyNetwork;
-        });
-      } on ErrorModel catch (e) {
-        print(e.response);
-      }
-    });
+    final request = ReqFamilyNetwork(
+        id: getString(PreferenceKey.id, ""), limit: dataLimit, page: 1);
+    try {
+      var res = await ApiManager().getFamilyNetowrk(request);
+      setState(() {
+        _memberList = res.response.familyNetwork;
+      });
+    } on ErrorModel catch (e) {
+      print(e.response);
+    }
   }
 
   _onShareClick() {
     share_bottom_sheet.showBottomSheet(
         context: context,
-        color: AppColors.colorBottomSheet,
+        color: colorBottomSheet,
         child: ShareProvider(
           memberList: _memberList,
           shareMessage: _shareMessage,
@@ -90,7 +83,7 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
     final id = _providerGroupList[index].providerNetwork.doctorId[subIndex];
     final request = ReqShareProvider(doctorId: id);
     try {
-      var res = await api.shareProvider(context, token, request);
+      var res = await ApiManager().shareProvider(request);
       ProgressDialogUtils.dismissProgressDialog();
       _shareMessage = res.message;
       _onShareClick();
@@ -106,7 +99,7 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
     _removeProvider = ReqRemoveProvider(
         doctorId: _providerGroupList[index].providerNetwork.doctorId[subIndex],
         groupId: _providerGroupList[index].providerNetwork.sId,
-        userId: userId);
+        userId: getString(PreferenceKey.id));
 
     var name = _providerGroupList[index].doctor[0].fullName;
 
@@ -128,7 +121,7 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
   _onRemove() async {
     ProgressDialogUtils.showProgressDialog(context);
     try {
-      var res = await api.removeProvider(context, token, _removeProvider);
+      var res = await ApiManager().removeProvider(_removeProvider);
       if (widget.showBack) Navigator.of(context).pop();
       _getMyProviderGroupList(showProgress: false);
       ProgressDialogUtils.dismissProgressDialog();
@@ -145,7 +138,7 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
       ProgressDialogUtils.showProgressDialog(context);
     }
     try {
-      var res = await api.getMyProviderNetwork(context, token);
+      var res = await ApiManager().getMyProviderNetwork();
       ProgressDialogUtils.dismissProgressDialog();
       isInitlized = true;
       setState(() {
@@ -186,11 +179,11 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 10),
+                  SizedBox(height: spacing10),
                   if (widget.showBack) CustomBackButton(),
                   if (!fromHome) AppLogo(),
                   _buildHeader(),
-                  SizedBox(height: 25),
+                  SizedBox(height: spacing25),
                   Expanded(
                     child: ListSpeciality(
                       providerGroupList: _providerGroupList,
@@ -204,11 +197,11 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 10),
+                SizedBox(height: spacing10),
                 if (widget.showBack) CustomBackButton(),
                 AppLogo(),
                 _buildHeader(),
-                SizedBox(height: 25),
+                SizedBox(height: spacing25),
                 Expanded(
                   child: ListSpeciality(
                     providerGroupList: _providerGroupList,
@@ -223,31 +216,31 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
 
   _onShareAll() async {
     ProgressDialogUtils.showProgressDialog(context);
-    SharedPref().getValue('id').then((value) async {
-      final request = ReqShareProvider(userId: value);
-      try {
-        var res = await api.shareAllProvider(context, token, request);
-        ProgressDialogUtils.dismissProgressDialog();
-        _shareMessage = res.message;
-        _onShareClick();
-      } on ErrorModel catch (e) {
-        ProgressDialogUtils.dismissProgressDialog();
-        DialogUtils.showAlertDialog(context, e.response);
-      } catch (e) {
-        ProgressDialogUtils.dismissProgressDialog();
-      }
-    });
+    final request = ReqShareProvider(userId: getString(PreferenceKey.id));
+    try {
+      var res = await ApiManager().shareAllProvider(request);
+      ProgressDialogUtils.dismissProgressDialog();
+      _shareMessage = res.message;
+      _onShareClick();
+    } on ErrorModel catch (e) {
+      ProgressDialogUtils.dismissProgressDialog();
+      DialogUtils.showAlertDialog(context, e.response);
+    } catch (e) {
+      ProgressDialogUtils.dismissProgressDialog();
+    }
   }
 
   Widget _buildHeader() {
     return Align(
       alignment: Alignment.center,
       child: Text(
-        Strings.myProviderNetwork,
+        Localization.of(context).myProviderNetwork,
         textAlign: TextAlign.center,
-        style: AppTextStyle.boldStyle(
-            color: AppColors.colorBlack2,
+        style: const TextStyle(
+            color: colorBlack2,
             fontWeight: FontWeight.w700,
+            fontFamily: gilroyBold,
+            fontStyle: FontStyle.normal,
             fontSize: 20.0),
       ),
     );

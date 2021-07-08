@@ -1,18 +1,21 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hutano/api/api_helper.dart';
-import 'package:hutano/api/error_model.dart';
-import 'package:hutano/colors.dart';
+import 'package:hutano/apis/api_manager.dart';
+import 'package:hutano/apis/error_model.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/registration/login_pin/model/req_login_pin.dart';
-import 'package:hutano/strings.dart';
 import 'package:hutano/utils/argument_const.dart';
+import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/dialog_utils.dart';
 import 'package:hutano/utils/enum_utils.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/localization/localization.dart';
+import 'package:hutano/utils/preference_key.dart';
+import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/utils/progress_dialog.dart';
-import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/utils/size_config.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:local_auth/local_auth.dart';
@@ -24,6 +27,8 @@ import '../../../widgets/hutano_header_info.dart';
 import '../../../widgets/hutano_pin_input.dart';
 
 class LoginPin extends StatefulWidget {
+  final String number = getString(PreferenceKey.phone);
+
   LoginPin();
 
   @override
@@ -37,17 +42,10 @@ class _LoginPinState extends State<LoginPin> {
   final LocalAuthentication auth = LocalAuthentication();
   final _canCheckBiometrics = ValueNotifier<bool>(false);
   final _availableBiometrics = ValueNotifier<List<BiometricType>>(null);
-  String number;
-  ApiBaseHelper api = ApiBaseHelper();
 
   @override
   void initState() {
     super.initState();
-    SharedPref().getValue('phoneNumber').then((value) {
-      setState(() {
-        number = value;
-      });
-    });
     WidgetsBinding.instance.addPostFrameCallback((_) => {_checkBiometrics()});
     initializeDateFormatting('en');
   }
@@ -75,30 +73,42 @@ class _LoginPinState extends State<LoginPin> {
   }
 
   Future<void> _onLoginClick() async {
-    final request = ReqLoginPin(phoneNumber: number, pin: _otpController.text);
+    final request =
+        ReqLoginPin(phoneNumber: widget.number, pin: _otpController.text);
     ProgressDialogUtils.showProgressDialog(context);
     try {
-      await api.loginPin(request);
-      ProgressDialogUtils.dismissProgressDialog();
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        Routes.dashboardScreen,
-        (Route<dynamic> route) => false,
-        arguments: 0,
-      );
+      await ApiManager().loginPin(request).then((value) {
+        try {
+          ProgressDialogUtils.dismissProgressDialog();
+          //TODO : Verify Code
+          // Changing route to dashbaord
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            Routes.dashboardScreen,
+            (Route<dynamic> route) => false,
+            arguments: 0,
+          );
+        } catch (e) {
+          print(e);
+        }
+      });
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);
+    } catch (e) {
+      ProgressDialogUtils.dismissProgressDialog();
+      DialogUtils.showAlertDialog(
+          context, Localization.of(context).commonErrorMsg);
     }
   }
 
   void _onRegisterClick() =>
-      Navigator.of(context).pushNamed(Routes.registerEmailRoute);
+      Navigator.of(context).pushNamed(Routes.routeRegisterNumber);
 
   Widget _buildOtp(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(spacing10),
       child: HutanoPinInput(
-        width: MediaQuery.of(context).size.width / 1.7,
+        width: SizeConfig.screenWidth / 1.7,
         pinCount: 4,
         controller: _otpController,
         onChanged: (text) {
@@ -123,8 +133,9 @@ class _LoginPinState extends State<LoginPin> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         HutanoHeaderInfo(
-          title: Strings.enterPin,
-          subTitle: Strings.msgEnterPin.format([number]),
+          title: Localization.of(context).enterPin,
+          subTitle:
+              Localization.of(context).msgEnterPin.format([widget.number]),
         ),
       ],
     );
@@ -132,8 +143,8 @@ class _LoginPinState extends State<LoginPin> {
 
   Future<void> _authenticate() async {
     try {
-      var authenticated = await auth.authenticate(
-          localizedReason: Strings.labelAuthWithFingerPrint,
+      var authenticated = await auth.authenticateWithBiometrics(
+          localizedReason: Localization.of(context).labelAuthWithFingerPrint,
           useErrorDialogs: true);
       if (authenticated) {
         Navigator.of(context).pushNamedAndRemoveUntil(
@@ -156,8 +167,8 @@ class _LoginPinState extends State<LoginPin> {
             child: FlatButton(
               child: Image.asset(
                 FileConstants.icFingerPrint,
-                height: 60,
-                width: 60,
+                height: spacing60,
+                width: spacing60,
               ),
               onPressed: _authenticate,
             ),
@@ -167,8 +178,8 @@ class _LoginPinState extends State<LoginPin> {
 
   Widget _buildHeaderLabel(BuildContext context) {
     return Text(
-      Strings.signInTitle,
-      style: TextStyle(color: AppColors.colorBlack85, fontSize: 13),
+      Localization.of(context).signInTitle,
+      style: const TextStyle(color: colorBlack85, fontSize: fontSize13),
     );
   }
 
@@ -176,8 +187,8 @@ class _LoginPinState extends State<LoginPin> {
     return FlatButton(
       onPressed: _onForgotPinClick,
       child: Text(
-        Strings.forgotPin,
-        style: TextStyle(color: AppColors.colorPurple, fontSize: 13),
+        Localization.of(context).forgotPin,
+        style: const TextStyle(color: colorPurple, fontSize: fontSize13),
       ),
     );
   }
@@ -187,14 +198,14 @@ class _LoginPinState extends State<LoginPin> {
       text: TextSpan(
         children: <TextSpan>[
           TextSpan(
-              text: Strings.signIn,
+              text: Localization.of(context).signIn,
               style: TextStyle(
-                color: AppColors.colorBlack,
-                fontSize: 14,
+                color: colorBlack,
+                fontSize: fontSize14,
               )),
           TextSpan(
-            text: Strings.register,
-            style: TextStyle(color: AppColors.colorYellow, fontSize: 14),
+            text: Localization.of(context).register,
+            style: TextStyle(color: colorYellow, fontSize: fontSize14),
             recognizer: _tapRecognizer..onTap = _onRegisterClick,
           )
         ],
@@ -204,6 +215,7 @@ class _LoginPinState extends State<LoginPin> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Container(
       color: Colors.white,
       child: SafeArea(
@@ -214,24 +226,24 @@ class _LoginPinState extends State<LoginPin> {
                 HutanoHeader(
                   headerLabel: _buildHeaderLabel(context),
                   headerInfo: _buildHeader(context),
-                  spacing: 20,
+                  spacing: spacing20,
                 ),
                 _buildOtp(context),
                 _buildForgotPin(context),
                 SizedBox(
-                  height: 20,
+                  height: spacing20,
                 ),
                 HutanoButton(
-                  margin: 10,
+                  margin: spacing10,
                   onPressed: _enableButton ? _onLoginClick : null,
-                  label: Strings.logIn,
+                  label: Localization.of(context).logIn,
                 ),
                 SizedBox(
-                  height: 30,
+                  height: spacing30,
                 ),
                 //_buildRegister(context),
                 SizedBox(
-                  height: 40,
+                  height: spacing40,
                 ),
                 _buildFingerPrint(context),
               ],

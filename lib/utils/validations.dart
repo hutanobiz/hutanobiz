@@ -52,7 +52,7 @@ class Validations {
     if (value.isEmpty) {
       return null;
     } else if (getCleanedNumber(value).length < 10)
-      return "Please enter a valid phone number";
+      return "Please enter valid mobile number";
     else
       return null;
   }

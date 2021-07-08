@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/colors.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/screens/familynetwork/familycircle/model/res_family_circle.dart';
-import 'package:hutano/strings.dart';
-import 'package:hutano/text_style.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/localization/localization.dart';
 import '../../../widgets/hutano_button.dart';
 import 'family_member_model.dart';
 import 'member_profile.dart';
@@ -31,13 +31,13 @@ class _PermissionAccessState extends State<PermissionAccess> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      permissions.add(PermissionModel(Strings.fullAccess,
+      permissions.add(PermissionModel(Localization.of(context).fullAccess,
           FileConstants.icFullAccess, false, 1));
-      permissions.add(PermissionModel(Strings.appointments,
+      permissions.add(PermissionModel(Localization.of(context).appointments,
           FileConstants.icAppointments, false, 2));
-      permissions.add(PermissionModel(Strings.documents,
+      permissions.add(PermissionModel(Localization.of(context).documents,
           FileConstants.icDocuments, false, 3));
-      permissions.add(PermissionModel(Strings.notifications,
+      permissions.add(PermissionModel(Localization.of(context).notifications,
           FileConstants.icNotifications, false, 4));
 
       if (widget.userPermissionsList != null) {
@@ -60,7 +60,7 @@ class _PermissionAccessState extends State<PermissionAccess> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(15),
+            padding: const EdgeInsets.all(spacing15),
             child: MemberProfile(
               member: FamilyMember(
                   image: widget.member.name,
@@ -69,11 +69,11 @@ class _PermissionAccessState extends State<PermissionAccess> {
             ),
           ),
           Divider(
-            color: AppColors.colorBorder,
+            color: colorBorder,
             height: 0.5,
           ),
           Padding(
-            padding: EdgeInsets.all(15),
+            padding: EdgeInsets.all(spacing15),
             child: _buildPermissionList(context),
           )
         ],
@@ -86,9 +86,9 @@ class _PermissionAccessState extends State<PermissionAccess> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          Strings.permissions,
-          style:  AppTextStyle.semiBoldStyle(
-              fontSize: 16, ),
+          Localization.of(context).permissions,
+          style: const TextStyle(
+              fontSize: fontSize16, fontWeight: fontWeightSemiBold),
           textAlign: TextAlign.start,
         ),
         ListView.separated(
@@ -96,17 +96,17 @@ class _PermissionAccessState extends State<PermissionAccess> {
             itemBuilder: (context, pos) {
               var data = permissions[pos];
               return CheckboxListTile(
-                  activeColor: AppColors.colorYellow,
+                  activeColor: colorYellow,
                   contentPadding: EdgeInsets.all(0),
                   title: Container(
                       child: Row(children: [
-                    Image.asset(data.icon, height: 25, width: 25),
+                    Image.asset(data.icon, height: spacing25, width: spacing25),
                     SizedBox(
-                      width: 20,
+                      width: spacing20,
                     ),
                     Text(
                       data.label,
-                      style: const TextStyle(color: AppColors.colorBlack85),
+                      style: const TextStyle(color: colorBlack85),
                     )
                   ])),
                   value: data.isSelected,
@@ -117,14 +117,14 @@ class _PermissionAccessState extends State<PermissionAccess> {
             },
             separatorBuilder: (_, pos) {
               return Divider(
-                height: 15,
-                color: AppColors.colorBorder,
+                height: spacing15,
+                color: colorBorder,
                 thickness: 0.5,
               );
             },
             itemCount: permissions.length),
         HutanoButton(
-          label: Strings.done,
+          label: Localization.of(context).done,
           onPressed: () {
             var selectedPermission = <int>[];
             permissions.forEach((element) {

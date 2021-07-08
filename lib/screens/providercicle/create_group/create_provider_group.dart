@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/api/api_helper.dart';
-import 'package:hutano/api/error_model.dart';
-import 'package:hutano/colors.dart';
-import 'package:hutano/strings.dart';
-import 'package:hutano/text_style.dart';
+import 'package:hutano/apis/api_manager.dart';
+import 'package:hutano/apis/error_model.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/utils/argument_const.dart';
-import 'package:hutano/utils/file_constants.dart';
-import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/localization/localization.dart';
+import 'package:hutano/utils/preference_key.dart';
+import 'package:hutano/utils/preference_utils.dart';
+import 'package:hutano/utils/size_config.dart';
 import 'package:hutano/widgets/custom_back_button.dart';
 import 'package:hutano/widgets/widgets.dart';
-
 import '../../../utils/dialog_utils.dart';
-import '../../../utils/dimens.dart';
 import '../../../utils/extensions.dart';
 import '../../../utils/progress_dialog.dart';
 import '../../../widgets/hutano_button.dart';
@@ -29,17 +29,9 @@ class _CreateProviderGroupState extends State<CreateProviderGroup> {
   final _groupNameController = TextEditingController();
   bool _enableButton = false;
   final GlobalKey<FormState> _key = GlobalKey();
-  ApiBaseHelper api = ApiBaseHelper();
-  String token, userId;
+
   @override
   void initState() {
-    SharedPref().getToken().then((value) {
-      token = value;
-    });
-    SharedPref().getValue('id').then((value) {
-      userId = value;
-    });
-
     super.initState();
   }
 
@@ -47,10 +39,10 @@ class _CreateProviderGroupState extends State<CreateProviderGroup> {
     ProgressDialogUtils.showProgressDialog(context);
     final request = ReqAddProvider(
       groupName: _groupNameController.text.toString(),
-      userId: userId,
+      userId: getString(PreferenceKey.id),
     );
     try {
-      var res = await api.addProviderNetwork(context, token, request);
+      var res = await ApiManager().addProviderNetwork(request);
       ProgressDialogUtils.dismissProgressDialog();
 
       Widgets.showErrorDialog(
@@ -64,7 +56,7 @@ class _CreateProviderGroupState extends State<CreateProviderGroup> {
       //     context: context,
       //     message: res.response.toString(),
       //     isCancelEnable: false,
-      //     okButtonTitle: Strings.ok,
+      //     okButtonTitle: Localization.of(context).ok,
       //     okButtonAction: () {
       //       Navigator.of(context).pop({ArgumentConstant.number: ""});
       //     });
@@ -78,6 +70,7 @@ class _CreateProviderGroupState extends State<CreateProviderGroup> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -86,29 +79,29 @@ class _CreateProviderGroupState extends State<CreateProviderGroup> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomBackButton(margin: EdgeInsets.only(top: 20)),
-              SizedBox(height: 25),
+              SizedBox(height: spacing25),
               Text(
-                Strings.addCreateGroup,
-                style: AppTextStyle.semiBoldStyle(
-                  color: AppColors.colorDarkPurple,
-                  fontSize: 20,
-                ),
+                Localization.of(context).addCreateGroup,
+                style: const TextStyle(
+                    color: colorDarkPurple,
+                    fontSize: fontSize20,
+                    fontWeight: fontWeightSemiBold),
               ),
-              SizedBox(height: 60),
+              SizedBox(height: spacing60),
               Form(
                 key: _key,
                 child: _buildEmailField(context),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: spacing20),
               Align(
                 alignment: Alignment.center,
                 child: HutanoButton(
-                  width: MediaQuery.of(context).size.width / 1.5,
+                  width: SizeConfig.screenWidth / 1.5,
                   onPressed: _enableButton ? _addGroup : null,
-                  color: AppColors.colorPurple,
+                  color: colorPurple,
                   icon: FileConstants.icAddGroup,
                   buttonType: HutanoButtonType.withPrefixIcon,
-                  label: Strings.addCreateGroup,
+                  label: Localization.of(context).addCreateGroup,
                 ),
               ),
             ],
@@ -120,8 +113,8 @@ class _CreateProviderGroupState extends State<CreateProviderGroup> {
 
   Widget _buildEmailField(BuildContext context) {
     return HutanoTextField(
-        width: MediaQuery.of(context).size.width,
-        labelText: Strings.groupName,
+        width: SizeConfig.screenWidth,
+        labelText: Localization.of(context).groupName,
         focusNode: _groupFocus,
         controller: _groupNameController,
         onValueChanged: (value) {
@@ -130,8 +123,9 @@ class _CreateProviderGroupState extends State<CreateProviderGroup> {
             _enableButton = _validate;
           });
         },
-        validationMethod: (text) =>
-            text.toString().isBlank(context, Strings.errorEnterGroup));
+        validationMethod: (text) => text
+            .toString()
+            .isBlank(context, Localization.of(context).errorEnterGroup));
   }
 
   Widget _buildBottomButtons() {

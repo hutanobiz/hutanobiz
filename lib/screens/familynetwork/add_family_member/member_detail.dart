@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/screens/providercicle/search/item_member_detail.dart';
 import 'package:hutano/screens/providercicle/search/model/family_member.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/widgets/ripple_effect.dart';
 
 class MemberRow extends StatelessWidget {
@@ -28,8 +29,8 @@ class MemberRow extends StatelessWidget {
           },
           child: Image.asset(
             FileConstants.icAdd,
-            width: 40,
-            height: 40,
+            width: spacing40,
+            height: spacing40,
           ),
         ),
       ],

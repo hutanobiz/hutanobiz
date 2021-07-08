@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/text_style.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/widgets/arrow_button.dart';
 import 'package:hutano/widgets/bottom_arrows.dart';
 import 'package:hutano/widgets/circular_loader.dart';
@@ -93,7 +94,7 @@ class LoadingBackgroundNew extends StatelessWidget {
                           padding: const EdgeInsets.only(left: 12),
                           child: Text(title,
                               style: AppTextStyle.boldStyle(
-                                  color: AppColors.colorBlack2, fontSize: 18),
+                                  color: colorBlack2, fontSize: 18),
                               textAlign: TextAlign.left),
                         )
                       ],

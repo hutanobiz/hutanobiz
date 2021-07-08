@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/text_style.dart';
+import 'package:hutano/utils/color_utils.dart';
 
 enum HutanoButtonType {
   onlyLabel, //only label
@@ -21,7 +22,7 @@ class HutanoButton extends StatelessWidget {
   final HutanoButtonType buttonType;
   final Color color;
   final Color labelColor;
-  final Color _disableColor = AppColors.colorGrey;
+  final Color _disableColor = colorGrey;
   final double margin;
   final Color borderColor;
   final double borderWidth;
@@ -40,8 +41,8 @@ class HutanoButton extends StatelessWidget {
     this.iconSize = 25,
     this.margin = 0,
     this.isIconButton = false,
-    this.color = AppColors.accentColor,
-    this.labelColor = AppColors.colorWhite,
+    this.color = accentColor,
+    this.labelColor = colorWhite,
     this.buttonType = HutanoButtonType.onlyLabel,
     this.borderColor = Colors.transparent,
     this.borderWidth = 0,

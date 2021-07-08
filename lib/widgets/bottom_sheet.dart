@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/utils/color_utils.dart';
 
 Future showBottomSheet(
-    {BuildContext context, Widget child, Color color = AppColors.colorWhite}) {
+    {BuildContext context, Widget child, Color color = colorWhite}) {
   return showModalBottomSheet(
       context: context,
       backgroundColor: color,
@@ -20,7 +21,7 @@ Future showBottomSheet(
                 height: 6,
                 width: 50,
                 decoration: BoxDecoration(
-                    color: AppColors.colorGrey, borderRadius: BorderRadius.circular(10)),
+                    color: colorGrey, borderRadius: BorderRadius.circular(10)),
               ),
               child
             ],

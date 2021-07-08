@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hutano/screens/add_insurance/add_insruance.dart';
+import 'package:hutano/screens/add_insurance/add_insruance_complete.dart';
 import 'package:hutano/screens/appointments/appointment_complete.dart';
 import 'package:hutano/screens/appointments/appointment_detail_screen.dart';
 import 'package:hutano/screens/appointments/cancel_appointment.dart';
@@ -49,12 +51,8 @@ import 'package:hutano/screens/familynetwork/familycircle/family_circle.dart';
 import 'package:hutano/screens/familynetwork/member_message/member_message.dart';
 import 'package:hutano/screens/home.dart';
 import 'package:hutano/screens/home_main.dart';
-import 'package:hutano/screens/login.dart';
-import 'package:hutano/screens/payment/add_card_complete.dart';
-import 'package:hutano/screens/payment/add_insruance_complete.dart';
-import 'package:hutano/screens/payment/add_insurance.dart';
+import 'package:hutano/screens/invite/invite_text.dart';
 import 'package:hutano/screens/payment/add_new_card.dart';
-import 'package:hutano/screens/payment/add_payment_option.dart';
 import 'package:hutano/screens/payment/insurance_list.dart';
 import 'package:hutano/screens/payment/payments_methods.dart';
 import 'package:hutano/screens/payment/saved_cards.dart';
@@ -66,21 +64,24 @@ import 'package:hutano/screens/providercicle/provider_add_network/provider_add_n
 import 'package:hutano/screens/providercicle/provider_search/provider_search.dart';
 import 'package:hutano/screens/providercicle/search/search_screen.dart';
 import 'package:hutano/screens/providercicle/search_member/search_member.dart';
-import 'package:hutano/screens/registration/email_verification.dart';
-import 'package:hutano/screens/registration/email_verification_complete.dart';
-import 'package:hutano/screens/registration/forgot_password.dart';
+import 'package:hutano/screens/registration/add_provider/add_provider.dart';
+import 'package:hutano/screens/registration/email_verification/email_verification.dart';
+import 'package:hutano/screens/registration/email_verification/email_verification_complete.dart';
 import 'package:hutano/screens/registration/forgotpassword/forgot_password.dart';
 import 'package:hutano/screens/registration/invite_family/invite_family.dart';
 import 'package:hutano/screens/registration/invite_family/invite_family_success.dart';
 import 'package:hutano/screens/registration/login_pin/login_pin.dart';
 import 'package:hutano/screens/registration/otp_verification/model/otp_verification.dart';
+import 'package:hutano/screens/registration/payment/add_payment_option.dart';
+import 'package:hutano/screens/registration/payment/card_complete/add_card_complete.dart';
 import 'package:hutano/screens/registration/register.dart';
-import 'package:hutano/screens/registration/register_email.dart';
+import 'package:hutano/screens/registration/register/register.dart';
+import 'package:hutano/screens/registration/register_phone/register_number.dart';
 import 'package:hutano/screens/registration/reset_pin.dart';
 import 'package:hutano/screens/registration/resetpassword/reset_password.dart';
 import 'package:hutano/screens/registration/resetpassword/reset_password_success.dart';
-import 'package:hutano/screens/registration/verify_otp.dart';
-import 'package:hutano/screens/registration/verify_email_otp.dart';
+import 'package:hutano/screens/registration/signin/signin_screen.dart';
+import 'package:hutano/screens/registration/signin/web_view.dart';
 import 'package:hutano/screens/registration/welcome_screen.dart';
 import 'package:hutano/screens/setup_pin/set_pin.dart';
 import 'package:hutano/screens/setup_pin/set_pin_complete.dart';
@@ -90,10 +91,10 @@ class Routes {
   static const String loginRoute = '/login';
   static const String dashboardScreen = '/dashboardScreen';
   // static const String forgotPasswordRoute = '/forgotPassword';
-  static const String registerEmailRoute = '/registerEmail';
+  // static const String registerEmailRoute = '/registerEmail';
   // static const String verifyOtpRoute = '/verifyOtp';
   static const String verifyEmailOtpRoute = '/verifyEmailOtp';
-  static const String registerRoute = '/register';
+  // static const String registerRoute = '/register';
   static const String resetPasswordRoute = '/resetPassword';
   static const String chooseSpecialities = '/chooseSpecialities';
   static const String appointmentTypeScreen = '/appointmentTypeScreen';
@@ -178,15 +179,21 @@ class Routes {
   static const String routeForgotPassword = '/routeForgotPassword';
   static const String routeResetPin = '/routeResetPin';
   static const String routeResetPasswordSuccess = '/routeResetPasswordSuccess';
+  static const String routeRegisterNumber = '/routeRegisterNumber';
+  static const String routeWebView = '/routeWebView';
+  static const String routeRegister = '/routeRegister';
+  static const String routeInviteByText = '/routeInviteByText';
+  static const String routeAddProvider = '/routeAddProvider';
+  static const String editProfileRoute = '/editProfileRoute';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final dynamic args = settings.arguments;
 
     switch (settings.name) {
       case loginRoute:
-        if (args is bool) {
-          return _buildRoute(settings, LoginScreen(isBack: args));
-        }
+        // if (args is bool) {
+        return _buildRoute(settings, SignInScreen());
+        // }
         return _errorRoute();
         break;
       case dashboardScreen:
@@ -202,9 +209,9 @@ class Routes {
       // case forgotPasswordRoute:
       //   return _buildRoute(settings, ForgetPassword());
       //   break;
-      case registerEmailRoute:
-        return _buildRoute(settings, RegisterEmail());
-        break;
+      // case registerEmailRoute:
+      //   return _buildRoute(settings, RegisterEmail());
+      //   break;
       // case verifyOtpRoute:
       //   if (args is RegisterArguments) {
       //     return _buildRoute(settings, VerifyOTP(args: args));
@@ -213,12 +220,13 @@ class Routes {
       //   break;
       case verifyEmailOtpRoute:
         // if (args is Map) {
-        return _buildRoute(settings, EmailVerificationScreen());
+        // return _buildRoute(settings, EmailVerificationScreen());
+        return MaterialPageRoute(builder: (_) => EmailVerificationScreen());
         break;
       // }
       // return _errorRoute();
 
-      case registerRoute:
+      case editProfileRoute:
         if (args is RegisterArguments) {
           return _buildRoute(settings, Register(args: args));
         }
@@ -649,11 +657,28 @@ class Routes {
         final verificationModel = args[ArgumentConstant.verificationModel];
         return MaterialPageRoute(
             builder: (_) => ResetPin(verificationModel: verificationModel));
-          break;
-          case routeResetPasswordSuccess:
-          return MaterialPageRoute(
-            builder: (_) => ResetPasswordSuccess());
-
+        break;
+      case routeResetPasswordSuccess:
+        return MaterialPageRoute(builder: (_) => ResetPasswordSuccess());
+      case routeRegisterNumber:
+        return MaterialPageRoute(builder: (_) => RegisterNumber());
+      case routeWebView:
+        return MaterialPageRoute(builder: (_) => WebView());
+      case routeRegister:
+        final String number = args[ArgumentConstant.number];
+        final String countryCode = args[ArgumentConstant.countryCode];
+        return MaterialPageRoute(
+            builder: (_) => RegisterScreen(number, countryCode));
+      case routeInviteByText:
+        final String sms = args[ArgumentConstant.sms];
+        final String shareMessage = args[ArgumentConstant.shareMessage];
+        return MaterialPageRoute(
+            builder: (_) => InviteByTextScreen(
+                  sms,
+                  shareMessage: shareMessage,
+                ));
+      case routeAddProvider:
+        return MaterialPageRoute(builder: (_) => AddProvider());
       default:
         return _errorRoute();
     }

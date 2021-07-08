@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/colors.dart';
-import 'package:hutano/strings.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/localization/localization.dart';
 
 class SearchBar extends StatelessWidget {
   final TextEditingController controller;
@@ -13,7 +13,7 @@ class SearchBar extends StatelessWidget {
     var border = OutlineInputBorder(
       borderRadius: BorderRadius.circular(8),
       borderSide: BorderSide(
-        color:  AppColors.colorGrey60,
+        color: colorGrey60,
         width: 0.5,
       ),
     );
@@ -22,7 +22,7 @@ class SearchBar extends StatelessWidget {
         controller: controller,
         decoration: InputDecoration(
           isDense: true,
-          fillColor:  AppColors.colorBlack2.withOpacity(0.05),
+          fillColor: colorBlack2.withOpacity(0.05),
           suffixIconConstraints: BoxConstraints(),
           suffixIcon: InkWell(
             onTap: onSearch,
@@ -35,10 +35,10 @@ class SearchBar extends StatelessWidget {
               ),
             ),
           ),
-          hoverColor:  AppColors.colorGrey84,
+          hoverColor: colorGrey84,
           border: border,
           focusedBorder: border,
-          hintText: Strings.search,
+          hintText: Localization.of(context).search,
         ),
       ),
     );

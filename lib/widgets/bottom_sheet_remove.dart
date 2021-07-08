@@ -1,28 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/strings.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
 
 import 'hutano_button.dart';
 
-Future showBottomSheetRemove({BuildContext context,
-Function onRemove,
-Function onCancel,}) {
+Future showBottomSheetRemove({
+  BuildContext context,
+  Function onRemove,
+  Function onCancel,
+}) {
   return showModalBottomSheet(
-    backgroundColor: Colors.transparent,
+      backgroundColor: Colors.transparent,
       context: context,
       builder: (_) {
         return Container(
           child: Wrap(
             children: <Widget>[
               HutanoButton(
-                buttonType:HutanoButtonType.withPrefixIcon ,
+                buttonType: HutanoButtonType.withPrefixIcon,
                 label: Strings.remove,
                 color: Colors.white,
                 labelColor: Colors.black,
                 margin: 10,
                 height: 60,
                 onPressed: onRemove,
-                fontSize:18 ,
+                fontSize: 18,
                 icon: FileConstants.icBin,
                 iconSize: 20,
               ),
@@ -32,13 +34,12 @@ Function onCancel,}) {
                 color: Colors.white,
                 labelColor: Colors.black,
                 height: 60,
-                fontSize:18 ,
+                fontSize: 18,
                 onPressed: onCancel,
               ),
               SizedBox(
                 height: 20,
               )
-
             ],
           ),
         );

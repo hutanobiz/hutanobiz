@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:hutano/colors.dart';
-import 'package:hutano/screens/payment/res_insurance_list.dart';
+import 'package:hutano/screens/registration/register/model/res_insurance_list.dart';
 import 'package:hutano/strings.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/widgets/hutano_textfield.dart';
 import 'package:hutano/widgets/list_picker.dart';
-
-
 
 class InsuranceList extends StatefulWidget {
   final TextEditingController controller;
@@ -38,8 +36,10 @@ class _InsuranceListState extends State<InsuranceList> {
                 },
                 child: ListTile(
                   title: Center(
-                    child: Text(widget.insuranceList[pos].title,
-                    textAlign: TextAlign.center,),
+                    child: Text(
+                      widget.insuranceList[pos].title,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ));
           },
@@ -47,7 +47,7 @@ class _InsuranceListState extends State<InsuranceList> {
         context: context);
   }
 
-    Widget _buildAddressField() {
+  Widget _buildAddressField() {
     return TypeAheadFormField(
       textFieldConfiguration: TextFieldConfiguration(
           controller: widget.controller,
@@ -83,18 +83,18 @@ class _InsuranceListState extends State<InsuranceList> {
               labelText: Strings.insuranceCompany,
               hintText: "",
               isDense: true,
-              hintStyle: TextStyle(color: AppColors.colorBlack60, fontSize: 14),
+              hintStyle: TextStyle(color: colorBlack60, fontSize: 14),
               border: OutlineInputBorder(),
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: AppColors.colorBlack20, width: 1)),
+                  borderSide: BorderSide(color: colorBlack20, width: 1)),
               enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: AppColors.colorBlack20, width: 1)),
+                  borderSide: BorderSide(color: colorBlack20, width: 1)),
               disabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: AppColors.colorBlack20, width: 1)),
-              labelStyle: TextStyle(fontSize: 14, color: AppColors.colorGrey60))),
+                  borderSide: BorderSide(color: colorBlack20, width: 1)),
+              labelStyle: TextStyle(fontSize: 14, color: colorGrey60))),
       suggestionsCallback: (pattern) async {
         return pattern.length > 0 ? _getFilteredInsuranceList() : [];
       },
@@ -110,7 +110,7 @@ class _InsuranceListState extends State<InsuranceList> {
         return suggestionsBox;
       },
       onSuggestionSelected: (suggestion) {
-        widget.onInsuranceSelected(suggestion.title,suggestion.sId);
+        widget.onInsuranceSelected(suggestion.title, suggestion.sId);
         // widget.controller.text = suggestion.title;
       },
       hideOnError: true,
@@ -118,10 +118,12 @@ class _InsuranceListState extends State<InsuranceList> {
       hideOnEmpty: true,
     );
   }
-  _getFilteredInsuranceList(){
-  return widget.insuranceList.where((element) => element.title.toLowerCase().contains(widget.controller.text.toLowerCase()));
-  }
 
+  _getFilteredInsuranceList() {
+    return widget.insuranceList.where((element) => element.title
+        .toLowerCase()
+        .contains(widget.controller.text.toLowerCase()));
+  }
 
   Widget _getEmailTextField() {
     return Container(
@@ -131,7 +133,7 @@ class _InsuranceListState extends State<InsuranceList> {
           focusNode: FocusNode(),
           controller: widget.controller,
           suffixIcon: FileConstants.icDown,
-          labelTextStyle: TextStyle(fontSize: 14, color: AppColors.colorGrey60),
+          labelTextStyle: TextStyle(fontSize: 14, color: colorGrey60),
           suffixheight: 12,
           suffixwidth: 12,
           isFieldEnable: false,

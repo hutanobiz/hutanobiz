@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:hutano/colors.dart';
+import 'package:hutano/utils/color_utils.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class HutanoPinInput extends StatelessWidget {
@@ -40,9 +40,9 @@ class HutanoPinInput extends StatelessWidget {
             borderRadius: BorderRadius.circular(14),
             fieldHeight: boxSize + 6,
             fieldWidth: boxSize,
-            inactiveColor:AppColors.colorGrey12,
-            activeFillColor: AppColors.colorPurple,
-            activeColor: AppColors.colorPurple),
+            inactiveColor:colorGrey12,
+            activeFillColor: colorPurple,
+            activeColor: colorPurple),
         animationDuration: Duration(milliseconds: 300),
         onCompleted:onCompleted,
         onChanged: onChanged,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/api/api_helper.dart';
+import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
@@ -187,7 +187,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                                 onTap: () {
                                   Navigator.pushNamed(
                                     context,
-                                    Routes.registerRoute,
+                                    Routes.editProfileRoute,
                                     arguments: RegisterArguments(
                                       phone,
                                       false,

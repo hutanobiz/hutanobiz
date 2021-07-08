@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/text_style.dart';
-import 'package:hutano/utils/file_constants.dart';
-
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
 
 class HutanoHeaderInfo extends StatelessWidget {
   final String title;
@@ -39,9 +39,8 @@ class HutanoHeaderInfo extends StatelessWidget {
               Text(
                 title,
                 textAlign: TextAlign.center,
-                style: AppTextStyle.boldStyle(
-                    color: AppColors.colorBlack85,
-                    fontSize: 20),
+                style:
+                    AppTextStyle.boldStyle(color: colorBlack85, fontSize: 20),
               ),
             ],
           ),
@@ -53,7 +52,7 @@ class HutanoHeaderInfo extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 13,
-                  color: AppColors.colorBlack50,
+                  color: colorBlack50,
                   fontWeight: FontWeight.w400,
                 ),
               ),

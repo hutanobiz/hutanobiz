@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/api/api_helper.dart';
+import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/extensions.dart';

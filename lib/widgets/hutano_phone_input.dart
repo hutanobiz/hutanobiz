@@ -2,7 +2,8 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hutano/colors.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/validations.dart';
 import 'package:hutano/widgets/hutano_textfield.dart';
 
@@ -40,7 +41,7 @@ class HutanoPhoneInput extends StatelessWidget {
           decoration: BoxDecoration(
               border: Border.all(
                 width: 0.5,
-                color: AppColors.colorBlack20,
+                color: colorBlack20,
               ),
               borderRadius: BorderRadius.circular(4)),
           child: Row(

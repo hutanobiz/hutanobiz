@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hutano/api/api_helper.dart';
-import 'package:hutano/api/error_model.dart';
+import 'package:hutano/apis/api_manager.dart';
+import 'package:hutano/apis/error_model.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/strings.dart';
-import 'package:hutano/utils/file_constants.dart';
-import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/constants.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/widgets/app_header.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/hutano_progressbar.dart';
@@ -35,8 +37,6 @@ class ProviderSearch extends StatefulWidget {
 
 class _ProviderSearchState extends State<ProviderSearch> {
   final controller = TextEditingController();
-  ApiBaseHelper api = ApiBaseHelper();
-  String token;
 
   final PagingController<int, DoctorData> _pagingController =
       PagingController(firstPageKey: 1);
@@ -44,7 +44,6 @@ class _ProviderSearchState extends State<ProviderSearch> {
   @override
   void initState() {
     super.initState();
-
     controller.text = widget.serachText ?? "";
     _pagingController.addPageRequestListener(_searchProvider);
   }
@@ -69,24 +68,19 @@ class _ProviderSearchState extends State<ProviderSearch> {
 
   _searchProvider(int pageKey) async {
     // FocusManager.instance.primaryFocus.unfocus();
-    // SharedPref().getToken().then((value) {
-    //   token = value;
-    // });
-    if (token == null) {
-      token = await SharedPref().getToken();
-    }
+
     final locationData = LocationService().getLocationData();
     final param = <String, dynamic>{
       'search': controller.text.toString(),
-      'page': pageKey.toString(),
-      'limit': "20"
+      'page': pageKey,
+      'limit': dataLimit
     };
     if (locationData != null) {
       param['lattitude'] = locationData.latitude;
       param['longitude'] = locationData.longitude;
     }
     try {
-      var res = await api.searchProvider(context, token, param);
+      var res = await ApiManager().searchProvider(param);
       var _totalPage = (res.response.count / res.response.limit).ceil();
       if (pageKey < _totalPage) {
         _pagingController.appendPage(res.response.doctorData, pageKey + 1);
@@ -120,12 +114,12 @@ class _ProviderSearchState extends State<ProviderSearch> {
                 if (!widget.isFromTab)
                   AppHeader(
                       progressSteps: HutanoProgressSteps.four,
-                      title: Strings.addProviders,
-                      subTitle: Strings.addProviderToNetwork,
+                      title: Localization.of(context).addProviders,
+                      subTitle: Localization.of(context).addProviderToNetwork,
                       isFromTab: widget.isFromTab,
                       isAppLogoVisible: !widget.isFromTab),
                 SizedBox(
-                  height: 40,
+                  height: spacing40,
                 ),
                 SearchBar(controller: controller, onSearch: _onSearch),
                 Expanded(
@@ -155,7 +149,7 @@ class _ProviderSearchState extends State<ProviderSearch> {
                         HutanoButton(
                           width: 55,
                           height: 55,
-                          color: AppColors.accentColor,
+                          color: accentColor,
                           iconSize: 20,
                           buttonType: HutanoButtonType.onlyIcon,
                           icon: FileConstants.icForward,
@@ -191,12 +185,12 @@ class _ProviderSearchState extends State<ProviderSearch> {
             children: [
               AppHeader(
                 progressSteps: HutanoProgressSteps.four,
-                title: Strings.addProviders,
-                subTitle: Strings.addProviderToNetwork,
+                title: Localization.of(context).addProviders,
+                subTitle: Localization.of(context).addProviderToNetwork,
                 isFromTab: widget.isFromTab,
               ),
               SizedBox(
-                height: 40,
+                height: spacing40,
               ),
               SearchBar(controller: controller, onSearch: _onSearch),
               Expanded(
@@ -226,7 +220,7 @@ class _ProviderSearchState extends State<ProviderSearch> {
                       HutanoButton(
                         width: 55,
                         height: 55,
-                        color: AppColors.accentColor,
+                        color: accentColor,
                         iconSize: 20,
                         buttonType: HutanoButtonType.onlyIcon,
                         icon: FileConstants.icForward,

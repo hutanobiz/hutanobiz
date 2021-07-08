@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/utils/color_utils.dart';
 
 
 class ProgressDialogUtils {
@@ -33,7 +34,7 @@ class ProgressDialogUtils {
               Center(
                 child: CircularProgressIndicator(
                   valueColor:
-                      AlwaysStoppedAnimation<Color>(AppColors.primaryColor),
+                      AlwaysStoppedAnimation<Color>(primaryColor),
                 ),
               )
             ],

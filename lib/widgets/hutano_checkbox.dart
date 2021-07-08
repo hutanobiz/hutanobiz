@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
-import 'package:hutano/utils/file_constants.dart';
-
-
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
 
 class HutanoCheckBox extends StatelessWidget {
   final bool isChecked;
@@ -25,12 +24,12 @@ class HutanoCheckBox extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(5),
           border:
-              Border.all(width: 0.4, color: AppColors.colorLightGrey.withOpacity(0.2)),
+              Border.all(width: 0.4, color: colorLightGrey.withOpacity(0.2)),
           boxShadow: [
             BoxShadow(
                 blurRadius: 6,
                 offset: Offset(0, 1),
-                color: AppColors.colorLightGrey.withOpacity(0.2))
+                color: colorLightGrey.withOpacity(0.2))
           ],
         ),
       ),

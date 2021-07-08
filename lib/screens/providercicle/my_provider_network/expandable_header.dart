@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/api/api_helper.dart';
-import 'package:hutano/colors.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/dimens.dart';
+import 'package:hutano/utils/app_config.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
 import 'model/provider_group.dart';
 
 class ExpandableHeader extends StatelessWidget {
@@ -15,32 +16,31 @@ class ExpandableHeader extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          SizedBox(width: 5),
+          SizedBox(width: spacing5),
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: FadeInImage(
-                height: 40,
+                height: spacing40,
                 fit: BoxFit.cover,
-                width: 40,
-                image: NetworkImage(
-                    '${ApiBaseHelper.imageUrl}${providerGroup.image}' ?? " "),
+                width: spacing40,
+                image: NetworkImage('$imageUrl${providerGroup.image}' ?? " "),
                 placeholder: AssetImage(FileConstants.icDoctorSpecialist)),
           ),
-          SizedBox(width: 10),
+          SizedBox(width: spacing10),
           Text(
             providerGroup.groupType,
-            style: const TextStyle(color:  AppColors.colorBlack85, fontSize: 14),
+            style: const TextStyle(color: colorBlack85, fontSize: fontSize14),
           ),
-          SizedBox(width:10),
+          SizedBox(width: spacing10),
           Container(
             alignment: Alignment.center,
-            height: 25,
-            width: 25,
+            height: spacing25,
+            width: spacing25,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(7), color:  AppColors.colorYellow),
+                borderRadius: BorderRadius.circular(7), color: colorYellow),
             child: Text(
               providerGroup.count.toString(),
-              style: TextStyle(fontSize: 15),
+              style: TextStyle(fontSize: fontSize15),
             ),
           ),
           Spacer(),

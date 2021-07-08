@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hutano/colors.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/widgets/app_header.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/round_success.dart';
@@ -38,12 +39,11 @@ class AddProviderCompleteState extends State<AddProviderComplete> {
                   child: HutanoButton(
                     width: 55,
                     height: 55,
-                    color: AppColors.accentColor,
+                    color: accentColor,
                     iconSize: 20,
                     buttonType: HutanoButtonType.onlyIcon,
                     icon: FileConstants.icForward,
                     onPressed: () {
-                      //Todo to home
                       Navigator.of(context)
                           .pushReplacementNamed(Routes.myProviderNetwork);
                     },
@@ -51,7 +51,7 @@ class AddProviderCompleteState extends State<AddProviderComplete> {
                 ),
               ),
               SizedBox(
-                height: 20,
+                height: spacing20,
               ),
             ],
           ),
@@ -59,4 +59,5 @@ class AddProviderCompleteState extends State<AddProviderComplete> {
       ),
     );
   }
+
 }

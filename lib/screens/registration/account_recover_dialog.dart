@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_dialog/flutter_custom_dialog.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/text_style.dart';
+import 'package:hutano/utils/color_utils.dart';
 
 showacountRecoverDialog(
   BuildContext context,
@@ -30,7 +31,7 @@ showacountRecoverDialog(
                 "Account Setup",
                 textAlign: TextAlign.center,
                 style: AppTextStyle.boldStyle(
-                  color: AppColors.colorPurple100,
+                  color: colorPurple100,
                   fontSize: 18,
                 ),
               ),
@@ -41,7 +42,7 @@ showacountRecoverDialog(
                 email,
                 textAlign: TextAlign.center,
                 style: AppTextStyle.regularStyle(
-                    color: AppColors.colorBlack2.withOpacity(0.85),
+                    color: colorBlack2.withOpacity(0.85),
                     fontSize: 14.0),
               ),
               SizedBox(
@@ -53,7 +54,7 @@ showacountRecoverDialog(
               ),
               Text("is already registered",
                   style: const TextStyle(
-                      color: AppColors.colorLightBlack4,
+                      color: colorLightBlack4,
                       fontWeight: FontWeight.w300,
                       fontStyle: FontStyle.normal,
                       fontSize: 14.0),
@@ -64,10 +65,10 @@ showacountRecoverDialog(
               FlatButton(
                   height: 50,
                   minWidth: 200,
-                  color: AppColors.colorPurple100,
+                  color: colorPurple100,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
-                      side: BorderSide(color: AppColors.colorPurple100)),
+                      side: BorderSide(color: colorPurple100)),
                   onPressed: () {
                     onRecover();
                   },

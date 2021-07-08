@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/utils/color_utils.dart';
 
 
 enum HutanoProgressSteps {
@@ -34,7 +35,7 @@ class HutanoProgressBar extends StatelessWidget {
             width: 8,
             decoration: BoxDecoration(
                 color:
-                    index <= (progressSteps.index) ? AppColors.colorYellow : AppColors.colorLightYellow2,
+                    index <= (progressSteps.index) ? colorYellow : colorLightYellow2,
                 borderRadius: BorderRadius.circular(4)),
           );
         });

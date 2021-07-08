@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hutano/api/api_helper.dart';
-import 'package:hutano/api/error_model.dart';
-import 'package:hutano/colors.dart';
+import 'package:hutano/apis/api_manager.dart';
+import 'package:hutano/apis/error_model.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/setup_pin/model/req_setup_pin.dart';
-import 'package:hutano/strings.dart';
-import 'package:hutano/text_style.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/constants.dart';
 import 'package:hutano/utils/dialog_utils.dart';
 import 'package:hutano/utils/enum_utils.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/localization/localization.dart';
+import 'package:hutano/utils/preference_key.dart';
+import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/utils/progress_dialog.dart';
-import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/utils/size_config.dart';
 import 'package:hutano/widgets/app_header.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/hutano_pin_input.dart';
@@ -35,19 +38,6 @@ class _SetupPinState extends State<SetupPin> {
   bool _enableButton = false;
   final LocalAuthentication auth = LocalAuthentication();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  ApiBaseHelper api = ApiBaseHelper();
-  String userId, token;
-
-  @override
-  void initState() {
-    super.initState();
-    SharedPref().getToken().then((value) {
-      token = value;
-    });
-    SharedPref().getValue('id').then((value) {
-      userId = value;
-    });
-  }
 
   void updateButton(bool isValid) {
     if (isValid) {
@@ -65,11 +55,11 @@ class _SetupPinState extends State<SetupPin> {
 
   Future<void> _authenticate() async {
     try {
-      var authenticated = await auth.authenticate(
-          localizedReason: Strings.labelAuthWithFingerPrint,
+      var authenticated = await auth.authenticateWithBiometrics(
+          localizedReason: Localization.of(context).labelAuthWithFingerPrint,
           useErrorDialogs: true);
       if (authenticated) {
-        SharedPref().setBoolValue('setPin', true);
+        setBool(PreferenceKey.setPin, true);
         Navigator.of(context).pushReplacementNamed(Routes.addPaymentOption);
       }
     } on PlatformException catch (e) {
@@ -94,7 +84,7 @@ class _SetupPinState extends State<SetupPin> {
   Widget _buildPinInput(BuildContext context, String label,
       TextEditingController controller, Function function) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 50),
+      margin: EdgeInsets.symmetric(horizontal: spacing50),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -103,19 +93,22 @@ class _SetupPinState extends State<SetupPin> {
             child: Text(
               label,
               textAlign: TextAlign.center,
-              style: AppTextStyle.regularStyle(
-                fontSize: 14,
-                color: AppColors.colorBlack2,
+              style: TextStyle(
+                fontSize: fontSize14,
+                color: colorBlack2,
+                fontWeight: FontWeight.w400,
+                fontFamily: gilroyRegular,
+                fontStyle: FontStyle.normal,
               ),
             ),
           ),
           SizedBox(
-            height: 10,
+            height: spacing10,
           ),
           HutanoPinInput(
             pinCount: 4,
             controller: controller,
-            width: MediaQuery.of(context).size.width / 1.4,
+            width: SizeConfig.screenWidth / 1.4,
             onChanged: function,
           )
         ],
@@ -133,16 +126,19 @@ class _SetupPinState extends State<SetupPin> {
                   Expanded(
                     child: Container(
                       height: 0.5,
-                      color: AppColors.colorBlack2.withOpacity(0.3),
+                      color: colorBlack2.withOpacity(0.3),
                     ),
                   ),
                   SizedBox(
                     width: 3,
                   ),
                   Text('OR',
-                      style: AppTextStyle.mediumStyle(
-                        color: AppColors.colorBlack2.withOpacity(0.7),
-                        fontSize: 15,
+                      style: TextStyle(
+                        color: colorBlack2.withOpacity(0.7),
+                        fontSize: fontSize15,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: gilroyMedium,
+                        fontStyle: FontStyle.normal,
                       )),
                   SizedBox(
                     width: 3,
@@ -150,7 +146,7 @@ class _SetupPinState extends State<SetupPin> {
                   Expanded(
                     child: Container(
                       height: 0.5,
-                      color: AppColors.colorBlack2.withOpacity(0.3),
+                      color: colorBlack2.withOpacity(0.3),
                     ),
                   ),
                 ],
@@ -162,9 +158,12 @@ class _SetupPinState extends State<SetupPin> {
             Align(
               alignment: Alignment.center,
               child: Text('SETUP FINGER PRINT LOGIN',
-                  style: AppTextStyle.mediumStyle(
-                    color: AppColors.colorBlack2,
-                    fontSize: 17,
+                  style: TextStyle(
+                    color: colorBlack2,
+                    fontSize: fontSize17,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: gilroyMedium,
+                    fontStyle: FontStyle.normal,
                   )),
             ),
             SizedBox(
@@ -173,8 +172,8 @@ class _SetupPinState extends State<SetupPin> {
             FlatButton(
               child: Image.asset(
                 FileConstants.icFingerPrint,
-                height: 60,
-                width: 60,
+                height: spacing60,
+                width: spacing60,
               ),
               onPressed: _authenticate,
             ),
@@ -184,9 +183,12 @@ class _SetupPinState extends State<SetupPin> {
             Align(
               alignment: Alignment.center,
               child: Text('Touch your finger print sensor',
-                  style: AppTextStyle.mediumStyle(
-                    color: AppColors.colorBlack2.withOpacity(0.7),
-                    fontSize: 12,
+                  style: TextStyle(
+                    color: colorBlack2.withOpacity(0.7),
+                    fontSize: fontSize12,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: gilroyMedium,
+                    fontStyle: FontStyle.normal,
                   )),
             ),
             SizedBox(
@@ -200,12 +202,13 @@ class _SetupPinState extends State<SetupPin> {
     if (_confirmPinController.text == _newPinController.text) {
       try {
         ProgressDialogUtils.showProgressDialog(context);
-        await api
-            .setPin(context, token,
-                ReqSetupPin(pin: _confirmPinController.text, id: userId))
+        await ApiManager()
+            .setPin(ReqSetupPin(
+                pin: _confirmPinController.text,
+                id: getString(PreferenceKey.id)))
             .then((value) {
           ProgressDialogUtils.dismissProgressDialog();
-          SharedPref().setBoolValue('setPin', true);
+          setBool(PreferenceKey.setPin, true);
           if (widget.setupScreen == SetupScreenFrom.login) {
             Navigator.of(context).pushNamedAndRemoveUntil(
               Routes.dashboardScreen,
@@ -224,19 +227,19 @@ class _SetupPinState extends State<SetupPin> {
         DialogUtils.showAlertDialog(context, e.response);
       }
     } else {
-      _scaffoldKey.currentState
-          .showSnackBar(SnackBar(content: Text(Strings.confirmPinMessage)));
+      _scaffoldKey.currentState.showSnackBar(
+          SnackBar(content: Text(Localization.of(context).confirmPinMessage)));
       /* DialogUtils.showAlertDialog(
-          context, Strings.confirmPinMessage);*/
+          context, Localization.of(context).confirmPinMessage);*/
     }
   }
 
   Widget _buildButton(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 15, right: 15),
+      padding: const EdgeInsets.only(left: spacing15, right: spacing15),
       child: HutanoButton(
-        label: Strings.next,
-        margin: 10,
+        label: Localization.of(context).next,
+        margin: spacing10,
         onPressed: _enableButton ? _onUpdateClick : null,
       ),
     );
@@ -244,6 +247,7 @@ class _SetupPinState extends State<SetupPin> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Container(
       color: Colors.white,
       child: SafeArea(
@@ -253,23 +257,23 @@ class _SetupPinState extends State<SetupPin> {
             child: Column(
               children: [
                 AppHeader(
-                  title: Strings.fasterLogin,
-                  subTitle: Strings.createPin,
+                  title: Localization.of(context).fasterLogin,
+                  subTitle: Localization.of(context).createPin,
                 ),
                 SizedBox(
                   height: 50,
                 ),
-                _buildPinInput(context, Strings.newPin, _newPinController,
-                    _onNewPinChange),
-                _buildPinInput(context, Strings.confirmNewPin,
+                _buildPinInput(context, Localization.of(context).newPin,
+                    _newPinController, _onNewPinChange),
+                _buildPinInput(context, Localization.of(context).confirmNewPin,
                     _confirmPinController, _onConfirmPinChange),
                 SizedBox(
-                  height: 20,
+                  height: spacing20,
                 ),
                 if (widget.setupScreen != SetupScreenFrom.login)
                   _buildFingerPrint(context),
                 SizedBox(
-                  height: 20,
+                  height: spacing20,
                 ),
                 _buildButton(context),
                 if (widget.setupScreen != SetupScreenFrom.login)
@@ -280,7 +284,7 @@ class _SetupPinState extends State<SetupPin> {
                     },
                   ),
                 SizedBox(
-                  height: 50,
+                  height: spacing50,
                 ),
               ],
             ),

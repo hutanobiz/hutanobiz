@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/api/api_helper.dart';
-import 'package:hutano/colors.dart';
-import 'package:hutano/strings.dart';
-import 'package:hutano/text_style.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/dimens.dart';
+import 'package:hutano/utils/app_config.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/utils/localization/localization.dart';
 import '../../../widgets/text_with_image.dart';
 import 'model/provider_detail_model.dart';
 
@@ -27,18 +27,19 @@ class ProviderInfo extends StatelessWidget {
           children: [
             providerDetail.image == null
                 ? CircleAvatar(
-                    radius: 30,
-                    backgroundColor: AppColors.colorPurple.withOpacity(0.3),
+                    radius: spacing30,
+                    backgroundColor: colorPurple.withOpacity(0.3),
                     child: Text(
                       providerDetail.name.substring(0, 1).toUpperCase(),
-                      style: AppTextStyle.mediumStyle(
-                        color: AppColors.colorPurple,
-                      ),
+                      style: TextStyle(
+                          color: colorPurple,
+                          fontWeight: fontWeightMedium,
+                          fontFamily: poppins),
                     ))
                 : CircleAvatar(
-                    radius: 30,
-                    backgroundImage: NetworkImage(
-                        '${ApiBaseHelper.imageUrl}${providerDetail.image}'),
+                    radius: spacing30,
+                    backgroundImage:
+                        NetworkImage('$imageUrl${providerDetail.image}'),
                   ),
             SizedBox(
               width: 7,
@@ -54,7 +55,8 @@ class ProviderInfo extends StatelessWidget {
                       Expanded(
                         child: Text(
                           'Dr ${providerDetail.name}',
-                          style:  AppTextStyle.boldStyle( fontSize: 13),
+                          style: const TextStyle(
+                              fontWeight: fontWeightBold, fontSize: fontSize13),
                           textAlign: TextAlign.start,
                         ),
                       ),
@@ -74,7 +76,7 @@ class ProviderInfo extends StatelessWidget {
                   TextWithImage(
                       image: FileConstants.icExperience,
                       label: providerDetail.painType ??
-                          Strings
+                          Localization.of(context)
                               .yearsOfExpereince
                               .format([providerDetail.experience]))
                 ],

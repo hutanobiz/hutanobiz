@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/api/api_helper.dart';
-import 'package:hutano/colors.dart';
-import 'package:hutano/text_style.dart';
+import 'package:hutano/dimens.dart';
+import 'package:hutano/utils/app_config.dart';
+import 'package:hutano/utils/color_utils.dart';
 import 'family_member_model.dart';
 
 class MemberProfile extends StatelessWidget {
@@ -16,21 +16,21 @@ class MemberProfile extends StatelessWidget {
         children: [
           member.name != null
               ? CircleAvatar(
-                  radius: 25,
-                  backgroundColor: AppColors.colorPurple.withOpacity(0.3),
+                  radius: spacing25,
+                  backgroundColor: colorPurple.withOpacity(0.3),
                   child: Text(
                     member.name?.substring(0, 1).toUpperCase(),
-                    style: AppTextStyle.mediumStyle(
-                      color: AppColors.colorPurple,
-                    ),
+                    style: TextStyle(
+                        color: colorPurple,
+                        fontWeight: fontWeightMedium,
+                        fontFamily: poppins),
                   ))
               : CircleAvatar(
-                  radius: 25,
-                  backgroundImage:
-                      NetworkImage('${ApiBaseHelper.base_url}${member.image}'),
+                  radius: spacing25,
+                  backgroundImage: NetworkImage('$imageUrl${member.image}'),
                 ),
           SizedBox(
-            width: 20,
+            width: spacing20,
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,13 +39,13 @@ class MemberProfile extends StatelessWidget {
             children: [
               Text(
                 member.name,
-                style:  AppTextStyle.semiBoldStyle(
-                    color: AppColors.colorBlack,),
+                style: const TextStyle(
+                    color: colorBlack, fontWeight: fontWeightSemiBold),
               ),
               Text(
                 member.relation,
                 style:
-                    const TextStyle(color: AppColors.colorBlack70, fontSize: 13),
+                    const TextStyle(color: colorBlack70, fontSize: fontSize13),
               )
             ],
           )

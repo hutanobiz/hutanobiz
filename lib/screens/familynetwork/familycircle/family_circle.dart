@@ -1,14 +1,15 @@
-
 import 'package:flutter/material.dart';
-import 'package:hutano/api/api_helper.dart';
-import 'package:hutano/api/error_model.dart';
-import 'package:hutano/colors.dart';
+import 'package:hutano/apis/api_manager.dart';
+import 'package:hutano/apis/error_model.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/screens/familynetwork/familycircle/model/member_permission_model.dart';
 import 'package:hutano/screens/familynetwork/familycircle/model/res_family_circle.dart';
-import 'package:hutano/strings.dart';
-import 'package:hutano/text_style.dart';
-import 'package:hutano/utils/file_constants.dart';
-import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/constants.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/localization/localization.dart';
+import 'package:hutano/utils/preference_key.dart';
+import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/widgets/app_header.dart';
 import 'package:hutano/widgets/list_picker.dart';
 
@@ -33,8 +34,7 @@ class _FamilyCircleState extends State<FamilyCircle> {
   List<MemberPermissionModel> permissionList = [];
   bool _enableButton = false;
   final int _page = 1;
-  ApiBaseHelper api = ApiBaseHelper();
-  String token;
+
   @override
   void initState() {
     super.initState();
@@ -69,10 +69,9 @@ class _FamilyCircleState extends State<FamilyCircle> {
                   padding: const EdgeInsets.symmetric(vertical: 15.0),
                   child: Align(
                     alignment: Alignment.topLeft,
-                    child: Text(Strings.permissionsLabel,
-                        style: AppTextStyle.semiBoldStyle(
-                          fontSize: 14,
-                        )),
+                    child: Text(Localization.of(context).permissionsLabel,
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: fontWeightSemiBold)),
                   ),
                 ),
                 _feedbackSuggestListWidget(
@@ -110,10 +109,9 @@ class _FamilyCircleState extends State<FamilyCircle> {
                   padding: const EdgeInsets.symmetric(vertical: 15.0),
                   child: Align(
                     alignment: Alignment.topLeft,
-                    child: Text(Strings.permissionsLabel,
-                        style: AppTextStyle.semiBoldStyle(
-                          fontSize: 14,
-                        )),
+                    child: Text(Localization.of(context).permissionsLabel,
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: fontWeightSemiBold)),
                   ),
                 ),
                 _updateFeedbackSuggestListWidget(
@@ -138,7 +136,7 @@ class _FamilyCircleState extends State<FamilyCircle> {
           itemBuilder: (context, pos) {
             return StatefulBuilder(
                 builder: (context, _setState) => CheckboxListTile(
-                    activeColor: AppColors.colorYellow,
+                    activeColor: colorYellow,
                     contentPadding: EdgeInsets.all(0),
                     title: Container(
                         child: Row(children: [
@@ -148,10 +146,10 @@ class _FamilyCircleState extends State<FamilyCircle> {
                       Expanded(
                         child: Text(
                           permissionList[pos].label ?? "",
-                          style: AppTextStyle.regularStyle(
-                            color: AppColors.colorBlack85,
-                            fontSize: 14,
-                          ),
+                          style: const TextStyle(
+                              color: colorBlack85,
+                              fontSize: 14,
+                              fontWeight: fontWeightRegular),
                         ),
                       )
                     ])),
@@ -190,7 +188,7 @@ class _FamilyCircleState extends State<FamilyCircle> {
           itemBuilder: (context, pos) {
             return StatefulBuilder(
                 builder: (context, _setState) => CheckboxListTile(
-                    activeColor: AppColors.colorYellow,
+                    activeColor: colorYellow,
                     contentPadding: EdgeInsets.all(0),
                     title: Container(
                         child: Row(children: [
@@ -200,10 +198,10 @@ class _FamilyCircleState extends State<FamilyCircle> {
                       Expanded(
                         child: Text(
                           permissionList[pos].label ?? "",
-                          style: AppTextStyle.regularStyle(
-                            color: AppColors.colorBlack85,
-                            fontSize: 14,
-                          ),
+                          style: const TextStyle(
+                              color: colorBlack85,
+                              fontSize: 14,
+                              fontWeight: fontWeightRegular),
                         ),
                       )
                     ])),
@@ -224,59 +222,53 @@ class _FamilyCircleState extends State<FamilyCircle> {
     if (!isFromAlert) {
       ProgressDialogUtils.showProgressDialog(context);
     }
-    SharedPref().getValue('id').then((value) async {
-      final request = ReqFamilyNetwork(id: value, limit: 20, page: _page);
-      try {
-        var res = await api.getFamilyCircle(context,token,request);
-        if (!isFromAlert) {
-          ProgressDialogUtils.dismissProgressDialog();
-        }
-        setState(() {
-          list = res.response;
-        });
-      } on ErrorModel catch (e) {
-        if (!isFromAlert) {
-          ProgressDialogUtils.dismissProgressDialog();
-        }
-        DialogUtils.showAlertDialog(context, e.response);
-      } catch (e) {
+    final request = ReqFamilyNetwork(
+        id: getString(PreferenceKey.id), limit: dataLimit, page: _page);
+    try {
+      var res = await ApiManager().getFamilyCircle(request);
+      if (!isFromAlert) {
         ProgressDialogUtils.dismissProgressDialog();
       }
-    });
+      setState(() {
+        list = res.response;
+      });
+    } on ErrorModel catch (e) {
+      if (!isFromAlert) {
+        ProgressDialogUtils.dismissProgressDialog();
+      }
+      DialogUtils.showAlertDialog(context, e.response);
+    } catch (e) {
+      ProgressDialogUtils.dismissProgressDialog();
+    }
   }
 
   _getUserPermission() async {
     ProgressDialogUtils.showProgressDialog(context);
-    SharedPref().getToken().then((value) {
-      token = value;
-
-      SharedPref().getValue('id').then((value) async {
-        final request = ReqFamilyNetwork(id: value, limit: 20, page: _page);
-        try {
-          var res = await api.getUserPermission(context, token);
-          ProgressDialogUtils.dismissProgressDialog();
-          var i = 0;
-          var imagesList = [
-            FileConstants.icFullAccess,
-            FileConstants.icAppointments,
-            FileConstants.icDocuments,
-            FileConstants.icNotifications
-          ];
-          res.response.forEach((e) {
-            permissionList.add(MemberPermissionModel(
-                e.permission, false, imagesList[i], e.sId));
-            i++;
-          });
-          setState(() {});
-          _getFamilyNetwork();
-        } on ErrorModel catch (e) {
-          ProgressDialogUtils.dismissProgressDialog();
-          DialogUtils.showAlertDialog(context, e.response);
-        } catch (e) {
-          ProgressDialogUtils.dismissProgressDialog();
-        }
+    final request = ReqFamilyNetwork(
+        id: getString(PreferenceKey.id), limit: dataLimit, page: _page);
+    try {
+      var res = await ApiManager().getUserPermission();
+      ProgressDialogUtils.dismissProgressDialog();
+      var i = 0;
+      var imagesList = [
+        FileConstants.icFullAccess,
+        FileConstants.icAppointments,
+        FileConstants.icDocuments,
+       FileConstants.icNotifications
+      ];
+      res.response.forEach((e) {
+        permissionList.add(
+            MemberPermissionModel(e.permission, false, imagesList[i], e.sId));
+        i++;
       });
-    });
+      setState(() {});
+      _getFamilyNetwork();
+    } on ErrorModel catch (e) {
+      ProgressDialogUtils.dismissProgressDialog();
+      DialogUtils.showAlertDialog(context, e.response);
+    } catch (e) {
+      ProgressDialogUtils.dismissProgressDialog();
+    }
   }
 
   void _onEditClick() {
@@ -307,9 +299,9 @@ class _FamilyCircleState extends State<FamilyCircle> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: HutanoButton(
         buttonType: HutanoButtonType.onlyLabel,
-        color: AppColors.colorYellow,
+        color: colorYellow,
         iconSize: 20,
-        label: Strings.saveLabel,
+        label: Localization.of(context).saveLabel,
         onPressed: () {
           List<String> checkPermissions = [];
           permissionList.forEach((element) {
@@ -326,37 +318,37 @@ class _FamilyCircleState extends State<FamilyCircle> {
     Navigator.pop(context);
     ProgressDialogUtils.showProgressDialog(context);
     var member = list[index];
-    SharedPref().getValue('id').then((value) async {
-      final request = ReqAddPermission(
-          id: value,
-          userId: member.sId,
-          userPermissions: checkedPermission,
-          step: 2);
+    final request = ReqAddPermission(
+        id: getString(PreferenceKey.id, ""),
+        userId: member.sId,
+        userPermissions: checkedPermission,
+        step: 2);
 
-      try {
-        var res = await api.setMemberPermission(context,token,request);
-        ProgressDialogUtils.dismissProgressDialog();
-        if (res.data != null) {
-          // list[index].userPermissions = checkedPermission;
-          setState(() {});
-          DialogUtils.showAlertDialog(context, res.response);
-        }
-      } on ErrorModel catch (e) {
-        ProgressDialogUtils.dismissProgressDialog();
-        DialogUtils.showAlertDialog(context, e.response);
+    try {
+      var res = await ApiManager().setMemberPermission(request);
+      ProgressDialogUtils.dismissProgressDialog();
+      if (res.data != null) {
+        // list[index].userPermissions = checkedPermission;
+        setState(() {});
+        DialogUtils.showAlertDialog(context, res.response);
       }
-    });
+    } on ErrorModel catch (e) {
+      ProgressDialogUtils.dismissProgressDialog();
+      DialogUtils.showAlertDialog(context, e.response);
+    }
   }
 
   void onAddPermissionDone(List<String> checkedPermission, String memberId,
       BuildContext context) async {
+        //Todo:yyyy
     Navigator.pop(context);
     ProgressDialogUtils.showProgressDialog(context);
     final request =
         ReqAddUserPermissionModel(userPermissions: checkedPermission);
 
     try {
-      var res = await api.setSpecificMemberPermission(context,token,request, memberId ?? "");
+      var res = await ApiManager()
+          .setSpecificMemberPermission(request, memberId ?? "");
       ProgressDialogUtils.dismissProgressDialog();
       if (res.response != null) {
         DialogUtils.showAlertDialog(context, res.response);
@@ -403,12 +395,12 @@ class _FamilyCircleState extends State<FamilyCircle> {
             _backButton(),
             _buildHeader(context),
             SizedBox(
-              height: 20,
+              height: spacing20,
             ),
             _buildList(),
             // _buildPermissionButton(),
             SizedBox(
-              height: 20,
+              height: spacing20,
             ),
           ],
         ),
@@ -429,7 +421,7 @@ class _FamilyCircleState extends State<FamilyCircle> {
             buttonType: HutanoButtonType.onlyIcon,
           ),
           SizedBox(
-            width: 50,
+            width: spacing50,
           ),
         ],
       ),
@@ -442,10 +434,10 @@ class _FamilyCircleState extends State<FamilyCircle> {
       children: [
         AppHeader(
           margin: 20,
-          title: Strings.labelMyFamilyCircle,
-          subTitle: Strings.assignPermisstion,
+          title: Localization.of(context).labelMyFamilyCircle,
+          subTitle: Localization.of(context).assignPermisstion,
         ),
-        SizedBox(height: 15),
+        SizedBox(height: spacing15),
       ],
     );
   }
@@ -457,8 +449,8 @@ class _FamilyCircleState extends State<FamilyCircle> {
         padding: EdgeInsets.symmetric(horizontal: 15),
         separatorBuilder: (context, i) {
           return Divider(
-            color: AppColors.colorBorder,
-            height: 35,
+            color: colorBorder,
+            height: spacing35,
             thickness: 0.5,
           );
         },
@@ -469,8 +461,12 @@ class _FamilyCircleState extends State<FamilyCircle> {
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               PopupMenuItem<String>(
                 value: 'Value1',
-                textStyle: AppTextStyle.regularStyle(
-                    color: AppColors.colorBlack2, fontSize: 12.0),
+                textStyle: const TextStyle(
+                    color: colorBlack2,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: "Gilroy",
+                    fontStyle: FontStyle.normal,
+                    fontSize: 12.0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -482,14 +478,18 @@ class _FamilyCircleState extends State<FamilyCircle> {
                     SizedBox(
                       width: 5,
                     ),
-                    Text(Strings.managePermissionsLabel),
+                    Text(Localization.of(context).managePermissionsLabel),
                   ],
                 ),
               ),
               PopupMenuItem<String>(
                 value: 'Value2',
-                textStyle: AppTextStyle.regularStyle(
-                    color: AppColors.colorBlack2, fontSize: 12.0),
+                textStyle: const TextStyle(
+                    color: colorBlack2,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: "Gilroy",
+                    fontStyle: FontStyle.normal,
+                    fontSize: 12.0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -501,7 +501,7 @@ class _FamilyCircleState extends State<FamilyCircle> {
                     SizedBox(
                       width: 5,
                     ),
-                    Text(Strings.remove)
+                    Text(Localization.of(context).remove)
                   ],
                 ),
               ),

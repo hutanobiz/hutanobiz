@@ -11,18 +11,17 @@ class AppTheme {
     );
 
     return ThemeData.light().copyWith(
-      brightness: Brightness.light,
-      primaryColor: AppColors.goldenTainoii,
-      accentColor: AppColors.accentColor,
-      buttonColor: Colors.white,
-      textSelectionColor: Colors.cyan[100],
-      toggleableActiveColor: Colors.cyan[300],
-      floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: Colors.cyan[300],
-      ),
-      textTheme: textTheme.copyWith(
-        bodyText2: body1,
-      ),
-    );
+        brightness: Brightness.light,
+        primaryColor: AppColors.goldenTainoii,
+        accentColor: AppColors.accentColor,
+        buttonColor: Colors.white,
+        textSelectionColor: Colors.cyan[100],
+        toggleableActiveColor: Colors.cyan[300],
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: Colors.cyan[300],
+        ),
+        textTheme: textTheme.apply(
+          fontFamily: "Poppins",
+        ));
   }
 }

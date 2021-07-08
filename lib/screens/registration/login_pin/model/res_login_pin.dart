@@ -73,45 +73,45 @@ class Response {
 
   Response(
       {Location location,
-        String title,
-        String fullName,
-        String firstName,
-        String lastName,
-        String dob,
-        String address,
-        String city,
-        String state,
-        String avatar,
-        int zipCode,
-        String phoneNumber,
-        int gender,
-        List<Null> language,
-        String email,
-        bool isAbleTOReceiveOffersAndPromotions,
-        bool isAgreeTermsAndCondition,
-        String mobileCountryCode,
-        bool isContactInformationVerified,
-        bool isEmailVerified,
-        int status,
-        int type,
-        String resetPasswordVerificationCode,
-        String resetPasswordVerificationCodeSentAt,
-        String stripeCustomerId,
-        String stripeConnectAccount,
-        String referalCode,
-        int referalPoints,
-        int resetPinVerificationCode,
-        String resetPinVerificationCodeSentAt,
-        String emailVerificationCodeSendAt,
-        String emailVerificationCode,
-        String sId,
-        List<Insurance> insurance,
-        List<Tokens> tokens,
-        List<ProviderNetwork> providerNetwork,
-        String createdAt,
-        String updatedAt,
-        int iV,
-        List<FamilyNetwork> familyNetwork}) {
+      String title,
+      String fullName,
+      String firstName,
+      String lastName,
+      String dob,
+      String address,
+      String city,
+      String state,
+      String avatar,
+      int zipCode,
+      String phoneNumber,
+      int gender,
+      List<Null> language,
+      String email,
+      bool isAbleTOReceiveOffersAndPromotions,
+      bool isAgreeTermsAndCondition,
+      String mobileCountryCode,
+      bool isContactInformationVerified,
+      bool isEmailVerified,
+      int status,
+      int type,
+      String resetPasswordVerificationCode,
+      String resetPasswordVerificationCodeSentAt,
+      String stripeCustomerId,
+      String stripeConnectAccount,
+      String referalCode,
+      int referalPoints,
+      int resetPinVerificationCode,
+      String resetPinVerificationCodeSentAt,
+      String emailVerificationCodeSendAt,
+      String emailVerificationCode,
+      String sId,
+      List<Insurance> insurance,
+      List<Tokens> tokens,
+      List<ProviderNetwork> providerNetwork,
+      String createdAt,
+      String updatedAt,
+      int iV,
+      List<FamilyNetwork> familyNetwork}) {
     this._location = location;
     this._title = title;
     this._fullName = fullName;
@@ -189,7 +189,7 @@ class Response {
   bool get isAbleTOReceiveOffersAndPromotions =>
       _isAbleTOReceiveOffersAndPromotions;
   set isAbleTOReceiveOffersAndPromotions(
-      bool isAbleTOReceiveOffersAndPromotions) =>
+          bool isAbleTOReceiveOffersAndPromotions) =>
       _isAbleTOReceiveOffersAndPromotions = isAbleTOReceiveOffersAndPromotions;
   bool get isAgreeTermsAndCondition => _isAgreeTermsAndCondition;
   set isAgreeTermsAndCondition(bool isAgreeTermsAndCondition) =>
@@ -213,7 +213,7 @@ class Response {
   String get resetPasswordVerificationCodeSentAt =>
       _resetPasswordVerificationCodeSentAt;
   set resetPasswordVerificationCodeSentAt(
-      String resetPasswordVerificationCodeSentAt) =>
+          String resetPasswordVerificationCodeSentAt) =>
       _resetPasswordVerificationCodeSentAt =
           resetPasswordVerificationCodeSentAt;
   String get stripeCustomerId => _stripeCustomerId;
@@ -271,26 +271,27 @@ class Response {
     _state = json['state'];
     _avatar = json['avatar'];
     _zipCode = json['zipCode'];
-    _phoneNumber = json['phoneNumber'];
+    _phoneNumber = json['phoneNumber'].toString();
     _gender = json['gender'];
     if (json['language'] != null) {
       _language = new List<Null>();
       json['language'].forEach((v) {
-       // _language.add(new Null.fromJson(v));
+        // _language.add(new Null.fromJson(v));
       });
     }
     _email = json['email'];
     _isAbleTOReceiveOffersAndPromotions =
-    json['isAbleTOReceiveOffersAndPromotions'];
+        json['isAbleTOReceiveOffersAndPromotions'];
     _isAgreeTermsAndCondition = json['isAgreeTermsAndCondition'];
     _mobileCountryCode = json['mobileCountryCode'];
     _isContactInformationVerified = json['isContactInformationVerified'];
     _isEmailVerified = json['isEmailVerified'];
     _status = json['status'];
     _type = json['type'];
-    _resetPasswordVerificationCode = json['resetPasswordVerificationCode'];
+    _resetPasswordVerificationCode =
+        json['resetPasswordVerificationCode'].toString();
     _resetPasswordVerificationCodeSentAt =
-    json['resetPasswordVerificationCodeSentAt'];
+        json['resetPasswordVerificationCodeSentAt'];
     _stripeCustomerId = json['stripeCustomerId'];
     _stripeConnectAccount = json['stripeConnectAccount'];
     _referalCode = json['referalCode'];
@@ -298,7 +299,7 @@ class Response {
     _resetPinVerificationCode = json['resetPinVerificationCode'];
     _resetPinVerificationCodeSentAt = json['resetPinVerificationCodeSentAt'];
     _emailVerificationCodeSendAt = json['emailVerificationCodeSendAt'];
-    _emailVerificationCode = json['emailVerificationCode'];
+    _emailVerificationCode = json['emailVerificationCode'].toString();
     _sId = json['_id'];
     if (json['insurance'] != null) {
       _insurance = new List<Insurance>();
@@ -347,7 +348,7 @@ class Response {
     data['phoneNumber'] = this._phoneNumber;
     data['gender'] = this._gender;
     if (this._language != null) {
-     // data['language'] = this._language.map((v) => v.toJson()).toList();
+      // data['language'] = this._language.map((v) => v.toJson()).toList();
     }
     data['email'] = this._email;
     data['isAbleTOReceiveOffersAndPromotions'] =
@@ -427,9 +428,9 @@ class Insurance {
 
   Insurance(
       {String insuranceId,
-        String insuranceDocumentFront,
-        String insuranceDocumentBack,
-        String sId}) {
+      String insuranceDocumentFront,
+      String insuranceDocumentBack,
+      String sId}) {
     this._insuranceId = insuranceId;
     this._insuranceDocumentFront = insuranceDocumentFront;
     this._insuranceDocumentBack = insuranceDocumentBack;
@@ -538,9 +539,9 @@ class FamilyNetwork {
 
   FamilyNetwork(
       {String userId,
-        int userRelation,
-        List<int> userPermissions,
-        String sId}) {
+      int userRelation,
+      List<int> userPermissions,
+      String sId}) {
     this._userId = userId;
     this._userRelation = userRelation;
     this._userPermissions = userPermissions;

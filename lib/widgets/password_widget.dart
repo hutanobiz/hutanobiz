@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/text_style.dart';
 import 'package:hutano/utils/validations.dart';
 
 class PasswordTextField extends StatelessWidget {
@@ -38,7 +39,7 @@ class PasswordTextField extends StatelessWidget {
       controller: passwordController,
       decoration: InputDecoration(
         isDense: isDense ?? false,
-        labelStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
+        labelStyle: AppTextStyle.regularStyle(fontSize: 14),
         labelText: labelText,
         suffixIcon: suffixIcon,
         prefixIcon: prefixIcon != null ? prefixIcon : null,

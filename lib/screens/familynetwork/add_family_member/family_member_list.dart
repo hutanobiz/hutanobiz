@@ -2,12 +2,14 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/familynetwork/add_family_member/family_provider.dart';
 import 'package:hutano/screens/providercicle/search/model/family_member.dart';
-import 'package:hutano/strings.dart';
-import 'package:hutano/text_style.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/localization/localization.dart';
+import 'package:hutano/utils/size_config.dart';
 import 'package:hutano/widgets/no_data_found.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +23,7 @@ class FamilyMemberList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: new BoxDecoration(
-        color: AppColors.colorWhite,
+        color: colorWhite,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -39,26 +41,25 @@ class FamilyMemberList extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25),
             child: Text(
-              Strings.myFamilyNetwork,
+              Localization.of(context).myFamilyNetwork,
               style: TextStyle(
-                  fontSize: 14,
+                  fontSize: fontSize14,
                   fontWeight: FontWeight.w600,
                   fontStyle: FontStyle.normal,
-                  color: AppColors.colorBlack2),
+                  color: colorBlack2),
             ),
           ),
           Container(
             height: 150,
-            padding: EdgeInsets.only(left: 20, top: 20),
+            padding: EdgeInsets.only(left: spacing20, top: spacing20),
             child: (memberList.length == 0)
                 ? Center(
                     child: NoDataFound(
-                    msg: Strings.noMemberFound,
+                    msg: Localization.of(context).noMemberFound,
                   ))
                 : ListView.separated(
                     separatorBuilder: (_, pos) {
-                      return SizedBox(
-                          width: MediaQuery.of(context).size.width / 5);
+                      return SizedBox(width: SizeConfig.screenWidth / 5);
                     },
                     shrinkWrap: true,
                     primary: false,
@@ -93,14 +94,14 @@ class FamilyMemberList extends StatelessWidget {
                   children: [
                     Text("View all members".toUpperCase(),
                         style: TextStyle(
-                          color: AppColors.colorPurple100,
+                          color: colorPurple100,
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
                           fontStyle: FontStyle.normal,
                         )),
                     Icon(
                       Icons.keyboard_arrow_right,
-                      color: AppColors.colorPurple100,
+                      color: colorPurple100,
                       size: 30,
                     )
                   ],
@@ -127,19 +128,19 @@ class AddMore extends StatelessWidget {
                 borderRadius: BorderRadius.circular(30),
                 border: Border.all(
                   width: 1,
-                  color: AppColors.colorPurple100,
+                  color: colorPurple100,
                 )),
             child: Center(
               child: Image.asset(FileConstants.icAddUser),
             ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: spacing10),
           Text(
             "Add \n More",
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 13,
-              color: AppColors.colorPurple100,
+              fontSize: fontSize13,
+              color: colorPurple100,
               fontWeight: FontWeight.w500,
               fontStyle: FontStyle.normal,
             ),
@@ -155,9 +156,7 @@ class ItemFamilyMember extends StatelessWidget {
   final int memberIndex;
   final Contact contact;
 
-  const ItemFamilyMember(
-      {Key key, this.member, this.memberIndex = 0, this.contact})
-      : super(key: key);
+  const ItemFamilyMember({Key key, this.member,this.memberIndex=0,this.contact}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -167,16 +166,17 @@ class ItemFamilyMember extends StatelessWidget {
           children: [
             member.avatar != null
                 ? CircleAvatar(
-                    radius: 30,
-                    backgroundColor: AppColors.colorPurple.withOpacity(0.3),
+                    radius: spacing30,
+                    backgroundColor: colorPurple.withOpacity(0.3),
                     child: Text(
                       member.fullName.substring(0, 1).toUpperCase(),
-                      style: AppTextStyle.mediumStyle(
-                        color: AppColors.colorPurple,
-                      ),
+                      style: TextStyle(
+                          color: colorPurple,
+                          fontWeight: fontWeightMedium,
+                          fontFamily: poppins),
                     ))
                 : CircleAvatar(
-                    radius: 30,
+                    radius: spacing30,
                     backgroundImage: NetworkImage(''),
                   ),
             Positioned(
@@ -184,17 +184,12 @@ class ItemFamilyMember extends StatelessWidget {
               child: InkWell(
                 onTap: () {
                   // Provider.of<FamilyProvider>(context,listen: false).updateReqProviderMember(_finalMemberList);
-                  Provider.of<FamilyProvider>(context, listen: false)
-                      .removeRedProviderMember(memberIndex);
+                  Provider.of<FamilyProvider>(context,listen: false).removeRedProviderMember(memberIndex);
                   Iterable<Item> v = [];
                   List<Item> c = [];
-                  c.add(Item(label: "mobile", value: member.phoneNumber));
-                  Provider.of<FamilyProvider>(context, listen: false)
-                      .addProviderContacts(
-                          Contact(displayName: member.fullName, phones: c));
-                  Provider.of<FamilyProvider>(context, listen: false)
-                      .addFilteredProviderContacts(
-                          Contact(displayName: member.fullName, phones: c));
+                  c.add(Item(label: "mobile",value: member.phoneNumber));
+                  Provider.of<FamilyProvider>(context,listen: false).addProviderContacts(Contact(displayName: member.fullName,phones: c));
+                  Provider.of<FamilyProvider>(context,listen: false).addFilteredProviderContacts(Contact(displayName: member.fullName,phones: c));
                 },
                 child: Container(
                   width: 18,
@@ -212,20 +207,24 @@ class ItemFamilyMember extends StatelessWidget {
             )
           ],
         ),
-        SizedBox(height: 10),
+        SizedBox(height: spacing10),
         Text(
           member.fullName,
-          style: AppTextStyle.mediumStyle(
-            fontSize: 13,
-            color: AppColors.colorBlack2,
+          style: TextStyle(
+            fontSize: fontSize13,
+            color: colorBlack2,
+            fontWeight: FontWeight.w500,
+            fontStyle: FontStyle.normal,
           ),
         ),
-        SizedBox(height: 5),
+        SizedBox(height: spacing5),
         Text(
           member.relation,
-          style: AppTextStyle.regularStyle(
-            fontSize: 13,
-            color: AppColors.colorBlack2,
+          style: TextStyle(
+            fontSize: fontSize13,
+            color: colorBlack2,
+            fontWeight: FontWeight.w400,
+            fontStyle: FontStyle.normal,
           ),
         )
       ],

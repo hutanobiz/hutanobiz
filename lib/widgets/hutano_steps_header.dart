@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/utils/color_utils.dart';
 import 'hutano_round_button.dart';
 
 class HutanoStepsHeader extends StatelessWidget {
@@ -63,7 +64,7 @@ class HutanoStepsHeader extends StatelessWidget {
                       textAlign: TextAlign.start,
                       style: titleStyle ??
                           TextStyle(
-                              color: AppColors.colorBlack2,
+                              color: colorBlack2,
                               fontWeight: FontWeight.w500,
                               fontStyle: FontStyle.normal,
                               fontSize:
@@ -90,7 +91,7 @@ class HutanoStepsHeader extends StatelessWidget {
                                       : 11,
                               fontWeight: FontWeight.w400,
                               fontStyle: FontStyle.normal,
-                              color: AppColors.colorBlack2.withOpacity(0.85),
+                              color: colorBlack2.withOpacity(0.85),
                             ),
                       ),
                     ),

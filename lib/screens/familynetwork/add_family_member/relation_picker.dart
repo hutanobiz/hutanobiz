@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/colors.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/screens/providercicle/search/model/family_member.dart';
-import 'package:hutano/strings.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/utils/localization/localization.dart';
 import '../../../widgets/hutano_textfield.dart';
 import '../../../widgets/list_picker.dart';
 import 'model/res_relation_list.dart';
@@ -56,20 +57,20 @@ class _RelationPickerState extends State<RelationPicker> {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               widget.member != null
-                  ? Strings
+                  ? Localization.of(context)
                       .msgRelationToMember
                       .format([widget.member.fullName])
                   : "",
               style: TextStyle(
-                color: AppColors.colorBlack2,
-                fontSize: 13,
+                color: colorBlack2,
+                fontSize: fontSize13,
                 fontWeight: FontWeight.w500,
                 fontStyle: FontStyle.normal,
               ),
             ),
           ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: spacing10),
         Container(
             child: GestureDetector(
           onTap: _openStatePicker,
@@ -77,11 +78,11 @@ class _RelationPickerState extends State<RelationPicker> {
               focusNode: FocusNode(),
               controller: widget.controller,
               suffixIcon: FileConstants.icDown,
-              disableBorderColor: AppColors.colorDarkPurple,
-              suffixheight: 12,
-              suffixwidth: 12,
+              disableBorderColor: colorDarkPurple,
+              suffixheight: spacing12,
+              suffixwidth: spacing12,
               isFieldEnable: false,
-              hintText: Strings.relation,
+              hintText: Localization.of(context).relation,
               textInputAction: TextInputAction.next),
         )),
       ],

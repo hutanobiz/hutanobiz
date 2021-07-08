@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/api/api_helper.dart';
-import 'package:hutano/api/error_model.dart';
-import 'package:hutano/colors.dart';
+import 'package:hutano/apis/api_manager.dart';
+import 'package:hutano/apis/error_model.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/strings.dart';
 import 'package:hutano/utils/argument_const.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/localization/localization.dart';
+import 'package:hutano/utils/size_config.dart';
 import 'package:hutano/widgets/controller.dart';
 import '../../../utils/dialog_utils.dart';
 import '../../../utils/enum_utils.dart';
@@ -37,7 +39,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final GlobalKey<FormState> _emailKey = GlobalKey();
   bool _enableButton = false;
   String _countryCode = '+1';
-  ApiBaseHelper api = ApiBaseHelper();
 
   void _onSubmitClick() async {
     final model = ReqResetPassword();
@@ -61,7 +62,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   _callResetPasswordApi(model, verificationType) async {
     ProgressDialogUtils.showProgressDialog(context);
     try {
-      var res = await api.resetPassword(model);
+      var res = await ApiManager().resetPassword(model);
       ProgressDialogUtils.dismissProgressDialog();
       Widgets.showToast(res.response);
       final args = {
@@ -83,7 +84,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   _callResetPinApi(model, verificationType) async {
     ProgressDialogUtils.showProgressDialog(context);
     try {
-      var res = await api.resetPin(model);
+      var res = await ApiManager().resetPin(model);
       ProgressDialogUtils.dismissProgressDialog();
       Widgets.showToast(res.response);
       final args = {
@@ -110,13 +111,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.colorWhite,
+      color: colorWhite,
       child: SafeArea(
         child: Scaffold(
           body: Container(
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: spacing20),
                 child: Column(
                   children: <Widget>[
                     HutanoHeader(
@@ -133,7 +134,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       height: 25,
                       child: Center(
                         child: Text(
-                          Strings.or,
+                          Localization.of(context).or,
                         ),
                       ),
                     ),
@@ -142,11 +143,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       child: _buildEmailField(context),
                     ),
                     SizedBox(
-                      height: 50,
+                      height: spacing50,
                     ),
                     _buildSubmitButton(context),
                     SizedBox(
-                      height: 20,
+                      height: spacing20,
                     ),
                     _buildLoginText(context)
                   ],
@@ -168,17 +169,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         children: [
           Image.asset(
             FileConstants.icBack,
-            height: 20,
-            width: 20,
+            height: spacing20,
+            width: spacing20,
           ),
           SizedBox(
-            width: 7,
+            width: spacing7,
           ),
           Text(
-            Strings.msgReturnLogin,
+            Localization.of(context).msgReturnLogin,
             style: const TextStyle(
-              fontSize: 14,
-              color: AppColors.colorPurple,
+              fontSize: fontSize14,
+              color: colorPurple,
             ),
           )
         ],
@@ -188,11 +189,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   Widget _buildEmailField(BuildContext context) {
     return HutanoTextField(
-        width: MediaQuery.of(context).size.width,
-        labelText: Strings.emailAddress,
+        width: SizeConfig.screenWidth,
+        labelText: Localization.of(context).emailAddress,
         prefixIcon: FileConstants.icMail,
-        prefixwidth: 20,
-        prefixheight: 20,
+        prefixwidth: spacing20,
+        prefixheight: spacing20,
         focusNode: _emailFocus,
         controller: _emailController,
         onValueChanged: (value) {
@@ -208,9 +209,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   Widget _buildSubmitButton(BuildContext context) {
     return HutanoButton(
-      width: MediaQuery.of(context).size.width,
+      width: SizeConfig.screenWidth,
       onPressed: _enableButton ? _onSubmitClick : null,
-      label: Strings.confirm,
+      label: Localization.of(context).confirm,
     );
   }
 
@@ -234,13 +235,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   _getTitle() {
     return widget.verificationScreen == VerificationScreen.resetPassword
-        ? Strings.forgotPassword
-        : Strings.forgotPin;
+        ? Localization.of(context).forgotPassword
+        : Localization.of(context).forgotPin;
   }
 
   _getSubTitle() {
     return widget.verificationScreen == VerificationScreen.resetPassword
-        ? Strings.msgForgotPin.format(["Password"])
-        : Strings.msgForgotPin.format(["PIN"]);
+        ? Localization.of(context).msgForgotPin.format(["Password"])
+        : Localization.of(context).msgForgotPin.format(["PIN"]);
   }
 }

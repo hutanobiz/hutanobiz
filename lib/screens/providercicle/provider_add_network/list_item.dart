@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/colors.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/dimens.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/widgets/custom_card.dart';
 
 import '../../../widgets/placeholder_image.dart';
@@ -14,7 +15,7 @@ class ListItem extends StatelessWidget {
     return CustomCard(
       margin: EdgeInsets.symmetric(vertical: 0, horizontal: 4),
       child: Container(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(spacing10),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
@@ -33,7 +34,7 @@ class ListItem extends StatelessWidget {
                 child: Text(
                   _item.groupName,
                   style: const TextStyle(
-                      color:  AppColors.colorBlack85, fontSize: 14),
+                      color: colorBlack85, fontSize: fontSize14),
                 ),
               ),
             ),

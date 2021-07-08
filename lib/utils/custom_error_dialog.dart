@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hutano/colors.dart';
 import 'package:hutano/strings.dart';
+import 'package:hutano/utils/color_utils.dart';
 
 class CustomErrorDialog {
   static void showErrorDialog(BuildContext context, String message) {
@@ -131,7 +131,7 @@ class CustomErrorDialog {
       CupertinoDialogAction(
         child: Text(
           okButtonTitle,
-          style: TextStyle(color: AppColors.colorLightGreen),
+          style: TextStyle(color: colorLightGreen),
         ),
         onPressed: () {
           Navigator.of(context).pop();

@@ -1,9 +1,7 @@
-
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
-import 'package:hutano/colors.dart';
-
-import '../../../utils/dimens.dart';
+import 'package:hutano/dimens.dart';
+import 'package:hutano/utils/color_utils.dart';
 import '../../../utils/extensions.dart';
 import '../provider_search/model/provider_detail_model.dart';
 import 'expandable_header.dart';
@@ -28,38 +26,38 @@ class _ListSpecialityState extends State<ListSpeciality> {
   Widget build(BuildContext context) {
     return ListView.separated(
         separatorBuilder: (_, pos) {
-          return SizedBox(height: 15);
+          return SizedBox(height: spacing15);
         },
         shrinkWrap: true,
         itemCount: widget.providerGroupList.length,
         itemBuilder: (_, pos) {
           return Container(
-            padding: EdgeInsets.symmetric(horizontal: 10),
+            padding: EdgeInsets.symmetric(horizontal: spacing10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
-                color:  AppColors.colorGrey,
+                color: colorGrey,
                 width: 0.5,
               ),
             ),
             child: ExpandablePanel(
               theme: ExpandableThemeData(
                   hasIcon: true,
-                  iconSize: 30,
-                  iconColor:  AppColors.colorBlack60,
-                  iconPadding: EdgeInsets.only(top: 15)),
+                  iconSize: spacing30,
+                  iconColor: colorBlack60,
+                  iconPadding: EdgeInsets.only(top: spacing15)),
               header: ExpandableHeader(providerGroup: _getProviderGroup(pos)),
               expanded: Column(
                 children: [
                   Divider(
-                    color:  AppColors.colorGrey3,
+                    color: colorGrey3,
                     thickness: 0.5,
                     indent: 5,
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: spacing10),
                   ListView.separated(
                       separatorBuilder: (_, pos) {
-                        return SizedBox(height: 15);
+                        return SizedBox(height: spacing15);
                       },
                       shrinkWrap: true,
                       itemCount: widget.providerGroupList[pos].docInfo.length,
@@ -72,9 +70,9 @@ class _ListSpecialityState extends State<ListSpeciality> {
                           onRemove: widget.onRemove,
                         );
                       }),
-                  SizedBox(height: 15),
+                  SizedBox(height: spacing15),
                 ],
-              ), 
+              ),
             ),
           );
         });

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/api/api_helper.dart';
-import 'package:hutano/api/error_model.dart';
+import 'package:hutano/apis/api_manager.dart';
+import 'package:hutano/apis/error_model.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/strings.dart';
-import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/utils/localization/localization.dart';
+import 'package:hutano/utils/preference_key.dart';
+import 'package:hutano/utils/preference_utils.dart';
+import 'package:hutano/utils/size_config.dart';
 
 import '../../utils/dialog_utils.dart';
 import '../../utils/extensions.dart';
@@ -28,7 +31,6 @@ class _ResetPinState extends State<ResetPin> {
   final _confirmPinController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _enableButton = false;
-  ApiBaseHelper api = ApiBaseHelper();
 
   void updateButton(bool isValid) {
     if (isValid) {
@@ -59,7 +61,9 @@ class _ResetPinState extends State<ResetPin> {
   void _onUpdateClick() async {
     if (_newPinController.text != _confirmPinController.text) {
       _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text(Strings.errorPasswordNotMatch.format(["PIN", "PIN"]))));
+          content: Text(Localization.of(context)
+              .errorPasswordNotMatch
+              .format(["PIN", "PIN"]))));
 
       return;
     }
@@ -72,20 +76,21 @@ class _ResetPinState extends State<ResetPin> {
       // mobileCountryCode: widget.verificationModel.countryCode,
     );
     try {
-      await api.resetPinStep3(request);
+      await ApiManager().resetPinStep3(request);
       ProgressDialogUtils.dismissProgressDialog();
 
       DialogUtils.showOkCancelAlertDialog(
           context: context,
-          message: Strings.passwordResetSuccess.format(["PIN"]),
+          message:
+              Localization.of(context).passwordResetSuccess.format(["PIN"]),
           isCancelEnable: false,
-          okButtonTitle: Strings.ok,
+          okButtonTitle: Localization.of(context).ok,
           okButtonAction: () {
             Navigator.of(context).pushReplacementNamed(
               Routes.loginPin,
             );
           });
-      SharedPref().setBoolValue('setPin', true);
+      setBool(PreferenceKey.setPin, true);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);
@@ -104,16 +109,16 @@ class _ResetPinState extends State<ResetPin> {
               children: [
                 HutanoHeader(
                   headerInfo: HutanoHeaderInfo(
-                    title: Strings.resetPin,
-                    subTitle: Strings.msgResetPin,
+                    title: Localization.of(context).resetPin,
+                    subTitle: Localization.of(context).msgResetPin,
                   ),
                 ),
-                _buildPinInput(context, Strings.newPin, _newPinController,
-                    _onNewPinChange),
-                _buildPinInput(context, Strings.confirmNewPin,
+                _buildPinInput(context, Localization.of(context).newPin,
+                    _newPinController, _onNewPinChange),
+                _buildPinInput(context, Localization.of(context).confirmNewPin,
                     _confirmPinController, _onConfirmPinChange),
                 SizedBox(
-                  height: 20,
+                  height: spacing20,
                 ),
                 _buildButton(context)
               ],
@@ -126,8 +131,8 @@ class _ResetPinState extends State<ResetPin> {
 
   Widget _buildButton(BuildContext context) {
     return HutanoButton(
-      label: Strings.update,
-      margin: 10,
+      label: Localization.of(context).update,
+      margin: spacing10,
       onPressed: _enableButton ? _onUpdateClick : null,
     );
   }
@@ -135,21 +140,21 @@ class _ResetPinState extends State<ResetPin> {
   Widget _buildPinInput(BuildContext context, String label,
       TextEditingController controller, Function function) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 50),
+      margin: EdgeInsets.symmetric(horizontal: spacing50),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             label,
-            style: TextStyle(fontSize: 14),
+            style: TextStyle(fontSize: fontSize14),
           ),
           SizedBox(
-            height: 10,
+            height: spacing10,
           ),
           HutanoPinInput(
             pinCount: 4,
             controller: controller,
-            width: MediaQuery.of(context).size.width / 1.7,
+            width: SizeConfig.screenWidth / 1.7,
             onChanged: function,
           )
         ],

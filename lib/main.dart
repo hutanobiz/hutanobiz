@@ -1,29 +1,23 @@
+import 'package:country_code_picker/country_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/screens/familynetwork/add_family_member/add_family_member.dart';
 import 'package:hutano/screens/familynetwork/add_family_member/family_provider.dart';
-import 'package:hutano/screens/home.dart';
+
 import 'package:hutano/screens/home_main.dart';
-import 'package:hutano/screens/login.dart';
-import 'package:hutano/screens/payment/add_card_complete.dart';
-import 'package:hutano/screens/payment/add_insruance_complete.dart';
-import 'package:hutano/screens/payment/add_insurance.dart';
-import 'package:hutano/screens/payment/add_new_card.dart';
-import 'package:hutano/screens/payment/add_payment_option.dart';
-import 'package:hutano/screens/providercicle/my_provider_network/my_provider_network.dart';
-import 'package:hutano/screens/providercicle/provider_search/provider_search.dart';
-import 'package:hutano/screens/registration/email_verification_complete.dart';
-import 'package:hutano/screens/registration/invite_family/invite_family.dart';
 import 'package:hutano/screens/registration/login_pin/login_pin.dart';
 import 'package:hutano/screens/registration/onboarding.dart';
-import 'package:hutano/screens/registration/verify_email_otp.dart';
+import 'package:hutano/screens/registration/payment/add_payment_option.dart';
+import 'package:hutano/screens/registration/signin/signin_screen.dart';
 import 'package:hutano/screens/registration/welcome_screen.dart';
+import 'package:hutano/screens/setup_pin/set_pin.dart';
 import 'package:hutano/theme.dart';
-import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/utils/localization/localization.dart';
+import 'package:hutano/utils/preference_key.dart';
+import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -54,7 +48,8 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Widget _defaultHome = LoginScreen();
+  await init();
+  Widget _defaultHome = SignInScreen();
   await Firebase.initializeApp();
 // Set the background messaging handler early on, as a named top-level function
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -76,15 +71,20 @@ void main() async {
     sound: true,
   );
 
-  bool _result = await SharedPref().checkValue("token");
-  bool isIntro = await SharedPref().getValue("isIntro") ?? false;
-  bool skipStep = await SharedPref().getValue("skipStep") ?? false;
-  bool performedStep = await SharedPref().getValue("perFormedSteps") ?? false;
-  bool isSetupPin = await SharedPref().getValue("setPin") ?? false;
+  // bool _result = await SharedPref().checkValue("token");
+  // bool isIntro = await SharedPref().getValue("isIntro") ?? false;
+  // bool skipStep = await SharedPref().getValue("skipStep") ?? false;
+  // bool performedStep = await SharedPref().getValue("perFormedSteps") ?? false;
+  // bool isSetupPin = await SharedPref().getValue("setPin") ?? false;
 
+  var token = getString(PreferenceKey.tokens);
+  var skipStep = getBool(PreferenceKey.skipStep, false);
+  var performedStep = getBool(PreferenceKey.perFormedSteps, false);
+  var isSetupPin = getBool(PreferenceKey.setPin, false);
+  var isIntro = getBool(PreferenceKey.intro, false);
   if (!isIntro) {
     _defaultHome = OnBoardingPage();
-  } else if (_result) {
+  } else if (token.isNotEmpty) {
     if (skipStep || performedStep) {
       if (isSetupPin) {
         _defaultHome = LoginPin();
@@ -94,11 +94,15 @@ void main() async {
     } else if (!performedStep) {
       _defaultHome = WelcomeScreen();
     } else {
-      _defaultHome = LoginScreen();
+      _defaultHome = SignInScreen();
     }
   } else {
-    _defaultHome = LoginScreen();
+    _defaultHome = SignInScreen();
   }
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.dark,
+  ));
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitDown,
@@ -114,6 +118,18 @@ void main() async {
           home: _defaultHome,
           onGenerateRoute: Routes.generateRoute,
           navigatorKey: navigatorKey,
+          localizationsDelegates: [
+            const MyLocalizationsDelegate(),
+            CountryLocalizations.delegate,
+          ],
+          supportedLocales: [
+            const Locale('en', ''),
+            const Locale('it'),
+            const Locale('fr'),
+            const Locale('es'),
+            const Locale('de'),
+            const Locale('pt'),
+          ],
         ),
       ),
     ));

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/api/api_helper.dart';
-import 'package:hutano/api/error_model.dart';
-import 'package:hutano/colors.dart';
+import 'package:hutano/apis/api_manager.dart';
+import 'package:hutano/apis/error_model.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/strings.dart';
+import 'package:hutano/screens/registration/register_phone/model/req_register_number.dart';
 import 'package:hutano/utils/argument_const.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/widgets/controller.dart';
 import '../../../../utils/dialog_utils.dart';
 import '../../../../utils/enum_utils.dart';
@@ -30,7 +32,6 @@ class OtpVerification extends StatefulWidget {
 class _OtpVerificationState extends State<OtpVerification> {
   final TextEditingController _otpController = TextEditingController();
   bool _enableButton = false;
-  ApiBaseHelper api = ApiBaseHelper();
 
   _onButtonClick() async {
     final _screenType = widget.verificationModel.verificationScreen;
@@ -56,7 +57,7 @@ class _OtpVerificationState extends State<OtpVerification> {
       // mobileCountryCode: widget.verificationModel.countryCode,
     );
     try {
-      await api.resetPassword(request);
+      await ApiManager().resetPassword(request);
       ProgressDialogUtils.dismissProgressDialog();
       final args = {
         ArgumentConstant.verificationModel: widget.verificationModel,
@@ -82,7 +83,7 @@ class _OtpVerificationState extends State<OtpVerification> {
       // mobileCountryCode: widget.verificationModel.countryCode,
     );
     try {
-      await api.resetPin(request);
+      await ApiManager().resetPin(request);
       ProgressDialogUtils.dismissProgressDialog();
 
       Navigator.of(context)
@@ -98,21 +99,23 @@ class _OtpVerificationState extends State<OtpVerification> {
   _register() async {
     ProgressDialogUtils.showProgressDialog(context);
     final otp = _otpController.text.trim().toString();
-    final request = {
-      "step": "2",
-      "type": "1",
-      "isAgreeTermsAndCondition": "1",
-      "phoneNumber": widget.verificationModel.phone.rawNumber().toString(),
-      "verificationCode": otp.toString(),
-      "mobileCountryCode": widget.verificationModel.countryCode.toString(),
-    };
+    final request = ReqRegsiterNumber(
+      step: 2,
+      type: 1,
+      isAgreeTermsAndCondition: 1,
+      phoneNumber: widget.verificationModel.phone.rawNumber(),
+      verificationCode: otp,
+      mobileCountryCode: widget.verificationModel.countryCode,
+    );
     try {
-      await api.register(request);
+      await ApiManager().register(request);
       ProgressDialogUtils.dismissProgressDialog();
-//Todo
-      Navigator.of(context).pushReplacementNamed(Routes.registerRoute,
-          arguments: RegisterArguments(
-              widget.verificationModel.phone.rawNumber(), false));
+
+      Navigator.of(context)
+          .pushReplacementNamed(Routes.routeRegister, arguments: {
+        ArgumentConstant.number: widget.verificationModel.phone.rawNumber(),
+        ArgumentConstant.countryCode: widget.verificationModel.countryCode
+      });
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);
@@ -141,7 +144,7 @@ class _OtpVerificationState extends State<OtpVerification> {
       // mobileCountryCode: widget.verificationModel.countryCode,
     );
     try {
-      var res = await api.resetPassword(request);
+      var res = await ApiManager().resetPassword(request);
       ProgressDialogUtils.dismissProgressDialog();
       Widgets.showToast(res.response);
     } on ErrorModel catch (e) {
@@ -161,7 +164,7 @@ class _OtpVerificationState extends State<OtpVerification> {
       // mobileCountryCode: widget.verificationModel.countryCode,
     );
     try {
-      var res = await api.resetPin(request);
+      var res = await ApiManager().resetPin(request);
       ProgressDialogUtils.dismissProgressDialog();
       Widgets.showToast(res.response);
     } on ErrorModel catch (e) {
@@ -172,20 +175,18 @@ class _OtpVerificationState extends State<OtpVerification> {
 
   _resendRegistrationApi() async {
     ProgressDialogUtils.showProgressDialog(context);
-    final request = {
-//        loginData["phoneNumber"] = cleanedPhoneNumber;
-// //             loginData["type"] = "1";
-//       "step": 4,
-      "type": "1",
-      // "isAgreeTermsAndCondition": 1,
-      "phoneNumber": widget.verificationModel.phone.rawNumber().toString(),
-      // "mobileCountryCode": widget.verificationModel.countryCode.toString(),
-    };
+    final request = ReqRegsiterNumber(
+      step: 4,
+      type: 1,
+      isAgreeTermsAndCondition: 1,
+      phoneNumber: widget.verificationModel.phone.rawNumber(),
+      mobileCountryCode: widget.verificationModel.countryCode,
+    );
     try {
-      var res = await api.resendPhoneOtp(context, request);
+      var res = await ApiManager().resendPhoneVerificationCode(request);
       ProgressDialogUtils.dismissProgressDialog();
       Widgets.showToast(
-          'A 6-digit verification number has been re-sent to your phone.');
+          "Your Hutano code is: ${res.response['verificationCode']}. This code is expires in 10 minutes.");
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);
@@ -194,15 +195,14 @@ class _OtpVerificationState extends State<OtpVerification> {
 
   _callRegsitrationApi() async {
     ProgressDialogUtils.showProgressDialog(context);
-    final request = {
-      "step": "1",
-      "type": "1",
-      "phoneNumber": widget.verificationModel.phone.rawNumber().toString(),
-      "mobileCountryCode": widget.verificationModel.countryCode.toString(),
-      "isAgreeTermsAndCondition": "1"
-    };
+    final request = ReqRegsiterNumber(
+        step: 1,
+        type: 1,
+        phoneNumber: widget.verificationModel.phone.rawNumber(),
+        mobileCountryCode: widget.verificationModel.countryCode,
+        isAgreeTermsAndCondition: 1);
     try {
-      var res = await api.otpOnCall(request);
+      var res = await ApiManager().otpOnCall(request);
       ProgressDialogUtils.dismissProgressDialog();
       Widgets.showToast(res.response);
     } on ErrorModel catch (e) {
@@ -227,16 +227,16 @@ class _OtpVerificationState extends State<OtpVerification> {
                 ),
                 _buildOtp(context),
                 HutanoButton(
-                  margin: 10,
+                  margin: spacing10,
                   onPressed: _enableButton ? _onButtonClick : null,
-                  label: Strings.verify,
+                  label: Localization.of(context).verify,
                 ),
                 SizedBox(
-                  height: 20,
+                  height: spacing20,
                 ),
                 _buildResend(context),
                 SizedBox(
-                  height: 20,
+                  height: spacing20,
                 ),
                 if (widget.verificationModel.verificationScreen ==
                     VerificationScreen.registration)
@@ -251,7 +251,7 @@ class _OtpVerificationState extends State<OtpVerification> {
 
   Widget _buildOtp(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.all(spacing10),
       child: HutanoPinInput(
         pinCount: 6,
         controller: _otpController,
@@ -278,10 +278,10 @@ class _OtpVerificationState extends State<OtpVerification> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          Strings.msgCodeNotRecieved,
+          Localization.of(context).msgCodeNotRecieved,
           style: TextStyle(
-            fontSize: 14,
-            color: AppColors.colorBlack,
+            fontSize: fontSize14,
+            color: colorBlack,
           ),
         ),
         RawMaterialButton(
@@ -290,10 +290,10 @@ class _OtpVerificationState extends State<OtpVerification> {
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           onPressed: _resendCode,
           child: Text(
-            Strings.resend,
+            Localization.of(context).resend,
             style: TextStyle(
-              fontSize: 14,
-              color: AppColors.accentColor,
+              fontSize: fontSize14,
+              color: accentColor,
             ),
           ),
         )
@@ -306,15 +306,15 @@ class _OtpVerificationState extends State<OtpVerification> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         HutanoHeaderInfo(
-          title: Strings.verifyCode,
-          subTitle: Strings.msgOtpReceived,
+          title: Localization.of(context).verifyCode,
+          subTitle: Localization.of(context).msgOtpReceived,
         ),
         SizedBox(
-          height: 7,
+          height: spacing7,
         ),
         Text(
           _getLabel(),
-          style: TextStyle(fontSize: 13),
+          style: TextStyle(fontSize: fontSize13),
         )
       ],
     );

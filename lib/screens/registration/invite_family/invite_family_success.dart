@@ -3,7 +3,9 @@ import 'package:flutter/widgets.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/strings.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/widgets/app_header.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/hutano_progressbar.dart';
@@ -25,8 +27,8 @@ class InviteFamilySuccess extends StatelessWidget {
             children: [
               AppHeader(
                 progressSteps: HutanoProgressSteps.one,
-                title: Strings.inviteFamilyAndFriends,
-                subTitle: Strings.taskComplete,
+                title: Localization.of(context).inviteFamilyAndFriends,
+                subTitle: Localization.of(context).taskComplete,
               ),
               Spacer(),
               RoundSuccess(),
@@ -38,7 +40,7 @@ class InviteFamilySuccess extends StatelessWidget {
                   child: HutanoButton(
                     width: 55,
                     height: 55,
-                    color: AppColors.accentColor,
+                    color: accentColor,
                     iconSize: 20,
                     buttonType: HutanoButtonType.onlyIcon,
                     icon: FileConstants.icForward,

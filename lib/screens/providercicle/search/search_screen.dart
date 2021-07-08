@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hutano/api/api_helper.dart';
-import 'package:hutano/api/error_model.dart';
-import 'package:hutano/colors.dart';
+import 'package:hutano/apis/api_manager.dart';
+import 'package:hutano/apis/error_model.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/strings.dart';
 import 'package:hutano/utils/argument_const.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/constants.dart';
 import 'package:hutano/utils/enum_utils.dart';
-import 'package:hutano/utils/file_constants.dart';
-import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/widgets/custom_scaffold.dart';
 import 'package:hutano/widgets/no_data_found.dart';
 import 'package:hutano/widgets/ripple_effect.dart';
@@ -16,7 +17,6 @@ import 'package:hutano/widgets/ripple_effect.dart';
 import '../../../utils/debouncer.dart';
 import '../../../utils/extensions.dart';
 import '../../../utils/dialog_utils.dart';
-import '../../../utils/dimens.dart';
 import '../../../utils/progress_dialog.dart';
 import '../../../widgets/hutano_button.dart';
 import 'item_member_detail.dart';
@@ -40,14 +40,10 @@ class _SearchScreenState extends State<SearchScreen> {
   List<FamilyMember> _memberList = [];
   final int _page = 1;
   final GlobalKey<FormState> _key = GlobalKey();
-  ApiBaseHelper api = ApiBaseHelper();
-  String token;
+
   @override
   void initState() {
     super.initState();
-    SharedPref().getToken().then((value) {
-      token = value;
-    });
     if (widget.searchScreen != null) {
       if (widget.searchScreen == SearchScreenFrom.inviteFamily) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -70,9 +66,10 @@ class _SearchScreenState extends State<SearchScreen> {
 
   _searchUser(s) async {
     ProgressDialogUtils.showProgressDialog(context);
-    final request = ReqSearchNumber(limit: 20, page: _page, searchByNumber: s);
+    final request =
+        ReqSearchNumber(limit: dataLimit, page: _page, searchByNumber: s);
     try {
-      var res = await api.searchContact(context, token, request);
+      var res = await ApiManager().searchContact(request);
       ProgressDialogUtils.dismissProgressDialog();
       setState(() {
         _memberList = res.response;
@@ -95,12 +92,13 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      padding: EdgeInsets.only(top: 30, left: 15, right: 15, bottom: 10),
+      padding: EdgeInsets.only(
+          top: spacing30, left: spacing15, right: spacing15, bottom: spacing10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 25,
+            height: spacing25,
           ),
           Form(
             autovalidate: true,
@@ -108,19 +106,19 @@ class _SearchScreenState extends State<SearchScreen> {
             child: _buildSearchField(),
           ),
           SizedBox(
-            height: 30,
+            height: spacing30,
           ),
           Expanded(
             child: (_memberList.length == 0 &&
                     _searchController.text.length > 0)
                 ? Center(
                     child: NoDataFound(
-                    msg: Strings.noMemberFound,
+                    msg: Localization.of(context).noMemberFound,
                   ))
                 : ListView.separated(
                     separatorBuilder: (_, pos) {
                       return Divider(
-                        color: AppColors.colorBorder45,
+                        color: colorBorder45,
                         thickness: 0.5,
                         height: 25,
                       );
@@ -172,8 +170,8 @@ class _SearchScreenState extends State<SearchScreen> {
     );
     return TextFormField(
       controller: _searchController,
-      style: TextStyle(color: AppColors.colorDarkPurple),
-      cursorColor: AppColors.colorDarkPurple,
+      style: TextStyle(color: colorDarkPurple),
+      cursorColor: colorDarkPurple,
       maxLength: 10,
       maxLengthEnforced: true,
       onChanged: (s) => _debouncer(() {
@@ -191,7 +189,7 @@ class _SearchScreenState extends State<SearchScreen> {
       decoration: InputDecoration(
         counterText: "",
         isDense: true,
-        fillColor: AppColors.colorWhiteSmoke44,
+        fillColor: colorWhiteSmoke44,
         filled: true,
         suffixIconConstraints: BoxConstraints(),
         suffixIcon: InkWell(
@@ -200,8 +198,8 @@ class _SearchScreenState extends State<SearchScreen> {
             padding: const EdgeInsets.only(right: 8),
             child: Icon(
               Icons.cancel,
-              color: AppColors.colorLightBlue,
-              size: 25,
+              color: colorLightBlue,
+              size: spacing25,
             ),
           ),
         ),
@@ -214,11 +212,11 @@ class _SearchScreenState extends State<SearchScreen> {
             width: 20,
           ),
         ),
-        hoverColor: AppColors.colorGrey84,
+        hoverColor: colorGrey84,
         border: border,
         disabledBorder: border,
         focusedBorder: border,
-        hintText: Strings.search,
+        hintText: Localization.of(context).search,
       ),
     );
   }

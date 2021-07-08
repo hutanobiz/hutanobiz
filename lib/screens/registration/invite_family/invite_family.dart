@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/strings.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/skip_later.dart';
 import '../../../widgets/app_header.dart';
@@ -30,11 +33,11 @@ class _InviteFamilyScreenState extends State<InviteFamilyScreen> {
               children: [
                 AppHeader(
                   progressSteps: HutanoProgressSteps.three,
-                  title: Strings.inviteFamilyAndFriends,
-                  subTitle: Strings.assignPermisstion,
+                  title: Localization.of(context).inviteFamilyAndFriends,
+                  subTitle: Localization.of(context).assignPermisstion,
                 ),
                 SizedBox(
-                  height: 80,
+                  height: spacing80,
                 ),
                 GestureDetector(onTap: () {
                   Navigator.of(context).pushReplacementNamed(Routes.addFamilyMember);
@@ -51,7 +54,7 @@ class _InviteFamilyScreenState extends State<InviteFamilyScreen> {
                       HutanoButton(
                         width: 55,
                         height: 55,
-                        color: AppColors.accentColor,
+                        color: accentColor,
                         iconSize: 20,
                         buttonType: HutanoButtonType.onlyIcon,
                         icon: FileConstants.icForward,
@@ -86,9 +89,9 @@ class _InviteFamilyScreenState extends State<InviteFamilyScreen> {
             SizedBox(
               width: 15,
             ),
-            Text(Strings.inviteByText,
+            Text(Localization.of(context).inviteByText,
                 style: const TextStyle(
-                    color: AppColors.colorBlack2,
+                    color: colorBlack2,
                     fontStyle: FontStyle.normal,
                     fontSize: 14.0),
                 textAlign: TextAlign.left),
@@ -105,7 +108,7 @@ class _InviteFamilyScreenState extends State<InviteFamilyScreen> {
         ),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(8)),
-            border: Border.all(color: AppColors.colorGreyBorder, width: 0.5),
+            border: Border.all(color: colorGreyBorder, width: 0.5),
             boxShadow: [
               BoxShadow(
                   color: const Color(0x148b8b8b),
@@ -113,7 +116,7 @@ class _InviteFamilyScreenState extends State<InviteFamilyScreen> {
                   blurRadius: 30,
                   spreadRadius: 0)
             ],
-            color: AppColors.colorWhite));
+            color: colorWhite));
   }
 
   _skipTaskNow() {

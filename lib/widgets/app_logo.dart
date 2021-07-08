@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
 
 class AppLogo extends StatelessWidget {
   const AppLogo({this.appLogoText});

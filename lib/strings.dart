@@ -1,5 +1,5 @@
 class Strings {
-  static const String logIn = "Log In";
+  static const String logIn = "Log in";
   static const String emailText = "Email address";
   static const String passwordText = "Password";
   static const String enterEmail = "Please enter email address";
@@ -53,7 +53,7 @@ class Strings {
   static const String msgEnterAddress = "Please enter a email address";
 
   static const String msgEnterValidAddress =
-      "Please enter a valid email address";
+      "Please enter valid email address";
 
   static const String signIn = "Don't have an account? ";
 

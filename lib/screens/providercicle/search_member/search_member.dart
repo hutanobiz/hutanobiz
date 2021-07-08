@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hutano/api/api_helper.dart';
-import 'package:hutano/api/error_model.dart';
-import 'package:hutano/colors.dart';
+import 'package:hutano/apis/api_manager.dart';
+import 'package:hutano/apis/error_model.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/strings.dart';
-import 'package:hutano/text_style.dart';
 import 'package:hutano/utils/argument_const.dart';
-import 'package:hutano/utils/file_constants.dart';
-import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/constants.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/localization/localization.dart';
+import 'package:hutano/utils/preference_key.dart';
+import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/widgets/custom_scaffold.dart';
 import 'package:hutano/widgets/no_data_found.dart';
 import 'package:hutano/widgets/ripple_effect.dart';
-
 import '../../../utils/debouncer.dart';
 import '../../../utils/dialog_utils.dart';
-import '../../../utils/dimens.dart';
 import '../../../utils/progress_dialog.dart';
 import '../../../widgets/hutano_button.dart';
 import '../../familynetwork/add_family_member/model/res_add_member.dart';
@@ -38,15 +38,10 @@ class _SearchScreenState extends State<SearchMember> {
   final _debouncer = Debouncer();
   List<FamilyNetwork> _memberList = [];
   final int _page = 1;
-  String token;
-  ApiBaseHelper api = ApiBaseHelper();
 
   @override
   void initState() {
     super.initState();
-    SharedPref().getToken().then((value) {
-      token = value;
-    });
     if (widget.loadAllData) {
       WidgetsBinding.instance.addPostFrameCallback((_) => {_searchUser('')});
     }
@@ -64,23 +59,25 @@ class _SearchScreenState extends State<SearchMember> {
 
   _searchUser(s) async {
     ProgressDialogUtils.showProgressDialog(context);
-    SharedPref().getValue('id').then((value) async {
-      final request =
-          ReqFamilyNetwork(id: value, limit: 20, page: _page, search: s);
 
-      try {
-        var res = await api.getFamilyNetowrk(context, token, request);
-        ProgressDialogUtils.dismissProgressDialog();
-        setState(() {
-          _memberList = res.response.familyNetwork;
-        });
-      } on ErrorModel catch (e) {
-        ProgressDialogUtils.dismissProgressDialog();
-        DialogUtils.showAlertDialog(context, e.response);
-      } catch (e) {
-        ProgressDialogUtils.dismissProgressDialog();
-      }
-    });
+    final request = ReqFamilyNetwork(
+        id: getString(PreferenceKey.id),
+        limit: dataLimit,
+        page: _page,
+        search: s);
+
+    try {
+      var res = await ApiManager().getFamilyNetowrk(request);
+      ProgressDialogUtils.dismissProgressDialog();
+      setState(() {
+        _memberList = res.response.familyNetwork;
+      });
+    } on ErrorModel catch (e) {
+      ProgressDialogUtils.dismissProgressDialog();
+      DialogUtils.showAlertDialog(context, e.response);
+    } catch (e) {
+      ProgressDialogUtils.dismissProgressDialog();
+    }
   }
 
   _onClose() {
@@ -93,16 +90,17 @@ class _SearchScreenState extends State<SearchMember> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      padding: EdgeInsets.only(top: 30, left: 15, right: 15, bottom: 10),
+      padding: EdgeInsets.only(
+          top: spacing30, left: spacing15, right: spacing15, bottom: spacing10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 25,
+            height: spacing25,
           ),
           _buildSearchField(),
           SizedBox(
-            height: 30,
+            height: spacing30,
           ),
           Expanded(
             child:
@@ -111,7 +109,7 @@ class _SearchScreenState extends State<SearchMember> {
                     : ListView.separated(
                         separatorBuilder: (_, pos) {
                           return Divider(
-                            color: AppColors.colorBorder45,
+                            color: colorBorder45,
                             thickness: 0.5,
                             height: 25,
                           );
@@ -132,10 +130,12 @@ class _SearchScreenState extends State<SearchMember> {
                                   avatar: _memberList[pos].avatar,
                                   fullName: _memberList[pos].fullName,
                                   relation: _memberList[pos].relation),
-                              titleStyle: AppTextStyle.semiBoldStyle(
-                                  color: AppColors.colorBlack, fontSize: 14),
+                              titleStyle: TextStyle(
+                                  color: colorBlack,
+                                  fontWeight: fontWeightSemiBold,
+                                  fontSize: fontSize14),
                               subTitleStyle: TextStyle(
-                                  color: AppColors.colorBlack70, fontSize: 12),
+                                  color: colorBlack70, fontSize: fontSize12),
                             ),
                           );
                         }),
@@ -163,8 +163,8 @@ class _SearchScreenState extends State<SearchMember> {
     );
     return TextField(
       controller: _searchController,
-      style: TextStyle(color: AppColors.colorDarkPurple),
-      cursorColor: AppColors.colorDarkPurple,
+      style: TextStyle(color: colorDarkPurple),
+      cursorColor: colorDarkPurple,
       onChanged: (s) => _debouncer(() {
         _onSearch(s);
       }),
@@ -172,7 +172,7 @@ class _SearchScreenState extends State<SearchMember> {
       inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
       decoration: InputDecoration(
         isDense: true,
-        fillColor: AppColors.colorWhiteSmoke44,
+        fillColor: colorWhiteSmoke44,
         filled: true,
         suffixIconConstraints: BoxConstraints(),
         suffixIcon: InkWell(
@@ -181,8 +181,8 @@ class _SearchScreenState extends State<SearchMember> {
             padding: const EdgeInsets.only(right: 8),
             child: Icon(
               Icons.cancel,
-              color: AppColors.colorLightBlue,
-              size: 25,
+              color: colorLightBlue,
+              size: spacing25,
             ),
           ),
         ),
@@ -195,11 +195,11 @@ class _SearchScreenState extends State<SearchMember> {
             width: 20,
           ),
         ),
-        hoverColor: AppColors.colorGrey84,
+        hoverColor: colorGrey84,
         border: border,
         disabledBorder: border,
         focusedBorder: border,
-        hintText: Strings.search,
+        hintText: Localization.of(context).search,
       ),
     );
   }

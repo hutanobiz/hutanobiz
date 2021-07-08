@@ -11,26 +11,12 @@ class ReqAddProvider {
   });
 
   dynamic toMap() {
-    var map = {};
-    if (userId != null) {
-      map['userId'] = userId;
-    }
-    if (doctorId != null) {
-      map['doctorId'] = doctorId;
-    }
-    if (groupId != null) {
-      map['groupId'] = groupId;
-    }
-    if (groupName != null) {
-      map['groupName'] = groupName;
-    }
-    // return {
-    //   'userId': userId,
-    //   'doctorId': doctorId,
-    //   'groupId': groupId,
-    //   'groupName': groupName,
-    // };
-    return map;
+    return {
+      'userId': userId,
+      'doctorId': doctorId,
+      'groupId': groupId,
+      'groupName': groupName,
+    };
   }
 
   factory ReqAddProvider.fromMap(Map<String, dynamic> map) {

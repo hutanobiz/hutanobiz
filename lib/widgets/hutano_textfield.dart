@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/utils/color_utils.dart';
 
 class HutanoTextField extends StatefulWidget {
   final Color suffixIconColor;
@@ -82,12 +83,12 @@ class HutanoTextField extends StatefulWidget {
       this.suffixwidth,
       this.suffixheight,
       this.autovalidate = AutovalidateMode.onUserInteraction,
-      this.focusedBorderColor = AppColors.colorPurple,
+      this.focusedBorderColor = colorPurple,
       this.floatingBehaviour = FloatingLabelBehavior.auto,
       this.textSize = 14,
       this.labelTextStyle,
-      this.enabledBorderColor = AppColors.colorBlack20,
-      this.disableBorderColor = AppColors.colorBlack20,
+      this.enabledBorderColor = colorBlack20,
+      this.disableBorderColor = colorBlack20,
       this.prefixPadding,
       this.isPasswordField = false,
       this.border,
@@ -128,7 +129,7 @@ class _HutanoTextFieldState extends State<HutanoTextField> {
           child: TextFormField(
             autovalidateMode: widget.autovalidate,
             style: TextStyle(
-              color: AppColors.textColor,
+              color: textColor,
               fontSize: widget.textSize,
             ),
             controller: widget.controller,
@@ -140,7 +141,6 @@ class _HutanoTextFieldState extends State<HutanoTextField> {
             enabled: widget.isFieldEnable,
             decoration: InputDecoration(
               labelText: widget.labelText,
-              isDense: true,
               errorText: widget.errorText,
               labelStyle: widget.labelTextStyle != null
                   ? widget.labelTextStyle
@@ -155,7 +155,7 @@ class _HutanoTextFieldState extends State<HutanoTextField> {
               counterText: "",
               hintText: widget.hintText,
               floatingLabelBehavior: widget.floatingBehaviour,
-              hintStyle: TextStyle(color: AppColors.colorGrey60, fontSize: 14),
+              hintStyle: TextStyle(color: colorGrey60, fontSize: 14),
 
               focusedBorder: OutlineInputBorder(
                   borderRadius: const BorderRadius.all(Radius.circular(12)),
@@ -226,13 +226,11 @@ class _HutanoTextFieldState extends State<HutanoTextField> {
 
   _buildLabel() {
     if (widget.floatingBehaviour == FloatingLabelBehavior.always) {
-      return TextStyle(fontSize: 14, color: AppColors.colorGrey60);
+      return TextStyle(fontSize: 14, color: colorGrey60);
     }
 
     return TextStyle(
         fontSize: 14,
-        color: widget.focusNode.hasFocus
-            ? AppColors.colorPurple
-            : AppColors.colorBlack85);
+        color: widget.focusNode.hasFocus ? colorPurple : colorBlack85);
   }
 }

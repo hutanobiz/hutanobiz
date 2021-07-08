@@ -1,15 +1,14 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:hutano/colors.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/strings.dart';
-import 'package:hutano/text_style.dart';
 import 'package:hutano/utils/argument_const.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/constants.dart';
 import 'package:hutano/utils/extensions.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/widgets/custom_card.dart';
-
 
 import '../../../widgets/hutano_button.dart';
 import '../../../widgets/text_with_image.dart';
@@ -24,7 +23,7 @@ class ItemProviderDetail extends StatelessWidget {
 
   RoundedRectangleBorder _getBorder({double bottomLeft, double bottomRight}) {
     return RoundedRectangleBorder(
-        side: BorderSide(color:  AppColors.colorPurple, width: 0.5),
+        side: const BorderSide(color: colorPurple, width: 0.5),
         borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(bottomLeft),
             bottomRight: Radius.circular(bottomRight),
@@ -58,11 +57,11 @@ class ItemProviderDetail extends StatelessWidget {
                   ArgumentConstant.doctorAvatar: providerDetail.user[0].avatar
                 });
               },
-              label: Strings.addToNetwork,
+              label: Localization.of(context).addToNetwork,
               height: 45,
-              fontSize: 12,
-              labelColor:  AppColors.colorWhite,
-              color:  AppColors.colorPurple,
+              fontSize: fontSize12,
+              labelColor: colorWhite,
+              color: colorPurple,
               buttonShape: _getBorder(bottomLeft: 14, bottomRight: 0),
             )),
       ],
@@ -141,7 +140,7 @@ class ItemProviderDetail extends StatelessWidget {
               ),
             ),
             Container(
-              height: 50,
+              height: spacing50,
               margin: EdgeInsets.only(top: 20, right: 5),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -149,16 +148,21 @@ class ItemProviderDetail extends StatelessWidget {
                 children: [
                   Text(
                     '\$${_getFee()}',
-                    style:  AppTextStyle.semiBoldStyle(
-                        color:  AppColors.colorBlack2,
+                    style: const TextStyle(
+                        color: colorBlack2,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: gilroySemiBold,
+                        fontStyle: FontStyle.normal,
                         fontSize: 16.0),
                   ),
                   Text(
-                    Strings.consultationFee,
-                    style:  AppTextStyle.regularStyle(
-                      color:  AppColors.colorBlack2,
+                    Localization.of(context).consultationFee,
+                    style: const TextStyle(
+                      color: colorBlack2,
                       fontSize: 11,
                       fontWeight: FontWeight.w400,
+                      fontFamily: gilroyRegular,
+                      fontStyle: FontStyle.normal,
                     ),
                   ),
                 ],
@@ -209,7 +213,7 @@ class ItemProviderDetail extends StatelessWidget {
           IntrinsicWidth(
             child: TextWithImage(
               image: FileConstants.icLocation,
-              label: Strings
+              label: Localization.of(context)
                   .miles
                   .format([providerDetail.distance.toStringAsFixed(2) ?? '0']),
             ),
@@ -233,7 +237,7 @@ class ItemProviderDetail extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Divider(
-                    color:  AppColors.colorBorder,
+                    color: colorBorder,
                     height: 0.5,
                   ),
                 ),

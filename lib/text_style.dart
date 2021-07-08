@@ -1,8 +1,5 @@
-
-
 import 'package:flutter/material.dart';
-
-import 'dimens.dart';
+import 'package:hutano/dimens.dart';
 
 class AppTextStyle {
   const AppTextStyle._();
@@ -15,7 +12,7 @@ class AppTextStyle {
   }) {
     return _textStyle(
       color: color,
-      fontSize: fontSize ?? Dimens.fontSize26,
+      fontSize: fontSize ?? fontSize26,
       fontWeight: fontWeight ?? FontWeight.w600,
       decoration: decoration,
     );
@@ -29,7 +26,7 @@ class AppTextStyle {
   }) {
     return _textStyle(
       color: color,
-      fontSize: fontSize ?? Dimens.fontSize20,
+      fontSize: fontSize ?? fontSize20,
       fontWeight: fontWeight ?? FontWeight.w600,
       decoration: decoration,
     );
@@ -43,7 +40,7 @@ class AppTextStyle {
   }) {
     return _textStyle(
       color: color,
-      fontSize: fontSize ?? Dimens.fontSize14,
+      fontSize: fontSize ?? fontSize14,
       fontWeight: fontWeight ?? FontWeight.w500,
       decoration: decoration,
     );
@@ -57,7 +54,7 @@ class AppTextStyle {
   }) {
     return _textStyle(
       color: color,
-      fontSize: fontSize ?? Dimens.fontSize14,
+      fontSize: fontSize ?? fontSize14,
       fontWeight: fontWeight ?? FontWeight.w600,
       decoration: decoration,
     );
@@ -71,7 +68,7 @@ class AppTextStyle {
   }) {
     return _textStyle(
       color: color,
-      fontSize: fontSize ?? Dimens.fontSize22,
+      fontSize: fontSize ?? fontSize22,
       fontWeight: fontWeight ?? FontWeight.w700,
       decoration: decoration,
     );
@@ -85,7 +82,7 @@ class AppTextStyle {
   }) {
     return _textStyle(
       color: color,
-      fontSize: fontSize ?? Dimens.fontSize12,
+      fontSize: fontSize ?? fontSize14,
       decoration: decoration,
       fontWeight: fontWeight ?? FontWeight.w400,
     );
@@ -99,7 +96,7 @@ class AppTextStyle {
   }) {
     return _textStyle(
       color: color,
-      fontSize: fontSize ?? Dimens.fontSize16,
+      fontSize: fontSize ?? fontSize16,
       fontWeight: fontWeight ?? FontWeight.w400,
       decoration: decoration,
     );

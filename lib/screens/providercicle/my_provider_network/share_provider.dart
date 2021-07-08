@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/api/api_helper.dart';
-import 'package:hutano/colors.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/app_config.dart';
 import 'package:hutano/utils/argument_const.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/size_config.dart';
 import 'package:hutano/widgets/ripple_effect.dart';
 
 import '../../familynetwork/add_family_member/model/res_add_member.dart';
@@ -20,7 +22,7 @@ class ShareProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      padding: EdgeInsets.symmetric(vertical: spacing20, horizontal: spacing20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -31,16 +33,16 @@ class ShareProvider extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemCount: memberList.length,
                 separatorBuilder: (_, pos) {
-                  return SizedBox(width: MediaQuery.of(context).size.width / 6);
+                  return SizedBox(width: SizeConfig.screenWidth / 6);
                 },
                 itemBuilder: (_, pos) {
                   return RippleEffect(
                     onTap: () {
-                      Navigator.of(context)
-                          .pushNamed(Routes.memberMessage, arguments: {
-                        ArgumentConstant.member: memberList[pos],
-                        ArgumentConstant.shareMessage: shareMessage
-                      });
+                      Navigator.of(context).pushNamed( Routes.memberMessage,
+                          arguments: {
+                            ArgumentConstant.member: memberList[pos],
+                            ArgumentConstant.shareMessage: shareMessage
+                          });
                     },
                     child: Member(FamilyMember(
                       avatar: memberList[pos].avatar ?? "",
@@ -51,11 +53,11 @@ class ShareProvider extends StatelessWidget {
                 }),
           ),
           Divider(
-            color: AppColors.colorGrey3,
+            color: colorGrey3,
             thickness: 0.5,
             height: 30,
           ),
-          SizedBox(height: 15),
+          SizedBox(height: spacing15),
           BottomOptionList(shareMessage: shareMessage)
         ],
       ),
@@ -74,18 +76,18 @@ class Member extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(25),
           child: FadeInImage(
-              height: 50,
+              height: spacing50,
               fit: BoxFit.cover,
-              width: 50,
-              image: NetworkImage('${ApiBaseHelper.imageUrl}${_member.avatar}'),
+              width: spacing50,
+              image: NetworkImage('$imageUrl${_member.avatar}'),
               placeholder: AssetImage(FileConstants.icUser)),
         ),
         SizedBox(
-          height: 12,
+          height: spacing12,
         ),
         Text(
           _member.fullName,
-          style: const TextStyle(fontSize: 11, color: AppColors.colorBlack60),
+          style: const TextStyle(fontSize: fontSize11, color: colorBlack60),
         )
       ],
     );

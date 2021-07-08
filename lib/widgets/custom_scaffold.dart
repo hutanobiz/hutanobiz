@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/colors.dart';
+import 'package:hutano/utils/color_utils.dart';
 
 class CustomScaffold extends StatelessWidget {
   final Widget child;
@@ -11,13 +11,13 @@ class CustomScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: AppColors.colorYellow,
+        backgroundColor: colorYellow,
         appBar: PreferredSize(
           preferredSize: Size(double.infinity, 30),
           child: Container(
             height: double.infinity,
             width: double.infinity,
-            color: AppColors.colorYellow,
+            color: colorYellow,
             child: SafeArea(child: appbar ?? Container()),
           ),
         ),
@@ -28,7 +28,7 @@ class CustomScaffold extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-            color: AppColors.colorWhite,
+            color: colorWhite,
           ),
           child: child,
         ));

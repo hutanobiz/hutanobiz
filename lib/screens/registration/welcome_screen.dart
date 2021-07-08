@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/colors.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/strings.dart';
-import 'package:hutano/text_style.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/constants.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/localization/localization.dart';
+import 'package:hutano/utils/preference_key.dart';
+import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/hutano_header_info.dart';
@@ -22,16 +25,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       color: Colors.white,
       child: SafeArea(
         child: Scaffold(
-          body: ListView(
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.max,
             children: [
-              SizedBox(height: 30),
+              SizedBox(height: spacing30),
               HutanoHeaderInfo(
                 showLogo: true,
-                title: Strings.welcome,
-                subTitle: Strings.accNowActive,
-                subTitleFontSize: 15,
+                title: Localization.of(context).welcome,
+                subTitle: Localization.of(context).accNowActive,
+                subTitleFontSize: fontSize15,
               ),
-              SizedBox(height: 30),
+              SizedBox(height: spacing30),
               Row(
                 children: [
                   SizedBox(width: 35),
@@ -43,10 +48,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   SizedBox(width: 20),
                   Flexible(
                     child: Text(
-                      Strings.completeTask,
+                      Localization.of(context).completeTask,
                       maxLines: 2,
-                      style: AppTextStyle.semiBoldStyle(
-                          color: AppColors.colorBlack2,
+                      style: TextStyle(
+                          color: colorBlack2,
+                          fontFamily: gilroySemiBold,
+                          fontWeight: FontWeight.w600,
+                          fontStyle: FontStyle.normal,
                           fontSize:
                               (MediaQuery.of(context).devicePixelRatio > 2)
                                   ? 16
@@ -56,12 +64,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ],
               ),
               SizedBox(
-                height: (MediaQuery.of(context).devicePixelRatio > 2) ? 28 : 20,
+                height: (MediaQuery.of(context).devicePixelRatio > 2)
+                    ? 28
+                    : spacing20,
               ),
               HutanoStepsHeader(
-                title: Strings.activateEmail,
-                subTitle: Strings.activateEmailDesc,
-                iconText: Strings.stepOne,
+                title: Localization.of(context).activateEmail,
+                subTitle: Localization.of(context).activateEmailDesc,
+                iconText: stepOne,
                 titleStyle: _getTitletStyle(),
                 subTitleStyle: _getSubTitletStyle(),
               ),
@@ -69,9 +79,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 height: 20,
               ),
               HutanoStepsHeader(
-                title: Strings.addPaymentOption,
-                subTitle: Strings.addPaymentDesc,
-                iconText: Strings.stepTwo,
+                title: Localization.of(context).addPaymentOption,
+                subTitle: Localization.of(context).addPaymentDesc,
+                iconText: stepTwo,
                 titleStyle: _getTitletStyle(),
                 subTitleStyle: _getSubTitletStyle(),
               ),
@@ -79,28 +89,28 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 height: 20,
               ),
               HutanoStepsHeader(
-                  title: Strings.addFamily,
-                  subTitle: Strings.addFamilyDesc,
+                  title: Localization.of(context).addFamily,
+                  subTitle: Localization.of(context).addFamilyDesc,
                   titleStyle: _getTitletStyle(),
                   subTitleStyle: _getSubTitletStyle(),
-                  iconText: Strings.stepThree),
+                  iconText: stepThree),
               SizedBox(
                 height: 20,
               ),
               HutanoStepsHeader(
-                title: Strings.addProvider,
-                subTitle: Strings.addProviderDesc,
+                title: Localization.of(context).addProvider,
+                subTitle: Localization.of(context).addProviderDesc,
                 titleStyle: _getTitletStyle(),
                 subTitleStyle: _getSubTitletStyle(),
-                iconText: Strings.stepFour,
+                iconText: stepFour,
               ),
               SizedBox(
-                height: 20,
+                height: spacing20,
               ),
               Spacer(),
               _buildCompleteTaskNowButton(context),
               SizedBox(
-                height: 20,
+                height: spacing20,
               ),
               Container(
                 alignment: Alignment.center,
@@ -119,46 +129,52 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   _getTitletStyle() {
-    return AppTextStyle.mediumStyle(
-      color: AppColors.colorBlack2,
-      fontSize: 15,
+    return TextStyle(
+      color: colorBlack2,
+      fontSize: fontSize15,
+      fontWeight: FontWeight.w500,
+      fontFamily: gilroyMedium,
+      fontStyle: FontStyle.normal,
     );
   }
 
   _getSubTitletStyle() {
-    return AppTextStyle.regularStyle(
+    return TextStyle(
+        fontFamily: gilroyRegular,
         fontWeight: FontWeight.w400,
-        color: AppColors.colorBlack2.withOpacity(0.85),
-        fontSize: 14);
+        fontStyle: FontStyle.normal,
+        color: colorBlack2.withOpacity(0.85),
+        fontSize: fontSize14);
   }
 
   _buildCompleteTaskNowButton(BuildContext context) => Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20),
+      padding: const EdgeInsets.only(left: spacing20, right: spacing20),
       child: HutanoButton(
         buttonType: HutanoButtonType.withPrefixIcon,
         isIconButton: true,
         icon: FileConstants.icDone,
-        color: AppColors.colorOrange,
-        iconSize: 30,
-        label: Strings.completeTaskNow,
+        color: colorOrange,
+        iconSize: spacing30,
+        label: Localization.of(context).completeTaskNow,
         onPressed: _completeTaskNow,
       ));
 
   _buildSkipTaskNowButton(BuildContext context) => Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+      padding: const EdgeInsets.only(
+          left: spacing20, right: spacing20, bottom: spacing20),
       child: HutanoButton(
         buttonType: HutanoButtonType.withPrefixIcon,
         isIconButton: true,
-        labelColor: AppColors.colorBlack,
-        iconSize: 20,
+        labelColor: colorBlack,
+        iconSize: spacing20,
         color: Colors.transparent,
         icon: FileConstants.icSkipBlack,
-        label: Strings.skipTasks,
+        label: Localization.of(context).skipTasks,
         onPressed: _skipTaskNow,
       ));
 
   _completeTaskNow() async {
-    await SharedPref().setBoolValue('perFormedSteps', true);
+    setBool(PreferenceKey.perFormedSteps, true);
     Navigator.of(context).pushNamed(Routes.verifyEmailOtpRoute);
 
     // _sendCode();
@@ -177,7 +193,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   // }
 
   _skipTaskNow() async {
-    await SharedPref().setBoolValue('skipStep', true);
+    setBool(PreferenceKey.skipStep, true);
 
     Navigator.of(context).pushNamedAndRemoveUntil(
       Routes.dashboardScreen,

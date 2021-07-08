@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/strings.dart';
-import 'package:hutano/utils/file_constants.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/localization/localization.dart';
 import '../../../utils/extensions.dart';
 import '../../../widgets/app_header.dart';
 import '../../../widgets/hutano_button.dart';
@@ -42,28 +45,28 @@ class _AddProviderState extends State<AddProvider> {
               
               AppHeader(
                 progressSteps: HutanoProgressSteps.four,
-                title: Strings.addProviders,
-                subTitle: Strings.addProviderToNetwork,
+                title: Localization.of(context).addProviders,
+                subTitle: Localization.of(context).addProviderToNetwork,
               ),
               SizedBox(
-                height: 20,
+                height: spacing20,
               ),
               _buildSearchByName(context),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                child: Text(Strings.or),
+                padding: EdgeInsets.symmetric(vertical: spacing10),
+                child: Text(Localization.of(context).or),
               ),
               _buildSearchByPhoneNumber(context),
               SizedBox(
-                height: 50,
+                height: spacing50,
               ),
               _buildNextButton(context),
               SizedBox(
-                height: 20,
+                height: spacing20,
               ),
               _buildSkipTaskNowButton(context),
               SizedBox(
-                height: 20,
+                height: spacing20,
               ),
             ],
           ),
@@ -72,26 +75,26 @@ class _AddProviderState extends State<AddProvider> {
 
   Widget _buildSearchByName(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 20, right: 20),
+      margin: EdgeInsets.only(left: spacing20, right: spacing20),
       child: Padding(
-        padding: EdgeInsets.only(left: 25, right: 25),
+        padding: EdgeInsets.only(left: spacing25, right: spacing25),
         child: HutanoTextField(
-            labelText: Strings.searchByName,
-            hintText: Strings.enterProviderName,
+            labelText: Localization.of(context).searchByName,
+            hintText: Localization.of(context).enterProviderName,
             floatingBehaviour: FloatingLabelBehavior.always,
             textInputType: TextInputType.text,
             focusNode: _nameFocus,
             controller: _nameController,
             suffixIcon: FileConstants.icSearchYellow,
             suffixIconClick: _onProviderNameSearch,
-            suffixheight: 30,
-            suffixwidth: 30,
+            suffixheight: spacing30,
+            suffixwidth: spacing30,
             labelTextStyle:
-                TextStyle(fontSize: 11, color: AppColors.colorPurple100),
-            enabledBorderColor: AppColors.colorPurple100,
-            disableBorderColor: AppColors.colorPurple100,
-            focusedBorderColor: AppColors.colorPurple100,
-            prefixPadding: EdgeInsets.only(right: 20, left: 20),
+                TextStyle(fontSize: fontSize11, color: colorPurple100),
+            enabledBorderColor: colorPurple100,
+            disableBorderColor: colorPurple100,
+            focusedBorderColor: colorPurple100,
+            prefixPadding: EdgeInsets.only(right: spacing20, left: spacing20),
             onValueChanged: (value) {
               _phoneController.text = "";
             },
@@ -103,26 +106,26 @@ class _AddProviderState extends State<AddProvider> {
 
   Widget _buildSearchByPhoneNumber(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 20, right: 20),
+      margin: EdgeInsets.only(left: spacing20, right: spacing20),
       child: Padding(
-        padding: EdgeInsets.only(left: 25, right: 25),
+        padding: EdgeInsets.only(left: spacing25, right: spacing25),
         child: HutanoTextField(
-            labelText: Strings.searchByNumber,
-            hintText: Strings.enterProviderNumber,
+            labelText: Localization.of(context).searchByNumber,
+            hintText: Localization.of(context).enterProviderNumber,
             floatingBehaviour: FloatingLabelBehavior.always,
             focusNode: _phoneFocus,
             controller: _phoneController,
             suffixIcon: FileConstants.icSearchYellow,
             suffixIconClick: _onProviderNumberSearch,
-            suffixheight: 30,
-            suffixwidth: 30,
-            enabledBorderColor: AppColors.colorPurple100,
-            disableBorderColor: AppColors.colorPurple100,
-            focusedBorderColor: AppColors.colorPurple100,
-            prefixPadding: EdgeInsets.only(right: 20, left: 20),
+            suffixheight: spacing30,
+            suffixwidth: spacing30,
+            enabledBorderColor: colorPurple100,
+            disableBorderColor: colorPurple100,
+            focusedBorderColor: colorPurple100,
+            prefixPadding: EdgeInsets.only(right: spacing20, left: spacing20),
             textInputType: TextInputType.number,
             labelTextStyle:
-                TextStyle(fontSize: 11, color: AppColors.colorPurple100),
+                TextStyle(fontSize: fontSize11, color: colorPurple100),
             onValueChanged: (value) {
               _nameController.text = "";
             },
@@ -133,27 +136,27 @@ class _AddProviderState extends State<AddProvider> {
   }
 
   _buildNextButton(BuildContext context) => Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20),
+      padding: const EdgeInsets.only(left: spacing20, right: spacing20),
       child: HutanoButton(
         buttonType: HutanoButtonType.withIcon,
         isIconButton: true,
         icon: FileConstants.icNext,
-        color: AppColors.colorDarkBlue,
+        color: colorDarkBlue,
         iconSize: 20,
-        label: Strings.next.toUpperCase(),
+        label: Localization.of(context).next.toUpperCase(),
         onPressed: _enableButton ? _nextScreen : null,
       ));
 
   _buildSkipTaskNowButton(BuildContext context) => Padding(
       padding: const EdgeInsets.only(
-          left: 20, right: 20, bottom: 20),
+          left: spacing20, right: spacing20, bottom: spacing20),
       child: HutanoButton(
         buttonType: HutanoButtonType.withIcon,
         isIconButton: true,
         iconSize: 20,
-        color: AppColors.colorYellow,
+        color: colorYellow,
         icon: FileConstants.icSkip,
-        label: Strings.skipThisTask,
+        label: Localization.of(context).skipThisTask,
         onPressed: _skipTaskNow,
       ));
 

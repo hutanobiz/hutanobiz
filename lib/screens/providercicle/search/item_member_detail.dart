@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/api/api_helper.dart';
-import 'package:hutano/colors.dart';
-import 'package:hutano/text_style.dart';
-
-import '../../../utils/dimens.dart';
+import 'package:hutano/dimens.dart';
+import 'package:hutano/utils/app_config.dart';
+import 'package:hutano/utils/color_utils.dart';
 import 'model/family_member.dart';
 
 class MemberDetail extends StatelessWidget {
@@ -22,23 +20,23 @@ class MemberDetail extends StatelessWidget {
         children: [
           member.avatar == null
               ? CircleAvatar(
-                  radius: 20,
-                  backgroundColor: AppColors.colorPurple.withOpacity(0.3),
+                  radius: spacing20,
+                  backgroundColor: colorPurple.withOpacity(0.3),
                   child: Text(
                     member.fullName == null
                         ? ""
                         : member.fullName.substring(0, 1).toUpperCase(),
-                    style: AppTextStyle.mediumStyle(
-                      color: AppColors.colorPurple,
-                    ),
+                    style: TextStyle(
+                        color: colorPurple,
+                        fontWeight: fontWeightMedium,
+                        fontFamily: poppins),
                   ))
               : CircleAvatar(
-                  radius: 20,
-                  backgroundImage:
-                      NetworkImage('${ApiBaseHelper.imageUrl}${member.avatar}'),
+                  radius: spacing20,
+                  backgroundImage: NetworkImage('$imageUrl${member.avatar}'),
                 ),
           SizedBox(
-            width: 20,
+            width: spacing20,
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,24 +46,28 @@ class MemberDetail extends StatelessWidget {
               Text(
                 member.fullName == null ? "" : member.fullName,
                 style: titleStyle ??
-                     AppTextStyle.mediumStyle(
-                        color: AppColors.colorBlack,),
+                    const TextStyle(
+                        color: colorBlack,
+                        fontWeight: fontWeightMedium,
+                        fontFamily: poppins),
               ),
               if (member.phoneNumber != null)
                 Text(
                   member.phoneNumber.toString(),
                   style: subTitleStyle ??
-                       AppTextStyle.regularStyle(
-                          color: AppColors.colorBlack70,
-                          fontSize: 12,),
+                      const TextStyle(
+                          color: colorBlack70,
+                          fontSize: fontSize12,
+                          fontFamily: poppins),
                 ),
               if (member.relation != null)
                 Text(
                   member.relation,
                   style: subTitleStyle ??
-                       AppTextStyle.regularStyle(
-                          color: AppColors.colorBlack70,
-                          fontSize: 12,),
+                      const TextStyle(
+                          color: colorBlack70,
+                          fontSize: fontSize12,
+                          fontFamily: poppins),
                 )
             ],
           )

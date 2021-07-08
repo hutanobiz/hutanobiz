@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hutano/api/api_helper.dart';
-import 'package:hutano/api/error_model.dart';
-import 'package:hutano/colors.dart';
-import 'package:hutano/strings.dart';
-import 'package:hutano/utils/file_constants.dart';
-import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/apis/api_manager.dart';
+import 'package:hutano/apis/error_model.dart';
+import 'package:hutano/dimens.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/widgets/custom_scaffold.dart';
 
 import '../../../utils/dialog_utils.dart';
@@ -34,14 +34,10 @@ class _MemberMessageState extends State<MemberMessage> {
   bool _enableButton = false;
   final controller = TextEditingController();
   final GlobalKey<FormState> _key = GlobalKey();
-  ApiBaseHelper api = ApiBaseHelper();
-  String token;
+
   @override
   void initState() {
     super.initState();
-    SharedPref().getToken().then((value) {
-      token = value;
-    });
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       controller.text = widget.message;
       setState(() {
@@ -55,7 +51,7 @@ class _MemberMessageState extends State<MemberMessage> {
         message: controller.text, phoneNumber: widget.member.phoneNumber);
     ProgressDialogUtils.showProgressDialog(context);
     try {
-      var res = await api.shareMessage(context, token, request);
+      var res = await ApiManager().shareMessage(request);
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, res.response);
     } on ErrorModel catch (e) {
@@ -72,7 +68,8 @@ class _MemberMessageState extends State<MemberMessage> {
       key: _key,
       autovalidate: true,
       child: CustomScaffold(
-        padding: EdgeInsets.only(top: 30, left: 15, right: 15, bottom: 0),
+        padding:
+            EdgeInsets.only(top: spacing30, left: 15, right: 15, bottom: 0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,19 +81,19 @@ class _MemberMessageState extends State<MemberMessage> {
                   relation: widget.member.relation),
             ),
             SizedBox(
-              height: 50,
+              height: spacing50,
             ),
             Text(
-              Strings.typeMessage,
-              style: TextStyle(fontSize: 15),
+              Localization.of(context).typeMessage,
+              style: TextStyle(fontSize: fontSize15),
             ),
             SizedBox(
-              height: 15,
+              height: spacing15,
             ),
             _buildInputField(),
             _buildBottomButtons(),
             SizedBox(
-              height: 30,
+              height: spacing30,
             )
           ],
         ),
@@ -108,7 +105,7 @@ class _MemberMessageState extends State<MemberMessage> {
     var border = OutlineInputBorder(
       borderRadius: BorderRadius.circular(14),
       borderSide: BorderSide(
-        color: AppColors.colorBlack20,
+        color: colorBlack20,
         width: 0.5,
       ),
     );
@@ -122,7 +119,7 @@ class _MemberMessageState extends State<MemberMessage> {
           isDense: true,
           border: border,
           focusedBorder: border,
-          hintText: Strings.typeHere,
+          hintText: Localization.of(context).typeHere,
         ),
       ),
     );
@@ -141,13 +138,13 @@ class _MemberMessageState extends State<MemberMessage> {
             buttonType: HutanoButtonType.onlyIcon,
           ),
           SizedBox(
-            width: 50,
+            width: spacing50,
           ),
           Flexible(
             flex: 1,
             child: HutanoButton(
-              label: Strings.send,
-              labelColor: AppColors.colorBlack,
+              label: Localization.of(context).send,
+              labelColor: colorBlack,
               onPressed: _enableButton ? _onSend : null,
             ),
           ),

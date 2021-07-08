@@ -1,20 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hutano/colors.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/strings.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/widgets/app_header.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/hutano_progressbar.dart';
 import 'package:hutano/widgets/round_success.dart';
 
-
-
 class SetPinComplete extends StatefulWidget {
-
   @override
-  _SetPinCompleteState createState() =>
-      _SetPinCompleteState();
+  _SetPinCompleteState createState() => _SetPinCompleteState();
 }
 
 class _SetPinCompleteState extends State<SetPinComplete> {
@@ -30,14 +27,14 @@ class _SetPinCompleteState extends State<SetPinComplete> {
               AppHeader(
                 progressSteps: HutanoProgressSteps.two,
                 title: "Set Pin",
-                subTitle: Strings.taskComplete,
+                subTitle: Localization.of(context).taskComplete,
               ),
               Spacer(),
               RoundSuccess(),
               Spacer(),
               _buildNextButton(context),
               SizedBox(
-                height: 80,
+                height: spacing80,
               ),
             ],
           ),
@@ -47,12 +44,12 @@ class _SetPinCompleteState extends State<SetPinComplete> {
   }
 
   _buildNextButton(BuildContext context) => Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20),
+      padding: const EdgeInsets.only(left: spacing20, right: spacing20),
       child: HutanoButton(
         buttonType: HutanoButtonType.onlyLabel,
-        color: AppColors.colorYellow,
+        color: colorYellow,
         iconSize: 20,
-        label: Strings.next,
+        label: Localization.of(context).next,
         onPressed: _nextClick,
       ));
 
