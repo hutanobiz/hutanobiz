@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/utils/constants/constants.dart';
+import 'package:hutano/widgets/show_common_upload_dialog.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -27,7 +28,6 @@ class _UploadImageState extends State<UploadImage> {
 
   _openImageDialog(source) {
     PermissionUtils.requestPermission(
-      
         [source == ImageSource.gallery ? Permission.photos : Permission.camera],
         context, permissionGrant: () {
       _pickImage(source);
@@ -37,29 +37,17 @@ class _UploadImageState extends State<UploadImage> {
   void showPickerDialog() {
     FocusScope.of(context).unfocus();
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(Localization.of(context).picker),
-          content: Text(Localization.of(context).selectImageType),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(Localization.of(context).camera),
-              onPressed: () {
-                Navigator.pop(context);
-                _openImageDialog(ImageSource.camera);
-              },
-            ),
-            FlatButton(
-              child: Text(Localization.of(context).gallery),
-              onPressed: () {
-                Navigator.pop(context);
-                _openImageDialog(ImageSource.gallery);
-              },
-            ),
-          ],
-        );
+    showCommonUploadDialog(
+      context,
+      Localization.of(context).picker,
+      Localization.of(context).uploadPhoto,
+      onTop: () {
+        Navigator.pop(context);
+        _openImageDialog(ImageSource.camera);
+      },
+      onBottom: () {
+        Navigator.pop(context);
+        _openImageDialog(ImageSource.gallery);
       },
     );
   }
@@ -156,8 +144,7 @@ class _UploadImageState extends State<UploadImage> {
                 style: TextStyle(
                     color: colorPurple100.withOpacity(0.85),
                     fontSize: fontSize14,
-                    fontFamily: gilroyMedium
-                    ),
+                    fontFamily: gilroyMedium),
               )
             ],
           ),
