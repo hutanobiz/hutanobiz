@@ -4,12 +4,14 @@ import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:hutano/screens/add_insurance/model/req_add_insurace.dart';
 import 'package:hutano/screens/add_insurance/model/res_get_my_insurance.dart';
+import 'package:hutano/screens/dashboard/model/res_invite_friends.dart';
 import 'package:hutano/screens/familynetwork/add_family_member/model/req_add_member.dart';
 import 'package:hutano/screens/familynetwork/add_family_member/model/res_add_member.dart';
 import 'package:hutano/screens/familynetwork/add_family_member/model/res_relation_list.dart';
 import 'package:hutano/screens/familynetwork/familycircle/model/req_add_permission.dart';
 import 'package:hutano/screens/familynetwork/familycircle/model/req_add_permission_model.dart';
 import 'package:hutano/screens/familynetwork/familycircle/model/req_family_network.dart';
+import 'package:hutano/screens/familynetwork/familycircle/model/req_remove_family_member.dart';
 import 'package:hutano/screens/familynetwork/familycircle/model/res_family_circle.dart';
 import 'package:hutano/screens/familynetwork/familycircle/model/res_family_network.dart';
 import 'package:hutano/screens/familynetwork/familycircle/model/res_user_permission_model.dart';
@@ -17,6 +19,7 @@ import 'package:hutano/screens/familynetwork/member_message/model/req_message_sh
 import 'package:hutano/screens/familynetwork/member_message/model/res_message_share.dart';
 import 'package:hutano/screens/invite/model/req_invite.dart';
 import 'package:hutano/screens/invite/model/res_invite.dart';
+import 'package:hutano/screens/payment/model/res_reward_points.dart';
 import 'package:hutano/screens/providercicle/my_provider_network/model/req_remove_provider.dart';
 import 'package:hutano/screens/providercicle/my_provider_network/model/req_share_provider.dart';
 import 'package:hutano/screens/providercicle/my_provider_network/model/res_my_provider_network.dart';
@@ -687,6 +690,39 @@ class ApiManager {
       final response = await _apiService.post(patient + apiShareMessage,
           data: model.toMap());
       return ResMessageShare.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+   Future<CommonRes> removeFamilyNetwork(ReqRemoveFamilyMember model) async {
+    try {
+      final response = await _apiService.post(
+        patient + apiRemoveFamilyNetwork,
+        data: model.toJson(),
+      );
+      return CommonRes.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+  Future<ResRewardPoints> getHutanoCash() async {
+    try {
+      final response = await _apiService.get(
+        patient + apiRewardPoints,
+      );
+      return ResRewardPoints.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+  Future<ResInviteFriends> inviteMember() async {
+    try {
+      final response = await _apiService.post(
+        patient + apiInviteMember,
+      );
+      return ResInviteFriends.fromJson(response.data);
     } on DioError catch (error) {
       throw ErrorModel.fromJson(error.response.data);
     }

@@ -275,6 +275,20 @@ class ApiBaseHelper {
     });
   }
 
+  Future<dynamic> bookAppointment2(
+      BuildContext context, String token, Map map) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.contentTypeHeader: "application/json"
+    };
+    return _netUtil
+        .post(base_url + "api/patient/appointment-booking-v1",
+            headers: headers, body: json.encode(map))
+        .then((res) {
+      return res;
+    });
+  }
+
   Future<List<dynamic>> getProfessionalTitle() {
     return _netUtil.get(base_url + "api/professional-titles").then((res) {
       return res["response"];

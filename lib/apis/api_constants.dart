@@ -78,3 +78,4 @@ const String currentMedicalHistoryEndPoint = "api/patient/add-medical-detail";
 const String getDiagnosticTestEndPoint = "api/patient/diagnostic-test-results";
 const String getBodyPartEndPoint = "api/patient/get-body-part";
 const String addMedicationDetailEndPoint = "api/patient/add-medication-detail";
+const String apiRemoveFamilyNetwork = "remove-family-network";
