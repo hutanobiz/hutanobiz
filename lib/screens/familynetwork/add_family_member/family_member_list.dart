@@ -12,7 +12,7 @@ import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/utils/size_config.dart';
 import 'package:hutano/widgets/no_data_found.dart';
 import 'package:provider/provider.dart';
-
+import 'package:hutano/utils/extensions.dart';
 import 'model/res_add_member.dart';
 
 class FamilyMemberList extends StatelessWidget {
@@ -156,7 +156,9 @@ class ItemFamilyMember extends StatelessWidget {
   final int memberIndex;
   final Contact contact;
 
-  const ItemFamilyMember({Key key, this.member,this.memberIndex=0,this.contact}) : super(key: key);
+  const ItemFamilyMember(
+      {Key key, this.member, this.memberIndex = 0, this.contact})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -184,12 +186,21 @@ class ItemFamilyMember extends StatelessWidget {
               child: InkWell(
                 onTap: () {
                   // Provider.of<FamilyProvider>(context,listen: false).updateReqProviderMember(_finalMemberList);
-                  Provider.of<FamilyProvider>(context,listen: false).removeRedProviderMember(memberIndex);
+                  Provider.of<FamilyProvider>(context, listen: false)
+                      .removeRedProviderMember(memberIndex);
                   Iterable<Item> v = [];
                   List<Item> c = [];
-                  c.add(Item(label: "mobile",value: member.phoneNumber));
-                  Provider.of<FamilyProvider>(context,listen: false).addProviderContacts(Contact(displayName: member.fullName,phones: c));
-                  Provider.of<FamilyProvider>(context,listen: false).addFilteredProviderContacts(Contact(displayName: member.fullName,phones: c));
+                  c.add(Item(label: "mobile", value: member.phoneNumber));
+                  Provider.of<FamilyProvider>(context, listen: false)
+                      .addProviderContacts(
+                          Contact(displayName: member.fullName, phones: c));
+                  Provider.of<FamilyProvider>(context, listen: false)
+                      .addFilteredProviderContacts(
+                          Contact(displayName: member.fullName, phones: c));
+                  Provider.of<FamilyProvider>(context, listen: false)
+                      .providerMembers
+                      .toString()
+                      .debugLog();
                 },
                 child: Container(
                   width: 18,

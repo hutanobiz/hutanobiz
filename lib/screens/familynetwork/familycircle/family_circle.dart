@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/apis/api_manager.dart';
+import 'package:hutano/apis/common_res.dart';
 import 'package:hutano/apis/error_model.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/screens/familynetwork/familycircle/model/member_permission_model.dart';
+import 'package:hutano/screens/familynetwork/familycircle/model/req_remove_family_member.dart';
 import 'package:hutano/screens/familynetwork/familycircle/model/res_family_circle.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/constants.dart';
@@ -10,9 +12,11 @@ import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/utils/preference_key.dart';
 import 'package:hutano/utils/preference_utils.dart';
+import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/app_header.dart';
+import 'package:hutano/widgets/controller.dart';
 import 'package:hutano/widgets/list_picker.dart';
-
+import 'package:hutano/utils/extensions.dart';
 import '../../../utils/dialog_utils.dart';
 import '../../../utils/progress_dialog.dart';
 import '../../../widgets/bottom_sheet.dart' as permissionsheet;
@@ -135,28 +139,26 @@ class _FamilyCircleState extends State<FamilyCircle> {
           shrinkWrap: true,
           itemBuilder: (context, pos) {
             return StatefulBuilder(
-                builder: (context, _setState) => CheckboxListTile(
-                    activeColor: colorYellow,
-                    contentPadding: EdgeInsets.all(0),
-                    title: Container(
-                        child: Row(children: [
-                      Image.asset(permissionList[pos].value,
+                builder: (context, _setState) => ListTile(
+                      leading: Image.asset(permissionList[pos].value,
                           width: 20, height: 20),
-                      SizedBox(width: 15),
-                      Expanded(
-                        child: Text(
-                          permissionList[pos].label ?? "",
-                          style: const TextStyle(
-                              color: colorBlack85,
-                              fontSize: 14,
-                              fontWeight: fontWeightRegular),
-                        ),
-                      )
-                    ])),
-                    value: permissionList[pos].isSelected,
-                    onChanged: (val) {
-                      _setState(() => permissionList[pos].isSelected = val);
-                    }));
+                      title: Text(
+                        permissionList[pos].label ?? "",
+                        style: const TextStyle(
+                            color: colorBlack85,
+                            fontSize: 14,
+                            fontWeight: fontWeightRegular),
+                      ),
+                      trailing: permissionList[pos].isSelected
+                          ? Image.asset("images/checkedCheck.png",
+                              height: 24, width: 24)
+                          : Image.asset("images/uncheckedCheck.png",
+                              height: 24, width: 24),
+                      onTap: () {
+                        _setState(() => permissionList[pos].isSelected =
+                            !permissionList[pos].isSelected);
+                      },
+                    ));
           },
           separatorBuilder: (_, pos) {
             return SizedBox();
@@ -187,29 +189,27 @@ class _FamilyCircleState extends State<FamilyCircle> {
           shrinkWrap: true,
           itemBuilder: (context, pos) {
             return StatefulBuilder(
-                builder: (context, _setState) => CheckboxListTile(
-                    activeColor: colorYellow,
-                    contentPadding: EdgeInsets.all(0),
-                    title: Container(
-                        child: Row(children: [
-                      Image.asset(permissionList[pos].value,
+                builder: (context, _setState) => ListTile(
+                      leading: Image.asset(permissionList[pos].value,
                           width: 20, height: 20),
-                      SizedBox(width: 15),
-                      Expanded(
-                        child: Text(
-                          permissionList[pos].label ?? "",
-                          style: const TextStyle(
-                              color: colorBlack85,
-                              fontSize: 14,
-                              fontWeight: fontWeightRegular),
-                        ),
-                      )
-                    ])),
-                    value: permissionList[pos].isSelected,
-                    onChanged: (val) {
-                      _setState(() => permissionList[pos].isSelected = val);
-                      debugPrint("${permissionList[pos].isSelected}");
-                    }));
+                      title: Text(
+                        permissionList[pos].label ?? "",
+                        style: const TextStyle(
+                            color: colorBlack85,
+                            fontSize: 14,
+                            fontWeight: fontWeightRegular),
+                      ),
+                      trailing: permissionList[pos].isSelected
+                          ? Image.asset("images/checkedCheck.png",
+                              height: 24, width: 24)
+                          : Image.asset("images/uncheckedCheck.png",
+                              height: 24, width: 24),
+                      onTap: () {
+                        _setState(() => permissionList[pos].isSelected =
+                            !permissionList[pos].isSelected);
+                        debugPrint("${permissionList[pos].isSelected}");
+                      },
+                    ));
           },
           separatorBuilder: (_, pos) {
             return SizedBox();
@@ -254,7 +254,7 @@ class _FamilyCircleState extends State<FamilyCircle> {
         FileConstants.icFullAccess,
         FileConstants.icAppointments,
         FileConstants.icDocuments,
-       FileConstants.icNotifications
+        FileConstants.icNotifications
       ];
       res.response.forEach((e) {
         permissionList.add(
@@ -340,7 +340,6 @@ class _FamilyCircleState extends State<FamilyCircle> {
 
   void onAddPermissionDone(List<String> checkedPermission, String memberId,
       BuildContext context) async {
-        //Todo:yyyy
     Navigator.pop(context);
     ProgressDialogUtils.showProgressDialog(context);
     final request =
@@ -528,12 +527,38 @@ class _FamilyCircleState extends State<FamilyCircle> {
                   _openStatePicker(context, i);
                 }
               } else {
-                debugPrint("Value2");
+                SharedPref().getValue(PreferenceKey.id).then((value) {
+                  ReqRemoveFamilyMember removeFamilyMember =
+                      ReqRemoveFamilyMember(
+                          sId: value.toString(),
+                          userId: list[i].sId.toString());
+                  setState(() {
+                    list.remove(list[i]);
+                  });
+                  _removeFamilyNetworkMember(context, removeFamilyMember);
+                });
               }
             },
           );
         },
       ),
     );
+  }
+
+  void _removeFamilyNetworkMember(
+      BuildContext context, ReqRemoveFamilyMember model) async {
+    ProgressDialogUtils.showProgressDialog(context);
+    await ApiManager().removeFamilyNetwork(model).then((result) {
+      if (result is CommonRes) {
+        ProgressDialogUtils.dismissProgressDialog();
+        Widgets.showToast(result.response);
+        _getFamilyNetwork();
+      }
+    }).catchError((dynamic e) {
+      ProgressDialogUtils.dismissProgressDialog();
+      if (e is ErrorModel) {
+        e.toString().debugLog();
+      }
+    });
   }
 }

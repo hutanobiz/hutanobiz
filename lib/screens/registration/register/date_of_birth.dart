@@ -28,7 +28,7 @@ class DateOfBirth extends StatelessWidget {
         }
       },
       child: Container(
-        margin: EdgeInsets.only(top: spacing15),
+        margin: EdgeInsets.only(top:spacing15),
         child: HutanoTextField(
             focusNode: FocusNode(),
             labelText: Localization.of(context).dob,

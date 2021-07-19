@@ -4,7 +4,9 @@ import 'package:hutano/apis/api_manager.dart';
 import 'package:hutano/apis/error_model.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/add_insurance/add_insruance.dart';
 import 'package:hutano/screens/registration/register/model/res_insurance_list.dart';
+import 'package:hutano/utils/argument_const.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/constants.dart';
 import 'package:hutano/utils/dialog_utils.dart';
@@ -65,7 +67,6 @@ class _AddInsuranceCompleteState extends State<AddInsuranceComplete> {
                 padding: const EdgeInsets.symmetric(horizontal: 18),
                 child: Column(children: [
                   AppHeader(
-                    progressSteps: HutanoProgressSteps.two,
                     title: Localization.of(context).labelInsuranceOptions,
                     subTitle: Localization.of(context).labelInsuranceAdded,
                   ),
@@ -93,6 +94,26 @@ class _AddInsuranceCompleteState extends State<AddInsuranceComplete> {
                   _buildInsuanrceList(),
                   SizedBox(
                     height: spacing20,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushNamed(Routes.addInsurance,
+                          arguments: {
+                            ArgumentConstant.argsinsuranceType:
+                                InsuranceType.secondary
+                          });
+                    },
+                    child: Text(
+                        Localization.of(context)
+                            .addSecondaryInsurance
+                            .toUpperCase(),
+                        style: const TextStyle(
+                            color: colorPurple100,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: "Poppins",
+                            fontStyle: FontStyle.normal,
+                            fontSize: 14.0),
+                        textAlign: TextAlign.center),
                   ),
                   Align(
                     alignment: Alignment.centerRight,

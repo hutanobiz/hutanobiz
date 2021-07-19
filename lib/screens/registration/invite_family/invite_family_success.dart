@@ -13,7 +13,8 @@ import 'package:hutano/widgets/round_success.dart';
 
 class InviteFamilySuccess extends StatelessWidget {
   _nextClick(context) {
-    Navigator.of(context).pushReplacementNamed(Routes.loginRoute,arguments: false);
+    Navigator.of(context)
+        .pushReplacementNamed(Routes.loginRoute, arguments: false);
   }
 
   @override
@@ -26,7 +27,6 @@ class InviteFamilySuccess extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               AppHeader(
-                progressSteps: HutanoProgressSteps.one,
                 title: Localization.of(context).inviteFamilyAndFriends,
                 subTitle: Localization.of(context).taskComplete,
               ),

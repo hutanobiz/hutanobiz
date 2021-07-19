@@ -11,8 +11,7 @@ import '../../../widgets/round_success.dart';
 
 class InviteFamilyComplete extends StatefulWidget {
   @override
-  _InviteFamilyCompleteState createState() =>
-      _InviteFamilyCompleteState();
+  _InviteFamilyCompleteState createState() => _InviteFamilyCompleteState();
 }
 
 class _InviteFamilyCompleteState extends State<InviteFamilyComplete> {
@@ -53,12 +52,11 @@ class _InviteFamilyCompleteState extends State<InviteFamilyComplete> {
           iconSize: 20,
           buttonType: HutanoButtonType.onlyIcon,
           icon: FileConstants.icForward,
-          onPressed: () async{
+          onPressed: () async {
             Navigator.of(context).pushNamed(Routes.providerSearch);
           },
         ),
       ),
     );
   }
-
 }

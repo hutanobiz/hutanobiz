@@ -28,14 +28,13 @@ class _GenderSelectorState extends State<GenderSelector> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-     data.add(RadioModel(Localization.of(context).male, FileConstants.icMale,
-          GenderType.male, colorPurple100));
-      data.add(RadioModel(Localization.of(context).female,
-          FileConstants.icFemale, GenderType.female, colorPink));
+    data.add(RadioModel(Localization.of(context).male, FileConstants.icMale,
+        GenderType.male, colorPurple100));
+    data.add(RadioModel(Localization.of(context).female, FileConstants.icFemale,
+        GenderType.female, colorPink));
   }
 
   _buildRadioButton(int pos) {
-    
     var genderModel = data[pos];
     return GestureDetector(
       onTap: () {
@@ -49,7 +48,9 @@ class _GenderSelectorState extends State<GenderSelector> {
           children: [
             Image.asset(
               genderModel.icon,
-              color: colorPurple100,
+              color: (widget.gender == genderModel.value)
+                  ? colorWhite
+                  : colorPurple100,
               height: spacing20,
               width: spacing20,
             ),
@@ -58,11 +59,17 @@ class _GenderSelectorState extends State<GenderSelector> {
             ),
             Text(
               genderModel.text,
-              style: TextStyle(color: colorPurple100),
+              style: TextStyle(
+                  color: (widget.gender == genderModel.value)
+                      ? colorWhite
+                      : colorPurple100),
             ),
           ],
         ),
         decoration: BoxDecoration(
+          color: (widget.gender == genderModel.value)
+              ? colorPurple100
+              : Colors.white,
           border: Border.all(
               color: (widget.gender == genderModel.value)
                   ? colorPurple100

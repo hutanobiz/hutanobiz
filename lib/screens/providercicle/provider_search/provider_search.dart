@@ -63,7 +63,7 @@ class _ProviderSearchState extends State<ProviderSearch> {
 
   _onSearch() {
     _pagingController.refresh();
-    FocusManager.instance.primaryFocus.unfocus();
+    // FocusManager.instance.primaryFocus.unfocus();
   }
 
   _searchProvider(int pageKey) async {

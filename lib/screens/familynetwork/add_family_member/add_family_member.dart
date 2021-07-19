@@ -36,6 +36,7 @@ class AddFamilyMember extends StatefulWidget {
 
 class _AddFamilyMemberState extends State<AddFamilyMember> {
   final _relationCotnroller = TextEditingController();
+  FocusNode searchFocus = FocusNode();
   List<Relations> _relationList = [];
   List<FamilyNetwork> _memberList = [];
   Relations _selectedRelation;
@@ -141,6 +142,7 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    getScreenSize(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -155,6 +157,7 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
                   controller: _relationCotnroller,
                   relationList: _relationList,
                   onRelationSelected: _onRelationSelected,
+                  searchFocusNode: searchFocus,
                 ),
               ),
               Divider(
@@ -227,7 +230,13 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
                                   itemBuilder: (context, pos) {
                                     if (pos ==
                                         familyProvider.providerMembers.length) {
-                                      return AddMore();
+                                      return InkWell(
+                                          onTap: () {
+                                            Widgets.showToast(
+                                                "Search your contacts and invite them");
+                                            searchFocus.requestFocus();
+                                          },
+                                          child: AddMore());
                                     }
                                     return ItemFamilyMember(
                                         contact: familyProvider
@@ -255,8 +264,7 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
                         if ((familyProvider.providerMembers.length != 0))
                           GestureDetector(
                             onTap: () {
-                              Navigator.of(context)
-                                  .pushNamed(Routes.familyCircle);
+                              _addFamilyMemberApiCall(context);
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -319,13 +327,7 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
           buttonType: HutanoButtonType.onlyIcon,
           icon: FileConstants.icForward,
           onPressed: () async {
-            if (Provider.of<FamilyProvider>(context, listen: false)
-                .providerMembers
-                .isNotEmpty) {
-              _addFamilyMemberApiCall(context);
-            } else {
-              Navigator.of(context).pushNamed(Routes.inviteFamilyComplete);
-            }
+            Navigator.of(context).pushNamed(Routes.inviteFamilyComplete);
           },
         ),
       ),
@@ -345,12 +347,16 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
 
     try {
       var res = await ApiManager().addMember(request);
-      Widgets.showToast(res.response);
+      // showToast(res.response);
       ProgressDialogUtils.dismissProgressDialog();
-      Navigator.of(context).pushNamed(Routes.inviteFamilyComplete);
+      Navigator.of(context).pushNamed(Routes.familyCircle);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      if (e.hashCode == 422 && e.response == "Family member already exist") {
+        Navigator.of(context).pushNamed(Routes.familyCircle);
+      } else {
+        DialogUtils.showAlertDialog(context, e.response);
+      }
     }
   }
 }

@@ -6,6 +6,7 @@ import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/widgets/app_header.dart';
 import 'package:hutano/widgets/hutano_button.dart';
+import 'package:hutano/widgets/hutano_progressbar.dart';
 import 'package:hutano/widgets/round_success.dart';
 
 class AddProviderComplete extends StatefulWidget {
@@ -26,6 +27,7 @@ class AddProviderCompleteState extends State<AddProviderComplete> {
             mainAxisSize: MainAxisSize.max,
             children: [
               AppHeader(
+                progressSteps: HutanoProgressSteps.four,
                 title: "My Providers",
                 subTitle: "Proivders added",
               ),
@@ -44,8 +46,10 @@ class AddProviderCompleteState extends State<AddProviderComplete> {
                     buttonType: HutanoButtonType.onlyIcon,
                     icon: FileConstants.icForward,
                     onPressed: () {
-                      Navigator.of(context)
-                          .pushReplacementNamed(Routes.myProviderNetwork);
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          Routes.dashboardScreen,
+                          (Route<dynamic> route) => false,
+                          arguments: 0);
                     },
                   ),
                 ),
@@ -59,5 +63,4 @@ class AddProviderCompleteState extends State<AddProviderComplete> {
       ),
     );
   }
-
 }

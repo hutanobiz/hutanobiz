@@ -57,6 +57,7 @@ class _SignInScreenState extends State<SignInScreen> {
     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
     _firebaseMessaging.getToken().then((String token) {
+      deviceToken = token;
       SharedPref().setValue("deviceToken", token);
       print(token);
     });

@@ -18,14 +18,18 @@ class SearchBar extends StatelessWidget {
       ),
     );
     return Container(
-      child: TextField(
+      child: TextFormField(
         controller: controller,
+        textInputAction: TextInputAction.done,
         decoration: InputDecoration(
           isDense: true,
           fillColor: colorBlack2.withOpacity(0.05),
           suffixIconConstraints: BoxConstraints(),
           suffixIcon: InkWell(
-            onTap: onSearch,
+            onTap: () {
+              FocusManager.instance.primaryFocus.unfocus();
+              onSearch();
+            },
             child: Padding(
               padding: const EdgeInsets.only(right: 8),
               child: Image.asset(
@@ -40,6 +44,15 @@ class SearchBar extends StatelessWidget {
           focusedBorder: border,
           hintText: Localization.of(context).search,
         ),
+        onChanged: (val) {
+          if (val.length == 0 || val.length > 2) {
+            onSearch();
+          }
+        },
+        onFieldSubmitted: (val) {
+          FocusManager.instance.primaryFocus.unfocus();
+          onSearch();
+        },
       ),
     );
   }

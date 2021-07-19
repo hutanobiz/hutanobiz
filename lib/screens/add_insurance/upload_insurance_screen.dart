@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/widgets/dashed_border.dart';
+import 'package:hutano/widgets/show_common_upload_dialog.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../utils/size_config.dart';
@@ -159,31 +160,39 @@ class _UploadInsuranceScreenState extends State<UploadInsuranceScreen> {
   }
 
   void showPickerDialog(bool isFront) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: new Text("Picker"),
-          content: new Text("Select image picker type."),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text("Camera"),
-              onPressed: () {
-                getImage(isFront, 2);
-                Navigator.pop(context);
-              },
-            ),
-            new FlatButton(
-              child: new Text("Gallery"),
-              onPressed: () {
-                getImage(isFront, 3);
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
+    showCommonUploadDialog(
+      context,
+      "Picker",
+      "Upload Photo",
+      onTop: () {
+        getImage(isFront, 2);
+        Navigator.pop(context);
+      },
+      onBottom: () {
+        getImage(isFront, 3);
+        Navigator.pop(context);
       },
     );
+    // return AlertDialog(
+    //   title: new Text("Picker"),
+    //   content: new Text("Select image picker type."),
+    //   actions: <Widget>[
+    //     new FlatButton(
+    //       child: new Text("Camera"),
+    //       onPressed: () {
+    //         getImage(isFront, 2);
+    //         Navigator.pop(context);
+    //       },
+    //     ),
+    //     new FlatButton(
+    //       child: new Text("Gallery"),
+    //       onPressed: () {
+    //         getImage(isFront, 3);
+    //         Navigator.pop(context);
+    //       },
+    //     ),
+    //   ],
+    // );
   }
 
   Future getImage(bool isFront, int source) async {

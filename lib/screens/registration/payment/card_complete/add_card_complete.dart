@@ -10,8 +10,6 @@ import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/dialog_utils.dart';
 import 'package:hutano/utils/localization/localization.dart';
-import 'package:hutano/utils/preference_key.dart';
-import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/utils/progress_dialog.dart';
 import 'package:hutano/widgets/app_header.dart';
 import 'package:hutano/widgets/hutano_button.dart';
@@ -37,8 +35,6 @@ class _AddCardCompleteState extends State<AddCardComplete> {
   }
 
   _getCard() {
-    var aa = getString(PreferenceKey.tokens);
-    print(aa);
     ProgressDialogUtils.showProgressDialog(context);
     ApiManager().getCard().then((value) {
       if (value.status == success) {

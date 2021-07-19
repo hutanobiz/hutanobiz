@@ -20,9 +20,14 @@ class MyContacts extends StatefulWidget {
   final TextEditingController controller;
   final List<Relations> relationList;
   final ValueSetter<Relations> onRelationSelected;
+  final FocusNode searchFocusNode;
 
   const MyContacts(
-      {Key key, this.controller, this.relationList, this.onRelationSelected})
+      {Key key,
+      this.controller,
+      this.relationList,
+      this.onRelationSelected,
+      this.searchFocusNode})
       : super(key: key);
   @override
   _MyContactsState createState() => _MyContactsState();
@@ -173,6 +178,7 @@ class _MyContactsState extends State<MyContacts> {
           Container(
             child: TextField(
               controller: searchController,
+              focusNode: widget.searchFocusNode ?? FocusNode(),
               decoration: InputDecoration(
                 isDense: true,
                 labelText: 'Search',
@@ -202,6 +208,9 @@ class _MyContactsState extends State<MyContacts> {
                   ),
                 ),
               ),
+              onChanged: (val) {
+                isSearching = true;
+              },
             ),
           ),
           isLoading

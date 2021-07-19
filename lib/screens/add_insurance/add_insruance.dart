@@ -147,16 +147,7 @@ class _AddInsuranceState extends State<AddInsurance> {
               backImage: _backImage)
           .then((value) {
         ProgressDialogUtils.dismissProgressDialog();
-
-        if (widget.insuranceType == InsuranceType.primary) {
-          setState(() {
-            showSecondaryInsurance = true;
-          });
-          DialogUtils.showAlertDialog(context, "Insurance updated successfully",
-              title: "");
-        } else {
-          Navigator.pushReplacementNamed(context, Routes.addCardComplete);
-        }
+        Navigator.pushReplacementNamed(context, Routes.addInsuranceComplete);
       }, onError: (e) {
         ProgressDialogUtils.dismissProgressDialog();
         DialogUtils.showAlertDialog(context, "${e.response}");
@@ -259,7 +250,8 @@ class _AddInsuranceState extends State<AddInsurance> {
                   if (showSecondaryInsurance)
                     GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pushNamed(Routes.addInsurance,
+                        Navigator.of(context).pushReplacementNamed(
+                            Routes.addInsurance,
                             arguments: {
                               ArgumentConstant.argsinsuranceType:
                                   InsuranceType.secondary

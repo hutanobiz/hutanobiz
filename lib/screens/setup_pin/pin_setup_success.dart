@@ -36,7 +36,6 @@ class PinSetupSuccess extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               AppHeader(
-                progressSteps: HutanoProgressSteps.one,
                 title: Localization.of(context).newPinCreation,
                 subTitle: Localization.of(context).taskComplete,
               ),

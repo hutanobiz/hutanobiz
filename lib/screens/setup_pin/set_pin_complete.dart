@@ -25,7 +25,6 @@ class _SetPinCompleteState extends State<SetPinComplete> {
             mainAxisSize: MainAxisSize.max,
             children: [
               AppHeader(
-                progressSteps: HutanoProgressSteps.two,
                 title: "Set Pin",
                 subTitle: Localization.of(context).taskComplete,
               ),

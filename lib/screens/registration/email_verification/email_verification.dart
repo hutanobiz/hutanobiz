@@ -243,6 +243,6 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   }
 
   _skipTaskNow() {
-    Navigator.of(context).pushNamed(Routes.addPaymentOption);
+    Navigator.of(context).pushNamed(Routes.setupPin);
   }
 }

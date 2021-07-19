@@ -264,8 +264,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           context, Localization.of(context).errorHealthInsurance);
       return;
     }
-    _verifyAddress();
-    // _register();
+    _register();
   }
 
   _verifyAddress() async {
@@ -278,7 +277,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     try {
       await ApiManager().verifyAddress(request);
       ProgressDialogUtils.dismissProgressDialog();
-      _register();
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);
@@ -394,10 +392,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
       //   arguments: _insuranceMap,
       // );
 
-      Navigator.of(context).pushReplacementNamed(
+      Navigator.of(context).pushNamedAndRemoveUntil(
           _registerModel.haveHealthInsurance
               ? Routes.addInsurance
-              : Routes.welcome);
+              : Routes.welcome,
+          (Route<dynamic> route) => false);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);
