@@ -196,11 +196,11 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                           data.add(medicalHistory['name']);
                         }
 
-                        for (dynamic medicalHistory in _diseaseList) {
-                          if (!data.contains(medicalHistory)) {
-                            data.insert(0, medicalHistory);
-                          }
-                        }
+                        // for (dynamic medicalHistory in _diseaseList) {
+                        //   if (!data.contains(medicalHistory)) {
+                        //     data.insert(0, medicalHistory['name']);
+                        //   }
+                        // }
 
                         return ListView.builder(
                           padding: EdgeInsets.only(
@@ -311,64 +311,64 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
   }
 
   void saveMedicalHistory() {
-    if (_diseaseList.length > 0) {
-      Map<String, String> diseaseMap = {};
+    // if (_diseaseList.length > 0) {
+    //   Map<String, String> diseaseMap = {};
 
-      if ((_diseaseList.contains('Others') || _diseaseList.contains('Other')) &&
-          _otherDiseaseController.text.isEmpty) {
-        Widgets.showToast('Please enter the disease');
-      } else {
-        FocusScope.of(context).requestFocus(FocusNode());
+    //   if ((_diseaseList.contains('Others') || _diseaseList.contains('Other')) &&
+    //       _otherDiseaseController.text.isEmpty) {
+    //     Widgets.showToast('Please enter the disease');
+    //   } else {
+    //     FocusScope.of(context).requestFocus(FocusNode());
 
-        if ((_diseaseList.contains('Others') ||
-            _diseaseList.contains('Other'))) {
-          _diseaseList.remove('Others');
-          _diseaseList.remove('Other');
-          if (_otherDiseaseController.text.isNotEmpty) {
-            diseaseMap['otherMedicalHistory'] = _otherDiseaseController.text;
-            // _diseaseList.add(_otherDiseaseController.text);
-          }
-        }
+    //     if ((_diseaseList.contains('Others') ||
+    //         _diseaseList.contains('Other'))) {
+    //       _diseaseList.remove('Others');
+    //       _diseaseList.remove('Other');
+    //       if (_otherDiseaseController.text.isNotEmpty) {
+    //         diseaseMap['otherMedicalHistory'] = _otherDiseaseController.text;
+    //         // _diseaseList.add(_otherDiseaseController.text);
+    //       }
+    //     }
 
-        setLoading(true);
+    //     setLoading(true);
 
-        for (int i = 0; i < _diseaseList.length; i++) {
-          if (_diseaseList[i] != null) {
-            if (!diseaseMap.containsValue(_diseaseList[i])) {
-              diseaseMap['medicalHistory[${i.toString()}]'] = _diseaseList[i];
-            }
-          }
-        }
+    //     for (int i = 0; i < _diseaseList.length; i++) {
+    //       if (_diseaseList[i] != null) {
+    //         if (!diseaseMap.containsValue(_diseaseList[i])) {
+    //           diseaseMap['medicalHistory[${i.toString()}]'] = _diseaseList[i];
+    //         }
+    //       }
+    //     }
 
-        api.sendPatientMedicalHistory(token, diseaseMap).then((response) {
-          if (response != null) {
-            setLoading(false);
+    //     api.sendPatientMedicalHistory(token, diseaseMap).then((response) {
+    //       if (response != null) {
+    //         setLoading(false);
 
-            if (_otherDiseaseController.text.isNotEmpty) {
-              _otherDiseaseController.text = '';
-            }
+    //         if (_otherDiseaseController.text.isNotEmpty) {
+    //           _otherDiseaseController.text = '';
+    //         }
 
-            if (isBottomButtonsShow) {
-              if (_diseaseList != null && _diseaseList.length > 0) {
-                _container.setConsentToTreatData(
-                    "medicalHistory", _diseaseList);
-                if (diseaseMap['otherMedicalHistory'] != null) {
-                  _container.setConsentToTreatData(
-                      'otherMedicalHistory', diseaseMap['otherMedicalHistory']);
-                }
-              }
+    //         if (isBottomButtonsShow) {
+    //           if (_diseaseList != null && _diseaseList.length > 0) {
+    //             _container.setConsentToTreatData(
+    //                 "medicalHistory", _diseaseList);
+    //             if (diseaseMap['otherMedicalHistory'] != null) {
+    //               _container.setConsentToTreatData(
+    //                   'otherMedicalHistory', diseaseMap['otherMedicalHistory']);
+    //             }
+    //           }
 
-              Navigator.of(context).pushNamed(Routes.seekingCureScreen);
-            }
-          }
-        }).futureError((error) {
-          setLoading(false);
-          error.toString().debugLog();
-        });
-      }
-    } else {
-      Widgets.showToast('Please select a disease');
-    }
+    Navigator.of(context).pushNamed(Routes.seekingCureScreen);
+    //         }
+    //       }
+    //     }).futureError((error) {
+    //       setLoading(false);
+    //       error.toString().debugLog();
+    //     });
+    //   }
+    // } else {
+    //   Widgets.showToast('Please select a disease');
+    // }
   }
 
   void setLoading(bool value) {

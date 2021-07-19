@@ -57,10 +57,10 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   String _totalDuration = "";
   Map _profileMap = new Map();
   Map _servicesMap = new Map();
-  Map<String, String> _reviewAppointmentData = Map();
+  Map<String, dynamic> _reviewAppointmentData = Map();
   Map _consentToTreatMap;
   String paymentType, insuranceName, insuranceImage, insuranceId;
-
+  ApiBaseHelper api = ApiBaseHelper();
   List<dynamic> _consultaceList = List();
 
   setPolylines() async {
@@ -339,6 +339,410 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   }
 
   _bookAppointment() async {
+    try {
+      _timezone = await FlutterNativeTimezone.getLocalTimezone();
+    } catch (e) {
+      print('Could not get the local timezone');
+    }
+    if (mounted) {
+      setState(() {});
+    }
+    try {
+      SharedPref().getToken().then((token) async {
+        _loading(true);
+        Uri uri = Uri.parse(
+            ApiBaseHelper.base_url + "api/patient/appointment-booking-v1");
+
+        String doctorId = '';
+
+        if (_profileMap["userId"] != null && _profileMap["userId"] is Map) {
+          doctorId = _profileMap["userId"]["_id"].toString();
+        } else if (_profileMap["User"] != null is Map) {
+          doctorId = _profileMap["User"][0]["_id"].toString();
+        }
+
+        _reviewAppointmentData["type"] =
+            _container.getProjectsResponse()["serviceType"]?.toString() ?? "1";
+        _reviewAppointmentData["date"] =
+            DateFormat("MM/dd/yyyy").format(_bookedDate).toString();
+        _reviewAppointmentData["fromTime"] = _bookedTime;
+        _reviewAppointmentData["timeZonePlace"] = _timezone;
+        _reviewAppointmentData["doctor"] = doctorId;
+
+        _reviewAppointmentData["isOndemand"] = _appointmentData["isOndemand"];
+
+        if (_appointmentData["officeId"] != null) {
+          _reviewAppointmentData["officeId"] = _appointmentData["officeId"];
+        }
+
+        // request.fields.addAll(_reviewAppointmentData);
+
+        if (_reviewAppointmentData["type"] == '3') {
+          _reviewAppointmentData['userAddressId'] =
+              _consentToTreatMap["userAddress"]["_id"].toString();
+          _reviewAppointmentData['parkingType'] =
+              _consentToTreatMap["parkingMap"]["parkingType"].toString();
+          _reviewAppointmentData['parkingFee'] =
+              _consentToTreatMap["parkingMap"]["parkingFee"].toString();
+          _reviewAppointmentData['parkingBay'] =
+              _consentToTreatMap["parkingMap"]["parkingBay"].toString();
+
+          if (_consentToTreatMap["parkingMap"]["instructions"].toString() !=
+              null) {
+            _reviewAppointmentData['instructions'] =
+                _consentToTreatMap["parkingMap"]["instructions"].toString();
+          }
+        }
+
+        _reviewAppointmentData['consentToTreat'] = '1';
+        _reviewAppointmentData['problemTimeSpan'] =
+            _consentToTreatMap["problemTimeSpan"];
+        _reviewAppointmentData['isProblemImproving'] =
+            _consentToTreatMap["isProblemImproving"];
+        _reviewAppointmentData['isTreatmentReceived'] =
+            _consentToTreatMap["isTreatmentReceived"];
+        _reviewAppointmentData['description'] =
+            _consentToTreatMap["description"].toString().trim();
+
+        if (paymentType != null) {
+          if (paymentType == "3") {
+            _reviewAppointmentData['cashPayment'] = "3";
+            _reviewAppointmentData['paymentMethod'] = "3";
+          } else if (paymentType == "2") {
+            _reviewAppointmentData['paymentMethod'] = "2";
+            _reviewAppointmentData['insuranceId'] = insuranceId;
+          } else {
+            _reviewAppointmentData['paymentMethod'] = "1";
+            _reviewAppointmentData['cardId'] =
+                _consentToTreatMap["paymentMap"]["selectedCard"]['id'];
+          }
+        }
+
+        if (_consentToTreatMap["imagesList"] != null &&
+            _consentToTreatMap["imagesList"].length > 0) {
+          List<String> imgList = [];
+          for (Map doc in _consentToTreatMap["imagesList"]) {
+            imgList.add(doc['_id']);
+          }
+          _reviewAppointmentData['medicalImages'] = imgList;
+        }
+
+        if (_consentToTreatMap["docsList"] != null &&
+            _consentToTreatMap["docsList"].length > 0) {
+          List<String> docList = [];
+          for (Map doc in _consentToTreatMap["docsList"]) {
+            docList.add(doc['_id']);
+          }
+
+          _reviewAppointmentData['medicalDocuments'] = docList;
+        }
+
+        var customMedicalHistory = [
+          {
+            'name': "Asthma",
+            'year': "2013",
+            'month': "04",
+            '_id': "60e7e12cc1e7f02933b94eea"
+          },
+          {
+            'name': "Enterovirus",
+            'year': "2018",
+            'month': "07",
+            '_id': "60ed2a58dc717a14adc8131a"
+          }
+        ];
+        if (customMedicalHistory != null && customMedicalHistory.length > 0) {
+          _reviewAppointmentData['medicalHistory'] = customMedicalHistory;
+        }
+
+        // _reviewAppointmentData['medicalHistory'] = [
+        //   {'pharmacyId': '60ee72bcf84c8032e87f2325'}
+        // ];
+
+        _reviewAppointmentData['medicalDiagnosticsTests'] = [
+          '60e532386e13bf66c4192dff'
+        ];
+
+        _reviewAppointmentData['medicationDetails'] = [
+          '60e7e838c1e7f02933b94eee',
+          '60ee6c5860b7c02410a9e1c5'
+        ];
+
+        _reviewAppointmentData['vitals'] = {
+          'date': '2021-07-10T06:23:42.000Z',
+          'time': '3:15 AM',
+          'bloodPressureSbp': '22',
+          'bloodPressureDbp': '32',
+          'heartRate': '56',
+          'oxygenSaturation': '56',
+          'temperature': '97'
+        };
+
+        _reviewAppointmentData['problems'] = [
+          {
+            "problemId": "60ed052b073ef503a779310a",
+            "image": "1626146091855_problem.png",
+            "bodyPart": [
+              {"name": "Feet", "sides": "1"}
+            ],
+            "dailyActivity": "2",
+            "isProblemImproving": "1",
+            "isTreatmentReceived": "1",
+            "name": "Abnormal Sensations",
+            "problemBetter": ["Sitting", "Standing"],
+            "problemFacingTimeSpan": {"type": "2", "period": "4"},
+            "problemRating": "4",
+            "problemWorst": ["Standing "],
+            "symptoms": ["Tingling"],
+            "treatmentReceived": {"type": "2", "period": "4"}
+          }
+        ];
+
+        // if (_consentToTreatMap["otherMedicalHistory"] != null) {
+        //   request.fields["otherMedicalHistory"] =
+        //       _consentToTreatMap["otherMedicalHistory"];
+        // }
+
+        api
+            .bookAppointment2(context, token, _reviewAppointmentData)
+            .then((responseJson) {
+          if (responseJson["response"] is String) {
+            _loading(false);
+            Widgets.showAppDialog(
+                isError: true,
+                context: context,
+                buttonText: responseJson["response"].contains('already')
+                    ? 'Go to Requests'
+                    : 'Close',
+                description: responseJson["response"],
+                onPressed: () {
+                  if (responseJson["response"].contains('already')) {
+                    _container.consentToTreatMap.clear();
+                    _container.getProviderData().clear();
+                    _container.appointmentData.clear();
+
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      Routes.dashboardScreen,
+                      (Route<dynamic> route) => false,
+                      arguments: 2,
+                    );
+                  } else {
+                    Navigator.pop(context);
+                  }
+                });
+            //  } else if (responseJson["response"]['paymentIntent'] != null) {
+            //   String _clientSecret =
+            //       responseJson["response"]['paymentIntent']['client_secret'];
+
+            //   PaymentIntent _paymentIntent = PaymentIntent(
+            //     paymentMethodId: _consentToTreatMap["paymentMap"]["selectedCard"]
+            //         ['id'],
+            //     clientSecret: _clientSecret,
+            //   );
+
+            //   StripePayment.confirmPaymentIntent(
+            //     _paymentIntent,
+            //   ).then((PaymentIntentResult value) {
+            //     _loading(false);
+            //     showConfirmDialog();
+            //   }).futureError((error) {
+            //     _loading(false);
+
+            //     Widgets.showErrorialog(
+            //       context: context,
+            //       description: error.toString(),
+            //     );
+            //   });
+          } else {
+            _loading(false);
+
+            responseJson["response"].toString().debugLog();
+
+            // showConfirmDialog();
+            String name = '', nameTitle = '';
+            if (_profileMap['userId'] is Map) {
+              if (_profileMap["userId"] != null) {
+                nameTitle =
+                    _profileMap["userId"]["title"]?.toString() ?? 'Dr. ';
+                name =
+                    nameTitle + _profileMap["userId"]["fullName"]?.toString() ??
+                        "---";
+              }
+            } else if (_profileMap["User"] != null &&
+                _profileMap["User"].length > 0) {
+              nameTitle =
+                  (_profileMap["User"][0]["title"]?.toString() ?? 'Dr. ');
+              name = '$nameTitle ' +
+                  (_profileMap["User"][0]["fullName"]?.toString() ?? "---");
+            }
+            var appointmentType = '';
+            appointmentType = _container.projectsResponse["serviceType"]
+                        .toString() ==
+                    '1'
+                ? "office"
+                : _container.projectsResponse["serviceType"].toString() == '2'
+                    ? "telemedicine"
+                    : "onsite";
+            Widgets.showAppDialog(
+                context: context,
+                description:
+                    'Your $appointmentType appointment with $name is booked.',
+                buttonText: 'Go to Requests',
+                isCongrats: true,
+                onPressed: () {
+                  _container.consentToTreatMap.clear();
+                  _container.getProviderData().clear();
+                  _container.appointmentData.clear();
+
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    Routes.dashboardScreen,
+                    (Route<dynamic> route) => false,
+                    arguments: 2,
+                  );
+                });
+          }
+        }).futureError((error) {
+          _loading(false);
+          error.toString().debugLog();
+        });
+        // }
+
+        // var aa = jsonEncode(request.fields);
+        // print(aa);
+        // request.fields.toString().debugLog();
+
+        // var response = await request.send().futureError((e) {
+        //   _loading(false);
+        //   e.toString().debugLog();
+        // });
+        // final int statusCode = response.statusCode;
+        // log("Status code: $statusCode");
+
+        // JsonDecoder _decoder = new JsonDecoder();
+
+        // String respStr = await response.stream.bytesToString();
+        // var responseJson = _decoder.convert(respStr);
+
+        // if (statusCode < 200 || statusCode > 400 || json == null) {
+        //   _loading(false);
+        //   if (responseJson["response"] is String)
+        //     Widgets.showToast(responseJson["response"]);
+        //   else if (responseJson["response"] is Map)
+        //     Widgets.showToast(responseJson);
+        //   else {
+        //     responseJson["response"]
+        //         .map((m) => Widgets.showToast(m.toString()))
+        //         .toList();
+        //   }
+
+        //   responseJson["response"].toString().debugLog();
+        //   throw Exception(responseJson);
+        // } else {
+        //   if (responseJson["response"] is String) {
+        //     _loading(false);
+        //     Widgets.showAppDialog(
+        //         isError: true,
+        //         context: context,
+        //         buttonText: responseJson["response"].contains('already')
+        //             ? 'Go to Requests'
+        //             : 'Close',
+        //         description: responseJson["response"],
+        //         onPressed: () {
+        //           if (responseJson["response"].contains('already')) {
+        //             _container.consentToTreatMap.clear();
+        //             _container.getProviderData().clear();
+        //             _container.appointmentData.clear();
+
+        //             Navigator.of(context).pushNamedAndRemoveUntil(
+        //               Routes.dashboardScreen,
+        //               (Route<dynamic> route) => false,
+        //               arguments: 2,
+        //             );
+        //           } else {
+        //             Navigator.pop(context);
+        //           }
+        //         });
+        //     //  } else if (responseJson["response"]['paymentIntent'] != null) {
+        //     //   String _clientSecret =
+        //     //       responseJson["response"]['paymentIntent']['client_secret'];
+
+        //     //   PaymentIntent _paymentIntent = PaymentIntent(
+        //     //     paymentMethodId: _consentToTreatMap["paymentMap"]["selectedCard"]
+        //     //         ['id'],
+        //     //     clientSecret: _clientSecret,
+        //     //   );
+
+        //     //   StripePayment.confirmPaymentIntent(
+        //     //     _paymentIntent,
+        //     //   ).then((PaymentIntentResult value) {
+        //     //     _loading(false);
+        //     //     showConfirmDialog();
+        //     //   }).futureError((error) {
+        //     //     _loading(false);
+
+        //     //     Widgets.showErrorialog(
+        //     //       context: context,
+        //     //       description: error.toString(),
+        //     //     );
+        //     //   });
+        //   } else {
+        //     _loading(false);
+
+        //     responseJson["response"].toString().debugLog();
+
+        //     // showConfirmDialog();
+        //     String name = '', nameTitle = '';
+        //     if (_profileMap['userId'] is Map) {
+        //       if (_profileMap["userId"] != null) {
+        //         nameTitle =
+        //             _profileMap["userId"]["title"]?.toString() ?? 'Dr. ';
+        //         name =
+        //             nameTitle + _profileMap["userId"]["fullName"]?.toString() ??
+        //                 "---";
+        //       }
+        //     } else if (_profileMap["User"] != null &&
+        //         _profileMap["User"].length > 0) {
+        //       nameTitle =
+        //           (_profileMap["User"][0]["title"]?.toString() ?? 'Dr. ');
+        //       name = '$nameTitle ' +
+        //           (_profileMap["User"][0]["fullName"]?.toString() ?? "---");
+        //     }
+        //     var appointmentType = '';
+        //     appointmentType = _container.projectsResponse["serviceType"]
+        //                 .toString() ==
+        //             '1'
+        //         ? "office"
+        //         : _container.projectsResponse["serviceType"].toString() == '2'
+        //             ? "telemedicine"
+        //             : "onsite";
+        //     Widgets.showAppDialog(
+        //         context: context,
+        //         description:
+        //             'Your $appointmentType appointment with $name is booked.',
+        //         buttonText: 'Go to Requests',
+        //         isCongrats: true,
+        //         onPressed: () {
+        //           _container.consentToTreatMap.clear();
+        //           _container.getProviderData().clear();
+        //           _container.appointmentData.clear();
+
+        //           Navigator.of(context).pushNamedAndRemoveUntil(
+        //             Routes.dashboardScreen,
+        //             (Route<dynamic> route) => false,
+        //             arguments: 2,
+        //           );
+        //         });
+        //   }
+        //   _loading(false);
+        // }
+      });
+    } on Exception catch (error) {
+      _loading(false);
+      error.toString().debugLog();
+    }
+  }
+
+  _bookAppointmentPre() async {
     try {
       _timezone = await FlutterNativeTimezone.getLocalTimezone();
     } catch (e) {
