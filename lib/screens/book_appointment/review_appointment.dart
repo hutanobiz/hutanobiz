@@ -524,7 +524,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                     Navigator.of(context).pushNamedAndRemoveUntil(
                       Routes.dashboardScreen,
                       (Route<dynamic> route) => false,
-                      arguments: 2,
+                      arguments: 1,
                     );
                   } else {
                     Navigator.pop(context);
@@ -916,7 +916,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                     Navigator.of(context).pushNamedAndRemoveUntil(
                       Routes.dashboardScreen,
                       (Route<dynamic> route) => false,
-                      arguments: 2,
+                      arguments: 1,
                     );
                   } else {
                     Navigator.pop(context);
@@ -989,7 +989,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                   Navigator.of(context).pushNamedAndRemoveUntil(
                     Routes.dashboardScreen,
                     (Route<dynamic> route) => false,
-                    arguments: 2,
+                    arguments: 1,
                   );
                 });
           }
@@ -1073,7 +1073,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                       Navigator.of(context).pushNamedAndRemoveUntil(
                         Routes.dashboardScreen,
                         (Route<dynamic> route) => false,
-                        arguments: 2,
+                        arguments: 1,
                       );
                     })
               ],
