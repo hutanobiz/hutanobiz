@@ -32,7 +32,8 @@ class LoadingBackgroundNew extends StatelessWidget {
       this.isBackRequired = true,
       this.centerTitle = false,
       this.isSkipLater = false,
-      this.onSkipForTap})
+      this.onSkipForTap,
+      this.notificationCount})
       : super(key: key);
 
   final bool isLoading;
@@ -54,6 +55,7 @@ class LoadingBackgroundNew extends StatelessWidget {
   final bool centerTitle;
   final bool isSkipLater;
   final Function onSkipForTap;
+  final int notificationCount;
 
   @override
   Widget build(BuildContext context) {
@@ -119,26 +121,29 @@ class LoadingBackgroundNew extends StatelessWidget {
                                       width: 22,
                                     ),
                                   ),
-                                  Positioned(
-                                    top: 0,
-                                    right: 0,
-                                    child: Container(
-                                      width: 20,
-                                      height: 20,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10)),
-                                          color: Colors.red),
-                                      child: Center(
-                                        child: Text(
-                                          "1",
-                                          style: AppTextStyle.semiBoldStyle(
-                                              fontSize: 11,
-                                              color: Colors.white),
-                                        ),
-                                      ),
-                                    ),
-                                  )
+                                  (notificationCount ?? 0) > 0
+                                      ? Positioned(
+                                          top: 0,
+                                          right: 0,
+                                          child: Container(
+                                            width: 20,
+                                            height: 20,
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(10)),
+                                                color: Colors.red),
+                                            child: Center(
+                                              child: Text(
+                                                '${notificationCount ?? "1"}',
+                                                style:
+                                                    AppTextStyle.semiBoldStyle(
+                                                        fontSize: 11,
+                                                        color: Colors.white),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      : SizedBox()
                                 ],
                               ),
                             ),

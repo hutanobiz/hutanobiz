@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_dialog/flutter_custom_dialog.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hutano/colors.dart';
 
@@ -181,6 +182,8 @@ class Widgets {
     String buttonText,
     Function onPressed,
   }) {
+    customDialog(context, title, description, buttonText, onPressed: onPressed);
+    return;
     showDialog(
       context: context,
       builder: (context) => Platform.isIOS
@@ -346,6 +349,113 @@ class Widgets {
 
   static SizedBox sizedBox({@required double height}) {
     return SizedBox(height: height);
+  }
+
+  static customDialog(
+      BuildContext context, String title, String description, String buttonText,
+      {Function onPressed,
+      String leftText,
+      Function onLeftPressed,
+      String rightText,
+      Function onRightPressed,
+      bool isConfirmationDialog = false}) {
+    var yyDialog = YYDialog();
+    yyDialog.build(context)
+      ..width = 300
+      ..backgroundColor = Colors.transparent
+      ..barrierDismissible = false
+      ..widget(
+        Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(24)),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: Column(
+              children: [
+                Text(
+                  title ?? "Alert",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 18,
+                ),
+                Text(
+                  description,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 13,
+                  ),
+                ),
+                SizedBox(
+                  height: 25,
+                ),
+                isConfirmationDialog
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          FlatButton(
+                              color: AppColors.windsor,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  side: BorderSide(color: AppColors.windsor)),
+                              onPressed: () {
+                                yyDialog.dismiss();
+                                onLeftPressed();
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Text(
+                                  leftText ?? "Yes",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 14),
+                                ),
+                              )),
+                          FlatButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  side: BorderSide(color: AppColors.windsor)),
+                              onPressed: () {
+                                yyDialog.dismiss();
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Text(
+                                  rightText ?? "No",
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 14),
+                                ),
+                              ))
+                        ],
+                      )
+                    : FlatButton(
+                        color: AppColors.windsor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            side: BorderSide(color: AppColors.windsor)),
+                        onPressed: onPressed ??
+                            () {
+                              yyDialog.dismiss();
+                              onPressed();
+                            },
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Text(
+                            buttonText ?? "Ok",
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          ),
+                        ))
+              ],
+            ),
+          ),
+        ),
+      )
+      ..show();
   }
 
   static void showCallDialog(
