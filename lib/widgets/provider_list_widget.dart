@@ -268,24 +268,24 @@ class ProviderWidget extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              selectedAppointment != null &&
-                                      selectedAppointment != '0'
-                                  ? Container()
-                                  : SizedBox(width: 12),
-                              selectedAppointment != null &&
-                                      selectedAppointment != '0'
-                                  ? Container()
-                                  : Expanded(
-                                      child: Text(
-                                        "Starting from",
-                                        textAlign: TextAlign.right,
-                                        style: TextStyle(
-                                          fontSize: 13.0,
-                                          color: Colors.grey[600],
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
+                              // selectedAppointment != null &&
+                              //         selectedAppointment != '0'
+                              //     ? Container()
+                              //     : SizedBox(width: 12),
+                              // selectedAppointment != null &&
+                              //         selectedAppointment != '0'
+                              //     ? Container()
+                              //     : Expanded(
+                              //         child: Text(
+                              //           "Starting from",
+                              //           textAlign: TextAlign.right,
+                              //           style: TextStyle(
+                              //             fontSize: 13.0,
+                              //             color: Colors.grey[600],
+                              //             fontWeight: FontWeight.w400,
+                              //           ),
+                              //         ),
+                              //       ),
                             ],
                           ),
                         ),

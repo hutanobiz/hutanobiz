@@ -191,12 +191,21 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
       if (_servicesMap["services"] != null) {
         _servicesList = _servicesMap["services"];
 
-        for (int i = 0; i < _servicesList.length; i++) {
-          _reviewAppointmentData["services[${i.toString()}][subServiceId]"] =
-              _servicesList[i].subServiceId;
-          _reviewAppointmentData["services[${i.toString()}][amount]"] =
-              _servicesList[i].amount.toString();
+        if (_servicesList.length > 0) {
+          _reviewAppointmentData["services"] = _servicesList;
         }
+// 4:"services[1][amount]" -> "60"
+// 3:"services[1][subServiceId]" -> "6090f4d858adf55f8b70e53c"
+// 2:"services[0][amount]" -> "30"
+// 1:"services[0][subServiceId]" -> "6090f4d858adf55f8b70e53a"
+// 0:
+
+//         for (int i = 0; i < _servicesList.length; i++) {
+//           _reviewAppointmentData["services[${i.toString()}][subServiceId]"] =
+//               _servicesList[i].subServiceId;
+//           _reviewAppointmentData["services[${i.toString()}][amount]"] =
+//               _servicesList[i].amount.toString();
+//         }
       }
     } else {
       _consultaceList = _servicesMap["consultaceFee"];
@@ -480,15 +489,15 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
         _reviewAppointmentData['problems'] = [
           {
-            "problemId": "60ed052b073ef503a779310a",
-            "image": "1626146091855_problem.png",
+            "problemId": "60c639040777230d83773dd2",
+            "image": "1626674994244_problem.png",
             "bodyPart": [
-              {"name": "Feet", "sides": "1"}
+              {"name": "hand", "sides": "1"}
             ],
             "dailyActivity": "2",
             "isProblemImproving": "1",
             "isTreatmentReceived": "1",
-            "name": "Abnormal Sensations",
+            "name": "Bone and Muscle Issue",
             "problemBetter": ["Sitting", "Standing"],
             "problemFacingTimeSpan": {"type": "2", "period": "4"},
             "problemRating": "4",
@@ -597,7 +606,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                   Navigator.of(context).pushNamedAndRemoveUntil(
                     Routes.dashboardScreen,
                     (Route<dynamic> route) => false,
-                    arguments: 2,
+                    arguments: 1,
                   );
                 });
           }

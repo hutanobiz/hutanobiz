@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hutano/colors.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/strings.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/localization/localization.dart';
@@ -166,28 +164,40 @@ class _AddProviderState extends State<AddProvider> {
     //TODO : TEMPORARY CODE
     //Chaning route to dashboard screen from home
     if (_phoneController.text.isNotEmpty) {
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false,arguments: 0);
+      Navigator.of(context).pushNamedAndRemoveUntil(
+      Routes.homeMain,
+      (Route<dynamic> route) => false,);
+      // Navigator.of(context)
+      //     .pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false,arguments: 0);
       Navigator.of(context).pushNamed(Routes.dashboardSearchScreen,
           arguments: {'searchParam': _phoneController.text});
       // Navigator.of(context).pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false,
       //     arguments: {ArgumentConstant.searchText: _phoneController.text});
     } else if (!_nameController.text.isEmpty) {
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false,arguments: 0);
+      Navigator.of(context).pushNamedAndRemoveUntil(
+      Routes.homeMain,
+      (Route<dynamic> route) => false,);
+      // Navigator.of(context)
+      //     .pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false,arguments: 0);
       Navigator.of(context).pushNamed(Routes.dashboardSearchScreen,
           arguments: {'searchParam': _nameController.text});
       // Navigator.of(context).pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false,
       //     arguments: {ArgumentConstant.searchText: _nameController.text});
     } else {
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false,arguments: 0);
+      Navigator.of(context).pushNamedAndRemoveUntil(
+      Routes.homeMain,
+      (Route<dynamic> route) => false,);
+      // Navigator.of(context)
+      //     .pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false,arguments: 0);
     }
   }
 
   _skipTaskNow() {
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false,arguments: 0);
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      Routes.homeMain,
+      (Route<dynamic> route) => false,);
+    // Navigator.of(context)
+    //     .pushNamedAndRemoveUntil(Routes.dashboardScreen, (route) => false,arguments: 0);
     // Navigator.of(context).pushNamed(Routes.dashboardSearchScreen,arguments: {'searchParam':'Test'});
   }
 }

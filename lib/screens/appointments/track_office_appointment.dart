@@ -50,6 +50,12 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
 
   @override
   void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    _container = InheritedContainer.of(context);
     SharedPref().getToken().then((usertoken) {
       token = usertoken;
       setState(() {
@@ -60,12 +66,6 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
         );
       });
     });
-    super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    _container = InheritedContainer.of(context);
     super.didChangeDependencies();
   }
 
@@ -140,7 +140,8 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                 : status == 3
                     ? 'Treatment Started'
                     : 'Appointment Complete';
-    name = appointment["data"]['doctor']['title'] +appointment["data"]['doctor']['fullName'];
+    name = appointment["data"]['doctor']['title'] +
+        appointment["data"]['doctor']['fullName'];
     avatar = appointment["data"]['doctor']['avatar'];
 
     return Container(
@@ -161,10 +162,8 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
             text: '',
             fontSize: 0.0,
             onComplete: () {
-              setState(() {
-                _profileFuture = api.getAppointmentDetails(
-                    token, widget.appointmentId, _userLocation);
-              });
+              _profileFuture = api.getAppointmentDetails(
+                  token, widget.appointmentId, _userLocation);
             },
           ),
           TrackingProviderWidget(

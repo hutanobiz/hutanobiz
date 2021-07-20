@@ -9,12 +9,12 @@ import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/appointments/video_player.dart';
-import 'package:hutano/strings.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/problem_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
@@ -49,6 +49,14 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   final Set<Marker> _markers = {};
   BitmapDescriptor sourceIcon;
   Completer<GoogleMapController> _controller = Completer();
+
+  Map<String, String> timeSpanConfig = {
+    "1": "Hours",
+    "2": "Days",
+    "3": "Weeks",
+    "4": "Months",
+    "5": "Years"
+  };
 
   LatLng _userLocation = new LatLng(0.00, 0.00);
 
@@ -202,7 +210,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                   ? SizedBox()
                                   : profileMap['data']["type"] == 1
                                       ? FancyButton(
-                                          title: "Show status",
+                                          title: "Track Appointment",
                                           onPressed: () {
                                             Navigator.pushNamed(
                                               context,
@@ -215,7 +223,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                           })
                                       : profileMap['data']["type"] == 2
                                           ? FancyButton(
-                                              title: "Show status",
+                                              title: "Track Appointment",
                                               onPressed: () {
                                                 Navigator.pushNamed(
                                                   context,
@@ -229,7 +237,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                               })
                                           : profileMap['data']["type"] == 3
                                               ? FancyButton(
-                                                  title: 'Show status',
+                                                  title: 'Track Appointment',
                                                   onPressed: () {
                                                     Navigator.of(context)
                                                         .pushNamed(
@@ -989,11 +997,6 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   }
 
   Widget seekingCareWidget(dynamic _providerData) {
-    String timeSpan = "---";
-    if (_providerData["problemTimeSpan"] != null) {
-      timeSpan = _providerData["problemTimeSpan"].toString();
-    }
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
       child: Column(
@@ -1001,110 +1004,132 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         children: <Widget>[
           Text(
             "Description of problem",
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          SizedBox(height: 18.0),
-          Text(
-            _providerData['description']?.toString() ?? '---',
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
               fontSize: 14.0,
+              fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(height: 20),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(14.0),
-                border: Border.all(color: Colors.grey[200])),
-            padding: EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Container(
-                      height: 5.0,
-                      width: 5.0,
-                      decoration: new BoxDecoration(
-                        color: Colors.black,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      "Problem duration: ",
-                      style: TextStyle(fontSize: 13),
-                    ),
-                    Text(
-                      timeSpan == "1"
-                          ? "Hours"
-                          : timeSpan == "2"
-                              ? "Days"
-                              : timeSpan == "3"
-                                  ? "Weeks"
-                                  : timeSpan == "4"
-                                      ? "Months"
-                                      : "---",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 12),
-                Row(
-                  children: <Widget>[
-                    Container(
-                      height: 5.0,
-                      width: 5.0,
-                      decoration: new BoxDecoration(
-                        color: Colors.black,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        _providerData["isTreatmentReceived"]
-                            ? "Treatment for this complaint is taken in the past 3 months."
-                            : "No treatment for this complaint in the past 3 months.",
-                        style: TextStyle(fontSize: 13),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 12),
-                Row(
-                  children: <Widget>[
-                    Container(
-                      height: 5.0,
-                      width: 5.0,
-                      decoration: new BoxDecoration(
-                        color: Colors.black,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        _providerData["isProblemImproving"]
-                            ? "The problem is NOT improving."
-                            : "The problem is NOT improving.",
-                        style: TextStyle(fontSize: 13),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+          SizedBox(
+            height: 10,
           ),
+          ListView.separated(
+            separatorBuilder: (context, index) => SizedBox(height: 20),
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: profileMap['appointmentProblems'].length,
+            itemBuilder: (context, index) {
+              return ProblemWidget(
+                  appointmentProblem: profileMap['appointmentProblems'][index],
+                  problemTimeSpanMap: timeSpanConfig);
+            },
+          ),
+          // Text(
+          //   "Description of problem",
+          //   style: TextStyle(
+          //     fontWeight: FontWeight.w500,
+          //   ),
+          // ),
+          // SizedBox(height: 18.0),
+          // Text(
+          //   _providerData['description']?.toString() ?? '---',
+          //   style: TextStyle(
+          //     fontWeight: FontWeight.w500,
+          //     color: Colors.black,
+          //     fontSize: 14.0,
+          //   ),
+          // ),
+          // SizedBox(height: 20),
+          // Container(
+          //   width: MediaQuery.of(context).size.width,
+          //   decoration: BoxDecoration(
+          //       shape: BoxShape.rectangle,
+          //       color: Colors.white,
+          //       borderRadius: BorderRadius.circular(14.0),
+          //       border: Border.all(color: Colors.grey[200])),
+          //   padding: EdgeInsets.all(12),
+          //   child: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: <Widget>[
+          //       Row(
+          //         children: <Widget>[
+          //           Container(
+          //             height: 5.0,
+          //             width: 5.0,
+          //             decoration: new BoxDecoration(
+          //               color: Colors.black,
+          //               shape: BoxShape.circle,
+          //             ),
+          //           ),
+          //           SizedBox(width: 8),
+          //           Text(
+          //             "Problem duration: ",
+          //             style: TextStyle(fontSize: 13),
+          //           ),
+          //           Text(
+          //             timeSpan == "1"
+          //                 ? "Hours"
+          //                 : timeSpan == "2"
+          //                     ? "Days"
+          //                     : timeSpan == "3"
+          //                         ? "Weeks"
+          //                         : timeSpan == "4"
+          //                             ? "Months"
+          //                             : "---",
+          //             style: TextStyle(
+          //               fontSize: 14,
+          //               fontWeight: FontWeight.w500,
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //       SizedBox(height: 12),
+          //       Row(
+          //         children: <Widget>[
+          //           Container(
+          //             height: 5.0,
+          //             width: 5.0,
+          //             decoration: new BoxDecoration(
+          //               color: Colors.black,
+          //               shape: BoxShape.circle,
+          //             ),
+          //           ),
+          //           SizedBox(width: 8),
+          //           Expanded(
+          //             child: Text(
+          //               _providerData["isTreatmentReceived"]
+          //                   ? "Treatment for this complaint is taken in the past 3 months."
+          //                   : "No treatment for this complaint in the past 3 months.",
+          //               style: TextStyle(fontSize: 13),
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //       SizedBox(height: 12),
+          //       Row(
+          //         children: <Widget>[
+          //           Container(
+          //             height: 5.0,
+          //             width: 5.0,
+          //             decoration: new BoxDecoration(
+          //               color: Colors.black,
+          //               shape: BoxShape.circle,
+          //             ),
+          //           ),
+          //           SizedBox(width: 8),
+          //           Expanded(
+          //             child: Text(
+          //               _providerData["isProblemImproving"]
+          //                   ? "The problem is NOT improving."
+          //                   : "The problem is NOT improving.",
+          //               style: TextStyle(fontSize: 13),
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );

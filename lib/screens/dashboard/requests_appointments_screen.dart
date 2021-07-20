@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/apis/api_helper.dart';
-import 'package:hutano/colors.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
-import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/request_list_widget.dart';
 
 class RequestAppointmentsScreen extends StatefulWidget {
@@ -53,13 +51,15 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
-      backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
-        title: "Requests",
-        isAddBack: false,
-        color: Colors.white,
-        child: _buildList(),
-      ),
+      // backgroundColor: AppColors.goldenTainoi,
+      body:
+          // LoadingBackground(
+          //   title: "Requests",
+          //   isAddBack: false,
+          //   color: Colors.white,
+          //   child:
+          _buildList(),
+      // ),
     );
   }
 
@@ -162,7 +162,9 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
     if (response["doctor"] != null) {
       if (response["isOndemand"] == true) {
         name = (response["doctor"][0]['title']?.toString() ?? 'Dr.') +
-                                  ' ' + response["doctor"][0]["fullName"]?.toString() ?? "---";
+                ' ' +
+                response["doctor"][0]["fullName"]?.toString() ??
+            "---";
         avatar = response["doctor"][0]["avatar"].toString();
         if (response['doctorData'] != null) {
           if (response['doctorData']["professionalTitle"] != null) {
@@ -175,7 +177,9 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
         }
       } else {
         name = (response["doctor"]['title']?.toString() ?? 'Dr.') +
-                                  ' ' + response["doctor"]["fullName"]?.toString() ?? "---";
+                ' ' +
+                response["doctor"]["fullName"]?.toString() ??
+            "---";
         avatar = response["doctor"]["avatar"].toString();
         if (response['doctorData'] != null) {
           if (response['doctorData'][0]["professionalTitle"] != null) {

@@ -236,6 +236,13 @@ class Widgets {
     String rightText,
     Function onRightPressed,
   }) {
+    customDialog(context, title ?? "Are You Sure", description, "",
+        leftText: leftText,
+        rightText: rightText,
+        onLeftPressed: onLeftPressed,
+        onRightPressed: onRightPressed,
+        isConfirmationDialog: true);
+    return;
     showDialog(
       context: context,
       builder: (context) => Platform.isIOS

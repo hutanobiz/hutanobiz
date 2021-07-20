@@ -97,7 +97,7 @@ class HutanoPhoneInput extends StatelessWidget {
           textInputAction: TextInputAction.done,
           isNumberField: true,
           validationMethod: validationMethod,
-          prefixIcon: 'images/login_phone.png',
+          prefixIcon: FileConstants.icCall,
           onFieldSubmitted: onFieldSubmitied,
           onValueChanged: onValueChanged,
         )

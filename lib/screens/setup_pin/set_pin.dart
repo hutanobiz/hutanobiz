@@ -211,10 +211,13 @@ class _SetupPinState extends State<SetupPin> {
           setBool(PreferenceKey.setPin, true);
           if (widget.setupScreen == SetupScreenFrom.login) {
             Navigator.of(context).pushNamedAndRemoveUntil(
-              Routes.dashboardScreen,
-              (Route<dynamic> route) => false,
-              arguments: 0,
-            );
+      Routes.homeMain,
+      (Route<dynamic> route) => false,);
+            // Navigator.of(context).pushNamedAndRemoveUntil(
+            //   Routes.dashboardScreen,
+            //   (Route<dynamic> route) => false,
+            //   arguments: 0,
+            // );
           } else {
             Navigator.of(context).pushReplacementNamed(Routes.setPinComplete);
           }

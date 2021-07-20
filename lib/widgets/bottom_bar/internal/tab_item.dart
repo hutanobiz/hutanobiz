@@ -51,14 +51,11 @@ class TabItem extends StatelessWidget {
             child: AnimatedAlign(
                 duration: Duration(milliseconds: animDuration),
                 alignment: Alignment(0, (selected) ? kTextOn : kTextOff),
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
                   child: Text(
                     title,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                     style: titleStyle,
-                  ),
                 )),
           ),
           Container(

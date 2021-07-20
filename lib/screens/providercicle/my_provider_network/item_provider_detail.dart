@@ -16,15 +16,17 @@ class ItemProviderDetail extends StatelessWidget {
   final int subIndex;
   final Function onShare;
   final Function onRemove;
+  final Function onMakeAppointment;
 
-  const ItemProviderDetail({
-    Key key,
-    this.providerDetail,
-    this.index,
-    this.subIndex,
-    this.onShare,
-    this.onRemove,
-  }) : super(key: key);
+  const ItemProviderDetail(
+      {Key key,
+      this.providerDetail,
+      this.index,
+      this.subIndex,
+      this.onShare,
+      this.onRemove,
+      this.onMakeAppointment})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -98,18 +100,24 @@ class ItemProviderDetail extends StatelessWidget {
               child: TextWithImage(
             image: FileConstants.icRemoveBlack,
             label: Localization.of(context).remove,
-            textStyle: TextStyle(color: colorBlack2.withOpacity(0.85), fontSize: fontSize12),
+            textStyle: TextStyle(
+                color: colorBlack2.withOpacity(0.85), fontSize: fontSize12),
           )),
         ),
         SizedBox(
           width: 15,
         ),
-        IntrinsicWidth(
-          child: TextWithImage(
-            
-               textStyle: TextStyle(color: colorPurple100, fontSize: fontSize12),
-              image: FileConstants.icAppointmentBlue,
-              label: Localization.of(context).makeAppointment),
+        RippleEffect(
+          onTap: () {
+            onMakeAppointment(index, subIndex);
+          },
+          child: IntrinsicWidth(
+            child: TextWithImage(
+                textStyle:
+                    TextStyle(color: colorPurple100, fontSize: fontSize12),
+                image: FileConstants.icAppointmentBlue,
+                label: Localization.of(context).makeAppointment),
+          ),
         ),
       ],
     );

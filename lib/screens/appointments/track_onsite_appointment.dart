@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:isolate';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -17,7 +16,6 @@ import 'package:hutano/widgets/tracking_button.dart';
 import 'package:hutano/widgets/tracking_provider_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
-import 'package:location/location.dart';
 
 const TRACK_STATUS_PROVIDER = 'trackingStatusProvider';
 const PROVIDER_START_DRIVING = 'providerStartDriving';
@@ -185,10 +183,8 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
             text: '',
             fontSize: 0.0,
             onComplete: () {
-              setState(() {
                 _profileFuture = api.getAppointmentDetails(
                     token, widget.appointmentId, _userLocation);
-              });
             },
           ),
           TrackingProviderWidget(

@@ -18,7 +18,6 @@ class PushNotificationService {
 
   Future initialise() async {
     configLocalNotification();
-
     NotificationSettings settings = await _firebaseMessaging.requestPermission(
       alert: true,
       announcement: false,
@@ -37,7 +36,6 @@ class PushNotificationService {
     } else {
       print('User declined or has not accepted permission');
     }
-
     FirebaseMessaging.instance
         .getInitialMessage()
         .then((RemoteMessage message) {
@@ -45,7 +43,7 @@ class PushNotificationService {
         navigateUser(message);
       }
     });
-
+    await FirebaseMessaging.instance.getToken();
     FirebaseMessaging.onMessage.listen(
       (RemoteMessage message) {
         print("onMessage: $message");

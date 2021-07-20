@@ -13,9 +13,10 @@ class ListSpeciality extends StatefulWidget {
   final List<ProviderGroupList> providerGroupList;
   final Function onShare;
   final Function onRemove;
+   final Function onMakeAppointment;
 
   const ListSpeciality(
-      {Key key, this.providerGroupList, this.onShare, this.onRemove})
+      {Key key, this.providerGroupList, this.onShare, this.onRemove,this.onMakeAppointment})
       : super(key: key);
   @override
   _ListSpecialityState createState() => _ListSpecialityState();
@@ -68,6 +69,7 @@ class _ListSpecialityState extends State<ListSpeciality> {
                           subIndex: position,
                           onShare: widget.onShare,
                           onRemove: widget.onRemove,
+                          onMakeAppointment:widget.onMakeAppointment
                         );
                       }),
                   SizedBox(height: spacing15),

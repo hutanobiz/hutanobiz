@@ -94,7 +94,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
           children: <Widget>[
             Container(
               child: ListView(
-                // padding: const EdgeInsets.only(bottom: 70.0),
+                padding: const EdgeInsets.only(bottom: 70.0),
                 shrinkWrap: true,
                 //children: widgetList(),//_providerMap),
                 children: [
@@ -215,7 +215,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                     ),
                     child: TextField(
                       controller: reviewText,
-                      maxLines: 10,
+                      maxLines: 5,
                       autocorrect: false,
                       decoration: InputDecoration(
                         filled: true,

@@ -6,7 +6,6 @@ import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/circular_loader.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
-import 'package:hutano/widgets/widgets.dart';
 import 'package:package_info/package_info.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -279,9 +278,13 @@ class _SettingsScreenState extends State<SettingScreen> {
               customListButton(
                 "Update Medical History",
                 "images/profile_update_medical.png",
-                () => Navigator.of(context).pushNamed(
-                  Routes.updateMedicalHistory,
-                ),
+                () {
+                  var map = {};
+                  map['isBottomButtonsShow'] = false;
+                  map['isFromAppointment'] = false;
+                  Navigator.of(context)
+                      .pushNamed(Routes.updateMedicalHistory, arguments: map);
+                },
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 28.0),

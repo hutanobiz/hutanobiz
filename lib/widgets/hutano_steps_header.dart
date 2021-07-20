@@ -58,20 +58,18 @@ class HutanoStepsHeader extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 20),
-                  child: Expanded(
-                    child: Text(
-                      title,
-                      textAlign: TextAlign.start,
-                      style: titleStyle ??
-                          TextStyle(
-                              color: colorBlack2,
-                              fontWeight: FontWeight.w500,
-                              fontStyle: FontStyle.normal,
-                              fontSize:
-                                  (MediaQuery.of(context).devicePixelRatio > 2)
-                                      ? 15
-                                      : 12),
-                    ),
+                  child: Text(
+                    title,
+                    textAlign: TextAlign.start,
+                    style: titleStyle ??
+                        TextStyle(
+                            color: colorBlack2,
+                            fontWeight: FontWeight.w500,
+                            fontStyle: FontStyle.normal,
+                            fontSize:
+                                (MediaQuery.of(context).devicePixelRatio > 2)
+                                    ? 15
+                                    : 12),
                   ),
                 ),
                 SizedBox(
@@ -80,20 +78,18 @@ class HutanoStepsHeader extends StatelessWidget {
                 if (subTitle != null)
                   Padding(
                     padding: EdgeInsets.only(left: subTitlePadding ? 20 : 0),
-                    child: Expanded(
-                      child: Text(
-                        subTitle,
-                        style: subTitleStyle ??
-                            TextStyle(
-                              fontSize:
-                                  (MediaQuery.of(context).devicePixelRatio > 2)
-                                      ? 13
-                                      : 11,
-                              fontWeight: FontWeight.w400,
-                              fontStyle: FontStyle.normal,
-                              color: colorBlack2.withOpacity(0.85),
-                            ),
-                      ),
+                    child: Text(
+                      subTitle,
+                      style: subTitleStyle ??
+                          TextStyle(
+                            fontSize:
+                                (MediaQuery.of(context).devicePixelRatio > 2)
+                                    ? 13
+                                    : 11,
+                            fontWeight: FontWeight.w400,
+                            fontStyle: FontStyle.normal,
+                            color: colorBlack2.withOpacity(0.85),
+                          ),
                     ),
                   )
               ],

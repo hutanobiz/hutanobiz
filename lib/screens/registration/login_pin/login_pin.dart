@@ -82,10 +82,14 @@ class _LoginPinState extends State<LoginPin> {
           ProgressDialogUtils.dismissProgressDialog();
           //TODO : Verify Code
           // Changing route to dashbaord
+          // Navigator.of(context).pushNamedAndRemoveUntil(
+          //   Routes.dashboardScreen,
+          //   (Route<dynamic> route) => false,
+          //   arguments: 0,
+          // );
           Navigator.of(context).pushNamedAndRemoveUntil(
-            Routes.dashboardScreen,
+            Routes.homeMain,
             (Route<dynamic> route) => false,
-            arguments: 0,
           );
         } catch (e) {
           print(e);
@@ -147,10 +151,14 @@ class _LoginPinState extends State<LoginPin> {
           localizedReason: Localization.of(context).labelAuthWithFingerPrint,
           useErrorDialogs: true);
       if (authenticated) {
+        // Navigator.of(context).pushNamedAndRemoveUntil(
+        //   Routes.dashboardScreen,
+        //   (Route<dynamic> route) => false,
+        //   arguments: 0,
+        // );
         Navigator.of(context).pushNamedAndRemoveUntil(
-          Routes.dashboardScreen,
+          Routes.homeMain,
           (Route<dynamic> route) => false,
-          arguments: 0,
         );
       }
     } on PlatformException catch (e) {

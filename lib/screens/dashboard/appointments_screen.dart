@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/apis/api_helper.dart';
-import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/appointment_list_widget.dart';
-import 'package:hutano/widgets/inherited_widget.dart';
-import 'package:hutano/widgets/loading_background.dart';
 
 class AppointmentsScreen extends StatefulWidget {
   AppointmentsScreen({Key key}) : super(key: key);
@@ -50,13 +47,15 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
-        title: "Appointments",
-        isAddBack: false,
-        color: Colors.white,
-        child: _buildList(),
-      ),
+      // backgroundColor: AppColors.goldenTainoi,
+      body:
+          //  LoadingBackground(
+          //   title: "Appointments",
+          //   isAddBack: false,
+          //   color: Colors.white,
+          //   child:
+          _buildList(),
+      // ),
     );
   }
 

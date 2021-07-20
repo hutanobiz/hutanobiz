@@ -7,7 +7,6 @@ import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/utils/preference_key.dart';
 import 'package:hutano/utils/preference_utils.dart';
-import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/hutano_header_info.dart';
 import 'package:hutano/widgets/hutano_steps_header.dart';
@@ -25,9 +24,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       color: Colors.white,
       child: SafeArea(
         child: Scaffold(
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.max,
+          body: ListView(
+            // crossAxisAlignment: CrossAxisAlignment.stretch,
+            // mainAxisSize: MainAxisSize.max,
             children: [
               SizedBox(height: spacing30),
               HutanoHeaderInfo(
@@ -107,7 +106,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               SizedBox(
                 height: spacing20,
               ),
-              Spacer(),
+              // Spacer(),
               _buildCompleteTaskNowButton(context),
               SizedBox(
                 height: spacing20,
@@ -194,11 +193,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   _skipTaskNow() async {
     setBool(PreferenceKey.skipStep, true);
-
     Navigator.of(context).pushNamedAndRemoveUntil(
-      Routes.dashboardScreen,
+      Routes.homeMain,
       (Route<dynamic> route) => false,
-      arguments: 0,
     );
+
+    // Navigator.of(context).pushNamedAndRemoveUntil(
+    //   Routes.dashboardScreen,
+    //   (Route<dynamic> route) => false,
+    //   arguments: 0,
+    // );
   }
 }

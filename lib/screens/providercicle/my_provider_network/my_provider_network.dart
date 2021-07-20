@@ -4,6 +4,7 @@ import 'package:hutano/apis/error_model.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/main.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/screens/providercicle/provider_search/provider_search.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/constants.dart';
@@ -114,6 +115,12 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
     //     context: context, onRemove: _onRemove, onCancel: _onCancel);
   }
 
+  onMakeAppointment(int index, int subIndex) {
+    Navigator.of(context).pushNamed(Routes.providerProfileScreen,
+        arguments:
+            _providerGroupList[index].providerNetwork.doctorId[subIndex]);
+  }
+
   _onCancel() {
     Navigator.of(context).pop();
   }
@@ -189,6 +196,7 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
                       providerGroupList: _providerGroupList,
                       onShare: onShare,
                       onRemove: onRemove,
+                      onMakeAppointment: onMakeAppointment,
                     ),
                   ),
                 ],

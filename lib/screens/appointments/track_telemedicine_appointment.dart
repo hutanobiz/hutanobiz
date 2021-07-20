@@ -49,7 +49,7 @@ class _TrackTelemedicineAppointmentState
       SimpleCountDownController();
   var appointmentTime;
   var currentTime;
- String name = "---", avatar;
+  String name = "---", avatar;
 
   @override
   void initState() {
@@ -156,7 +156,8 @@ class _TrackTelemedicineAppointmentState
             ? 'Provider Ready'
             : "Appointment accepted";
 
-    name = appointment["data"]['doctor']['title'] +appointment["data"]['doctor']['fullName'];
+    name = appointment["data"]['doctor']['title'] +
+        appointment["data"]['doctor']['fullName'];
     avatar = appointment["data"]['doctor']['avatar'];
 
     return Container(
@@ -177,10 +178,8 @@ class _TrackTelemedicineAppointmentState
             text: '',
             fontSize: 0.0,
             onComplete: () {
-              setState(() {
-                _profileFuture = api.getAppointmentDetails(
-                    token, widget.appointmentId, _userLocation);
-              });
+              _profileFuture = api.getAppointmentDetails(
+                  token, widget.appointmentId, _userLocation);
             },
           ),
           TrackingProviderWidget(
@@ -273,14 +272,14 @@ class _TrackTelemedicineAppointmentState
                       ? 'images/trackCheckedCurrent.png'
                       : 'images/trackUnchecked.png'
                   : index == 2
-                      ? status == 4
+                      ? status == 4 || status == 3
                           ? userRating != null
                               ? 'images/trackChecked.png'
                               : 'images/trackCheckedCurrent.png'
                           : 'images/trackUnchecked.png'
                       : index == 1
                           ? isDoctorJoin
-                              ? status == 4
+                              ? status == 4 || status == 3
                                   ? 'images/trackChecked.png'
                                   : 'images/trackCheckedCurrent.png'
                               : 'images/trackUnchecked.png'
@@ -300,7 +299,7 @@ class _TrackTelemedicineAppointmentState
                           )
                         : dottedLine()
                     : index == 1
-                        ? status == 4
+                        ? status == 4 || status == 3
                             ? Container(
                                 height: 45,
                                 width: 1,
@@ -336,18 +335,19 @@ class _TrackTelemedicineAppointmentState
                           image: 'images/trackGiveFeedBack.png',
                           onTap: () {
                             Navigator.pushNamed(
-                                context, Routes.rateDoctorScreen, arguments: {
-                              'rateFrom': "2",
-                              'appointmentId': widget.appointmentId,
-                              'name': name,
-                              'avatar': avatar,
-                            });
+                                context, Routes.rateDoctorScreen,
+                                arguments: {
+                                  'rateFrom': "2",
+                                  'appointmentId': widget.appointmentId,
+                                  'name': name,
+                                  'avatar': avatar,
+                                });
                           })
                       : SizedBox()
                   : index == 2
                       ? SizedBox()
                       : index == 1
-                          ? status == 4
+                          ? status == 4 || status == 3
                               ? SizedBox()
                               : !isDoctorJoin
                                   ? SizedBox()
@@ -368,7 +368,7 @@ class _TrackTelemedicineAppointmentState
                                                       token,
                                                       widget.appointmentId,
                                                       _userLocation);
-                                                      setState(() {});
+                                              setState(() {});
                                             });
                                           })
                                       : TrackingButton(
@@ -535,7 +535,7 @@ class _TrackTelemedicineAppointmentState
                                                     token,
                                                     widget.appointmentId,
                                                     _userLocation);
-                                                    setState(() {});
+                                            setState(() {});
                                           });
                                         })
                                     : SizedBox()
@@ -626,8 +626,8 @@ class _TrackTelemedicineAppointmentState
         appointmentCompleteMap['appointmentId'] = widget.appointmentId;
         appointmentCompleteMap['type'] =
             appointmentResponse['data']['type'].toString();
-         appointmentCompleteMap['name'] = name;
-          appointmentCompleteMap['avatar'] = avatar;
+        appointmentCompleteMap['name'] = name;
+        appointmentCompleteMap['avatar'] = avatar;
         appointmentCompleteMap["dateTime"] =
             DateFormat('dd MMM yyyy, HH:mm').format(DateTime.now());
 

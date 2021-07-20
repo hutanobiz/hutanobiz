@@ -120,7 +120,7 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
               filled: true,
               fillColor: AppColors.snow,
               labelStyle: TextStyle(fontSize: 13.0, color: Colors.grey),
-              labelText: "Type the name of a provider or specialty",
+              labelText: "Type the name of a provider or speciality",
               prefixIcon: Icon(
                 Icons.search,
                 color: Colors.black,

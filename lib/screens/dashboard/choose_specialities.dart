@@ -61,14 +61,17 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
 
           if (data == null || data.length == 0) return Container();
 
-          return GridView.builder(
+          return ListView.separated(
+            separatorBuilder: (context, index) {
+              return SizedBox(height: 16);
+            },
             shrinkWrap: true,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 2.3,
-              mainAxisSpacing: 18.0,
-              crossAxisSpacing: 16.0,
-            ),
+            // gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            //   crossAxisCount: 2,
+            //   childAspectRatio: 2.3,
+            //   mainAxisSpacing: 18.0,
+            //   crossAxisSpacing: 16.0,
+            // ),
             itemCount: data.length,
             itemBuilder: (context, index) {
               if (data == null || data.length == 0) return Container();
@@ -109,7 +112,7 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
                   onTap: () {
                     conatiner.projectsResponse.removeWhere(
                         (key, value) => key.toString().contains('specialtyId'));
-                        
+
                     conatiner.setProjectsResponse(
                         "specialtyId[${index.toString()}]", data[index]["_id"]);
 

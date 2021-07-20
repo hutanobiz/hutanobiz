@@ -336,8 +336,12 @@ class _SignInScreenState extends State<SignInScreen> {
               ArgumentConstant.setPinScreen: SetupScreenFrom.login
             });
           } else {
-            Navigator.of(context)
-                .pushReplacementNamed(Routes.dashboardScreen, arguments: 0);
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              Routes.homeMain,
+              (Route<dynamic> route) => false,
+            );
+            // Navigator.of(context)
+            //     .pushReplacementNamed(Routes.dashboardScreen, arguments: 0);
             if (value.response.pin != null) {
               setBool(PreferenceKey.setPin, true);
             }

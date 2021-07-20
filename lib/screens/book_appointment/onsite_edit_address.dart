@@ -376,7 +376,6 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
               SizedBox(width: 20.0),
               Expanded(
                 child: CustomTextField(
-                    validator: Validations.requiredValue,
                     controller: _roomNoController,
                     inputType: TextInputType.number,
                     labelText: "Appt or unit number",
@@ -425,6 +424,10 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
 
       map.toString().debugLog();
 
+      if (_addressMap['title'] == null || _addressMap['title'] == '') {
+        _addressMap['title'] = _addressMap['address'];
+      }
+
       if (widget.addressObject != null) {
         map['id'] = _addressMap['_id'];
 
@@ -450,21 +453,22 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
   }
 
   bool isFormFilled() {
-    if (_titleController.text.isEmpty) {
-      Widgets.showErrorialog(context: context, description: "Enter Save as");
+    // if (_titleController.text.isEmpty) {
+    //   Widgets.showErrorialog(context: context, description: "Enter Save as");
 
-      return false;
-    } else if (_residenceTypeController.text.isEmpty ||
+    //   return false;
+    // } else
+    if (_residenceTypeController.text.isEmpty ||
         _addressMap['addresstype'] == null) {
       Widgets.showErrorialog(
           context: context, description: "Select Residence type");
 
       return false;
-    } else if (_roomNoController.text.isEmpty) {
-      Widgets.showErrorialog(
-          context: context, description: "Enter Appt or unit");
+      // } else if (_roomNoController.text.isEmpty) {
+      //   Widgets.showErrorialog(
+      //       context: context, description: "Enter Appt or unit");
 
-      return false;
+      //   return false;
     } else if (_cityController.text.isEmpty) {
       Widgets.showErrorialog(context: context, description: "Enter City");
 

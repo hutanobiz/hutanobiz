@@ -7,7 +7,6 @@ import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
-import 'package:hutano/widgets/widgets.dart';
 
 class MedicalHistoryScreen extends StatefulWidget {
   MedicalHistoryScreen({Key key, this.isBottomButtonsShow}) : super(key: key);
@@ -237,17 +236,17 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                                             _diseaseList.add(medicalHistory);
                                           }
                                         } else {
-                                          setLoading(true);
-                                          api
-                                              .deletePatientMedicalHistory(
-                                                  token, medicalHistory)
-                                              .then((value) {
-                                            setLoading(false);
-                                            _diseaseList.remove(medicalHistory);
-                                          }).futureError((error) {
-                                            setLoading(false);
-                                            error.toString().debugLog();
-                                          });
+                                          // setLoading(true);
+                                          // api
+                                          //     .deletePatientMedicalHistory(
+                                          //         token, medicalHistory)
+                                          //     .then((value) {
+                                          //   setLoading(false);
+                                          _diseaseList.remove(medicalHistory);
+                                          // }).futureError((error) {
+                                          //   setLoading(false);
+                                          //   error.toString().debugLog();
+                                          // });
                                         }
                                       });
                                     },
@@ -301,7 +300,9 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                         margin: const EdgeInsets.fromLTRB(20, 0, 20, 10),
                         child: FancyButton(
                           title: 'Save',
-                          onPressed: saveMedicalHistory,
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
                         ),
                       ),
           ],
