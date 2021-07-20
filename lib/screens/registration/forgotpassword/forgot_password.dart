@@ -64,7 +64,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     try {
       var res = await ApiManager().resetPassword(model);
       ProgressDialogUtils.dismissProgressDialog();
-      Widgets.showToast(res.response);
+      // Widgets.showToast(res.response);
       final args = {
         ArgumentConstant.verificationModel: VerificationModel(
             verificationType: verificationType,
@@ -86,7 +86,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     try {
       var res = await ApiManager().resetPin(model);
       ProgressDialogUtils.dismissProgressDialog();
-      Widgets.showToast(res.response);
+      // Widgets.showToast(res.response); 
       final args = {
         ArgumentConstant.verificationModel: VerificationModel(
             verificationType: verificationType,

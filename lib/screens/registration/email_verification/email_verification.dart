@@ -203,7 +203,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
           .resendEmailOtp(ReqEmail(email: email, phoneNumber: phoneNumber))
           .then((value) {
         ProgressDialogUtils.dismissProgressDialog();
-        Widgets.showToast("${value['response']} ${value['verificationCode']}");
+        // Widgets.showToast("${value['response']} ${value['verificationCode']}");
       }).catchError((dynamic e) {
         ProgressDialogUtils.dismissProgressDialog();
         if (e is ErrorModel) {

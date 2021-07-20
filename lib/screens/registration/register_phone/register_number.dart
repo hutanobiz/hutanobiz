@@ -84,8 +84,8 @@ class _RegisterNumberState extends State<RegisterNumber> {
         }
       } else {
         if (res.response['message'] != null) {
-          Widgets.showToast(
-              "Your Hutano code is: ${res.response['otp']}. This code is expires in 10 minutes.");
+          // Widgets.showToast(
+          //     "Your Hutano code is: ${res.response['otp']}. This code is expires in 10 minutes.");
           final args = {
             ArgumentConstant.verificationModel: VerificationModel(
                 verificationType: VerificationType.phone,

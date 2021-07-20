@@ -146,7 +146,7 @@ class _OtpVerificationState extends State<OtpVerification> {
     try {
       var res = await ApiManager().resetPassword(request);
       ProgressDialogUtils.dismissProgressDialog();
-      Widgets.showToast(res.response);
+      // Widgets.showToast(res.response);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);
@@ -166,7 +166,7 @@ class _OtpVerificationState extends State<OtpVerification> {
     try {
       var res = await ApiManager().resetPin(request);
       ProgressDialogUtils.dismissProgressDialog();
-      Widgets.showToast(res.response);
+      // Widgets.showToast(res.response);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);
@@ -185,8 +185,8 @@ class _OtpVerificationState extends State<OtpVerification> {
     try {
       var res = await ApiManager().resendPhoneVerificationCode(request);
       ProgressDialogUtils.dismissProgressDialog();
-      Widgets.showToast(
-          "Your Hutano code is: ${res.response['verificationCode']}. This code is expires in 10 minutes.");
+      // Widgets.showToast(
+      //     "Your Hutano code is: ${res.response['verificationCode']}. This code is expires in 10 minutes.");
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);
@@ -204,7 +204,7 @@ class _OtpVerificationState extends State<OtpVerification> {
     try {
       var res = await ApiManager().otpOnCall(request);
       ProgressDialogUtils.dismissProgressDialog();
-      Widgets.showToast(res.response);
+      // Widgets.showToast(res.response);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);
