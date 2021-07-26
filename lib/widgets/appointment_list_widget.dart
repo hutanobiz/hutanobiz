@@ -91,7 +91,7 @@ class AppointmentListWidget extends StatelessWidget {
                                 ),
                                 Expanded(
                                   child: Text(
-                                    DateFormat('EEE, dd/MM/yyyy, hh:mm a')
+                                    DateFormat('EEE, MM/dd/yyyy, hh:mm a')
                                         .format(DateTime.utc(
                                                 DateTime.parse(response['date'])
                                                     .year,

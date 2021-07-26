@@ -171,7 +171,7 @@ class _SignUpFormState extends State<Register> {
 
               avatar = res["avatar"]?.toString();
               _genderGroup =
-                  res["gender"]?.toString() == "1" ? "male" : "female";
+                  res["gender"]?.toString() == "2" ? "male" : "female";
             }
           });
         }).futureError((error) {
@@ -902,7 +902,7 @@ class _SignUpFormState extends State<Register> {
     }
 
     loginData["phoneNumber"] = Validations.getCleanedNumber(phoneNumber);
-    loginData["gender"] = _genderGroup.trim().toString() == "male" ? "1" : "2";
+    loginData["gender"] = _genderGroup.trim().toString() == "male" ? "2" : "1";
 
     if (isUpdateProfile) {
       loginData["dob"] =

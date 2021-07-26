@@ -211,8 +211,9 @@ class _SetupPinState extends State<SetupPin> {
           setBool(PreferenceKey.setPin, true);
           if (widget.setupScreen == SetupScreenFrom.login) {
             Navigator.of(context).pushNamedAndRemoveUntil(
-      Routes.homeMain,
-      (Route<dynamic> route) => false,);
+              Routes.homeMain,
+              (Route<dynamic> route) => false,
+            );
             // Navigator.of(context).pushNamedAndRemoveUntil(
             //   Routes.dashboardScreen,
             //   (Route<dynamic> route) => false,

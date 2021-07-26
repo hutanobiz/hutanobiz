@@ -623,6 +623,8 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
             itemCount: profileMap['appointmentProblems'].length,
             itemBuilder: (context, index) {
               return ProblemWidget(
+                  dob: profileMap['data']['user']['dob'],
+                  gender: profileMap['data']['user']['gender'],
                   appointmentProblem: profileMap['appointmentProblems'][index],
                   problemTimeSpanMap: timeSpanConfig);
             },

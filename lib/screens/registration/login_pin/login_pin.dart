@@ -15,6 +15,7 @@ import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/utils/preference_key.dart';
 import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/utils/progress_dialog.dart';
+import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/utils/size_config.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
@@ -42,12 +43,15 @@ class _LoginPinState extends State<LoginPin> {
   final LocalAuthentication auth = LocalAuthentication();
   final _canCheckBiometrics = ValueNotifier<bool>(false);
   final _availableBiometrics = ValueNotifier<List<BiometricType>>(null);
-
+  String deviceToken;
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => {_checkBiometrics()});
     initializeDateFormatting('en');
+    SharedPref().getValue("deviceToken").then((value) {
+      deviceToken = value;
+    });
   }
 
   void _onForgotPinClick() =>
@@ -73,8 +77,10 @@ class _LoginPinState extends State<LoginPin> {
   }
 
   Future<void> _onLoginClick() async {
-    final request =
-        ReqLoginPin(phoneNumber: widget.number, pin: _otpController.text);
+    final request = ReqLoginPin(
+        phoneNumber: widget.number,
+        deviceToken: deviceToken,
+        pin: _otpController.text);
     ProgressDialogUtils.showProgressDialog(context);
     try {
       await ApiManager().loginPin(request).then((value) {

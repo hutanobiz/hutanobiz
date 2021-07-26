@@ -267,13 +267,9 @@ class _CallPageState extends State<CallPage> {
                               context: context,
                               title: 'End Call',
                               description: 'Are you sure to end Call?',
-                              leftText: 'No',
+                              leftText: 'yes',
                               onLeftPressed: () {
-                                Navigator.pop(context);
-                              },
-                              rightText: 'Yes',
-                              onRightPressed: () {
-                                Navigator.pop(context);
+                                // Navigator.pop(context);
                                 var appointmentCompleteMap = {};
                                 appointmentCompleteMap['type'] = '2';
                                 appointmentCompleteMap['appointmentId'] =
@@ -295,7 +291,9 @@ class _CallPageState extends State<CallPage> {
                                   Routes.appointmentCompleteConfirmation,
                                   arguments: appointmentCompleteMap,
                                 );
-                              });
+                              },
+                              rightText: 'No',
+                              onRightPressed: () {});
                         },
                         child: Icon(
                           Icons.call_end,

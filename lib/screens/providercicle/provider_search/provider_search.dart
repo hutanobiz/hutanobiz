@@ -142,8 +142,12 @@ class _ProviderSearchState extends State<ProviderSearch> {
                     child: Row(
                       children: [
                         SkipLater(onTap: () {
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              Routes.dashboardScreen, (route) => false,arguments: 0);
+                           Navigator.of(context).pushNamedAndRemoveUntil(
+      Routes.homeMain,
+      (Route<dynamic> route) => false,
+    );
+                          // Navigator.of(context).pushNamedAndRemoveUntil(
+                          //     Routes.dashboardScreen, (route) => false,arguments: 0);
                         }),
                         Spacer(),
                         HutanoButton(
@@ -154,8 +158,12 @@ class _ProviderSearchState extends State<ProviderSearch> {
                           buttonType: HutanoButtonType.onlyIcon,
                           icon: FileConstants.icForward,
                           onPressed: () {
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                                Routes.dashboardScreen, (route) => false,arguments: 0);
+                             Navigator.of(context).pushNamedAndRemoveUntil(
+      Routes.homeMain,
+      (Route<dynamic> route) => false,
+    );
+                            // Navigator.of(context).pushNamedAndRemoveUntil(
+                            //     Routes.dashboardScreen, (route) => false,arguments: 0);
                           },
                         ),
                       ],
@@ -213,8 +221,12 @@ class _ProviderSearchState extends State<ProviderSearch> {
                   child: Row(
                     children: [
                       SkipLater(onTap: () {
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                            Routes.dashboardScreen, (route) => false,arguments: 0);
+                         Navigator.of(context).pushNamedAndRemoveUntil(
+      Routes.homeMain,
+      (Route<dynamic> route) => false,
+    );
+                        // Navigator.of(context).pushNamedAndRemoveUntil(
+                        //     Routes.dashboardScreen, (route) => false,arguments: 0);
                       }),
                       Spacer(),
                       HutanoButton(
@@ -225,8 +237,12 @@ class _ProviderSearchState extends State<ProviderSearch> {
                         buttonType: HutanoButtonType.onlyIcon,
                         icon: FileConstants.icForward,
                         onPressed: () {
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              Routes.dashboardScreen, (route) => false,arguments: 0);
+                           Navigator.of(context).pushNamedAndRemoveUntil(
+      Routes.homeMain,
+      (Route<dynamic> route) => false,
+    );
+                          // Navigator.of(context).pushNamedAndRemoveUntil(
+                          //     Routes.dashboardScreen, (route) => false,arguments: 0);
                         },
                       ),
                     ],

@@ -1150,7 +1150,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     ),
                               width: 132,
                               height: 94,
-                              fit: BoxFit.cover,
+                              fit: BoxFit.contain,
                             ),
                           ),
                           SizedBox(height: 10.0),

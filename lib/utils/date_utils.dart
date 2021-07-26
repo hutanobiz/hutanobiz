@@ -12,7 +12,7 @@ class DateConstants {
   static const String notificationDateFormat = "dd/MM";
   static const String notificationTimeFormat = "H:mm";
   static const String fullDateFormat = "E d MMM yyyy, HH:mm";
-  static const String notificationFullDate = "HH:mm dd/MM/yyyy";
+  static const String notificationFullDate = "HH:mm MM/dd/yyyy";
 }
 
 String getLocalDate(String dateUtc,

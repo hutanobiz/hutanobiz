@@ -143,7 +143,7 @@ class _ScrollingDayCalendarState extends State<ScrollingDayCalendar> {
           Text(
             DateFormat(widget.displayDateFormat != null
                     ? widget.displayDateFormat
-                    : "dd/MM/yyyy")
+                    : "MM/dd/yyyy")
                 .format(_selectedDate),
             style: TextStyle(
               fontWeight: FontWeight.w500,

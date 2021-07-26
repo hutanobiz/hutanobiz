@@ -46,10 +46,14 @@ class AddProviderCompleteState extends State<AddProviderComplete> {
                     buttonType: HutanoButtonType.onlyIcon,
                     icon: FileConstants.icForward,
                     onPressed: () {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          Routes.dashboardScreen,
-                          (Route<dynamic> route) => false,
-                          arguments: 0);
+                       Navigator.of(context).pushNamedAndRemoveUntil(
+      Routes.homeMain,
+      (Route<dynamic> route) => false,
+    );
+                      // Navigator.of(context).pushNamedAndRemoveUntil(
+                      //     Routes.dashboardScreen,
+                      //     (Route<dynamic> route) => false,
+                      //     arguments: 0);
                     },
                   ),
                 ),

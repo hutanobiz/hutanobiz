@@ -14,6 +14,7 @@ import 'package:hutano/utils/progress_dialog.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/app_header.dart';
 import 'package:hutano/widgets/controller.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/skip_later.dart';
 
 import '../../../utils/color_utils.dart';
@@ -124,8 +125,9 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                   ],
                 );
               } else {
-                return Center(
-                  child: new CircularProgressIndicator(),
+                return Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Center(child: CustomLoader()),
                 );
               }
             },

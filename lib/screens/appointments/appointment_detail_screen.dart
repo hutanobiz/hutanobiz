@@ -184,7 +184,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                       alignment: FractionalOffset.bottomRight,
                       child: Container(
                           height: 55.0,
-                          width: 200.0,
+                          width: MediaQuery.of(context).size.width - 90,
                           margin: const EdgeInsets.only(top: 10),
                           padding: const EdgeInsets.only(right: 20.0),
                           child:
@@ -1020,6 +1020,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             itemCount: profileMap['appointmentProblems'].length,
             itemBuilder: (context, index) {
               return ProblemWidget(
+                  dob: profileMap['data']['user']['dob'],
+                  gender: profileMap['data']['user']['gender'],
                   appointmentProblem: profileMap['appointmentProblems'][index],
                   problemTimeSpanMap: timeSpanConfig);
             },

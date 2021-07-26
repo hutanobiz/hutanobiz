@@ -111,7 +111,8 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
             : Colors.black54
         : widget.titleStyle.color;
 
-    themedTextStyle = widget.titleStyle.copyWith(color: textColor);
+    themedTextStyle =
+        widget.titleStyle.copyWith(color: textColor, fontSize: 11);
 
     inactiveIconColor = (widget.inactiveIconColor == null)
         ? (Theme.of(context).brightness == Brightness.dark)
