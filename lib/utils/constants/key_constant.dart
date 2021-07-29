@@ -62,4 +62,18 @@ class ArgumentConstant {
   static const String nameKey = 'name';
   static const String sizeKey = 'size';
   static const String serviceTypeKey = 'serviceType';
+  static const String isAbnormalKey = 'isAbnormal';
+  static const String isMaleHealthKey = 'isMaleHealth';
+  static const String isFemaleHealthKey = 'isFemaleHealth';
+  static const String isWoundSkinKey = 'isWoundSkin';
+  static const String isDentalCareKey = 'isDentalCare';
+  static const String isAntiAgingKey = 'isAntiAging';
+  static const String isStomachKey = 'isStomach';
+  static const String isBreathingKey = 'isBreathing';
+  static const String isHealthChestKey = 'isHealthChest';
+  static const String isHearingSightKey = 'isHearingSight';
+  static const String isNutritionKey = 'isNutrition';
+  static const String isForProblemKey = 'isForProblem';
+  static const String imagesKey = 'images';
+  static const String providerNameKey = 'providerName';
 }

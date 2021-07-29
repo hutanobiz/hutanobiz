@@ -16,7 +16,7 @@ class Extensions {
     dynamic state,
     String zipCode,
   ) {
-    String addressName = '', stateCode = ', ';
+    String addressName = ', ', stateCode = ', ';
 
     if (address != null) {
       addressName += address.toString().toLowerCase().contains('suite') ||
@@ -36,7 +36,7 @@ class Extensions {
         stateCode += state;
     }
 
-    return (street ?? "") +
+    return (street ?? "---") +
         ((addressName == null || addressName == ', ') ? "" : addressName) +
         ", " +
         (city ?? "") +
@@ -44,6 +44,7 @@ class Extensions {
         " " +
         (zipCode ?? "");
   }
+
   static String getDistance(dynamic distance) {
     String _distance;
 
@@ -64,7 +65,6 @@ class Extensions {
 
     return _distance;
   }
-
 
   static String getSortProfessionTitle(String professionTitle) {
     Map titleMap = {
@@ -150,7 +150,7 @@ extension TimeOfDayExt on String {
 }
 
 extension StringExtension on String {
-   String isValidEmail(BuildContext context) {
+  String isValidEmail(BuildContext context) {
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     final regex = RegExp(pattern);
@@ -163,7 +163,8 @@ extension StringExtension on String {
       return null;
     }
   }
-   String isValidNumber(BuildContext context) {
+
+  String isValidNumber(BuildContext context) {
     if (trim().isEmpty) {
       return Strings.msgEnterMobile;
     } else if (trim().length < 10) {
@@ -172,7 +173,8 @@ extension StringExtension on String {
       return null;
     }
   }
-   static String placeholderPattern = '(\{\{([a-zA-Z0-9]+)\}\})';
+
+  static String placeholderPattern = '(\{\{([a-zA-Z0-9]+)\}\})';
 
   String format(List replacements) {
     var template = this;
@@ -205,7 +207,8 @@ extension StringExtension on String {
     var dur = DateTime.now().difference(parsedDate);
     return (dur.inDays / 365).floor().toString();
   }
-   String isValidUSNumber(BuildContext context) {
+
+  String isValidUSNumber(BuildContext context) {
     if (trim().isEmpty) {
       return Strings.msgEnterMobile;
     } else if (trim().length < 14) {
@@ -256,9 +259,6 @@ extension StringExtension on String {
     return replaceAll(RegExp(r'[^\w]+'), '');
   }
 
- 
-
-
   String getYear() {
     var parsedDate = DateTime.parse(this);
     return parsedDate.year.toString();
@@ -276,7 +276,6 @@ extension StringExtension on String {
   String getUsFormatNumber() {
     return "(${substring(0, 3)}) ${substring(3, 6)}-${substring(6, length)}";
   }
-
 }
 
 extension StatusExt on String {
