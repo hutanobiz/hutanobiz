@@ -4,14 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/models/schedule.dart';
 import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
-import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
 import 'package:hutano/widgets/scrolling_day_calendar_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
@@ -213,100 +216,152 @@ class _SelectAppointmentTimeScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
-        isLoading: isLoading,
-        title: "Select an Appointment Time",
+      body: LoadingBackgroundNew(
+        title: "",
+        addHeader: true,
         color: AppColors.snow,
-        isAddBack: widget.arguments.fromScreen == 2,
-        addBottomArrows: false,
-        addBackButton: widget.arguments.fromScreen == 2 ? false : true,
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView(
-                shrinkWrap: true,
-                padding: const EdgeInsets.only(bottom: 70.0),
-                children: _scheduleDaysList.length > 0
-                    ? widgetList()
-                    : noScheduleAdded(),
-              ),
-            ),
-            Divider(height: 0.5),
-            Align(
-              alignment: FractionalOffset.bottomRight,
-              child: Container(
-                height: 55.0,
-                width: widget.arguments.fromScreen == 2
-                    ? MediaQuery.of(context).size.width
-                    : MediaQuery.of(context).size.width - 76.0,
-                margin: const EdgeInsets.only(top: 10),
-                padding: EdgeInsets.only(
-                    right: 0.0,
-                    left: widget.arguments.fromScreen == 2 ? 0 : 40.0),
-                child: FancyButton(
-                  title: widget.arguments.fromScreen == 2
-                      ? "Reschedule"
-                      : "Book now",
-                  onPressed: () {
-                    if (_selectedDate != null && _selectedTiming != null) {
-                      if (widget.arguments.fromScreen == 2) {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        var map = {};
-                        map['appointmentId'] = widget.arguments.appointmentId;
-                        map['date'] = DateFormat("MM/dd/yyyy")
-                            .format(_selectedDate)
-                            .toString();
-                        map['fromTime'] = _selectedTiming;
+        isAddBack: false,
+        addBottomArrows: true,
+        onForwardTap: () {
+          if (_selectedDate != null && _selectedTiming != null) {
+            if (widget.arguments.fromScreen == 2) {
+              setState(() {
+                isLoading = true;
+              });
+              var map = {};
+              map['appointmentId'] = widget.arguments.appointmentId;
+              map['date'] =
+                  DateFormat("MM/dd/yyyy").format(_selectedDate).toString();
+              map['fromTime'] = _selectedTiming;
 
-                        SharedPref().getToken().then((token) {
-                          _apiBaseHelper
-                              .rescheduleAppointment(token, map)
-                              .then((value) {
-                            setState(() {
-                              isLoading = false;
-                            });
-                            Widgets.showAppDialog(
-                                context: context,
-                                description: 'Appointment Rescheduled',
-                                isCongrats: true,
-                                buttonText: 'Go To Appointment',
-                                onPressed: () {
-                                  Navigator.of(context).pushNamedAndRemoveUntil(
-                                      Routes.dashboardScreen,
-                                      (Route<dynamic> route) => false,
-                                      arguments: 1);
-                                });
-                          }).futureError((onError) {
-                            setState(() {
-                              isLoading = false;
-                            });
-                          });
-                        });
-                      } else {
-                        _container.setAppointmentData("date", _selectedDate);
-                        _container.setAppointmentData("time", _selectedTiming);
-                        _container.setAppointmentData("isOndemand", '0');
-                        if (selectedAddress != null) {
-                          _container.setAppointmentData(
-                              'officeId', selectedAddress['_id']);
-                        }
-                        if (widget.arguments.fromScreen == 1) {
-                          Navigator.pop(context, _container.appointmentData);
-                        } else {
-                          Navigator.of(context)
-                              .pushNamed(Routes.consentToTreatScreen);
-                        }
-                      }
-                    } else {
-                      Widgets.showToast("Please select a timing");
-                    }
-                  },
-                ),
-              ),
-            )
-          ],
+              SharedPref().getToken().then((token) {
+                _apiBaseHelper.rescheduleAppointment(token, map).then((value) {
+                  setState(() {
+                    isLoading = false;
+                  });
+                  Widgets.showAppDialog(
+                      context: context,
+                      description: 'Appointment Rescheduled',
+                      isCongrats: true,
+                      buttonText: 'Go To Appointment',
+                      onPressed: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            Routes.dashboardScreen,
+                            (Route<dynamic> route) => false,
+                            arguments: 1);
+                      });
+                }).futureError((onError) {
+                  setState(() {
+                    isLoading = false;
+                  });
+                });
+              });
+            } else {
+              _container.setAppointmentData("date", _selectedDate);
+              _container.setAppointmentData("time", _selectedTiming);
+              _container.setAppointmentData("isOndemand", '0');
+              if (selectedAddress != null) {
+                _container.setAppointmentData(
+                    'officeId', selectedAddress['_id']);
+              }
+              if (widget.arguments.fromScreen == 1) {
+                Navigator.pop(context, _container.appointmentData);
+              } else {
+                Navigator.of(context).pushNamed(Routes.consentToTreatScreen);
+              }
+            }
+          } else {
+            Widgets.showToast("Please select a timing");
+          }
+        },
+        child:
+            // Column(
+            //   children: [
+            // Expanded(
+            // child:
+            ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.only(bottom: 70.0),
+          children:
+              _scheduleDaysList.length > 0 ? widgetList() : noScheduleAdded(),
+          // ),
+          // ),
+          // Divider(height: 0.5),
+          // Align(
+          //   alignment: FractionalOffset.bottomRight,
+          //   child: Container(
+          //     height: 55.0,
+          //     width: widget.arguments.fromScreen == 2
+          //         ? MediaQuery.of(context).size.width
+          //         : MediaQuery.of(context).size.width - 76.0,
+          //     margin: const EdgeInsets.only(top: 10),
+          //     padding: EdgeInsets.only(
+          //         right: 0.0,
+          //         left: widget.arguments.fromScreen == 2 ? 0 : 40.0),
+          //     child: FancyButton(
+          //       title: widget.arguments.fromScreen == 2
+          //           ? "Reschedule"
+          //           : "Book now",
+          //       onPressed: () {
+          //         if (_selectedDate != null && _selectedTiming != null) {
+          //           if (widget.arguments.fromScreen == 2) {
+          //             setState(() {
+          //               isLoading = true;
+          //             });
+          //             var map = {};
+          //             map['appointmentId'] = widget.arguments.appointmentId;
+          //             map['date'] = DateFormat("MM/dd/yyyy")
+          //                 .format(_selectedDate)
+          //                 .toString();
+          //             map['fromTime'] = _selectedTiming;
+
+          //             SharedPref().getToken().then((token) {
+          //               _apiBaseHelper
+          //                   .rescheduleAppointment(token, map)
+          //                   .then((value) {
+          //                 setState(() {
+          //                   isLoading = false;
+          //                 });
+          //                 Widgets.showAppDialog(
+          //                     context: context,
+          //                     description: 'Appointment Rescheduled',
+          //                     isCongrats: true,
+          //                     buttonText: 'Go To Appointment',
+          //                     onPressed: () {
+          //                       Navigator.of(context).pushNamedAndRemoveUntil(
+          //                           Routes.dashboardScreen,
+          //                           (Route<dynamic> route) => false,
+          //                           arguments: 1);
+          //                     });
+          //               }).futureError((onError) {
+          //                 setState(() {
+          //                   isLoading = false;
+          //                 });
+          //               });
+          //             });
+          //           } else {
+          //             _container.setAppointmentData("date", _selectedDate);
+          //             _container.setAppointmentData("time", _selectedTiming);
+          //             _container.setAppointmentData("isOndemand", '0');
+          //             if (selectedAddress != null) {
+          //               _container.setAppointmentData(
+          //                   'officeId', selectedAddress['_id']);
+          //             }
+          //             if (widget.arguments.fromScreen == 1) {
+          //               Navigator.pop(context, _container.appointmentData);
+          //             } else {
+          //               Navigator.of(context)
+          //                   .pushNamed(Routes.consentToTreatScreen);
+          //             }
+          //           }
+          //         } else {
+          //           Widgets.showToast("Please select a timing");
+          //         }
+          //       },
+          //     ),
+          //   ),
+          // )
+          // ],
         ),
       ),
     );
@@ -340,52 +395,60 @@ class _SelectAppointmentTimeScreenState
                 ['isOnline']
             ? Column(
                 children: [
-                  Wrap(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('On-demand Service',
+                      Flexible(
+                        child: Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                Localization.of(context).onDemandServiceLabel,
+                                style: TextStyle(
+                                    fontSize: fontSize14,
+                                    fontWeight: fontWeightSemiBold),
+                              ),
+                            ),
+                            SizedBox(width: spacing15),
+                            Image.asset(FileConstants.icOnDemandService,
+                                width: spacing15, height: spacing15)
+                          ],
+                        ),
+                      ),
+                      Text(Localization.of(context).activeLabel,
                           style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          )),
-                      SizedBox(
-                        width: 4,
-                      ),
-                      Image.asset(
-                        'images/info.png',
-                        height: 16,
-                        alignment: Alignment.bottomCenter,
-                      ),
-                      Text(
-                        'ACTIVE',
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.emerald),
-                      )
+                              fontSize: fontSize14,
+                              fontWeight: fontWeightMedium,
+                              color: Color(0xff44c963)))
                     ],
                   ),
                   SizedBox(height: 12),
                   Container(
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(14.0)),
-                        border: Border.all(color: Colors.grey[300], width: 0.5),
+                    padding: EdgeInsets.symmetric(
+                        vertical: spacing20, horizontal: spacing20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(14.0),
                       ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                              child: Text(
-                            'Instant Appointment',
+                      border: Border.all(color: Colors.grey[300]),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(Localization.of(context).instantAppointmentLabel,
                             style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.windsor),
-                          )),
-                          Icon(Icons.arrow_forward_ios_outlined,
-                              size: 12, color: AppColors.windsor)
-                        ],
-                      )).onClick(onTap: () {
+                                color: colorPurple100,
+                                fontSize: fontSize13,
+                                fontWeight: fontWeightMedium)),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.black,
+                          size: 12.0,
+                        )
+                      ],
+                    ),
+                  ).onClick(onTap: () {
                     _container.setAppointmentData("date", DateTime.now());
                     _container.setAppointmentData("time", '00:00');
                     _container.setAppointmentData("isOndemand", '1');
@@ -741,15 +804,12 @@ class _SelectAppointmentTimeScreenState
               ),
             ),
             SizedBox(width: 6.0),
-            Expanded(
-              child: Text(
-                "${list.length.toString()} available time slots",
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 11.0,
-                  color: AppColors.goldenTainoi,
-                  fontWeight: FontWeight.w600,
-                ),
+            Text(
+              "${list.length.toString()} slots",
+              style: TextStyle(
+                fontSize: 11.0,
+                color: AppColors.goldenTainoi,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ],
@@ -806,7 +866,7 @@ class _SelectAppointmentTimeScreenState
           color: currentSchedule.isBlock
               ? Colors.grey.withOpacity(0.05)
               : currentSchedule.isSelected
-                  ? AppColors.windsor
+                  ? Color(0xff009900)
                   : AppColors.snow,
           borderRadius: BorderRadius.all(Radius.circular(14.0)),
           border: Border.all(
