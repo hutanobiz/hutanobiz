@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/round_corner_checkbox.dart';
 import 'package:hutano/widgets/widgets.dart';
 
@@ -43,13 +44,25 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
         title: "Consent to Treat",
-        isAddBack: false,
+        addHeader: true,
         addBottomArrows: true,
+        padding: EdgeInsets.only(
+            left: spacing20, right: spacing20, bottom: spacing60),
         onForwardTap: () {
+          //TODO : REFACTOR CODE. COMMENTING CURRNET API AND USING ANOTHER
+          // isAgree
+          //     ? Navigator.of(context).pushNamed(Routes.medicalHistoryScreen)
+          //     : Widgets.showToast("Please agree to continue");
+
+          // Provider.of<SymptomsInfoProvider>(context, listen: false)
+          //     .setAppoinmentData(userId, getString(PreferenceKey.id));
+
+          // Navigator.of(context).pushNamed(routeMyMedicalHistory)
           isAgree
-              ? Navigator.of(context).pushNamed(Routes.medicalHistoryScreen)
+              ? Navigator.of(context)
+                  .pushNamed(Routes.medicalHistoryScreen, arguments: true)
               : Widgets.showToast("Please agree to continue");
         },
         color: Colors.white,
