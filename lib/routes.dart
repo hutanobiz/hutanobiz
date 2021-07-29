@@ -21,13 +21,25 @@ import 'package:hutano/screens/appointments/treatment_summary.dart';
 import 'package:hutano/screens/appointments/upload_documents.dart';
 import 'package:hutano/screens/appointments/upload_images.dart';
 import 'package:hutano/screens/appointments/video_call.dart';
+import 'package:hutano/screens/appointments/view_medical_history.dart';
 import 'package:hutano/screens/appointments/virtual_waiting_room.dart';
+import 'package:hutano/screens/book_appointment/conditiontime/condition_time.dart';
+import 'package:hutano/screens/book_appointment/diagnosis/test_diagnosis.dart';
+import 'package:hutano/screens/book_appointment/diagnosis/upload_diagnostic_result.dart';
+import 'package:hutano/screens/book_appointment/effect_ability.dart';
+import 'package:hutano/screens/book_appointment/morecondition/more_condition.dart';
+import 'package:hutano/screens/book_appointment/morecondition/welcome_new_followup.dart';
+import 'package:hutano/screens/book_appointment/multiplehealthissues/abnormal_sensation.dart';
+import 'package:hutano/screens/book_appointment/multiplehealthissues/bone_muscle_issue.dart';
+import 'package:hutano/screens/book_appointment/multiplehealthissues/breathing_issue.dart';
+import 'package:hutano/screens/book_appointment/multiplehealthissues/immunization_screen.dart';
 import 'package:hutano/screens/book_appointment/onsite_address.dart';
 import 'package:hutano/screens/book_appointment/onsite_edit_address.dart';
 import 'package:hutano/screens/book_appointment/review_appointment.dart';
 import 'package:hutano/screens/book_appointment/select_appointment_time_screen.dart';
 import 'package:hutano/screens/book_appointment/select_parking_screen.dart';
 import 'package:hutano/screens/book_appointment/select_services.dart';
+import 'package:hutano/screens/book_appointment/vitals/vital_reviews.dart';
 import 'package:hutano/screens/dashboard/all_reviews_screen.dart';
 import 'package:hutano/screens/dashboard/all_tiltes_specialties_screen.dart';
 import 'package:hutano/screens/dashboard/appointment_type_screen.dart';
@@ -52,11 +64,25 @@ import 'package:hutano/screens/familynetwork/member_message/member_message.dart'
 import 'package:hutano/screens/home.dart';
 import 'package:hutano/screens/home_main.dart';
 import 'package:hutano/screens/invite/invite_text.dart';
+import 'package:hutano/screens/medical_history/body_symptoms.dart';
+import 'package:hutano/screens/medical_history/checkout.dart';
+import 'package:hutano/screens/medical_history/current_medical_history.dart';
+import 'package:hutano/screens/medical_history/generalized_pain_symptoms.dart';
+import 'package:hutano/screens/medical_history/medicine_information.dart';
+import 'package:hutano/screens/medical_history/my_medical_history.dart';
+import 'package:hutano/screens/medical_history/pain_symptoms.dart';
+import 'package:hutano/screens/medical_history/payment_methods.dart';
+import 'package:hutano/screens/medical_history/symptoms_information.dart';
+import 'package:hutano/screens/medical_history/test_documents_list.dart';
+import 'package:hutano/screens/medical_history/upload_insurance_image.dart';
+import 'package:hutano/screens/medical_history/upload_symptoms_images.dart';
+import 'package:hutano/screens/medical_history/upload_test_documents.dart';
 import 'package:hutano/screens/payment/add_new_card.dart';
 import 'package:hutano/screens/payment/insurance_list.dart';
 import 'package:hutano/screens/payment/payments_methods.dart';
 import 'package:hutano/screens/payment/saved_cards.dart';
 import 'package:hutano/screens/payment/upload_insurance_images.dart';
+import 'package:hutano/screens/pharmacy/add_pharmacy.dart';
 import 'package:hutano/screens/providercicle/add_provider_complete.dart';
 import 'package:hutano/screens/providercicle/create_group/create_provider_group.dart';
 import 'package:hutano/screens/providercicle/my_provider_network/my_provider_network.dart';
@@ -85,7 +111,8 @@ import 'package:hutano/screens/registration/signin/web_view.dart';
 import 'package:hutano/screens/registration/welcome_screen.dart';
 import 'package:hutano/screens/setup_pin/set_pin.dart';
 import 'package:hutano/screens/setup_pin/set_pin_complete.dart';
-import 'package:hutano/utils/argument_const.dart';
+import 'package:hutano/utils/constants/key_constant.dart';
+// import 'package:hutano/utils/argument_const.dart';
 
 class Routes {
   static const String loginRoute = '/login';
@@ -185,6 +212,37 @@ class Routes {
   static const String routeInviteByText = '/routeInviteByText';
   static const String routeAddProvider = '/routeAddProvider';
   static const String editProfileRoute = '/editProfileRoute';
+  static const String routeMoreCondition = '/routeMoreCondition';
+  static const String routeWelcomeNewFollowup = '/routeWelcomeNewFollowup';
+  static const String routeBoneAndMuscle = '/routeBoneAndMuscle';
+  static const String routeImmunization = '/routeImmunization';
+  static const String routeEffectAbility = '/routeEffectAbility';
+  static const String routeAbnormal = '/routeAbnormal';
+  static const String routeBreathingIssue = '/routeBreathingIssue';
+  static const String routeVitalReviews = '/routeVitalReviews';
+  static const String routeTestDiagnosis = '/routeTestDiagnosis';
+  static const String routeConditionTimeScreen = '/routeConditionTimeScreen';
+  static const String routeMyMedicalHistory = '/routeMyMedicalHistory';
+  static const String routeBodySymptoms = '/routeBodySymptoms';
+  static const String routePainSymptoms = '/routePainSymptoms';
+  static const String routeGeneralizedPainSymptoms =
+      '/routeGeneralizedPainSymptoms';
+  static const String routeSymptomsInformation = '/routeSymptomsInformation';
+  static const String routeMedicineInformation = '/routeMedicineInformation';
+  static const String routeUploadTestDocuments = '/routeUploadTestDocuments';
+  static const String routeCurrentMedicalHistory =
+      '/routeCurrentMedicalHistory';
+  static const String routeUploadDiagnosticResult =
+      '/routeUploadDiagnosticResult';
+  static const String routeTestDocumentsList = '/routeTestDocumentsList';
+  static const String routeUploadSymptomsImages = '/routeUploadSymptomsImages';
+  static const String routeNotificationScreen = '/routeNotificationScreen';
+  static const String routePaymentMethods = '/routePaymentMethods';
+  static const String routeCheckout = '/routeCheckout';
+  static const String routeUploadInsuranceImage = '/routeUploadInsuranceImage';
+  static const String allImagesTabsScreen = '/allImagesTabsScreen';
+  static const String routeAddPharmacy = '/routeAddPharmacy';
+  static const String viewMedicalHistory = '/viewMedicalHistory';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final dynamic args = settings.arguments;
@@ -447,6 +505,13 @@ class Routes {
           UpdateMedicalHistory(isBottomButtonsShow: args),
         );
         break;
+
+      case viewMedicalHistory:
+        return _buildRoute(
+          settings,
+          ViewMedicalHistoryScreen(isBottomButtonsShow: args),
+        );
+        break;
       case allTitlesSpecialtesScreen:
         return _buildRoute(settings, AllTitlesSpecialtesScreen());
         break;
@@ -679,6 +744,104 @@ class Routes {
                 ));
       case routeAddProvider:
         return MaterialPageRoute(builder: (_) => AddProvider());
+      case routeMoreCondition:
+        return MaterialPageRoute(builder: (_) => MoreCondition());
+      case routeWelcomeNewFollowup:
+        return MaterialPageRoute(builder: (_) => WelcomeNewFollowUp());
+      case routeBoneAndMuscle:
+        return MaterialPageRoute(builder: (_) => BoneMuscleIssue());
+      case routeImmunization:
+        return MaterialPageRoute(builder: (_) => ImmunizationScreen());
+      case routeEffectAbility:
+        return MaterialPageRoute(builder: (_) => EffectAbilityScreen());
+      case routeAbnormal:
+        bool abnormal = args[ArgumentConstant.isAbnormalKey];
+        bool maleHealth = args[ArgumentConstant.isMaleHealthKey];
+        bool femaleHealth = args[ArgumentConstant.isFemaleHealthKey];
+        bool woundSkin = args[ArgumentConstant.isWoundSkinKey];
+        bool dentalCare = args[ArgumentConstant.isDentalCareKey];
+        bool hearingSight = args[ArgumentConstant.isHearingSightKey];
+        return MaterialPageRoute(
+            builder: (_) => AbnormalSensation(
+                abnormal: abnormal,
+                maleHealth: maleHealth,
+                femaleHealth: femaleHealth,
+                woundSkin: woundSkin,
+                dentalCare: dentalCare,
+                hearingSight: hearingSight));
+      case routeBreathingIssue:
+        bool isAntiAging = args[ArgumentConstant.isAntiAgingKey];
+        bool stomach = args[ArgumentConstant.isStomachKey];
+        bool breathing = args[ArgumentConstant.isBreathingKey];
+        bool healthChest = args[ArgumentConstant.isHealthChestKey];
+        bool nutrition = args[ArgumentConstant.isNutritionKey];
+        return MaterialPageRoute(
+            builder: (_) => BreathingIssue(
+                isAntiAging: isAntiAging,
+                stomach: stomach,
+                breathing: breathing,
+                healthChest: healthChest,
+                nutrition: nutrition));
+      case routeVitalReviews:
+        return MaterialPageRoute(builder: (_) => VitalReviews());
+      case routeTestDiagnosis:
+        return MaterialPageRoute(builder: (_) => TestDiagnosisScreen());
+      case routeConditionTimeScreen:
+        bool isForProblem = args[ArgumentConstant.isForProblemKey];
+        return MaterialPageRoute(
+            builder: (_) => ConditionTimeScreen(isForProblem: isForProblem));
+
+      case routeMyMedicalHistory:
+        return MaterialPageRoute(builder: (_) => MyMedicalHistory());
+      case routeBodySymptoms:
+        return MaterialPageRoute(builder: (_) => BodySymptoms());
+      case routePainSymptoms:
+        return MaterialPageRoute(
+          builder: (_) => PainSymptoms(
+            selectedBodyTypeIndex: args[ArgumentConstant.argselectedBodyType],
+            selectedBodyPart: args[ArgumentConstant.argsselectBodyPart],
+          ),
+        );
+      case routeGeneralizedPainSymptoms:
+        return MaterialPageRoute(builder: (_) => GeneralizedPainSymptoms());
+      case routeSymptomsInformation:
+        return MaterialPageRoute(
+          builder: (_) => SymptomsInformation(
+            selectedSymtomsType: args[ArgumentConstant.argSeletedSymptomsType],
+          ),
+        );
+      case routeMedicineInformation:
+        return MaterialPageRoute(
+          builder: (_) => MedicineInformation(),
+        );
+      case routeUploadTestDocuments:
+        return MaterialPageRoute(builder: (_) => UploadTestDocuments());
+      case routeCurrentMedicalHistory:
+        return MaterialPageRoute(builder: (_) => CurrentMedicalHistory());
+      case routeUploadDiagnosticResult:
+        return MaterialPageRoute(builder: (_) => UploadDiagnosticResult());
+      case routeTestDocumentsList:
+        return MaterialPageRoute(
+            builder: (_) => TestDocumentsList(
+                  type: args[ArgumentConstant.documentType],
+                ));
+      case routeUploadSymptomsImages:
+        return MaterialPageRoute(builder: (_) => UploadSymptomsImages());
+      case routePaymentMethods:
+        return MaterialPageRoute(builder: (_) => PaymentMethods());
+      case routeCheckout:
+        final card = args[ArgumentConstant.card];
+        return MaterialPageRoute(builder: (_) => Checkout(card: card));
+      case routeUploadInsuranceImage:
+        return MaterialPageRoute(
+            builder: (_) => UploadInsuranceImage(
+                  insuranceId: args[ArgumentConstant.insuranceId],
+                ));
+      case routeAddPharmacy:
+        return MaterialPageRoute(builder: (_) => AddPharmacy());
+      // case allImagesTabsScreen:
+      //   return _buildRoute(settings, AllImagesTabs());
+      //   break;
       default:
         return _errorRoute();
     }
