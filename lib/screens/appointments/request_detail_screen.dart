@@ -88,7 +88,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
             _medicalHistoryMap['isFromAppointment'] = true;
 
             Navigator.of(context).pushNamed(
-              Routes.updateMedicalHistory,
+              Routes.viewMedicalHistory,
               arguments: _medicalHistoryMap,
             );
           },
@@ -203,8 +203,8 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
 
     if (_providerData["type"].toString() == '3') {
       address = Extensions.addressFormat(
-        _providerData["userAddress"]["address"]?.toString(),
         _providerData["userAddress"]["street"]?.toString(),
+        _providerData["userAddress"]["address"]?.toString(),
         _providerData["userAddress"]["city"]?.toString(),
         _providerData["userAddress"]["state"],
         _providerData["userAddress"]["zipCode"]?.toString(),
@@ -222,8 +222,9 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
       }
     } else {
       address = Extensions.addressFormat(
-        _providerData["doctorAddress"]["address"]?.toString(),
+
         _providerData["doctorAddress"]["street"]?.toString(),
+        _providerData["doctorAddress"]["address"]?.toString(),
         _providerData["doctorAddress"]["city"]?.toString(),
         _providerData["doctorAddress"]["state"],
         _providerData["doctorAddress"]["zipCode"]?.toString(),
