@@ -3,23 +3,32 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/app_constants.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/constants.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/constants/key_constant.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/utils/localization/localization.dart';
+import 'package:hutano/widgets/text_with_image.dart';
 
 class ProviderWidget extends StatelessWidget {
-  ProviderWidget(
-      {Key key,
-      @required this.data,
-      this.selectedAppointment,
-      this.bookAppointment,
-      this.isOptionsShow = true,
-      this.averageRating,
-      this.isProverPicShow = false,
-      this.margin,
-      this.onRatingClick,
-      this.onLocationClick,
-      this.totalDistance})
-      : assert(data != null),
+  ProviderWidget({
+    Key key,
+    @required this.data,
+    this.selectedAppointment,
+    this.bookAppointment,
+    this.isOptionsShow = true,
+    this.averageRating,
+    this.isProverPicShow = false,
+    this.margin,
+    this.onRatingClick,
+    this.onLocationClick,
+    this.showPaymentProcced = false,
+    this.appointmentTime,
+  })  : assert(data != null),
         super(key: key);
 
   final data;
@@ -28,7 +37,10 @@ class ProviderWidget extends StatelessWidget {
   final bool isOptionsShow, isProverPicShow;
   final EdgeInsets margin;
   final Function onRatingClick, onLocationClick;
-  final String totalDistance;
+
+  // Show extra details in confirm and pay screen
+  final bool showPaymentProcced;
+  final String appointmentTime;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +52,11 @@ class ProviderWidget extends StatelessWidget {
         professionalTitle = "---",
         distance = "0",
         address = '---';
+    bool isOnline = false;
+
+    isOnline = data['ondemandavailabledoctor'] != null
+        ? data['ondemandavailabledoctor']['isOnline']
+        : false;
 
     if (data['distance'] != null) {
       distance =
@@ -126,6 +143,10 @@ class ProviderWidget extends StatelessWidget {
       avatar = data["User"][0]["avatar"]?.toString();
     }
 
+    if (data["education"] != null && data["education"].isNotEmpty) {
+      name += ', ' + data["education"][0]["degree"]?.toString() ?? '---̥';
+    }
+
     practicingSince = data["practicingSince"] != null
         ? ((DateTime.now()
                     .difference(DateTime.parse(data["practicingSince"]))
@@ -159,304 +180,475 @@ class ProviderWidget extends StatelessWidget {
       }
 
       address = Extensions.addressFormat(
-        business["address"]?.toString(),
         business["street"]?.toString(),
+        business["address"]?.toString(),
         business["city"]?.toString(),
         _state,
         business["zipCode"]?.toString(),
       );
     }
 
-    return Container(
-      margin: margin ?? const EdgeInsets.only(bottom: 22.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(
-          Radius.circular(14.0),
-        ),
-        border: Border.all(color: Colors.grey[300]),
-      ),
-      child: Column(
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.only(top: 18, left: 12, right: 12),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Material(
-                  type: MaterialType.transparency,
-                  child: InkWell(
-                    splashColor: Colors.grey[200],
-                    onTap: isProverPicShow
-                        ? () {
-                            FocusScope.of(context).requestFocus(FocusNode());
-                            Navigator.of(context).pushNamed(
-                              Routes.providerImageScreen,
-                              arguments: (ApiBaseHelper.imageUrl + avatar),
-                            );
-                          }
-                        : null,
-                    child: Container(
-                      width: 58.0,
-                      height: 58.0,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: avatar == null
-                              ? AssetImage('images/profile_user.png')
-                              : NetworkImage(ApiBaseHelper.imageUrl + avatar),
-                          fit: BoxFit.cover,
+    return Stack(
+      children: [
+        Container(
+          margin: margin ?? const EdgeInsets.only(bottom: 22.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(
+              Radius.circular(14.0),
+            ),
+            border: Border.all(color: Colors.grey[300]),
+          ),
+          child: Column(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.only(top: 18, left: 12, right: 12),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Stack(
+                      children: [
+                        Material(
+                          type: MaterialType.transparency,
+                          child: InkWell(
+                            splashColor: Colors.grey[200],
+                            onTap: isProverPicShow
+                                ? () {
+                                    FocusScope.of(context)
+                                        .requestFocus(FocusNode());
+                                    Navigator.of(context).pushNamed(
+                                      Routes.providerImageScreen,
+                                      arguments:
+                                          (ApiBaseHelper.imageUrl + avatar),
+                                    );
+                                  }
+                                : null,
+                            child: Container(
+                              width: 100.0,
+                              height: 100.0,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: avatar == null
+                                      ? AssetImage(
+                                          FileConstants.icImgPlaceHolder)
+                                      : NetworkImage(
+                                          ApiBaseHelper.imageUrl + avatar),
+                                  fit: BoxFit.cover,
+                                ),
+                                borderRadius:
+                                    new BorderRadius.all(Radius.circular(50.0)),
+                                border: new Border.all(
+                                  color: Colors.grey[300],
+                                  width: 1.0,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                        borderRadius:
-                            new BorderRadius.all(Radius.circular(50.0)),
-                        border: new Border.all(
-                          color: Colors.grey[300],
-                          width: 1.0,
+                        Positioned(
+                            top: 0,
+                            right: spacing10,
+                            child: isOnline
+                                ? CircleAvatar(
+                                    backgroundColor: Color(0xff009900),
+                                    radius: spacing10)
+                                : SizedBox())
+                      ],
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: spacing8, right: spacing8, top: spacing10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              name,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  color: colorBlack,
+                                  fontWeight: fontWeightSemiBold,
+                                  fontSize: fontSize14),
+                            ),
+                            SizedBox(height: spacing8),
+                            Row(
+                              children: <Widget>[
+                                Image(
+                                    image: AssetImage(
+                                      FileConstants.icExperience,
+                                    ),
+                                    height: 15.0,
+                                    width: 15.0),
+                                // '\u2022 '
+                                SizedBox(width: 3),
+                                Expanded(
+                                    child: Text(professionalTitle,
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: fontSize12,
+                                            fontWeight: fontWeightRegular)))
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: spacing10,
+                                bottom: 5.0,
+                                right: 5.0,
+                              ),
+                              child: showPaymentProcced
+                                  ? SizedBox()
+                                  // TextWithImage(
+                                  //         size: 16,
+                                  //         imageSpacing: 5,
+                                  //         textStyle: TextStyle(
+                                  //             color: colorDarkBlue3,
+                                  //             fontWeight: FontWeight.w600,
+                                  //             fontFamily: gilroySemiBold,
+                                  //             fontStyle: FontStyle.normal,
+                                  //             fontSize: 12.0),
+                                  //         label: "Payment Processed",
+                                  //         image: FileConstants.icCreditCard)
+                                  : Wrap(
+                                      runSpacing: 6,
+                                      children: <Widget>[
+                                        data['isOfficeEnabled']
+                                            ? Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 6),
+                                                child: 'ic_provider_office'
+                                                    .imageIcon(
+                                                  width: 25,
+                                                  height: 25,
+                                                ),
+                                              )
+                                            : Container(),
+                                        data['isVideoChatEnabled']
+                                            ? Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 6),
+                                                child: AppConstants
+                                                    .icProviderVideoStr
+                                                    .imageIcon(
+                                                  width: imageSize25,
+                                                  height: imageSize25,
+                                                ),
+                                              )
+                                            : Container(),
+                                        data['isOnsiteEnabled']
+                                            ? Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 6),
+                                                child: 'ic_provider_onsite'
+                                                    .imageIcon(
+                                                  width: imageSize25,
+                                                  height: imageSize25,
+                                                ),
+                                              )
+                                            : Container(),
+                                        // Padding(
+                                        //   padding:
+                                        //       const EdgeInsets.only(right: 6),
+                                        //   child: AppConstants
+                                        //       .icProviderGreenMessageStr
+                                        //       .imageIcon(
+                                        //     width: imageSize25,
+                                        //     height: imageSize25,
+                                        //   ),
+                                        // )
+                                      ],
+                                    ),
+                            )
+                          ],
                         ),
                       ),
                     ),
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                name,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              "\$$fee",
-                              style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
+                        SizedBox(
+                          height: 35,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: 5.0,
-                            bottom: 5.0,
-                          ),
-                          child: Row(
-                            children: <Widget>[
-                              Image(
-                                image: AssetImage(
-                                  "images/ic_experience.png",
-                                ),
-                                height: 14.0,
-                                width: 11.0,
-                              ),
-                              SizedBox(width: 3.0),
-                              Expanded(
-                                child: Text(
-                                  practicingSince + " yrs experience",
-                                  style: TextStyle(
-                                    color: Colors.black.withOpacity(0.7),
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ),
-                              // selectedAppointment != null &&
-                              //         selectedAppointment != '0'
-                              //     ? Container()
-                              //     : SizedBox(width: 12),
-                              // selectedAppointment != null &&
-                              //         selectedAppointment != '0'
-                              //     ? Container()
-                              //     : Expanded(
-                              //         child: Text(
-                              //           "Starting from",
-                              //           textAlign: TextAlign.right,
-                              //           style: TextStyle(
-                              //             fontSize: 13.0,
-                              //             color: Colors.grey[600],
-                              //             fontWeight: FontWeight.w400,
-                              //           ),
-                              //         ),
-                              //       ),
-                            ],
-                          ),
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                "ic_rating_golden"
-                                    .imageIcon(width: 12, height: 12),
-                                SizedBox(
-                                  width: 2,
-                                ),
-                                Text(
-                                  averageRating ?? "0",
-                                  style: TextStyle(
-                                    decoration: onRatingClick != null
-                                        ? TextDecoration.underline
-                                        : TextDecoration.none,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 12,
-                                    color: Colors.black.withOpacity(0.7),
-                                  ),
-                                ),
-                              ],
-                            ).onClick(
-                              onTap:
-                                  onRatingClick != null ? onRatingClick : null,
+                        if (appointmentTime == null)
+                          Text(
+                            "\$$fee",
+                            style: TextStyle(
+                              fontSize: fontSize16,
+                              fontWeight: fontWeightSemiBold,
                             ),
-                            SizedBox(width: 3),
-                            Expanded(
-                              child: Text(
-                                '\u2022 ' + professionalTitle,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                          ),
+                        selectedAppointment != null &&
+                                selectedAppointment != '0'
+                            ? Container()
+                            : SizedBox(height: 5),
+                        selectedAppointment != null &&
+                                selectedAppointment != '0'
+                            ? Container()
+                            : Text(
+                                // "Starting from",
+                                "",
                                 style: TextStyle(
-                                  color: Colors.black.withOpacity(0.7),
-                                  fontSize: 12,
+                                  fontSize: 13.0,
+                                  color: Colors.grey[600],
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
-                            ),
-                          ],
+                        SizedBox(
+                          height: selectedAppointment != null &&
+                                  selectedAppointment != '0'
+                              ? 20
+                              : 5,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: 5.0,
-                            bottom: 5.0,
-                            right: 5.0,
-                          ),
-                          child: Row(
-                            children: <Widget>[
-                              data['isOfficeEnabled']
-                                  ? Padding(
-                                      padding: const EdgeInsets.only(right: 8),
-                                      child: 'ic_provider_office'.imageIcon(
-                                        width: 20,
-                                        height: 20,
-                                      ),
-                                    )
-                                  : Container(),
-                              data['isVideoChatEnabled']
-                                  ? Padding(
-                                      padding: const EdgeInsets.only(right: 8),
-                                      child: 'ic_provider_video'.imageIcon(
-                                        width: 20,
-                                        height: 20,
-                                      ),
-                                    )
-                                  : Container(),
-                              data['isOnsiteEnabled']
-                                  ? Padding(
-                                      padding: const EdgeInsets.only(right: 8),
-                                      child: 'ic_provider_onsite'.imageIcon(
-                                        width: 20,
-                                        height: 20,
-                                      ),
-                                    )
-                                  : Container(),
-                              Spacer(),
-                              isOptionsShow
-                                  ? 'ic_forward'.imageIcon(
-                                      width: 9,
-                                      height: 15,
-                                    )
-                                  : Container(),
-                            ],
-                          ),
-                        )
                       ],
                     ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8.0, 3.0, 8.0, 3.0),
+                child: Divider(
+                  thickness: 0.5,
+                  color: Colors.grey[300],
+                ),
+              ),
+              if (appointmentTime != null)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 3.0, 8.0, 15.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Appointment Details",
+                      style: const TextStyle(
+                          color: const Color(0xff000000),
+                          fontWeight: FontWeight.w600,
+                          fontFamily: "Gilroy",
+                          fontStyle: FontStyle.normal,
+                          fontSize: 13.0),
+                    ),
                   ),
                 ),
-              ],
-            ),
+              Padding(
+                padding: isOptionsShow
+                    ? const EdgeInsets.only(left: 12.0, right: 12.0)
+                    : const EdgeInsets.only(
+                        left: spacing12,
+                        right: spacing12,
+                        bottom: spacing10,
+                        top: spacing10),
+                child: Row(
+                  children: <Widget>[
+                    if (appointmentTime == null) ...[
+                      'ic_location_grey'.imageIcon(height: 14.0, width: 11.0),
+                      SizedBox(width: 3.0),
+                      Expanded(
+                        child: Text(
+                          address,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontWeight: fontWeightRegular,
+                              fontSize: fontSize12),
+                        ).onClick(
+                          onTap:
+                              onLocationClick != null ? onLocationClick : null,
+                        ),
+                      )
+                    ],
+                    if (appointmentTime != null) ...[
+                      Expanded(
+                        child: TextWithImage(
+                            size: 20,
+                            imageSpacing: 3,
+                            textStyle: TextStyle(
+                                color: colorBlack.withOpacity(0.7),
+                                fontWeight: FontWeight.w400,
+                                fontFamily: gilroyRegular,
+                                fontStyle: FontStyle.normal,
+                                fontSize: 12.0),
+                            label: appointmentTime,
+                            image: FileConstants.icCalendarGrey),
+                      ),
+                    ],
+                    SizedBox(width: 15),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Row(
+                        children: <Widget>[
+                          Image.asset(FileConstants.icMilesPointer,
+                              width: 15, height: 15),
+                          SizedBox(width: 5.0),
+                          Text(
+                            distance,
+                            style: TextStyle(
+                                fontWeight: fontWeightRegular,
+                                fontSize: fontSize12),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (appointmentTime != null) SizedBox(width: 35),
+                  ],
+                ),
+              ),
+              if (appointmentTime != null)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 8.0, 15.0),
+                  child: Row(
+                    children: [
+                      'ic_location_grey'.imageIcon(height: 14.0, width: 11.0),
+                      SizedBox(width: 3.0),
+                      Expanded(
+                        child: Text(
+                          address,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            decoration: onLocationClick != null
+                                ? TextDecoration.underline
+                                : TextDecoration.none,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12,
+                            color: Colors.black.withOpacity(0.6),
+                          ),
+                        ).onClick(
+                          onTap:
+                              onLocationClick != null ? onLocationClick : null,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              isOptionsShow
+                  ? Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: const EdgeInsets.only(top: 12.0),
+                            child: FlatButton(
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                              color: Colors.transparent,
+                              splashColor: Colors.grey[300],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(13.0),
+                                ),
+                                side: BorderSide(
+                                    width: 0.5,
+                                    color: AppColors.persian_indigo),
+                              ),
+                              child: Text(
+                                Localization.of(context).addToNetwork,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 12.0,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              onPressed: () {
+                                final user = data["User"][0];
+                                var name = "";
+                                var occupation = "";
+                                if (user == null) {
+                                  return;
+                                }
+                                name = user["fullName"];
+                                if (data["Specialties"].length > 0) {
+                                  occupation = data["Specialties"][0]["title"];
+                                  name =
+                                      'Dr. $name , ${occupation.getInitials()}';
+                                }
+
+                                Navigator.of(context).pushNamed(
+                                    routeProviderAddNetwork,
+                                    arguments: {
+                                      ArgumentConstant.doctorId: data["userId"],
+                                      ArgumentConstant.doctorName: name,
+                                      ArgumentConstant.doctorAvatar:
+                                          data["User"][0]["avatar"]
+                                    });
+
+                                print(data);
+                              },
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: const EdgeInsets.only(top: 12.0),
+                            child: FlatButton(
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                              color: AppColors.persian_indigo,
+                              splashColor: Colors.grey[300],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(13.0),
+                                ),
+                                side: BorderSide(
+                                    width: 0.5,
+                                    color: AppColors.persian_indigo),
+                              ),
+                              child: Text(
+                                "Book Appointment",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 12.0,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              onPressed: bookAppointment,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Container(),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8.0, 3.0, 8.0, 3.0),
-            child: Divider(
-              thickness: 0.5,
-              color: Colors.grey[300],
-            ),
-          ),
-          Padding(
-            padding: isOptionsShow
-                ? const EdgeInsets.only(left: 12.0, right: 12.0)
-                : const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 12.0),
-            child: Row(
-              children: <Widget>[
-                'ic_location_grey'.imageIcon(height: 14.0, width: 11.0),
-                SizedBox(width: 3.0),
-                Expanded(
-                  child: Text(
-                    address,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+        ),
+        Positioned(
+          right: 0,
+          child: Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                  color: colorPurple100,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(0),
+                      bottomRight: Radius.circular(0),
+                      bottomLeft: Radius.circular(15),
+                      topRight: Radius.circular(15))),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Image.asset(
+                    FileConstants.icStarPoints,
+                    height: 14,
+                    width: 14,
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Text(
+                    averageRating ?? "0",
+                    textAlign: TextAlign.center,
                     style: TextStyle(
-                      decoration: onLocationClick != null
+                      decoration: onRatingClick != null
                           ? TextDecoration.underline
                           : TextDecoration.none,
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w500,
                       fontSize: 12,
-                      color: Colors.black.withOpacity(0.6),
+                      color: Colors.white,
                     ),
-                  ).onClick(
-                    onTap: onLocationClick != null ? onLocationClick : null,
                   ),
-                ),
-                SizedBox(width: 15),
-                "ic_app_distance".imageIcon(),
-                SizedBox(width: 5.0),
-                Text(
-                  totalDistance ?? distance,
-                  style: TextStyle(
-                    color: AppColors.windsor,
-                  ),
-                  // ),
-                ),
-              ],
-            ),
-          ),
-          isOptionsShow
-              ? Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: const EdgeInsets.only(top: 12.0),
-                  child: FlatButton(
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    color: AppColors.persian_indigo,
-                    splashColor: Colors.grey[300],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        bottomRight: Radius.circular(13.0),
-                        bottomLeft: Radius.circular(13.0),
-                      ),
-                      side: BorderSide(
-                          width: 0.5, color: AppColors.persian_indigo),
-                    ),
-                    child: Text(
-                      "Book Appointment",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12.0,
-                        color: Colors.white,
-                      ),
-                    ),
-                    onPressed: bookAppointment,
-                  ),
-                )
-              : Container(),
-        ],
-      ),
+                ],
+              )),
+        )
+      ],
     );
   }
 }
