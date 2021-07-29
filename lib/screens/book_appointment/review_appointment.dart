@@ -446,23 +446,29 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           _reviewAppointmentData['medicalDocuments'] = docList;
         }
 
-        var customMedicalHistory = [
-          {
-            'name': "Asthma",
-            'year': "2013",
-            'month': "04",
-            '_id': "60e7e12cc1e7f02933b94eea"
-          },
-          {
-            'name': "Enterovirus",
-            'year': "2018",
-            'month': "07",
-            '_id': "60ed2a58dc717a14adc8131a"
-          }
-        ];
-        if (customMedicalHistory != null && customMedicalHistory.length > 0) {
-          _reviewAppointmentData['medicalHistory'] = customMedicalHistory;
+        if (_consentToTreatMap["medicalHistory"] != null &&
+            _consentToTreatMap["medicalHistory"].length > 0) {
+          _reviewAppointmentData['medicalHistory'] =
+              _consentToTreatMap["medicalHistory"];
         }
+
+        // var customMedicalHistory = [
+        //   {
+        //     'name': "Asthma",
+        //     'year': "2013",
+        //     'month': "04",
+        //     '_id': "60e7e12cc1e7f02933b94eea"
+        //   },
+        //   {
+        //     'name': "Enterovirus",
+        //     'year': "2018",
+        //     'month': "07",
+        //     '_id': "60ed2a58dc717a14adc8131a"
+        //   }
+        // ];
+        // if (customMedicalHistory != null && customMedicalHistory.length > 0) {
+        //   _reviewAppointmentData['medicalHistory'] = customMedicalHistory;
+        // }
 
         // _reviewAppointmentData['medicalHistory'] = [
         //   {'pharmacyId': '60ee72bcf84c8032e87f2325'}
@@ -751,265 +757,265 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     }
   }
 
-  _bookAppointmentPre() async {
-    try {
-      _timezone = await FlutterNativeTimezone.getLocalTimezone();
-    } catch (e) {
-      print('Could not get the local timezone');
-    }
-    if (mounted) {
-      setState(() {});
-    }
-    try {
-      SharedPref().getToken().then((token) async {
-        _loading(true);
-        Uri uri = Uri.parse(
-            ApiBaseHelper.base_url + "api/patient/appointment-booking-web");
-        http.MultipartRequest request = http.MultipartRequest('POST', uri);
-        request.headers['authorization'] = token;
+  // _bookAppointmentPre() async {
+  //   try {
+  //     _timezone = await FlutterNativeTimezone.getLocalTimezone();
+  //   } catch (e) {
+  //     print('Could not get the local timezone');
+  //   }
+  //   if (mounted) {
+  //     setState(() {});
+  //   }
+  //   try {
+  //     SharedPref().getToken().then((token) async {
+  //       _loading(true);
+  //       Uri uri = Uri.parse(
+  //           ApiBaseHelper.base_url + "api/patient/appointment-booking-web");
+  //       http.MultipartRequest request = http.MultipartRequest('POST', uri);
+  //       request.headers['authorization'] = token;
 
-        token.toString().debugLog();
+  //       token.toString().debugLog();
 
-        String doctorId = '';
+  //       String doctorId = '';
 
-        if (_profileMap["userId"] != null && _profileMap["userId"] is Map) {
-          doctorId = _profileMap["userId"]["_id"].toString();
-        } else if (_profileMap["User"] != null is Map) {
-          doctorId = _profileMap["User"][0]["_id"].toString();
-        }
+  //       if (_profileMap["userId"] != null && _profileMap["userId"] is Map) {
+  //         doctorId = _profileMap["userId"]["_id"].toString();
+  //       } else if (_profileMap["User"] != null is Map) {
+  //         doctorId = _profileMap["User"][0]["_id"].toString();
+  //       }
 
-        _reviewAppointmentData["type"] =
-            _container.getProjectsResponse()["serviceType"]?.toString() ?? "1";
-        _reviewAppointmentData["date"] =
-            DateFormat("MM/dd/yyyy").format(_bookedDate).toString();
-        _reviewAppointmentData["fromTime"] = _bookedTime;
-        _reviewAppointmentData["timeZonePlace"] = _timezone;
-        _reviewAppointmentData["doctor"] = doctorId;
+  //       _reviewAppointmentData["type"] =
+  //           _container.getProjectsResponse()["serviceType"]?.toString() ?? "1";
+  //       _reviewAppointmentData["date"] =
+  //           DateFormat("MM/dd/yyyy").format(_bookedDate).toString();
+  //       _reviewAppointmentData["fromTime"] = _bookedTime;
+  //       _reviewAppointmentData["timeZonePlace"] = _timezone;
+  //       _reviewAppointmentData["doctor"] = doctorId;
 
-        _reviewAppointmentData["isOndemand"] = _appointmentData["isOndemand"];
+  //       _reviewAppointmentData["isOndemand"] = _appointmentData["isOndemand"];
 
-        if (_appointmentData["officeId"] != null) {
-          _reviewAppointmentData["officeId"] = _appointmentData["officeId"];
-        }
+  //       if (_appointmentData["officeId"] != null) {
+  //         _reviewAppointmentData["officeId"] = _appointmentData["officeId"];
+  //       }
 
-        request.fields.addAll(_reviewAppointmentData);
+  //       request.fields.addAll(_reviewAppointmentData);
 
-        if (_reviewAppointmentData["type"] == '3') {
-          request.fields['userAddressId'] =
-              _consentToTreatMap["userAddress"]["_id"].toString();
-          request.fields['parkingType'] =
-              _consentToTreatMap["parkingMap"]["parkingType"].toString();
-          request.fields['parkingFee'] =
-              _consentToTreatMap["parkingMap"]["parkingFee"].toString();
-          request.fields['parkingBay'] =
-              _consentToTreatMap["parkingMap"]["parkingBay"].toString();
+  //       if (_reviewAppointmentData["type"] == '3') {
+  //         request.fields['userAddressId'] =
+  //             _consentToTreatMap["userAddress"]["_id"].toString();
+  //         request.fields['parkingType'] =
+  //             _consentToTreatMap["parkingMap"]["parkingType"].toString();
+  //         request.fields['parkingFee'] =
+  //             _consentToTreatMap["parkingMap"]["parkingFee"].toString();
+  //         request.fields['parkingBay'] =
+  //             _consentToTreatMap["parkingMap"]["parkingBay"].toString();
 
-          if (_consentToTreatMap["parkingMap"]["instructions"].toString() !=
-              null) {
-            request.fields['instructions'] =
-                _consentToTreatMap["parkingMap"]["instructions"].toString();
-          }
-        }
+  //         if (_consentToTreatMap["parkingMap"]["instructions"].toString() !=
+  //             null) {
+  //           request.fields['instructions'] =
+  //               _consentToTreatMap["parkingMap"]["instructions"].toString();
+  //         }
+  //       }
 
-        request.fields['consentToTreat'] = '1';
-        request.fields['problemTimeSpan'] =
-            _consentToTreatMap["problemTimeSpan"];
-        request.fields['isProblemImproving'] =
-            _consentToTreatMap["isProblemImproving"];
-        request.fields['isTreatmentReceived'] =
-            _consentToTreatMap["isTreatmentReceived"];
-        request.fields['description'] =
-            _consentToTreatMap["description"].toString().trim();
+  //       request.fields['consentToTreat'] = '1';
+  //       request.fields['problemTimeSpan'] =
+  //           _consentToTreatMap["problemTimeSpan"];
+  //       request.fields['isProblemImproving'] =
+  //           _consentToTreatMap["isProblemImproving"];
+  //       request.fields['isTreatmentReceived'] =
+  //           _consentToTreatMap["isTreatmentReceived"];
+  //       request.fields['description'] =
+  //           _consentToTreatMap["description"].toString().trim();
 
-        if (paymentType != null) {
-          if (paymentType == "3") {
-            request.fields['cashPayment'] = "3";
-            request.fields['paymentMethod'] = "3";
-          } else if (paymentType == "2") {
-            request.fields['paymentMethod'] = "2";
-            request.fields['insuranceId'] = insuranceId;
-          } else {
-            request.fields['paymentMethod'] = "1";
-            request.fields['cardId'] =
-                _consentToTreatMap["paymentMap"]["selectedCard"]['id'];
-          }
-        }
+  //       if (paymentType != null) {
+  //         if (paymentType == "3") {
+  //           request.fields['cashPayment'] = "3";
+  //           request.fields['paymentMethod'] = "3";
+  //         } else if (paymentType == "2") {
+  //           request.fields['paymentMethod'] = "2";
+  //           request.fields['insuranceId'] = insuranceId;
+  //         } else {
+  //           request.fields['paymentMethod'] = "1";
+  //           request.fields['cardId'] =
+  //               _consentToTreatMap["paymentMap"]["selectedCard"]['id'];
+  //         }
+  //       }
 
-        if (_consentToTreatMap["imagesList"] != null &&
-            _consentToTreatMap["imagesList"].length > 0) {
-          List<Map> imagesList = _consentToTreatMap["imagesList"];
-          if (imagesList != null && imagesList.length > 0) {
-            for (int i = 0; i < imagesList.length; i++) {
-              request.fields["medicalImages[$i][images]"] =
-                  imagesList[i]["images"];
-              request.fields["medicalImages[$i][name]"] = imagesList[i]["name"];
-            }
-          }
-        }
+  //       if (_consentToTreatMap["imagesList"] != null &&
+  //           _consentToTreatMap["imagesList"].length > 0) {
+  //         List<Map> imagesList = _consentToTreatMap["imagesList"];
+  //         if (imagesList != null && imagesList.length > 0) {
+  //           for (int i = 0; i < imagesList.length; i++) {
+  //             request.fields["medicalImages[$i][images]"] =
+  //                 imagesList[i]["images"];
+  //             request.fields["medicalImages[$i][name]"] = imagesList[i]["name"];
+  //           }
+  //         }
+  //       }
 
-        if (_consentToTreatMap["docsList"] != null &&
-            _consentToTreatMap["docsList"].length > 0) {
-          List<Map> imagesList = _consentToTreatMap["docsList"];
-          if (imagesList != null && imagesList.length > 0) {
-            for (int i = 0; i < imagesList.length; i++) {
-              request.fields["medicalDocuments[$i][type]"] =
-                  imagesList[i]["type"];
-              request.fields["medicalDocuments[$i][name]"] =
-                  imagesList[i]["name"];
-              request.fields["medicalDocuments[$i][medicalDocuments]"] =
-                  imagesList[i]["medicalDocuments"];
-              request.fields["medicalDocuments[$i][date]"] =
-                  imagesList[i]["date"];
-            }
-          }
-        }
+  //       if (_consentToTreatMap["docsList"] != null &&
+  //           _consentToTreatMap["docsList"].length > 0) {
+  //         List<Map> imagesList = _consentToTreatMap["docsList"];
+  //         if (imagesList != null && imagesList.length > 0) {
+  //           for (int i = 0; i < imagesList.length; i++) {
+  //             request.fields["medicalDocuments[$i][type]"] =
+  //                 imagesList[i]["type"];
+  //             request.fields["medicalDocuments[$i][name]"] =
+  //                 imagesList[i]["name"];
+  //             request.fields["medicalDocuments[$i][medicalDocuments]"] =
+  //                 imagesList[i]["medicalDocuments"];
+  //             request.fields["medicalDocuments[$i][date]"] =
+  //                 imagesList[i]["date"];
+  //           }
+  //         }
+  //       }
 
-        if (_consentToTreatMap["medicalHistory"] != null &&
-            _consentToTreatMap["medicalHistory"].length > 0) {
-          for (int i = 0;
-              i < _consentToTreatMap["medicalHistory"].length;
-              i++) {
-            request.fields["medicalHistory[$i]"] =
-                _consentToTreatMap["medicalHistory"][i];
-          }
-        }
-        if (_consentToTreatMap["otherMedicalHistory"] != null) {
-          request.fields["otherMedicalHistory"] =
-              _consentToTreatMap["otherMedicalHistory"];
-        }
+  //       if (_consentToTreatMap["medicalHistory"] != null &&
+  //           _consentToTreatMap["medicalHistory"].length > 0) {
+  //         for (int i = 0;
+  //             i < _consentToTreatMap["medicalHistory"].length;
+  //             i++) {
+  //           request.fields["medicalHistory[$i]"] =
+  //               _consentToTreatMap["medicalHistory"][i];
+  //         }
+  //       }
+  //       if (_consentToTreatMap["otherMedicalHistory"] != null) {
+  //         request.fields["otherMedicalHistory"] =
+  //             _consentToTreatMap["otherMedicalHistory"];
+  //       }
 
-        request.fields.toString().debugLog();
+  //       request.fields.toString().debugLog();
 
-        var response = await request.send().futureError((e) {
-          _loading(false);
-          e.toString().debugLog();
-        });
-        final int statusCode = response.statusCode;
-        log("Status code: $statusCode");
+  //       var response = await request.send().futureError((e) {
+  //         _loading(false);
+  //         e.toString().debugLog();
+  //       });
+  //       final int statusCode = response.statusCode;
+  //       log("Status code: $statusCode");
 
-        JsonDecoder _decoder = new JsonDecoder();
+  //       JsonDecoder _decoder = new JsonDecoder();
 
-        String respStr = await response.stream.bytesToString();
-        var responseJson = _decoder.convert(respStr);
+  //       String respStr = await response.stream.bytesToString();
+  //       var responseJson = _decoder.convert(respStr);
 
-        if (statusCode < 200 || statusCode > 400 || json == null) {
-          _loading(false);
-          if (responseJson["response"] is String)
-            Widgets.showToast(responseJson["response"]);
-          else if (responseJson["response"] is Map)
-            Widgets.showToast(responseJson);
-          else {
-            responseJson["response"]
-                .map((m) => Widgets.showToast(m.toString()))
-                .toList();
-          }
+  //       if (statusCode < 200 || statusCode > 400 || json == null) {
+  //         _loading(false);
+  //         if (responseJson["response"] is String)
+  //           Widgets.showToast(responseJson["response"]);
+  //         else if (responseJson["response"] is Map)
+  //           Widgets.showToast(responseJson);
+  //         else {
+  //           responseJson["response"]
+  //               .map((m) => Widgets.showToast(m.toString()))
+  //               .toList();
+  //         }
 
-          responseJson["response"].toString().debugLog();
-          throw Exception(responseJson);
-        } else {
-          if (responseJson["response"] is String) {
-            _loading(false);
-            Widgets.showAppDialog(
-                isError: true,
-                context: context,
-                buttonText: responseJson["response"].contains('already')
-                    ? 'Go to Requests'
-                    : 'Close',
-                description: responseJson["response"],
-                onPressed: () {
-                  if (responseJson["response"].contains('already')) {
-                    _container.consentToTreatMap.clear();
-                    _container.getProviderData().clear();
-                    _container.appointmentData.clear();
+  //         responseJson["response"].toString().debugLog();
+  //         throw Exception(responseJson);
+  //       } else {
+  //         if (responseJson["response"] is String) {
+  //           _loading(false);
+  //           Widgets.showAppDialog(
+  //               isError: true,
+  //               context: context,
+  //               buttonText: responseJson["response"].contains('already')
+  //                   ? 'Go to Requests'
+  //                   : 'Close',
+  //               description: responseJson["response"],
+  //               onPressed: () {
+  //                 if (responseJson["response"].contains('already')) {
+  //                   _container.consentToTreatMap.clear();
+  //                   _container.getProviderData().clear();
+  //                   _container.appointmentData.clear();
 
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                      Routes.dashboardScreen,
-                      (Route<dynamic> route) => false,
-                      arguments: 1,
-                    );
-                  } else {
-                    Navigator.pop(context);
-                  }
-                });
-            //  } else if (responseJson["response"]['paymentIntent'] != null) {
-            //   String _clientSecret =
-            //       responseJson["response"]['paymentIntent']['client_secret'];
+  //                   Navigator.of(context).pushNamedAndRemoveUntil(
+  //                     Routes.dashboardScreen,
+  //                     (Route<dynamic> route) => false,
+  //                     arguments: 1,
+  //                   );
+  //                 } else {
+  //                   Navigator.pop(context);
+  //                 }
+  //               });
+  //           //  } else if (responseJson["response"]['paymentIntent'] != null) {
+  //           //   String _clientSecret =
+  //           //       responseJson["response"]['paymentIntent']['client_secret'];
 
-            //   PaymentIntent _paymentIntent = PaymentIntent(
-            //     paymentMethodId: _consentToTreatMap["paymentMap"]["selectedCard"]
-            //         ['id'],
-            //     clientSecret: _clientSecret,
-            //   );
+  //           //   PaymentIntent _paymentIntent = PaymentIntent(
+  //           //     paymentMethodId: _consentToTreatMap["paymentMap"]["selectedCard"]
+  //           //         ['id'],
+  //           //     clientSecret: _clientSecret,
+  //           //   );
 
-            //   StripePayment.confirmPaymentIntent(
-            //     _paymentIntent,
-            //   ).then((PaymentIntentResult value) {
-            //     _loading(false);
-            //     showConfirmDialog();
-            //   }).futureError((error) {
-            //     _loading(false);
+  //           //   StripePayment.confirmPaymentIntent(
+  //           //     _paymentIntent,
+  //           //   ).then((PaymentIntentResult value) {
+  //           //     _loading(false);
+  //           //     showConfirmDialog();
+  //           //   }).futureError((error) {
+  //           //     _loading(false);
 
-            //     Widgets.showErrorialog(
-            //       context: context,
-            //       description: error.toString(),
-            //     );
-            //   });
-          } else {
-            _loading(false);
+  //           //     Widgets.showErrorialog(
+  //           //       context: context,
+  //           //       description: error.toString(),
+  //           //     );
+  //           //   });
+  //         } else {
+  //           _loading(false);
 
-            responseJson["response"].toString().debugLog();
+  //           responseJson["response"].toString().debugLog();
 
-            // showConfirmDialog();
-            String name = '', nameTitle = '';
-            if (_profileMap['userId'] is Map) {
-              if (_profileMap["userId"] != null) {
-                nameTitle =
-                    _profileMap["userId"]["title"]?.toString() ?? 'Dr. ';
-                name =
-                    nameTitle + _profileMap["userId"]["fullName"]?.toString() ??
-                        "---";
-              }
-            } else if (_profileMap["User"] != null &&
-                _profileMap["User"].length > 0) {
-              nameTitle =
-                  (_profileMap["User"][0]["title"]?.toString() ?? 'Dr. ');
-              name = '$nameTitle ' +
-                  (_profileMap["User"][0]["fullName"]?.toString() ?? "---");
-            }
-            var appointmentType = '';
-            appointmentType = _container.projectsResponse["serviceType"]
-                        .toString() ==
-                    '1'
-                ? "office"
-                : _container.projectsResponse["serviceType"].toString() == '2'
-                    ? "telemedicine"
-                    : "onsite";
-            Widgets.showAppDialog(
-                context: context,
-                description:
-                    'Your $appointmentType appointment with $name is booked.',
-                buttonText: 'Go to Requests',
-                isCongrats: true,
-                onPressed: () {
-                  _container.consentToTreatMap.clear();
-                  _container.getProviderData().clear();
-                  _container.appointmentData.clear();
+  //           // showConfirmDialog();
+  //           String name = '', nameTitle = '';
+  //           if (_profileMap['userId'] is Map) {
+  //             if (_profileMap["userId"] != null) {
+  //               nameTitle =
+  //                   _profileMap["userId"]["title"]?.toString() ?? 'Dr. ';
+  //               name =
+  //                   nameTitle + _profileMap["userId"]["fullName"]?.toString() ??
+  //                       "---";
+  //             }
+  //           } else if (_profileMap["User"] != null &&
+  //               _profileMap["User"].length > 0) {
+  //             nameTitle =
+  //                 (_profileMap["User"][0]["title"]?.toString() ?? 'Dr. ');
+  //             name = '$nameTitle ' +
+  //                 (_profileMap["User"][0]["fullName"]?.toString() ?? "---");
+  //           }
+  //           var appointmentType = '';
+  //           appointmentType = _container.projectsResponse["serviceType"]
+  //                       .toString() ==
+  //                   '1'
+  //               ? "office"
+  //               : _container.projectsResponse["serviceType"].toString() == '2'
+  //                   ? "telemedicine"
+  //                   : "onsite";
+  //           Widgets.showAppDialog(
+  //               context: context,
+  //               description:
+  //                   'Your $appointmentType appointment with $name is booked.',
+  //               buttonText: 'Go to Requests',
+  //               isCongrats: true,
+  //               onPressed: () {
+  //                 _container.consentToTreatMap.clear();
+  //                 _container.getProviderData().clear();
+  //                 _container.appointmentData.clear();
 
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                    Routes.dashboardScreen,
-                    (Route<dynamic> route) => false,
-                    arguments: 1,
-                  );
-                });
-          }
-          _loading(false);
-        }
-      });
-    } on Exception catch (error) {
-      _loading(false);
-      error.toString().debugLog();
-    }
-  }
+  //                 Navigator.of(context).pushNamedAndRemoveUntil(
+  //                   Routes.dashboardScreen,
+  //                   (Route<dynamic> route) => false,
+  //                   arguments: 1,
+  //                 );
+  //               });
+  //         }
+  //         _loading(false);
+  //       }
+  //     });
+  //   } on Exception catch (error) {
+  //     _loading(false);
+  //     error.toString().debugLog();
+  //   }
+  // }
 
   void showConfirmDialog() {
     showDialog(
@@ -1111,16 +1117,16 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
       if (_container.projectsResponse["serviceType"].toString() == '3') {
         address = Extensions.addressFormat(
-          _consentToTreatMap["userAddress"]["address"]?.toString(),
           _consentToTreatMap["userAddress"]["street"]?.toString(),
+          _consentToTreatMap["userAddress"]["address"]?.toString(),
           _consentToTreatMap["userAddress"]["city"]?.toString(),
           _consentToTreatMap["userAddress"]['state'],
           _consentToTreatMap["userAddress"]["zipCode"]?.toString(),
         );
       } else if (_container.projectsResponse["serviceType"].toString() == '1') {
         address = Extensions.addressFormat(
-          business["address"]?.toString(),
           business["street"]?.toString(),
+          business["address"]?.toString(),
           business["city"]?.toString(),
           _state,
           business["zipCode"]?.toString(),
@@ -1135,12 +1141,12 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           left: 20.0,
         ),
         child: ProviderWidget(
-            data: _profileMap,
-            selectedAppointment:
-                _container.projectsResponse['serviceType'].toString(),
-            isOptionsShow: false,
-            averageRating: averageRating,
-            totalDistance: _totalDistance),
+          data: _profileMap,
+          selectedAppointment:
+              _container.projectsResponse['serviceType'].toString(),
+          isOptionsShow: false,
+          averageRating: averageRating,
+        ),
       ),
     );
     _widgetList.add(Padding(
