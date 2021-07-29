@@ -272,8 +272,8 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
         dynamic business = detail["businessLocation"];
 
         address = Extensions.addressFormat(
-          business["address"]?.toString(),
           business["street"]?.toString(),
+          business["address"]?.toString(),
           business["city"]?.toString(),
           business["state"],
           business["zipCode"]?.toString(),
@@ -288,8 +288,8 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
 
     if (_data["type"].toString() == '3') {
       address = Extensions.addressFormat(
-        _data["userAddress"]["address"]?.toString(),
         _data["userAddress"]["street"]?.toString(),
+        _data["userAddress"]["address"]?.toString(),
         _data["userAddress"]["city"]?.toString(),
         _data["userAddress"]["state"],
         _data["userAddress"]["zipCode"]?.toString(),
