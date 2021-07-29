@@ -57,6 +57,9 @@ dependencies:
   dio: ^4.0.0
   share: ^2.0.4
   firebase_analytics: "^7.0.1"
+  flutter_xlider: ^3.4.0
+  touchable: ^1.0.0
+  keyboard_actions: ^3.4.1
   flutter: 
     sdk: flutter
 
