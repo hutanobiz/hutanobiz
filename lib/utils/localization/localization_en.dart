@@ -924,10 +924,10 @@ class LocalizationEN implements Localization {
   String get providerOfficeSubLabel => "Schedule an in-office appointment.";
 
   @override
-  String get videoChatSubLabel => "Schedule an in-office appointment.";
+  String get videoChatSubLabel => "Schedule an online video appointment.";
 
   @override
-  String get onSiteSubLabel => "Schedule an in-office appointment.";
+  String get onSiteSubLabel => "Schedule an onsite appointment.";
 
   @override
   String get selectTimeSlot => "Select time slot";
@@ -961,10 +961,10 @@ class LocalizationEN implements Localization {
   String get describeProblemHint => "Describe Problem";
 
   @override
-  String get selectYearHint => "Select Year";
+  String get selectYearHint => "Year";
 
   @override
-  String get selectMonthHint => "Select Month";
+  String get selectMonthHint => "Month";
 
   @override
   String get selectYearError => "Please select year";
@@ -1349,4 +1349,97 @@ class LocalizationEN implements Localization {
 
   @override
   String get selectSideLabel => "Select Side";
+
+  @override
+  String get breathingIssueLabel => "Breathing Issue";
+
+  @override
+  String get searchAssociatedSymptomsLabel => "Select associated symptoms";
+
+  @override
+  String get lowLabel => "Low";
+
+  @override
+  String get mediumLabel => "Medium";
+
+  @override
+  String get highLabel => "High";
+
+  @override
+  String get whatIsTheProblemLabel => "What is the problem";
+
+  @override
+  String get antiAgingHeader => "Anti-Aging";
+
+  @override
+  String get chestAndHeartHeader => "Chest and Heart";
+
+  @override
+  String get bowelStomachHeader => "Bowel, Stomach and Eating Issue";
+
+  @override
+  String get abnormalSensationHeader => "Abnormal Sensations";
+
+  @override
+  String get maleHealthHeader => "Male Health";
+
+  @override
+  String get femaleHealthHeader => "Female Health";
+
+  @override
+  String get woundOrSkinHeader => "Wound or Skin";
+
+  @override
+  String get dentalHealthHeader => "Dental Health";
+
+  @override
+  String get associatedSymptomsLabel => "Associated symptoms";
+
+  @override
+  String get whenWasLastPeriodLabel => "When was your last period?";
+
+  @override
+  String get pregnantLabel => "I am pregnant";
+
+  @override
+  String get immunizationLabel => "Immunization";
+
+  @override
+  String get vaccineHint => "Vaccine";
+
+  @override
+  String get haveYouHadVaccineLabel => "Have you had this vaccine before?";
+
+  @override
+  String get dayToDayActivity => "No effects on my day-to-day function";
+
+  @override
+  String get difficultActivity =>
+      "It is difficult to perform daily activities.";
+
+  @override
+  String get impossibleActivity =>
+      "It is impossible to perform daily activities.";
+
+  @override
+  String get conditionAffectedHeader =>
+      "How is this condition affecting your ability to perform daily activities?";
+
+  @override
+  String get hearingAndSightHeader => "Hearing and Sight";
+
+  @override
+  String get nutritionHeader => "Nutritrion";
+
+  @override
+  String get yourGoalsHint => "Your goals";
+
+  @override
+  String get howLongHadProblemHeader => "How long have you had this problem?";
+
+  @override
+  String get theProblemIsHeader => "The problem is";
+
+  @override
+  String get uploadDocument => "Upload Document";
 }

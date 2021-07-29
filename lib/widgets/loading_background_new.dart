@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/text_style.dart';
 import 'package:hutano/utils/color_utils.dart';
@@ -33,7 +34,9 @@ class LoadingBackgroundNew extends StatelessWidget {
       this.centerTitle = false,
       this.isSkipLater = false,
       this.onSkipForTap,
-      this.notificationCount})
+      this.isCameraVisible = false,
+      this.notificationCount,
+      this.onCameraForTap})
       : super(key: key);
 
   final bool isLoading;
@@ -56,6 +59,8 @@ class LoadingBackgroundNew extends StatelessWidget {
   final bool isSkipLater;
   final Function onSkipForTap;
   final int notificationCount;
+  final bool isCameraVisible;
+  final Function onCameraForTap;
 
   @override
   Widget build(BuildContext context) {
@@ -95,8 +100,10 @@ class LoadingBackgroundNew extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(left: 12),
                           child: Text(title,
-                              style: AppTextStyle.boldStyle(
-                                  color: colorBlack2, fontSize: 18),
+                              style: const TextStyle(
+                                  color: colorBlack2,
+                                  fontWeight: fontWeightBold,
+                                  fontSize: fontSize18),
                               textAlign: TextAlign.left),
                         )
                       ],
@@ -114,7 +121,7 @@ class LoadingBackgroundNew extends StatelessWidget {
                               child: Stack(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.all(5),
+                                    padding: const EdgeInsets.all(spacing5),
                                     child: Image.asset(
                                       FileConstants.icNotification,
                                       height: 22,
@@ -250,7 +257,9 @@ class LoadingBackgroundNew extends StatelessWidget {
                   child: BottomArrows(
                       onForwardTap: onForwardTap,
                       isSkipLater: isSkipLater,
-                      onSkipForTap: onSkipForTap),
+                      onSkipForTap: onSkipForTap,
+                      isCameraVisible: isCameraVisible,
+                      onCameraForTap: onCameraForTap),
                 )
               : Container(),
         ],
