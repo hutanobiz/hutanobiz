@@ -261,6 +261,8 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
                                     dynamic _filterTitle = _filtersList[index];
 
                                     return RoundCornerCheckBox(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         title: _filtersList[index][
                                             (filterListIndex == 6 ||
                                                     filterListIndex == 2)

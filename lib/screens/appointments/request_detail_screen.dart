@@ -222,7 +222,6 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
       }
     } else {
       address = Extensions.addressFormat(
-
         _providerData["doctorAddress"]["street"]?.toString(),
         _providerData["doctorAddress"]["address"]?.toString(),
         _providerData["doctorAddress"]["city"]?.toString(),

@@ -6,22 +6,24 @@ class RoundCornerCheckBox extends StatelessWidget {
   final String title;
   final TextStyle textStyle;
   final double textPadding;
+  final MainAxisAlignment mainAxisAlignment;
 
-  RoundCornerCheckBox({
-    Key key,
-    @required this.value,
-    @required this.onCheck,
-    this.title,
-    this.textStyle,
-    this.textPadding = 10,
-  }) : super(key: key);
+  RoundCornerCheckBox(
+      {Key key,
+      @required this.value,
+      @required this.onCheck,
+      this.title,
+      this.textStyle,
+      this.textPadding = 10,
+      this.mainAxisAlignment = MainAxisAlignment.center})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => onCheck(!value),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: mainAxisAlignment,
         // mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Padding(
