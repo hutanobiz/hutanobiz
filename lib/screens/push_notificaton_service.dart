@@ -140,7 +140,6 @@ class PushNotificationService {
               }
             }
             break;
-          case 'treatment_summary':
           case 'tracking':
             if (message.data['appointmentType'] == '1') {
               if (!isCurrent(Routes.trackOfficeAppointment,
@@ -167,6 +166,42 @@ class PushNotificationService {
                   Routes.trackOnsiteAppointment,
                   arguments: message.data['appointmentId'],
                 );
+              }
+            } else {
+              showNotification(message);
+            }
+
+            break;
+          case 'treatment_summary':
+            if (message.data['state'] == 'treatmentComplete') {
+              if (message.data['appointmentType'] == '1') {
+                if (!isCurrent(Routes.trackOfficeAppointment,
+                    message.data['appointmentId'])) {
+                  Navigator.of(navigatorContext).pushNamed(
+                    Routes.trackOfficeAppointment,
+                    arguments: message.data['appointmentId'],
+                  );
+                } else {
+                  Navigator.of(navigatorContext).pushReplacementNamed(
+                    Routes.trackOfficeAppointment,
+                    arguments: message.data['appointmentId'],
+                  );
+                }
+              } else if (message.data['appointmentType'] == '3') {
+                if (!isCurrent(Routes.trackOnsiteAppointment,
+                    message.data['appointmentId'])) {
+                  Navigator.of(navigatorContext).pushNamed(
+                    Routes.trackOnsiteAppointment,
+                    arguments: message.data['appointmentId'],
+                  );
+                } else {
+                  Navigator.of(navigatorContext).pushReplacementNamed(
+                    Routes.trackOnsiteAppointment,
+                    arguments: message.data['appointmentId'],
+                  );
+                }
+              } else {
+                showNotification(message);
               }
             } else {
               showNotification(message);
