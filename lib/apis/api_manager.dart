@@ -4,6 +4,16 @@ import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:hutano/screens/add_insurance/model/req_add_insurace.dart';
 import 'package:hutano/screens/add_insurance/model/res_get_my_insurance.dart';
+import 'package:hutano/screens/appointments/model/model/res_disease_model.dart';
+import 'package:hutano/screens/appointments/model/req_add_disease_model.dart';
+import 'package:hutano/screens/appointments/model/req_communication_center_model.dart';
+import 'package:hutano/screens/appointments/model/res_communication_center_model.dart';
+import 'package:hutano/screens/appointments/model/res_medical_documents_model.dart';
+import 'package:hutano/screens/appointments/model/res_uploaded_document_images_model.dart';
+import 'package:hutano/screens/book_appointment/conditiontime/model/req_treated_condition_time.dart';
+import 'package:hutano/screens/book_appointment/diagnosis/model/req_add_diagnostic_test_model.dart';
+import 'package:hutano/screens/book_appointment/diagnosis/model/res_diagnostic_test_result.dart';
+import 'package:hutano/screens/book_appointment/vitals/model/req_add_vital_model.dart';
 import 'package:hutano/screens/dashboard/model/res_invite_friends.dart';
 import 'package:hutano/screens/familynetwork/add_family_member/model/req_add_member.dart';
 import 'package:hutano/screens/familynetwork/add_family_member/model/res_add_member.dart';
@@ -19,7 +29,18 @@ import 'package:hutano/screens/familynetwork/member_message/model/req_message_sh
 import 'package:hutano/screens/familynetwork/member_message/model/res_message_share.dart';
 import 'package:hutano/screens/invite/model/req_invite.dart';
 import 'package:hutano/screens/invite/model/res_invite.dart';
+import 'package:hutano/screens/medical_history/model/req_add_current_medical_history.dart';
+import 'package:hutano/screens/medical_history/model/req_add_my_insurace.dart';
+import 'package:hutano/screens/medical_history/model/req_medication_detail.dart';
+import 'package:hutano/screens/medical_history/model/req_pay_appointment.dart';
+import 'package:hutano/screens/medical_history/model/req_remove_medical_images.dart';
+import 'package:hutano/screens/medical_history/model/req_upload_images.dart';
+import 'package:hutano/screens/medical_history/model/req_upload_insurance_document.dart';
+import 'package:hutano/screens/medical_history/model/res_body_part_model.dart';
+import 'package:hutano/screens/medical_history/model/res_medical_images_upload.dart';
 import 'package:hutano/screens/payment/model/res_reward_points.dart';
+import 'package:hutano/screens/pharmacy/model/req_add_pharmacy_model.dart';
+import 'package:hutano/screens/pharmacy/model/res_google_place_detail_pharmacy.dart';
 import 'package:hutano/screens/providercicle/my_provider_network/model/req_remove_provider.dart';
 import 'package:hutano/screens/providercicle/my_provider_network/model/req_share_provider.dart';
 import 'package:hutano/screens/providercicle/my_provider_network/model/res_my_provider_network.dart';
@@ -47,6 +68,7 @@ import 'package:hutano/screens/registration/register/model/res_google_address_su
 import 'package:hutano/screens/registration/register/model/res_google_place_detail.dart';
 import 'package:hutano/screens/registration/register/model/res_google_place_suggetions.dart';
 import 'package:hutano/screens/registration/register/model/res_insurance_list.dart';
+import 'package:hutano/screens/registration/register/model/res_my_insurancelist.dart';
 import 'package:hutano/screens/registration/register/model/res_register.dart';
 import 'package:hutano/screens/registration/register/model/res_states_list.dart';
 import 'package:hutano/screens/registration/register/model/res_verify_address.dart';
@@ -80,147 +102,169 @@ class ApiManager {
     }
   }
 
-  // Future<ResDiseaseModel> getNewDisease() async {
-  //   try {
-  //     final response = await _apiService.get(getNewDiseaseEndPoint);
-  //     return ResDiseaseModel.fromJson(response.data);
-  //   } on DioError catch (error) {
-  //     throw ErrorModel.fromJson(error.response.data);
-  //   }
-  // }
+  Future<ResDiseaseModel> getNewDisease() async {
+    try {
+      final response = await _apiService.get(getNewDiseaseEndPoint);
+      return ResDiseaseModel.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
 
-  // Future<ResMedicalDocumentsModel> getMyDisease() async {
-  //   try {
-  //     final response = await _apiService.get(getMyDiseaseEndPoint);
-  //     return ResMedicalDocumentsModel.fromJson(response.data);
-  //   } on DioError catch (error) {
-  //     throw ErrorModel.fromJson(error.response.data);
-  //   }
-  // }
+  Future<List<Disease>> searchDisease(searchString) async {
+    try {
+      final response = await _apiService
+          .get('api/search-medical-history?searchString=$searchString');
+      return ResDiseaseModel.fromJson(response.data).response;
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
 
-  // Future<ResCommunicationReasonModel> getCommunicationCenterReason() async {
-  //   try {
-  //     final response = await _apiService.get(getCommunicationReasonEndPoint);
-  //     return ResCommunicationReasonModel.fromJson(response.data);
-  //   } on DioError catch (error) {
-  //     throw ErrorModel.fromJson(error.response.data);
-  //   }
-  // }
+  Future<ResMedicalDocumentsModel> getMyDisease() async {
+    try {
+      final response = await _apiService.get('api/patient/medical-history');
+      return ResMedicalDocumentsModel.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
 
-  // Future<CommonRes> addCommunicationReason(
-  //     ReqCommunicationReasonModel reqCommunicationReasonModel) async {
-  //   try {
-  //     final response = await _apiService.post(addCommunicationReasonEndPoint,
-  //         data: reqCommunicationReasonModel.toJson());
-  //     return CommonRes.fromJson(response.data);
-  //   } on DioError catch (error) {
-  //     throw ErrorModel.fromJson(error.response.data);
-  //   }
-  // }
+  Future<ResCommunicationReasonModel> getCommunicationCenterReason() async {
+    try {
+      final response = await _apiService.get(getCommunicationReasonEndPoint);
+      return ResCommunicationReasonModel.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
 
-  // Future<dynamic> addPatientDisease(
-  //     ReqAddDiseaseModel reqAddDiseaseModel) async {
-  //   try {
-  //     final response = await _apiService.post(addPatientDiseaseEndPoint,
-  //         data: reqAddDiseaseModel.toJson());
-  //     return response;
-  //   } on DioError catch (error) {
-  //     throw ErrorModel.fromJson(error.response.data);
-  //   }
-  // }
+  Future<CommonRes> addCommunicationReason(
+      ReqCommunicationReasonModel reqCommunicationReasonModel) async {
+    try {
+      final response = await _apiService.post(addCommunicationReasonEndPoint,
+          data: reqCommunicationReasonModel.toJson());
+      return CommonRes.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
 
-  // Future<CommonRes> addPharmacy(ReqAddPharmacyModel reqAddPharmacyModel) async {
-  //   try {
-  //     final response = await _apiService.post(addPharmacyEndPoint,
-  //         data: reqAddPharmacyModel.toJson());
-  //     return CommonRes.fromJson(response.data);
-  //   } on DioError catch (error) {
-  //     throw ErrorModel.fromJson(error.response.data);
-  //   }
-  // }
+  Future<dynamic> updatePatientDisease(
+      ReqAddDiseaseModel reqAddDiseaseModel) async {
+    try {
+      final response = await _apiService.post(
+          'api/patient/medical-history-update',
+          data: reqAddDiseaseModel.toJson());
+      return response;
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
 
-  // Future<CommonRes> addVital(ReqAddVitalsModel reqAddVitalsModel) async {
-  //   try {
-  //     final response = await _apiService.post(addVitalsEndPoint,
-  //         data: reqAddVitalsModel.toJson());
-  //     return CommonRes.fromJson(response.data);
-  //   } on DioError catch (error) {
-  //     throw ErrorModel.fromJson(error.response.data);
-  //   }
-  // }
+  Future<dynamic> addPatientDisease(
+      ReqAddDiseaseModel reqAddDiseaseModel) async {
+    try {
+      final response = await _apiService.post('api/patient/medical-history',
+          data: {'medicalHistory': reqAddDiseaseModel.toJson()});
+      return response;
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
 
-  // Future<CommonRes> addDiagnosticsData(
-  //     ReqAddDiagnosticTestModel reqAddDiagnosticTestModel) async {
-  //   try {
-  //     final response = await _apiService.post(addDiagnosticsPoint,
-  //         data: reqAddDiagnosticTestModel.toJson());
-  //     return CommonRes.fromJson(response.data);
-  //   } on DioError catch (error) {
-  //     throw ErrorModel.fromJson(error.response.data);
-  //   }
-  // }
+  Future<CommonRes> addPharmacy(ReqAddPharmacyModel reqAddPharmacyModel) async {
+    try {
+      final response = await _apiService.post(addPharmacyEndPoint,
+          data: reqAddPharmacyModel.toJson());
+      return CommonRes.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
 
-  // Future<CommonRes> addTreatedConditionTime(
-  //     ReqTreatedConditionTimeModel reqTreatedConditionTimeModel) async {
-  //   try {
-  //     final response = await _apiService.post(addTreatedConditionTimePoint,
-  //         data: reqTreatedConditionTimeModel.toJson());
-  //     return CommonRes.fromJson(response.data);
-  //   } on DioError catch (error) {
-  //     throw ErrorModel.fromJson(error.response.data);
-  //   }
-  // }
+  Future<CommonRes> addVital(ReqAddVitalsModel reqAddVitalsModel) async {
+    try {
+      final response = await _apiService.post(addVitalsEndPoint,
+          data: reqAddVitalsModel.toJson());
+      return CommonRes.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
 
-  // Future<CommonRes> addCurrentMedicalHistory(
-  //     ReqAddCurrentMedicalHistory reqAddCurrentMedicalHistory) async {
-  //   try {
-  //     final response = await _apiService.post(currentMedicalHistoryEndPoint,
-  //         data: reqAddCurrentMedicalHistory.toJson());
-  //     return CommonRes.fromJson(response.data);
-  //   } on DioError catch (error) {
-  //     throw ErrorModel.fromJson(error.response.data);
-  //   }
-  // }
+  Future<CommonRes> addDiagnosticsData(
+      ReqAddDiagnosticTestModel reqAddDiagnosticTestModel) async {
+    try {
+      final response = await _apiService.post(addDiagnosticsPoint,
+          data: reqAddDiagnosticTestModel.toJson());
+      return CommonRes.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
 
-  // Future<CommonRes> addMedicationDetail(
-  //     ReqMedicationDetail reqMedicationDetail) async {
-  //   try {
-  //     final response = await _apiService.post(addMedicationDetailEndPoint,
-  //         data: reqMedicationDetail.toJson());
-  //     return CommonRes.fromJson(response.data);
-  //   } on DioError catch (error) {
-  //     throw ErrorModel.fromJson(error.response.data);
-  //   }
-  // }
+  Future<CommonRes> addTreatedConditionTime(
+      ReqTreatedConditionTimeModel reqTreatedConditionTimeModel) async {
+    try {
+      final response = await _apiService.post(addTreatedConditionTimePoint,
+          data: reqTreatedConditionTimeModel.toJson());
+      return CommonRes.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
 
-  // Future<ResUploadedDocumentImagesModel>
-  //     getPatientUploadedDocumentImages() async {
-  //   try {
-  //     final response =
-  //         await _apiService.get(getPatientUploadedDocumentsImagesEndPoint);
-  //     return ResUploadedDocumentImagesModel.fromJson(response.data);
-  //   } on DioError catch (error) {
-  //     throw ErrorModel.fromJson(error.response.data);
-  //   }
-  // }
+  Future<CommonRes> addCurrentMedicalHistory(
+      ReqAddCurrentMedicalHistory reqAddCurrentMedicalHistory) async {
+    try {
+      final response = await _apiService.post(currentMedicalHistoryEndPoint,
+          data: reqAddCurrentMedicalHistory.toJson());
+      return CommonRes.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
 
-  // Future<ResDiagnosticTestResult> getUploadedDiagnosticTestResults() async {
-  //   try {
-  //     final response = await _apiService.get(getDiagnosticTestEndPoint);
-  //     return ResDiagnosticTestResult.fromJson(response.data);
-  //   } on DioError catch (error) {
-  //     throw ErrorModel.fromJson(error.response.data);
-  //   }
-  // }
+  Future<CommonRes> addMedicationDetail(
+      ReqMedicationDetail reqMedicationDetail) async {
+    try {
+      final response = await _apiService.post(addMedicationDetailEndPoint,
+          data: reqMedicationDetail.toJson());
+      return CommonRes.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
 
-  // Future<ResBodyPartModel> getBodyPart() async {
-  //   try {
-  //     final response = await _apiService.get(getBodyPartEndPoint);
-  //     return ResBodyPartModel.fromJson(response.data);
-  //   } on DioError catch (error) {
-  //     throw ErrorModel.fromJson(error.response.data);
-  //   }
-  // }
+  Future<ResUploadedDocumentImagesModel>
+      getPatientUploadedDocumentImages() async {
+    try {
+      final response =
+          await _apiService.get(getPatientUploadedDocumentsImagesEndPoint);
+      return ResUploadedDocumentImagesModel.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+  Future<ResDiagnosticTestResult> getUploadedDiagnosticTestResults() async {
+    try {
+      final response = await _apiService.get(getDiagnosticTestEndPoint);
+      return ResDiagnosticTestResult.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+  Future<ResBodyPartModel> getBodyPart() async {
+    try {
+      final response = await _apiService.get(getBodyPartEndPoint);
+      return ResBodyPartModel.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
 
   // Future<ResNotificationsModel> getAllNotification() async {
   //   try {
@@ -694,7 +738,8 @@ class ApiManager {
       throw ErrorModel.fromJson(error.response.data);
     }
   }
-   Future<CommonRes> removeFamilyNetwork(ReqRemoveFamilyMember model) async {
+
+  Future<CommonRes> removeFamilyNetwork(ReqRemoveFamilyMember model) async {
     try {
       final response = await _apiService.post(
         patient + apiRemoveFamilyNetwork,
@@ -738,96 +783,96 @@ class ApiManager {
   //   }
   // }
 
-  // Future<ResMedicalImageUpload> uploadPainImages(
-  //     ReqUploadImage request, File profile) async {
-  //   try {
-  //     var formData = FormData.fromMap(request.toMap());
-  //     if (profile != null) {
-  //       final fileName = profile.path.split('/').last;
-  //       var file = await MultipartFile.fromFile(profile.path,
-  //           filename: fileName, contentType: MediaType("image", fileName));
-  //       formData.files.add(MapEntry('medicalImages', file));
-  //     }
+  Future<ResMedicalImageUpload> uploadPainImages(
+      ReqUploadImage request, File profile) async {
+    try {
+      var formData = FormData.fromMap(request.toMap());
+      if (profile != null) {
+        final fileName = profile.path.split('/').last;
+        var file = await MultipartFile.fromFile(profile.path,
+            filename: fileName, contentType: MediaType("image", fileName));
+        formData.files.add(MapEntry('medicalImages', file));
+      }
 
-  //     final response = await ApiService().multipartPost(
-  //       patient + apiImages,
-  //       data: formData,
-  //       options: Options(contentType: 'application/x-www-form-urlencoded'),
-  //     );
-  //     return ResMedicalImageUpload.fromJson(response.data);
-  //   } on DioError catch (error) {
-  //     throw ErrorModel.fromJson(error.response.data);
-  //   }
-  // }
+      final response = await ApiService().multipartPost(
+        patient + apiImages,
+        data: formData,
+        options: Options(contentType: 'application/x-www-form-urlencoded'),
+      );
+      return ResMedicalImageUpload.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
 
-  // Future<ResMedicalImageUpload> removeMedicalImages(
-  //     ReqRemoveMedicalImages model) async {
-  //   try {
-  //     final response = await _apiService.post(patient + apiRemoveMedicalImages,
-  //         data: model.toMap());
-  //     return ResMedicalImageUpload.fromJson(response.data);
-  //   } on DioError catch (error) {
-  //     throw ErrorModel.fromJson(error.response.data);
-  //   }
-  // }
+  Future<ResMedicalImageUpload> removeMedicalImages(
+      ReqRemoveMedicalImages model) async {
+    try {
+      final response = await _apiService.post(patient + apiRemoveMedicalImages,
+          data: model.toMap());
+      return ResMedicalImageUpload.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
 
-  // Future<CommonRes> payAppointment(ReqPayAppointmnet model) async {
-  //   try {
-  //     final response = await _apiService.post(patient + apiCustomerCharge,
-  //         data: model.toMap());
-  //     return CommonRes.fromJson(response.data);
-  //   } on DioError catch (error) {
-  //     throw ErrorModel.fromJson(error.response.data);
-  //   }
-  // }
+  Future<CommonRes> payAppointment(ReqPayAppointmnet model) async {
+    try {
+      final response = await _apiService.post(patient + apiCustomerCharge,
+          data: model.toMap());
+      return CommonRes.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
 
-  // Future<CommonRes> addInsurance(ReqAddMyInsurance model) async {
-  //   try {
-  //     final response = await _apiService.post(patient + apiAddInsurance,
-  //         data: model.toMap());
-  //     return CommonRes.fromJson(response.data);
-  //   } on DioError catch (error) {
-  //     throw ErrorModel.fromJson(error.response.data);
-  //   }
-  // }
+  Future<CommonRes> addInsurance(ReqAddMyInsurance model) async {
+    try {
+      final response = await _apiService.post(patient + apiAddInsurance,
+          data: model.toMap());
+      return CommonRes.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
 
-  // Future<ResMyInsuranceList> myInsuranceList(Map<String, dynamic> model) async {
-  //   // final param = {'userId': controller.text.toString()};
-  //   try {
-  //     final response =
-  //         await _apiService.post(patient + apiMyInsurance, data: model);
-  //     return ResMyInsuranceList.fromJson(response.data);
-  //   } on DioError catch (error) {
-  //     throw ErrorModel.fromJson(error.response.data);
-  //   }
-  // }
+  Future<ResMyInsuranceList> myInsuranceList(Map<String, dynamic> model) async {
+    // final param = {'userId': controller.text.toString()};
+    try {
+      final response =
+          await _apiService.post(patient + apiMyInsurance, data: model);
+      return ResMyInsuranceList.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
 
-  // Future<CommonRes> uploadInsuranceDoc(
-  //     File frontImage, ReqUploadInsuranceDocuments model,
-  //     {File backImage}) async {
-  //   try {
-  //     var formData = FormData.fromMap(model.toMap());
-  //     final fileName = frontImage.path.split('/').last;
-  //     var file = await MultipartFile.fromFile(frontImage.path,
-  //         filename: fileName, contentType: MediaType("image", fileName));
-  //     formData.files.add(MapEntry('insuranceDocumentFront', file));
+  Future<CommonRes> uploadInsuranceDoc(
+      File frontImage, ReqUploadInsuranceDocuments model,
+      {File backImage}) async {
+    try {
+      var formData = FormData.fromMap(model.toMap());
+      final fileName = frontImage.path.split('/').last;
+      var file = await MultipartFile.fromFile(frontImage.path,
+          filename: fileName, contentType: MediaType("image", fileName));
+      formData.files.add(MapEntry('insuranceDocumentFront', file));
 
-  //     if (backImage != null) {
-  //       final fileName = backImage.path.split('/').last;
-  //       var file = await MultipartFile.fromFile(backImage.path,
-  //           filename: fileName, contentType: MediaType("image", fileName));
-  //       formData.files.add(MapEntry('insuranceDocumentBack', file));
-  //     }
-  //     final response = await ApiService().multipartPost(
-  //       patient + apiUploadInsuranceImage,
-  //       data: formData,
-  //       options: Options(contentType: 'application/x-www-form-urlencoded'),
-  //     );
-  //     return CommonRes.fromJson(response.data);
-  //   } on DioError catch (error) {
-  //     throw ErrorModel.fromJson(error.response.data);
-  //   }
-  // }
+      if (backImage != null) {
+        final fileName = backImage.path.split('/').last;
+        var file = await MultipartFile.fromFile(backImage.path,
+            filename: fileName, contentType: MediaType("image", fileName));
+        formData.files.add(MapEntry('insuranceDocumentBack', file));
+      }
+      final response = await ApiService().multipartPost(
+        patient + apiUploadInsuranceImage,
+        data: formData,
+        options: Options(contentType: 'application/x-www-form-urlencoded'),
+      );
+      return CommonRes.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
 
   Future<CommonRes> addInsuranceDoc(File frontImage, ReqAddInsurance model,
       {File backImage}) async {
@@ -887,16 +932,16 @@ class ApiManager {
     }
   }
 
-  // Future<ResGooglePlaceDetailPharmacy> getPlacePharmacyDetail(
-  //     Map<String, dynamic> model) async {
-  //   try {
-  //     final response =
-  //         await _googleService.get(googlePlaceDetail, params: model);
-  //     return ResGooglePlaceDetailPharmacy.fromJson(response.data);
-  //   } on DioError catch (error) {
-  //     throw ErrorModel.fromJson(error.response.data);
-  //   }
-  // }
+  Future<ResGooglePlaceDetailPharmacy> getPlacePharmacyDetail(
+      Map<String, dynamic> model) async {
+    try {
+      final response =
+          await _googleService.get(googlePlaceDetail, params: model);
+      return ResGooglePlaceDetailPharmacy.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
 
   Future<ResGoogleAddressSuggetion> getAddressSuggetion(
       Map<String, dynamic> model) async {
