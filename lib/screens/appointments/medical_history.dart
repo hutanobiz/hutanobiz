@@ -1,48 +1,62 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_custom_dialog/flutter_custom_dialog.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:hutano/apis/api_helper.dart';
+import 'package:hutano/apis/api_manager.dart';
+import 'package:hutano/apis/error_model.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/appointments/model/model/res_disease_model.dart';
+import 'package:hutano/screens/appointments/model/req_add_disease_model.dart';
+import 'package:hutano/screens/appointments/model/res_medical_documents_model.dart';
+import 'package:hutano/screens/medical_history/provider/appoinment_provider.dart';
+
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/utils/localization/localization.dart';
+import 'package:hutano/utils/preference_key.dart';
+import 'package:hutano/utils/preference_utils.dart';
+import 'package:hutano/utils/progress_dialog.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
+import 'package:hutano/widgets/month_year_item.dart';
+import 'package:provider/provider.dart';
 
 class MedicalHistoryScreen extends StatefulWidget {
   MedicalHistoryScreen({Key key, this.isBottomButtonsShow}) : super(key: key);
 
   final Map isBottomButtonsShow;
+  // final bool isFromTreat;
 
   @override
   _MedicalHistoryScreenState createState() => _MedicalHistoryScreenState();
 }
 
 class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
-  Future<List<dynamic>> _medicalFuture;
   ApiBaseHelper api = ApiBaseHelper();
-
-  List<dynamic> _diseaseList = [];
-  dynamic otherMedicalHistory;
+  List<MedicalHistory> _showDiseaseData = [];
+  List<Disease> _newDiseaseList = [];
   bool isBottomButtonsShow = true;
   bool isFromAppointment = false;
-
   String token = '';
-  List<dynamic> searchList = [];
-  List<dynamic> data = [];
   bool _isLoading = false;
-  String _searchText = '';
-  TextEditingController _otherDiseaseController = TextEditingController();
-
+  final _searchDiseaseController = TextEditingController();
+  final _searchDiseaseFocusNode = FocusNode();
   InheritedContainerState _container;
+  String _selectedDisease = "";
+  String _selectedSid = "";
+  bool isIndicatorLoading = false;
 
   @override
   void initState() {
     super.initState();
-
-    _otherDiseaseController.addListener(() {
-      setState(() {});
-    });
-
     if (widget.isBottomButtonsShow != null) {
       if (widget.isBottomButtonsShow['isBottomButtonsShow'] != null) {
         isBottomButtonsShow = widget.isBottomButtonsShow['isBottomButtonsShow'];
@@ -50,71 +64,25 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
       if (widget.isBottomButtonsShow['isFromAppointment'] != null) {
         isFromAppointment = widget.isBottomButtonsShow['isFromAppointment'];
       }
-
-      if (isFromAppointment) {
-        if (widget.isBottomButtonsShow['medicalHistory'] != null &&
-            widget.isBottomButtonsShow['medicalHistory'].length > 0) {
-          _diseaseList = widget.isBottomButtonsShow['medicalHistory'];
-        }
-      }
     }
-
-    _medicalFuture = api.getDiseases();
-
-    if (!isFromAppointment) {
+    // if (!isFromAppointment) {
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       SharedPref().getToken().then((token) {
         setState(() {
           this.token = token;
         });
-
-        api.getPatientDocuments(token).then((response) {
-          if (response != null) {
-            setLoading(false);
-
-            if (response["medicalHistory"] != null) {
-              setState(() {
-                _diseaseList = response["medicalHistory"];
-                if (response['otherMedicalHistory'] != null) {
-                  otherMedicalHistory = response['otherMedicalHistory'];
-                  _otherDiseaseController.text = otherMedicalHistory ?? '';
-                  _diseaseList.add('Other');
-                }
-              });
-            }
-          }
-        }).futureError((error) {
-          setLoading(false);
-          error.toString().debugLog();
-        });
+        _getMyDiseaseList();
       });
-    }
+    });
+    // }else{
+
+    // }
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
     _container = InheritedContainer.of(context);
-  }
-
-  @override
-  void dispose() {
-    _otherDiseaseController.dispose();
-    super.dispose();
-  }
-
-  void filterSearch(String searchKey) {
-    searchList.clear();
-
-    if (searchKey.isNotEmpty) {
-      for (dynamic f in data) {
-        if (f != null) {
-          if (f.toLowerCase().contains(searchKey.toLowerCase())) {
-            searchList.add(f);
-          }
-        }
-      }
-    }
   }
 
   @override
@@ -123,256 +91,379 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
       resizeToAvoidBottomInset: true,
       backgroundColor:
           isBottomButtonsShow ? AppColors.goldenTainoi : Colors.white,
-      body: LoadingBackground(
-        title: "Medical History",
+      body: LoadingBackgroundNew(
+        title: "",
+        addHeader: isBottomButtonsShow,
+        addTitle: !isBottomButtonsShow,
+        isAddBack: false,
+        addBackButton: false,
         isLoading: _isLoading,
-        isAddAppBar: isBottomButtonsShow,
-        isAddBack: !isBottomButtonsShow,
         addBottomArrows: isBottomButtonsShow,
         onForwardTap: saveMedicalHistory,
         color: Colors.white,
-        padding: const EdgeInsets.all(5.0),
+        isAddAppBar: isBottomButtonsShow,
+        padding: const EdgeInsets.all(spacing5),
         child: Column(
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 8, 20, 8),
-              child: TextFormField(
-                style: TextStyle(
-                  fontSize: 15,
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    _searchText = value;
-                    filterSearch(value);
-                  });
-                },
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  filled: true,
-                  hintMaxLines: 1,
-                  isDense: true,
-                  alignLabelWithHint: true,
-                  prefixIcon: Padding(
-                    padding: const EdgeInsets.all(14.0),
-                    child: Icon(Icons.search),
-                  ),
-                  hintText: 'Search',
-                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.4)),
-                  disabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: AppColors.goldenTainoi, width: 0.5),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: AppColors.goldenTainoi, width: 0.5),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.goldenTainoi),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-                keyboardType: TextInputType.text,
-              ),
-            ),
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom),
-                physics: ClampingScrollPhysics(),
-                children: <Widget>[
-                  FutureBuilder<List<dynamic>>(
-                    future: _medicalFuture,
-                    builder: (_, snapshot) {
-                      if (snapshot.hasData) {
-                        if (snapshot.data == null) return Container();
-
-                        // List<dynamic> data = [];
-                        data.clear();
-
-                        for (dynamic medicalHistory in snapshot.data) {
-                          data.add(medicalHistory['name']);
-                        }
-
-                        // for (dynamic medicalHistory in _diseaseList) {
-                        //   if (!data.contains(medicalHistory)) {
-                        //     data.insert(0, medicalHistory['name']);
-                        //   }
-                        // }
-
-                        return ListView.builder(
-                          padding: EdgeInsets.only(
-                              bottom: (_diseaseList.contains('Others') ||
-                                      _diseaseList.contains('Other'))
-                                  ? 10
-                                  : 65),
-                          shrinkWrap: true,
-                          physics: ClampingScrollPhysics(),
-                          itemCount: _searchText == null || _searchText == ''
-                              ? data.length
-                              : searchList.length,
-                          itemBuilder: (context, index) {
-                            dynamic medicalHistory =
-                                _searchText == null || _searchText == ''
-                                    ? data[index] ?? ''
-                                    : searchList[index] ?? '';
-
-                            return CheckboxListTile(
-                              title: Text(
-                                medicalHistory,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              value: _diseaseList.contains(medicalHistory),
-                              activeColor: AppColors.goldenTainoi,
-                              onChanged: isFromAppointment
-                                  ? (value) {}
-                                  : (value) {
-                                      setState(() {
-                                        if (value) {
-                                          if (!_diseaseList
-                                              .contains(medicalHistory)) {
-                                            _diseaseList.add(medicalHistory);
-                                          }
-                                        } else {
-                                          // setLoading(true);
-                                          // api
-                                          //     .deletePatientMedicalHistory(
-                                          //         token, medicalHistory)
-                                          //     .then((value) {
-                                          //   setLoading(false);
-                                          _diseaseList.remove(medicalHistory);
-                                          // }).futureError((error) {
-                                          //   setLoading(false);
-                                          //   error.toString().debugLog();
-                                          // });
-                                        }
-                                      });
-                                    },
-                            );
-                          },
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text("${snapshot.error}");
-                      }
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    },
-                  ),
-                  (_diseaseList.contains('Others') ||
-                          _diseaseList.contains('Other'))
-                      ? Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 75),
-                          child: TextField(
-                            scrollPadding: EdgeInsets.only(
-                              bottom: isBottomButtonsShow ? 100 : 0,
-                            ),
-                            controller: _otherDiseaseController,
-                            keyboardType: TextInputType.text,
-                            maxLines: 1,
-                            textInputAction: TextInputAction.done,
-                            decoration: InputDecoration(
-                              labelStyle: TextStyle(color: Colors.grey),
-                              labelText: "Other Medical Conditions",
-                              alignLabelWithHint: true,
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey[300]),
-                                borderRadius: BorderRadius.circular(14.0),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(14.0),
-                              ),
-                            ),
-                          ),
-                        )
-                      : Container(),
-                ],
-              ),
-            ),
-            isBottomButtonsShow
-                ? Container()
-                : isFromAppointment
-                    ? Container()
-                    : Container(
-                        height: 55,
-                        margin: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-                        child: FancyButton(
-                          title: 'Save',
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ),
+            if (!isFromAppointment) _medicalHistoryHeader(context),
+            if (!isFromAppointment) _buildSearchPastConditions(context),
+            _currentDiseaseList(context),
           ],
         ),
       ),
     );
   }
 
+  Widget _medicalHistoryHeader(BuildContext context) => Padding(
+        padding: const EdgeInsets.all(spacing10),
+        child: Align(
+          alignment: Alignment.topLeft,
+          child: Text(
+            Localization.of(context).medicalHistoryLabel,
+            style: const TextStyle(
+                color: colorDarkBlack,
+                fontWeight: fontWeightBold,
+                fontSize: fontSize16),
+          ),
+        ),
+      );
+
+  Widget _buildSearchPastConditions(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: spacing15),
+        child: TypeAheadFormField(
+          textFieldConfiguration: TextFieldConfiguration(
+              controller: _searchDiseaseController,
+              focusNode: _searchDiseaseFocusNode,
+              textInputAction: TextInputAction.next,
+              maxLines: 1,
+              onTap: () {},
+              onChanged: (value) {},
+              decoration: InputDecoration(
+                prefixIconConstraints: BoxConstraints(),
+                prefixIcon: GestureDetector(
+                  onTap: () {},
+                  child: Padding(
+                    padding: const EdgeInsets.all(spacing8),
+                    child: Icon(
+                      Icons.search,
+                      size: 30,
+                      color: colorBlack2,
+                    ),
+                  ),
+                ),
+                hintText: Localization.of(context).enterPastConditionHint,
+                isDense: true,
+                hintStyle: TextStyle(
+                    color: colorBlack2,
+                    fontSize: fontSize13,
+                    fontWeight: fontWeightRegular),
+                border: OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: colorBlack20, width: 1)),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: colorBlack20, width: 1)),
+                disabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: colorBlack20, width: 1)),
+              )),
+          suggestionsCallback: (pattern) async {
+            return pattern.length > 0 ? await _getDiseasesList(pattern) : [];
+          },
+          errorBuilder: (_, object) {
+            return Container();
+          },
+          itemBuilder: (context, suggestion) {
+            return ListTile(
+              title: Text(suggestion.name),
+            );
+          },
+          transitionBuilder: (context, suggestionsBox, controller) {
+            return suggestionsBox;
+          },
+          onSuggestionSelected: (suggestion) {
+            setState(() {
+              _selectedDisease = suggestion.name;
+              _selectedSid = suggestion.sId;
+            });
+            showAddDiseaseDialog(context, false);
+            _searchDiseaseController.text = "";
+          },
+          hideOnError: true,
+          hideSuggestionsOnKeyboardHide: true,
+          hideOnEmpty: true,
+        ),
+      );
+
+  Widget _currentDiseaseList(BuildContext context) => isIndicatorLoading
+      ? Expanded(
+          child: Center(
+            child: CustomLoader(),
+          ),
+        )
+      : _showDiseaseData == null ||
+              (_showDiseaseData == null || _showDiseaseData.isEmpty) &&
+                  !isIndicatorLoading
+          ? Expanded(
+              child: Center(
+                child: Text(
+                  Localization.of(context).noMedicalHistoryFound,
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: colorBlack2,
+                      fontWeight: fontWeightSemiBold),
+                ),
+              ),
+            )
+          : Expanded(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                    spacing20, spacing8, spacing20, spacing8),
+                child: ListView(
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                  physics: ClampingScrollPhysics(),
+                  children: <Widget>[
+                    ListView.builder(
+                        padding: EdgeInsets.only(
+                            bottom: (_showDiseaseData.contains('Others') ||
+                                    _showDiseaseData.contains('Other'))
+                                ? 10
+                                : 65),
+                        shrinkWrap: true,
+                        physics: ClampingScrollPhysics(),
+                        itemCount: _showDiseaseData.length,
+                        itemBuilder: (context, index) {
+                          return PopupMenuButton(
+                            offset: Offset(300, 50),
+                            itemBuilder: (BuildContext context) =>
+                                <PopupMenuEntry<String>>[
+                              if (!isFromAppointment)
+                                _popMenuCommonItem(
+                                    context,
+                                    Localization.of(context).edit,
+                                    FileConstants.icEdit),
+                              if (!isFromAppointment)
+                                _popMenuCommonItem(
+                                    context,
+                                    Localization.of(context).remove,
+                                    FileConstants.icRemoveBlack)
+                            ],
+                            child: ListTile(
+                              contentPadding: EdgeInsets.all(0),
+                              title: Text(
+                                _showDiseaseData[index].name,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              subtitle: Text(
+                                  "${_showDiseaseData[index].month} ${_showDiseaseData[index].year}"),
+                              trailing: Icon(Icons.more_vert),
+                            ),
+                            onSelected: (value) {
+                              if (value == Localization.of(context).edit) {
+                                setState(() {
+                                  _selectedDisease =
+                                      _showDiseaseData[index].name;
+                                  _selectedSid = _showDiseaseData[index].sId;
+                                });
+                                showAddDiseaseDialog(context, true,
+                                    medical: _showDiseaseData[index]);
+                              } else {
+                                _removeDisease(
+                                    context, _showDiseaseData[index]);
+                              }
+                            },
+                          );
+                        })
+                  ],
+                ),
+              ),
+            );
+
+  Widget _popMenuCommonItem(BuildContext context, String value, String image) =>
+      PopupMenuItem<String>(
+        value: value,
+        textStyle: const TextStyle(
+            color: colorBlack2,
+            fontWeight: fontWeightRegular,
+            fontSize: spacing12),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              image,
+              height: 15,
+              width: 15,
+            ),
+            SizedBox(
+              width: spacing5,
+            ),
+            Text(value)
+          ],
+        ),
+      );
+
+  showAddDiseaseDialog(BuildContext context, bool isForUpdate,
+      {MedicalHistory medical}) {
+    var addDiseaseDialog = YYDialog();
+    addDiseaseDialog.build(context)
+      ..width = (MediaQuery.of(context).size.width - 35)
+      ..backgroundColor = Colors.transparent
+      ..barrierDismissible = false
+      ..widget(
+        MonthYearItem(
+          selectedSid: _selectedSid,
+          selectedDisease: _selectedDisease,
+          yyDialog: addDiseaseDialog,
+          onSavePressed: _onSavePressed,
+          isForUpdate: isForUpdate,
+          month: medical?.month ?? "",
+          year: medical?.year?.toString() ?? "",
+        ),
+      )
+      ..show();
+  }
+
+  void _onSavePressed(
+      String sId, String disease, String month, int year, bool isForUpdate) {
+    _addMedicalData(
+        ReqAddDiseaseModel(
+            medicalHistoryId: sId,
+            sId: sId,
+            name: disease,
+            year: year.toString(),
+            month: month),
+        isForUpdate);
+  }
+
+  void _removeDisease(BuildContext context, MedicalHistory medicalHistory) {
+    setLoading(true);
+    api.deletePatientMedicalHistory(token, medicalHistory.sId).then((value) {
+      setLoading(false);
+      setState(() {
+        if (_showDiseaseData.contains(medicalHistory)) {
+          _showDiseaseData.remove(medicalHistory);
+        }
+      });
+    }).futureError((error) {
+      setLoading(false);
+      error.toString().debugLog();
+    });
+  }
+
   void saveMedicalHistory() {
-    // if (_diseaseList.length > 0) {
-    //   Map<String, String> diseaseMap = {};
-
-    //   if ((_diseaseList.contains('Others') || _diseaseList.contains('Other')) &&
-    //       _otherDiseaseController.text.isEmpty) {
-    //     Widgets.showToast('Please enter the disease');
-    //   } else {
-    //     FocusScope.of(context).requestFocus(FocusNode());
-
-    //     if ((_diseaseList.contains('Others') ||
-    //         _diseaseList.contains('Other'))) {
-    //       _diseaseList.remove('Others');
-    //       _diseaseList.remove('Other');
-    //       if (_otherDiseaseController.text.isNotEmpty) {
-    //         diseaseMap['otherMedicalHistory'] = _otherDiseaseController.text;
-    //         // _diseaseList.add(_otherDiseaseController.text);
-    //       }
-    //     }
-
-    //     setLoading(true);
-
-    //     for (int i = 0; i < _diseaseList.length; i++) {
-    //       if (_diseaseList[i] != null) {
-    //         if (!diseaseMap.containsValue(_diseaseList[i])) {
-    //           diseaseMap['medicalHistory[${i.toString()}]'] = _diseaseList[i];
-    //         }
-    //       }
-    //     }
-
-    //     api.sendPatientMedicalHistory(token, diseaseMap).then((response) {
-    //       if (response != null) {
-    //         setLoading(false);
-
-    //         if (_otherDiseaseController.text.isNotEmpty) {
-    //           _otherDiseaseController.text = '';
-    //         }
-
-    //         if (isBottomButtonsShow) {
-    //           if (_diseaseList != null && _diseaseList.length > 0) {
-    //             _container.setConsentToTreatData(
-    //                 "medicalHistory", _diseaseList);
-    //             if (diseaseMap['otherMedicalHistory'] != null) {
-    //               _container.setConsentToTreatData(
-    //                   'otherMedicalHistory', diseaseMap['otherMedicalHistory']);
-    //             }
-    //           }
-
-    Navigator.of(context).pushNamed(Routes.seekingCureScreen);
-    //         }
-    //       }
-    //     }).futureError((error) {
-    //       setLoading(false);
-    //       error.toString().debugLog();
-    //     });
-    //   }
-    // } else {
-    //   Widgets.showToast('Please select a disease');
-    // }
+    final _gender = getInt(PreferenceKey.gender);
+    Provider.of<SymptomsInfoProvider>(context, listen: false)
+        .setBodyType(_gender);
+    if (isBottomButtonsShow) {
+      if (_showDiseaseData != null && _showDiseaseData.length > 0) {
+        // _showDiseaseData.forEach((element) {
+        _container.setConsentToTreatData("medicalHistory", _showDiseaseData);
+        // });
+      }
+      Navigator.of(context).pushNamed(Routes.seekingCureScreen);
+      // Navigator.of(context).pushNamed(routeWelcomeNewFollowup);
+    }
   }
 
   void setLoading(bool value) {
     setState(() => _isLoading = value);
+  }
+
+  Future<List<Disease>> _getDiseasesList(String pattern) async {
+    return await ApiManager().searchDisease(pattern);
+  }
+
+  _getMyDiseaseList() async {
+    setState(() {
+      isIndicatorLoading = true;
+    });
+    await ApiManager().getMyDisease().then((result) {
+      if (result is ResMedicalDocumentsModel) {
+        setLoading(false);
+        setState(() {
+          isIndicatorLoading = false;
+        });
+        if (result.response.medicalHistory != null) {
+          setState(() {
+            _showDiseaseData = result.response.medicalHistory;
+          });
+        }
+        _getDiseaseList();
+      }
+    }).catchError((dynamic e) {
+      setState(() {
+        isIndicatorLoading = false;
+      });
+      if (e is ErrorModel) {
+        setLoading(false);
+        e.toString().debugLog();
+      }
+    });
+  }
+
+  _getDiseaseList() async {
+    try {
+      var res = await ApiManager().getNewDisease();
+      setState(() {
+        _newDiseaseList = res.response;
+      });
+      for (dynamic disease in _newDiseaseList) {
+        if (disease.name == "Other") {
+          _newDiseaseList.remove(disease);
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  _addMedicalData(
+      ReqAddDiseaseModel reqAddDiseaseModel, bool isForUpdate) async {
+    setLoading(true);
+    try {
+      if (isForUpdate) {
+        await ApiManager()
+            .updatePatientDisease(reqAddDiseaseModel)
+            .then(((result) {
+          setLoading(false);
+          _getMyDiseaseList();
+        }));
+
+        //  _getUpdatedDiseaseData();
+
+      } else {
+        await ApiManager()
+            .addPatientDisease(reqAddDiseaseModel)
+            .then(((result) {
+          setLoading(false);
+          _getMyDiseaseList();
+        }));
+      }
+    } catch (e) {
+      setLoading(false);
+      ProgressDialogUtils.dismissProgressDialog();
+      print(e);
+    }
+  }
+
+  void _getUpdatedDiseaseData() async {
+    await ApiManager().getMyDisease().then((result) {
+      if (result is ResMedicalDocumentsModel) {
+        if (result.response.medicalHistory != null) {
+          setState(() {
+            _showDiseaseData = result.response.medicalHistory;
+          });
+        }
+        setLoading(false);
+      }
+    }).catchError((dynamic e) {
+      if (e is ErrorModel) {
+        setLoading(false);
+        e.toString().debugLog();
+      }
+    });
   }
 }
