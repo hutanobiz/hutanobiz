@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/constants/key_constant.dart';
+import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/widgets/custom_card_view.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
+import 'package:hutano/widgets/widgets.dart';
 
 class AppointmentTypeScreen extends StatefulWidget {
   final Map appointmentTypeMap;
@@ -15,8 +20,12 @@ class AppointmentTypeScreen extends StatefulWidget {
 }
 
 class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
-  InheritedContainerState conatiner;
+ InheritedContainerState conatiner;
   Map _appointentTypeMap = {};
+  bool isOfficeSelected = false;
+  bool isVirtualSelected = false;
+  bool isHomeSelected = false;
+  String selectedType = "";
 
   @override
   void initState() {
@@ -37,53 +46,91 @@ class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
-        title: "How do you want to receive care?",
-        color: AppColors.snow,
-        isAddBack: false,
-        addBackButton: true,
-        child: column(),
+      body: LoadingBackgroundNew(
+        title: "",
+        addHeader: true,
+        child: column(context),
+        addBottomArrows: true,
+        onForwardTap: () {
+          if (selectedType.isNotEmpty) {
+            conatiner.setProjectsResponse("serviceType", selectedType);
+            Navigator.of(context).pushNamed(Routes.selectServicesScreen);
+          } else {
+            Widgets.showToast(Localization.of(context).noAppointmentSelected);
+          }
+        },
       ),
     );
   }
 
-  Widget column() {
+  Widget column(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        cardView(
-          'images/office_appointment.png',
-          "At the providers office",
-          _appointentTypeMap["isOfficeEnabled"],'1'
+        Padding(
+          padding: const EdgeInsets.only(bottom: 25),
+          child: Text(Localization.of(context).appointmentTypeScreenHeader,
+              style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: fontWeightSemiBold,
+                  fontSize: fontSize18)),
         ),
+        cardView(
+            FileConstants.icProviderOffice,
+            Localization.of(context).providerOfficeLabel,
+            Localization.of(context).providerOfficeSubLabel,
+            _appointentTypeMap[ArgumentConstant.isOfficeEnabled],
+            '1',
+            isOfficeSelected),
         SizedBox(height: 20.0),
         cardView(
-          'images/video_chat_appointment.png',
-          "Virtually by telemedicine",
-          _appointentTypeMap["isVideoChatEnabled"],'2'
-        ),
+            FileConstants.icVideoChatAppointment,
+            Localization.of(context).videoChatLabel,
+            Localization.of(context).videoChatSubLabel,
+            _appointentTypeMap[ArgumentConstant.isVideoChatEnabled],
+            '2',
+            isVirtualSelected),
         SizedBox(height: 20.0),
         cardView(
-          'images/onsite_appointment.png',
-          "In your home or office",
-          _appointentTypeMap["isOnsiteEnabled"],'3'
-        ),
+            FileConstants.icOnSiteAppointment,
+            Localization.of(context).onSiteLabel,
+            Localization.of(context).onSiteSubLabel,
+            _appointentTypeMap[ArgumentConstant.isOnsiteEnabled],
+            '3',
+            isHomeSelected),
       ],
     );
   }
 
-  Widget cardView(String image, String cardText, bool isAppointmentTypeTrue,String type) {
+  Widget cardView(String image, String cardText, String subText,
+      bool isAppointmentTypeTrue, String type, bool isSelected) {
     return !isAppointmentTypeTrue
         ? Container()
         : CustomCardView(
             onTap: () {
-              conatiner.setProjectsResponse("serviceType", type);
-
-              Navigator.of(context).pushNamed(Routes.selectServicesScreen);
+              if (type == '1') {
+                isOfficeSelected = true;
+                isVirtualSelected = false;
+                isHomeSelected = false;
+                selectedType = "1";
+              } else if (type == '2') {
+                isOfficeSelected = false;
+                isVirtualSelected = true;
+                isHomeSelected = false;
+                selectedType = "2";
+              }
+              if (type == '3') {
+                isOfficeSelected = false;
+                isVirtualSelected = false;
+                isHomeSelected = true;
+                selectedType = "3";
+              }
+              setState(() {});
             },
             image: image,
             cardText: cardText,
-            fontWeight: FontWeight.bold,
+            cardSubText: subText,
+            isSelected: isSelected,
           );
   }
 }
