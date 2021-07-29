@@ -5,12 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/screens/familynetwork/add_family_member/family_provider.dart';
 
 import 'package:hutano/screens/home_main.dart';
+import 'package:hutano/screens/medical_history/provider/appoinment_provider.dart';
 import 'package:hutano/screens/registration/login_pin/login_pin.dart';
 import 'package:hutano/screens/registration/onboarding.dart';
 import 'package:hutano/screens/registration/payment/add_payment_option.dart';
+import 'package:hutano/screens/registration/payment/provider/credit_card_provider.dart';
 import 'package:hutano/screens/registration/signin/signin_screen.dart';
 import 'package:hutano/screens/registration/welcome_screen.dart';
 import 'package:hutano/screens/setup_pin/set_pin.dart';
@@ -111,7 +114,13 @@ void main() async {
     DeviceOrientation.portraitUp,
   ]).whenComplete(() {
     runApp(MultiProvider(
-      providers: [ListenableProvider(create: (_) => FamilyProvider())],
+      providers: [
+        // ListenableProvider(create: (_) => FamilyProvider())
+         ChangeNotifierProvider(create: (_) => CreditCardProvider()),
+        ChangeNotifierProvider(create: (_) => SymptomsInfoProvider()),
+        ListenableProvider(create: (_) => FamilyProvider()),
+        ListenableProvider(create: (_) => HealthConditionProvider())
+        ],
       child: InheritedContainer(
         child: MaterialApp(
           title: "Hutano",
