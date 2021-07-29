@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/extensions.dart';
-import 'package:hutano/widgets/fancy_button.dart';
+import 'package:hutano/utils/localization/localization.dart';
+import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 
@@ -78,12 +82,13 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
         title: "Select Services",
         color: AppColors.snow,
         isAddBack: false,
-        addBackButton: true,
+        addHeader: true,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: ListView(
@@ -92,42 +97,39 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
                 children: widgetList(),
               ),
             ),
-            Divider(height: 0.5),
             Align(
-              alignment: FractionalOffset.bottomRight,
-              child: Container(
-                height: 55.0,
-                width: MediaQuery.of(context).size.width - 76.0,
-                margin: const EdgeInsets.only(top: 10),
-                padding: const EdgeInsets.only(right: 0.0, left: 40.0),
-                child: FancyButton(
-                  title: "Continue",
-                  onPressed: () {
-                    if (_radioValue == 1) {
-                      if (_selectedServicesMap.values.toList().length > 0) {
-                        _container.setServicesData("status", "1");
-                        _container.setServicesData(
-                            "services", _selectedServicesMap.values.toList());
-
-                        Navigator.of(context).pushNamed(
-                            Routes.selectAppointmentTimeScreen,
-                            arguments: SelectDateTimeArguments(fromScreen: 0));
-                      } else {
-                        Widgets.showToast("Please choose at least one service");
-                      }
-                    } else {
-                      _container.setServicesData("status", "0");
+              alignment: Alignment.centerRight,
+              child: HutanoButton(
+                width: 55,
+                height: 55,
+                color: accentColor,
+                iconSize: 20,
+                buttonType: HutanoButtonType.onlyIcon,
+                icon: FileConstants.icForward,
+                onPressed: () {
+                  if (_radioValue == 1) {
+                    if (_selectedServicesMap.values.toList().length > 0) {
+                      _container.setServicesData("status", "1");
                       _container.setServicesData(
-                          "consultaceFee", profileMap[_appointmentTypeKey]);
+                          "services", _selectedServicesMap.values.toList());
+
                       Navigator.of(context).pushNamed(
-                        Routes.selectAppointmentTimeScreen,
-                        arguments: SelectDateTimeArguments(fromScreen: 0),
-                      );
+                          Routes.selectAppointmentTimeScreen,
+                          arguments: SelectDateTimeArguments(fromScreen: 0));
+                    } else {
+                      Widgets.showToast("Please choose at least one service");
                     }
-                  },
-                ),
+                  } else {
+                    _container.setServicesData("status", "0");
+                    _container.setServicesData(
+                        "consultaceFee", profileMap[_appointmentTypeKey]);
+                    Navigator.of(context).pushNamed(
+                        Routes.selectAppointmentTimeScreen,
+                        arguments: SelectDateTimeArguments(fromScreen: 0));
+                  }
+                },
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -198,44 +200,45 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
       child: Row(
         children: <Widget>[
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                "Consultation",
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              SizedBox(height: 7),
-              RichText(
-                text: TextSpan(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  Localization.of(context).consultationLabel,
                   style: TextStyle(
-                    fontSize: 13.0,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
+                    fontSize: fontSize16,
+                    color: colorBlack2,
+                    fontWeight: fontWeightBold,
                   ),
-                  children: <TextSpan>[
-                    TextSpan(text: 'Fee \$ '),
-                    TextSpan(
+                ),
+                SizedBox(height: 7),
+                RichText(
+                    text: TextSpan(children: <TextSpan>[
+                  TextSpan(
+                      text: 'Fee \$ ',
+                      style: TextStyle(
+                          fontSize: fontSize13,
+                          fontWeight: fontWeightMedium,
+                          color: colorBlack2)),
+                  TextSpan(
                       text: '$fee \u2022 ',
                       style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    TextSpan(text: 'Duration '),
-                    TextSpan(
+                          fontSize: fontSize13,
+                          fontWeight: fontWeightSemiBold,
+                          color: colorBlack2)),
+                  TextSpan(
+                      text: Localization.of(context).durationLabel,
+                      style: TextStyle(
+                          fontSize: fontSize13,
+                          fontWeight: fontWeightMedium,
+                          color: colorBlack2)),
+                  TextSpan(
                       text: '$duration min',
                       style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+                          fontSize: fontSize13,
+                          fontWeight: fontWeightSemiBold,
+                          color: colorBlack2))
+                ]))
+              ]),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
@@ -281,20 +284,17 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
                     Text(
                       "Services",
                       style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w700,
+                        fontSize: fontSize16,
+                        color: colorBlack2,
+                        fontWeight: fontWeightBold,
                       ),
                     ),
                     SizedBox(height: 7),
-                    Text(
-                      "Choose offered services",
-                      style: TextStyle(
-                        fontSize: 13.0,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                    Text(Localization.of(context).chooseOfferedServices,
+                        style: TextStyle(
+                            fontSize: fontSize13,
+                            fontWeight: fontWeightMedium,
+                            color: colorBlack2)),
                   ],
                 ),
                 Expanded(
