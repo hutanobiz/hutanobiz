@@ -12,7 +12,11 @@ import 'package:hutano/screens/appointments/model/res_medical_documents_model.da
 import 'package:hutano/screens/appointments/model/res_uploaded_document_images_model.dart';
 import 'package:hutano/screens/book_appointment/conditiontime/model/req_treated_condition_time.dart';
 import 'package:hutano/screens/book_appointment/diagnosis/model/req_add_diagnostic_test_model.dart';
+import 'package:hutano/screens/book_appointment/diagnosis/model/res_diagnostic_test_model.dart';
 import 'package:hutano/screens/book_appointment/diagnosis/model/res_diagnostic_test_result.dart';
+import 'package:hutano/screens/book_appointment/morecondition/model/res_more_condition_model.dart';
+import 'package:hutano/screens/book_appointment/multiplehealthissues/model/req_selected_condition_model.dart';
+import 'package:hutano/screens/book_appointment/multiplehealthissues/model/res_selected_condition_model.dart';
 import 'package:hutano/screens/book_appointment/vitals/model/req_add_vital_model.dart';
 import 'package:hutano/screens/dashboard/model/res_invite_friends.dart';
 import 'package:hutano/screens/familynetwork/add_family_member/model/req_add_member.dart';
@@ -37,10 +41,14 @@ import 'package:hutano/screens/medical_history/model/req_remove_medical_images.d
 import 'package:hutano/screens/medical_history/model/req_upload_images.dart';
 import 'package:hutano/screens/medical_history/model/req_upload_insurance_document.dart';
 import 'package:hutano/screens/medical_history/model/res_body_part_model.dart';
+import 'package:hutano/screens/medical_history/model/res_get_medication_detail.dart';
 import 'package:hutano/screens/medical_history/model/res_medical_images_upload.dart';
+import 'package:hutano/screens/medical_history/model/res_medication_detail.dart';
+import 'package:hutano/screens/medical_history/model/res_medicine.dart';
 import 'package:hutano/screens/payment/model/res_reward_points.dart';
 import 'package:hutano/screens/pharmacy/model/req_add_pharmacy_model.dart';
 import 'package:hutano/screens/pharmacy/model/res_google_place_detail_pharmacy.dart';
+import 'package:hutano/screens/pharmacy/model/res_preferred_pharmacy_list.dart';
 import 'package:hutano/screens/providercicle/my_provider_network/model/req_remove_provider.dart';
 import 'package:hutano/screens/providercicle/my_provider_network/model/req_share_provider.dart';
 import 'package:hutano/screens/providercicle/my_provider_network/model/res_my_provider_network.dart';
@@ -226,17 +234,6 @@ class ApiManager {
     }
   }
 
-  Future<CommonRes> addMedicationDetail(
-      ReqMedicationDetail reqMedicationDetail) async {
-    try {
-      final response = await _apiService.post(addMedicationDetailEndPoint,
-          data: reqMedicationDetail.toJson());
-      return CommonRes.fromJson(response.data);
-    } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
-    }
-  }
-
   Future<ResUploadedDocumentImagesModel>
       getPatientUploadedDocumentImages() async {
     try {
@@ -266,6 +263,46 @@ class ApiManager {
     }
   }
 
+  Future<ResMedicine> searchMedicine(String search) async {
+    try {
+      final response = await ApiService().get(
+        "api/search-prescription?searchString=$search",
+      );
+      return ResMedicine.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+  Future<ResMedicationDetail> addMedicationDetail(
+      ReqMedicationDetail reqMedicationDetail) async {
+    try {
+      final response = await _apiService.post(addMedicationDetailEndPoint,
+          data: reqMedicationDetail.toJson());
+      return ResMedicationDetail.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+  Future<ResGetMedicationDetail> getMedicationDetails() async {
+    try {
+      final response = await _apiService.get(getMedicationDetailEndPoint);
+      return ResGetMedicationDetail.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+  // Future<ReqTest> getOnSiteAddressDetails() async {
+  //   try {
+  //     final response = await _apiService.get(onSiteAddressEndPoint);
+  //     return ReqTest.fromJson(response.data);
+  //   } on DioError catch (error) {
+  //     throw ErrorModel.fromJson(error.response.data);
+  //   }
+  // }
+
   // Future<ResNotificationsModel> getAllNotification() async {
   //   try {
   //     final response = await _apiService.get(notificationEndPoint);
@@ -279,6 +316,57 @@ class ApiManager {
   //   try {
   //     final response = await _apiService.get(notificationReadEndPoint);
   //     return ResNotificationRead.fromJson(response.data);
+  //   } on DioError catch (error) {
+  //     throw ErrorModel.fromJson(error.response.data);
+  //   }
+  // }
+
+  Future<ResMoreConditionModel> getMoreConditions() async {
+    try {
+      final response = await _apiService.get(getMoreConditionEndPoint);
+      return ResMoreConditionModel.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+  Future<ResSelectConditionModel> getHealthConditionDetails(
+      ReqSelectConditionModel reqSelectConditionModel) async {
+    try {
+      final response = await _apiService.post(getHealthConditionDetailsEndPoint,
+          data: reqSelectConditionModel.toJson());
+      return ResSelectConditionModel.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+  Future<ResDiagnositcTestModel> getDiagnosticTestTypeList() async {
+    try {
+      final response = await _apiService.get(getDiagnosticTestFromApiEndPoint);
+      return ResDiagnositcTestModel.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+  Future<ResPreferredPharmacyList> getPreferredPharmacyList(
+      String input) async {
+    try {
+      final response =
+          await _apiService.get("/api/search-pharmacy?searchString=$input");
+      return ResPreferredPharmacyList.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+  // Future<ResSearchMedicalHistory> getSearchedMedicalHistory(
+  //     String input) async {
+  //   try {
+  //     final response = await _apiService
+  //         .get("api/search-medical-history?searchString=$input");
+  //     return ResSearchMedicalHistory.fromJson(response.data);
   //   } on DioError catch (error) {
   //     throw ErrorModel.fromJson(error.response.data);
   //   }

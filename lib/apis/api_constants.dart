@@ -79,3 +79,12 @@ const String getDiagnosticTestEndPoint = "api/patient/diagnostic-test-results";
 const String getBodyPartEndPoint = "api/patient/get-body-part";
 const String addMedicationDetailEndPoint = "api/patient/add-medication-detail";
 const String apiRemoveFamilyNetwork = "remove-family-network";
+const String getMedicationDetailEndPoint = "api/patient/medications";
+const String getMoreConditionEndPoint = "api/patient/problem-list";
+const String getHealthConditionDetailsEndPoint =
+    "api/patient/selected-problem-list";
+const String getDiagnosticTestFromApiEndPoint =
+    "api/patient/dignoStics-test-type-list";
+const String newBookingAppointmentFlowEndPoint =
+    "api/patient/appointment-booking-v1";
+const String onSiteAddressEndPoint = "api/patient/address";

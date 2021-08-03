@@ -17,6 +17,7 @@ import 'package:hutano/utils/constants/constants.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/dialog_utils.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/utils/preference_constants.dart';
 import 'package:hutano/utils/preference_key.dart';
 import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/utils/progress_dialog.dart';
@@ -87,7 +88,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     initPlatformState();
-
     _professionalTitleFuture = _api.getProfessionalTitle();
     _specialtiesFuture = _api.getSpecialties();
     _initLocationDialog();
@@ -114,21 +114,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
       _ondemandDoctorsFuture =
           _api.getOnDemandDoctors(token, _latLng, _miles, 'Asia/Kolkata');
 
-      SharedPref().getValue("isEmailVerified").then((value) {
-        if (value == null || value == false) {
-          _api.profile(value, Map()).then((value) {
-            setState(() {
-              isEmailVerified = value["response"]["isEmailVerified"] ?? false;
-              SharedPref().setBoolValue("isEmailVerified",
-                  value["response"]["isEmailVerified"] ?? false);
-            });
-          });
-        } else {
-          setState(() {
-            isEmailVerified = value;
-          });
-        }
+      // SharedPref().getValue("isEmailVerified").then((value) {
+      //   if (value == null || value == false) {
+      _api.profile(value, Map()).then((value) {
+        setState(() {
+          setString(AppPreference.dobKey, value["response"]['dob']);
+          isEmailVerified = value["response"]["isEmailVerified"] ?? false;
+          SharedPref().setBoolValue(
+              "isEmailVerified", value["response"]["isEmailVerified"] ?? false);
+        });
       });
+      // } else {
+      //   setState(() {
+      //     isEmailVerified = value;
+      //   });
+      // }
+      // });
       getUnreadNotification();
     });
     super.didChangeDependencies();

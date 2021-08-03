@@ -1,15 +1,15 @@
-class ResMedicine {
+class ResSearchMedicalHistory {
   String status;
-  List<Medicine> response;
+  List<SearchMedicalHistory> response;
 
-  ResMedicine({this.status, this.response});
+  ResSearchMedicalHistory({this.status, this.response});
 
-  ResMedicine.fromJson(Map<String, dynamic> json) {
+  ResSearchMedicalHistory.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     if (json['response'] != null) {
-      response = new List<Medicine>();
+      response = new List<SearchMedicalHistory>();
       json['response'].forEach((v) {
-        response.add(new Medicine.fromJson(v));
+        response.add(new SearchMedicalHistory.fromJson(v));
       });
     }
   }
@@ -24,24 +24,24 @@ class ResMedicine {
   }
 }
 
-class Medicine {
-  List<String> dose;
+class SearchMedicalHistory {
+  int status;
   String sId;
   String name;
   String createdAt;
   String updatedAt;
   int iV;
 
-  Medicine(
-      {this.dose,
+  SearchMedicalHistory(
+      {this.status,
       this.sId,
       this.name,
       this.createdAt,
       this.updatedAt,
       this.iV});
 
-  Medicine.fromJson(Map<String, dynamic> json) {
-    dose = json['dose'].cast<String>();
+  SearchMedicalHistory.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
     sId = json['_id'];
     name = json['name'];
     createdAt = json['createdAt'];
@@ -51,7 +51,7 @@ class Medicine {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['dose'] = this.dose;
+    data['status'] = this.status;
     data['_id'] = this.sId;
     data['name'] = this.name;
     data['createdAt'] = this.createdAt;

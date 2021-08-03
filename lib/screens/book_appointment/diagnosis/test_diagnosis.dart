@@ -10,6 +10,8 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/book_appointment/diagnosis/model/res_diagnostic_test_model.dart';
+import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
@@ -31,6 +33,7 @@ import 'package:hutano/utils/progress_dialog.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/show_common_upload_dialog.dart';
+import 'package:provider/provider.dart';
 
 import '../../../colors.dart';
 import '../../../strings.dart';
@@ -44,7 +47,7 @@ class TestDiagnosisScreen extends StatefulWidget {
 
 class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
   bool _isTookDiagnosticTest = false;
-  List<ResDiagnosticModel> _diagnosisList = [];
+  // List<ResDiagnosticModel> _diagnosisList = [];
   final documentTypeController = TextEditingController();
   final documentDateController = TextEditingController();
   String documentName = '';
@@ -60,16 +63,13 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
     'Other',
   ];
   bool _isLoading = false;
+  List<DiagnosticTest> _finalTestList = [];
 
   @override
   void initState() {
     super.initState();
-    _diagnosisList.add(ResDiagnosticModel("MRI", false));
-    _diagnosisList.add(ResDiagnosticModel("X-Ray", false));
-    _diagnosisList.add(ResDiagnosticModel("CAT Scan", false));
-    _diagnosisList.add(ResDiagnosticModel("Labs", false));
-    _diagnosisList.add(ResDiagnosticModel("Bone Scan", false));
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      _getTestDiagnostics(context);
       SharedPref().getToken().then((token) {
         setState(() {
           this.token = token;
@@ -91,9 +91,9 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
               if (_isTookDiagnosticTest) {
                 _forwardButtonPressed(context);
               } else {
-                Navigator.of(context).pushNamed(
-                  Routes.routeMedicineInformation,
-                );
+                Provider.of<HealthConditionProvider>(context, listen: false)
+                    .updateDiagnostics([]);
+                Navigator.of(context).pushNamed(Routes.routeMedicineInformation);
               }
             },
             isSkipLater: true,
@@ -102,9 +102,9 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
             padding:
                 EdgeInsets.only(left: spacing20, right: spacing20, bottom: 60),
             onSkipForTap: () {
-              Navigator.of(context).pushNamed(
-                Routes.routeMedicineInformation,
-              );
+              Provider.of<HealthConditionProvider>(context, listen: false)
+                  .updateDiagnostics([]);
+              Navigator.of(context).pushNamed(Routes.routeMedicineInformation);
             },
             child: SingleChildScrollView(
               child: Column(
@@ -128,6 +128,7 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
                         child: _uploadDocumentsButton(context),
                         strokeWidth: 1,
                         dashPattern: [8, 8]),
+                  SizedBox(height: spacing20),
                 ],
               ),
             )));
@@ -189,31 +190,32 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
       (_isTookDiagnosticTest)
           ? ListView.separated(
               shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
               itemBuilder: (context, pos) {
                 return ListTile(
                   dense: true,
                   title: Row(children: [
-                    Text(_diagnosisList[pos].diagnosticTest,
+                    Text(_finalTestList[pos].name,
                         style: TextStyle(
                             color: colorBlack2,
                             fontWeight: fontWeightSemiBold,
                             fontSize: fontSize14))
                   ]),
-                  trailing: _diagnosisList[pos].isSelected
+                  trailing: _finalTestList[pos].isSelected
                       ? Image.asset("images/checkedCheck.png",
                           height: 24, width: 24)
                       : Image.asset("images/uncheckedCheck.png",
                           height: 24, width: 24),
                   onTap: () {
-                    setState(() => _diagnosisList[pos].isSelected =
-                        !_diagnosisList[pos].isSelected);
+                    setState(() => _finalTestList[pos].isSelected =
+                        !_finalTestList[pos].isSelected);
                   },
                 );
               },
               separatorBuilder: (_, pos) {
                 return SizedBox();
               },
-              itemCount: _diagnosisList.length)
+              itemCount: _finalTestList.length)
           : SizedBox();
 
   Widget _uploadDocumentsButton(BuildContext context) => Center(
@@ -262,28 +264,57 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
   }
 
   void showPickerDialog() {
-    showCommonUploadDialog(context, Localization.of(context).picker,
-        Localization.of(context).uploadDocument, onTop: () {
-      Navigator.pop(context);
-      showImagePickerDialog();
-    }, onBottom: () {
-      getDocumentType();
-      Navigator.pop(context);
-    }, isForDocument: true);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(Localization.of(context).picker),
+          content: Text(Localization.of(context).selectDocPickerTypeLabel),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(Localization.of(context).imageLabel),
+              onPressed: () {
+                Navigator.pop(context);
+                showImagePickerDialog();
+              },
+            ),
+            FlatButton(
+              child: Text(Localization.of(context).pdfLabel),
+              onPressed: () {
+                getDocumentType();
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void showImagePickerDialog() {
-    showCommonUploadDialog(
-      context,
-      Localization.of(context).picker,
-      Localization.of(context).uploadPhoto,
-      onTop: () {
-        getImage(1);
-        Navigator.pop(context);
-      },
-      onBottom: () {
-        getImage(2);
-        Navigator.pop(context);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(Localization.of(context).picker),
+          content: Text(Localization.of(context).selectImagePickerTypeLabel),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(Localization.of(context).camera),
+              onPressed: () {
+                getImage(1);
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: Text(Localization.of(context).gallery),
+              onPressed: () {
+                getImage(2);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
       },
     );
   }
@@ -559,35 +590,25 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
   }
 
   void _forwardButtonPressed(BuildContext context) {
-    List<LongAgo> selectedTests = [];
-
-    _diagnosisList.forEach((element) {
+    List<String> selectedTests = [];
+    _finalTestList.forEach((element) {
       if (element.isSelected) {
-        selectedTests.add(LongAgo(name: element.diagnosticTest));
+        selectedTests.add(element.sId);
       }
     });
-    if (selectedTests.isNotEmpty) {
-      final reqModel = ReqAddDiagnosticTestModel(
-          diagnosticTests: Localization.of(context).yes,
-          longAgo: selectedTests);
-      _addDiagnosticsData(context, reqModel);
-    } else {
-      Widgets.showToast("Please select any diagnostic tests");
-    }
+    Provider.of<HealthConditionProvider>(context, listen: false)
+        .updateDiagnostics(selectedTests);
+    Navigator.of(context).pushNamed(Routes.routeUploadTestDocuments);
   }
 
-  void _addDiagnosticsData(
-      BuildContext context, ReqAddDiagnosticTestModel reqModel) async {
-    ProgressDialogUtils.showProgressDialog(context);
-    await ApiManager().addDiagnosticsData(reqModel).then(((result) {
-      if (result is CommonRes) {
-        ProgressDialogUtils.dismissProgressDialog();
-        Navigator.of(context).pushNamed(Routes.
-          routeUploadTestDocuments,
-        );
+  void _getTestDiagnostics(BuildContext context) async {
+    await ApiManager().getDiagnosticTestTypeList().then((result) {
+      if (result is ResDiagnositcTestModel) {
+        setState(() {
+          _finalTestList = result.response;
+        });
       }
-    })).catchError((dynamic e) {
-      ProgressDialogUtils.dismissProgressDialog();
+    }).catchError((dynamic e) {
       if (e is ErrorModel) {
         e.toString().debugLog();
       }

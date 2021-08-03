@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hutano/apis/api_manager.dart';
-import 'package:hutano/apis/common_res.dart';
 import 'package:hutano/apis/error_model.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
+import 'package:hutano/screens/medical_history/model/req_medication_detail.dart';
+import 'package:hutano/screens/medical_history/model/res_get_medication_detail.dart';
+import 'package:hutano/screens/medical_history/model/res_medication_detail.dart';
+
 import 'package:hutano/utils/extensions.dart';
-import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +18,6 @@ import 'package:provider/provider.dart';
 import '../../apis/appoinment_service.dart';
 import '../../utils/color_utils.dart';
 import '../../utils/dialog_utils.dart';
-import '../../utils/dimens.dart';
 import '../../utils/localization/localization.dart';
 import '../../utils/preference_key.dart';
 import '../../utils/preference_utils.dart';
@@ -23,7 +25,6 @@ import '../../utils/progress_dialog.dart';
 import '../../widgets/hutano_button.dart';
 import 'model/medicine_time_model.dart';
 import 'model/req_create_appoinmet.dart';
-import 'model/req_medication_detail.dart';
 import 'model/res_medicine.dart';
 import 'provider/appoinment_provider.dart';
 
@@ -45,11 +46,13 @@ class _MedicineInformationState extends State<MedicineInformation> {
   Medicine _selectedMedicine;
   bool isTookMedication = false;
   final _searchFocusNode = FocusNode();
+  List<Medications> _getMedicineList = [];
 
   @override
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      _getMedicationDetail(context, false);
       _medicineTimeList.add(MedicineTimeModel(
           Localization.of(context).onceADayDoseTime, false, 1));
       _medicineTimeList.add(MedicineTimeModel(
@@ -212,9 +215,9 @@ class _MedicineInformationState extends State<MedicineInformation> {
   }
 
   void searchMedicine(String value) {
-    AppoinmentService().searchMedicine(value).then((value) {
+    ApiManager().searchMedicine(value).then((value) {
       setState(() {
-        medicines = value.medicines;
+        medicines = value.response;
       });
     });
   }
@@ -231,15 +234,18 @@ class _MedicineInformationState extends State<MedicineInformation> {
         addBottomArrows: true,
         onForwardTap: () {
           if (_currentStepIndex == 2) {
-            if (selectedMedicines.isEmpty) {
-             Widgets.showToast(Localization.of(context).addMedicationMsg);
+            if (_getMedicineList.isEmpty) {
+              Widgets.showToast(Localization.of(context).addMedicationMsg);
             } else {
-              final reqModel = ReqMedicationDetail(
-                  anyMedication: "Yes",
-                  addMedication: selectedMedicines,
-                  doseOfMedicine: selectedMedicinDose,
-                  frequencyOfDosage: selectedMedcineTime);
-              _addMedicationDetailData(context, reqModel);
+              List<String> _medicationList = [];
+              _getMedicineList.forEach((element) {
+                if (element.isSelected) {
+                  _medicationList.add(element.sId);
+                }
+              });
+              Provider.of<HealthConditionProvider>(context, listen: false)
+                  .updateMedicationData(_medicationList);
+              Navigator.of(context).pushNamed(Routes.routeAddPharmacy);
             }
           } else {
             if (_currentStepIndex == 1 && isTookMedication) {
@@ -247,6 +253,8 @@ class _MedicineInformationState extends State<MedicineInformation> {
                 _currentStepIndex = 2;
               });
             } else {
+              Provider.of<HealthConditionProvider>(context, listen: false)
+                  .updateMedicationData([]);
               Navigator.of(context).pushNamed(Routes.routeAddPharmacy);
             }
           }
@@ -300,7 +308,7 @@ class _MedicineInformationState extends State<MedicineInformation> {
                     child: Row(children: [
                   Expanded(
                     child: Text(
-                      medicines[index].drugName ?? '',
+                      medicines[index].name ?? '',
                       style: const TextStyle(
                           color: colorBlack2,
                           fontSize: fontSize14,
@@ -312,7 +320,7 @@ class _MedicineInformationState extends State<MedicineInformation> {
                 onChanged: (val) {
                   setState(() {
                     _selectedMedicine = medicines[index];
-                    _searchController.text = _selectedMedicine.drugName;
+                    _searchController.text = _selectedMedicine.name;
                     _searchFocusNode.unfocus();
                   });
                 }));
@@ -451,7 +459,7 @@ class _MedicineInformationState extends State<MedicineInformation> {
 
   Widget _medicineDoseAndDosTime(BuildContext context) {
     var doselist = <Widget>[];
-    for (var d in _selectedMedicine?.dosage ?? []) {
+    for (var d in _selectedMedicine?.dose ?? []) {
       doselist.add(_doseButtons(d));
     }
     return Column(
@@ -540,16 +548,15 @@ class _MedicineInformationState extends State<MedicineInformation> {
                           _medicineDoseTime =
                               _medicineTimeList[index].timeLabel;
                         });
-                        selectedMedicines.add(_selectedMedicine.drugName);
+                        selectedMedicines.add(_selectedMedicine.name);
                         selectedMedicinDose.add(_medicineDose);
                         selectedMedcineTime.add(_medicineDoseTime);
-                        _searchFocusNode.unfocus();
-                        _searchController.clear();
-                        setState(() {
-                          _selectedMedicine = null;
-                          _medicineDose = null;
-                          _medicineDoseTime = null;
-                        });
+                        final reqModel = ReqMedicationDetail(
+                            dose: _medicineDose,
+                            name: _selectedMedicine.name,
+                            frequency: _medicineDoseTime,
+                            prescriptionId: _selectedMedicine.sId);
+                        _addMedicationDetailData(context, reqModel);
                       }),
                 ],
               );
@@ -563,39 +570,43 @@ class _MedicineInformationState extends State<MedicineInformation> {
       },
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      itemCount: selectedMedicines.length,
+      itemCount: _getMedicineList.length,
       itemBuilder: (context, index) {
-        var name = selectedMedicines[index];
-        var dose = selectedMedicinDose[index];
-        var time = selectedMedcineTime[index];
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 20,
-              width: 20,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  color: AppColors.windsor,
-                  borderRadius: BorderRadius.circular(5)),
-              child: Text(
-                '${index + 1}',
-                style: TextStyle(
-                    fontSize: fontSize10,
-                    color: Colors.white,
-                    fontWeight: fontWeightSemiBold),
-              ),
-            ),
-            SizedBox(width: spacing15),
-            Expanded(
-                child: Text(
-              "$name $dose $time",
+        return ListTile(
+          dense: true,
+          title: Text(
+            "${_getMedicineList[index].name} ${_getMedicineList[index].dose} ${_getMedicineList[index].frequency}",
+            style: TextStyle(
+                fontWeight: fontWeightMedium,
+                fontSize: fontSize14,
+                color: colorBlack2),
+          ),
+          trailing: _currentStepIndex == 2
+              ? _getMedicineList[index].isSelected
+                  ? Image.asset("images/checkedCheck.png",
+                      height: 24, width: 24)
+                  : Image.asset("images/uncheckedCheck.png",
+                      height: 24, width: 24)
+              : SizedBox(),
+          leading: Container(
+            height: 20,
+            width: 20,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                color: AppColors.windsor,
+                borderRadius: BorderRadius.circular(5)),
+            child: Text(
+              '${index + 1}',
               style: TextStyle(
-                  fontWeight: fontWeightMedium,
-                  fontSize: fontSize14,
-                  color: colorBlack2),
-            ))
-          ],
+                  fontSize: fontSize10,
+                  color: Colors.white,
+                  fontWeight: fontWeightSemiBold),
+            ),
+          ),
+          onTap: () {
+            setState(() => _getMedicineList[index].isSelected =
+                !_getMedicineList[index].isSelected);
+          },
         );
       });
 
@@ -603,12 +614,41 @@ class _MedicineInformationState extends State<MedicineInformation> {
       BuildContext context, ReqMedicationDetail reqModel) async {
     ProgressDialogUtils.showProgressDialog(context);
     await ApiManager().addMedicationDetail(reqModel).then(((result) {
-      if (result is CommonRes) {
+      if (result is ResMedicationDetail) {
         ProgressDialogUtils.dismissProgressDialog();
-        Navigator.of(context).pushNamed(Routes.routeAddPharmacy);
+        _searchFocusNode.unfocus();
+        _searchController.clear();
+        setState(() {
+          _selectedMedicine = null;
+          _medicineDose = null;
+          _medicineDoseTime = null;
+        });
+        _getMedicationDetail(context, true);
       }
     })).catchError((dynamic e) {
       ProgressDialogUtils.dismissProgressDialog();
+      if (e is ErrorModel) {
+        e.toString().debugLog();
+      }
+    });
+  }
+
+  void _getMedicationDetail(
+      BuildContext context, bool isFromAddMedicine) async {
+    if (!isFromAddMedicine) ProgressDialogUtils.showProgressDialog(context);
+    await ApiManager().getMedicationDetails().then((result) {
+      if (result is ResGetMedicationDetail) {
+        result.response.toString().debugLog();
+        setState(() {
+          _getMedicineList = result.response.medications;
+          _getMedicineList.forEach((element) {
+            element.isSelected = false;
+          });
+        });
+        if (!isFromAddMedicine) ProgressDialogUtils.dismissProgressDialog();
+      }
+    }).catchError((dynamic e) {
+      if (!isFromAddMedicine) ProgressDialogUtils.dismissProgressDialog();
       if (e is ErrorModel) {
         e.toString().debugLog();
       }

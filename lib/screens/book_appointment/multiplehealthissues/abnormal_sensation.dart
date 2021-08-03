@@ -6,6 +6,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
+
 import 'package:hutano/utils/app_constants.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/common_methods.dart';
@@ -74,10 +75,9 @@ class _AbnormalSensationState extends State<AbnormalSensation> {
         _listOfSymptoms.add(DescribeSymptomsModel("Shooting", false, 3));
         _listOfSymptoms.add(DescribeSymptomsModel("Numb", false, 4));
       }
-      _listOfBodyPart
-          .add(BodyPartModel("Knee", true, ['Left', 'Right'], false));
-      _listOfBodyPart.add(BodyPartModel("Arm muscle", false, [], false));
-      _listOfBodyPart.add(BodyPartModel("Spine", false, [], false));
+      _listOfBodyPart.add(BodyPartModel("Knee", true, [], false, ""));
+      _listOfBodyPart.add(BodyPartModel("Arm muscle", false, [], false, ""));
+      _listOfBodyPart.add(BodyPartModel("Spine", false, [], false, ""));
       _listOfAssociatedSymptoms
           .add(AssociatedSymptomsModel("Left arm weakness"));
       _listOfAssociatedSymptoms
@@ -100,7 +100,8 @@ class _AbnormalSensationState extends State<AbnormalSensation> {
                 left: spacing20, right: spacing10, bottom: spacing70),
             addBottomArrows: true,
             onForwardTap: () {
-              _nextScreenNavigation(context);
+              // _nextScreenNavigation(context);
+              Navigator.of(context).pushNamed(Routes.routeEffectAbility);
             },
             isCameraVisible: true,
             onCameraForTap: () {},
@@ -292,7 +293,8 @@ class _AbnormalSensationState extends State<AbnormalSensation> {
                   suggestion.bodyPart,
                   suggestion.hasInternalPart,
                   suggestion.sides,
-                  suggestion.isItClicked));
+                  suggestion.isItClicked,
+                  ""));
             });
             _searchBodyPartController.text = "";
           },
@@ -555,14 +557,15 @@ class _AbnormalSensationState extends State<AbnormalSensation> {
                 itemCount: _listOfSelectedDisease[index].sides.length,
                 itemBuilder: (context, pos) {
                   return ListTile(
-                      title: Text(_listOfSelectedDisease[index].sides[pos],
+                      title: Text(
+                          _listOfSelectedDisease[index].sides[pos].toString(),
                           style: TextStyle(
                               fontWeight: fontWeightMedium,
                               fontSize: fontSize14,
                               color: colorBlack2)),
                       onTap: () {
                         _sideController.text =
-                            _listOfSelectedDisease[index].sides[pos];
+                            _listOfSelectedDisease[index].sides[pos].toString();
                         Navigator.pop(context);
                       });
                 }))
@@ -647,9 +650,9 @@ class _AbnormalSensationState extends State<AbnormalSensation> {
       } else if (Provider.of<HealthConditionProvider>(context, listen: false)
           .healthConditions
           .contains(12)) {
-        Navigator.pushNamed(context, Routes.routeImmunization);
+        Navigator.pushNamed(context,Routes. routeImmunization);
       } else {
-        Navigator.pushNamed(context, Routes.routeEffectAbility);
+        Navigator.pushNamed(context,Routes. routeEffectAbility);
       }
     } else if (widget.maleHealth) {
       if (Provider.of<HealthConditionProvider>(context, listen: false)
@@ -669,7 +672,7 @@ class _AbnormalSensationState extends State<AbnormalSensation> {
           .contains(11)) {
         antiAgingNavigation(context);
       } else {
-        Navigator.pushNamed(context, Routes.routeEffectAbility);
+        Navigator.pushNamed(context,Routes. routeEffectAbility);
       }
     } else if (widget.femaleHealth) {
       if (Provider.of<HealthConditionProvider>(context, listen: false)
@@ -695,9 +698,9 @@ class _AbnormalSensationState extends State<AbnormalSensation> {
       } else if (Provider.of<HealthConditionProvider>(context, listen: false)
           .healthConditions
           .contains(12)) {
-        Navigator.pushNamed(context, Routes.routeImmunization);
+        Navigator.pushNamed(context,Routes. routeImmunization);
       } else {
-        Navigator.pushNamed(context, Routes.routeEffectAbility);
+        Navigator.pushNamed(context,Routes. routeEffectAbility);
       }
     } else if (widget.woundSkin) {
       if (Provider.of<HealthConditionProvider>(context, listen: false)
@@ -717,7 +720,7 @@ class _AbnormalSensationState extends State<AbnormalSensation> {
           .contains(12)) {
         Navigator.pushNamed(context, Routes.routeImmunization);
       } else {
-        Navigator.pushNamed(context, Routes.routeEffectAbility);
+        Navigator.pushNamed(context,Routes. routeEffectAbility);
       }
     } else if (widget.dentalCare) {
       if (Provider.of<HealthConditionProvider>(context, listen: false)
@@ -727,10 +730,26 @@ class _AbnormalSensationState extends State<AbnormalSensation> {
       } else if (Provider.of<HealthConditionProvider>(context, listen: false)
           .healthConditions
           .contains(12)) {
-        Navigator.pushNamed(context, Routes.routeImmunization);
+        Navigator.pushNamed(context,Routes. routeImmunization);
       } else {
-        Navigator.pushNamed(context, Routes.routeEffectAbility);
+        Navigator.pushNamed(context,Routes. routeEffectAbility);
       }
+    }
+  }
+
+  int getIssueIndex() {
+    if (widget.abnormal) {
+      return 4;
+    } else if (widget.maleHealth) {
+      return 6;
+    } else if (widget.femaleHealth) {
+      return 5;
+    } else if (widget.woundSkin) {
+      return 7;
+    } else if (widget.dentalCare) {
+      return 9;
+    } else {
+      return 1;
     }
   }
 }

@@ -1,15 +1,15 @@
-class ResMedicine {
+class ResDiagnositcTestModel {
   String status;
-  List<Medicine> response;
+  List<DiagnosticTest> response;
 
-  ResMedicine({this.status, this.response});
+  ResDiagnositcTestModel({this.status, this.response});
 
-  ResMedicine.fromJson(Map<String, dynamic> json) {
+  ResDiagnositcTestModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     if (json['response'] != null) {
-      response = new List<Medicine>();
+      response = new List<DiagnosticTest>();
       json['response'].forEach((v) {
-        response.add(new Medicine.fromJson(v));
+        response.add(new DiagnosticTest.fromJson(v));
       });
     }
   }
@@ -24,39 +24,32 @@ class ResMedicine {
   }
 }
 
-class Medicine {
-  List<String> dose;
-  String sId;
+class DiagnosticTest {
   String name;
+  String sId;
+  int iV;
   String createdAt;
   String updatedAt;
-  int iV;
+  bool isSelected = false;
 
-  Medicine(
-      {this.dose,
-      this.sId,
-      this.name,
-      this.createdAt,
-      this.updatedAt,
-      this.iV});
+  DiagnosticTest(
+      {this.name, this.sId, this.iV, this.createdAt, this.updatedAt});
 
-  Medicine.fromJson(Map<String, dynamic> json) {
-    dose = json['dose'].cast<String>();
-    sId = json['_id'];
+  DiagnosticTest.fromJson(Map<String, dynamic> json) {
     name = json['name'];
+    sId = json['_id'];
+    iV = json['__v'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
-    iV = json['__v'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['dose'] = this.dose;
-    data['_id'] = this.sId;
     data['name'] = this.name;
+    data['_id'] = this.sId;
+    data['__v'] = this.iV;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
-    data['__v'] = this.iV;
     return data;
   }
 }

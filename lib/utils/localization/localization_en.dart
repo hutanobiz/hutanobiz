@@ -1442,4 +1442,40 @@ class LocalizationEN implements Localization {
 
   @override
   String get uploadDocument => "Upload Document";
+
+   @override
+  String get leftSide => "Left";
+
+  @override
+  String get rightSide => "Right";
+
+  @override
+  String get backSide => "Back";
+
+  @override
+  String get frontSide => "Front";
+
+  @override
+  String get noAddress => "No Address";
+
+  @override
+  String get makesYourProblemBetter => "What makes your problem better?";
+
+  @override
+  String get actuallyMakesYourProblemBetter =>
+      "Activity that makes your problem better";
+
+  @override
+  String get actuallyMakesYourProblemWorst =>
+      "Activity that makes your problem worst";
+
+  @override
+  String get improvingProblem => "Improving";
+
+  @override
+  String get worseningProblem => "Worsening";
+
+  @override
+  String get stayingSameProblem => "Staying the same";
+
 }

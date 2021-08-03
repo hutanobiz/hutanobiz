@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hutano/apis/api_helper.dart';
+import 'package:hutano/apis/api_manager.dart';
+import 'package:hutano/apis/error_model.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/book_appointment/morecondition/model/res_condition_type.dart';
+import 'package:hutano/screens/book_appointment/morecondition/model/res_more_condition_model.dart';
 import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/common_methods.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/constants/key_constant.dart';
 import 'package:hutano/utils/localization/localization.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/utils/progress_dialog.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:provider/provider.dart';
 
@@ -19,41 +25,16 @@ class MoreCondition extends StatefulWidget {
 }
 
 class _MoreConditionState extends State<MoreCondition> {
-  List<ResConditionType> _conditionList = [];
-  List<ResConditionType> _tempConditionList = [];
+  List<HealthCondition> _tempConditionList = [];
   final _searchConditionController = TextEditingController();
   final _searchConditionFocusNode = FocusNode();
+  List<HealthCondition> _conditionList = [];
 
   @override
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      _conditionList.add(ResConditionType("Bone and Muscle Pain",
-          "Musculoskeletal Problem", FileConstants.icChatSend, false, 1));
-      _conditionList.add(ResConditionType("Bowel, Stomach or Eating",
-          "Digestive and Excretion", FileConstants.icChatSend, false, 2));
-      _conditionList.add(ResConditionType("Bone and Muscle Pain",
-          "Musculoskeletal Problem", FileConstants.icChatSend, false, 3));
-      _conditionList.add(ResConditionType("Bone and Muscle Pain",
-          "Musculoskeletal Problem", FileConstants.icChatSend, false, 4));
-      _conditionList.add(ResConditionType("Bone and Muscle Pain",
-          "Musculoskeletal Problem", FileConstants.icChatSend, false, 5));
-      _conditionList.add(ResConditionType("Bone and Muscle Pain",
-          "Musculoskeletal Problem", FileConstants.icChatSend, false, 6));
-      _conditionList.add(ResConditionType("Bone and Muscle Pain",
-          "Musculoskeletal Problem", FileConstants.icChatSend, false, 7));
-      _conditionList.add(ResConditionType("Bone and Muscle Pain",
-          "Musculoskeletal Problem", FileConstants.icChatSend, false, 8));
-      _conditionList.add(ResConditionType("Bone and Muscle Pain",
-          "Musculoskeletal Problem", FileConstants.icChatSend, false, 9));
-      _conditionList.add(ResConditionType("Bone and Muscle Pain",
-          "Musculoskeletal Problem", FileConstants.icChatSend, false, 10));
-      _conditionList.add(ResConditionType("Bone and Muscle Pain",
-          "Musculoskeletal Problem", FileConstants.icChatSend, false, 11));
-      _conditionList.add(ResConditionType("Bone and Muscle Pain",
-          "Musculoskeletal Problem", FileConstants.icChatSend, false, 12));
-      _tempConditionList = _conditionList;
-      setState(() {});
+      _getAllHealthConditions(context);
     });
   }
 
@@ -69,14 +50,22 @@ class _MoreConditionState extends State<MoreCondition> {
             addBottomArrows: true,
             onForwardTap: () {
               List<int> _selectedConditionList = [];
+              int i = 1;
               _conditionList.forEach((element) {
                 if (element.isSelected) {
-                  _selectedConditionList.add(element.number);
+                  _selectedConditionList.add(i);
+                  i++;
+                } else {
+                  i++;
                 }
               });
               Provider.of<HealthConditionProvider>(context, listen: false)
                   .updateHealthConditions(_selectedConditionList);
-              Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
+              Navigator.of(context).pushNamed(Routes.routeBoneAndMuscle, arguments: {
+                ArgumentConstant.problemIdKey: _conditionList[0].sId,
+                ArgumentConstant.problemNameKey: _conditionList[0].name,
+                ArgumentConstant.problemImageKey: _conditionList[0].image
+              });
             },
             child: SingleChildScrollView(
               child: Column(
@@ -153,8 +142,8 @@ class _MoreConditionState extends State<MoreCondition> {
                       itemBuilder: (BuildContext context, int index) {
                         return _columnCommonItem(
                           context,
-                          _conditionList[index].conditionHeader,
-                          _conditionList[index].conditionSubHeader,
+                          _conditionList[index].name,
+                          _conditionList[index].subName,
                           _conditionList[index].image,
                           index,
                           _conditionList[index].isSelected,
@@ -192,7 +181,7 @@ class _MoreConditionState extends State<MoreCondition> {
                   )),
               SizedBox(height: 10),
               Image.network(
-                ApiBaseHelper.imageUrl + "medicalDocuments-1622183421709.jpg",
+                ApiBaseHelper.imageUrl + image,
                 width: 40,
                 height: 40,
               ),
@@ -226,37 +215,108 @@ class _MoreConditionState extends State<MoreCondition> {
       );
 
   _getConditionList(String _searchText, BuildContext context) {
-    List<ResConditionType> tempList = [];
+    List<HealthCondition> tempList = [];
     if (_searchText == null || _searchText.isEmpty) {
       tempList.addAll(_tempConditionList);
     } else {
-      List<ResConditionType> tempCountry = [];
+      List<HealthCondition> tempCondition = [];
       for (var item in _tempConditionList) {
-        if (item.conditionHeader != null) {
-          if (item.conditionHeader
+        if (item.name != null) {
+          if (item.name
                   .toLowerCase()
                   .startsWith(_searchText.trim().toLowerCase()) ||
-              item.conditionSubHeader
+              item.subName
                       .toLowerCase()
                       .indexOf(_searchText.trim().toLowerCase()) !=
                   -1) {
-            tempCountry.add(item);
+            tempCondition.add(item);
           }
         } else {
-          if (item.conditionSubHeader
+          if (item.subName
                   .toLowerCase()
                   .indexOf(_searchText.trim().toLowerCase()) !=
               -1) {
-            tempCountry.add(item);
+            tempCondition.add(item);
           }
         }
       }
-      if (tempCountry.isNotEmpty) {
-        tempList.addAll(tempCountry);
+      if (tempCondition.isNotEmpty) {
+        tempList.addAll(tempCondition);
       }
     }
     setState(() {
       _conditionList = tempList;
     });
+  }
+
+  void _getAllHealthConditions(BuildContext context) async {
+    ProgressDialogUtils.showProgressDialog(context);
+    await ApiManager().getMoreConditions().then((result) {
+      ProgressDialogUtils.dismissProgressDialog();
+      if (result is ResMoreConditionModel) {
+        setState(() {
+          _conditionList = result.response;
+          _tempConditionList = result.response;
+        });
+      }
+    }).catchError((dynamic e) {
+      ProgressDialogUtils.dismissProgressDialog();
+      if (e is ErrorModel) {
+        e.toString().debugLog();
+      }
+    });
+  }
+
+  //TODO WILL USER AFTER MULTIPLE HEALTH ISSUES FEATURE ADDED
+  void _nextNavigationScreen(BuildContext context) {
+    if (Provider.of<HealthConditionProvider>(context, listen: false)
+        .healthConditions
+        .contains(1)) {
+      Navigator.of(context).pushNamed(Routes.routeBoneAndMuscle, arguments: {
+        ArgumentConstant.problemIdKey: _conditionList[0].sId,
+        ArgumentConstant.problemNameKey: _conditionList[0].name,
+        ArgumentConstant.problemImageKey: _conditionList[0].image
+      });
+    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
+        .healthConditions
+        .contains(2)) {
+      stomachNavigation(context);
+    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
+        .healthConditions
+        .contains(3)) {
+      breathingNavigation(context);
+    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
+        .healthConditions
+        .contains(4)) {
+      abnormalNavigation(context);
+    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
+        .healthConditions
+        .contains(5)) {
+      femaleHealthNavigation(context);
+    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
+        .healthConditions
+        .contains(6)) {
+      maleHealthNavigation(context);
+    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
+        .healthConditions
+        .contains(7)) {
+      woundSkinNavigation(context);
+    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
+        .healthConditions
+        .contains(8)) {
+      healthAndChestNavigation(context);
+    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
+        .healthConditions
+        .contains(9)) {
+      dentalCareNavigation(context);
+    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
+        .healthConditions
+        .contains(11)) {
+      antiAgingNavigation(context);
+    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
+        .healthConditions
+        .contains(12)) {
+      Navigator.pushNamed(context,Routes.routeImmunization);
+    }
   }
 }

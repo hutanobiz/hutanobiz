@@ -1,28 +1,25 @@
 class ReqMedicationDetail {
-  String anyMedication;
-  List<String> addMedication;
-  List<String> doseOfMedicine;
-  List<String> frequencyOfDosage;
+  String dose;
+  String name;
+  String frequency;
+  String prescriptionId;
 
   ReqMedicationDetail(
-      {this.anyMedication,
-      this.addMedication,
-      this.doseOfMedicine,
-      this.frequencyOfDosage});
+      {this.dose, this.name, this.frequency, this.prescriptionId});
 
   ReqMedicationDetail.fromJson(Map<String, dynamic> json) {
-    anyMedication = json['anyMedication'];
-    addMedication = json['addMedication'].cast<String>();
-    doseOfMedicine = json['doseOfMedicine'].cast<String>();
-    frequencyOfDosage = json['frequencyOfDosage'].cast<String>();
+    dose = json['dose'];
+    name = json['name'];
+    frequency = json['frequency'];
+    prescriptionId = json['prescriptionId'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['anyMedication'] = this.anyMedication;
-    data['addMedication'] = this.addMedication;
-    data['doseOfMedicine'] = this.doseOfMedicine;
-    data['frequencyOfDosage'] = this.frequencyOfDosage;
+    data['dose'] = this.dose;
+    data['name'] = this.name;
+    data['frequency'] = this.frequency;
+    data['prescriptionId'] = this.prescriptionId;
     return data;
   }
 }

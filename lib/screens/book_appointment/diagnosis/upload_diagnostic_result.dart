@@ -140,28 +140,57 @@ class _UploadDiagnosticResultState extends State<UploadDiagnosticResult> {
       );
 
   void showPickerDialog() {
-    showCommonUploadDialog(context, Localization.of(context).picker,
-        Localization.of(context).uploadDocument, onTop: () {
-      Navigator.pop(context);
-      showImagePickerDialog();
-    }, onBottom: () {
-      getDocumentType();
-      Navigator.pop(context);
-    }, isForDocument: true);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(Localization.of(context).picker),
+          content: Text(Localization.of(context).selectDocPickerTypeLabel),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(Localization.of(context).imageLabel),
+              onPressed: () {
+                Navigator.pop(context);
+                showImagePickerDialog();
+              },
+            ),
+            FlatButton(
+              child: Text(Localization.of(context).pdfLabel),
+              onPressed: () {
+                getDocumentType();
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void showImagePickerDialog() {
-    showCommonUploadDialog(
-      context,
-      Localization.of(context).picker,
-      Localization.of(context).uploadPhoto,
-      onTop: () {
-        getImage(1);
-        Navigator.pop(context);
-      },
-      onBottom: () {
-        getImage(2);
-        Navigator.pop(context);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(Localization.of(context).picker),
+          content: Text(Localization.of(context).selectImagePickerTypeLabel),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(Localization.of(context).camera),
+              onPressed: () {
+                getImage(1);
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: Text(Localization.of(context).gallery),
+              onPressed: () {
+                getImage(2);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
       },
     );
   }

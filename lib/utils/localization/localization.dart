@@ -517,4 +517,15 @@ abstract class Localization {
   String get howLongHadProblemHeader;
   String get theProblemIsHeader;
   String get uploadDocument;
+  String get leftSide;
+  String get rightSide;
+  String get backSide;
+  String get frontSide;
+  String get noAddress;
+  String get makesYourProblemBetter;
+  String get actuallyMakesYourProblemBetter;
+  String get actuallyMakesYourProblemWorst;
+  String get improvingProblem;
+  String get worseningProblem;
+  String get stayingSameProblem;
 }

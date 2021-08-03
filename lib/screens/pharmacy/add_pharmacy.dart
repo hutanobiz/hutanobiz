@@ -1,18 +1,15 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/apis/api_manager.dart';
-import 'package:hutano/apis/common_res.dart';
 import 'package:hutano/apis/error_model.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/screens/pharmacy/model/req_add_pharmacy_model.dart';
+import 'package:hutano/screens/appointments/model/req_booking_appointment_model.dart';
+import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/screens/pharmacy/model/res_google_place_detail_pharmacy.dart';
-import 'package:hutano/screens/registration/register/model/res_google_address_suggetion.dart';
 import 'package:hutano/screens/registration/register/model/res_states_list.dart';
 import 'package:hutano/screens/registration/register/state_list.dart';
 import 'package:hutano/utils/address_util.dart';
@@ -21,15 +18,13 @@ import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/enum_utils.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/localization/localization.dart';
-import 'package:hutano/utils/progress_dialog.dart';
 import 'package:hutano/utils/size_config.dart';
+import 'package:hutano/widgets/controller.dart';
 import 'package:hutano/widgets/hutano_textfield.dart';
-import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
-import 'package:hutano/widgets/widgets.dart';
-import 'package:location/location.dart';
-import 'package:hutano/utils/extensions.dart';
+import 'package:provider/provider.dart';
 import 'model/places.dart';
+import 'model/res_preferred_pharmacy_list.dart';
 
 class AddPharmacy extends StatefulWidget {
   @override
@@ -58,68 +53,16 @@ class _AddPharmacyState extends State<AddPharmacy> {
   final GlobalKey<FormState> _pharmacyKey = GlobalKey();
   bool _autoValidate = false;
   final labelStyle = TextStyle(fontSize: fontSize14, color: colorGrey60);
-  List<Address> _placeList = [];
+  List<AddressPharmacy> _placeList = [];
   List<AddressComponentsDetail> _placeDetail = [];
   GeometryDetail geometry;
   List<States> _stateList = [];
   States _selectedState;
   bool _enableButton = false;
   List<Place> _pharmacyList = [];
+  List<Pharmacy> _pharmacyNewList = [];
   LatLng currentLatLng;
-
-  @override
-  void initState() {
-    super.initState();
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      _getUserCurrentLocation(context).then((value) {
-        _getPharmacyList(context);
-      });
-      _getStatesList();
-    });
-  }
-
-  Future _getUserCurrentLocation(BuildContext context) async {
-    Location _location = Location();
-    PermissionStatus _permission;
-
-    _permission = await _location.requestPermission();
-
-    switch (_permission) {
-      case PermissionStatus.granted:
-        bool serviceStatus = await _location.serviceEnabled();
-
-        if (serviceStatus) {
-          Widgets.showToast("Getting Location. Please wait..");
-
-          try {
-            LocationData locationData = await _location.getLocation();
-            setState(() {
-              currentLatLng = LatLng(locationData.latitude ?? 0.00,
-                  locationData.longitude ?? 0.00);
-            });
-            Location().onLocationChanged.listen((value) {
-              if (locationData != null) {
-                currentLatLng = LatLng(locationData.latitude ?? 0.00,
-                    locationData.longitude ?? 0.00);
-                locationData = value;
-              }
-            });
-          } on PlatformException catch (e) {
-            Widgets.showToast(e.message.toString());
-          }
-        } else {
-          bool serviceStatusResult = await _location.requestService();
-          _getUserCurrentLocation(context);
-        }
-
-        break;
-      case PermissionStatus.denied:
-        _getUserCurrentLocation(context);
-        break;
-      case PermissionStatus.deniedForever:
-        break;
-    }
-  }
+  String _addedPharmacyId = "";
 
   @override
   void dispose() {
@@ -144,18 +87,11 @@ class _AddPharmacyState extends State<AddPharmacy> {
         padding: EdgeInsets.only(bottom: 70),
         onForwardTap: _enableButton
             ? () {
-                ReqAddPharmacyModel reqAddPharmacyModel = ReqAddPharmacyModel(
-                  name: _pharmacyController.value.text.trim() ?? "",
-                  address: _addressController.value.text.trim() ?? "",
-                  city: _cityController.value.text.trim() ?? "",
-                  state: _stateController.value.text.trim() ?? "",
-                  zipCode:
-                      int.parse(_zipCodeController.value.text.trim() ?? "") ??
-                          0,
-                  phoneNumber:
-                      "+1${_phoneNoController.value.text.trim()}" ?? "",
-                );
-                _addPharmacyData(context, reqAddPharmacyModel);
+                PreferredPharmacy preferredPharmacy =
+                    PreferredPharmacy(pharmacyId: _addedPharmacyId);
+                Provider.of<HealthConditionProvider>(context, listen: false)
+                    .updatePharmacy(preferredPharmacy);
+                Navigator.of(context).pushNamed(Routes.routeVitalReviews);
               }
             : () {
                 Widgets.showToast("Please add pharmacy details");
@@ -163,6 +99,8 @@ class _AddPharmacyState extends State<AddPharmacy> {
         addBottomArrows: true,
         isSkipLater: true,
         onSkipForTap: () {
+          Provider.of<HealthConditionProvider>(context, listen: false)
+              .updatePharmacy(PreferredPharmacy());
           Navigator.of(context).pushNamed(Routes.routeVitalReviews);
         },
         child: SingleChildScrollView(
@@ -211,22 +149,6 @@ class _AddPharmacyState extends State<AddPharmacy> {
     );
   }
 
-  void _getPharmacyList(BuildContext context) async {
-    final response = await Dio().get(
-        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${currentLatLng.latitude},${currentLatLng.longitude}&rankby=distance&type=pharmacy&key=AIzaSyB0oMSYks73MwXluaDyBXqG9u_SCaCFs-I");
-    debugPrint("RESPONSE ${response.data['results']}");
-    final predictions = response.data['results'];
-    var _displayResults = <String>[];
-    for (var i = 0; i < predictions.length; i++) {
-      String address2 = predictions[i]['name'];
-      String placeId2 = predictions[i]['place_id'];
-      setState(() {
-        _pharmacyList.add(Place(address2, placeId2));
-      });
-    }
-    debugPrint("PHARMACY $_displayResults");
-  }
-
   void validateFields() {
     if (_addressController.text.trim() != null &&
         _addressController.text.trim().isNotEmpty &&
@@ -272,6 +194,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
                 pharmacyError =
                     value.toString().isBlank(context, "Please enter pharamcy");
               });
+              _getPreferredPharmacy(context, value ?? "");
             },
             decoration: InputDecoration(
                 errorText: pharmacyError,
@@ -312,15 +235,18 @@ class _AddPharmacyState extends State<AddPharmacy> {
         },
         itemBuilder: (context, suggestion) {
           return ListTile(
-            title: Text(suggestion.address),
+            title: Text(suggestion.name),
           );
         },
         transitionBuilder: (context, suggestionsBox, controller) {
           return suggestionsBox;
         },
         onSuggestionSelected: (suggestion) {
-          _pharmacyController.text = suggestion.address;
-          _getPlaceDetail(suggestion.placeId);
+          _pharmacyController.text = suggestion.name;
+          setState(() {
+            _addedPharmacyId = suggestion.sId;
+            _placeList = suggestion.address;
+          });
         },
         hideOnError: true,
         hideSuggestionsOnKeyboardHide: true,
@@ -381,15 +307,18 @@ class _AddPharmacyState extends State<AddPharmacy> {
         },
         itemBuilder: (context, suggestion) {
           return ListTile(
-            title: Text(suggestion.description),
+            title: Text(suggestion.address),
           );
         },
         transitionBuilder: (context, suggestionsBox, controller) {
           return suggestionsBox;
         },
         onSuggestionSelected: (suggestion) {
-          _addressController.text = suggestion.structuredFormatting.mainText;
-          _getPlaceDetail(suggestion.placeId);
+          _addressController.text = suggestion.address;
+          _cityController.text = suggestion.city;
+          _stateController.text = suggestion.state;
+          _zipCodeController.text = suggestion.zipCode;
+          _phoneNoController.text = suggestion.phone;
         },
         hideOnError: true,
         hideSuggestionsOnKeyboardHide: true,
@@ -477,23 +406,15 @@ class _AddPharmacyState extends State<AddPharmacy> {
       textInputAction: TextInputAction.done);
 
   _getFilteredBodyPartList() {
-    return _pharmacyList.where((element) => element.address
+    return _pharmacyNewList.where((element) => element.name
         .toLowerCase()
         .contains(_pharmacyController.text.toLowerCase()));
   }
 
-  _getPlaceSuggestion(String query) async {
-    final params = <String, String>{'input': query, 'components': 'country:us'};
-    await ApiManager().getAddressSuggetion(params).then((result) {
-      _placeList = result.predictions.length >= 5
-          ? result.predictions.sublist(0, 5)
-          : result.predictions;
-    }).catchError((dynamic e) {
-      if (e is ErrorModel) {
-        e.toString().debugLog();
-      }
-    });
-    return _placeList;
+  _getPlaceSuggestion(String query) {
+    return _placeList.where((element) => element.address
+        .toLowerCase()
+        .contains(_addressController.text.toLowerCase()));
   }
 
   void _parseAddress() {
@@ -516,48 +437,11 @@ class _AddPharmacyState extends State<AddPharmacy> {
     setState(() {});
   }
 
-  void _getPlaceDetail(String placeId) async {
-    ProgressDialogUtils.showProgressDialog(context);
-    final params = <String, String>{
-      'fields': 'geometry,address_components',
-      'place_id': placeId
-    };
-    await ApiManager().getPlacePharmacyDetail(params).then((result) {
-      if (result is ResGooglePlaceDetailPharmacy) {
-        _placeDetail = result.result.addressComponents;
-        geometry = result.result.geometry;
-        if (_placeDetail != null && _placeDetail.length > 0) {
-          _parseAddress();
-        }
-      }
-      ProgressDialogUtils.dismissProgressDialog();
-    }).catchError((dynamic e) {
-      ProgressDialogUtils.dismissProgressDialog();
-      if (e is ErrorModel) {
-        e.toString().debugLog();
-      }
-    });
-  }
-
   void _onStateSelected(int index) {
     FocusManager.instance.primaryFocus.unfocus();
     _stateController.text = _stateList[index].title;
     _selectedState = _stateList[index];
     showError(RegisterError.city.index);
-  }
-
-  void _getStatesList() async {
-    await ApiManager().statesList().then((result) {
-      if (result is ResStatesList) {
-        setState(() {
-          _stateList = result.response;
-        });
-      }
-    }).catchError((dynamic e) {
-      if (e is ErrorModel) {
-        e.toString().debugLog();
-      }
-    });
   }
 
   void showError(int index) {
@@ -588,16 +472,14 @@ class _AddPharmacyState extends State<AddPharmacy> {
     setState(() {});
   }
 
-  void _addPharmacyData(
-      BuildContext context, ReqAddPharmacyModel reqModel) async {
-    ProgressDialogUtils.showProgressDialog(context);
-    await ApiManager().addPharmacy(reqModel).then(((result) {
-      if (result is CommonRes) {
-        ProgressDialogUtils.dismissProgressDialog();
-        Navigator.of(context).pushNamed(Routes.routeVitalReviews);
+  void _getPreferredPharmacy(BuildContext context, String input) async {
+    await ApiManager().getPreferredPharmacyList(input).then((result) {
+      if (result is ResPreferredPharmacyList) {
+        setState(() {
+          _pharmacyNewList = result.response;
+        });
       }
-    })).catchError((dynamic e) {
-      ProgressDialogUtils.dismissProgressDialog();
+    }).catchError((dynamic e) {
       if (e is ErrorModel) {
         e.toString().debugLog();
       }

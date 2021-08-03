@@ -109,14 +109,6 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
         addHeader: true,
         addBottomArrows: true,
         onForwardTap: () {
-          // Navigator.of(context).pushNamed(
-          //   _container.projectsResponse[ArgumentConstant.serviceTypeKey]
-          //               .toString() ==
-          //           '3'
-          //       ? Routes.onsiteAddresses
-          //       : Routes.paymentMethodScreen,
-          //   arguments: true,
-          // );
           Navigator.of(context).pushNamed(Routes.routeMedicineInformation);
         },
         padding: EdgeInsets.only(bottom: spacing70),
@@ -126,28 +118,6 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
             _myDocumentSubHeader(context),
             _uploadFileHeader(context),
             _buildDocumentList(context),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: DottedBorder(
-                  padding: EdgeInsets.all(spacing20),
-                  borderType: BorderType.RRect,
-                  radius: Radius.circular(12),
-                  color: AppColors.windsor,
-                  child: _uploadDocumentsButton(context),
-                  strokeWidth: 1,
-                  dashPattern: [8, 8]),
-            ),
-            SizedBox(height: spacing10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Text(
-                Localization.of(context).uploadFileLowerLabel,
-                style: TextStyle(
-                    fontSize: fontSize12,
-                    fontWeight: fontWeightRegular,
-                    color: colorBlack2),
-              ),
-            )
           ],
         ),
       ),
@@ -253,10 +223,8 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
                                       fontWeight: fontWeightSemiBold,
                                       fontSize: fontSize14,
                                       color: colorBlack2)),
-                              subtitle: Text(
-                                  _allDocuments[index].size != null
-                                      ? _allDocuments[index].size + " mb"
-                                      : "---+---",
+                              //TODO SIZE DATA NEED TO SHOW AFTER API CHANGES AVAILABLE FOR BACKEND
+                              subtitle: Text("---+---",
                                   style: TextStyle(
                                       fontWeight: fontWeightRegular,
                                       fontSize: fontSize12,
@@ -271,6 +239,28 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
                         }),
                   ),
                   SizedBox(height: spacing10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: DottedBorder(
+                        padding: EdgeInsets.all(spacing20),
+                        borderType: BorderType.RRect,
+                        radius: Radius.circular(12),
+                        color: AppColors.windsor,
+                        child: _uploadDocumentsButton(context),
+                        strokeWidth: 1,
+                        dashPattern: [8, 8]),
+                  ),
+                  SizedBox(height: spacing10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Text(
+                      Localization.of(context).uploadFileLowerLabel,
+                      style: TextStyle(
+                          fontSize: fontSize12,
+                          fontWeight: fontWeightRegular,
+                          color: colorBlack2),
+                    ),
+                  )
                 ],
               ),
             );
@@ -338,28 +328,57 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
       );
 
   void showPickerDialog() {
-    showCommonUploadDialog(context, Localization.of(context).picker,
-        Localization.of(context).uploadDocument, onTop: () {
-      Navigator.pop(context);
-      showImagePickerDialog();
-    }, onBottom: () {
-      getDocumentType();
-      Navigator.pop(context);
-    }, isForDocument: true);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(Localization.of(context).picker),
+          content: Text(Localization.of(context).selectDocPickerTypeLabel),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(Localization.of(context).imageLabel),
+              onPressed: () {
+                Navigator.pop(context);
+                showImagePickerDialog();
+              },
+            ),
+            FlatButton(
+              child: Text(Localization.of(context).pdfLabel),
+              onPressed: () {
+                getDocumentType();
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void showImagePickerDialog() {
-    showCommonUploadDialog(
-      context,
-      Localization.of(context).picker,
-      Localization.of(context).uploadPhoto,
-      onTop: () {
-        getImage(1);
-        Navigator.pop(context);
-      },
-      onBottom: () {
-        getImage(2);
-        Navigator.pop(context);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(Localization.of(context).picker),
+          content: Text(Localization.of(context).selectImagePickerTypeLabel),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(Localization.of(context).camera),
+              onPressed: () {
+                getImage(1);
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: Text(Localization.of(context).gallery),
+              onPressed: () {
+                getImage(2);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
       },
     );
   }

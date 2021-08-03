@@ -76,4 +76,7 @@ class ArgumentConstant {
   static const String isForProblemKey = 'isForProblem';
   static const String imagesKey = 'images';
   static const String providerNameKey = 'providerName';
+  static const String problemIdKey = 'problemId';
+  static const String problemNameKey = 'problemName';
+  static const String problemImageKey = 'problemImage';
 }

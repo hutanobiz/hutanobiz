@@ -1,13 +1,13 @@
 class ResUploadedDocumentImagesModel {
   String status;
-  DocumentImage response;
+  Response response;
 
   ResUploadedDocumentImagesModel({this.status, this.response});
 
   ResUploadedDocumentImagesModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     response = json['response'] != null
-        ? new DocumentImage.fromJson(json['response'])
+        ? new Response.fromJson(json['response'])
         : null;
   }
 
@@ -21,40 +21,47 @@ class ResUploadedDocumentImagesModel {
   }
 }
 
-class DocumentImage {
-  List<dynamic> otherMedicalHistory;
+class Response {
+  int otherMedicalHistory;
   String sId;
-  List<MedicalHistory> medicalHistory;
+  List<String> medicalHistory;
   String userId;
+  List<UserAddress> userAddress;
   List<MedicalImages> medicalImages;
   List<MedicalDocuments> medicalDocuments;
-  List<UserAddress> userAddress;
   String createdAt;
   String updatedAt;
   int iV;
+  List<Medications> medications;
+  List<String> medicalDiagnostics;
+  List<String> preferredPharmacy;
 
-  DocumentImage(
+  Response(
       {this.otherMedicalHistory,
       this.sId,
       this.medicalHistory,
       this.userId,
+      this.userAddress,
       this.medicalImages,
       this.medicalDocuments,
-      this.userAddress,
       this.createdAt,
       this.updatedAt,
-      this.iV});
+      this.iV,
+      this.medications,
+      this.medicalDiagnostics,
+      this.preferredPharmacy});
 
-  DocumentImage.fromJson(Map<String, dynamic> json) {
+  Response.fromJson(Map<String, dynamic> json) {
     otherMedicalHistory = json['otherMedicalHistory'];
     sId = json['_id'];
-    if (json['medicalHistory'] != null) {
-      medicalHistory = new List<MedicalHistory>();
-      json['medicalHistory'].forEach((v) {
-        medicalHistory.add(new MedicalHistory.fromJson(v));
+    medicalHistory = json['medicalHistory'].cast<String>();
+    userId = json['userId'];
+    if (json['userAddress'] != null) {
+      userAddress = new List<UserAddress>();
+      json['userAddress'].forEach((v) {
+        userAddress.add(new UserAddress.fromJson(v));
       });
     }
-    userId = json['userId'];
     if (json['medicalImages'] != null) {
       medicalImages = new List<MedicalImages>();
       json['medicalImages'].forEach((v) {
@@ -67,26 +74,28 @@ class DocumentImage {
         medicalDocuments.add(new MedicalDocuments.fromJson(v));
       });
     }
-    if (json['userAddress'] != null) {
-      userAddress = new List<UserAddress>();
-      json['userAddress'].forEach((v) {
-        userAddress.add(new UserAddress.fromJson(v));
-      });
-    }
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     iV = json['__v'];
+    if (json['medications'] != null) {
+      medications = new List<Medications>();
+      json['medications'].forEach((v) {
+        medications.add(new Medications.fromJson(v));
+      });
+    }
+    medicalDiagnostics = json['medicalDiagnostics'].cast<String>();
+    preferredPharmacy = json['preferredPharmacy'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['otherMedicalHistory'] = this.otherMedicalHistory;
     data['_id'] = this.sId;
-    if (this.medicalHistory != null) {
-      data['medicalHistory'] =
-          this.medicalHistory.map((v) => v.toJson()).toList();
-    }
+    data['medicalHistory'] = this.medicalHistory;
     data['userId'] = this.userId;
+    if (this.userAddress != null) {
+      data['userAddress'] = this.userAddress.map((v) => v.toJson()).toList();
+    }
     if (this.medicalImages != null) {
       data['medicalImages'] =
           this.medicalImages.map((v) => v.toJson()).toList();
@@ -95,37 +104,79 @@ class DocumentImage {
       data['medicalDocuments'] =
           this.medicalDocuments.map((v) => v.toJson()).toList();
     }
-    if (this.userAddress != null) {
-      data['userAddress'] = this.userAddress.map((v) => v.toJson()).toList();
-    }
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
     data['__v'] = this.iV;
+    if (this.medications != null) {
+      data['medications'] = this.medications.map((v) => v.toJson()).toList();
+    }
+    data['medicalDiagnostics'] = this.medicalDiagnostics;
+    data['preferredPharmacy'] = this.preferredPharmacy;
     return data;
   }
 }
 
-class MedicalHistory {
-  String name;
-  int year;
-  String month;
+class UserAddress {
+  String title;
+  int addresstype;
+  String address;
+  String street;
+  String city;
+  String state;
+  String stateCode;
+  String zipCode;
+  String type;
+  List<int> coordinates;
   String sId;
+  String number;
+  String securityGate;
 
-  MedicalHistory({this.name, this.year, this.month, this.sId});
+  UserAddress(
+      {this.title,
+      this.addresstype,
+      this.address,
+      this.street,
+      this.city,
+      this.state,
+      this.stateCode,
+      this.zipCode,
+      this.type,
+      this.coordinates,
+      this.sId,
+      this.number,
+      this.securityGate});
 
-  MedicalHistory.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    year = json['year'];
-    month = json['month'];
+  UserAddress.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
+    addresstype = json['addresstype'];
+    address = json['address'];
+    street = json['street'];
+    city = json['city'];
+    state = json['state'];
+    stateCode = json['stateCode'];
+    zipCode = json['zipCode'];
+    type = json['type'];
+    coordinates = json['coordinates'].cast<int>();
     sId = json['_id'];
+    number = json['number'];
+    securityGate = json['securityGate'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['year'] = this.year;
-    data['month'] = this.month;
+    data['title'] = this.title;
+    data['addresstype'] = this.addresstype;
+    data['address'] = this.address;
+    data['street'] = this.street;
+    data['city'] = this.city;
+    data['state'] = this.state;
+    data['stateCode'] = this.stateCode;
+    data['zipCode'] = this.zipCode;
+    data['type'] = this.type;
+    data['coordinates'] = this.coordinates;
     data['_id'] = this.sId;
+    data['number'] = this.number;
+    data['securityGate'] = this.securityGate;
     return data;
   }
 }
@@ -161,10 +212,9 @@ class MedicalDocuments {
   String name;
   String date;
   String sId;
-  String size;
 
   MedicalDocuments(
-      {this.medicalDocuments, this.type, this.name, this.date, this.sId,this.size});
+      {this.medicalDocuments, this.type, this.name, this.date, this.sId});
 
   MedicalDocuments.fromJson(Map<String, dynamic> json) {
     medicalDocuments = json['medicalDocuments'];
@@ -172,7 +222,6 @@ class MedicalDocuments {
     name = json['name'];
     date = json['date'];
     sId = json['_id'];
-    size = json['size'];
   }
 
   Map<String, dynamic> toJson() {
@@ -182,72 +231,35 @@ class MedicalDocuments {
     data['name'] = this.name;
     data['date'] = this.date;
     data['_id'] = this.sId;
-    data['size'] = this.size;
     return data;
   }
 }
 
-class UserAddress {
-  String title;
-  int addresstype;
-  String address;
-  String street;
-  String city;
-  String state;
-  String stateCode;
-  String zipCode;
-  String type;
-  List<double> coordinates;
+class Medications {
+  String prescriptionId;
+  String name;
+  String dose;
+  String frequency;
   String sId;
-  String number;
-  String securityGate;
 
-  UserAddress(
-      {this.title,
-      this.addresstype,
-      this.address,
-      this.street,
-      this.city,
-      this.state,
-      this.stateCode,
-      this.zipCode,
-      this.type,
-      this.coordinates,
-      this.sId,
-      this.number,
-      this.securityGate});
+  Medications(
+      {this.prescriptionId, this.name, this.dose, this.frequency, this.sId});
 
-  UserAddress.fromJson(Map<String, dynamic> json) {
-    title = json['title'];
-    addresstype = json['addresstype'];
-    address = json['address'];
-    street = json['street'];
-    city = json['city'];
-    state = json['state'];
-    stateCode = json['stateCode'];
-    zipCode = json['zipCode'];
-    type = json['type'];
-    coordinates = json['coordinates'].cast<double>();
+  Medications.fromJson(Map<String, dynamic> json) {
+    prescriptionId = json['prescriptionId'];
+    name = json['name'];
+    dose = json['dose'];
+    frequency = json['frequency'];
     sId = json['_id'];
-    number = json['number'];
-    securityGate = json['securityGate'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['title'] = this.title;
-    data['addresstype'] = this.addresstype;
-    data['address'] = this.address;
-    data['street'] = this.street;
-    data['city'] = this.city;
-    data['state'] = this.state;
-    data['stateCode'] = this.stateCode;
-    data['zipCode'] = this.zipCode;
-    data['type'] = this.type;
-    data['coordinates'] = this.coordinates;
+    data['prescriptionId'] = this.prescriptionId;
+    data['name'] = this.name;
+    data['dose'] = this.dose;
+    data['frequency'] = this.frequency;
     data['_id'] = this.sId;
-    data['number'] = this.number;
-    data['securityGate'] = this.securityGate;
     return data;
   }
 }

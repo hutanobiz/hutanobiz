@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/dimens.dart';
+import 'package:hutano/routes.dart';
+import 'package:hutano/screens/appointments/model/req_booking_appointment_model.dart';
+import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/screens/medical_history/model/medicine_time_model.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/key_constant.dart';
 import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
+import 'package:provider/provider.dart';
 
 class EffectAbilityScreen extends StatefulWidget {
   @override
@@ -16,6 +20,7 @@ class EffectAbilityScreen extends StatefulWidget {
 class _EffectAbilityScreenState extends State<EffectAbilityScreen> {
   List<MedicineTimeModel> _activityList = [];
   int radioVal = 1;
+  String _dailyActivity = "1";
 
   @override
   void initState() {
@@ -41,8 +46,16 @@ class _EffectAbilityScreenState extends State<EffectAbilityScreen> {
           addHeader: true,
           addBottomArrows: true,
           onForwardTap: () {
-            // Navigator.pushNamed(context, routeConditionTimeScreen,
-            //     arguments: {ArgumentConstant.isForProblemKey: true});
+            Problems model =
+                Provider.of<HealthConditionProvider>(context, listen: false)
+                    .problemsData;
+            model.dailyActivity = radioVal.toString();
+            Provider.of<HealthConditionProvider>(context, listen: false)
+                .updateProblemData(model);
+            Navigator.pushNamed(context, Routes.routeConditionTimeScreen,
+                arguments: {
+                  ArgumentConstant.isForProblemKey: true,
+                });
           },
           padding: EdgeInsets.zero,
           child: SingleChildScrollView(
@@ -92,6 +105,13 @@ class _EffectAbilityScreenState extends State<EffectAbilityScreen> {
                       onChanged: (val) {
                         setState(() {
                           radioVal = val;
+                        });
+                        _activityList.forEach((element) {
+                          if (element.index == radioVal) {
+                            _activityList[index].isSelected = true;
+                          } else {
+                            _activityList[index].isSelected = false;
+                          }
                         });
                       }),
                 ],

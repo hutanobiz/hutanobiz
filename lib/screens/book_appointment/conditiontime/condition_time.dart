@@ -4,12 +4,15 @@ import 'package:hutano/apis/api_manager.dart';
 import 'package:hutano/apis/common_res.dart';
 import 'package:hutano/apis/error_model.dart';
 import 'package:hutano/dimens.dart';
+import 'package:hutano/screens/appointments/model/req_booking_appointment_model.dart';
 import 'package:hutano/screens/book_appointment/conditiontime/model/common_time_model.dart';
 import 'package:hutano/screens/book_appointment/conditiontime/model/req_treated_condition_time.dart';
+import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/screens/book_appointment/multiplehealthissues/model/describe_symptoms_model.dart';
 import 'package:hutano/utils/app_constants.dart';
 
 import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/common_methods.dart';
 import 'package:hutano/utils/constants/key_constant.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/localization/localization.dart';
@@ -19,6 +22,7 @@ import 'package:hutano/utils/progress_dialog.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
+import 'package:provider/provider.dart';
 
 import '../../../colors.dart';
 import '../../../routes.dart';
@@ -55,6 +59,8 @@ class _ConditionTimeScreenState extends State<ConditionTimeScreen> {
       _isMonthVisible = false,
       _isYearVisible = false;
   List<DescribeSymptomsModel> _listOfSymptoms = [];
+  String _selectedType = "0";
+  String _selectedValue = "0";
 
   @override
   void initState() {
@@ -78,9 +84,12 @@ class _ConditionTimeScreenState extends State<ConditionTimeScreen> {
           i++) {
         _yearsList.add(CommonTimeModel("$i", false, i));
       }
-      _listOfSymptoms.add(DescribeSymptomsModel("Improving", false, 1));
-      _listOfSymptoms.add(DescribeSymptomsModel("Worsening", false, 2));
-      _listOfSymptoms.add(DescribeSymptomsModel("Staying the same", false, 3));
+      _listOfSymptoms.add(DescribeSymptomsModel(
+          Localization.of(context).improvingProblem, false, 1));
+      _listOfSymptoms.add(DescribeSymptomsModel(
+          Localization.of(context).worseningProblem, false, 2));
+      _listOfSymptoms.add(DescribeSymptomsModel(
+          Localization.of(context).stayingSameProblem, false, 3));
       setState(() {
         if (widget.isForProblem) {
           _isTreated = true;
@@ -99,17 +108,7 @@ class _ConditionTimeScreenState extends State<ConditionTimeScreen> {
             addHeader: true,
             addBottomArrows: true,
             onForwardTap: () {
-              if (_isTreated) {
-                if (!widget.isForProblem) {
-                  _onForwardButtonTap(context);
-                } else {
-                  //TODO API INTEGRATION IS PENDING
-                  // Navigator.pushNamed(context, routeConditionTimeScreen,
-                  //     arguments: {ArgumentConstant.isForProblemKey: false});
-                }
-              } else {
-                // Navigator.of(context).pushNamed(Routes.allImagesTabsScreen);
-              }
+              _onForwardTapButton(context);
             },
             color: Colors.white,
             padding: EdgeInsets.only(left: spacing20, bottom: spacing70),
@@ -341,14 +340,24 @@ class _ConditionTimeScreenState extends State<ConditionTimeScreen> {
     setState(() {
       if (labelStr == AppConstants.hours) {
         _selectedHour = val;
+        _selectedType = "1";
+        _selectedValue = val;
       } else if (labelStr == AppConstants.days) {
         _selectedDay = val;
+        _selectedType = "2";
+        _selectedValue = val;
       } else if (labelStr == AppConstants.weeks) {
         _selectedWeek = val;
+        _selectedType = "3";
+        _selectedValue = val;
       } else if (labelStr == AppConstants.monthsConst) {
         _selectedMonth = val;
+        _selectedType = "4";
+        _selectedValue = val;
       } else if (labelStr == AppConstants.years) {
         _selectedYear = val;
+        _selectedType = "5";
+        _selectedValue = val;
       }
     });
   }
@@ -361,65 +370,236 @@ class _ConditionTimeScreenState extends State<ConditionTimeScreen> {
         _isWeekVisible = false;
         _isMonthVisible = false;
         _isYearVisible = false;
+        _resetValues(val);
       } else if (val == AppConstants.days) {
         _isHourVisible = false;
         _isDayVisible = true;
         _isWeekVisible = false;
         _isMonthVisible = false;
         _isYearVisible = false;
+        _resetValues(val);
       } else if (val == AppConstants.weeks) {
         _isHourVisible = false;
         _isDayVisible = false;
         _isWeekVisible = true;
         _isMonthVisible = false;
         _isYearVisible = false;
+        _resetValues(val);
       } else if (val == AppConstants.monthsConst) {
         _isHourVisible = false;
         _isDayVisible = false;
         _isWeekVisible = false;
         _isMonthVisible = true;
         _isYearVisible = false;
+        _resetValues(val);
       } else if (val == AppConstants.years) {
         _isHourVisible = false;
         _isDayVisible = false;
         _isWeekVisible = false;
         _isMonthVisible = false;
         _isYearVisible = true;
+        _resetValues(val);
       }
     });
   }
 
-  void _onForwardButtonTap(BuildContext context) {
-    List<LongAgo> agoList = [];
-    agoList.add(LongAgo(
-        hour: _selectedHour,
-        day: _selectedDay,
-        month: _selectedMonth,
-        week: _selectedWeek,
-        year: _selectedYear));
-    final reqModel = ReqTreatedConditionTimeModel(
-        flag: Localization.of(context).yes, longAgo: agoList);
-    _addTreatedConditionTimeData(context, reqModel);
+  void _resetValues(String val) {
+    setState(() {
+      _selectedValue = "0";
+      if (val == AppConstants.hours) {
+        _selectedDay = "0";
+        _selectedWeek = "0";
+        _selectedMonth = "0";
+        _selectedYear = int.parse(getString(AppPreference.dobKey)
+                .substring(getString(AppPreference.dobKey).length - 4))
+            .toString();
+        _daysList.forEach((element) {
+          element.isSelected = false;
+        });
+        _weeksList.forEach((element) {
+          element.isSelected = false;
+        });
+        _monthsList.forEach((element) {
+          element.isSelected = false;
+        });
+        _yearsList.forEach((element) {
+          element.isSelected = false;
+        });
+      } else if (val == AppConstants.days) {
+        _selectedHour = "0";
+        _selectedWeek = "0";
+        _selectedMonth = "0";
+        _selectedYear = int.parse(getString(AppPreference.dobKey)
+                .substring(getString(AppPreference.dobKey).length - 4))
+            .toString();
+        _hoursList.forEach((element) {
+          element.isSelected = false;
+        });
+        _weeksList.forEach((element) {
+          element.isSelected = false;
+        });
+        _monthsList.forEach((element) {
+          element.isSelected = false;
+        });
+        _yearsList.forEach((element) {
+          element.isSelected = false;
+        });
+      } else if (val == AppConstants.weeks) {
+        _selectedHour = "0";
+        _selectedDay = "0";
+        _selectedMonth = "0";
+        _selectedYear = int.parse(getString(AppPreference.dobKey)
+                .substring(getString(AppPreference.dobKey).length - 4))
+            .toString();
+        _hoursList.forEach((element) {
+          element.isSelected = false;
+        });
+        _daysList.forEach((element) {
+          element.isSelected = false;
+        });
+        _monthsList.forEach((element) {
+          element.isSelected = false;
+        });
+        _yearsList.forEach((element) {
+          element.isSelected = false;
+        });
+      } else if (val == AppConstants.monthsConst) {
+        _selectedHour = "0";
+        _selectedDay = "0";
+        _selectedWeek = "0";
+        _selectedYear = int.parse(getString(AppPreference.dobKey)
+                .substring(getString(AppPreference.dobKey).length - 4))
+            .toString();
+        _hoursList.forEach((element) {
+          element.isSelected = false;
+        });
+        _daysList.forEach((element) {
+          element.isSelected = false;
+        });
+        _weeksList.forEach((element) {
+          element.isSelected = false;
+        });
+        _yearsList.forEach((element) {
+          element.isSelected = false;
+        });
+      } else if (val == AppConstants.years) {
+        _selectedHour = "0";
+        _selectedDay = "0";
+        _selectedWeek = "0";
+        _selectedMonth = "0";
+        _hoursList.forEach((element) {
+          element.isSelected = false;
+        });
+        _daysList.forEach((element) {
+          element.isSelected = false;
+        });
+        _weeksList.forEach((element) {
+          element.isSelected = false;
+        });
+        _monthsList.forEach((element) {
+          element.isSelected = false;
+        });
+      }
+    });
   }
 
-  void _addTreatedConditionTimeData(
-      BuildContext context, ReqTreatedConditionTimeModel reqModel) async {
-    ProgressDialogUtils.showProgressDialog(context);
-    await ApiManager().addTreatedConditionTime(reqModel).then(((result) {
-      if (result is CommonRes) {
-        ProgressDialogUtils.dismissProgressDialog();
-        if (widget.isForProblem) {
-          Navigator.pushNamed(context, Routes.routeConditionTimeScreen,
-              arguments: {ArgumentConstant.isForProblemKey: false});
+  void _onForwardTapButton(BuildContext context) {
+    if (_isTreated) {
+      if (!widget.isForProblem) {
+        Problems model =
+            Provider.of<HealthConditionProvider>(context, listen: false)
+                .problemsData;
+        model.isTreatmentReceived = "1";
+        if (_selectedValue != "0") {
+          model.treatmentReceived = ProblemFacingTimeSpan(
+              type: _selectedType, period: _selectedValue);
         } else {
-          // Navigator.of(context).pushNamed(Routes.allImagesTabsScreen);
+          model.treatmentReceived = ProblemFacingTimeSpan();
         }
+        Provider.of<HealthConditionProvider>(context, listen: false)
+            .updateProblemData(model);
+        Navigator.of(context).pushNamed(Routes.allImagesTabsScreen);
+      } else {
+        Problems model =
+            Provider.of<HealthConditionProvider>(context, listen: false)
+                .problemsData;
+        _listOfSymptoms.forEach((element) {
+          if (element.index == 1) {
+            if (element.isSelected) {
+              model.isProblemImproving = "1";
+            } else {
+              model.isProblemImproving = "0";
+            }
+          }
+        });
+        if (_selectedValue != "0") {
+          model.problemFacingTimeSpan = ProblemFacingTimeSpan(
+              type: _selectedType, period: _selectedValue);
+        } else {
+          model.problemFacingTimeSpan = ProblemFacingTimeSpan();
+        }
+        Provider.of<HealthConditionProvider>(context, listen: false)
+            .updateProblemData(model);
+        Navigator.pushNamed(context,Routes. routeConditionTimeScreen, arguments: {
+          ArgumentConstant.isForProblemKey: false,
+        });
       }
-    })).catchError((dynamic e) {
-      ProgressDialogUtils.dismissProgressDialog();
-      if (e is ErrorModel) {
-        e.toString().debugLog();
-      }
-    });
+    } else {
+      Problems model =
+          Provider.of<HealthConditionProvider>(context, listen: false)
+              .problemsData;
+      model.isTreatmentReceived = "0";
+      model.treatmentReceived = ProblemFacingTimeSpan();
+      Provider.of<HealthConditionProvider>(context, listen: false)
+          .updateProblemData(model);
+      Navigator.of(context).pushNamed(Routes.allImagesTabsScreen);
+    }
+  }
+
+  //TODO WILL USER AFTER MULTIPLE HEALTH ISSUES FEATURE ADDED
+  void _nextScreenNavigation(BuildContext context) {
+    if (Provider.of<HealthConditionProvider>(context, listen: false)
+        .healthConditions
+        .contains(2)) {
+      stomachNavigation(context);
+    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
+        .healthConditions
+        .contains(3)) {
+      breathingNavigation(context);
+    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
+        .healthConditions
+        .contains(4)) {
+      abnormalNavigation(context);
+    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
+        .healthConditions
+        .contains(5)) {
+      femaleHealthNavigation(context);
+    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
+        .healthConditions
+        .contains(6)) {
+      maleHealthNavigation(context);
+    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
+        .healthConditions
+        .contains(7)) {
+      woundSkinNavigation(context);
+    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
+        .healthConditions
+        .contains(8)) {
+      healthAndChestNavigation(context);
+    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
+        .healthConditions
+        .contains(9)) {
+      dentalCareNavigation(context);
+    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
+        .healthConditions
+        .contains(11)) {
+      antiAgingNavigation(context);
+    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
+        .healthConditions
+        .contains(12)) {
+      Navigator.pushNamed(context,Routes. routeImmunization);
+    } else {
+      Navigator.of(context).pushNamed(Routes.allImagesTabsScreen);
+    }
   }
 }

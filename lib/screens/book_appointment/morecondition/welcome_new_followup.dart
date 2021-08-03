@@ -64,7 +64,7 @@ class _WelcomeNewFollowUpState extends State<WelcomeNewFollowUp> {
       InkWell(
         onTap: () {
           if (number == 1) {
-            Navigator.of(context).pushNamed(Routes.routeBoneAndMuscle);
+            Navigator.of(context).pushNamed(Routes.routeMoreCondition);
           }
         },
         child: Padding(
@@ -86,52 +86,4 @@ class _WelcomeNewFollowUpState extends State<WelcomeNewFollowUp> {
           ),
         ),
       );
-
-  void _nextNavigationScreen(BuildContext context) {
-    if (Provider.of<HealthConditionProvider>(context, listen: false)
-        .healthConditions
-        .contains(1)) {
-      Navigator.of(context).pushNamed(Routes.routeBoneAndMuscle);
-    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
-        .healthConditions
-        .contains(2)) {
-      stomachNavigation(context);
-    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
-        .healthConditions
-        .contains(3)) {
-      breathingNavigation(context);
-    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
-        .healthConditions
-        .contains(4)) {
-      abnormalNavigation(context);
-    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
-        .healthConditions
-        .contains(5)) {
-      femaleHealthNavigation(context);
-    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
-        .healthConditions
-        .contains(6)) {
-      maleHealthNavigation(context);
-    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
-        .healthConditions
-        .contains(7)) {
-      woundSkinNavigation(context);
-    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
-        .healthConditions
-        .contains(8)) {
-      healthAndChestNavigation(context);
-    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
-        .healthConditions
-        .contains(9)) {
-      dentalCareNavigation(context);
-    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
-        .healthConditions
-        .contains(11)) {
-      antiAgingNavigation(context);
-    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
-        .healthConditions
-        .contains(12)) {
-      Navigator.pushNamed(context, Routes.routeImmunization);
-    }
-  }
 }

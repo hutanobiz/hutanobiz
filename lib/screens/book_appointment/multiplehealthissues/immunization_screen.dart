@@ -35,9 +35,9 @@ class _ImmunizationScreenState extends State<ImmunizationScreen> {
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      _listOfVaccines.add(BodyPartModel("Covid 19", true, [], false));
-      _listOfVaccines.add(BodyPartModel("Arm muscle", false, [], false));
-      _listOfVaccines.add(BodyPartModel("Spine", false, [], false));
+      _listOfVaccines.add(BodyPartModel("Covid 19", true, [], false, ""));
+      _listOfVaccines.add(BodyPartModel("Arm muscle", false, [], false, ""));
+      _listOfVaccines.add(BodyPartModel("Spine", false, [], false, ""));
       _listOfAssociatedSymptoms
           .add(AssociatedSymptomsModel("Left arm weakness"));
       _listOfAssociatedSymptoms
@@ -60,7 +60,7 @@ class _ImmunizationScreenState extends State<ImmunizationScreen> {
                 left: spacing20, right: spacing10, bottom: spacing70),
             addBottomArrows: true,
             onForwardTap: () {
-              Navigator.pushNamed(context,Routes.routeEffectAbility);
+              Navigator.pushNamed(context,Routes. routeEffectAbility);
             },
             isCameraVisible: true,
             onCameraForTap: () {},
@@ -142,7 +142,8 @@ class _ImmunizationScreenState extends State<ImmunizationScreen> {
                   suggestion.bodyPart,
                   suggestion.hasInternalPart,
                   suggestion.sides,
-                  suggestion.isItClicked));
+                  suggestion.isItClicked,
+                  ""));
             });
             _searchVaccineController.text = "";
           },

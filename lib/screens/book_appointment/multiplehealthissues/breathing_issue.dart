@@ -48,10 +48,11 @@ class _BreathingIssueState extends State<BreathingIssue> {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       _listOfAssociatedSymptoms
-          .add(BodyPartModel("Feet Swelling", false, [], false));
+          .add(BodyPartModel("Feet Swelling", false, [], false, ""));
       _listOfAssociatedSymptoms
-          .add(BodyPartModel("Swelling of hands", false, [], false));
-      _listOfAssociatedSymptoms.add(BodyPartModel("Anxiety", false, [], false));
+          .add(BodyPartModel("Swelling of hands", false, [], false, ""));
+      _listOfAssociatedSymptoms
+          .add(BodyPartModel("Anxiety", false, [], false, ""));
       setState(() {});
     });
   }
@@ -68,7 +69,8 @@ class _BreathingIssueState extends State<BreathingIssue> {
               left: spacing20, right: spacing10, bottom: spacing70),
           addBottomArrows: true,
           onForwardTap: () {
-            _nextScreenNavigation(context);
+            // _nextScreenNavigation(context);
+            Navigator.of(context).pushNamed(Routes.routeEffectAbility);
           },
           isCameraVisible: true,
           onCameraForTap: () {},
@@ -185,7 +187,8 @@ class _BreathingIssueState extends State<BreathingIssue> {
                   suggestion.bodyPart,
                   suggestion.hasInternalPart,
                   suggestion.sides,
-                  suggestion.isItClicked));
+                  suggestion.isItClicked,
+                  ""));
             });
             _searchAssociatedSymptomsController.text = "";
           },
@@ -389,7 +392,7 @@ class _BreathingIssueState extends State<BreathingIssue> {
       } else if (Provider.of<HealthConditionProvider>(context, listen: false)
           .healthConditions
           .contains(12)) {
-        Navigator.pushNamed(context, Routes.routeImmunization);
+        Navigator.pushNamed(context,Routes. routeImmunization);
       } else {
         Navigator.pushNamed(context, Routes.routeEffectAbility);
       }
@@ -445,6 +448,20 @@ class _BreathingIssueState extends State<BreathingIssue> {
       } else {
         Navigator.pushNamed(context, Routes.routeEffectAbility);
       }
+    }
+  }
+
+  int getIssueIndex() {
+    if (widget.isAntiAging) {
+      return 11;
+    } else if (widget.stomach) {
+      return 2;
+    } else if (widget.breathing) {
+      return 3;
+    } else if (widget.healthChest) {
+      return 8;
+    } else {
+      return 1;
     }
   }
 }

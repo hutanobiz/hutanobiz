@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/screens/add_insurance/add_insruance.dart';
 import 'package:hutano/screens/add_insurance/add_insruance_complete.dart';
+import 'package:hutano/screens/appointments/all_documents_tabs.dart';
+import 'package:hutano/screens/appointments/all_images_tabs.dart';
 import 'package:hutano/screens/appointments/appointment_complete.dart';
 import 'package:hutano/screens/appointments/appointment_detail_screen.dart';
 import 'package:hutano/screens/appointments/cancel_appointment.dart';
@@ -33,6 +35,7 @@ import 'package:hutano/screens/book_appointment/multiplehealthissues/abnormal_se
 import 'package:hutano/screens/book_appointment/multiplehealthissues/bone_muscle_issue.dart';
 import 'package:hutano/screens/book_appointment/multiplehealthissues/breathing_issue.dart';
 import 'package:hutano/screens/book_appointment/multiplehealthissues/immunization_screen.dart';
+import 'package:hutano/screens/book_appointment/multiplehealthissues/makes_condition_better_worst.dart';
 import 'package:hutano/screens/book_appointment/onsite_address.dart';
 import 'package:hutano/screens/book_appointment/onsite_edit_address.dart';
 import 'package:hutano/screens/book_appointment/review_appointment.dart';
@@ -243,6 +246,8 @@ class Routes {
   static const String allImagesTabsScreen = '/allImagesTabsScreen';
   static const String routeAddPharmacy = '/routeAddPharmacy';
   static const String viewMedicalHistory = '/viewMedicalHistory';
+  static const String routeConditionBetterWorst = '/routeConditionBetterWorst';
+  static const String allDocumentsTabsScreen = '/allDocumentsTabsScreen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final dynamic args = settings.arguments;
@@ -749,7 +754,21 @@ class Routes {
       case routeWelcomeNewFollowup:
         return MaterialPageRoute(builder: (_) => WelcomeNewFollowUp());
       case routeBoneAndMuscle:
-        return MaterialPageRoute(builder: (_) => BoneMuscleIssue());
+        String problemId = args[ArgumentConstant.problemIdKey];
+        String problemName = args[ArgumentConstant.problemNameKey];
+        String problemImage = args[ArgumentConstant.problemImageKey];
+        return MaterialPageRoute(
+            builder: (_) => BoneMuscleIssue(
+                problemId: problemId,
+                problemName: problemName,
+                problemImage: problemImage));
+      case routeConditionBetterWorst:
+        String problemId = args[ArgumentConstant.problemIdKey];
+        return MaterialPageRoute(
+            builder: (_) => MakesConditionBetterWorst(
+                  problemId: problemId,
+                ));
+
       case routeImmunization:
         return MaterialPageRoute(builder: (_) => ImmunizationScreen());
       case routeEffectAbility:
@@ -790,7 +809,6 @@ class Routes {
         bool isForProblem = args[ArgumentConstant.isForProblemKey];
         return MaterialPageRoute(
             builder: (_) => ConditionTimeScreen(isForProblem: isForProblem));
-
       case routeMyMedicalHistory:
         return MaterialPageRoute(builder: (_) => MyMedicalHistory());
       case routeBodySymptoms:
@@ -839,9 +857,12 @@ class Routes {
                 ));
       case routeAddPharmacy:
         return MaterialPageRoute(builder: (_) => AddPharmacy());
-      // case allImagesTabsScreen:
-      //   return _buildRoute(settings, AllImagesTabs());
-      //   break;
+      case allImagesTabsScreen:
+        return _buildRoute(settings, AllImagesTabs());
+        break;
+      case allDocumentsTabsScreen:
+        return _buildRoute(settings, AllDocumentsTabs());
+        break;
       default:
         return _errorRoute();
     }
