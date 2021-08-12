@@ -2,21 +2,32 @@ import 'dart:async';
 import 'dart:io';
 import 'package:async/async.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:http/http.dart';
 
 import 'package:flutter/material.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
+import 'package:hutano/strings.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/constants/key_constant.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/round_corner_checkbox.dart';
+import 'package:hutano/widgets/show_common_upload_dialog.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UploadImagesScreen extends StatefulWidget {
@@ -43,11 +54,14 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
   List<Map> _selectedImagesList = [];
 
   InheritedContainerState _container;
+  TextEditingController _imageDateController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-
+    _imageDateController.addListener(() {
+      setState(() {});
+    });
     if (widget.isBottomButtonsShow != null) {
       if (widget.isBottomButtonsShow['isBottomButtonsShow'] != null) {
         isBottomButtonsShow = widget.isBottomButtonsShow['isBottomButtonsShow'];
@@ -101,6 +115,12 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
   }
 
   @override
+  void dispose() {
+    _imageDateController.dispose();
+    super.dispose();
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
@@ -112,271 +132,249 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
     return Scaffold(
       backgroundColor:
           isBottomButtonsShow ? AppColors.goldenTainoi : Colors.white,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
         title: "Images",
         isLoading: _isLoading,
-        isAddAppBar: isBottomButtonsShow,
+        isAddAppBar: false,
         isAddBack: false,
-        addBackButton: isBottomButtonsShow,
+        addHeader: false,
         color: Colors.white,
-        padding: EdgeInsets.fromLTRB(20, 20, 20, isBottomButtonsShow ? 20 : 20),
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 65.0),
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: widgetList(),
-                    ),
-                  ),
-                  isFromAppointment
-                      ? Container()
-                      : Align(
-                          alignment: Alignment.bottomCenter,
-                          child: SizedBox(
-                            height: 55.0,
-                            child: FancyButton(
-                              title: "Upload images",
-                              buttonIcon: "ic_upload",
-                              buttonColor: AppColors.windsor,
-                              onPressed: showPickerDialog,
-                            ),
-                          ),
-                        ),
-                ],
-              ),
-            ),
-            Divider(height: 0.5),
-            isBottomButtonsShow
-                ? Align(
-                    alignment: FractionalOffset.bottomRight,
-                    child: Container(
-                      height: 55.0,
-                      width: MediaQuery.of(context).size.width - 76.0,
-                      margin: const EdgeInsets.only(top: 10),
-                      padding: const EdgeInsets.only(right: 0.0, left: 40.0),
-                      child: FancyButton(
-                        title: "Continue",
-                        onPressed: () {
-                          if (_selectedImagesList != null &&
-                              _selectedImagesList.length > 0) {
-                            _container.setConsentToTreatData(
-                                "imagesList", _selectedImagesList);
-                          }
-
-                          Navigator.of(context)
-                              .pushNamed(Routes.uploadDocumentsScreen);
-                        },
-                      ),
-                    ),
-                  )
-                : SizedBox()
-          ],
+        isSkipLater: true,
+        addBottomArrows: isBottomButtonsShow,
+        onSkipForTap: () {
+          Provider.of<HealthConditionProvider>(context, listen: false)
+              .updateImages([]);
+          Navigator.of(context).pushNamed(Routes.allDocumentsTabsScreen);
+        },
+        onForwardTap: () {
+          List<String> _selectedMedicalImages = [];
+          if (_selectedImagesList != null && _selectedImagesList.length > 0) {
+            _container.setConsentToTreatData("imagesList", _selectedImagesList);
+            _selectedImagesList.forEach((element) {
+              _selectedMedicalImages.add(element['_id']);
+            });
+            Provider.of<HealthConditionProvider>(context, listen: false)
+                .updateImages(_selectedMedicalImages);
+          }
+          Navigator.of(context).pushNamed(Routes.allDocumentsTabsScreen);
+        },
+        padding: EdgeInsets.fromLTRB(
+            0, 0, 0, isBottomButtonsShow ? spacing70 : spacing20),
+        child: ListView(
+          children: widgetList(context),
         ),
       ),
     );
   }
 
-  List<Widget> widgetList() {
+  List<Widget> widgetList(BuildContext context) {
     List<Widget> formWidget = List();
-
-    formWidget.add(Text(
-      imagesList.isEmpty
-          ? "Images can, at times, help your clinician understand the extent of your injury or condition. Please upload any images that might help your clinician diagnoses your condition. Images, especially of skin conditions can help your provider understand the nature of your condition. Images are kept confidential and will be part of your digital medical chart that you can access from from the cloud."
-          : "Images can, at times, help your clinician understand the extent of your injury. Please upload any images that might help your clinician diagnoses your condition.",
-      style: TextStyle(
-        fontSize: 14.0,
-      ),
-    ));
-
-    formWidget.add(SizedBox(height: 30));
-
-    formWidget.add(
-      Wrap(
-        spacing: 10,
-        runSpacing: 20,
-        children: images(),
-      ),
-    );
-
+    formWidget.add(SizedBox(height: spacing10));
+    formWidget.add(_uploadImagesBanner(context));
+    formWidget.add(SizedBox(height: spacing30));
+    formWidget.add(_uploadedImageViews(context));
     return formWidget;
   }
 
-  List<Widget> images() {
-    List<Widget> columnContent = [];
+  Widget _uploadedImageViews(BuildContext context) => GridView.builder(
+        itemCount: imagesList.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+        ),
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (BuildContext context, int index) {
+          String imageFile = imagesList[index][ArgumentConstant.imagesKey];
+          if (!imagesList[index][ArgumentConstant.imagesKey]
+              .toString()
+              .contains('image_cropper')) {
+            imageFile = ApiBaseHelper.imageUrl +
+                imagesList[index][ArgumentConstant.imagesKey];
+          }
+          return Padding(
+            padding: const EdgeInsets.all(spacing5),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0)),
+              clipBehavior: Clip.antiAlias,
+              child: Stack(
+                fit: StackFit.expand,
+                children: <Widget>[
+                  ClipRRect(
+                      borderRadius: BorderRadius.circular(16.0),
+                      child: imageFile.contains('http') ||
+                              imageFile.contains('https')
+                          ? Image.network(imageFile, fit: BoxFit.cover)
+                          : Image.file(File(imageFile), fit: BoxFit.cover)),
+                  isBottomButtonsShow
+                      ? Padding(
+                          padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
+                          child: Align(
+                              alignment: Alignment.topLeft,
+                              child: SizedBox(
+                                  height: 32,
+                                  width: 32,
+                                  child: RoundCornerCheckBox(
+                                      value: _selectedImagesList
+                                          .contains(imagesList[index]),
+                                      onCheck: (value) {
+                                        if (value) {
+                                          if (!_selectedImagesList
+                                              .contains(imagesList[index])) {
+                                            setState(() {
+                                              _selectedImagesList
+                                                  .add(imagesList[index]);
+                                            });
+                                          }
+                                        } else {
+                                          setState(() {
+                                            _selectedImagesList
+                                                .remove(imagesList[index]);
+                                          });
+                                        }
+                                      }))))
+                      : isFromAppointment
+                          ? Container()
+                          : Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Align(
+                                  alignment: Alignment.topRight,
+                                  child: SizedBox(
+                                      height: 22,
+                                      width: 22,
+                                      child: RawMaterialButton(
+                                        onPressed: () {
+                                          setLoading(true);
 
-    for (dynamic content in imagesList) {
-      if (content['images'] != null) {
-        String imageFile = content['images'];
-        if (!content['images'].toString().contains('image_cropper')) {
-          imageFile = ApiBaseHelper.imageUrl + content['images'];
-        }
-
-        columnContent.add(
-          Container(
-            height: 120.0,
-            width: 180.0,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16.0),
-              border: Border.all(
-                color: Colors.grey[300],
+                                          _api
+                                              .deletePatientImage(
+                                            token,
+                                            imagesList[index]
+                                                [ArgumentConstant.idKey],
+                                          )
+                                              .whenComplete(() {
+                                            setLoading(false);
+                                            setState(() => imagesList
+                                                .remove(imagesList[index]));
+                                          }).futureError((error) {
+                                            setLoading(false);
+                                            error.toString().debugLog();
+                                          });
+                                        },
+                                        child: Icon(
+                                          Icons.close,
+                                          color: Colors.grey,
+                                          size: 16.0,
+                                        ),
+                                        shape: CircleBorder(),
+                                        elevation: 2.0,
+                                        fillColor: Colors.white,
+                                        constraints: const BoxConstraints(
+                                            minWidth: 22.0, minHeight: 22.0),
+                                      )))),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      height: spacing60,
+                      padding: const EdgeInsets.all(
+                        spacing10,
+                      ),
+                      alignment: Alignment.center,
+                      color: Colors.white,
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                    imagesList[index]
+                                            [ArgumentConstant.nameKey] ??
+                                        '---+---',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontSize: fontSize14,
+                                        fontWeight: fontWeightSemiBold,
+                                        color: Color(0xff1b1200)))),
+                            Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                    imagesList[index]
+                                            [ArgumentConstant.dateKey] ??
+                                        '---+---',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontSize: fontSize12,
+                                        fontWeight: fontWeightRegular,
+                                        color: Colors.black)))
+                          ]),
+                    ).onClick(onTap: () {
+                      if (!_selectedImagesList.contains(imagesList[index])) {
+                        setState(() {
+                          _selectedImagesList.add(imagesList[index]);
+                        });
+                      } else {
+                        setState(() {
+                          _selectedImagesList.remove(imagesList[index]);
+                        });
+                      }
+                    }),
+                  ),
+                ],
+              ).onClick(
+                onTap: imageFile.toLowerCase().endsWith("pdf")
+                    ? () async {
+                        var url = imageFile;
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        } else {
+                          throw 'Could not launch $url';
+                        }
+                      }
+                    : () {
+                        Navigator.of(context).pushNamed(
+                          Routes.providerImageScreen,
+                          arguments: imageFile,
+                        );
+                      },
               ),
             ),
-            child: Stack(
-              fit: StackFit.expand,
-              children: <Widget>[
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(16.0),
-                  child:
-                      imageFile.contains('http') || imageFile.contains('https')
-                          ? Image.network(
-                              imageFile,
-                              fit: BoxFit.cover,
-                            )
-                          : Image.file(
-                              File(imageFile),
-                              fit: BoxFit.cover,
-                            ),
-                ),
-                isBottomButtonsShow
-                    ? Padding(
-                        padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: SizedBox(
-                            height: 32,
-                            width: 32,
-                            child: RoundCornerCheckBox(
-                              value: _selectedImagesList.contains(content),
-                              onCheck: (value) {
-                                if (value) {
-                                  if (!_selectedImagesList.contains(content)) {
-                                    setState(() {
-                                      _selectedImagesList.add(content);
-                                    });
-                                  }
-                                } else {
-                                  setState(() {
-                                    _selectedImagesList
-                                        .remove(content['_id'].toString());
-                                  });
-                                }
-                              },
-                            ),
-                          ),
-                        ),
-                      )
-                    : isFromAppointment
-                        ? Container()
-                        : Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Align(
-                              alignment: Alignment.topRight,
-                              child: SizedBox(
-                                height: 22,
-                                width: 22,
-                                child: RawMaterialButton(
-                                  onPressed: () {
-                                    setLoading(true);
+          );
+        },
+      );
 
-                                    _api
-                                        .deletePatientImage(
-                                      token,
-                                      content['_id'],
-                                    )
-                                        .whenComplete(() {
-                                      setLoading(false);
-                                      setState(
-                                          () => imagesList.remove(content));
-                                    }).futureError((error) {
-                                      setLoading(false);
-                                      error.toString().debugLog();
-                                    });
-                                  },
-                                  child: Icon(
-                                    Icons.close,
-                                    color: Colors.grey,
-                                    size: 16.0,
-                                  ),
-                                  shape: CircleBorder(),
-                                  elevation: 2.0,
-                                  fillColor: Colors.white,
-                                  constraints: const BoxConstraints(
-                                      minWidth: 22.0, minHeight: 22.0),
-                                ),
-                              ),
-                            ),
-                          ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    height: 50,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 4, horizontal: 8.0),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(14.0),
-                      border: Border.all(
-                        color: Colors.grey[100],
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        "ic_image".imageIcon(
-                          width: 20,
-                        ),
-                        SizedBox(width: 5.0),
-                        Expanded(
-                          child: Text(
-                            content['name'],
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ).onClick(onTap: () {
-                    if (!_selectedImagesList.contains(content)) {
-                      setState(() {
-                        _selectedImagesList.add(content);
-                      });
-                    } else {
-                      setState(() {
-                        _selectedImagesList.remove(content);
-                      });
-                    }
-                  }),
-                ),
-              ],
+  Widget _uploadImagesBanner(BuildContext context) => (!isFromAppointment)
+      ? ListTile(
+          onTap: showPickerDialog,
+          leading: CircleAvatar(
+            radius: spacing30,
+            backgroundColor: AppColors.goldenTainoi,
+            child: Image.asset(
+              FileConstants.icCamera,
+              width: spacing20,
+              height: spacing20,
+              color: Colors.white,
             ),
-          ).onClick(
-            onTap: imageFile.toLowerCase().endsWith("pdf")
-                ? () async {
-                    var url = imageFile;
-                    if (await canLaunch(url)) {
-                      await launch(url);
-                    } else {
-                      throw 'Could not launch $url';
-                    }
-                  }
-                : () {
-                    Navigator.of(context).pushNamed(
-                      Routes.providerImageScreen,
-                      arguments: imageFile,
-                    );
-                  },
           ),
-        );
-      }
-    }
-
-    return columnContent;
-  }
+          title: ListTile(
+            contentPadding: EdgeInsets.all(0),
+            title: Text(
+              Localization.of(context).uploadMedicalImagesLabel,
+              style: TextStyle(
+                  fontSize: fontSize15,
+                  fontWeight: fontWeightSemiBold,
+                  color: Colors.black),
+            ),
+            subtitle: Text(
+              Localization.of(context).uploadMedicalImagesSubLabel,
+              style: TextStyle(
+                  fontSize: fontSize12,
+                  fontWeight: fontWeightRegular,
+                  color: Color(0xff1b1200)),
+            ),
+            trailing: Icon(Icons.add, color: AppColors.goldenTainoi, size: 30),
+          ),
+        )
+      : SizedBox();
 
   Future getImage(int source) async {
     ImagePicker _picker = ImagePicker();
@@ -465,7 +463,27 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
               ),
             ),
           ),
-          SizedBox(height: 39),
+          SizedBox(height: spacing25),
+          TextField(
+            enabled: false,
+            controller: _imageDateController,
+            decoration: getInputDecoration('Date'),
+          ).onClick(onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+            DatePicker.showDatePicker(
+              context,
+              showTitleActions: true,
+              onConfirm: (date) {
+                if (date != null)
+                  _imageDateController.text =
+                      DateFormat(Strings.datePattern).format(date);
+              },
+              currentTime: DateTime.now(),
+              maxTime: DateTime.now(),
+              locale: LocaleType.en,
+            );
+          }),
+          SizedBox(height: spacing40),
           Row(
             children: <Widget>[
               Expanded(
@@ -495,9 +513,15 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                   onPressed: () async {
                     if (imageName == null || imageName.isEmpty) {
                       Widgets.showToast("Image name can't be empty");
+                    } else if (_imageDateController.text == null ||
+                        _imageDateController.text.isEmpty) {
+                      Widgets.showToast(Localization.of(context).errImageDate);
+                      return;
                     } else {
                       Map<String, String> fileMap = {};
-                      fileMap['name'] = imageName;
+                      fileMap[ArgumentConstant.nameKey] = imageName;
+                      fileMap[ArgumentConstant.dateKey] =
+                          _imageDateController.text;
                       Navigator.pop(context);
 
                       setLoading(true);
@@ -519,6 +543,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                         multipartList,
                       )
                           .then((value) {
+                        _imageDateController.text = '';
                         setState(() {
                           _api.getPatientDocuments(token).then((value) {
                             if (value != null) {
@@ -556,30 +581,47 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
     );
   }
 
+  InputDecoration getInputDecoration(String label) {
+    return InputDecoration(
+      labelStyle: TextStyle(color: Colors.grey),
+      labelText: label,
+      alignLabelWithHint: true,
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14.0),
+        borderSide: BorderSide(
+          color: Colors.grey[300],
+          width: 0.5,
+        ),
+      ),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14.0),
+        borderSide: BorderSide(
+          color: Colors.grey[300],
+          width: 0.5,
+        ),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14.0),
+        borderSide: BorderSide(
+          color: Colors.grey[300],
+          width: 0.5,
+        ),
+      ),
+    );
+  }
+
   void showPickerDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: new Text("Picker"),
-          content: new Text("Select image picker type."),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text("Camera"),
-              onPressed: () {
-                getImage(1);
-                Navigator.pop(context);
-              },
-            ),
-            new FlatButton(
-              child: new Text("Gallery"),
-              onPressed: () {
-                getImage(2);
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
+    showCommonUploadDialog(
+      context,
+      Localization.of(context).picker,
+      Localization.of(context).uploadPhoto,
+      onTop: () {
+        getImage(1);
+        Navigator.pop(context);
+      },
+      onBottom: () {
+        getImage(2);
+        Navigator.pop(context);
       },
     );
   }

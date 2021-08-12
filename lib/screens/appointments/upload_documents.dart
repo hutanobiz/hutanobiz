@@ -8,18 +8,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/strings.dart';
+import 'package:hutano/utils/argument_const.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/round_corner_checkbox.dart';
+import 'package:hutano/widgets/show_common_upload_dialog.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UploadDocumentsScreen extends StatefulWidget {
@@ -150,311 +158,280 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          isBottomButtonsShow ? AppColors.goldenTainoi : Colors.white,
-      body: LoadingBackground(
-        title: "Upload Documents",
-        isAddAppBar: isBottomButtonsShow,
-        isLoading: _isLoading,
-        isAddBack: false,
-        addBackButton: isBottomButtonsShow,
-        color: Colors.white,
-        padding: EdgeInsets.fromLTRB(20, 20, 20, isBottomButtonsShow ? 20 : 20),
-        child: Column(
-          children: [
-            Expanded(
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 65),
-                    child: ListView(
-                      children: widgetList(),
-                    ),
-                  ),
-                  isFromAppointment
-                      ? Container()
-                      : Align(
-                          alignment: Alignment.bottomCenter,
-                          child: SizedBox(
-                            height: 55.0,
-                            child: FancyButton(
-                              title: "upload document(s)",
-                              buttonIcon: "ic_upload",
-                              buttonColor: AppColors.windsor,
-                              onPressed: showPickerDialog,
-                            ),
-                          ),
-                        ),
-                ],
-              ),
-            ),
-            Divider(height: 0.5),
-            isBottomButtonsShow
-                ? Align(
-                    alignment: FractionalOffset.bottomRight,
-                    child: Container(
-                      height: 55.0,
-                      width: MediaQuery.of(context).size.width - 76.0,
-                      margin: const EdgeInsets.only(top: 10),
-                      padding: const EdgeInsets.only(right: 0.0, left: 40.0),
-                      child: FancyButton(
-                        title: "Continue",
-                        onPressed: () {
-                          if (_selectedDocsList != null &&
-                              _selectedDocsList.length > 0) {
-                            _container.setConsentToTreatData(
-                                "docsList", _selectedDocsList);
-                          }
-
-                          Navigator.of(context).pushNamed(
-                            _container.projectsResponse['serviceType']
-                                        .toString() ==
-                                    '3'
-                                ? Routes.onsiteAddresses
-                                : Routes.paymentMethodScreen,
-                            arguments: true,
-                          );
-                        },
-                      ),
-                    ),
-                  )
-                : SizedBox()
-          ],
-        ),
-      ),
-    );
+        backgroundColor:
+            isBottomButtonsShow ? AppColors.goldenTainoi : Colors.white,
+        body: LoadingBackgroundNew(
+            title: "",
+            isAddAppBar: false,
+            isLoading: _isLoading,
+            isAddBack: false,
+            addHeader: false,
+            isSkipLater: true,
+            addBottomArrows: isBottomButtonsShow,
+            onSkipForTap: () {
+              Provider.of<HealthConditionProvider>(context, listen: false)
+                  .updateDocuments([]);
+              Navigator.of(context).pushNamed(Routes.routeUploadDiagnosticNew);
+            },
+            onForwardTap: () {
+              List<String> _selectedMedicalDocs = [];
+              if (_selectedDocsList != null && _selectedDocsList.length > 0) {
+                _container.setConsentToTreatData("docsList", _selectedDocsList);
+                _selectedDocsList.forEach((element) {
+                  _selectedMedicalDocs.add(element['_id']);
+                });
+                Provider.of<HealthConditionProvider>(context, listen: false)
+                    .updateDocuments(_selectedMedicalDocs);
+              }
+              Navigator.of(context).pushNamed(Routes.routeUploadDiagnosticNew);
+            },
+            color: Colors.white,
+            padding: EdgeInsets.fromLTRB(
+                0, 0, 0, isBottomButtonsShow ? spacing70 : spacing20),
+            child: ListView(
+              children: widgetList(context),
+            )));
   }
 
-  List<Widget> widgetList() {
+  List<Widget> widgetList(BuildContext context) {
     List<Widget> formWidget = List();
-
-    formWidget.add(Text(
-      '\u2022 Do you have a copy of imaging results like an MRI, Xray or CAT Scan report?\n\u2022 Please upload the documents for your provider to review before your appointment.\n\u2022 Once uploaded, your documents will be available anytime you need to refer to them.',
-      style: TextStyle(
-        fontSize: 14.0,
-      ),
-    ));
-
-    formWidget.add(SizedBox(height: 30));
-
-    formWidget.add(Wrap(
-      spacing: 10,
-      runSpacing: 20,
-      children: images(),
-    ));
-
+    formWidget.add(SizedBox(height: spacing10));
+    formWidget.add(_uploadMedicalDocumentsBanner(context));
+    formWidget.add(SizedBox(height: spacing30));
+    formWidget.add(_uploadedDocumentsViews(context));
     return formWidget;
   }
 
-  images() {
-    List<Widget> columnContent = [];
+  Widget _uploadedDocumentsViews(BuildContext context) => GridView.builder(
+        itemCount: docsList.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+        ),
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (BuildContext context, int index) {
+          String document = docsList[index]['medicalDocuments'];
 
-    for (Map content in docsList) {
-      if (content['medicalDocuments'] != null) {
-        String document = content['medicalDocuments'];
-        if (!document.contains('data/')) {
-          document = ApiBaseHelper.imageUrl + content['medicalDocuments'];
-        }
-
-        columnContent.add(
-          Container(
-            height: 150.0,
-            width: 180.0,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16.0),
-              border: Border.all(
-                color: Colors.grey[300],
-              ),
-            ),
-            child: Stack(
-              fit: StackFit.expand,
-              children: <Widget>[
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(16.0),
-                  child: document.toLowerCase().endsWith("pdf")
-                      ? "ic_pdf".imageIcon()
-                      : (document.contains('http') || document.contains('https')
-                          ? Image.network(
-                              document,
-                              height: 125.0,
-                              width: 180.0,
-                              fit: BoxFit.cover,
-                            )
-                          : Image.file(
-                              File(document),
-                              height: 125.0,
-                              width: 180.0,
-                              fit: BoxFit.cover,
-                            )),
-                ),
-                isBottomButtonsShow
-                    ? Padding(
-                        padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: SizedBox(
-                            height: 32,
-                            width: 32,
-                            child: RoundCornerCheckBox(
-                              value: _selectedDocsList.contains(content),
-                              onCheck: (value) {
-                                if (value) {
-                                  if (!_selectedDocsList.contains(content)) {
+          if (!document.contains('data/')) {
+            document =
+                ApiBaseHelper.imageUrl + docsList[index]['medicalDocuments'];
+          }
+          return Padding(
+            padding: const EdgeInsets.all(spacing5),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0)),
+              clipBehavior: Clip.antiAlias,
+              child: Stack(
+                fit: StackFit.expand,
+                children: <Widget>[
+                  ClipRRect(
+                      borderRadius: BorderRadius.circular(16.0),
+                      child: document.toLowerCase().endsWith("pdf")
+                          ? "ic_pdf".imageIcon()
+                          : (document.contains('http') ||
+                                  document.contains('https')
+                              ? Image.network(
+                                  document,
+                                  height: 125.0,
+                                  width: 180.0,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.file(
+                                  File(document),
+                                  height: 125.0,
+                                  width: 180.0,
+                                  fit: BoxFit.cover,
+                                ))),
+                  isBottomButtonsShow
+                      ? Padding(
+                          padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: SizedBox(
+                              height: 32,
+                              width: 32,
+                              child: RoundCornerCheckBox(
+                                value:
+                                    _selectedDocsList.contains(docsList[index]),
+                                onCheck: (value) {
+                                  if (value) {
+                                    if (!_selectedDocsList
+                                        .contains(docsList[index])) {
+                                      setState(() {
+                                        _selectedDocsList.add(docsList[index]);
+                                      });
+                                    }
+                                  } else {
                                     setState(() {
-                                      _selectedDocsList.add(content);
+                                      _selectedDocsList.remove(docsList[index]);
                                     });
                                   }
-                                } else {
-                                  setState(() {
-                                    _selectedDocsList
-                                        .remove(content['_id'].toString());
-                                  });
-                                }
-                              },
+                                },
+                              ),
                             ),
                           ),
-                        ),
-                      )
-                    : isFromAppointment
-                        ? Container()
-                        : Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Align(
-                              alignment: Alignment.topRight,
-                              child: SizedBox(
-                                height: 22,
-                                width: 22,
-                                child: RawMaterialButton(
-                                  onPressed: () {
-                                    setLoading(true);
+                        )
+                      : isFromAppointment
+                          ? Container()
+                          : Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Align(
+                                alignment: Alignment.topRight,
+                                child: SizedBox(
+                                  height: 22,
+                                  width: 22,
+                                  child: RawMaterialButton(
+                                    onPressed: () {
+                                      setLoading(true);
 
-                                    _api
-                                        .deletePatientMedicalDocs(
-                                      token,
-                                      content['_id'],
-                                    )
-                                        .whenComplete(() {
-                                      setLoading(false);
-                                      setState(() => docsList.remove(content));
-                                    }).futureError((error) {
-                                      setLoading(false);
-                                      error.toString().debugLog();
-                                    });
-                                  },
-                                  child: Icon(
-                                    Icons.close,
-                                    color: Colors.grey,
-                                    size: 16.0,
-                                  ),
-                                  shape: CircleBorder(),
-                                  elevation: 2.0,
-                                  fillColor: Colors.white,
-                                  constraints: const BoxConstraints(
-                                    minWidth: 22.0,
-                                    minHeight: 22.0,
+                                      _api
+                                          .deletePatientMedicalDocs(
+                                        token,
+                                        docsList[index]['_id'],
+                                      )
+                                          .whenComplete(() {
+                                        setLoading(false);
+                                        setState(() =>
+                                            docsList.remove(docsList[index]));
+                                      }).futureError((error) {
+                                        setLoading(false);
+                                        error.toString().debugLog();
+                                      });
+                                    },
+                                    child: Icon(
+                                      Icons.close,
+                                      color: Colors.grey,
+                                      size: 16.0,
+                                    ),
+                                    shape: CircleBorder(),
+                                    elevation: 2.0,
+                                    fillColor: Colors.white,
+                                    constraints: const BoxConstraints(
+                                      minWidth: 22.0,
+                                      minHeight: 22.0,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                // Align(
-                //   alignment: Alignment.bottomCenter,
-                //   child:
-                Column(
-                  children: [
-                    Spacer(),
-                    Container(
-                      // height: 108,
-                      width: 180,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 4),
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(14.0),
-                        border: Border.all(
-                          color: Colors.grey[100],
-                        ),
-                      ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      height: spacing70,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: spacing10, vertical: 5),
+                      alignment: Alignment.center,
+                      color: Colors.white,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Text(
-                            content['name'],
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                              color: Colors.black.withOpacity(0.85),
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                docsList[index][ArgumentConstant.nameKey],
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: fontSize14,
+                                    fontWeight: fontWeightSemiBold,
+                                    color: Color(0xff1b1200)),
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 3.0),
-                          Text(
-                            'Type - ' + content['type'],
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 12,
-                              color: Colors.black.withOpacity(0.60),
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                docsList[index][ArgumentConstant.typeKey],
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: fontSize12,
+                                    fontWeight: fontWeightRegular,
+                                    color: Colors.black),
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 3.0),
-                          Text(
-                            'Date - ' + content['date'],
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 12,
-                              color: Colors.black.withOpacity(0.60),
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                docsList[index][ArgumentConstant.dateKey],
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: fontSize12,
+                                    fontWeight: fontWeightRegular,
+                                    color: Colors.black),
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 3.0),
-                        ],
-                      ),
-                    ).onClick(
-                      onTap: () {
-                        _selectedDocsList.toString().debugLog();
+                          ]),
+                    ).onClick(onTap: () {
+                      _selectedDocsList.toString().debugLog();
 
-                        if (!_selectedDocsList.contains(content)) {
-                          setState(() {
-                            _selectedDocsList.add(content);
-                          });
-                        } else {
-                          setState(() {
-                            _selectedDocsList.remove(content);
-                          });
-                        }
-                      },
-                    ),
-                  ],
-                )
-                // ),
-              ],
-            ),
-          ).onClick(
-              onTap: document.toLowerCase().endsWith("pdf")
-                  ? () async {
-                      var url = document;
-                      if (await canLaunch(url)) {
-                        await launch(url);
+                      if (!_selectedDocsList.contains(docsList[index])) {
+                        setState(() {
+                          _selectedDocsList.add(docsList[index]);
+                        });
                       } else {
-                        throw 'Could not launch $url';
+                        setState(() {
+                          _selectedDocsList.remove(docsList[index]);
+                        });
                       }
-                    }
-                  : () {
-                      Navigator.of(context).pushNamed(
-                        Routes.providerImageScreen,
-                        arguments: document,
-                      );
                     }),
-        );
-      }
-    }
+                  ),
+                ],
+              ).onClick(
+                onTap: document.toLowerCase().endsWith("pdf")
+                    ? () async {
+                        var url = document;
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        } else {
+                          throw 'Could not launch $url';
+                        }
+                      }
+                    : () {
+                        Navigator.of(context).pushNamed(
+                          Routes.providerImageScreen,
+                          arguments: document,
+                        );
+                      },
+              ),
+            ),
+          );
+        },
+      );
 
-    return columnContent;
-  }
+  Widget _uploadMedicalDocumentsBanner(BuildContext context) =>
+      (!isFromAppointment)
+          ? ListTile(
+              onTap: showPickerDialog,
+              leading: CircleAvatar(
+                radius: spacing30,
+                backgroundColor: AppColors.goldenTainoi,
+                child: Image.asset(
+                  FileConstants.icCamera,
+                  width: spacing20,
+                  height: spacing20,
+                  color: Colors.white,
+                ),
+              ),
+              title: ListTile(
+                contentPadding: EdgeInsets.all(0),
+                title: Text(
+                  Localization.of(context).uploadMedicalDocsLabel,
+                  style: TextStyle(
+                      fontSize: fontSize15,
+                      fontWeight: fontWeightSemiBold,
+                      color: Colors.black),
+                ),
+                subtitle: Text(
+                  Localization.of(context).uploadMedicalDocsSubLabel,
+                  style: TextStyle(
+                      fontSize: fontSize12,
+                      fontWeight: fontWeightRegular,
+                      color: Color(0xff1b1200)),
+                ),
+                trailing:
+                    Icon(Icons.add, color: AppColors.goldenTainoi, size: 30),
+              ),
+            )
+          : SizedBox();
 
   void getDocumentType() async {
     FilePickerResult file = await FilePicker.platform.pickFiles(
@@ -509,7 +486,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
           ).onClick(onTap: _documentTypeBottomDialog),
           SizedBox(height: 25),
           textField(
-            'Name of the document',
+            'What is the body part',
             (value) {
               documentName = value;
             },
@@ -591,12 +568,11 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
 
                       _api
                           .multipartPost(
-                        ApiBaseHelper.base_url +
-                            'api/patient/medical-documents',
-                        token,
-                        fileMap,
-                      multipartList
-                      )
+                              ApiBaseHelper.base_url +
+                                  'api/patient/medical-documents',
+                              token,
+                              fileMap,
+                              multipartList)
                           .then((value) {
                         documentTypeController.text = '';
                         documentDateController.text = '';
@@ -685,57 +661,28 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
   }
 
   void showPickerDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Picker"),
-          content: Text("Select document picker type."),
-          actions: <Widget>[
-            FlatButton(
-              child: Text("Image"),
-              onPressed: () {
-                Navigator.pop(context);
-                showImagePickerDialog();
-              },
-            ),
-            FlatButton(
-              child: Text("PDF"),
-              onPressed: () {
-                getDocumentType();
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
-      },
-    );
+    showCommonUploadDialog(context, Localization.of(context).picker,
+        Localization.of(context).uploadDocument, onTop: () {
+      Navigator.pop(context);
+      showImagePickerDialog();
+    }, onBottom: () {
+      getDocumentType();
+      Navigator.pop(context);
+    }, isForDocument: true);
   }
 
   void showImagePickerDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Picker"),
-          content: Text("Select image picker type."),
-          actions: <Widget>[
-            FlatButton(
-              child: Text("Camera"),
-              onPressed: () {
-                getImage(1);
-                Navigator.pop(context);
-              },
-            ),
-            FlatButton(
-              child: Text("Gallery"),
-              onPressed: () {
-                getImage(2);
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
+    showCommonUploadDialog(
+      context,
+      Localization.of(context).picker,
+      Localization.of(context).uploadPhoto,
+      onTop: () {
+        getImage(1);
+        Navigator.pop(context);
+      },
+      onBottom: () {
+        getImage(2);
+        Navigator.pop(context);
       },
     );
   }
