@@ -27,6 +27,7 @@ import 'package:hutano/screens/appointments/view_medical_history.dart';
 import 'package:hutano/screens/appointments/virtual_waiting_room.dart';
 import 'package:hutano/screens/book_appointment/conditiontime/condition_time.dart';
 import 'package:hutano/screens/book_appointment/diagnosis/test_diagnosis.dart';
+import 'package:hutano/screens/book_appointment/diagnosis/upload_diagnostic_new.dart';
 import 'package:hutano/screens/book_appointment/diagnosis/upload_diagnostic_result.dart';
 import 'package:hutano/screens/book_appointment/effect_ability.dart';
 import 'package:hutano/screens/book_appointment/morecondition/more_condition.dart';
@@ -43,6 +44,7 @@ import 'package:hutano/screens/book_appointment/select_appointment_time_screen.d
 import 'package:hutano/screens/book_appointment/select_parking_screen.dart';
 import 'package:hutano/screens/book_appointment/select_services.dart';
 import 'package:hutano/screens/book_appointment/vitals/vital_reviews.dart';
+import 'package:hutano/screens/chat/chat.dart';
 import 'package:hutano/screens/dashboard/all_reviews_screen.dart';
 import 'package:hutano/screens/dashboard/all_tiltes_specialties_screen.dart';
 import 'package:hutano/screens/dashboard/appointment_type_screen.dart';
@@ -248,6 +250,8 @@ class Routes {
   static const String viewMedicalHistory = '/viewMedicalHistory';
   static const String routeConditionBetterWorst = '/routeConditionBetterWorst';
   static const String allDocumentsTabsScreen = '/allDocumentsTabsScreen';
+  static const String chat = '/chat';
+  static const String routeUploadDiagnosticNew = '/routeUploadDiagnosticNew';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final dynamic args = settings.arguments;
@@ -863,7 +867,12 @@ class Routes {
       case allDocumentsTabsScreen:
         return _buildRoute(settings, AllDocumentsTabs());
         break;
-      default:
+      case chat:
+        return _buildRoute(settings, Chat(appointment: args));
+        break;
+      case routeUploadDiagnosticNew:
+        return MaterialPageRoute(builder: (_) => UploadDiagnosticNew());
+     default:
         return _errorRoute();
     }
   }

@@ -219,6 +219,10 @@ class _MedicineInformationState extends State<MedicineInformation> {
       setState(() {
         medicines = value.response;
       });
+    }).catchError((e) {
+      if (e is ErrorModel) {
+        e.toString().debugLog();
+      }
     });
   }
 
@@ -231,7 +235,7 @@ class _MedicineInformationState extends State<MedicineInformation> {
         title: "",
         addHeader: true,
         padding: EdgeInsets.only(bottom: spacing20),
-        addBottomArrows: true,
+        addBottomArrows: MediaQuery.of(context).viewInsets.bottom == 0,
         onForwardTap: () {
           if (_currentStepIndex == 2) {
             if (_getMedicineList.isEmpty) {
@@ -300,30 +304,23 @@ class _MedicineInformationState extends State<MedicineInformation> {
       physics: NeverScrollableScrollPhysics(),
       itemCount: medicines.length,
       itemBuilder: (context, index) {
-        return StatefulBuilder(
-            builder: (context, _setState) => CheckboxListTile(
-                activeColor: colorYellow,
-                contentPadding: EdgeInsets.all(0),
-                title: Container(
-                    child: Row(children: [
-                  Expanded(
-                    child: Text(
-                      medicines[index].name ?? '',
-                      style: const TextStyle(
-                          color: colorBlack2,
-                          fontSize: fontSize14,
-                          fontWeight: fontWeightMedium),
-                    ),
-                  )
-                ])),
-                value: true,
-                onChanged: (val) {
-                  setState(() {
-                    _selectedMedicine = medicines[index];
-                    _searchController.text = _selectedMedicine.name;
-                    _searchFocusNode.unfocus();
-                  });
-                }));
+        return ListTile(
+          onTap: () {
+            setState(() {
+              _selectedMedicine = medicines[index];
+              _searchController.text = _selectedMedicine.name;
+              _searchFocusNode.unfocus();
+            });
+          },
+          contentPadding: EdgeInsets.all(0),
+          title: Text(
+            medicines[index].name ?? '',
+            style: const TextStyle(
+                color: colorBlack2,
+                fontSize: fontSize14,
+                fontWeight: fontWeightMedium),
+          ),
+        );
       });
 
   Widget _askAndSearchMedicationWidget(BuildContext context) => Row(
@@ -462,9 +459,19 @@ class _MedicineInformationState extends State<MedicineInformation> {
     for (var d in _selectedMedicine?.dose ?? []) {
       doselist.add(_doseButtons(d));
     }
-    return Column(
+    return ListView(
+      shrinkWrap: true,
       children: [
-        Row(children: doselist),
+        Container(
+          height: 35,
+          child: ListView.builder(
+            itemCount: _selectedMedicine?.dose.length,
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) {
+              return _doseButtons(_selectedMedicine.dose[index]);
+            },
+          ),
+        ),
         if (_medicineDose != null && _medicineDose != null)
           SizedBox(width: spacing15),
         if (_medicineDose != null && _medicineDose != null)
@@ -493,7 +500,6 @@ class _MedicineInformationState extends State<MedicineInformation> {
         label: title,
         onPressed: onTap,
         buttonType: HutanoButtonType.onlyLabel,
-        width: 80,
         labelColor: selectedTitle == title
             ? colorActiveBodyPart
             : colorInactiveBodyPart,
@@ -581,13 +587,9 @@ class _MedicineInformationState extends State<MedicineInformation> {
                 fontSize: fontSize14,
                 color: colorBlack2),
           ),
-          trailing: _currentStepIndex == 2
-              ? _getMedicineList[index].isSelected
-                  ? Image.asset("images/checkedCheck.png",
-                      height: 24, width: 24)
-                  : Image.asset("images/uncheckedCheck.png",
-                      height: 24, width: 24)
-              : SizedBox(),
+          trailing: _getMedicineList[index].isSelected
+              ? Image.asset("images/checkedCheck.png", height: 24, width: 24)
+              : Image.asset("images/uncheckedCheck.png", height: 24, width: 24),
           leading: Container(
             height: 20,
             width: 20,

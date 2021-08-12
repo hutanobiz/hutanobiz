@@ -23,6 +23,11 @@ class ReqBookingAppointmentModel {
   String type;
   Vitals vitals;
   List<String> medicationDetails;
+  String previousAppointmentId;
+  String parkingFee;
+  String parkingType;
+  String instruction;
+  String userAddressId;
 
   ReqBookingAppointmentModel(
       {this.cardId,
@@ -48,7 +53,12 @@ class ReqBookingAppointmentModel {
       this.timeZonePlace,
       this.type,
       this.vitals,
-      this.medicationDetails});
+      this.medicationDetails,
+      this.previousAppointmentId,
+      this.parkingFee,
+      this.parkingType,
+      this.instruction,
+      this.userAddressId});
 
   ReqBookingAppointmentModel.fromJson(Map<String, dynamic> json) {
     cardId = json['cardId'];
@@ -88,6 +98,11 @@ class ReqBookingAppointmentModel {
     vitals =
         json['vitals'] != null ? new Vitals.fromJson(json['vitals']) : null;
     medicationDetails = json['medicationDetails'].cast<String>();
+    previousAppointmentId = json['previousAppointmentId'];
+    parkingFee = json['parkingFee'];
+    parkingType = json['parkingType'];
+    instruction = json['instruction'];
+    userAddressId = json['userAddressId'];
   }
 
   Map<String, dynamic> toJson() {
@@ -125,6 +140,11 @@ class ReqBookingAppointmentModel {
       data['vitals'] = this.vitals.toJson();
     }
     data['medicationDetails'] = this.medicationDetails;
+    data['previousAppointmentId'] = this.previousAppointmentId;
+    data['parkingFee'] = this.parkingFee;
+    data['parkingType'] = this.parkingType;
+    data['instruction'] = this.instruction;
+    data['userAddressId'] = this.userAddressId;
     return data;
   }
 }

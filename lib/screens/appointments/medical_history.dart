@@ -10,7 +10,9 @@ import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/appointments/model/model/res_disease_model.dart';
 import 'package:hutano/screens/appointments/model/req_add_disease_model.dart';
+import 'package:hutano/screens/appointments/model/req_booking_appointment_model.dart';
 import 'package:hutano/screens/appointments/model/res_medical_documents_model.dart';
+import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/screens/medical_history/provider/appoinment_provider.dart';
 
 import 'package:hutano/utils/color_utils.dart';
@@ -176,7 +178,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
           },
           itemBuilder: (context, suggestion) {
             return ListTile(
-              title: Text(suggestion.name),
+              title: Text(suggestion.name ?? ''),
             );
           },
           transitionBuilder: (context, suggestionsBox, controller) {
@@ -354,17 +356,35 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
   }
 
   void saveMedicalHistory() {
-    final _gender = getInt(PreferenceKey.gender);
-    Provider.of<SymptomsInfoProvider>(context, listen: false)
-        .setBodyType(_gender);
-    if (isBottomButtonsShow) {
-      if (_showDiseaseData != null && _showDiseaseData.length > 0) {
-        // _showDiseaseData.forEach((element) {
-        _container.setConsentToTreatData("medicalHistory", _showDiseaseData);
-        // });
+    if (_showDiseaseData != null) {
+      if (_showDiseaseData.length > 0) {
+        final _gender = getInt(PreferenceKey.gender);
+        Provider.of<SymptomsInfoProvider>(context, listen: false)
+            .setBodyType(_gender);
+        List<BookedMedicalHistory> _listOfHistory = [];
+        if (isBottomButtonsShow) {
+          if (_showDiseaseData != null && _showDiseaseData.length > 0) {
+            _showDiseaseData.forEach((element) {
+              _container.setConsentToTreatData("medicalHistory", element.name);
+              _listOfHistory.add(BookedMedicalHistory(
+                  name: element.name,
+                  year: int.parse(element.year),
+                  month: element.month));
+            });
+          }
+          Provider.of<HealthConditionProvider>(context, listen: false)
+              .updateMedicalHistory(_listOfHistory);
+          Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
+        }
+      } else {
+        Provider.of<HealthConditionProvider>(context, listen: false)
+            .updateMedicalHistory([]);
+        Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
       }
-      Navigator.of(context).pushNamed(Routes.seekingCureScreen);
-      // Navigator.of(context).pushNamed(routeWelcomeNewFollowup);
+    } else {
+      Provider.of<HealthConditionProvider>(context, listen: false)
+          .updateMedicalHistory([]);
+      Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
     }
   }
 

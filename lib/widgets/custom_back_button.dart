@@ -3,14 +3,18 @@ import 'package:flutter/material.dart';
 class CustomBackButton extends StatelessWidget {
   final EdgeInsets margin;
   final double size;
+  final Function onTap;
 
-  const CustomBackButton({Key key, this.margin, this.size=32}) : super(key: key);
+  const CustomBackButton({Key key, this.margin, this.size = 32, this.onTap})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.pop(context);
-      },
+      onTap: onTap != null
+          ? onTap
+          : () {
+              Navigator.pop(context);
+            },
       child: Container(
           margin: margin ?? const EdgeInsets.only(top: 15, left: 15),
           width: size,

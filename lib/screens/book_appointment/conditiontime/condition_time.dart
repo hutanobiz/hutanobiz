@@ -504,56 +504,56 @@ class _ConditionTimeScreenState extends State<ConditionTimeScreen> {
   }
 
   void _onForwardTapButton(BuildContext context) {
-    if (_isTreated) {
-      if (!widget.isForProblem) {
-        Problems model =
-            Provider.of<HealthConditionProvider>(context, listen: false)
-                .problemsData;
-        model.isTreatmentReceived = "1";
-        if (_selectedValue != "0") {
-          model.treatmentReceived = ProblemFacingTimeSpan(
-              type: _selectedType, period: _selectedValue);
-        } else {
-          model.treatmentReceived = ProblemFacingTimeSpan();
-        }
-        Provider.of<HealthConditionProvider>(context, listen: false)
-            .updateProblemData(model);
-        Navigator.of(context).pushNamed(Routes.allImagesTabsScreen);
-      } else {
-        Problems model =
-            Provider.of<HealthConditionProvider>(context, listen: false)
-                .problemsData;
-        _listOfSymptoms.forEach((element) {
-          if (element.index == 1) {
-            if (element.isSelected) {
-              model.isProblemImproving = "1";
-            } else {
-              model.isProblemImproving = "0";
-            }
-          }
-        });
-        if (_selectedValue != "0") {
-          model.problemFacingTimeSpan = ProblemFacingTimeSpan(
-              type: _selectedType, period: _selectedValue);
-        } else {
-          model.problemFacingTimeSpan = ProblemFacingTimeSpan();
-        }
-        Provider.of<HealthConditionProvider>(context, listen: false)
-            .updateProblemData(model);
-        Navigator.pushNamed(context,Routes. routeConditionTimeScreen, arguments: {
-          ArgumentConstant.isForProblemKey: false,
-        });
-      }
-    } else {
-      Problems model =
-          Provider.of<HealthConditionProvider>(context, listen: false)
-              .problemsData;
-      model.isTreatmentReceived = "0";
-      model.treatmentReceived = ProblemFacingTimeSpan();
-      Provider.of<HealthConditionProvider>(context, listen: false)
-          .updateProblemData(model);
-      Navigator.of(context).pushNamed(Routes.allImagesTabsScreen);
-    }
+    // if (_isTreated) {
+    //   if (!widget.isForProblem) {
+    //     Problems model =
+    //         Provider.of<HealthConditionProvider>(context, listen: false)
+    //             .boneAndMuscleData;
+    //     model.isTreatmentReceived = "1";
+    //     if (_selectedValue != "0") {
+    //       model.treatmentReceived = ProblemFacingTimeSpan(
+    //           type: _selectedType, period: _selectedValue);
+    //     } else {
+    //       model.treatmentReceived = ProblemFacingTimeSpan();
+    //     }
+    //     Provider.of<HealthConditionProvider>(context, listen: false)
+    //         .updateBoneAndMuscleData(model);
+    //     Navigator.of(context).pushNamed(Routes.allImagesTabsScreen);
+    //   } else {
+    //     Problems model =
+    //         Provider.of<HealthConditionProvider>(context, listen: false)
+    //             .boneAndMuscleData;
+    //     _listOfSymptoms.forEach((element) {
+    //       if (element.index == 1) {
+    //         if (element.isSelected) {
+    //           model.isProblemImproving = "1";
+    //         } else {
+    //           model.isProblemImproving = "0";
+    //         }
+    //       }
+    //     });
+    //     if (_selectedValue != "0") {
+    //       model.problemFacingTimeSpan = ProblemFacingTimeSpan(
+    //           type: _selectedType, period: _selectedValue);
+    //     } else {
+    //       model.problemFacingTimeSpan = ProblemFacingTimeSpan();
+    //     }
+    //     Provider.of<HealthConditionProvider>(context, listen: false)
+    //         .updateBoneAndMuscleData(model);
+    //     Navigator.pushNamed(context, routeConditionTimeScreen, arguments: {
+    //       ArgumentConstant.isForProblemKey: false,
+    //     });
+    //   }
+    // } else {
+    //   Problems model =
+    //       Provider.of<HealthConditionProvider>(context, listen: false)
+    //           .boneAndMuscleData;
+    //   model.isTreatmentReceived = "0";
+    //   model.treatmentReceived = ProblemFacingTimeSpan();
+    //   Provider.of<HealthConditionProvider>(context, listen: false)
+    //       .updateBoneAndMuscleData(model);
+    //   Navigator.of(context).pushNamed(Routes.allImagesTabsScreen);
+    // }
   }
 
   //TODO WILL USER AFTER MULTIPLE HEALTH ISSUES FEATURE ADDED
@@ -597,7 +597,7 @@ class _ConditionTimeScreenState extends State<ConditionTimeScreen> {
     } else if (Provider.of<HealthConditionProvider>(context, listen: false)
         .healthConditions
         .contains(12)) {
-      Navigator.pushNamed(context,Routes. routeImmunization);
+      Navigator.pushNamed(context, Routes.routeImmunization);
     } else {
       Navigator.of(context).pushNamed(Routes.allImagesTabsScreen);
     }

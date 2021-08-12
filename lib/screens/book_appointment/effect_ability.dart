@@ -46,16 +46,15 @@ class _EffectAbilityScreenState extends State<EffectAbilityScreen> {
           addHeader: true,
           addBottomArrows: true,
           onForwardTap: () {
-            Problems model =
-                Provider.of<HealthConditionProvider>(context, listen: false)
-                    .problemsData;
-            model.dailyActivity = radioVal.toString();
-            Provider.of<HealthConditionProvider>(context, listen: false)
-                .updateProblemData(model);
-            Navigator.pushNamed(context, Routes.routeConditionTimeScreen,
-                arguments: {
-                  ArgumentConstant.isForProblemKey: true,
-                });
+            // Problems model =
+            //     Provider.of<HealthConditionProvider>(context, listen: false)
+            //         .boneAndMuscleData;
+            // model.dailyActivity = radioVal.toString();
+            // Provider.of<HealthConditionProvider>(context, listen: false)
+            //     .updateBoneAndMuscleData(model);
+            // Navigator.pushNamed(context, routeConditionTimeScreen, arguments: {
+            //   ArgumentConstant.isForProblemKey: true,
+            // });
           },
           padding: EdgeInsets.zero,
           child: SingleChildScrollView(

@@ -476,6 +476,7 @@ abstract class Localization {
   String get rateYourDiscomfort;
   String get tellUsAboutCare;
   String get tellUsAboutMore;
+  String get aboutMore;
   String get searchForProblem;
   String get welcomeBackHeader;
   String get newHealthIssueHeader;

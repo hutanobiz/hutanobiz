@@ -47,18 +47,24 @@ class _ViewAllDocumentImagesState extends State<ViewAllDocumentImages> {
               child: CustomLoader(),
             )
           : !_getData && !_indicatorLoading
-              ? Expanded(
-                  child: Center(
-                    child: Text(
-                      widget.isForImage
-                          ? Localization.of(context).noMedicalImagesFound
-                          : Localization.of(context).noMedicalDocumentsFound,
-                      style: TextStyle(
-                          fontSize: fontSize16,
-                          color: colorBlack2,
-                          fontWeight: fontWeightSemiBold),
+              ? Flex(
+                  direction: Axis.horizontal,
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          widget.isForImage
+                              ? Localization.of(context).noMedicalImagesFound
+                              : Localization.of(context)
+                                  .noMedicalDocumentsFound,
+                          style: TextStyle(
+                              fontSize: fontSize16,
+                              color: colorBlack2,
+                              fontWeight: fontWeightSemiBold),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 )
               : GridView.builder(
                   itemCount: widget.isForImage
@@ -96,13 +102,13 @@ class _ViewAllDocumentImagesState extends State<ViewAllDocumentImages> {
                               child: Container(
                                 height:
                                     widget.isForImage ? spacing60 : spacing70,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 8.0, vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: spacing10, vertical: 5),
                                 alignment: Alignment.center,
                                 color: Colors.white,
                                 child: Column(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceEvenly,
                                   children: <Widget>[
                                     Align(
                                       alignment: Alignment.topLeft,
@@ -110,7 +116,6 @@ class _ViewAllDocumentImagesState extends State<ViewAllDocumentImages> {
                                         widget.isForImage
                                             ? _allImages[index].name
                                             : _allDocuments[index].name,
-                                        overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             fontSize: fontSize14,
                                             fontWeight: fontWeightSemiBold,
@@ -122,7 +127,6 @@ class _ViewAllDocumentImagesState extends State<ViewAllDocumentImages> {
                                         alignment: Alignment.topLeft,
                                         child: Text(
                                           _allDocuments[index].type,
-                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                               fontSize: fontSize12,
                                               fontWeight: fontWeightRegular,
@@ -139,7 +143,6 @@ class _ViewAllDocumentImagesState extends State<ViewAllDocumentImages> {
                                                 '---+---'
                                             : _allDocuments[index].date ??
                                                 "---+---",
-                                        overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             fontSize: fontSize12,
                                             fontWeight: fontWeightRegular,

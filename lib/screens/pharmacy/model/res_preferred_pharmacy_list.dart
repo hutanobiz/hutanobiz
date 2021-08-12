@@ -7,7 +7,7 @@ class ResPreferredPharmacyList {
   ResPreferredPharmacyList.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     if (json['response'] != null) {
-      response = new List<Pharmacy>();
+      response = <Pharmacy>[];
       json['response'].forEach((v) {
         response.add(new Pharmacy.fromJson(v));
       });
@@ -30,7 +30,7 @@ class Pharmacy {
   String createdAt;
   String updatedAt;
   int iV;
-  List<AddressPharmacy> address;
+  AddressPharmacy address;
 
   Pharmacy(
       {this.sId,
@@ -47,22 +47,26 @@ class Pharmacy {
     updatedAt = json['updatedAt'];
     iV = json['__v'];
     if (json['address'] != null) {
-      address = new List<AddressPharmacy>();
-      json['address'].forEach((v) {
-        address.add(new AddressPharmacy.fromJson(v));
-      });
+      if (json['address'] is List) {
+        if (json['address'].isNotEmpty) {
+          address = AddressPharmacy.fromJson(json['address'][0]);
+        }
+      } else {
+        address = AddressPharmacy.fromJson(json['address']);
+      }
     }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_id'] = this.sId;
+    data['pharmacyId'] = this.sId;
     data['name'] = this.name;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
     data['__v'] = this.iV;
     if (this.address != null) {
-      data['address'] = this.address.map((v) => v.toJson()).toList();
+      data['address'] = this.address.toJson();
     }
     return data;
   }

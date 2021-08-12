@@ -79,4 +79,8 @@ class ArgumentConstant {
   static const String problemIdKey = 'problemId';
   static const String problemNameKey = 'problemName';
   static const String problemImageKey = 'problemImage';
+  static const String isMoodMentalKey = 'isMoodMental';
+  static const String isImmunizationKey = 'isImmunization';
+  static const String isFromSettingKey = 'isFromSetting';
+  static const String indexKey = 'index';
 }

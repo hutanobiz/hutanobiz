@@ -35,8 +35,9 @@ class LoadingBackgroundNew extends StatelessWidget {
       this.isSkipLater = false,
       this.onSkipForTap,
       this.isCameraVisible = false,
+      this.onCameraForTap,
       this.notificationCount,
-      this.onCameraForTap})
+      this.onUpperBackTap})
       : super(key: key);
 
   final bool isLoading;
@@ -61,6 +62,7 @@ class LoadingBackgroundNew extends StatelessWidget {
   final int notificationCount;
   final bool isCameraVisible;
   final Function onCameraForTap;
+  final Function onUpperBackTap;
 
   @override
   Widget build(BuildContext context) {
@@ -79,14 +81,10 @@ class LoadingBackgroundNew extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       if (isBackRequired)
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: CustomBackButton(
-                            margin: const EdgeInsets.all(0),
-                            size: 26,
-                          ),
+                        CustomBackButton(
+                          margin: const EdgeInsets.all(0),
+                          size: 26,
+                          onTap: onUpperBackTap,
                         ),
                       if (!addTitle) ...[
                         Spacer(),
@@ -114,10 +112,7 @@ class LoadingBackgroundNew extends StatelessWidget {
                                   onRButtonTap != null ? onRButtonTap : () {},
                               child: Icon(Icons.add))
                           : InkWell(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, Routes.activityNotification);
-                              },
+                              onTap: () {},
                               child: Stack(
                                 children: [
                                   Padding(

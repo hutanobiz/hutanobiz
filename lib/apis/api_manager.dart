@@ -18,6 +18,9 @@ import 'package:hutano/screens/book_appointment/morecondition/model/res_more_con
 import 'package:hutano/screens/book_appointment/multiplehealthissues/model/req_selected_condition_model.dart';
 import 'package:hutano/screens/book_appointment/multiplehealthissues/model/res_selected_condition_model.dart';
 import 'package:hutano/screens/book_appointment/vitals/model/req_add_vital_model.dart';
+import 'package:hutano/screens/chat/models/chat_data_model.dart';
+import 'package:hutano/screens/chat/models/recent_chat_model.dart';
+import 'package:hutano/screens/chat/models/seach_doctor_data.dart';
 import 'package:hutano/screens/dashboard/model/res_invite_friends.dart';
 import 'package:hutano/screens/familynetwork/add_family_member/model/req_add_member.dart';
 import 'package:hutano/screens/familynetwork/add_family_member/model/res_add_member.dart';
@@ -46,9 +49,11 @@ import 'package:hutano/screens/medical_history/model/res_medical_images_upload.d
 import 'package:hutano/screens/medical_history/model/res_medication_detail.dart';
 import 'package:hutano/screens/medical_history/model/res_medicine.dart';
 import 'package:hutano/screens/payment/model/res_reward_points.dart';
+import 'package:hutano/screens/pharmacy/model/preferred_pharmacy.dart';
 import 'package:hutano/screens/pharmacy/model/req_add_pharmacy_model.dart';
 import 'package:hutano/screens/pharmacy/model/res_google_place_detail_pharmacy.dart';
-import 'package:hutano/screens/pharmacy/model/res_preferred_pharmacy_list.dart';
+import 'package:hutano/screens/pharmacy/model/res_preferred_pharmacy_list.dart'
+    as Pha;
 import 'package:hutano/screens/providercicle/my_provider_network/model/req_remove_provider.dart';
 import 'package:hutano/screens/providercicle/my_provider_network/model/req_share_provider.dart';
 import 'package:hutano/screens/providercicle/my_provider_network/model/res_my_provider_network.dart';
@@ -124,6 +129,56 @@ class ApiManager {
       final response = await _apiService
           .get('api/search-medical-history?searchString=$searchString');
       return ResDiseaseModel.fromJson(response.data).response;
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+  Future<List<SearchAppointment>> searchAppointments(searchString) async {
+    try {
+      final response = await _apiService.get(
+          'api/patient/search-doctor-appointment-list?searchString=$searchString');
+      var aa = SearchAppointmentData.fromJson(response.data).response;
+      return aa;
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+  Future<RecentChatData> getRecentChats() async {
+    try {
+      final response = await _apiService.get('api/patient/recent-chats');
+      var aa = RecentChatData.fromJson(response.data);
+      return aa;
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+  Future<MessagesData> getChatDetail(appointmentId) async {
+    try {
+      final response = await _apiService
+          .get('api/patient/chat-details?appointmentId=$appointmentId');
+      return MessagesData.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+  Future<PreferredPharmacyData> getMyPharmacies() async {
+    try {
+      final response = await _apiService.get('api/patient/preferred-Pharmacy');
+      return PreferredPharmacyData.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+  Future<dynamic> addPreferredPharmacy(Pha.Pharmacy pharmacyModel) async {
+    try {
+      final response = await _apiService.post('api/patient/preferred-Pharmacy',
+          data: pharmacyModel.toJson());
+      return response.data;
     } on DioError catch (error) {
       throw ErrorModel.fromJson(error.response.data);
     }
@@ -350,12 +405,11 @@ class ApiManager {
     }
   }
 
-  Future<ResPreferredPharmacyList> getPreferredPharmacyList(
-      String input) async {
+  Future<List<Pha.Pharmacy>> getPreferredPharmacyList(String input) async {
     try {
       final response =
-          await _apiService.get("/api/search-pharmacy?searchString=$input");
-      return ResPreferredPharmacyList.fromJson(response.data);
+          await _apiService.get("api/search-pharmacy?searchString=$input");
+      return Pha.ResPreferredPharmacyList.fromJson(response.data).response;
     } on DioError catch (error) {
       throw ErrorModel.fromJson(error.response.data);
     }

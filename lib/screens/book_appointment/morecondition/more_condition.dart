@@ -6,8 +6,10 @@ import 'package:hutano/apis/error_model.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/appointments/model/req_booking_appointment_model.dart';
 import 'package:hutano/screens/book_appointment/morecondition/model/res_condition_type.dart';
 import 'package:hutano/screens/book_appointment/morecondition/model/res_more_condition_model.dart';
+import 'package:hutano/screens/book_appointment/morecondition/model/selection_health_issue_model.dart';
 import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/common_methods.dart';
@@ -16,6 +18,7 @@ import 'package:hutano/utils/constants/key_constant.dart';
 import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/utils/progress_dialog.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/widgets/controller.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:provider/provider.dart';
 
@@ -43,124 +46,122 @@ class _MoreConditionState extends State<MoreCondition> {
     getScreenSize(context);
     return Scaffold(
         backgroundColor: AppColors.goldenTainoi,
-        body: LoadingBackgroundNew(
-            title: "",
-            addHeader: true,
-            padding: EdgeInsets.zero,
-            addBottomArrows: true,
-            onForwardTap: () {
-              List<int> _selectedConditionList = [];
-              int i = 1;
-              _conditionList.forEach((element) {
-                if (element.isSelected) {
-                  _selectedConditionList.add(i);
-                  i++;
-                } else {
-                  i++;
-                }
-              });
-              Provider.of<HealthConditionProvider>(context, listen: false)
-                  .updateHealthConditions(_selectedConditionList);
-              Navigator.of(context).pushNamed(Routes.routeBoneAndMuscle, arguments: {
-                ArgumentConstant.problemIdKey: _conditionList[0].sId,
-                ArgumentConstant.problemNameKey: _conditionList[0].name,
-                ArgumentConstant.problemImageKey: _conditionList[0].image
-              });
-            },
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    color: AppColors.goldenTainoi,
-                    width: screenSize.width,
-                    padding: EdgeInsets.only(left: spacing15),
+        body: WillPopScope(
+            onWillPop: _resetAction,
+            child: LoadingBackgroundNew(
+                title: "",
+                addHeader: true,
+                padding: EdgeInsets.zero,
+                addBottomArrows: true,
+                onUpperBackTap: () {
+                  Provider.of<HealthConditionProvider>(context, listen: false)
+                      .updateCurrentIndex(0);
+                  Navigator.pop(context);
+                },
+                onForwardTap: () {
+                  _onForwardTap(context);
+                },
+                child: SingleChildScrollView(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          Localization.of(context).tellUsAboutMore,
-                          style: TextStyle(
-                              fontSize: fontSize20,
-                              fontWeight: fontWeightBold,
-                              color: Color(0xff0E1C2A)),
-                        ),
-                        Container(
-                          height: 42,
-                          margin: EdgeInsets.only(
-                              top: spacing10,
-                              right: spacing15,
-                              bottom: spacing10),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                          child: TextField(
-                            textInputAction: TextInputAction.newline,
-                            textCapitalization: TextCapitalization.sentences,
-                            maxLines: 1,
-                            minLines: 1,
-                            controller: _searchConditionController,
-                            textAlignVertical: TextAlignVertical.center,
-                            decoration: InputDecoration(
-                                isDense: true,
-                                hintText:
-                                    Localization.of(context).searchForProblem,
-                                hintStyle: TextStyle(
-                                    fontSize: fontSize14,
-                                    fontWeight: fontWeightRegular),
-                                border: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                errorBorder: InputBorder.none,
-                                disabledBorder: InputBorder.none,
-                                prefixIcon: Padding(
-                                  padding: const EdgeInsets.all(spacing8),
-                                  child: Image.asset(
-                                    FileConstants.icSearch,
-                                    width: 10,
-                                    height: 10,
-                                  ),
-                                )),
-                            focusNode: _searchConditionFocusNode,
-                            onChanged: (value) {
-                              _getConditionList(value, context);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: spacing10),
-                    child: GridView.builder(
-                      itemCount: _conditionList.length,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2),
-                      itemBuilder: (BuildContext context, int index) {
-                        return _columnCommonItem(
-                          context,
-                          _conditionList[index].name,
-                          _conditionList[index].subName,
-                          _conditionList[index].image,
-                          index,
-                          _conditionList[index].isSelected,
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            )));
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                      Container(
+                          color: AppColors.goldenTainoi,
+                          width: screenSize.width,
+                          padding: EdgeInsets.only(left: spacing15),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(Localization.of(context).tellUsAboutMore,
+                                    style: TextStyle(
+                                        fontSize: fontSize20,
+                                        fontWeight: fontWeightBold,
+                                        color: Color(0xff0E1C2A))),
+                                Text(Localization.of(context).aboutMore,
+                                    style: TextStyle(
+                                        fontSize: fontSize20,
+                                        fontWeight: fontWeightBold,
+                                        color: Color(0xff0E1C2A))),
+                                Container(
+                                    height: 40,
+                                    margin: EdgeInsets.only(
+                                        top: spacing15,
+                                        right: spacing15,
+                                        bottom: spacing15),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10))),
+                                    child: TextField(
+                                        textInputAction:
+                                            TextInputAction.newline,
+                                        textCapitalization:
+                                            TextCapitalization.sentences,
+                                        maxLines: 1,
+                                        minLines: 1,
+                                        controller: _searchConditionController,
+                                        textAlignVertical:
+                                            TextAlignVertical.center,
+                                        decoration: InputDecoration(
+                                            isDense: true,
+                                            hintText: Localization.of(context)
+                                                .searchForProblem,
+                                            hintStyle: TextStyle(
+                                                fontSize: fontSize14,
+                                                fontWeight: fontWeightRegular),
+                                            border: InputBorder.none,
+                                            focusedBorder: InputBorder.none,
+                                            enabledBorder: InputBorder.none,
+                                            errorBorder: InputBorder.none,
+                                            disabledBorder: InputBorder.none,
+                                            prefixIcon: Padding(
+                                                padding: const EdgeInsets.all(
+                                                    spacing8),
+                                                child: Image.asset(
+                                                    FileConstants.icSearchBlack,
+                                                    color: colorBlack2,
+                                                    width: 20,
+                                                    height: 20))),
+                                        focusNode: _searchConditionFocusNode,
+                                        onChanged: (value) {
+                                          _getConditionList(value, context);
+                                        }))
+                              ])),
+                      Padding(
+                          padding: EdgeInsets.symmetric(horizontal: spacing10),
+                          child: GridView.builder(
+                              itemCount: _conditionList.length,
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2),
+                              itemBuilder: (BuildContext context, int index) {
+                                return _columnCommonItem(
+                                  context,
+                                  _conditionList[index].name,
+                                  _conditionList[index].subName,
+                                  _conditionList[index].image,
+                                  index,
+                                  _conditionList[index].isSelected,
+                                );
+                              }))
+                    ])))));
+  }
+
+  Future<bool> _resetAction() async {
+    Provider.of<HealthConditionProvider>(context, listen: false)
+        .decrementCurrentIndex();
+    Navigator.pop(context);
+    return true;
   }
 
   Widget _columnCommonItem(BuildContext context, String header,
           String subHeader, String image, int viewNumber, bool isSelected) =>
       Card(
         child: Container(
-          padding: EdgeInsets.all(spacing15),
+          padding: EdgeInsets.only(
+              top: spacing15, left: spacing15, right: spacing15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -198,21 +199,23 @@ class _MoreConditionState extends State<MoreCondition> {
                 ),
               ),
               Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(top: spacing10),
-                  child: Text(
-                    subHeader,
-                    style: TextStyle(
-                        color: colorBlack2,
-                        fontWeight: fontWeightRegular,
-                        fontSize: fontSize12),
-                  ),
+                child: Text(
+                  subHeader,
+                  style: TextStyle(
+                      color: colorBlack2,
+                      fontWeight: fontWeightRegular,
+                      fontSize: fontSize12),
                 ),
               ),
             ],
           ),
         ),
-      );
+      ).onClick(onTap: () {
+        setState(() {
+          _conditionList[viewNumber].isSelected =
+              !_conditionList[viewNumber].isSelected;
+        });
+      });
 
   _getConditionList(String _searchText, BuildContext context) {
     List<HealthCondition> tempList = [];
@@ -267,56 +270,76 @@ class _MoreConditionState extends State<MoreCondition> {
     });
   }
 
-  //TODO WILL USER AFTER MULTIPLE HEALTH ISSUES FEATURE ADDED
-  void _nextNavigationScreen(BuildContext context) {
-    if (Provider.of<HealthConditionProvider>(context, listen: false)
-        .healthConditions
-        .contains(1)) {
-      Navigator.of(context).pushNamed(Routes.routeBoneAndMuscle, arguments: {
-        ArgumentConstant.problemIdKey: _conditionList[0].sId,
-        ArgumentConstant.problemNameKey: _conditionList[0].name,
-        ArgumentConstant.problemImageKey: _conditionList[0].image
-      });
-    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
-        .healthConditions
-        .contains(2)) {
-      stomachNavigation(context);
-    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
-        .healthConditions
-        .contains(3)) {
-      breathingNavigation(context);
-    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
-        .healthConditions
-        .contains(4)) {
-      abnormalNavigation(context);
-    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
-        .healthConditions
-        .contains(5)) {
-      femaleHealthNavigation(context);
-    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
-        .healthConditions
-        .contains(6)) {
-      maleHealthNavigation(context);
-    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
-        .healthConditions
-        .contains(7)) {
-      woundSkinNavigation(context);
-    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
-        .healthConditions
-        .contains(8)) {
-      healthAndChestNavigation(context);
-    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
-        .healthConditions
-        .contains(9)) {
-      dentalCareNavigation(context);
-    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
-        .healthConditions
-        .contains(11)) {
-      antiAgingNavigation(context);
-    } else if (Provider.of<HealthConditionProvider>(context, listen: false)
-        .healthConditions
-        .contains(12)) {
-      Navigator.pushNamed(context,Routes.routeImmunization);
+  void _onForwardTap(BuildContext context) {
+    String doctorId =
+        Provider.of<HealthConditionProvider>(context, listen: false).providerId;
+    List<BookedMedicalHistory> medicalHistory =
+        Provider.of<HealthConditionProvider>(context, listen: false)
+            .medicalHistoryData;
+    String providerAddress =
+        Provider.of<HealthConditionProvider>(context, listen: false)
+            .providerAddress;
+    Provider.of<HealthConditionProvider>(context, listen: false)
+        .resetHealthConditionProvider();
+    Provider.of<HealthConditionProvider>(context, listen: false)
+        .updateProviderId(doctorId);
+    Provider.of<HealthConditionProvider>(context, listen: false)
+        .updateMedicalHistory(medicalHistory);
+    Provider.of<HealthConditionProvider>(context, listen: false)
+        .updateProviderAddress(providerAddress);
+    Provider.of<HealthConditionProvider>(context, listen: false)
+        .updateAllHealthIssuesData([]);
+    List<SelectionHealthIssueModel> _selectedConditionList = [];
+    List<int> tempList = [];
+    int i = 0;
+    _conditionList.forEach((element) {
+      if (element.isSelected) {
+        _selectedConditionList.add(SelectionHealthIssueModel(
+            index: i,
+            sId: element.sId,
+            name: element.name,
+            image: element.image,
+            isSelected: element.isSelected));
+        tempList.add(i);
+        i++;
+      } else {
+        i++;
+      }
+    });
+    if (tempList.isNotEmpty) {
+      Provider.of<HealthConditionProvider>(context, listen: false)
+          .updateHealthConditions(tempList);
+      Provider.of<HealthConditionProvider>(context, listen: false)
+          .updateListOfSelectedHealthIssues(_selectedConditionList);
+      for (int i = 0;
+          i <
+              Provider.of<HealthConditionProvider>(context, listen: false)
+                  .listOfSelectedHealthIssues
+                  .length;
+          i++) {
+        if (i ==
+            Provider.of<HealthConditionProvider>(context, listen: false)
+                .currentIndexOfIssue) {
+          Provider.of<HealthConditionProvider>(context, listen: false)
+              .updateCurrentIndex(0);
+          Navigator.of(context).pushNamed(Routes.routeBoneAndMuscle, arguments: {
+            ArgumentConstant.problemIdKey:
+                Provider.of<HealthConditionProvider>(context, listen: false)
+                    .listOfSelectedHealthIssues[i]
+                    .sId,
+            ArgumentConstant.problemNameKey:
+                Provider.of<HealthConditionProvider>(context, listen: false)
+                    .listOfSelectedHealthIssues[i]
+                    .name,
+            ArgumentConstant.problemImageKey:
+                Provider.of<HealthConditionProvider>(context, listen: false)
+                    .listOfSelectedHealthIssues[i]
+                    .image
+          });
+        }
+      }
+    } else {
+      Widgets.showToast("Please select any health condition");
     }
   }
 }

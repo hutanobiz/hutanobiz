@@ -1314,8 +1314,10 @@ class LocalizationEN implements Localization {
   @override
   String get tellUsAboutCare => "Tell us why you are seeking care..";
 
+  String get tellUsAboutMore => "Tell us more";
+
   @override
-  String get tellUsAboutMore => "Tell us more about your condition.";
+  String get aboutMore => "about your condition.";
 
   @override
   String get searchForProblem => "Search for problems...";

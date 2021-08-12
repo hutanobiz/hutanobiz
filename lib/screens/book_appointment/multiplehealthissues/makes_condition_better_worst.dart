@@ -57,14 +57,14 @@ class _MakesConditionBetterWorstState extends State<MakesConditionBetterWorst> {
                 left: spacing20, right: spacing10, bottom: spacing70),
             addBottomArrows: true,
             onForwardTap: () {
-              final model =
-                  Provider.of<HealthConditionProvider>(context, listen: false)
-                      .problemsData;
-              model.problemBetter = _selectedProblemBetterList;
-              model.problemWorst = _selectedProblemWorstList;
-              Provider.of<HealthConditionProvider>(context, listen: false)
-                  .updateProblemData(model);
-              Navigator.pushNamed(context, Routes.routeEffectAbility);
+              // final model =
+              //     Provider.of<HealthConditionProvider>(context, listen: false)
+              //         .boneAndMuscleData;
+              // model.problemBetter = _selectedProblemBetterList;
+              // model.problemWorst = _selectedProblemWorstList;
+              // Provider.of<HealthConditionProvider>(context, listen: false)
+              //     .updateBoneAndMuscleData(model);
+              // Navigator.pushNamed(context, routeEffectAbility);
             },
             isCameraVisible: true,
             onCameraForTap: () {},
