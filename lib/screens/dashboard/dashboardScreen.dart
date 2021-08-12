@@ -856,9 +856,51 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       //   Routes.appointmentTypeScreen,
                                       //   arguments: _appointentTypeMap,
                                       // );
-                                      Navigator.of(context).pushNamed(
-                                          Routes.providerProfileScreen,
-                                          arguments: doctorData["_id"]);
+
+                                      _loading(true);
+                                      Map<String, String> locMap = {};
+                                      LatLng _userLocation = LatLng(0.00, 0.00);
+                                      if (conatiner
+                                          .userLocationMap.isNotEmpty) {
+                                        _userLocation = conatiner
+                                                .userLocationMap['latLng'] ??
+                                            LatLng(0.00, 0.00);
+                                      }
+                                      locMap['lattitude'] = _userLocation
+                                          .latitude
+                                          .toStringAsFixed(2);
+                                      locMap['longitude'] = _userLocation
+                                          .longitude
+                                          .toStringAsFixed(2);
+                                      _api
+                                          .getProviderProfile(
+                                              doctorData["_id"], locMap)
+                                          .then((value) {
+                                        Map _appointentTypeMap = {};
+
+                                        dynamic response = value["data"][0];
+
+                                        _appointentTypeMap["isOfficeEnabled"] =
+                                            response["isOfficeEnabled"];
+                                        _appointentTypeMap[
+                                                "isVideoChatEnabled"] =
+                                            response["isVideoChatEnabled"];
+                                        _appointentTypeMap["isOnsiteEnabled"] =
+                                            response["isOnsiteEnabled"];
+                                        conatiner.providerResponse.clear();
+
+                                        conatiner.setProviderData(
+                                            "providerData", value);
+                                        _loading(false);
+                                        Navigator.of(context).pushNamed(
+                                          Routes.appointmentTypeScreen,
+                                          arguments: _appointentTypeMap,
+                                        );
+                                      });
+
+                                      // Navigator.of(context).pushNamed(
+                                      //     Routes.providerProfileScreen,
+                                      //     arguments: doctorData["_id"]);
                                     },
                                   ),
                                 )
@@ -1040,24 +1082,50 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      // doctor['distance'] =
-                                      //     _onDemandDoctorsList[index]['distance'];
-                                      // conatiner.providerResponse.clear();
-                                      // conatiner.setProviderData(
-                                      //   "providerData",
-                                      //   doctor,
-                                      // );
+                                      _loading(true);
+                                      Map<String, String> locMap = {};
+                                      LatLng _userLocation = LatLng(0.00, 0.00);
+                                      if (conatiner
+                                          .userLocationMap.isNotEmpty) {
+                                        _userLocation = conatiner
+                                                .userLocationMap['latLng'] ??
+                                            LatLng(0.00, 0.00);
+                                      }
+                                      locMap['lattitude'] = _userLocation
+                                          .latitude
+                                          .toStringAsFixed(2);
+                                      locMap['longitude'] = _userLocation
+                                          .longitude
+                                          .toStringAsFixed(2);
+                                      _api
+                                          .getProviderProfile(
+                                              doctorData["_id"], locMap)
+                                          .then((value) {
+                                        Map _appointentTypeMap = {};
 
-                                      // conatiner.setProviderData(
-                                      //     "subServices", subServices);
+                                        dynamic response = value["data"][0];
+
+                                        _appointentTypeMap["isOfficeEnabled"] =
+                                            response["isOfficeEnabled"];
+                                        _appointentTypeMap[
+                                                "isVideoChatEnabled"] =
+                                            response["isVideoChatEnabled"];
+                                        _appointentTypeMap["isOnsiteEnabled"] =
+                                            response["isOnsiteEnabled"];
+                                        conatiner.providerResponse.clear();
+
+                                        conatiner.setProviderData(
+                                            "providerData", value);
+                                        _loading(false);
+                                        Navigator.of(context).pushNamed(
+                                          Routes.appointmentTypeScreen,
+                                          arguments: _appointentTypeMap,
+                                        );
+                                      });
 
                                       // Navigator.of(context).pushNamed(
-                                      //   Routes.appointmentTypeScreen,
-                                      //   arguments: _appointentTypeMap,
-                                      // );
-                                      Navigator.of(context).pushNamed(
-                                          Routes.providerProfileScreen,
-                                          arguments: doctorData["_id"]);
+                                      //     Routes.providerProfileScreen,
+                                      //     arguments: doctorData["_id"]);
                                     },
                                   ),
                                 )

@@ -52,6 +52,13 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
   String token = '';
 
   LatLng _userLocation = LatLng(0, 0);
+  bool isLoading = false;
+
+  setLoading(loading) {
+    setState(() {
+      isLoading = loading;
+    });
+  }
 
   @override
   void didChangeDependencies() {
@@ -112,6 +119,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
         color: AppColors.snow,
         isAddBack: false,
         addBackButton: true,
+        isLoading: isLoading,
         padding: EdgeInsets.zero,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -356,14 +364,54 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                 _provider['averageRating']?.toStringAsFixed(1) ?? "0",
             bookAppointment: () {
               FocusScope.of(context).requestFocus(FocusNode());
-              Navigator.of(context).pushNamed(Routes.providerProfileScreen,
-                  arguments:
+              // Navigator.of(context).pushNamed(Routes.providerProfileScreen,
+              //     arguments:
+              // _provider["userId"] != null && _provider["userId"] is Map
+              //     ? _provider["userId"]["_id"]
+              //     : _provider["User"] != null &&
+              //             _provider["User"].length > 0
+              //         ? _provider["User"][0]["_id"]
+              //         : _provider["_id"]);
+
+              setLoading(true);
+              Map<String, String> locMap = {};
+              LatLng _userLocation = LatLng(0.00, 0.00);
+              if (_container.userLocationMap.isNotEmpty) {
+                _userLocation =
+                    _container.userLocationMap['latLng'] ?? LatLng(0.00, 0.00);
+              }
+              locMap['lattitude'] = _userLocation.latitude.toStringAsFixed(2);
+              locMap['longitude'] = _userLocation.longitude.toStringAsFixed(2);
+              api
+                  .getProviderProfile(
                       _provider["userId"] != null && _provider["userId"] is Map
                           ? _provider["userId"]["_id"]
                           : _provider["User"] != null &&
                                   _provider["User"].length > 0
                               ? _provider["User"][0]["_id"]
-                              : _provider["_id"]);
+                              : _provider["_id"],
+                      locMap)
+                  .then((value) {
+                Map _appointentTypeMap = {};
+
+                dynamic response = value["data"][0];
+
+                _appointentTypeMap["isOfficeEnabled"] =
+                    response["isOfficeEnabled"];
+                _appointentTypeMap["isVideoChatEnabled"] =
+                    response["isVideoChatEnabled"];
+                _appointentTypeMap["isOnsiteEnabled"] =
+                    response["isOnsiteEnabled"];
+                _container.providerResponse.clear();
+
+                _container.setProviderData("providerData", value);
+                setLoading(false);
+                Navigator.of(context).pushNamed(
+                  Routes.appointmentTypeScreen,
+                  arguments: _appointentTypeMap,
+                );
+              });
+
               // _container.providerResponse.clear();
 
               // _container.setProviderData("providerData", _provider);
