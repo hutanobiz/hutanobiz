@@ -18,15 +18,15 @@ class Extensions {
   ) {
     String addressName = ', ', stateCode = ', ';
 
-    if (address != null) {
-      addressName += address.toString().toLowerCase().contains('suite') ||
-              address.toString().toLowerCase().contains('ste') ||
-              address.toString().toLowerCase().contains('st')
+    if (street != null && street != '') {
+      addressName += street.toString().toLowerCase().contains('suite') ||
+              street.toString().toLowerCase().contains('ste') ||
+              street.toString().toLowerCase().contains('st')
           ? "Ste."
-          : (!(address.toString().toLowerCase().contains('suite') ||
-                  address.toString().toLowerCase().contains('ste'))
-              ? ("Ste. " + address.toString())
-              : address.toString());
+          : (!(street.toString().toLowerCase().contains('suite') ||
+                  street.toString().toLowerCase().contains('ste'))
+              ? ("Ste. " + street.toString())
+              : street.toString());
     }
 
     if (state != null) {
@@ -36,7 +36,7 @@ class Extensions {
         stateCode += state;
     }
 
-    return (street ?? "---") +
+    return (address ?? "---") +
         ((addressName == null || addressName == ', ') ? "" : addressName) +
         ", " +
         (city ?? "") +

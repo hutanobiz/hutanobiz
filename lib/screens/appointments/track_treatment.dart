@@ -310,8 +310,9 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
           dynamic business = detail["businessLocation"];
 
           address = Extensions.addressFormat(
-            business["street"]?.toString(),
+           
             business["address"]?.toString(),
+            business["street"]?.toString(),
             business["city"]?.toString(),
             business["state"],
             business["zipCode"]?.toString(),

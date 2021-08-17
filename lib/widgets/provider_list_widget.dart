@@ -180,8 +180,9 @@ class ProviderWidget extends StatelessWidget {
       }
 
       address = Extensions.addressFormat(
-        business["street"]?.toString(),
+        
         business["address"]?.toString(),
+        business["street"]?.toString(),
         business["city"]?.toString(),
         _state,
         business["zipCode"]?.toString(),

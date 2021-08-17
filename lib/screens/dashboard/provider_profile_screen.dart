@@ -443,8 +443,9 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
       dynamic business = _providerData["businessLocation"];
 
       address = Extensions.addressFormat(
-        business["street"]?.toString(),
+        
         business["address"]?.toString(),
+        business["street"]?.toString(),
         business["city"]?.toString(),
         business["state"] is Map ? business["state"] : null,
         business["zipCode"]?.toString(),

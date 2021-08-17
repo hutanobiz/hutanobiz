@@ -632,8 +632,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
         );
       } else if (_container.projectsResponse["serviceType"].toString() == '1') {
         address = Extensions.addressFormat(
-          business["street"]?.toString(),
           business["address"]?.toString(),
+          business["street"]?.toString(),
           business["city"]?.toString(),
           _state,
           business["zipCode"]?.toString(),
