@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/chat/models/seach_doctor_data.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:permission_handler/permission_handler.dart' as Permission;
@@ -208,6 +210,12 @@ class PushNotificationService {
             }
 
             break;
+          case 'chatNotification':
+            if (!isCurrentChatAppointment(
+                Routes.chat, message.data['appointmentId'])) {
+              showNotification(message);
+            } else {}
+            break;
           default:
             showNotification(message);
         }
@@ -350,8 +358,18 @@ class PushNotificationService {
             );
           }
         }
-
         break;
+      case 'chatNotification':
+        SharedPref().getToken().then((token) {
+          api
+              .getChatAppointmentDetails(token, message.data['appointmentId'])
+              .then((value) {
+            Navigator.of(navigatorContext).pushNamed(Routes.chat,
+                arguments: SearchAppointment.fromJson(value));
+          });
+        });
+        break;
+
       default:
         Navigator.of(navigatorContext).pushNamed(
           Routes.appointmentDetailScreen,
@@ -365,6 +383,20 @@ class PushNotificationService {
     Navigator.popUntil(navigatorContext, (route) {
       if (route.settings.name == routeName) {
         if (route.settings.arguments == args) {
+          isCurrent = true;
+        }
+      }
+      return true;
+    });
+    return isCurrent;
+  }
+
+  bool isCurrentChatAppointment(String routeName, args) {
+    bool isCurrent = false;
+    Navigator.popUntil(navigatorContext, (route) {
+      if (route.settings.name == routeName) {
+        SearchAppointment routeArg = route.settings.arguments;
+        if (routeArg.sId == args) {
           isCurrent = true;
         }
       }

@@ -20,6 +20,7 @@ import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
@@ -241,11 +242,12 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
         title: "Review Appointment",
         color: AppColors.snow,
         isLoading: _isLoading,
-        addBackButton: true,
+        isAddAppBar: true,
+        addHeader: true,
         padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
         child: Stack(
           children: <Widget>[
@@ -685,7 +687,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     );
     _container.projectsResponse["serviceType"].toString() == '2'
         ? _widgetList.add(Container())
-        : _widgetList.add(_initialPosition == null
+        : _widgetList.add((_initialPosition == null && _middlePoint == null)
             ? Container()
             : Stack(
                 children: <Widget>[
@@ -706,7 +708,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                         ),
                         polylines: _polyline,
                         markers: _markers,
-                        onMapCreated: (GoogleMapController controller) {
+                        onMapCreated: (GoogleMapController controller) async {
                           LatLngBounds bound;
                           if (_initialPosition.latitude >
                                   _desPosition.latitude &&
@@ -752,12 +754,17 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
                             setPolylines();
                           });
-
-                          CameraUpdate u2 =
-                              CameraUpdate.newLatLngBounds(bound, 50);
-                          controller.animateCamera(u2).then((void v) {
-                            check(u2, controller);
-                          });
+                          try {
+                            Future.delayed(Duration(milliseconds: 1000), () {
+                              CameraUpdate u2 =
+                                  CameraUpdate.newLatLngBounds(bound, 50);
+                              controller.animateCamera(u2).then((void v) {
+                                check(u2, controller);
+                              });
+                            });
+                          } catch (e) {
+                            print(e);
+                          }
                         },
                       ),
                     ),
@@ -782,8 +789,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                           children: <Widget>[
                             Text(
                               _totalDuration.toLowerCase().contains('mins')
-                                  ? _totalDuration.replaceAll(
-                                      'mins', ' minutes')
+                                  ? _totalDuration.replaceAll("mins", "minutes")
                                   : _totalDuration,
                               style: TextStyle(
                                 fontSize: 14.0,

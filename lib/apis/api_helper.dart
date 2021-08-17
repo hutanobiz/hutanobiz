@@ -498,6 +498,24 @@ class ApiBaseHelper {
     });
   }
 
+  Future<dynamic> getChatAppointmentDetails(
+      String token, String appointmentId) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    return _netUtil
+        .get(
+      Uri.encodeFull(
+        base_url +
+            "api/patient/get-appointment-details?appointmentId=$appointmentId"
+      ),
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
+
   Future<dynamic> rescheduleAppointment(String token, Map map) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,

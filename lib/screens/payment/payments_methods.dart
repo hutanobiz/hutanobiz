@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/apis/api_constants.dart';
 import 'package:hutano/apis/api_helper.dart';
+import 'package:hutano/apis/api_manager.dart';
+import 'package:hutano/apis/error_model.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/dialog_utils.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 
@@ -44,6 +49,31 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   bool isPayment = false;
 
   bool insuranceAdded = false;
+  int hutanoCash = 0;
+  int _huntaoCashRadioValue = 1;
+  int _huntaoCashRadioGrupValue = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _getHutanoCash();
+  }
+
+  _getHutanoCash() {
+    ApiManager().getHutanoCash().then((value) {
+      if (value.status == success) {
+        setState(() {
+          hutanoCash = value.response;
+        });
+      }
+    }).catchError((dynamic e) {
+      if (e is ErrorModel) {
+        if (e.response != null) {
+          DialogUtils.showAlertDialog(context, e.response);
+        }
+      }
+    });
+  }
 
   @override
   void didChangeDependencies() {
@@ -108,11 +138,11 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
+        addHeader: true,
         isLoading: _isLoading,
         title: isPayment ? "Select Payment Methods" : "Payment Methods",
         isAddBack: !isPayment,
-        addBackButton: isPayment,
         color: Colors.white,
         child: Stack(
           children: <Widget>[
@@ -145,7 +175,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                 "paymentMap", _paymentMap);
 
                             Navigator.of(context)
-                                .pushNamed(Routes.reviewAppointmentScreen);
+                                .pushNamed(Routes.appointmentConfirmation);
                           } else if (_cardListRadioValue != null) {
                             _paymentMap["paymentType"] = "1";
                             _paymentMap["selectedCard"] = selectedCard;
@@ -153,7 +183,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                             _container.setConsentToTreatData(
                                 "paymentMap", _paymentMap);
                             Navigator.of(context)
-                                .pushNamed(Routes.reviewAppointmentScreen);
+                                .pushNamed(Routes.appointmentConfirmation);
                           } else if (_listRadioValue != null) {
                             _paymentMap["paymentType"] = "2";
                             _paymentMap["insuranceId"] = insuranceId;
@@ -164,7 +194,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                 "paymentMap", _paymentMap);
 
                             Navigator.of(context)
-                                .pushNamed(Routes.reviewAppointmentScreen);
+                                .pushNamed(Routes.appointmentConfirmation);
                           } else {
                             Widgets.showToast("Please select a payment method");
                           }
@@ -249,6 +279,13 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
       "ic_cash_payment",
       "Cash/Check",
       2,
+    ));
+
+    var hutanoCashTitle = 'Hutano Cash (\$${hutanoCash.toString()})';
+    _widgetList.add(hutanoCashWidget(
+      "ic_cash_payment",
+      hutanoCashTitle,
+      0,
     ));
 
     return _widgetList;
@@ -897,4 +934,58 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         _listRadioValue = null;
         _cardListRadioValue = null;
       });
+
+  Widget hutanoCashWidget(String imageIcon, String title, int value) {
+    return GestureDetector(
+      onTap: () {
+        if (hutanoCash == 0) {
+          _container.setConsentToTreatData("hutanoCashApplied", false);
+          Widgets.showErrorDialog(
+              context: context, description: 'Insufficient Points');
+          return;
+        }
+        var value = (_huntaoCashRadioGrupValue == 0) ? 1 : 0;
+        setState(() {
+          _huntaoCashRadioGrupValue = value;
+        });
+        _container.setConsentToTreatData("hutanoCashApplied", value);
+        _container.setConsentToTreatData("hutanoCash", hutanoCash);
+      },
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(14.0)),
+          border: Border.all(color: Colors.grey[100]),
+        ),
+        child: Row(
+          children: <Widget>[
+            imageIcon.imageIcon(width: 70, height: 70),
+            SizedBox(width: 17.0),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 14.0,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            isPayment == false
+                ? Container()
+                : Expanded(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Radio(
+                          activeColor: AppColors.persian_blue,
+                          value: _huntaoCashRadioValue,
+                          groupValue: _huntaoCashRadioGrupValue,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          onChanged: (val) {}),
+                    ),
+                  )
+          ],
+        ),
+      ),
+    );
+  }
 }

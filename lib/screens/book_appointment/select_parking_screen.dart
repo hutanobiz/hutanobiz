@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/widgets.dart';
 
 class SelectParkingScreen extends StatefulWidget {
@@ -54,9 +58,10 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
         title: 'Where do I park?',
         isAddBack: false,
+        addHeader: true,
         addBackButton: true,
         color: Colors.white,
         child: Stack(
@@ -122,9 +127,23 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
     );
   }
 
+  Widget _locationTypeWidget(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(left: spacing5, bottom: spacing20),
+        child: Align(
+          alignment: Alignment.topLeft,
+          child: Text(
+            Localization.of(context).locationTypeLabel,
+            style: TextStyle(
+                fontSize: fontSize18,
+                fontWeight: fontWeightSemiBold,
+                color: colorDarkBlack),
+          ),
+        ),
+      );
+
   List<Widget> _widgetList() {
     List<Widget> _widgetList = List();
-
+    _widgetList.add(_locationTypeWidget(context));
     _widgetList.add(_containerWidget(parkingWidget()));
 
     _widgetList.add(SizedBox(height: 8.0));
@@ -165,7 +184,7 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
                           _parkingFee == null ? "" : _parkingFee.toString(),
                       style: TextStyle(
                           fontSize: 13.0,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w400,
                           color: Colors.black87),
                       onChanged: (fee) {
                         setState(() {
@@ -317,7 +336,7 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
                       _parkingList[index],
                       style: TextStyle(
                         color: Colors.black87,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w400,
                         fontSize: 14.0,
                       ),
                     ),

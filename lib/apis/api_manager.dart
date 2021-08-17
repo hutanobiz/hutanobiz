@@ -6,6 +6,7 @@ import 'package:hutano/screens/add_insurance/model/req_add_insurace.dart';
 import 'package:hutano/screens/add_insurance/model/res_get_my_insurance.dart';
 import 'package:hutano/screens/appointments/model/model/res_disease_model.dart';
 import 'package:hutano/screens/appointments/model/req_add_disease_model.dart';
+import 'package:hutano/screens/appointments/model/req_booking_appointment_model.dart';
 import 'package:hutano/screens/appointments/model/req_communication_center_model.dart';
 import 'package:hutano/screens/appointments/model/res_communication_center_model.dart';
 import 'package:hutano/screens/appointments/model/res_medical_documents_model.dart';
@@ -1102,6 +1103,17 @@ class ApiManager {
         patient + apiGetPatientInsurance,
       );
       return ResGetMyInsurance.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+  Future<dynamic> bookNewAppointment(
+      ReqBookingAppointmentModel reqBookingAppointmentModel) async {
+    try {
+      final response = await _apiService.post(newBookingAppointmentFlowEndPoint,
+          data: reqBookingAppointmentModel.toJson());
+      return response;
     } on DioError catch (error) {
       throw ErrorModel.fromJson(error.response.data);
     }

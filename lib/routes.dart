@@ -26,6 +26,7 @@ import 'package:hutano/screens/appointments/video_call.dart';
 import 'package:hutano/screens/appointments/view_medical_history.dart';
 import 'package:hutano/screens/appointments/virtual_waiting_room.dart';
 import 'package:hutano/screens/book_appointment/conditiontime/condition_time.dart';
+import 'package:hutano/screens/book_appointment/confirm_book_appointment.dart';
 import 'package:hutano/screens/book_appointment/diagnosis/test_diagnosis.dart';
 import 'package:hutano/screens/book_appointment/diagnosis/upload_diagnostic_new.dart';
 import 'package:hutano/screens/book_appointment/diagnosis/upload_diagnostic_result.dart';
@@ -40,6 +41,7 @@ import 'package:hutano/screens/book_appointment/multiplehealthissues/makes_condi
 import 'package:hutano/screens/book_appointment/onsite_address.dart';
 import 'package:hutano/screens/book_appointment/onsite_edit_address.dart';
 import 'package:hutano/screens/book_appointment/review_appointment.dart';
+import 'package:hutano/screens/book_appointment/review_appointment_detail.dart';
 import 'package:hutano/screens/book_appointment/select_appointment_time_screen.dart';
 import 'package:hutano/screens/book_appointment/select_parking_screen.dart';
 import 'package:hutano/screens/book_appointment/select_services.dart';
@@ -252,6 +254,8 @@ class Routes {
   static const String allDocumentsTabsScreen = '/allDocumentsTabsScreen';
   static const String chat = '/chat';
   static const String routeUploadDiagnosticNew = '/routeUploadDiagnosticNew';
+  static const String appointmentConfirmation = '/appointmentConfirmation';
+  static const String reviewAppointmentScreenDetail = '/reviewAppointmentScreenDetail';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final dynamic args = settings.arguments;
@@ -347,9 +351,14 @@ class Routes {
         }
         return _errorRoute();
         break;
+      case appointmentConfirmation:
+        return _buildRoute(settings, ConfirmBookAppointmentScreen());
+        break;
       case reviewAppointmentScreen:
         return _buildRoute(settings, ReviewAppointmentScreen());
         break;
+      case reviewAppointmentScreenDetail:
+        return _buildRoute(settings, ReviewAppointmentDetail());
       case providerProfileScreen:
         return _buildRoute(
             settings,
@@ -872,7 +881,7 @@ class Routes {
         break;
       case routeUploadDiagnosticNew:
         return MaterialPageRoute(builder: (_) => UploadDiagnosticNew());
-     default:
+      default:
         return _errorRoute();
     }
   }
