@@ -72,7 +72,6 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
     'Other',
   ];
   InheritedContainerState _container;
-  bool _isTookDiagnosticTest = false;
   List<DiagnosticTest> _finalTestList = [];
 
   List<Map> docsList = List();
@@ -155,13 +154,7 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
         padding: EdgeInsets.only(left: spacing20, right: spacing20, bottom: 60),
         child: ListView(
           children: <Widget>[
-            _anyDiagnosticTest(context),
-            Row(children: [
-              _yesButtonWidget(context),
-              SizedBox(width: spacing15),
-              _noButtonWidget(context),
-            ]),
-            if (_isTookDiagnosticTest) _uploadMedicalDocumentsBanner(context),
+            _uploadMedicalDocumentsBanner(context),
             // _uploadFileHeader(context),
             _uploadedDocumentsViews(context),
             // if (_isTookDiagnosticTest) SizedBox(height: spacing10),
@@ -194,47 +187,6 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
       ),
     );
   }
-
-  Widget _anyDiagnosticTest(BuildContext context) => Padding(
-        padding: EdgeInsets.symmetric(vertical: spacing20),
-        child: Text(
-          Localization.of(context).diagnosticTestHeader,
-          style: TextStyle(
-              color: Color(0xff0e1c2a),
-              fontSize: fontSize16,
-              fontWeight: fontWeightBold),
-        ),
-      );
-
-  Widget _yesButtonWidget(BuildContext context) => HutanoButton(
-        label: Localization.of(context).yes,
-        onPressed: () {
-          setState(() {
-            _isTookDiagnosticTest = true;
-          });
-        },
-        buttonType: HutanoButtonType.onlyLabel,
-        width: 65,
-        labelColor: _isTookDiagnosticTest ? colorWhite : colorPurple100,
-        color: _isTookDiagnosticTest ? colorPurple100 : colorWhite,
-        height: 34,
-      );
-
-  Widget _noButtonWidget(BuildContext context) => HutanoButton(
-        borderColor: colorGrey,
-        label: Localization.of(context).no,
-        onPressed: () {
-          setState(() {
-            _isTookDiagnosticTest = false;
-          });
-        },
-        buttonType: HutanoButtonType.onlyLabel,
-        width: 65,
-        labelColor: !_isTookDiagnosticTest ? colorWhite : colorPurple100,
-        color: !_isTookDiagnosticTest ? colorPurple100 : colorWhite,
-        borderWidth: 1,
-        height: 34,
-      );
 
   Widget _uploadMedicalDocumentsBanner(BuildContext context) => ListTile(
         onTap: showPickerDialog,
