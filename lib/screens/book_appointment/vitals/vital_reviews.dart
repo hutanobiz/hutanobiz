@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hutano/apis/api_manager.dart';
 import 'package:hutano/apis/common_res.dart';
 import 'package:hutano/apis/error_model.dart';
@@ -168,8 +169,9 @@ class _VitalReviewsState extends State<VitalReviews> {
                       _tempController,
                       _tempFocusNode,
                       "",
-                      "",
+                      "\u2109",
                       TextInputType.number,
+                      maxLength: 4,
                       isForTemp: true),
                 ],
               ),
@@ -204,6 +206,7 @@ class _VitalReviewsState extends State<VitalReviews> {
           bool isAmPMVisible = false,
           bool isFieldEnable = true,
           bool isForTime = true,
+          int maxLength = 3,
           bool isForTemp = false}) =>
       Padding(
         padding: EdgeInsets.symmetric(vertical: spacing10),
@@ -302,6 +305,7 @@ class _VitalReviewsState extends State<VitalReviews> {
                 child: TextFormField(
                   controller: controller,
                   keyboardType: inputType,
+                  maxLength: maxLength,
                   textAlign: TextAlign.center,
                   textInputAction:
                       isForTemp ? TextInputAction.done : TextInputAction.next,
@@ -313,6 +317,7 @@ class _VitalReviewsState extends State<VitalReviews> {
                   focusNode: focusNode,
                   enabled: isFieldEnable,
                   decoration: InputDecoration(
+                    counterText: '',
                     hintText: hintLabel,
                     hintStyle: TextStyle(
                         fontSize: fontSize13, fontWeight: fontWeightMedium),
@@ -347,6 +352,7 @@ class _VitalReviewsState extends State<VitalReviews> {
                 child: TextField(
                   controller: dbpController,
                   keyboardType: TextInputType.number,
+                  maxLength: maxLength,
                   textAlign: TextAlign.center,
                   textInputAction: TextInputAction.next,
                   style: TextStyle(
@@ -357,6 +363,7 @@ class _VitalReviewsState extends State<VitalReviews> {
                   focusNode: dbpFocusNode,
                   decoration: InputDecoration(
                     hintText: hint,
+                    counterText: '',
                     hintStyle: TextStyle(
                         fontSize: fontSize13, fontWeight: fontWeightMedium),
                     contentPadding: EdgeInsets.all(spacing8),
@@ -402,20 +409,31 @@ class _VitalReviewsState extends State<VitalReviews> {
       );
 
   void _onForwardTapButton(BuildContext context) {
-    if (_dateController.text.isNotEmpty &&
-        _timeController.text.isNotEmpty &&
-        _sbpController.text.isNotEmpty &&
-        _dbpController.text.isNotEmpty &&
-        _oxygenController.text.isNotEmpty &&
-        _tempController.text.isNotEmpty) {
+    // if (_dateController.text.isNotEmpty &&
+    //     _timeController.text.isNotEmpty &&
+    //     _sbpController.text.isNotEmpty &&
+    //     _dbpController.text.isNotEmpty &&
+    //     _oxygenController.text.isNotEmpty &&
+    //     _tempController.text.isNotEmpty) {
       Vitals vitalsModel = Vitals(
-          date: _selectedDate,
-          time: _selectedTime,
-          bloodPressureSbp: int.parse(_sbpController.value.text.trim()),
-          bloodPressureDbp: int.parse(_dbpController.value.text.trim()),
-          heartRate: int.parse(_heartRateController.value.text.trim()),
-          oxygenSaturation: int.parse(_oxygenController.value.text.trim()),
-          temperature: int.parse(_tempController.value.text.trim()));
+        date: _selectedDate ?? '',
+        time: _selectedTime ?? '',
+        bloodPressureSbp: _sbpController.value.text != ''
+            ? int.parse(_sbpController.value.text.trim())
+            : null,
+        bloodPressureDbp: _dbpController.value.text != ''
+            ? int.parse(_dbpController.value.text.trim())
+            : null,
+        heartRate: _heartRateController.value.text != ''
+            ? int.parse(_heartRateController.value.text.trim())
+            : null,
+        oxygenSaturation: _oxygenController.value.text != ''
+            ? int.parse(_oxygenController.value.text.trim())
+            : null,
+        temperature: _tempController.value.text != ''
+            ? double.parse(_tempController.value.text.trim())
+            : null,
+      );
       Provider.of<HealthConditionProvider>(context, listen: false)
           .updateVitals(vitalsModel);
       Navigator.of(context).pushNamed(
@@ -426,9 +444,9 @@ class _VitalReviewsState extends State<VitalReviews> {
             : Routes.paymentMethodScreen,
         arguments: true,
       );
-    } else {
-      Widgets.showToast("Please add vital details");
-    }
+    // } else {
+    //   Widgets.showToast("Please add vital details");
+    // }
   }
 
   void _addVitalsData(BuildContext context, ReqAddVitalsModel reqModel) async {
@@ -452,5 +470,26 @@ class _VitalReviewsState extends State<VitalReviews> {
         e.toString().debugLog();
       }
     });
+  }
+}
+
+class NumericalRangeFormatter extends TextInputFormatter {
+  final double min;
+  final double max;
+
+  NumericalRangeFormatter({@required this.min, @required this.max});
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text == '') {
+      return newValue;
+    } else if (int.parse(newValue.text) < min) {
+      return TextEditingValue().copyWith(text: min.toStringAsFixed(2));
+    } else {
+      return int.parse(newValue.text) > max ? oldValue : newValue;
+    }
   }
 }

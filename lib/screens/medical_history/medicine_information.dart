@@ -9,6 +9,7 @@ import 'package:hutano/screens/book_appointment/morecondition/providers/health_c
 import 'package:hutano/screens/medical_history/model/req_medication_detail.dart';
 import 'package:hutano/screens/medical_history/model/res_get_medication_detail.dart';
 import 'package:hutano/screens/medical_history/model/res_medication_detail.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
 
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
@@ -44,9 +45,9 @@ class _MedicineInformationState extends State<MedicineInformation> {
   List<String> selectedMedcineTime = [];
   List<MedicineTimeModel> _medicineTimeList = [];
   Medicine _selectedMedicine;
-  bool isTookMedication = false;
   final _searchFocusNode = FocusNode();
   List<Medications> _getMedicineList = [];
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -234,34 +235,28 @@ class _MedicineInformationState extends State<MedicineInformation> {
       body: LoadingBackgroundNew(
         title: "",
         addHeader: true,
+        isLoading: isLoading,
         padding: EdgeInsets.only(bottom: spacing20),
         addBottomArrows: MediaQuery.of(context).viewInsets.bottom == 0,
         onForwardTap: () {
-          if (_currentStepIndex == 2) {
-            if (_getMedicineList.isEmpty) {
-              Widgets.showToast(Localization.of(context).addMedicationMsg);
-            } else {
-              List<String> _medicationList = [];
-              _getMedicineList.forEach((element) {
-                if (element.isSelected) {
-                  _medicationList.add(element.sId);
-                }
-              });
-              Provider.of<HealthConditionProvider>(context, listen: false)
-                  .updateMedicationData(_medicationList);
-              Navigator.of(context).pushNamed(Routes.routeAddPharmacy);
-            }
-          } else {
-            if (_currentStepIndex == 1 && isTookMedication) {
-              setState(() {
-                _currentStepIndex = 2;
-              });
-            } else {
-              Provider.of<HealthConditionProvider>(context, listen: false)
-                  .updateMedicationData([]);
-              Navigator.of(context).pushNamed(Routes.routeAddPharmacy);
-            }
-          }
+          // if (_getMedicineList.isEmpty) {
+          //   Widgets.showToast(Localization.of(context).addMedicationMsg);
+          // } else {
+          List<String> _medicationList = [];
+          _getMedicineList.forEach((element) {
+            // if (element.isSelected) {
+            _medicationList.add(element.sId);
+            // }
+          });
+          Provider.of<HealthConditionProvider>(context, listen: false)
+              .updateMedicationData(_medicationList);
+          Navigator.of(context).pushNamed(Routes.routeAddPharmacy);
+          //   }
+          // } else {
+          //   Provider.of<HealthConditionProvider>(context, listen: false)
+          //       .updateMedicationData([]);
+          //   Navigator.of(context).pushNamed(Routes.routeAddPharmacy);
+          // }
         },
         child: Column(
           children: [
@@ -280,9 +275,8 @@ class _MedicineInformationState extends State<MedicineInformation> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (_currentStepIndex > 0) _askAndSearchMedicationWidget(context),
-            if (_currentStepIndex > 1 && isTookMedication)
-              _medicationDetailWidget(),
+            _askAndSearchMedicationWidget(context),
+            _medicationDetailWidget(),
             Visibility(
               visible: MediaQuery.of(context).viewInsets.bottom != 0.0,
               child: _searchMedicineList(),
@@ -323,68 +317,8 @@ class _MedicineInformationState extends State<MedicineInformation> {
         );
       });
 
-  Widget _askAndSearchMedicationWidget(BuildContext context) => Row(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _takeAnyMedicines(context),
-              SizedBox(height: spacing10),
-              Row(children: [
-                _yesButtonWidget(context),
-                SizedBox(width: spacing15),
-                _noButtonWidget(context),
-              ]),
-              SizedBox(height: spacing15),
-              if (_currentStepIndex > 1 && isTookMedication)
-                _searchAndMedicationWidget(context)
-            ],
-          ),
-        ],
-      );
-
-  Widget _takeAnyMedicines(BuildContext context) => Padding(
-        padding: EdgeInsets.symmetric(vertical: spacing5, horizontal: spacing5),
-        child: Text(
-          Localization.of(context).doYouTakeMedication,
-          style: TextStyle(
-              color: Color(0xff0e1c2a),
-              fontSize: fontSize16,
-              fontWeight: fontWeightBold),
-        ),
-      );
-
-  Widget _yesButtonWidget(BuildContext context) => HutanoButton(
-        label: Localization.of(context).yes,
-        onPressed: () {
-          setState(() {
-            isTookMedication = true;
-            _currentStepIndex = 2;
-          });
-        },
-        buttonType: HutanoButtonType.onlyLabel,
-        width: 65,
-        labelColor: isTookMedication ? colorWhite : colorPurple100,
-        color: isTookMedication ? colorPurple100 : colorWhite,
-        height: 34,
-      );
-
-  Widget _noButtonWidget(BuildContext context) => HutanoButton(
-        borderColor: colorGrey,
-        label: Localization.of(context).no,
-        onPressed: () {
-          setState(() {
-            isTookMedication = false;
-            _currentStepIndex = 1;
-          });
-        },
-        buttonType: HutanoButtonType.onlyLabel,
-        width: 65,
-        labelColor: !isTookMedication ? colorWhite : colorPurple100,
-        color: !isTookMedication ? colorPurple100 : colorWhite,
-        borderWidth: 1,
-        height: 34,
-      );
+  Widget _askAndSearchMedicationWidget(BuildContext context) =>
+      _searchAndMedicationWidget(context);
 
   Widget _searchAndMedicationWidget(BuildContext context) => Padding(
         padding: EdgeInsets.symmetric(vertical: spacing15),
@@ -578,39 +512,68 @@ class _MedicineInformationState extends State<MedicineInformation> {
       physics: NeverScrollableScrollPhysics(),
       itemCount: _getMedicineList.length,
       itemBuilder: (context, index) {
-        return ListTile(
-          dense: true,
-          title: Text(
-            "${_getMedicineList[index].name} ${_getMedicineList[index].dose} ${_getMedicineList[index].frequency}",
-            style: TextStyle(
-                fontWeight: fontWeightMedium,
-                fontSize: fontSize14,
-                color: colorBlack2),
-          ),
-          trailing: _getMedicineList[index].isSelected
-              ? Image.asset("images/checkedCheck.png", height: 24, width: 24)
-              : Image.asset("images/uncheckedCheck.png", height: 24, width: 24),
-          leading: Container(
-            height: 20,
-            width: 20,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                color: AppColors.windsor,
-                borderRadius: BorderRadius.circular(5)),
-            child: Text(
-              '${index + 1}',
+        return PopupMenuButton(
+          offset: Offset(300, 50),
+          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+            _popMenuCommonItem(context, Localization.of(context).remove,
+                FileConstants.icRemoveBlack)
+          ],
+          child: ListTile(
+            dense: true,
+            title: Text(
+              "${_getMedicineList[index].name} \n ${_getMedicineList[index].dose} ${_getMedicineList[index].frequency}",
               style: TextStyle(
-                  fontSize: fontSize10,
-                  color: Colors.white,
-                  fontWeight: fontWeightSemiBold),
+                  fontWeight: fontWeightMedium,
+                  fontSize: fontSize14,
+                  color: colorBlack2),
             ),
+            trailing: Icon(Icons.more_vert),
+            leading: Container(
+              height: 20,
+              width: 20,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: AppColors.windsor,
+                  borderRadius: BorderRadius.circular(5)),
+              child: Text(
+                '${index + 1}',
+                style: TextStyle(
+                    fontSize: fontSize10,
+                    color: Colors.white,
+                    fontWeight: fontWeightSemiBold),
+              ),
+            ),
+            // onTap: () {
+            //   setState(() => _getMedicineList[index].isSelected =
+            //       !_getMedicineList[index].isSelected);
+            // },
           ),
-          onTap: () {
-            setState(() => _getMedicineList[index].isSelected =
-                !_getMedicineList[index].isSelected);
+          onSelected: (value) {
+            _removeMedicine(context, _getMedicineList[index]);
           },
         );
       });
+
+  void _removeMedicine(BuildContext context, Medications pharmacy) {
+    setLoading(true);
+    ApiManager().deleteMedication(pharmacy.sId).then((value) {
+      setLoading(false);
+      setState(() {
+        if (_getMedicineList.contains(pharmacy)) {
+          _getMedicineList.remove(pharmacy);
+        }
+      });
+    }).futureError((error) {
+      setLoading(false);
+      error.toString().debugLog();
+    });
+  }
+
+  setLoading(loading) {
+    setState(() {
+      isLoading = loading;
+    });
+  }
 
   void _addMedicationDetailData(
       BuildContext context, ReqMedicationDetail reqModel) async {
@@ -656,4 +619,27 @@ class _MedicineInformationState extends State<MedicineInformation> {
       }
     });
   }
+
+  Widget _popMenuCommonItem(BuildContext context, String value, String image) =>
+      PopupMenuItem<String>(
+        value: value,
+        textStyle: const TextStyle(
+            color: colorBlack2,
+            fontWeight: fontWeightRegular,
+            fontSize: spacing12),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              image,
+              height: 15,
+              width: 15,
+            ),
+            SizedBox(
+              width: spacing5,
+            ),
+            Text(value)
+          ],
+        ),
+      );
 }

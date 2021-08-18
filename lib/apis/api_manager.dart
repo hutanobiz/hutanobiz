@@ -341,6 +341,20 @@ class ApiManager {
     }
   }
 
+  Future<CommonRes> deleteMedication(
+      String medicationId) async {
+    try {
+      final response = await _apiService.post('api/patient/delete-medications',
+          data: {'id':medicationId});
+      return CommonRes.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+
+  // https://dev.hutano.com/api/patient/delete-medications
+
   Future<ResGetMedicationDetail> getMedicationDetails() async {
     try {
       final response = await _apiService.get(getMedicationDetailEndPoint);

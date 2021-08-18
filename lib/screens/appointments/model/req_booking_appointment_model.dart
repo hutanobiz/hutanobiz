@@ -316,7 +316,7 @@ class Vitals {
   int bloodPressureDbp;
   int heartRate;
   int oxygenSaturation;
-  int temperature;
+  double temperature;
 
   Vitals(
       {this.date,
