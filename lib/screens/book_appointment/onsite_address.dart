@@ -137,7 +137,9 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
         child: Align(
           alignment: Alignment.topLeft,
           child: Text(
-            Localization.of(context).treatmentLocationLabel,
+            widget.isBookAppointment
+                ? Localization.of(context).treatmentLocationLabel
+                : 'Addresses',
             style: TextStyle(
                 fontSize: fontSize18,
                 fontWeight: fontWeightSemiBold,
@@ -189,11 +191,11 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
           addressList = snapshot.data;
 
           return ListView.separated(
-              padding: const EdgeInsets.only(bottom: 65),
+              padding: EdgeInsets.only(bottom: 65),
               separatorBuilder: (BuildContext context, int index) => Divider(
                     color: AppColors.haiti.withOpacity(0.20),
                   ),
-              physics: ClampingScrollPhysics(),
+              physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: addressList.length,
               itemBuilder: (context, index) {
@@ -283,7 +285,7 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     onChanged: _selectAddress(address),
                   )
-                : Container(),
+                : null,
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

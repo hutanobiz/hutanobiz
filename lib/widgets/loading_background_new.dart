@@ -112,7 +112,10 @@ class LoadingBackgroundNew extends StatelessWidget {
                                   onRButtonTap != null ? onRButtonTap : () {},
                               child: Icon(Icons.add))
                           : InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, Routes.activityNotification);
+                              },
                               child: Stack(
                                 children: [
                                   Padding(

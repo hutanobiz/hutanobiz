@@ -108,7 +108,6 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
 
   List<HealthCondition> _conditionList = [];
   bool _isPressedOnProblemImproving = false;
-  bool _isPressedOnTreatmentReceived = false;
   ScrollController _listOfBetterController = ScrollController();
   ScrollController _listOfWorstController = ScrollController();
 
@@ -203,8 +202,8 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                     .decrementCurrentIndex();
                 Navigator.pop(context);
               },
-              isCameraVisible: MediaQuery.of(context).viewInsets.bottom == 0,
-              onCameraForTap: () {},
+              // isCameraVisible: MediaQuery.of(context).viewInsets.bottom == 0,
+              // onCameraForTap: () {},
               child: SingleChildScrollView(
                 controller: _wholeBodyController,
                 child: Column(
@@ -1061,7 +1060,6 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
         label: Localization.of(context).yes,
         onPressed: () {
           setState(() {
-            _isPressedOnTreatmentReceived = true;
             _isTreated = true;
           });
           // _wholeBodyController
@@ -1083,7 +1081,6 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
         label: Localization.of(context).no,
         onPressed: () {
           setState(() {
-            _isPressedOnTreatmentReceived = true;
             _isTreated = false;
           });
         },
@@ -1720,13 +1717,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
       problemBetter: _selectedProblemBetterList,
       problemWorst: _selectedProblemWorstList,
       isProblemImproving: "",
-      isTreatmentReceived: !_isTreated
-          ? _isPressedOnTreatmentReceived
-              ? "0"
-              : ""
-          : _isPressedOnTreatmentReceived
-              ? "1"
-              : "",
+      isTreatmentReceived: _isTreated ? "1" : "0",
       problemFacingTimeSpan: _selectedProValue != "0"
           ? ProblemFacingTimeSpan(
               type: _selectedProType, period: _selectedProValue)

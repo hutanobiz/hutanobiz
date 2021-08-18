@@ -62,8 +62,8 @@ class _ImmunizationScreenState extends State<ImmunizationScreen> {
             onForwardTap: () {
               Navigator.pushNamed(context,Routes. routeEffectAbility);
             },
-            isCameraVisible: true,
-            onCameraForTap: () {},
+            // isCameraVisible: true,
+            // onCameraForTap: () {},
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

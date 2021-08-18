@@ -231,6 +231,10 @@ class _ConfirmBookAppointmentScreenState
             _consultaceList[i]["fee"].toString();
       }
     }
+    if (_consentToTreatMap != null &&
+        _consentToTreatMap["parkingMap"] != null &&
+        _consentToTreatMap["parkingMap"]["parkingFee"] != null)
+      _totalAmount += _consentToTreatMap["parkingMap"]["parkingFee"];
   }
 
   initPlatformState() async {
@@ -1423,7 +1427,8 @@ class _ConfirmBookAppointmentScreenState
             title: "Pay \$${_totalAmount.toStringAsFixed(2)}",
             onPressed: () {
               // showPaymentConfirmDialog();
-              Navigator.of(context).pushNamed(Routes.reviewAppointmentScreenDetail);
+              Navigator.of(context)
+                  .pushNamed(Routes.reviewAppointmentScreenDetail);
             },
           ),
         ),

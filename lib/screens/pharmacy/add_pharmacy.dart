@@ -329,8 +329,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
                                             pharmacyList.isEmpty) &&
                                         !isIndicatorLoading
                                 ? Text(
-                                    Localization.of(context)
-                                        .noMedicalHistoryFound,
+                                    'No pharmacy found',
                                     style: TextStyle(
                                         fontSize: 16,
                                         color: colorBlack2,
@@ -559,9 +558,26 @@ class _AddPharmacyState extends State<AddPharmacy> {
           return Container();
         },
         itemBuilder: (context, suggestion) {
+          String addressData = '';
+          if (suggestion.address != null) {
+            if (suggestion.address.address != null) {
+              addressData = suggestion.address.address + ', ';
+            }
+            if (suggestion.address.city != null) {
+              addressData += suggestion.address.city + ', ';
+            }
+            if (suggestion.address.state != null) {
+              addressData += suggestion.address.state + ', ';
+            }
+            if (suggestion.address.zipCode != null) {
+              addressData += suggestion.address.zipCode + ', ';
+            }
+            if (suggestion.address.phone != null) {
+              addressData += suggestion.address.phone;
+            }
+          }
           return ListTile(
-            title: Text(suggestion.name),
-          );
+              title: Text(suggestion.name), subtitle: Text(addressData));
         },
         transitionBuilder: (context, suggestionsBox, controller) {
           return suggestionsBox;
@@ -571,11 +587,13 @@ class _AddPharmacyState extends State<AddPharmacy> {
           selectedPharmacy = suggestion;
           _nameController.text = suggestion.name;
           _pharmacyController.text = suggestion.name;
-          _addressController.text = suggestion.address.address;
-          _cityController.text = suggestion.address.city;
-          _stateController.text = suggestion.address.state;
-          _zipCodeController.text = suggestion.address.zipCode;
-          _phoneNoController.text = suggestion.address.phone;
+          if (suggestion.address != null) {
+            _addressController.text = suggestion.address.address;
+            _cityController.text = suggestion.address.city;
+            _stateController.text = suggestion.address.state;
+            _zipCodeController.text = suggestion.address.zipCode;
+            _phoneNoController.text = suggestion.address.phone;
+          }
 
           setState(() {});
         },

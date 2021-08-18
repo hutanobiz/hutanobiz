@@ -63,6 +63,18 @@ class _VitalReviewsState extends State<VitalReviews> {
     super.didChangeDependencies();
 
     _container = InheritedContainer.of(context);
+    _dateController.text =
+        formattedDate(DateTime.now(), AppConstants.vitalReviewsDateFormat);
+
+    _timeController.text = DateFormat("h:mm a")
+        .format(DateTime.now())
+        .replaceAll("PM", "")
+        .replaceAll("AM", "");
+    if (DateTime.now().hour >= 12) {
+      isSwitchSelected = false;
+    } else {
+      isSwitchSelected = true;
+    }
   }
 
   @override
@@ -237,18 +249,13 @@ class _VitalReviewsState extends State<VitalReviews> {
                                 value.hour.toString() +
                                     ":" +
                                     value.minute.toString());
-                            var dateFormat = DateFormat("h:mm a");
+                            var dateFormat = DateFormat("hh:mm a");
                             _timeController.text = dateFormat
                                 .format(tempDate)
                                 .replaceAll("PM", "")
                                 .replaceAll("AM", "");
-                            setState(() {
-                              _selectedTime = dateFormat.format(tempDate);
-                            });
-                            if (int.parse(_timeController.value.text
-                                    .trim()
-                                    .split(':')[0]) >=
-                                12) {
+                            _selectedTime = dateFormat.format(tempDate);
+                            if (value.hour >= 12) {
                               setState(() {
                                 isSwitchSelected = false;
                               });
@@ -415,35 +422,34 @@ class _VitalReviewsState extends State<VitalReviews> {
     //     _dbpController.text.isNotEmpty &&
     //     _oxygenController.text.isNotEmpty &&
     //     _tempController.text.isNotEmpty) {
-      Vitals vitalsModel = Vitals(
-        date: _selectedDate ?? '',
-        time: _selectedTime ?? '',
-        bloodPressureSbp: _sbpController.value.text != ''
-            ? int.parse(_sbpController.value.text.trim())
-            : null,
-        bloodPressureDbp: _dbpController.value.text != ''
-            ? int.parse(_dbpController.value.text.trim())
-            : null,
-        heartRate: _heartRateController.value.text != ''
-            ? int.parse(_heartRateController.value.text.trim())
-            : null,
-        oxygenSaturation: _oxygenController.value.text != ''
-            ? int.parse(_oxygenController.value.text.trim())
-            : null,
-        temperature: _tempController.value.text != ''
-            ? double.parse(_tempController.value.text.trim())
-            : null,
-      );
-      Provider.of<HealthConditionProvider>(context, listen: false)
-          .updateVitals(vitalsModel);
-      Navigator.of(context).pushNamed(
-        _container.projectsResponse[ArgumentConstant.serviceTypeKey]
-                    .toString() ==
-                '3'
-            ? Routes.onsiteAddresses
-            : Routes.paymentMethodScreen,
-        arguments: true,
-      );
+    Vitals vitalsModel = Vitals(
+      date: _selectedDate ?? '',
+      time: _selectedTime ?? '',
+      bloodPressureSbp: _sbpController.value.text != ''
+          ? int.parse(_sbpController.value.text.trim())
+          : null,
+      bloodPressureDbp: _dbpController.value.text != ''
+          ? int.parse(_dbpController.value.text.trim())
+          : null,
+      heartRate: _heartRateController.value.text != ''
+          ? int.parse(_heartRateController.value.text.trim())
+          : null,
+      oxygenSaturation: _oxygenController.value.text != ''
+          ? int.parse(_oxygenController.value.text.trim())
+          : null,
+      temperature: _tempController.value.text != ''
+          ? double.parse(_tempController.value.text.trim())
+          : null,
+    );
+    Provider.of<HealthConditionProvider>(context, listen: false)
+        .updateVitals(vitalsModel);
+    Navigator.of(context).pushNamed(
+      _container.projectsResponse[ArgumentConstant.serviceTypeKey].toString() ==
+              '3'
+          ? Routes.onsiteAddresses
+          : Routes.paymentMethodScreen,
+      arguments: true,
+    );
     // } else {
     //   Widgets.showToast("Please add vital details");
     // }

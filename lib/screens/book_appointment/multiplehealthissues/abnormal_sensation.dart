@@ -103,8 +103,8 @@ class _AbnormalSensationState extends State<AbnormalSensation> {
               // _nextScreenNavigation(context);
               Navigator.of(context).pushNamed(Routes.routeEffectAbility);
             },
-            isCameraVisible: true,
-            onCameraForTap: () {},
+            // isCameraVisible: true,
+            // onCameraForTap: () {},
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

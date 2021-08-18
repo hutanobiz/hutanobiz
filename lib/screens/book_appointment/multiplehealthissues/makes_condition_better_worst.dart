@@ -66,8 +66,8 @@ class _MakesConditionBetterWorstState extends State<MakesConditionBetterWorst> {
               //     .updateBoneAndMuscleData(model);
               // Navigator.pushNamed(context, routeEffectAbility);
             },
-            isCameraVisible: true,
-            onCameraForTap: () {},
+            // isCameraVisible: true,
+            // onCameraForTap: () {},
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

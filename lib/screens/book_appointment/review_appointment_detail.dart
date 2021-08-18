@@ -369,10 +369,10 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
           address = Extensions.addressFormat(
             Provider.of<HealthConditionProvider>(context, listen: false)
                 .addressDetails
-                .street,
+                .address,
             Provider.of<HealthConditionProvider>(context, listen: false)
                 .addressDetails
-                .address,
+                .street,
             Provider.of<HealthConditionProvider>(context, listen: false)
                 .addressDetails
                 .city,
@@ -387,8 +387,8 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
           );
         } else {
           address = Extensions.addressFormat(
-            _consentToTreatMap["userAddress"]["street"]?.toString(),
             _consentToTreatMap["userAddress"]["address"]?.toString(),
+            _consentToTreatMap["userAddress"]["street"]?.toString(),
             _consentToTreatMap["userAddress"]["city"]?.toString(),
             _consentToTreatMap["userAddress"]['state'],
             _consentToTreatMap["userAddress"]["zipCode"]?.toString(),
@@ -567,8 +567,10 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                                 child: TextWithImage(
                                   imageSpacing: spacing10,
                                   image: FileConstants.icClockTimer,
-                                  label: '${DateFormat('dd MMMM yyyy').format(_bookedDate).toString()}' +
-                                      ' ${int.parse(_appointmentData['time'].split(':')[0])}:${int.parse(_appointmentData['time'].split(':')[1])} ${int.parse(_appointmentData['time'].split(':')[0]) >= 12 ? 'PM' : 'AM'}',
+                                  label: _appointmentData["isOndemand"] == '1'
+                                      ? "Ondemand Appointment"
+                                      : '${DateFormat('dd MMMM yyyy').format(_bookedDate).toString()}' +
+                                          ' ${int.parse(_appointmentData['time'].split(':')[0])}:${int.parse(_appointmentData['time'].split(':')[1])} ${int.parse(_appointmentData['time'].split(':')[0]) >= 12 ? 'PM' : 'AM'}',
                                   textStyle: TextStyle(
                                       color: colorBlack70,
                                       fontWeight: FontWeight.w400,
