@@ -33,7 +33,8 @@ class ProviderProfileScreen extends StatefulWidget {
   _ProviderProfileScreenState createState() => _ProviderProfileScreenState();
 }
 
-class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
+class _ProviderProfileScreenState extends State<ProviderProfileScreen>
+    with SingleTickerProviderStateMixin {
   Future<dynamic> _profileFuture;
   InheritedContainerState _container;
   Map profileMapResponse = Map();
@@ -61,6 +62,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
       fridayTimings,
       saturdayTimings,
       sundayTimings;
+  TabController _tabController;
+  int selectedIndex = 0;
 
   List<dynamic> _timings = List(7);
 
@@ -73,6 +76,11 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(
+      initialIndex: selectedIndex,
+      length: 2,
+      vsync: this,
+    );
 
     setSourceAndDestinationIcons();
   }
@@ -169,38 +177,15 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                         : null;
 
                     return LoadingBackgroundNew(
-                        title: name,
-                        color: Colors.white,
-                        isAddBack: false,
-                        addHeader: true,
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: Column(children: <Widget>[
-                          // Expanded(
-                          //   child: SingleChildScrollView(
-                          //     controller: _scrollController,
-                          //     padding: const EdgeInsets.only(bottom: 10),
-                          //     child: Column(
-                          //       crossAxisAlignment: CrossAxisAlignment.start,
-                          //       children:
-                          //           // widgetList(profileMapResponse),
-                          //           _buildProivderidget(profileMapResponse),
-                          //     ),
-                          //   ),
-                          // ),
-
-                          Expanded(
-                            child: Column(
-                              children: _buildProivderidget(profileMapResponse),
-                            ),
-                          ),
-                          // Expanded(
-                          //   child: ListView(
-                          //     shrinkWrap: true,
-                          //     padding: const EdgeInsets.only(bottom: 70.0),
-                          //     children: _widgetList(),
-                          //   ),
-                          // ),
-                        ]));
+                      title: name,
+                      color: Colors.white,
+                      isAddBack: false,
+                      addHeader: true,
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: ListView(
+                        children: _buildProivderidget(profileMapResponse),
+                      ),
+                    );
                   } else if (snapshot.hasError) {
                     return Text("${snapshot.error}");
                   }
@@ -268,27 +253,39 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
             text: "Packages",
           )
         ],
-        // controller: _tabController,
+        controller: _tabController,
+        onTap: (int index) {
+          setState(() {
+            selectedIndex = index;
+            _tabController.animateTo(index);
+          });
+        },
         indicatorSize: TabBarIndicatorSize.tab,
       ),
     ));
 
     formWidget.add(
-      Expanded(
-        child: TabBarView(
-          children: [
-            SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: widgetList(profileMapResponse),
-              ),
+      IndexedStack(
+        children: [
+          Visibility(
+            child: ListView(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              children: widgetList(profileMapResponse),
             ),
-            SingleChildScrollView(
-                child: Column(
+            visible: selectedIndex == 0,
+          ),
+          Visibility(
+            child: ListView(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
               children: officeData != null ? _widgetList() : [Container()],
-            )),
-          ],
-        ),
+            ),
+            // maintainState: true,
+            visible: selectedIndex == 1,
+          ),
+        ],
+        index: selectedIndex,
       ),
     );
 
@@ -443,7 +440,6 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
       dynamic business = _providerData["businessLocation"];
 
       address = Extensions.addressFormat(
-        
         business["address"]?.toString(),
         business["street"]?.toString(),
         business["city"]?.toString(),
@@ -1325,10 +1321,9 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
   }
 
   List<Widget> _widgetList() {
-    List<Widget> formWidget = new List();
+    List<Widget> formWidget = [];
 
     formWidget.add(SizedBox(height: 26));
-
     formWidget.add(consultancyFeeWidget());
 
     formWidget.add(SizedBox(height: 26));
