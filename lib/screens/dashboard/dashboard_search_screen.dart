@@ -287,14 +287,15 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
     List<dynamic> tempList = List();
     String professionalTitle = "---";
 
-    if (_list.isNotEmpty)
-      _list.forEach((f) {
-        if (f[searchKey] != null) {
-          if (f[searchKey].toLowerCase().contains(_searchText.toLowerCase())) {
-            tempList.add(f);
-          }
-        }
-      });
+    // if (_list.isNotEmpty)
+    //   _list.forEach((f) {
+    //     if (f[searchKey] != null) {
+    //       if (f[searchKey].toLowerCase().contains(_searchText.toLowerCase())) {
+    //         tempList.add(f);
+    //       }
+    //     }
+    //   });
+    tempList.addAll(_list);
 
     return ListView.separated(
       separatorBuilder: (BuildContext context, int index) => Divider(),
@@ -315,7 +316,9 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
           return isDoctorList
               ? ProviderTileWidget(
                   avatar: tempList[index]['avatar'] ?? '',
-                  name: (tempList[index]['title']??'')+' '+ tempList[index][searchKey] +
+                  name: (tempList[index]['title'] ?? '') +
+                      ' ' +
+                      tempList[index][searchKey] +
                       Extensions.getSortProfessionTitle(professionalTitle),
                   profession: professionalTitle,
                   onTap: () {

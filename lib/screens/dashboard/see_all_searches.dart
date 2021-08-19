@@ -78,11 +78,13 @@ class _SeeAllSearchScreeenState extends State<SeeAllSearchScreeen> {
 
                         if (type == 1) {
                           _container.setProjectsResponse(
-                              "specialtyId[${_list[index].toString()}]",
+                             "specialtyId[${index.toString()}]",
+                              // "specialtyId[${_list[index].toString()}]",
                               _list[index]["_id"]);
                         } else if (type == 3) {
                           _container.setProjectsResponse(
-                              "subServices[${_list[index].toString()}]",
+                            "subServices[${index.toString()}]",
+                              // "subServices[${_list[index].toString()}]",
                               _list[index]["_id"]);
                         }
 
