@@ -63,6 +63,12 @@ class _VitalReviewsState extends State<VitalReviews> {
     super.didChangeDependencies();
 
     _container = InheritedContainer.of(context);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
     _dateController.text =
         formattedDate(DateTime.now(), AppConstants.vitalReviewsDateFormat);
 
