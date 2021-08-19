@@ -355,8 +355,18 @@ class _CallPageState extends State<CallPage> {
           ],
         ));
       default:
+      return Container(
+            child: Stack(
+          children: <Widget>[
+            remoteVideo
+                ? _videoView(views.last)
+                : Container(
+                    color: Colors.black,
+                  ),
+            _myVideoView(views[0]),
+          ],
+        ));
     }
-    return Container();
   }
 
   /// Helper function to get list of native views
