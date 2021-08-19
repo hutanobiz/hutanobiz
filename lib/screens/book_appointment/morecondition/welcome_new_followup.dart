@@ -37,12 +37,12 @@ class _WelcomeNewFollowUpState extends State<WelcomeNewFollowUp> {
                     Localization.of(context).newEpisodeHeader,
                     FileConstants.icProviderOffice,
                     1),
-                _commonListTileWidget(
-                    context,
-                    Localization.of(context).followUpAppointmentHeader,
-                    Localization.of(context).followUpHeader,
-                    FileConstants.icNotificationAppointments,
-                    2),
+                // _commonListTileWidget(
+                //     context,
+                //     Localization.of(context).followUpAppointmentHeader,
+                //     Localization.of(context).followUpHeader,
+                //     FileConstants.icNotificationAppointments,
+                //     2),
               ],
             )));
   }
