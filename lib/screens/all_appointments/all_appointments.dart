@@ -28,7 +28,7 @@ class _AllAppointmentsState extends State<AllAppointments>
 
   void initState() {
     super.initState();
-    tabs = ['Requests', 'Appointments'];
+    tabs = ['Appointments', 'Requests'];
     _tabController = TabController(length: tabs.length, vsync: this);
     _tabController.addListener(_handleTabControllerTick);
   }
@@ -75,9 +75,9 @@ class _AllAppointmentsState extends State<AllAppointments>
   }
 
   Widget _tabsContent() => _currentIndex == 0
-      ? RequestAppointmentsScreen()
+      ? AppointmentsScreen()
       : _currentIndex == 1
-          ? AppointmentsScreen()
+          ? RequestAppointmentsScreen()
           : ComingSoon(isBackRequired: false, isFromUpload: false);
 
   List<Widget> _tabsHeader() {
