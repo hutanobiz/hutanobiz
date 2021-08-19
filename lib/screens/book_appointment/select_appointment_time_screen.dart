@@ -262,7 +262,9 @@ class _SelectAppointmentTimeScreenState
               _container.setAppointmentData("isOndemand", '0');
               if (selectedAddress != null) {
                 _container.setAppointmentData(
-                    'officeId', selectedAddress['_id']);
+                    'selectedAddress', selectedAddress['_id']);
+                _container.setAppointmentData(
+                    'selectedAddress', selectedAddress);
               }
               if (widget.arguments.fromScreen == 1) {
                 Navigator.pop(context, _container.appointmentData);
@@ -455,6 +457,8 @@ class _SelectAppointmentTimeScreenState
                     if (selectedAddress != null) {
                       _container.setAppointmentData(
                           'officeId', selectedAddress['_id']);
+                      _container.setAppointmentData(
+                          'selectedAddress', selectedAddress);
                     }
 
                     if (widget.arguments.fromScreen == 1) {

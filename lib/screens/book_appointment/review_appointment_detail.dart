@@ -168,6 +168,16 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
             _consentToTreatMap["userAddress"]['coordinates'][0]);
       }
     } else if (_container.projectsResponse["serviceType"].toString() == '1') {
+      if (_appointmentData["selectedAddress"] != null) {
+        if (_appointmentData["selectedAddress"]["coordinates"].length > 0) {
+          _desPosition = LatLng(
+              double.parse(_appointmentData["selectedAddress"]["coordinates"][1]
+                  .toString()),
+              double.parse(_appointmentData["selectedAddress"]["coordinates"][0]
+                  .toString()));
+        }
+      }
+    } else {
       if (_profileMap["businessLocation"] != null) {
         if (_profileMap["businessLocation"]["coordinates"].length > 0) {
           _desPosition = LatLng(
@@ -177,7 +187,7 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                   .toString()));
         }
       }
-    } else {}
+    }
     if (_initialPosition != null) {
       _middlePoint = LatLng(
           (_initialPosition.latitude + _desPosition.latitude) / 2,
@@ -350,51 +360,69 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
     List<Widget> _widgetList = new List();
     String address;
 
-    if (_profileMap["businessLocation"] != null) {
-      dynamic business = _profileMap["businessLocation"];
-
-      dynamic _state;
-
-      if (business["state"] is Map && business["state"].length > 0) {
-        _state = business["state"];
-      } else if (_profileMap['State'] != null &&
-          _profileMap["State"].length > 0) {
-        _state = _profileMap['State'][0];
+    if (_container.projectsResponse["serviceType"].toString() == '3') {
+      if (Provider.of<HealthConditionProvider>(context, listen: false)
+              .addressDetails !=
+          null) {
+        address = Extensions.addressFormat(
+          Provider.of<HealthConditionProvider>(context, listen: false)
+              .addressDetails
+              .address,
+          Provider.of<HealthConditionProvider>(context, listen: false)
+              .addressDetails
+              .street,
+          Provider.of<HealthConditionProvider>(context, listen: false)
+              .addressDetails
+              .city,
+          Provider.of<HealthConditionProvider>(context, listen: false)
+              .addressDetails
+              .state
+              .title
+              .toString(),
+          Provider.of<HealthConditionProvider>(context, listen: false)
+              .addressDetails
+              .zipCode,
+        );
+      } else {
+        address = Extensions.addressFormat(
+          _consentToTreatMap["userAddress"]["address"]?.toString(),
+          _consentToTreatMap["userAddress"]["street"]?.toString(),
+          _consentToTreatMap["userAddress"]["city"]?.toString(),
+          _consentToTreatMap["userAddress"]['state'],
+          _consentToTreatMap["userAddress"]["zipCode"]?.toString(),
+        );
       }
+    } else if (_container.projectsResponse["serviceType"].toString() == '1') {
+      if (_appointmentData["selectedAddress"] != null) {
+        dynamic _state;
 
-      if (_container.projectsResponse["serviceType"].toString() == '3') {
-        if (Provider.of<HealthConditionProvider>(context, listen: false)
-                .addressDetails !=
-            null) {
-          address = Extensions.addressFormat(
-            Provider.of<HealthConditionProvider>(context, listen: false)
-                .addressDetails
-                .address,
-            Provider.of<HealthConditionProvider>(context, listen: false)
-                .addressDetails
-                .street,
-            Provider.of<HealthConditionProvider>(context, listen: false)
-                .addressDetails
-                .city,
-            Provider.of<HealthConditionProvider>(context, listen: false)
-                .addressDetails
-                .state
-                .title
-                .toString(),
-            Provider.of<HealthConditionProvider>(context, listen: false)
-                .addressDetails
-                .zipCode,
-          );
-        } else {
-          address = Extensions.addressFormat(
-            _consentToTreatMap["userAddress"]["address"]?.toString(),
-            _consentToTreatMap["userAddress"]["street"]?.toString(),
-            _consentToTreatMap["userAddress"]["city"]?.toString(),
-            _consentToTreatMap["userAddress"]['state'],
-            _consentToTreatMap["userAddress"]["zipCode"]?.toString(),
-          );
+        if (_appointmentData["selectedAddress"]["state"] is Map &&
+            _appointmentData["selectedAddress"]["state"].length > 0) {
+          _state = _appointmentData["selectedAddress"]["state"];
+        } else if (_profileMap['State'] != null &&
+            _profileMap["State"].length > 0) {
+          _state = _profileMap['State'][0];
         }
-      } else if (_container.projectsResponse["serviceType"].toString() == '1') {
+        address = Extensions.addressFormat(
+          _appointmentData["selectedAddress"]["address"]?.toString(),
+          _appointmentData["selectedAddress"]["street"]?.toString(),
+          _appointmentData["selectedAddress"]["city"]?.toString(),
+          _state,
+          _appointmentData["selectedAddress"]["zipCode"]?.toString(),
+        );
+      }
+    } else {
+      if (_profileMap["businessLocation"] != null) {
+        dynamic business = _profileMap["businessLocation"];
+
+        dynamic _state;
+
+        if (business["state"] is Map && business["state"].length > 0) {
+          _state = business["state"];
+        } else if (_profileMap['State'] != null &&
+            _profileMap["State"].length > 0) {
+          _state = _profileMap['State'][0];
+        }
         address = Extensions.addressFormat(
           business["address"]?.toString(),
           business["street"]?.toString(),
@@ -402,7 +430,7 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
           _state,
           business["zipCode"]?.toString(),
         );
-      } else {}
+      }
     }
 
     _widgetList.add(
@@ -660,21 +688,22 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
       children: [
         locationWidget(
             address,
-            LatLng(
-                _providerData.containsKey('providerData')
-                    ? _providerData['providerData'].containsKey('data')
-                        ? _providerData['providerData']['data'][0]
-                            ['businessLocation']['coordinates'][0]
-                        : _providerData['providerData']['businessLocation']
-                            ['coordinates'][0]
-                    : _providerData['businessLocation']['coordinates'][0],
-                _providerData.containsKey('providerData')
-                    ? _providerData['providerData'].containsKey('data')
-                        ? _providerData['providerData']['data'][0]
-                            ['businessLocation']['coordinates'][0]
-                        : _providerData['providerData']['businessLocation']
-                            ['coordinates'][0]
-                    : _providerData['businessLocation']['coordinates'][1]),
+            _desPosition,
+            // LatLng(
+            //     _providerData.containsKey('providerData')
+            //         ? _providerData['providerData'].containsKey('data')
+            //             ? _providerData['providerData']['data'][0]
+            //                 ['businessLocation']['coordinates'][0]
+            //             : _providerData['providerData']['businessLocation']
+            //                 ['coordinates'][0]
+            //         : _providerData['businessLocation']['coordinates'][0],
+            //     _providerData.containsKey('providerData')
+            //         ? _providerData['providerData'].containsKey('data')
+            //             ? _providerData['providerData']['data'][0]
+            //                 ['businessLocation']['coordinates'][0]
+            //             : _providerData['providerData']['businessLocation']
+            //                 ['coordinates'][0]
+            //         : _providerData['businessLocation']['coordinates'][1]),
             _profileMap['distance']),
         Padding(
           padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
@@ -968,7 +997,7 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                     markers: _markers,
                     initialCameraPosition: CameraPosition(
                       target: latLng,
-                      zoom: 9.0,
+                      zoom: 14.0,
                     ),
                     onMapCreated: (GoogleMapController controller) {
                       _controller.complete(controller);
