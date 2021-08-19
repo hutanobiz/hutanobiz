@@ -86,7 +86,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
       resizeToAvoidBottomInset: true,
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackground(
-        title: "Rate Doctor",
+        title: "Rate Provider",
         isAddBack: true,
         isLoading: _isLoading,
         color: Colors.white,
