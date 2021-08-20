@@ -17,6 +17,7 @@ class ReqRegister {
   int step;
   String deviceToken;
   int gender;
+  int genderType;
   String fullName;
   bool haveHealthInsurance;
   String latitude;
@@ -41,6 +42,7 @@ class ReqRegister {
       this.haveHealthInsurance,
       this.deviceToken,
       this.gender,
+      this.genderType,
       this.fullName,
       this.latitude,
       this.longitude});
@@ -56,7 +58,7 @@ class ReqRegister {
       'zipCode': zipCode,
       'state': state,
       'dob': dob,
-      'haveHealthInsurance':haveHealthInsurance,
+      'haveHealthInsurance': haveHealthInsurance,
       'city': city,
       'insuranceId': insuranceId,
       'mobileCountryCode': mobileCountryCode,
@@ -67,6 +69,7 @@ class ReqRegister {
       'step': step,
       'fullName': fullName,
       'gender': gender,
+      'genderType': genderType,
       'latitude': latitude,
       'longitude': longitude,
     };
@@ -83,7 +86,7 @@ class ReqRegister {
       email: map['email'],
       zipCode: map['zipCode'],
       state: map['state'],
-      haveHealthInsurance:map['haveHealthInsurance'],
+      haveHealthInsurance: map['haveHealthInsurance'],
       deviceToken: map['deviceToken'],
       dob: map['dob'],
       city: map['city'],
@@ -95,6 +98,7 @@ class ReqRegister {
       type: map['type'],
       step: map['step'],
       gender: map['gender'],
+      genderType: map['genderType'],
       fullName: map['fullName'],
       latitude: map['latitude'],
       longitude: map['longitude'],

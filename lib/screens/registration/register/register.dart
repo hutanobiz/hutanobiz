@@ -51,6 +51,12 @@ class RegisterScreen extends StatefulWidget {
   _RegisterScreenState createState() => _RegisterScreenState();
 }
 
+class Genders {
+  int val;
+  String title;
+  Genders(this.val, this.title);
+}
+
 class _RegisterScreenState extends State<RegisterScreen> {
   final FocusNode _firstNameFocus = FocusNode();
   final FocusNode _lastNameFocus = FocusNode();
@@ -102,7 +108,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String deviceToken;
 
   final labelStyle = TextStyle(fontSize: fontSize14, color: colorGrey60);
+  List<Genders> genders = [
+    Genders(0, 'Same as sex'),
+    Genders(1, 'Lesbian'),
+    Genders(2, 'Gay'),
+    Genders(3, 'Bisexual'),
+    Genders(4, 'Transgender'),
+    Genders(5, 'Queer'),
+    Genders(6, 'Other'),
+  ];
 
+  Genders genderType;
   @override
   void initState() {
     super.initState();
@@ -112,6 +128,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     SharedPref().getValue("deviceToken").then((value) {
       deviceToken = value;
     });
+    genderType = genders.first;
+    _registerModel.genderType = genders.first.val;
 
     if (_addressFocus != null) {
       _addressFocus.addListener(() {
@@ -553,6 +571,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     GenderSelector(
                         onGenderChange: _onGenderChange, gender: _gender),
+
+                    SizedBox(
+                      height: spacing20,
+                    ),
+                    DropdownButtonFormField<Genders>(
+                      decoration: InputDecoration(
+                        labelText: "Gender",
+                        border: OutlineInputBorder(),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide:
+                                BorderSide(color: Colors.grey[300], width: 1)),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide:
+                                BorderSide(color: Colors.grey[300], width: 1)),
+                        disabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide:
+                                BorderSide(color: Colors.grey[300], width: 1)),
+                      ),
+                      value: genderType,
+                      items: genders
+                          .map<DropdownMenuItem<Genders>>((Genders value) {
+                        return DropdownMenuItem<Genders>(
+                          value: value,
+                          child: Text(value.title),
+                        );
+                      }).toList(),
+                      onChanged: (val) {
+                        setState(() {
+                          _registerModel.genderType = val.val;
+                          genderType = val;
+                        });
+                      },
+                    ),
                     SizedBox(
                       height: spacing20,
                     ),
