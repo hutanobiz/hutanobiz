@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hutano/apis/api_constants.dart';
 import 'package:hutano/apis/api_manager.dart';
+import 'package:hutano/apis/error_model.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/add_insurance/effective_date_picker.dart';
@@ -85,22 +87,21 @@ class _AddInsuranceState extends State<AddInsurance> {
     showError(AddInsuranceError.effectiveDate.index);
   }
 
-  Insurance _selectedInsurance;
   _onInsuranceSelected(String title, String id) {
     FocusManager.instance.primaryFocus.unfocus();
     _companyController.text = title;
     _addInsuranceModel.insuranceCompany = id;
-    // _selectedInsurance = _insuranceList[index];
     showError(AddInsuranceError.insuranceCompany.index);
   }
 
   List<Insurance> _insuranceList = [];
-
+  List<Insurance> myInsuranceList = [];
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _getInsuranceList();
+      _getMyInsurance();
     });
   }
 
@@ -109,10 +110,39 @@ class _AddInsuranceState extends State<AddInsurance> {
       var res = await ApiManager().insuraceList();
       setState(() {
         _insuranceList = res.response;
+        if (myInsuranceList.isNotEmpty && _insuranceList.isNotEmpty) {
+          _insuranceList.removeWhere((element) {
+            return myInsuranceList.any((item) => item.title == element.title);
+          });
+        }
       });
     } catch (e) {
       print(e);
     }
+  }
+
+  _getMyInsurance() {
+    ProgressDialogUtils.showProgressDialog(context);
+    ApiManager().getPatientInsurance().then((value) {
+      if (value.status == success) {
+        ProgressDialogUtils.dismissProgressDialog();
+        setState(() {
+          myInsuranceList = value.response;
+          if (myInsuranceList.isNotEmpty && _insuranceList.isNotEmpty) {
+            _insuranceList.removeWhere((element) {
+              return myInsuranceList.any((item) => item.title == element.title);
+            });
+          }
+        });
+      }
+    }).catchError((dynamic e) {
+      if (e is ErrorModel) {
+        if (e.response != null) {
+          ProgressDialogUtils.dismissProgressDialog();
+          DialogUtils.showAlertDialog(context, e.response);
+        }
+      }
+    });
   }
 
   validateField() {
@@ -186,7 +216,6 @@ class _AddInsuranceState extends State<AddInsurance> {
                   SizedBox(
                     height: spacing40,
                   ),
-                  // _getInsuranceCompany(),
                   TextWithImage(
                       size: spacing30,
                       textStyle: TextStyle(fontSize: fontSize16),
@@ -225,7 +254,6 @@ class _AddInsuranceState extends State<AddInsurance> {
                           controller: _effectiveDateController),
                     ],
                   ),
-
                   SizedBox(height: 20),
                   Align(
                     alignment: Alignment.centerLeft,
@@ -336,33 +364,6 @@ class _AddInsuranceState extends State<AddInsurance> {
     Navigator.of(context)
         .pushNamedAndRemoveUntil(Routes.welcome, (route) => false);
     setBool(PreferenceKey.skipStep, true);
-  }
-
-  Widget _getInsuranceCompany() {
-    return HutanoTextField(
-        onValueChanged: (value) {
-          _addInsuranceModel.insuranceCompany = value;
-          setState(() {
-            _insuranceCompanyError = value
-                .toString()
-                .isBlank(context, Localization.of(context).errorEnterFirstName);
-          });
-        },
-        labelTextStyle: labelStyle,
-        errorText: _insuranceCompanyError,
-        focusNode: _insuranceCompany,
-        controller: _companyController,
-        labelText: Localization.of(context).insuranceCompany,
-        focusedBorderColor: colorBlack20,
-        onFieldSubmitted: (s) {
-          FocusScope.of(context).requestFocus(_insuranceMember);
-          showError(AddInsuranceError.insuranceCompany.index);
-        },
-        textInputFormatter: [
-          FilteringTextInputFormatter.allow(RegExp("[a-zA-Z -]"))
-        ],
-        textInputType: TextInputType.name,
-        textInputAction: TextInputAction.next);
   }
 
   Widget _getInsuredMember() {
