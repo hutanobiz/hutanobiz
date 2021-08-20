@@ -97,7 +97,7 @@ class AppointmentCompleteConfirmation extends StatelessWidget {
                       ),
                     ),
                     label: Text(
-                      "Rate Doctor",
+                      "Rate provider",
                       style: TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.w500,
