@@ -250,6 +250,9 @@ class _MedicineInformationState extends State<MedicineInformation> {
           });
           Provider.of<HealthConditionProvider>(context, listen: false)
               .updateMedicationData(_medicationList);
+              Provider.of<HealthConditionProvider>(context, listen: false)
+              .updateMedicationModelData(_getMedicineList);
+          
           Navigator.of(context).pushNamed(Routes.routeAddPharmacy);
           //   }
           // } else {

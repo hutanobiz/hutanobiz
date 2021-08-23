@@ -93,7 +93,10 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
               } else {
                 Provider.of<HealthConditionProvider>(context, listen: false)
                     .updateDiagnostics([]);
-                Navigator.of(context).pushNamed(Routes.routeMedicineInformation);
+                Provider.of<HealthConditionProvider>(context, listen: false)
+                    .updateDiagnosticsModel([]);
+                Navigator.of(context)
+                    .pushNamed(Routes.routeMedicineInformation);
               }
             },
             isSkipLater: true,
@@ -104,6 +107,8 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
             onSkipForTap: () {
               Provider.of<HealthConditionProvider>(context, listen: false)
                   .updateDiagnostics([]);
+              Provider.of<HealthConditionProvider>(context, listen: false)
+                  .updateDiagnosticsModel([]);
               Navigator.of(context).pushNamed(Routes.routeMedicineInformation);
             },
             child: SingleChildScrollView(
@@ -591,13 +596,17 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
 
   void _forwardButtonPressed(BuildContext context) {
     List<String> selectedTests = [];
+    List<DiagnosticTest> selectedTestsModel = [];
     _finalTestList.forEach((element) {
       if (element.isSelected) {
         selectedTests.add(element.sId);
+        selectedTestsModel.add(element);
       }
     });
     Provider.of<HealthConditionProvider>(context, listen: false)
         .updateDiagnostics(selectedTests);
+    Provider.of<HealthConditionProvider>(context, listen: false)
+        .updateDiagnosticsModel(selectedTestsModel);
     Navigator.of(context).pushNamed(Routes.routeUploadTestDocuments);
   }
 

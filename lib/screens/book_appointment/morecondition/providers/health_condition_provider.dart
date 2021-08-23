@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/screens/appointments/model/req_booking_appointment_model.dart';
+import 'package:hutano/screens/book_appointment/diagnosis/model/res_diagnostic_test_model.dart';
 import 'package:hutano/screens/book_appointment/model/res_onsite_address_model.dart';
 import 'package:hutano/screens/book_appointment/morecondition/model/selection_health_issue_model.dart';
+import 'package:hutano/screens/medical_history/model/res_get_medication_detail.dart';
 
 class HealthConditionProvider extends ChangeNotifier {
   List<int> healthConditions = [];
   Vitals vitalsData;
   PreferredPharmacy preferredPharmacyData;
   List<String> medicalDiagnosticsTestsData = [];
+  List<DiagnosticTest> medicalDiagnosticsTestsModelData = [];
   List<String> medicalDocumentsData = [];
   List<String> medicalImagesData = [];
   String providerId = "";
@@ -21,6 +24,7 @@ class HealthConditionProvider extends ChangeNotifier {
   int currentIndexOfIssue = 0;
   List<Problems> allHealthIssuesData = [];
   String providerAddress = "";
+  List<Medications> medicationModelData = [];
 
   void updateHealthConditions(List<int> list) {
     healthConditions = list;
@@ -34,6 +38,11 @@ class HealthConditionProvider extends ChangeNotifier {
 
   void updatePharmacy(PreferredPharmacy preferredPharmacy) {
     preferredPharmacyData = preferredPharmacy;
+    notifyListeners();
+  }
+
+  void updateDiagnosticsModel(List<DiagnosticTest> list) {
+    medicalDiagnosticsTestsModelData = list;
     notifyListeners();
   }
 
@@ -69,6 +78,11 @@ class HealthConditionProvider extends ChangeNotifier {
 
   void updateMedicationData(List<String> list) {
     medicationData = list;
+    notifyListeners();
+  }
+
+  void updateMedicationModelData(List<Medications> list) {
+    medicationModelData = list;
     notifyListeners();
   }
 
@@ -119,12 +133,14 @@ class HealthConditionProvider extends ChangeNotifier {
     vitalsData = null;
     preferredPharmacyData = null;
     medicalDiagnosticsTestsData = [];
+    medicalDiagnosticsTestsModelData = [];
     medicalDocumentsData = [];
     medicalImagesData = [];
     providerId = "";
     officeId = "";
     medicalHistoryData = [];
     medicationData = [];
+    medicationModelData = [];
     coordinatesDetails = null;
     addressDetails = null;
     listOfSelectedHealthIssues = [];

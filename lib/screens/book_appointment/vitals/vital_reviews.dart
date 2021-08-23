@@ -71,7 +71,9 @@ class _VitalReviewsState extends State<VitalReviews> {
 
     _dateController.text =
         formattedDate(DateTime.now(), AppConstants.vitalReviewsDateFormat);
-
+    _selectedDate =
+        formattedDate(DateTime.now(), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z");
+    _selectedTime = DateFormat("hh:mm a").format(DateTime.now());
     _timeController.text = DateFormat("h:mm a")
         .format(DateTime.now())
         .replaceAll("PM", "")
@@ -115,14 +117,15 @@ class _VitalReviewsState extends State<VitalReviews> {
           onSkipForTap: () {
             Provider.of<HealthConditionProvider>(context, listen: false)
                 .updateVitals(Vitals());
-            Navigator.of(context).pushNamed(
-              _container.projectsResponse[ArgumentConstant.serviceTypeKey]
-                          .toString() ==
-                      '3'
-                  ? Routes.onsiteAddresses
-                  : Routes.paymentMethodScreen,
-              arguments: true,
-            );
+            Navigator.pushNamed(context, Routes.bookingSummary);
+            // Navigator.of(context).pushNamed(
+            //   _container.projectsResponse[ArgumentConstant.serviceTypeKey]
+            //               .toString() ==
+            //           '3'
+            //       ? Routes.onsiteAddresses
+            //       : Routes.paymentMethodScreen,
+            //   arguments: true,
+            // );
           },
           child: SingleChildScrollView(
             child: Form(
@@ -449,13 +452,14 @@ class _VitalReviewsState extends State<VitalReviews> {
     );
     Provider.of<HealthConditionProvider>(context, listen: false)
         .updateVitals(vitalsModel);
-    Navigator.of(context).pushNamed(
-      _container.projectsResponse[ArgumentConstant.serviceTypeKey].toString() ==
-              '3'
-          ? Routes.onsiteAddresses
-          : Routes.paymentMethodScreen,
-      arguments: true,
-    );
+    Navigator.pushNamed(context, Routes.bookingSummary);
+    // Navigator.of(context).pushNamed(
+    //   _container.projectsResponse[ArgumentConstant.serviceTypeKey].toString() ==
+    //           '3'
+    //       ? Routes.onsiteAddresses
+    //       : Routes.paymentMethodScreen,
+    //   arguments: true,
+    // );
     // } else {
     //   Widgets.showToast("Please add vital details");
     // }
@@ -467,14 +471,15 @@ class _VitalReviewsState extends State<VitalReviews> {
       if (result is CommonRes) {
         ProgressDialogUtils.dismissProgressDialog();
         Widgets.showToast(result.response);
-        Navigator.of(context).pushNamed(
-          _container.projectsResponse[ArgumentConstant.serviceTypeKey]
-                      .toString() ==
-                  '3'
-              ? Routes.onsiteAddresses
-              : Routes.paymentMethodScreen,
-          arguments: true,
-        );
+        Navigator.pushNamed(context, Routes.bookingSummary);
+        // Navigator.of(context).pushNamed(
+        //   _container.projectsResponse[ArgumentConstant.serviceTypeKey]
+        //               .toString() ==
+        //           '3'
+        //       ? Routes.onsiteAddresses
+        //       : Routes.paymentMethodScreen,
+        //   arguments: true,
+        // );
       }
     })).catchError((dynamic e) {
       ProgressDialogUtils.dismissProgressDialog();

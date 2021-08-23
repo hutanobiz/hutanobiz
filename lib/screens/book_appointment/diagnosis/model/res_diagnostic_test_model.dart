@@ -30,10 +30,18 @@ class DiagnosticTest {
   int iV;
   String createdAt;
   String updatedAt;
+  String type;
+  String date;
   bool isSelected = false;
 
   DiagnosticTest(
-      {this.name, this.sId, this.iV, this.createdAt, this.updatedAt});
+      {this.name,
+      this.sId,
+      this.iV,
+      this.createdAt,
+      this.updatedAt,
+      this.type,
+      this.date});
 
   DiagnosticTest.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -41,6 +49,8 @@ class DiagnosticTest {
     iV = json['__v'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
+    type = json['type'];
+    date = json['date'];
   }
 
   Map<String, dynamic> toJson() {

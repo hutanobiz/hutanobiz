@@ -119,6 +119,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       _api.profile(value, Map()).then((value) {
         setState(() {
           setString(AppPreference.dobKey, value["response"]['dob']);
+          setInt(PreferenceKey.gender, value["response"]['gender']);
           isEmailVerified = value["response"]["isEmailVerified"] ?? false;
           SharedPref().setBoolValue(
               "isEmailVerified", value["response"]["isEmailVerified"] ?? false);
