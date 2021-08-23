@@ -25,6 +25,7 @@ import 'package:hutano/screens/appointments/upload_images.dart';
 import 'package:hutano/screens/appointments/video_call.dart';
 import 'package:hutano/screens/appointments/view_medical_history.dart';
 import 'package:hutano/screens/appointments/virtual_waiting_room.dart';
+import 'package:hutano/screens/book_appointment/booking_summary.dart';
 import 'package:hutano/screens/book_appointment/conditiontime/condition_time.dart';
 import 'package:hutano/screens/book_appointment/confirm_book_appointment.dart';
 import 'package:hutano/screens/book_appointment/diagnosis/test_diagnosis.dart';
@@ -255,7 +256,9 @@ class Routes {
   static const String chat = '/chat';
   static const String routeUploadDiagnosticNew = '/routeUploadDiagnosticNew';
   static const String appointmentConfirmation = '/appointmentConfirmation';
-  static const String reviewAppointmentScreenDetail = '/reviewAppointmentScreenDetail';
+  static const String reviewAppointmentScreenDetail =
+      '/reviewAppointmentScreenDetail';
+  static const String bookingSummary = '/bookingSummary';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final dynamic args = settings.arguments;
@@ -359,6 +362,8 @@ class Routes {
         break;
       case reviewAppointmentScreenDetail:
         return _buildRoute(settings, ReviewAppointmentDetail());
+      case bookingSummary:
+      return _buildRoute(settings, Bookingsummary());
       case providerProfileScreen:
         return _buildRoute(
             settings,

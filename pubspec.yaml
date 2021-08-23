@@ -61,6 +61,7 @@ dependencies:
   touchable: ^1.0.0
   keyboard_actions: ^3.4.1
   socket_io_client: 1.0.1
+  collection: ^1.15.0
   flutter: 
     sdk: flutter
 
