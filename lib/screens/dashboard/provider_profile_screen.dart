@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -7,16 +8,16 @@ import 'package:google_maps_flutter/google_maps_flutter.dart' hide MapType;
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/dimens.dart';
+import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/book_appointment/select_services.dart';
+import 'package:hutano/text_style.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/constants.dart';
-import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/extensions.dart';
-import 'package:hutano/widgets/common_rating_widget.dart';
 import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
-import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
 import 'package:hutano/widgets/review_widget.dart';
@@ -279,7 +280,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
             child: ListView(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              children: officeData != null ? _widgetList() : [Container()],
+              children: _widgetList(),
             ),
             // maintainState: true,
             visible: selectedIndex == 1,
@@ -1321,24 +1322,88 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
   }
 
   List<Widget> _widgetList() {
+    var groupAppointmentTypeMap =
+        groupBy(profileMapResponse['services'], (obj) => obj['serviceType']);
+    List<Customer> groupOfficeList = [], groupOnsiteList = [];
     List<Widget> formWidget = [];
 
-    formWidget.add(SizedBox(height: 26));
-    formWidget.add(consultancyFeeWidget());
+    formWidget.add(officeData != null
+        ? consultancyFeeWidget(
+            'Office', officeData.fee.toDouble(), officeData.duration.toString())
+        : SizedBox());
+    if (groupAppointmentTypeMap.containsKey(1)) {
+      var groupOfficeMap =
+          groupBy(groupAppointmentTypeMap[1], (obj) => obj['serviceName']);
+      groupOfficeMap.forEach((k, v) => groupOfficeList
+          .add(Customer(k, v.map((m) => Services.fromJson(m)).toList())));
+
+      formWidget.add(servicesExpandedWidget(groupOfficeList));
+    }
+
+    formWidget.add(officeData != null
+        ? consultancyFeeWidget('Telemedicine', videoData.fee.toDouble(),
+            videoData.duration.toString())
+        : SizedBox());
+
+    formWidget.add(officeData != null
+        ? consultancyFeeWidget(
+            'Onsite', onsiteData.fee.toDouble(), onsiteData.duration.toString())
+        : SizedBox());
+    if (groupAppointmentTypeMap.containsKey(3)) {
+      var groupOnsiteMap =
+          groupBy(groupAppointmentTypeMap[3], (obj) => obj['serviceName']);
+      groupOnsiteMap.forEach((k, v) => groupOnsiteList
+          .add(Customer(k, v.map((m) => Services.fromJson(m)).toList())));
+
+      formWidget.add(servicesExpandedWidget(groupOnsiteList));
+    }
 
     formWidget.add(SizedBox(height: 26));
-
-    if (officeData.services != null && officeData.services.length > 0)
-      formWidget.add(servicesWidget());
 
     return formWidget;
   }
 
-  Widget consultancyFeeWidget() {
-    double fee = officeData.fee.toDouble();
-    String duration = officeData.duration.toString();
+  servicesExpandedWidget(groupList) {
+    return ListView.separated(
+        separatorBuilder: (BuildContext context, int index) => Divider(),
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: groupList.length,
+        itemBuilder: (context, index) {
+          if (groupList != null && groupList.length > 0) {
+            return ExpansionTile(
+              title: Text(
+                groupList[index].name,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
+                ),
+              ),
+              children: [
+                ListView.separated(
+                    separatorBuilder: (BuildContext context, int index) =>
+                        SizedBox(
+                          height: 10,
+                        ),
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: groupList[index].services.length,
+                    itemBuilder: (context, itemIndex) {
+                      Services services = groupList[index].services[itemIndex];
+                      return serviceSlotWidget(services);
+                    })
+              ],
+            );
+          }
 
+          return Container();
+        });
+  }
+
+  Widget consultancyFeeWidget(String title, double fee, String duration) {
     return Container(
+      margin: EdgeInsets.only(top: 20),
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -1347,59 +1412,57 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
           color: Colors.grey[100],
         ),
       ),
-      child: Row(
-        children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        children: [
+          Text(
+            title,
+            style: AppTextStyle.boldStyle(
+              fontSize: 16,
+            ),
+          ),
+          Row(
             children: <Widget>[
-              Text(
-                "Consultation",
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              SizedBox(height: 7),
-              RichText(
-                text: TextSpan(
-                  style: TextStyle(
-                    fontSize: 13.0,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Consultation",
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                  children: <TextSpan>[
-                    TextSpan(text: 'Fee \$ '),
-                    TextSpan(
-                      text: '${fee.toStringAsFixed(2)} ',
+                  SizedBox(height: 7),
+                  RichText(
+                    text: TextSpan(
                       style: TextStyle(
-                        fontWeight: FontWeight.w600,
+                        fontSize: 13.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
                       ),
+                      children: <TextSpan>[
+                        TextSpan(text: 'Fee \$ '),
+                        TextSpan(
+                          text: '${fee.toStringAsFixed(2)} ',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        TextSpan(text: 'Duration '),
+                        TextSpan(
+                          text: '$duration min',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
-                    TextSpan(text: 'Duration '),
-                    TextSpan(
-                      text: '$duration min',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           ),
-          Expanded(
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Radio(
-                activeColor: AppColors.persian_blue,
-                groupValue: _radioValue,
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                value: 0,
-                onChanged: _handleRadioValueChange,
-              ),
-            ),
-          )
         ],
       ),
     ).onClick(
@@ -1407,107 +1470,15 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
     );
   }
 
-  Widget servicesWidget() {
-    return Container(
-      padding: const EdgeInsets.all(2.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14.0),
-        border: Border.all(
-          color: Colors.grey[100],
-        ),
-      ),
-      child: Column(
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              color: _radioValue == 0 ? Colors.white : Colors.grey[100],
-              borderRadius: BorderRadius.circular(14.0),
-            ),
-            child: Row(
-              children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "Services",
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    SizedBox(height: 7),
-                    Text(
-                      "Choose offered services",
-                      style: TextStyle(
-                        fontSize: 13.0,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Radio(
-                      activeColor: AppColors.persian_blue,
-                      groupValue: _radioValue,
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      value: 1,
-                      onChanged: _handleRadioValueChange,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ).onClick(
-            onTap: () => _handleRadioValueChange(1),
-          ),
-          _radioValue == 0
-              ? Container()
-              : officeData.services != null && officeData.services.length > 0
-                  ? ListView.separated(
-                      separatorBuilder: (BuildContext context, int index) =>
-                          Divider(),
-                      physics: ClampingScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: officeData.services.length,
-                      itemBuilder: (context, index) {
-                        ServiceData services = officeData.services[index];
-                        return serviceSlotWidget(services);
-                      })
-                  : Container(
-                      alignment: Alignment.centerLeft,
-                      padding: const EdgeInsets.all(20),
-                      child: Text("NO services available"),
-                    ),
-        ],
-      ),
-    );
-  }
-
-  Widget serviceSlotWidget(ServiceData services) {
-    return CheckboxListTile(
+  Widget serviceSlotWidget(Services services) {
+    return ListTile(
       dense: false,
-      controlAffinity: ListTileControlAffinity.trailing,
-      value: _selectedServicesMap.containsKey(services.subServiceId),
-      activeColor: AppColors.goldenTainoi,
-      onChanged: (value) {
-        value
-            ? _selectedServicesMap[services.subServiceId] = services
-            : _selectedServicesMap.remove(services.subServiceId);
-
-        setState(() {});
-      },
       title: Text(
-        services.subServiceTitle ?? "---",
+        services.subServiceName ?? "---",
         style: TextStyle(
-          fontSize: 14.0,
-          fontWeight: FontWeight.w600,
+          fontSize: 15.0,
           color: Colors.black,
+          fontWeight: FontWeight.w600,
         ),
       ),
       subtitle: RichText(
@@ -1522,7 +1493,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
               text: 'Amount \$ ',
               style: TextStyle(
                 fontSize: 13.0,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w400,
                 color: Colors.black.withOpacity(0.85),
               ),
             ),
@@ -1530,7 +1501,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
               text: '${services.amount.toStringAsFixed(2)} \u2022 ',
               style: TextStyle(
                 fontSize: 13.0,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w500,
                 color: Colors.black.withOpacity(0.85),
               ),
             ),
@@ -1538,7 +1509,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
               text: 'Duration ',
               style: TextStyle(
                 fontSize: 13.0,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w400,
                 color: Colors.black.withOpacity(0.85),
               ),
             ),
@@ -1546,7 +1517,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
               text: '${services.duration} min',
               style: TextStyle(
                 fontSize: 13.0,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w500,
                 color: Colors.black.withOpacity(0.85),
               ),
             ),
