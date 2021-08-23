@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/dimens.dart';
@@ -12,6 +13,18 @@ import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
+
+class Customer {
+  String name;
+  List<Services> services;
+
+  Customer(this.name, this.services);
+
+  @override
+  String toString() {
+    return '{ ${this.name}, ${this.services} }';
+  }
+}
 
 class SelectServicesScreen extends StatefulWidget {
   @override
@@ -29,6 +42,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
   Map<String, Services> _selectedServicesMap = Map();
   List _serviceList;
   Map profileMap = Map();
+  List<Customer> groupList = [];
 
   @override
   void didChangeDependencies() {
@@ -75,6 +89,9 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
       servicesList = _serviceList.map((m) => Services.fromJson(m)).toList();
     }
 
+    var groupMap = groupBy(servicesList, (obj) => obj.serviceName);
+
+    groupMap.forEach((k, v) => groupList.add(Customer(k, v)));
     super.didChangeDependencies();
   }
 
@@ -316,17 +333,41 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
           ),
           _radioValue == 0
               ? Container()
-              : servicesList != null && servicesList.length > 0
+              : groupList != null && groupList.length > 0
                   ? ListView.separated(
                       separatorBuilder: (BuildContext context, int index) =>
                           Divider(),
                       physics: ClampingScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: servicesList.length,
+                      itemCount: groupList.length,
                       itemBuilder: (context, index) {
-                        if (servicesList != null && servicesList.length > 0) {
-                          Services services = servicesList[index];
-                          return serviceSlotWidget(services);
+                        if (groupList != null && groupList.length > 0) {
+                          return ExpansionTile(
+                            title: Text(
+                              groupList[index].name,
+                              style: TextStyle(
+                                fontSize: fontSize16,
+                                color: colorBlack2,
+                                fontWeight: fontWeightSemiBold,
+                              ),
+                            ),
+                            children: [
+                              ListView.separated(
+                                  separatorBuilder:
+                                      (BuildContext context, int index) =>
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                  physics: ClampingScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: groupList[index].services.length,
+                                  itemBuilder: (context, itemIndex) {
+                                    Services services =
+                                        groupList[index].services[itemIndex];
+                                    return serviceSlotWidget(services);
+                                  })
+                            ],
+                          );
                         }
 
                         return Container();
