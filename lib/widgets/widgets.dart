@@ -495,7 +495,7 @@ class Widgets {
                           height: 24,
                         ),
                         Text(
-                          isRejoin ? 'Call request' : 'Call Setting',
+                          isRejoin ? 'Rejoin call' : 'Join call',
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 18,
@@ -630,7 +630,7 @@ class Widgets {
                                               BorderRadius.circular(8.0))),
                                 ),
                                 child: Text(
-                                  isRejoin ? 'Join' : 'Enter call',
+                                  isRejoin ? 'Join' : 'Start call',
                                   style: TextStyle(
                                       color: AppColors.windsor,
                                       fontWeight: FontWeight.w500),

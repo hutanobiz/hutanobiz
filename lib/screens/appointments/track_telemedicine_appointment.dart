@@ -353,7 +353,7 @@ class _TrackTelemedicineAppointmentState
                                   ? SizedBox()
                                   : !isUserJoin
                                       ? TrackingButton(
-                                          title: 'Enter Waiting Room',
+                                          title: 'I am ready',
                                           image: 'images/watch.png',
                                           onTap: () {
                                             var appointmentId = {};
@@ -520,7 +520,7 @@ class _TrackTelemedicineAppointmentState
                                         : SizedBox(),
                                 !isUserJoin
                                     ? TrackingButton(
-                                        title: 'Enter Waiting Room',
+                                        title: 'I am ready',
                                         image: 'images/watch.png',
                                         onTap: () {
                                           var appointmentId = {};
