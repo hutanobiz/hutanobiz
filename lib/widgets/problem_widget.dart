@@ -26,8 +26,10 @@ class ProblemWidget extends StatelessWidget {
       String bodyPartList = '';
       appointmentProblem['bodyPart'].forEach((value) {
         if (value['sides'].length > 0) {
-          bodyPartList +=
-              ' ' + '${sidesMap[value['sides'][0]]} ' + value['name'] + ',';
+          bodyPartList += ' ' +
+              '${sidesMap[int.parse('${value['sides'][0]}')]} ' +
+              value['name'] +
+              ',';
         } else {
           bodyPartList += ' ' + value['name'] + ',';
         }
@@ -169,7 +171,8 @@ class ProblemWidget extends StatelessWidget {
                     child: Text(
                   appointmentProblem['name'] +
                       ' associated with' +
-                      problemTitle,
+                      problemTitle +
+                      ' discomfort',
                   style: AppTextStyle.mediumStyle(),
                 ))
               ],
