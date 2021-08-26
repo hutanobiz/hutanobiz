@@ -11,11 +11,13 @@ import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/simple_timer_text.dart';
 import 'package:hutano/widgets/tracking_button.dart';
 import 'package:hutano/widgets/tracking_provider_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 const TRACK_STATUS_PROVIDER = 'trackingStatusProvider';
 const PROVIDER_START_DRIVING = 'providerStartDriving';
@@ -80,12 +82,11 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
-        title: "Appointment Status",
-        isLoading: _isLoading,
-        isAddBack: true,
-        addBackButton: false,
-        color: Colors.white,
+      body: LoadingBackgroundNew(
+        title: "Track Appointment",
+        color: AppColors.snow,
+        isAddBack: false,
+        addHeader: true,
         padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
         child: Container(
           width: MediaQuery.of(context).size.width,
@@ -162,7 +163,8 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                 : status == 3
                     ? 'Treatment Started'
                     : 'Appointment Complete';
-    name = appointment["data"]['doctor']['title'] +appointment["data"]['doctor']['fullName'];
+    name = appointment["data"]['doctor']['title'] +
+        appointment["data"]['doctor']['fullName'];
     avatar = appointment["data"]['doctor']['avatar'];
 
     return Container(
@@ -171,10 +173,13 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
       ),
-      padding: EdgeInsets.all(20),
       child: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 20),
         shrinkWrap: true,
         children: <Widget>[
+          SizedBox(
+            height: 20,
+          ),
           SimpleCountDownTimer(
             controller: _simpleCountDownController2,
             duration: appointmentTime.difference(currentTime).inSeconds > 86400
@@ -183,8 +188,8 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
             text: '',
             fontSize: 0.0,
             onComplete: () {
-                _profileFuture = api.getAppointmentDetails(
-                    token, widget.appointmentId, _userLocation);
+              _profileFuture = api.getAppointmentDetails(
+                  token, widget.appointmentId, _userLocation);
             },
           ),
           TrackingProviderWidget(
@@ -193,6 +198,9 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
               stringStatus: stringStatus,
               appointment: appointment),
           timingWidget(appointment['data']),
+          SizedBox(
+            height: 20,
+          ),
         ],
       ),
     );
@@ -233,10 +241,14 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
     return Column(
       children: <Widget>[
         SizedBox(height: 20),
+        timingSubWidget("Appointment Placed", -1,
+            response[_trackStatusKey]["status"], "", false),
+        timingSubWidget("Chart Reviewed", -1,
+            response[_trackStatusKey]["status"], "", false),
         timingSubWidget("Appointment Accepted", 0,
             response[_trackStatusKey]["status"], "", false),
         timingSubWidget(
-            'Provider Started Driving',
+            'Provider on the way',
             1,
             response[_trackStatusKey]["status"],
             response[_trackStatusKey][_startDrivingStatusKey] != null
@@ -461,10 +473,21 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                                   })
                               : SizedBox()
                           : index == 1
-                              ? SizedBox()
+                              ? TrackingButton(
+                                  title: 'Call Provider',
+                                  image: 'assets/images/ic_phone.png',
+                                  onTap: () async {
+                                    if (await canLaunch(
+                                        'tel:${appointmentResponse['data']['doctor']['phoneNumber']}')) {
+                                      await launch(
+                                          'tel:${appointmentResponse['data']['doctor']['phoneNumber']}');
+                                    } else {
+                                      throw 'Could not launch url';
+                                    }
+                                  })
                               : index == 2 && !isProviderArrivedConfirm
                                   ? TrackingButton(
-                                      title: 'Confirm',
+                                      title: 'Acknowledge Arrival',
                                       image: 'images/trackArrived.png',
                                       onTap: () {
                                         onsiteChangeRequestStatus(
@@ -525,8 +548,8 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
         appointmentCompleteMap['appointmentId'] = widget.appointmentId;
         appointmentCompleteMap['type'] =
             appointmentResponse['data']['type'].toString();
-         appointmentCompleteMap['name'] = name;
-          appointmentCompleteMap['avatar'] = avatar;
+        appointmentCompleteMap['name'] = name;
+        appointmentCompleteMap['avatar'] = avatar;
         appointmentCompleteMap["dateTime"] =
             DateFormat('dd MMM yyyy, HH:mm').format(DateTime.now());
 
