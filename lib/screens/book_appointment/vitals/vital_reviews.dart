@@ -192,7 +192,7 @@ class _VitalReviewsState extends State<VitalReviews> {
                       "",
                       "\u2109",
                       TextInputType.number,
-                      maxLength: 4,
+                      maxLength: 5,
                       isForTemp: true),
                 ],
               ),
@@ -432,7 +432,9 @@ class _VitalReviewsState extends State<VitalReviews> {
     //     _oxygenController.text.isNotEmpty &&
     //     _tempController.text.isNotEmpty) {
     Vitals vitalsModel = Vitals(
-      date: _selectedDate ?? '',
+      date: _tempController.text.isNotEmpty || _sbpController.text.isNotEmpty
+          ? _selectedDate
+          : null,
       time: _selectedTime ?? '',
       bloodPressureSbp: _sbpController.value.text != ''
           ? int.parse(_sbpController.value.text.trim())

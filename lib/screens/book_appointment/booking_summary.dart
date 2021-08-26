@@ -216,7 +216,9 @@ class _BookingsummaryState extends State<Bookingsummary> {
                       ),
                       TextSpan(
                         text: vitals.temperature != null
-                            ? '${vitals.temperature} \u2109'
+                            ? vitals.temperature.toString().contains('.0')
+                                ? '${vitals.temperature.toInt()} \u2109'
+                                : '${vitals.temperature} \u2109'
                             : '',
                         style: AppTextStyle.mediumStyle(fontSize: 14),
                       ),
