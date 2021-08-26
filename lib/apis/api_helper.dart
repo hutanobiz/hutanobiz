@@ -52,7 +52,7 @@ class ApiBaseHelper {
   NetworkUtil _netUtil = new NetworkUtil();
   static const String imageUrl = "https://hutano-assets.s3.amazonaws.com/";
   static const String base_url = "https://dev.hutano.com/";
-  static const String base_u = "dev.hutano.com";  
+  static const String base_u = "dev.hutano.com";
   static const String socket_url = "https://dev.hutano.com";
 
   // static const String base_u = "staging.hutano.com/";
@@ -61,7 +61,6 @@ class ApiBaseHelper {
   //  static const String base_u = "shumba.hutano.com/";
   // static const String base_url = "https://shumba.hutano.com/";
   // static const String socket_url = "https://shumba.hutano.com";
-
 
   static const String image_base_url =
       "https://hutano-assets.s3.amazonaws.com/";
@@ -255,21 +254,20 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> deletePharmacy(String token,String pharmacyId) {
+  Future<dynamic> deletePharmacy(String token, String pharmacyId) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
     return _netUtil
         .get(
-      Uri.encodeFull(base_url + "api/patient/preferred-Pharmacy-delete?pharmacyId=$pharmacyId"),
+      Uri.encodeFull(base_url +
+          "api/patient/preferred-Pharmacy-delete?pharmacyId=$pharmacyId"),
       headers: headers,
     )
         .then((res) {
       return res["response"];
     });
   }
-
-  
 
   Future<dynamic> getSetupIntent(BuildContext context, String token) {
     Map<String, String> headers = {
@@ -505,10 +503,8 @@ class ApiBaseHelper {
     };
     return _netUtil
         .get(
-      Uri.encodeFull(
-        base_url +
-            "api/patient/get-appointment-details?appointmentId=$appointmentId"
-      ),
+      Uri.encodeFull(base_url +
+          "api/patient/get-appointment-details?appointmentId=$appointmentId"),
       headers: headers,
     )
         .then((res) {
