@@ -1041,13 +1041,13 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
   String getAppointmentImage(String status, BuildContext context) {
     switch (status) {
       case "1":
-        return FileConstants.icOfficeAppointment;
+        return 'images/ic_office_app.png';
         break;
       case "2":
-        return FileConstants.icVideoChatAppointment;
+        return 'images/ic_video_app.png';
         break;
       case "3":
-        return FileConstants.icOnSiteAppointment;
+        return 'images/ic_onsite_app.png';
         break;
       default:
         return "";
