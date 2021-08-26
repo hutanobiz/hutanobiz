@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/screens/appointments/model/track_office_model.dart';
+import 'package:hutano/screens/appointments/track_appointment/track_appointment.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
@@ -11,6 +13,7 @@ import 'dart:ui';
 import 'package:hutano/routes.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/simple_timer_text.dart';
 import 'package:hutano/widgets/tracking_button.dart';
 import 'package:hutano/widgets/tracking_provider_widget.dart';
@@ -74,12 +77,11 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: AppColors.goldenTainoi,
-        body: LoadingBackground(
+        body: LoadingBackgroundNew(
             title: "Track Appointment",
-            isLoading: _isLoading,
-            isAddBack: true,
-            addBackButton: false,
-            color: Colors.white,
+            color: AppColors.snow,
+            isAddBack: false,
+            addHeader: true,
             padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
             child: Container(
               child: FutureBuilder(
@@ -145,15 +147,18 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
     avatar = appointment["data"]['doctor']['avatar'];
 
     return Container(
-      padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
       ),
       child: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 20),
         shrinkWrap: true,
         children: <Widget>[
+          SizedBox(
+            height: 20,
+          ),
           SimpleCountDownTimer(
             controller: _simpleCountDownController2,
             duration: appointmentTime.difference(currentTime).inSeconds > 86400
@@ -175,12 +180,9 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
             height: 20,
           ),
           timingWidget(appointment["data"]),
-          // (appointment["data"][_trackStatusKey]["status"] == 2 ||
-          //         appointment["data"][_trackStatusKey]["status"] == 3
-          //     ? Container()
-          //     : _button(
-          //         appointment["data"],
-          //       )),
+          SizedBox(
+            height: 20,
+          ),
         ],
       ),
     );
@@ -239,10 +241,14 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
   Widget timingWidget(Map response) {
     return Column(
       children: <Widget>[
+        timingSubWidget("Appointment Placed", -1,
+            response[_trackStatusKey]["status"], "", false),
+        timingSubWidget("Chart Reviewed", -1,
+            response[_trackStatusKey]["status"], "", false),
         timingSubWidget("Appointment Accepted", 0,
             response[_trackStatusKey]["status"], "", false),
         timingSubWidget(
-            "Started Driving",
+            "On my way to the office",
             1,
             response[_trackStatusKey]["status"],
             response[_trackStatusKey][_startDrivingStatusKey] != null
@@ -500,13 +506,26 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                               ],
                             )
                           : index == 1
-                              ? TrackingButton(
-                                  title: 'Arrived',
-                                  image: 'images/trackArrived.png',
-                                  onTap: () {
-                                    changeRequestStatus(
-                                        widget.appointmentId, "2");
-                                  })
+                              ? Row(
+                                  children: [
+                                    TrackingButton(
+                                        title: 'Arrived',
+                                        image: 'images/trackArrived.png',
+                                        onTap: () {
+                                          changeRequestStatus(
+                                              widget.appointmentId, "2");
+                                        }),
+                                    TrackingButton(
+                                        title: 'Directions',
+                                        image:
+                                            'assets/images/ic_navigation_blue.png',
+                                        onTap: () {
+                                          Navigator.pushNamed(context,
+                                              Routes.officeDirectionScreen,
+                                              arguments: TrackOfficeModel.fromJson(appointmentResponse));
+                                        }),
+                                  ],
+                                )
                               : index == 2
                                   ? SizedBox()
                                   : index == 3

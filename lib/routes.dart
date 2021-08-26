@@ -268,7 +268,7 @@ class Routes {
       '/routeOnSiteTrackAppointment';
   static const String routeVirtualTrackAppointment =
       '/routeVirtualTrackAppointment';
-      static const String officeDirectionScreen = '/officeDirectionScreen';
+  static const String officeDirectionScreen = '/officeDirectionScreen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final dynamic args = settings.arguments;
@@ -479,16 +479,14 @@ class Routes {
         );
         break;
 
-        case officeDirectionScreen:
+      case officeDirectionScreen:
         return _buildRoute(
           settings,
           OfficeDirectionScreen(
-            appointmentId: args,
+            trackOfficeModel: args,
           ),
         );
         break;
-
-        
 
       case telemedicineTrackTreatmentScreen:
         return _buildRoute(
