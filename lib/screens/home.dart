@@ -1,7 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hutano/screens/all_appointments/all_appointments.dart';
+import 'package:hutano/screens/chat/all_chats.dart';
 import 'package:hutano/screens/dashboard/dashboardScreen.dart';
 import 'package:hutano/screens/dashboard/setting.dart';
 import 'package:hutano/screens/providercicle/my_provider_network/my_provider_network.dart';
@@ -51,7 +51,8 @@ class _HomeScreenState extends State<HomeScreen> {
     //     woundSkin: true,
     //     dentalCare: false),
     // ChatScreen(),
-    ComingSoon(isBackRequired: false, isFromUpload: false),
+    ChatMain(),
+    // ComingSoon(isBackRequired: false, isFromUpload: false),
     SettingScreen(),
   ];
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
