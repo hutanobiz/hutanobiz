@@ -110,6 +110,7 @@ class _MonthYearItemState extends State<MonthYearItem> {
             EdgeInsets.symmetric(horizontal: spacing10, vertical: spacing20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             _buildDropDownBottomSheet(context, AppConstants.months, []),
             _buildDropDownBottomSheet(context, [], years)
