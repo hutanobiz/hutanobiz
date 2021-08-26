@@ -389,8 +389,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
     if (_providerData["type"].toString() == '3') {
       address = Extensions.addressFormat(
-        _providerData["userAddress"]["street"]?.toString(),
         _providerData["userAddress"]["address"]?.toString(),
+        _providerData["userAddress"]["street"]?.toString(),
         _providerData["userAddress"]["city"]?.toString(),
         _providerData["userAddress"]["state"],
         _providerData["userAddress"]["zipCode"]?.toString(),
@@ -408,9 +408,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       }
     } else {
       address = Extensions.addressFormat(
-        _providerData["doctorAddress"]["street"]?.toString(),
         _providerData["doctorAddress"]["address"]?.toString(),
-        
+        _providerData["doctorAddress"]["street"]?.toString(),
         _providerData["doctorAddress"]["city"]?.toString(),
         _providerData["doctorAddress"]["state"],
         _providerData["doctorAddress"]["zipCode"]?.toString(),
