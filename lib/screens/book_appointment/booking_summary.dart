@@ -137,7 +137,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
               itemCount: medicalHistories.length,
               itemBuilder: (context, index) {
                 return Text(
-                  '${index + 1}. ${medicalHistories[index].name}',
+                  '${index + 1}. ${medicalHistories[index].name} from ${medicalHistories[index].year}',
                   style: AppTextStyle.mediumStyle(fontSize: 14),
                 );
               },

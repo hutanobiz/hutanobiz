@@ -262,7 +262,7 @@ class _SelectAppointmentTimeScreenState
               _container.setAppointmentData("isOndemand", '0');
               if (selectedAddress != null) {
                 _container.setAppointmentData(
-                    'selectedAddress', selectedAddress['_id']);
+                    'officeId', selectedAddress['_id']);
                 _container.setAppointmentData(
                     'selectedAddress', selectedAddress);
               }
