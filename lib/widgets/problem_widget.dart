@@ -73,7 +73,8 @@ class ProblemWidget extends StatelessWidget {
           "Started ${appointmentProblem['problemFacingTimeSpan']['period']} ${problemTimeSpanMap[appointmentProblem['problemFacingTimeSpan']['type']]} ago. ";
 
     //to check any treatment taken previously
-    if (appointmentProblem['isTreatmentReceived'] == 0)
+    if (appointmentProblem['isTreatmentReceived'] == 0 ||
+        appointmentProblem['isTreatmentReceived'] == '0')
       problemText += "First time receiving care for this problem. ";
     else
       problemText += "Second time receiving care for this problem. ";
