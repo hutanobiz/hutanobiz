@@ -543,27 +543,31 @@ class _TrackTelemedicineAppointmentState
                                                 color: Colors.grey[300],
                                               )
                                             : SizedBox(),
-                                    !isUserJoin
-                                        ? TrackingButton(
-                                            title: 'I am ready',
-                                            image: 'images/watch.png',
-                                            onTap: () {
-                                              var appointmentId = {};
-                                              appointmentId['appointmentId'] =
-                                                  widget.appointmentId;
-                                              api
-                                                  .patientAvailableForCall(
-                                                      token, appointmentId)
-                                                  .then((value) {
-                                                _profileFuture =
-                                                    api.getAppointmentDetails(
-                                                        token,
-                                                        widget.appointmentId,
-                                                        _userLocation);
-                                                setState(() {});
-                                              });
-                                            })
-                                        : SizedBox()
+                                    isDoctorJoin
+                                        ? SizedBox()
+                                        : !isUserJoin
+                                            ? TrackingButton(
+                                                title: 'I am ready',
+                                                image: 'images/watch.png',
+                                                onTap: () {
+                                                  var appointmentId = {};
+                                                  appointmentId[
+                                                          'appointmentId'] =
+                                                      widget.appointmentId;
+                                                  api
+                                                      .patientAvailableForCall(
+                                                          token, appointmentId)
+                                                      .then((value) {
+                                                    _profileFuture = api
+                                                        .getAppointmentDetails(
+                                                            token,
+                                                            widget
+                                                                .appointmentId,
+                                                            _userLocation);
+                                                    setState(() {});
+                                                  });
+                                                })
+                                            : SizedBox()
                                   ],
                                 )
             ],
