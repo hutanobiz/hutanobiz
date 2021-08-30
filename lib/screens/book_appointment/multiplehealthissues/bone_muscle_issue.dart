@@ -221,11 +221,15 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                         context, Localization.of(context).rateYourPainHeader),
                     _rateDiscomfort(context),
                     //Problem Better & Worst
-                    _commonSecondHeaderText(context,
-                        Localization.of(context).makesYourProblemBetter),
-                    _buildSearchForProblemBetter(context),
+                    _commonSecondHeaderText(
+                        context,
+                        Localization.of(context)
+                            .actuallyMakesYourProblemBetter),
+                    // _buildSearchForProblemBetter(context),
                     _problemBetterListView(context),
-                    _buildSearchForProblemWorst(context),
+                    _commonSecondHeaderText(context,
+                        Localization.of(context).actuallyMakesYourProblemWorst),
+                    // _buildSearchForProblemWorst(context),
                     _problemWorstListView(context),
                     //Ebility List
                     _headerView(context),
@@ -797,43 +801,29 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
     });
   }
 
-  Widget _problemBetterListView(BuildContext context) => Padding(
-        padding: EdgeInsets.only(top: spacing8, bottom: spacing8),
-        child: Container(
-          height: _problemBetterList.length > 4
-              ? 200
-              : _problemBetterList.length == 1
-                  ? 50
-                  : 100,
-          child: Scrollbar(
-            isAlwaysShown: true,
-            controller: _listOfBetterController,
-            child: ListView.builder(
-                controller: _listOfBetterController,
-                shrinkWrap: true,
-                itemCount: _problemBetterList.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    dense: true,
-                    title: Text(_problemBetterList[index].reasonName,
-                        style: TextStyle(
-                            color: colorBlack2,
-                            fontWeight: fontWeightSemiBold,
-                            fontSize: fontSize14)),
-                    trailing: _problemBetterList[index].isSelected
-                        ? Image.asset("images/checkedCheck.png",
-                            height: 24, width: 24)
-                        : Image.asset("images/uncheckedCheck.png",
-                            height: 24, width: 24),
-                    onTap: () {
-                      setState(() => _problemBetterList[index].isSelected =
-                          !_problemBetterList[index].isSelected);
-                    },
-                  );
-                }),
-          ),
-        ),
-      );
+  Widget _problemBetterListView(BuildContext context) => ListView.builder(
+      padding: EdgeInsets.only(top: spacing8, bottom: spacing8),
+      controller: _listOfBetterController,
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: _problemBetterList.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          dense: true,
+          title: Text(_problemBetterList[index].reasonName,
+              style: TextStyle(
+                  color: colorBlack2,
+                  fontWeight: fontWeightSemiBold,
+                  fontSize: fontSize14)),
+          trailing: _problemBetterList[index].isSelected
+              ? Image.asset("images/checkedCheck.png", height: 24, width: 24)
+              : Image.asset("images/uncheckedCheck.png", height: 24, width: 24),
+          onTap: () {
+            setState(() => _problemBetterList[index].isSelected =
+                !_problemBetterList[index].isSelected);
+          },
+        );
+      });
 
   Widget _selectedProblemBetterListItems(BuildContext context) =>
       ListView.builder(
@@ -906,45 +896,31 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                 disabledBorder: InputBorder.none)),
       );
 
-  Widget _problemWorstListView(BuildContext context) => Padding(
-        padding: EdgeInsets.only(top: spacing8, bottom: spacing8),
-        child: Container(
-          height: _problemWorstList.length > 4
-              ? 200
-              : _problemWorstList.length == 1
-                  ? 50
-                  : 100,
-          child: Scrollbar(
-            isAlwaysShown: true,
-            controller: _listOfWorstController,
-            child: ListView.builder(
-                controller: _listOfWorstController,
-                shrinkWrap: true,
-                itemCount: _problemWorstList.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    dense: true,
-                    title: Row(children: [
-                      Text(_problemWorstList[index].reasonName,
-                          style: TextStyle(
-                              color: colorBlack2,
-                              fontWeight: fontWeightSemiBold,
-                              fontSize: fontSize14))
-                    ]),
-                    trailing: _problemWorstList[index].isSelected
-                        ? Image.asset("images/checkedCheck.png",
-                            height: 24, width: 24)
-                        : Image.asset("images/uncheckedCheck.png",
-                            height: 24, width: 24),
-                    onTap: () {
-                      setState(() => _problemWorstList[index].isSelected =
-                          !_problemWorstList[index].isSelected);
-                    },
-                  );
-                }),
-          ),
-        ),
-      );
+  Widget _problemWorstListView(BuildContext context) => ListView.builder(
+      padding: EdgeInsets.only(top: spacing8, bottom: spacing8),
+      physics: NeverScrollableScrollPhysics(),
+      controller: _listOfWorstController,
+      shrinkWrap: true,
+      itemCount: _problemWorstList.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          dense: true,
+          title: Row(children: [
+            Text(_problemWorstList[index].reasonName,
+                style: TextStyle(
+                    color: colorBlack2,
+                    fontWeight: fontWeightSemiBold,
+                    fontSize: fontSize14))
+          ]),
+          trailing: _problemWorstList[index].isSelected
+              ? Image.asset("images/checkedCheck.png", height: 24, width: 24)
+              : Image.asset("images/uncheckedCheck.png", height: 24, width: 24),
+          onTap: () {
+            setState(() => _problemWorstList[index].isSelected =
+                !_problemWorstList[index].isSelected);
+          },
+        );
+      });
 
   Widget _selectedProblemWorstListItems(BuildContext context) =>
       ListView.builder(
