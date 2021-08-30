@@ -148,7 +148,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                     padding: const EdgeInsets.all(spacing8),
                     child: Icon(
                       Icons.search,
-                      size: 30,
+                      size: 24,
                       color: colorBlack2,
                     ),
                   ),
@@ -374,17 +374,20 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
           }
           Provider.of<HealthConditionProvider>(context, listen: false)
               .updateMedicalHistory(_listOfHistory);
-          Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
+          // Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
+           Navigator.of(context).pushNamed(Routes.routeMoreCondition);
         }
       } else {
         Provider.of<HealthConditionProvider>(context, listen: false)
             .updateMedicalHistory([]);
-        Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
+        // Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
+         Navigator.of(context).pushNamed(Routes.routeMoreCondition);
       }
     } else {
       Provider.of<HealthConditionProvider>(context, listen: false)
           .updateMedicalHistory([]);
-      Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
+      // Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
+       Navigator.of(context).pushNamed(Routes.routeMoreCondition);
     }
   }
 
