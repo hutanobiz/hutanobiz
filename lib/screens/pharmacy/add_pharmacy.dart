@@ -505,50 +505,40 @@ class _AddPharmacyState extends State<AddPharmacy> {
         ),
       );
 
-  Widget _pharmacyFieldWidget(BuildContext context) => TypeAheadFormField(
+  Widget _pharmacyFieldWidget(BuildContext context) => Container(
+      padding: const EdgeInsets.symmetric(horizontal: 2),
+      height: 40,
+      decoration: BoxDecoration(
+          color: colorBlack2.withOpacity(0.06),
+          borderRadius: BorderRadius.all(Radius.circular(8))),
+      child: TypeAheadFormField(
         textFieldConfiguration: TextFieldConfiguration(
             controller: _pharmacyController,
-            // focusNode: _pharmacyFocusNode,
+            focusNode: _pharmacyFocusNode,
             textInputAction: TextInputAction.next,
             maxLines: 1,
             onTap: () {},
-            onChanged: (value) {
-              setState(() {
-                pharmacyError =
-                    value.toString().isBlank(context, "Please enter pharamcy");
-              });
-            },
+            onChanged: (value) {},
             decoration: InputDecoration(
-                errorText: pharmacyError,
-                suffixIconConstraints: BoxConstraints(),
-                suffixIcon: GestureDetector(
-                  onTap: () {
-                    _pharmacyController.text = "";
-                  },
+              prefixIconConstraints: BoxConstraints(),
+              prefixIcon: GestureDetector(
+                  onTap: () {},
                   child: Padding(
-                    padding: EdgeInsets.all(spacing14),
-                    child: Image.asset(
-                      FileConstants.icClose,
-                      width: 30,
-                      height: 30,
-                    ),
-                  ),
-                ),
-                labelText: "Pharmacy Name",
-                hintText: "",
-                isDense: true,
-                hintStyle: TextStyle(color: colorBlack60, fontSize: fontSize14),
-                border: OutlineInputBorder(),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(spacing12),
-                    borderSide: BorderSide(color: colorBlack20, width: 1)),
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(spacing12),
-                    borderSide: BorderSide(color: colorBlack20, width: 1)),
-                disabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(spacing12),
-                    borderSide: BorderSide(color: colorBlack20, width: 1)),
-                labelStyle: labelStyle)),
+                      padding: const EdgeInsets.all(spacing8),
+                      child: Image.asset(FileConstants.icSearchBlack,
+                          color: colorBlack2, width: 20, height: 20))),
+              hintText: 'Pharmacy Name',
+              isDense: true,
+              hintStyle: TextStyle(
+                  color: colorBlack2,
+                  fontSize: fontSize13,
+                  fontWeight: fontWeightRegular),
+              border: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              errorBorder: InputBorder.none,
+              disabledBorder: InputBorder.none,
+            )),
         suggestionsCallback: (pattern) async {
           return pattern.length > 0
               ? await ApiManager().getPreferredPharmacyList(pattern)
@@ -600,7 +590,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
         hideOnError: true,
         hideSuggestionsOnKeyboardHide: true,
         hideOnEmpty: true,
-      );
+      ));
 
   Widget _addressFieldWidget(BuildContext context) => TypeAheadFormField(
         textFieldConfiguration: TextFieldConfiguration(

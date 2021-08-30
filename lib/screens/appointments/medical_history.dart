@@ -130,8 +130,13 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
         ),
       );
 
-  Widget _buildSearchPastConditions(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: spacing15),
+  Widget _buildSearchPastConditions(BuildContext context) => Container(
+        margin: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 2),
+        height: 40,
+        decoration: BoxDecoration(
+            color: colorBlack2.withOpacity(0.06),
+            borderRadius: BorderRadius.all(Radius.circular(8))),
         child: TypeAheadFormField(
           textFieldConfiguration: TextFieldConfiguration(
               controller: _searchDiseaseController,
@@ -143,32 +148,22 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
               decoration: InputDecoration(
                 prefixIconConstraints: BoxConstraints(),
                 prefixIcon: GestureDetector(
-                  onTap: () {},
-                  child: Padding(
-                    padding: const EdgeInsets.all(spacing8),
-                    child: Icon(
-                      Icons.search,
-                      size: 24,
-                      color: colorBlack2,
-                    ),
-                  ),
-                ),
+                    onTap: () {},
+                    child: Padding(
+                        padding: const EdgeInsets.all(spacing8),
+                        child: Image.asset(FileConstants.icSearchBlack,
+                            color: colorBlack2, width: 20, height: 20))),
                 hintText: Localization.of(context).enterPastConditionHint,
                 isDense: true,
                 hintStyle: TextStyle(
                     color: colorBlack2,
                     fontSize: fontSize13,
                     fontWeight: fontWeightRegular),
-                border: OutlineInputBorder(),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: colorBlack20, width: 1)),
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: colorBlack20, width: 1)),
-                disabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: colorBlack20, width: 1)),
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
               )),
           suggestionsCallback: (pattern) async {
             return pattern.length > 0 ? await _getDiseasesList(pattern) : [];
@@ -375,19 +370,19 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
           Provider.of<HealthConditionProvider>(context, listen: false)
               .updateMedicalHistory(_listOfHistory);
           // Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
-           Navigator.of(context).pushNamed(Routes.routeMoreCondition);
+          Navigator.of(context).pushNamed(Routes.routeMoreCondition);
         }
       } else {
         Provider.of<HealthConditionProvider>(context, listen: false)
             .updateMedicalHistory([]);
         // Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
-         Navigator.of(context).pushNamed(Routes.routeMoreCondition);
+        Navigator.of(context).pushNamed(Routes.routeMoreCondition);
       }
     } else {
       Provider.of<HealthConditionProvider>(context, listen: false)
           .updateMedicalHistory([]);
       // Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
-       Navigator.of(context).pushNamed(Routes.routeMoreCondition);
+      Navigator.of(context).pushNamed(Routes.routeMoreCondition);
     }
   }
 
