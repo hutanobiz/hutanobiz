@@ -182,20 +182,30 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
 
     if (response["doctorData"] != null) {
       if (response["isOndemand"] == true) {
-        if (response["doctorData"]["professionalTitle"] != null) {
+        if (response["doctorData"]["professionalTitle"].isNotEmpty) {
           professionalTitle = response["doctorData"]["professionalTitle"][0]
                       ["title"]
                   ?.toString() ??
               "---";
-          name += Extensions.getSortProfessionTitle(professionalTitle);
+        }
+        if (response["doctorData"]["education"].isNotEmpty) {
+          name += ' ' +
+                  response["doctorData"]["education"][0]["degree"]
+                      ?.toString() ??
+              "---";
         }
       } else {
-        if (response["doctorData"][0]["professionalTitle"] != null) {
+        if (response["doctorData"][0]["professionalTitle"].isNotEmpty) {
           professionalTitle = response["doctorData"][0]["professionalTitle"]
                       ["title"]
                   ?.toString() ??
               "---";
-          name += Extensions.getSortProfessionTitle(professionalTitle);
+        }
+        if (response["doctorData"][0]["education"].isNotEmpty) {
+          name += ' ' +
+                  response["doctorData"][0]["education"][0]["degree"]
+                      ?.toString() ??
+              "---";
         }
       }
     }

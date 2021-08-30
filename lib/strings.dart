@@ -11,6 +11,7 @@ class Strings {
   static const String datePattern = 'MMMM dd, yyyy';
   static const String dateTimePattern = 'MMMM dd, yyyy, HH:mm';
   static const String timePattern = 'hh:mm a';
+  static const String appointmentTimePattern = 'MMM dd, hh:mm';
   static const String kGoogleApiKey = "AIzaSyAkq7DnUBTkddWXddoHAX02Srw6570ktx8";
   static const String ddMMMMyyyy = 'MM/dd/yyyy';
   static const String introTitle1 = "Flexible Scheduling";
@@ -52,8 +53,7 @@ class Strings {
 
   static const String msgEnterAddress = "Please enter a email address";
 
-  static const String msgEnterValidAddress =
-      "Please enter valid email address";
+  static const String msgEnterValidAddress = "Please enter valid email address";
 
   static const String signIn = "Don't have an account? ";
 

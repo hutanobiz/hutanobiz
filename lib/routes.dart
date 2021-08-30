@@ -12,12 +12,10 @@ import 'package:hutano/screens/appointments/consent_to_treat_screen.dart';
 import 'package:hutano/screens/appointments/medical_history.dart';
 import 'package:hutano/screens/appointments/office_direction.dart';
 import 'package:hutano/screens/appointments/office_track_treatment.dart';
-import 'package:hutano/screens/appointments/onsite_appointment/onsite_track_appointment.dart';
 import 'package:hutano/screens/appointments/rate_doctor_screen.dart';
 import 'package:hutano/screens/appointments/request_detail_screen.dart';
 import 'package:hutano/screens/appointments/seeking_cure.dart';
 import 'package:hutano/screens/appointments/telemedicine_track_treatment.dart';
-import 'package:hutano/screens/appointments/track_appointment/track_appointment.dart';
 import 'package:hutano/screens/appointments/track_office_appointment.dart';
 import 'package:hutano/screens/appointments/track_onsite_appointment.dart';
 import 'package:hutano/screens/appointments/track_telemedicine_appointment.dart';
@@ -28,7 +26,6 @@ import 'package:hutano/screens/appointments/upload_images.dart';
 import 'package:hutano/screens/appointments/video_call.dart';
 import 'package:hutano/screens/appointments/view_medical_history.dart';
 import 'package:hutano/screens/appointments/virtual_waiting_room.dart';
-import 'package:hutano/screens/appointments/virtualappointment/virtual_track_appointment.dart';
 import 'package:hutano/screens/book_appointment/booking_summary.dart';
 import 'package:hutano/screens/book_appointment/conditiontime/condition_time.dart';
 import 'package:hutano/screens/book_appointment/confirm_book_appointment.dart';
@@ -906,27 +903,6 @@ class Routes {
       case routeUploadDiagnosticNew:
         return MaterialPageRoute(builder: (_) => UploadDiagnosticNew());
 
-      case routeTrackAppointment:
-        String appointmentId = args[ArgumentConstant.appointmentId];
-        String professionalTitle = args[ArgumentConstant.professionalTitleKey];
-        return MaterialPageRoute(
-            builder: (_) => TrackAppointment(
-                appointmentId: appointmentId,
-                professionalTitle: professionalTitle));
-      case routeOnSiteTrackAppointment:
-        String appointmentId = args[ArgumentConstant.appointmentId];
-        String professionalTitle = args[ArgumentConstant.professionalTitleKey];
-        return MaterialPageRoute(
-            builder: (_) => OnSiteTrackAppointment(
-                appointmentId: appointmentId,
-                professionalTitle: professionalTitle));
-      case routeVirtualTrackAppointment:
-        String appointmentId = args[ArgumentConstant.appointmentId];
-        String professionalTitle = args[ArgumentConstant.professionalTitleKey];
-        return MaterialPageRoute(
-            builder: (_) => VirtualTrackAppointment(
-                appointmentId: appointmentId,
-                professionalTitle: professionalTitle));
       default:
         return _errorRoute();
     }

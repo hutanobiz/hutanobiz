@@ -172,7 +172,13 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                         ["title"]
                     ?.toString() ??
                 "---";
-            name += Extensions.getSortProfessionTitle(professionalTitle);
+          }
+          if (response['doctorData']["education"].isNotEmpty) {
+            name += ' ' +
+                    response['doctorData']["education"][0]["degree"]
+                        ?.toString() ??
+                "---";
+            ;
           }
         }
       } else {
@@ -187,7 +193,12 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                         ["title"]
                     ?.toString() ??
                 "---";
-            name += Extensions.getSortProfessionTitle(professionalTitle);
+          }
+          if (response['doctorData'][0]["education"].isNotEmpty) {
+            name += ' ' +
+                    response['doctorData'][0]["education"][0]["degree"]
+                        ?.toString() ??
+                "---";
           }
         }
       }
