@@ -418,7 +418,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
         _reviewAppointmentData['medicalDiagnosticsTests'] =
             Provider.of<HealthConditionProvider>(context, listen: false)
-                .medicalDiagnosticsTestsData;
+                .medicalDiagnosticsTestsModelData;
         _reviewAppointmentData['medicalDocuments'] =
             Provider.of<HealthConditionProvider>(context, listen: false)
                 .medicalDocumentsData;

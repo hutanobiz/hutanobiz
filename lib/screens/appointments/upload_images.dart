@@ -10,6 +10,7 @@ import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/appointments/model/res_uploaded_document_images_model.dart';
 import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
@@ -52,8 +53,6 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
   bool isFromAppointment = false;
 
   List<Map> _selectedImagesList = [];
-
-  InheritedContainerState _container;
   TextEditingController _imageDateController = TextEditingController();
 
   @override
@@ -123,8 +122,6 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
-    _container = InheritedContainer.of(context);
   }
 
   @override
@@ -147,11 +144,10 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
           Navigator.of(context).pushNamed(Routes.allDocumentsTabsScreen);
         },
         onForwardTap: () {
-          List<String> _selectedMedicalImages = [];
+          List<MedicalImages> _selectedMedicalImages = [];
           if (_selectedImagesList != null && _selectedImagesList.length > 0) {
-            _container.setConsentToTreatData("imagesList", _selectedImagesList);
             _selectedImagesList.forEach((element) {
-              _selectedMedicalImages.add(element['_id']);
+              _selectedMedicalImages.add(MedicalImages.fromJson(element));
             });
             Provider.of<HealthConditionProvider>(context, listen: false)
                 .updateImages(_selectedMedicalImages);
@@ -476,7 +472,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
               onConfirm: (date) {
                 if (date != null)
                   _imageDateController.text =
-                      DateFormat(Strings.datePattern).format(date);
+                   DateFormat(Strings.datePattern).format(date);
               },
               currentTime: DateTime.now(),
               maxTime: DateTime.now(),
@@ -632,3 +628,9 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
     }
   }
 }
+  
+                      
+                       
+                   
+                    
+                    

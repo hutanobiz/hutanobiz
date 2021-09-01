@@ -92,8 +92,6 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
                 _forwardButtonPressed(context);
               } else {
                 Provider.of<HealthConditionProvider>(context, listen: false)
-                    .updateDiagnostics([]);
-                Provider.of<HealthConditionProvider>(context, listen: false)
                     .updateDiagnosticsModel([]);
                 Navigator.of(context)
                     .pushNamed(Routes.routeMedicineInformation);
@@ -105,8 +103,6 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
             padding:
                 EdgeInsets.only(left: spacing20, right: spacing20, bottom: 60),
             onSkipForTap: () {
-              Provider.of<HealthConditionProvider>(context, listen: false)
-                  .updateDiagnostics([]);
               Provider.of<HealthConditionProvider>(context, listen: false)
                   .updateDiagnosticsModel([]);
               Navigator.of(context).pushNamed(Routes.routeMedicineInformation);
@@ -595,16 +591,12 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
   }
 
   void _forwardButtonPressed(BuildContext context) {
-    List<String> selectedTests = [];
     List<DiagnosticTest> selectedTestsModel = [];
     _finalTestList.forEach((element) {
       if (element.isSelected) {
-        selectedTests.add(element.sId);
         selectedTestsModel.add(element);
       }
     });
-    Provider.of<HealthConditionProvider>(context, listen: false)
-        .updateDiagnostics(selectedTests);
     Provider.of<HealthConditionProvider>(context, listen: false)
         .updateDiagnosticsModel(selectedTestsModel);
     Navigator.of(context).pushNamed(Routes.routeUploadTestDocuments);

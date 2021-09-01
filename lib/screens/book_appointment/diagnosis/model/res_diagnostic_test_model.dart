@@ -26,6 +26,7 @@ class ResDiagnositcTestModel {
 
 class DiagnosticTest {
   String name;
+  String image;
   String sId;
   int iV;
   String createdAt;
@@ -36,6 +37,7 @@ class DiagnosticTest {
 
   DiagnosticTest(
       {this.name,
+      this.image,
       this.sId,
       this.iV,
       this.createdAt,
@@ -45,6 +47,7 @@ class DiagnosticTest {
 
   DiagnosticTest.fromJson(Map<String, dynamic> json) {
     name = json['name'];
+    image = json['image'];
     sId = json['_id'];
     iV = json['__v'];
     createdAt = json['createdAt'];
@@ -56,6 +59,7 @@ class DiagnosticTest {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['name'] = this.name;
+    data['image'] = image;
     data['_id'] = this.sId;
     data['__v'] = this.iV;
     data['createdAt'] = this.createdAt;

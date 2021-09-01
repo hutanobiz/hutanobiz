@@ -468,7 +468,6 @@ class _ConfirmBookAppointmentScreenState
                       style: const TextStyle(
                           color: const Color(0xff1e36ba),
                           fontWeight: FontWeight.w500,
-                          fontFamily: gilroyMedium,
                           fontStyle: FontStyle.normal,
                           fontSize: 13.0),
                       textAlign: TextAlign.right),
@@ -803,7 +802,7 @@ class _ConfirmBookAppointmentScreenState
                           : "Onsite Request Sent!",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: Colors.black.withOpacity(0.90),
                   ),
@@ -954,7 +953,6 @@ class _ConfirmBookAppointmentScreenState
             style: TextStyle(
                 color: colorBlack.withOpacity(0.9),
                 fontWeight: FontWeight.w500,
-                fontFamily: gilroyMedium,
                 fontStyle: FontStyle.normal,
                 fontSize: 13.0),
           ),
@@ -1188,9 +1186,9 @@ class _ConfirmBookAppointmentScreenState
             "Checkout",
             style: TextStyle(
                 color: colorBlack.withOpacity(0.93),
-                fontFamily: gilroyMedium,
+                fontWeight: FontWeight.w600,
                 fontStyle: FontStyle.normal,
-                fontSize: 16.0),
+                fontSize: 14.0),
           ),
           SizedBox(height: 12),
           Container(
@@ -1273,7 +1271,6 @@ class _ConfirmBookAppointmentScreenState
               style: TextStyle(
                 color: colorBlack2.withOpacity(0.8),
                 fontWeight: FontWeight.w500,
-                fontFamily: gilroyMedium,
                 fontStyle: FontStyle.normal,
                 fontSize: 14.0,
               ),
@@ -1283,7 +1280,6 @@ class _ConfirmBookAppointmentScreenState
             '\$${(services.amount.toStringAsFixed(2) ?? '0.00')}',
             style: TextStyle(
               fontWeight: FontWeight.w500,
-              fontFamily: gilroyMedium,
               fontStyle: FontStyle.normal,
               fontSize: 16.0,
               color: colorBlack2.withOpacity(0.85),
@@ -1304,7 +1300,6 @@ class _ConfirmBookAppointmentScreenState
               style: TextStyle(
                 color: colorBlack2.withOpacity(0.8),
                 fontWeight: FontWeight.w500,
-                fontFamily: isBold ? gilroySemiBold : gilroyMedium,
                 fontStyle: FontStyle.normal,
                 fontSize: isBold ? 16 : 14.0,
               ),
@@ -1313,10 +1308,9 @@ class _ConfirmBookAppointmentScreenState
           Text(
             subTitle ?? '\$0.00}',
             style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontFamily: isBold ? gilroyBold : gilroyMedium,
+              fontWeight: FontWeight.w600,
               fontStyle: FontStyle.normal,
-              fontSize: 16.0,
+              fontSize: 14.0,
               color: colorBlack2.withOpacity(0.85),
             ),
           )
@@ -1376,9 +1370,8 @@ class _ConfirmBookAppointmentScreenState
                   style: TextStyle(
                       color: colorGolden,
                       fontWeight: FontWeight.w600,
-                      fontFamily: gilroySemiBold,
                       fontStyle: FontStyle.normal,
-                      fontSize: 16.0),
+                      fontSize: 14.0),
                 ),
               ],
             ),
@@ -1408,9 +1401,7 @@ class _ConfirmBookAppointmentScreenState
           child: Text("Confirm and Pay",
               style: const TextStyle(
                   color: const Color(0xff040238),
-                  fontWeight: FontWeight.w600,
-                  fontFamily: gilroySemiBold,
-                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.w700,
                   fontSize: 18.0),
               textAlign: TextAlign.left),
         ),
@@ -1450,7 +1441,6 @@ class _ConfirmBookAppointmentScreenState
               style: TextStyle(
                   color: colorBlack.withOpacity(0.9),
                   fontWeight: FontWeight.w500,
-                  fontFamily: gilroyMedium,
                   fontStyle: FontStyle.normal,
                   fontSize: 14.0),
               textAlign: TextAlign.left),

@@ -30,7 +30,7 @@ import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/text_with_image.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
-import 'package:location/location.dart';
+import 'package:location/location.dart' as Loc;
 import 'package:provider/provider.dart';
 import 'package:hutano/utils/caps_extension.dart';
 
@@ -233,14 +233,14 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
   }
 
   initPlatformState() async {
-    Location _location = Location();
-    PermissionStatus _permission;
+    Loc.Location _location = Loc.Location();
+    Loc.PermissionStatus _permission;
 
     _permission = await _location.requestPermission();
     print("Permission: $_permission");
 
     switch (_permission) {
-      case PermissionStatus.granted:
+      case Loc.PermissionStatus.granted:
         bool serviceStatus = await _location.serviceEnabled();
         print("Service status: $serviceStatus");
 
@@ -248,7 +248,7 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
           Widgets.showToast("Getting Location. Please wait..");
 
           try {
-            LocationData locationData = await _location.getLocation();
+            Loc.LocationData locationData = await _location.getLocation();
 
             _initialPosition =
                 LatLng(locationData.latitude, locationData.longitude);
@@ -274,12 +274,12 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
         }
 
         break;
-      case PermissionStatus.denied:
+      case Loc.PermissionStatus.denied:
         initPlatformState();
         break;
-      case PermissionStatus.deniedForever:
+      case Loc.PermissionStatus.deniedForever:
         break;
-      case PermissionStatus.grantedLimited:
+      case Loc.PermissionStatus.grantedLimited:
         // TODO: Handle this case.
         break;
     }
@@ -453,7 +453,7 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                           spreadRadius: 0)
                     ],
                     color: const Color(0xffffffff)),
-                height: 155,
+                height: 135,
                 child: Stack(
                   children: [
                     Padding(
@@ -568,13 +568,11 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                             color: Colors.grey,
                             thickness: 0.3,
                           ),
-                          Wrap(
-                            spacing: 30,
-                            runSpacing: 5,
+                          Row(
                             children: [
                               IntrinsicWidth(
                                 child: TextWithImage(
-                                  imageSpacing: spacing10,
+                                  imageSpacing: spacing4,
                                   image: getAppointmentImage(
                                       _container.projectsResponse["serviceType"]
                                           .toString(),
@@ -586,23 +584,22 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                                   textStyle: TextStyle(
                                       color: colorBlack70,
                                       fontWeight: FontWeight.w400,
-                                      fontFamily: gilroyRegular,
                                       fontStyle: FontStyle.normal,
                                       fontSize: fontSize12),
                                 ),
                               ),
+                              Spacer(),
                               IntrinsicWidth(
                                 child: TextWithImage(
-                                  imageSpacing: spacing10,
+                                  imageSpacing: spacing4,
                                   image: FileConstants.icClockTimer,
                                   label: _appointmentData["isOndemand"] == '1'
                                       ? "Ondemand Appointment"
-                                      : '${DateFormat('dd MMMM yyyy').format(_bookedDate).toString()}' +
+                                      : '${DateFormat('MMM dd,').format(_bookedDate).toString()}' +
                                           ' ${int.parse(_appointmentData['time'].split(':')[0])}:${int.parse(_appointmentData['time'].split(':')[1])} ${int.parse(_appointmentData['time'].split(':')[0]) >= 12 ? 'PM' : 'AM'}',
                                   textStyle: TextStyle(
                                       color: colorBlack70,
                                       fontWeight: FontWeight.w400,
-                                      fontFamily: gilroyRegular,
                                       fontStyle: FontStyle.normal,
                                       fontSize: fontSize12),
                                 ),
@@ -656,55 +653,13 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                 ),
               ),
             ],
-          )
-
-          // ProviderWidget(
-          //   data: _profileMap,
-          //   showPaymentProcced: true,
-          //   appointmentTime: 'CHANGE KARVANU CHHE',
-          //   selectedAppointment:
-          //       _container.projectsResponse['serviceType'].toString(),
-          //   isOptionsShow: false,
-          //   averageRating: 'CHANGE KARVANU CHHE',
-          // ),
-          ),
+          )),
     );
-    // _widgetList.add(Padding(
-    //   padding: const EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 11.0),
-    //   child: Text(
-    //     "Appointment Type",
-    //     style: TextStyle(
-    //       fontSize: 14.0,
-    //       fontWeight: FontWeight.w600,
-    //     ),
-    //   ),
-    // ));
-    // _widgetList.add(appoCard(
-    //   _container.projectsResponse["serviceType"].toString(),
-    // ));
 
     _widgetList.add(Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        locationWidget(
-            address,
-            _desPosition,
-            // LatLng(
-            //     _providerData.containsKey('providerData')
-            //         ? _providerData['providerData'].containsKey('data')
-            //             ? _providerData['providerData']['data'][0]
-            //                 ['businessLocation']['coordinates'][0]
-            //             : _providerData['providerData']['businessLocation']
-            //                 ['coordinates'][0]
-            //         : _providerData['businessLocation']['coordinates'][0],
-            //     _providerData.containsKey('providerData')
-            //         ? _providerData['providerData'].containsKey('data')
-            //             ? _providerData['providerData']['data'][0]
-            //                 ['businessLocation']['coordinates'][0]
-            //             : _providerData['providerData']['businessLocation']
-            //                 ['coordinates'][0]
-            //         : _providerData['businessLocation']['coordinates'][1]),
-            _profileMap['distance']),
+        locationWidget(address, _desPosition, _profileMap['distance']),
         Padding(
           padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
           child: Text(
@@ -715,7 +670,6 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                 fontSize: 13.0),
           ),
         ),
-        // _buildCardWidget(),
         Container(
           height: 55.0,
           padding: const EdgeInsets.only(right: 14, left: 20.0),
@@ -748,6 +702,41 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
               } else if (_profileMap["User"] != null is Map) {
                 doctorId = _profileMap["User"][0]["_id"].toString();
               }
+              List<String> medicalImages = [];
+              if (Provider.of<HealthConditionProvider>(context, listen: false)
+                      .medicalImagesData
+                      .length >
+                  0) {
+                Provider.of<HealthConditionProvider>(context, listen: false)
+                    .medicalImagesData
+                    .forEach((element) {
+                  medicalImages.add(element.sId);
+                });
+              }
+              List<String> medicalDocuments = [];
+              if (Provider.of<HealthConditionProvider>(context, listen: false)
+                      .medicalDocumentsData
+                      .length >
+                  0) {
+                Provider.of<HealthConditionProvider>(context, listen: false)
+                    .medicalDocumentsData
+                    .forEach((element) {
+                  medicalDocuments.add(element.sId);
+                });
+              }
+
+              List<String> medicalDiagnosticsTests = [];
+              if (Provider.of<HealthConditionProvider>(context, listen: false)
+                      .medicalDiagnosticsTestsModelData
+                      .length >
+                  0) {
+                Provider.of<HealthConditionProvider>(context, listen: false)
+                    .medicalDiagnosticsTestsModelData
+                    .forEach((element) {
+                  medicalDiagnosticsTests.add(element.sId);
+                });
+              }
+
               final finalModel = ReqBookingAppointmentModel(
                   // consultation: "",
                   isFollowUp: "0",
@@ -806,11 +795,10 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                           ? _consentToTreatMap["paymentMap"]["insuranceId"] ?? ''
                           : ''
                       : '',
-                  // _reviewAppointmentData['cashPayment'] = "3";
-                  medicalDiagnosticsTests: Provider.of<HealthConditionProvider>(context, listen: false).medicalDiagnosticsTestsData,
-                  medicalDocuments: Provider.of<HealthConditionProvider>(context, listen: false).medicalDocumentsData,
+                  medicalDiagnosticsTests: medicalDiagnosticsTests,
+                  medicalDocuments: medicalDocuments,
                   medicalHistory: Provider.of<HealthConditionProvider>(context, listen: false).medicalHistoryData,
-                  medicalImages: Provider.of<HealthConditionProvider>(context, listen: false).medicalImagesData,
+                  medicalImages: medicalImages,
                   preferredPharmacy: Provider.of<HealthConditionProvider>(context, listen: false).preferredPharmacyData,
                   problems: Provider.of<HealthConditionProvider>(context, listen: false).allHealthIssuesData,
                   vitals: Provider.of<HealthConditionProvider>(context, listen: false).vitalsData,
@@ -1106,253 +1094,6 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
     );
   }
 
-  // _bookAppointment() async {
-  //   try {
-  //     _timezone = await FlutterNativeTimezone.getLocalTimezone();
-  //   } catch (e) {
-  //     print('Could not get the local timezone');
-  //   }
-  //   if (mounted) {
-  //     setState(() {});
-  //   }
-  //   try {
-  //     SharedPref().getToken().then((token) async {
-  //       _loading(true);
-  //       ProgressDialogUtils.showProgressDialog(context);
-  //       Uri uri = Uri.parse(
-  //           ApiBaseHelper.base_url + "api/patient/appointment-booking");
-  //       http.MultipartRequest request = http.MultipartRequest('POST', uri);
-  //       request.headers['authorization'] = token;
-
-  //       token.toString().debugLog();
-
-  //       String doctorId = '';
-
-  //       if (_profileMap["userId"] != null && _profileMap["userId"] is Map) {
-  //         doctorId = _profileMap["userId"]["_id"].toString();
-  //       } else if (_profileMap["User"] != null is Map) {
-  //         doctorId = _profileMap["User"][0]["_id"].toString();
-  //       }
-
-  //       _reviewAppointmentData["type"] =
-  //           _container.getProjectsResponse()["serviceType"]?.toString() ?? "1";
-  //       _reviewAppointmentData["date"] =
-  //           DateFormat("MM/dd/yyyy").format(_bookedDate).toString();
-  //       _reviewAppointmentData["fromTime"] = _bookedTime;
-  //       _reviewAppointmentData["timeZonePlace"] = _timezone;
-  //       _reviewAppointmentData["doctor"] = doctorId;
-
-  //       request.fields.addAll(_reviewAppointmentData);
-
-  //       if (_reviewAppointmentData["type"] == '3') {
-  //         if (Provider.of<HealthConditionProvider>(context, listen: false)
-  //                 .addressDetails !=
-  //             null) {
-  //           request.fields['userAddressId'] =
-  //               Provider.of<HealthConditionProvider>(context, listen: false)
-  //                   .addressDetails
-  //                   .sId;
-  //         } else {
-  //           request.fields['userAddressId'] =
-  //               _consentToTreatMap["userAddress"]["_id"].toString();
-  //         }
-  //         if (_consentToTreatMap["parkingMap"]["parkingType"] == null) {
-  //           request.fields['parkingType'] = "";
-  //           request.fields['parkingFee'] = "";
-  //           request.fields['parkingBay'] = "";
-  //         } else {
-  //           request.fields['parkingType'] =
-  //               _consentToTreatMap["parkingMap"]["parkingType"].toString();
-  //           request.fields['parkingFee'] =
-  //               _consentToTreatMap["parkingMap"]["parkingFee"].toString();
-  //           request.fields['parkingBay'] =
-  //               _consentToTreatMap["parkingMap"]["parkingBay"].toString();
-  //         }
-
-  //         if (_consentToTreatMap["parkingMap"]["instructions"].toString() !=
-  //             null) {
-  //           request.fields['instructions'] =
-  //               _consentToTreatMap["parkingMap"]["instructions"].toString();
-  //         }
-  //       }
-
-  //       request.fields['consentToTreat'] = '1';
-  //       //TODO : Temp code added for appointment book
-
-  //       // request.fields['problemTimeSpan'] =
-  //       //     _consentToTreatMap["problemTimeSpan"];
-  //       // request.fields['isProblemImproving'] =
-  //       //     _consentToTreatMap["isProblemImproving"];
-  //       // request.fields['isTreatmentReceived'] =
-  //       //     _consentToTreatMap["isTreatmentReceived"];
-  //       // request.fields['description'] =
-  //       //     _consentToTreatMap["description"].toString().trim();
-
-  //       request.fields['problemTimeSpan'] = "2";
-  //       request.fields['isProblemImproving'] = "1";
-  //       request.fields['isTreatmentReceived'] = "0";
-  //       request.fields['description'] = "Treatment";
-
-  //       if (paymentType != null) {
-  //         if (paymentType == "3") {
-  //           request.fields['cashPayment'] = "3";
-  //           request.fields['paymentMethod'] = "3";
-  //         } else if (paymentType == "2") {
-  //           request.fields['paymentMethod'] = "2";
-  //           request.fields['insuranceId'] = insuranceId;
-  //         } else {
-  //           request.fields['paymentMethod'] = "1";
-  //           request.fields['cardId'] =
-  //               _consentToTreatMap["paymentMap"]["selectedCard"]['id'];
-  //         }
-  //       }
-
-  //       // If hutano cash is selecetd from payment method
-  //       if (_consentToTreatMap['hutanoCashApplied'] != null &&
-  //           _consentToTreatMap['hutanoCashApplied'] != 0) {
-  //         request.fields['isHutanoCashApplied'] = "1";
-  //       }
-
-  //       if (_consentToTreatMap["imagesList"] != null &&
-  //           _consentToTreatMap["imagesList"].length > 0) {
-  //         List<Map> imagesList = _consentToTreatMap["imagesList"];
-  //         if (imagesList != null && imagesList.length > 0) {
-  //           for (int i = 0; i < imagesList.length; i++) {
-  //             request.fields["medicalImages[$i][images]"] =
-  //                 imagesList[i]["images"];
-  //             request.fields["medicalImages[$i][name]"] = imagesList[i]["name"];
-  //           }
-  //         }
-  //       }
-
-  //       if (_consentToTreatMap["docsList"] != null &&
-  //           _consentToTreatMap["docsList"].length > 0) {
-  //         List<Map> imagesList = _consentToTreatMap["docsList"];
-  //         if (imagesList != null && imagesList.length > 0) {
-  //           for (int i = 0; i < imagesList.length; i++) {
-  //             request.fields["medicalDocuments[$i][type]"] =
-  //                 imagesList[i]["type"];
-  //             request.fields["medicalDocuments[$i][name]"] =
-  //                 imagesList[i]["name"];
-  //             request.fields["medicalDocuments[$i][medicalDocuments]"] =
-  //                 imagesList[i]["medicalDocuments"];
-  //             request.fields["medicalDocuments[$i][date]"] =
-  //                 imagesList[i]["date"];
-  //           }
-  //         }
-  //       }
-
-  //       if (_consentToTreatMap["medicalHistory"] != null &&
-  //           _consentToTreatMap["medicalHistory"].length > 0) {
-  //         for (int i = 0;
-  //             i < _consentToTreatMap["medicalHistory"].length;
-  //             i++) {
-  //           request.fields["medicalHistory[$i]"] =
-  //               _consentToTreatMap["medicalHistory"][i];
-  //         }
-  //       }
-
-  //       request.fields.toString().debugLog();
-  //       var response = await request.send().futureError((e) {
-  //         _loading(false);
-  //         ProgressDialogUtils.dismissProgressDialog();
-  //         e.toString().debugLog();
-  //       });
-
-  //       if (response == null) {
-  //         return;
-  //       }
-  //       final int statusCode = response.statusCode;
-  //       log("Status code: $statusCode");
-
-  //       JsonDecoder _decoder = new JsonDecoder();
-
-  //       String respStr = await response.stream.bytesToString();
-  //       var responseJson = _decoder.convert(respStr);
-
-  //       if (statusCode < 200 || statusCode > 400 || json == null) {
-  //         _loading(false);
-  //         ProgressDialogUtils.dismissProgressDialog();
-  //         if (responseJson["response"] is String)
-  //           Widgets.showToast(responseJson["response"]);
-  //         else if (responseJson["response"] is Map)
-  //           Widgets.showToast(responseJson);
-  //         else {
-  //           responseJson["response"]
-  //               .map((m) => Widgets.showToast(m.toString()))
-  //               .toList();
-  //         }
-
-  //         responseJson["response"].toString().debugLog();
-  //         _container.consentToTreatMap.clear();
-  //         _container.getProviderData().clear();
-  //         _container.appointmentData.clear();
-
-  //         Navigator.of(context).pushNamedAndRemoveUntil(
-  //           Routes.dashboardScreen,
-  //           (Route<dynamic> route) => false,
-  //           arguments: true,
-  //         );
-  //         throw Exception(responseJson);
-  //       } else {
-  //         if (responseJson["response"] is String) {
-  //           _loading(false);
-  //           ProgressDialogUtils.dismissProgressDialog();
-  //           Widgets.showErrorialog(
-  //               context: context,
-  //               description: responseJson["response"],
-  //               onPressed: () {
-  //                 _container.consentToTreatMap.clear();
-  //                 _container.getProviderData().clear();
-  //                 _container.appointmentData.clear();
-
-  //                 Navigator.of(context).pushNamedAndRemoveUntil(
-  //                   Routes.dashboardScreen,
-  //                   (Route<dynamic> route) => false,
-  //                   arguments: true,
-  //                 );
-  //               });
-  //           //  } else if (responseJson["response"]['paymentIntent'] != null) {
-  //           //   String _clientSecret =
-  //           //       responseJson["response"]['paymentIntent']['client_secret'];
-
-  //           //   PaymentIntent _paymentIntent = PaymentIntent(
-  //           //     paymentMethodId: _consentToTreatMap["paymentMap"]["selectedCard"]
-  //           //         ['id'],
-  //           //     clientSecret: _clientSecret,
-  //           //   );
-
-  //           //   StripePayment.confirmPaymentIntent(
-  //           //     _paymentIntent,
-  //           //   ).then((PaymentIntentResult value) {
-  //           //     _loading(false);
-  //           //     showConfirmDialog();
-  //           //   }).futureError((error) {
-  //           //     _loading(false);
-
-  //           //     Widgets.showErrorialog(
-  //           //       context: context,
-  //           //       description: error.toString(),
-  //           //     );
-  //           //   });
-  //         } else {
-  //           _loading(false);
-  //           ProgressDialogUtils.dismissProgressDialog();
-  //           responseJson["response"].toString().debugLog();
-
-  //           showConfirmDialog();
-  //         }
-  //         _loading(false);
-  //         ProgressDialogUtils.dismissProgressDialog();
-  //       }
-  //     });
-  //   } on Exception catch (error) {
-  //     _loading(false);
-  //     ProgressDialogUtils.dismissProgressDialog();
-  //     error.toString().debugLog();
-  //   }
-  // }
-
   void showConfirmDialog() {
     showDialog(
       context: context,
@@ -1482,7 +1223,6 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                   style: TextStyle(
                       color: colorGolden,
                       fontWeight: FontWeight.w600,
-                      fontFamily: gilroySemiBold,
                       fontStyle: FontStyle.normal,
                       fontSize: 16.0),
                 ),
@@ -1585,7 +1325,6 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                       style: const TextStyle(
                           color: const Color(0xff1e36ba),
                           fontWeight: FontWeight.w500,
-                          fontFamily: gilroyMedium,
                           fontStyle: FontStyle.normal,
                           fontSize: 13.0),
                       textAlign: TextAlign.right),

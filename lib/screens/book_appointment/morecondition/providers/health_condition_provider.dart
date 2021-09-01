@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/screens/appointments/model/req_booking_appointment_model.dart';
+import 'package:hutano/screens/appointments/model/res_uploaded_document_images_model.dart' as DocImg;
 import 'package:hutano/screens/book_appointment/diagnosis/model/res_diagnostic_test_model.dart';
 import 'package:hutano/screens/book_appointment/model/res_onsite_address_model.dart';
 import 'package:hutano/screens/book_appointment/morecondition/model/selection_health_issue_model.dart';
@@ -10,10 +11,9 @@ class HealthConditionProvider extends ChangeNotifier {
   List<int> healthConditions = [];
   Vitals vitalsData;
   PreferredPharmacy preferredPharmacyData;
-  List<String> medicalDiagnosticsTestsData = [];
   List<DiagnosticTest> medicalDiagnosticsTestsModelData = [];
-  List<String> medicalDocumentsData = [];
-  List<String> medicalImagesData = [];
+  List<DocImg.MedicalDocuments> medicalDocumentsData = [];
+  List<DocImg.MedicalImages> medicalImagesData = [];
   String providerId = "";
   String officeId = "";
   List<BookedMedicalHistory> medicalHistoryData = [];
@@ -46,17 +46,12 @@ class HealthConditionProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateDiagnostics(List<String> list) {
-    medicalDiagnosticsTestsData = list;
-    notifyListeners();
-  }
-
-  void updateDocuments(List<String> list) {
+  void updateDocuments(List<DocImg.MedicalDocuments> list) {
     medicalDocumentsData = list;
     notifyListeners();
   }
 
-  void updateImages(List<String> list) {
+  void updateImages(List<DocImg.MedicalImages> list) {
     medicalImagesData = list;
     notifyListeners();
   }
@@ -132,7 +127,6 @@ class HealthConditionProvider extends ChangeNotifier {
     healthConditions = [];
     vitalsData = null;
     preferredPharmacyData = null;
-    medicalDiagnosticsTestsData = [];
     medicalDiagnosticsTestsModelData = [];
     medicalDocumentsData = [];
     medicalImagesData = [];

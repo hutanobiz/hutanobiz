@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/appointments/model/req_booking_appointment_model.dart';
+import 'package:hutano/screens/appointments/model/res_uploaded_document_images_model.dart'
+    as MedImg;
 import 'package:hutano/screens/book_appointment/diagnosis/model/res_diagnostic_test_model.dart';
 import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/screens/medical_history/model/res_get_medication_detail.dart';
-
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/text_style.dart';
 import 'package:hutano/utils/argument_const.dart';
 import 'package:hutano/utils/preference_constants.dart';
@@ -16,6 +19,7 @@ import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/problem_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Bookingsummary extends StatefulWidget {
   Bookingsummary({Key key}) : super(key: key);
@@ -99,6 +103,22 @@ class _BookingsummaryState extends State<Bookingsummary> {
           ? prescriptionWidget(
               Provider.of<HealthConditionProvider>(context, listen: false)
                   .medicationModelData)
+          : SizedBox(),
+      Provider.of<HealthConditionProvider>(context, listen: false)
+                  .medicalImagesData
+                  .length >
+              0
+          ? medicalImagesWidget(
+              Provider.of<HealthConditionProvider>(context, listen: false)
+                  .medicalImagesData)
+          : SizedBox(),
+      Provider.of<HealthConditionProvider>(context, listen: false)
+                  .medicalDocumentsData
+                  .length >
+              0
+          ? medicalDocumentWidget(
+              Provider.of<HealthConditionProvider>(context, listen: false)
+                  .medicalDocumentsData)
           : SizedBox(),
       Provider.of<HealthConditionProvider>(context, listen: false)
                   .medicalDiagnosticsTestsModelData
@@ -263,6 +283,181 @@ class _BookingsummaryState extends State<Bookingsummary> {
     );
   }
 
+  ListView medicalImagesWidget(List<MedImg.MedicalImages> medicalImages) {
+    return ListView(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      children: [
+        SizedBox(height: 20),
+        Text(
+          "Medical images",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+        ),
+        SizedBox(height: 20),
+        Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            border: Border.all(color: Colors.grey[200]),
+          ),
+          child: ListView.separated(
+            separatorBuilder: (context, index) => SizedBox(height: 20),
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: medicalImages.length,
+            itemBuilder: (context, index) {
+              String date = medicalImages[index].date.length > 15
+                  ? medicalImages[index].date.substring(0, 15)
+                  : medicalImages[index].date;
+              return Row(
+                children: [
+                  Container(
+                      height: 80,
+                      width: 80,
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16.0)),
+                        clipBehavior: Clip.antiAlias,
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16.0),
+                            child: medicalImages[index]
+                                    .images
+                                    .toLowerCase()
+                                    .endsWith("pdf")
+                                ? "ic_pdf".imageIcon()
+                                : Image.network(
+                                    ApiBaseHelper.imageUrl +
+                                        medicalImages[index].images,
+                                    height: 80.0,
+                                    width: 80.0,
+                                    fit: BoxFit.cover,
+                                  )),
+                      )).onClick(
+                    onTap: medicalImages[index]
+                            .images
+                            .toLowerCase()
+                            .endsWith("pdf")
+                        ? () async {
+                            var url = ApiBaseHelper.imageUrl +
+                                medicalImages[index].images;
+                            if (await canLaunch(url)) {
+                              await launch(url);
+                            } else {
+                              throw 'Could not launch $url';
+                            }
+                          }
+                        : () {
+                            Navigator.of(context).pushNamed(
+                              Routes.providerImageScreen,
+                              arguments: ApiBaseHelper.imageUrl +
+                                  medicalImages[index].images,
+                            );
+                          },
+                  ),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text('${(index + 1)}. ' +
+                        medicalImages[index].name +
+                        ' taken on ' +
+                        date),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  ListView medicalDocumentWidget(
+      List<MedImg.MedicalDocuments> medicalDocuments) {
+    return ListView(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      children: [
+        SizedBox(height: 20),
+        Text(
+          "Medical Documents",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+        ),
+        SizedBox(height: 20),
+        Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            border: Border.all(color: Colors.grey[200]),
+          ),
+          child: ListView.separated(
+            separatorBuilder: (context, index) => SizedBox(height: 20),
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: medicalDocuments.length,
+            itemBuilder: (context, index) {
+              return Row(
+                children: [
+                  Container(
+                      height: 80,
+                      width: 80,
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16.0)),
+                        clipBehavior: Clip.antiAlias,
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16.0),
+                            child: medicalDocuments[index]
+                                    .medicalDocuments
+                                    .toLowerCase()
+                                    .endsWith("pdf")
+                                ? "ic_pdf".imageIcon()
+                                : Image.network(
+                                    ApiBaseHelper.imageUrl +
+                                        medicalDocuments[index]
+                                            .medicalDocuments,
+                                    height: 80.0,
+                                    width: 80.0,
+                                    fit: BoxFit.cover,
+                                  )),
+                      )).onClick(
+                    onTap: medicalDocuments[index]
+                            .medicalDocuments
+                            .toLowerCase()
+                            .endsWith("pdf")
+                        ? () async {
+                            var url = ApiBaseHelper.imageUrl +
+                                medicalDocuments[index].medicalDocuments;
+                            if (await canLaunch(url)) {
+                              await launch(url);
+                            } else {
+                              throw 'Could not launch $url';
+                            }
+                          }
+                        : () {
+                            Navigator.of(context).pushNamed(
+                              Routes.providerImageScreen,
+                              arguments: ApiBaseHelper.imageUrl +
+                                  medicalDocuments[index].medicalDocuments,
+                            );
+                          },
+                  ),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text('${(index + 1)}. ' +
+                        medicalDocuments[index].name +
+                        ' ' +
+                        medicalDocuments[index].type +
+                        ' taken on ' +
+                        medicalDocuments[index].date),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
   ListView diagnosticTestWidget(List<DiagnosticTest> dignosticTest) {
     return ListView(
       shrinkWrap: true,
@@ -286,12 +481,60 @@ class _BookingsummaryState extends State<Bookingsummary> {
             physics: NeverScrollableScrollPhysics(),
             itemCount: dignosticTest.length,
             itemBuilder: (context, index) {
-              return Text('${(index + 1)}. ' +
-                  dignosticTest[index].name +
-                  ' ' +
-                  dignosticTest[index].type +
-                  ' taken on ' +
-                  dignosticTest[index].date);
+              return Row(
+                children: [
+                  Container(
+                      height: 80,
+                      width: 80,
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16.0)),
+                        clipBehavior: Clip.antiAlias,
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16.0),
+                            child: dignosticTest[index]
+                                    .image
+                                    .toLowerCase()
+                                    .endsWith("pdf")
+                                ? "ic_pdf".imageIcon()
+                                : Image.network(
+                                    ApiBaseHelper.imageUrl +
+                                        dignosticTest[index].image,
+                                    height: 80.0,
+                                    width: 80.0,
+                                    fit: BoxFit.cover,
+                                  )),
+                      )).onClick(
+                    onTap:
+                        dignosticTest[index].image.toLowerCase().endsWith("pdf")
+                            ? () async {
+                                var url = ApiBaseHelper.imageUrl +
+                                    dignosticTest[index].image;
+                                if (await canLaunch(url)) {
+                                  await launch(url);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+                              }
+                            : () {
+                                Navigator.of(context).pushNamed(
+                                  Routes.providerImageScreen,
+                                  arguments: ApiBaseHelper.imageUrl +
+                                      dignosticTest[index].image,
+                                );
+                              },
+                  ),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text('${(index + 1)}. ' +
+                        dignosticTest[index].name +
+                        ' ' +
+                        dignosticTest[index].type +
+                        ' taken on ' +
+                        dignosticTest[index].date),
+                  ),
+                ],
+              );
             },
           ),
         ),

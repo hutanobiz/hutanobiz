@@ -10,6 +10,7 @@ import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/appointments/model/res_uploaded_document_images_model.dart';
 import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/argument_const.dart';
@@ -64,9 +65,6 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
   String documentName = '';
   bool isBottomButtonsShow = true;
   bool isFromAppointment = false;
-
-  InheritedContainerState _container;
-
   List<Map> _selectedDocsList = [];
 
   @override
@@ -108,7 +106,6 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    _container = InheritedContainer.of(context);
   }
 
   @override
@@ -174,11 +171,10 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
               Navigator.of(context).pushNamed(Routes.routeUploadDiagnosticNew);
             },
             onForwardTap: () {
-              List<String> _selectedMedicalDocs = [];
+              List<MedicalDocuments> _selectedMedicalDocs = [];
               if (_selectedDocsList != null && _selectedDocsList.length > 0) {
-                _container.setConsentToTreatData("docsList", _selectedDocsList);
                 _selectedDocsList.forEach((element) {
-                  _selectedMedicalDocs.add(element['_id']);
+                  _selectedMedicalDocs.add(MedicalDocuments.fromJson(element));
                 });
                 Provider.of<HealthConditionProvider>(context, listen: false)
                     .updateDocuments(_selectedMedicalDocs);

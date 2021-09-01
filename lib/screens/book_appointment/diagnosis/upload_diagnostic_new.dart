@@ -768,18 +768,12 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
   }
 
   void _forwardButtonPressed(BuildContext context) {
-    List<String> _selectedMedicalDocs = [];
     List<DiagnosticTest> selectedTestsModel = [];
     if (_selectedDocsList != null && _selectedDocsList.length > 0) {
       _selectedDocsList.forEach((element) {
-        _selectedMedicalDocs.add(element['_id']);
         selectedTestsModel.add(DiagnosticTest.fromJson(element));
       });
-      Provider.of<HealthConditionProvider>(context, listen: false)
-          .updateDocuments(_selectedMedicalDocs);
     }
-    Provider.of<HealthConditionProvider>(context, listen: false)
-        .updateDiagnostics(_selectedMedicalDocs);
 
     Provider.of<HealthConditionProvider>(context, listen: false)
         .updateDiagnosticsModel(selectedTestsModel);
