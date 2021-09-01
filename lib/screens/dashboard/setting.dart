@@ -140,7 +140,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                       ),
                       child: avatar == null || avatar == "null"
                           ? Image(
-                              image: AssetImage('images/profile_user.png'),
+                              image: AssetImage('images/ic_profile.png'),
                               height: 74.0,
                               width: 74.0,
                             )
