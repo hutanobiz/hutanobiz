@@ -20,7 +20,9 @@ class SocketClass {
         "autoConnect": false,
       });
   void connect() {
-    socket.connect();
+    if (!socket.connected) {
+      socket.connect();
+    }
     socket.onConnect((data) {
       print("Connected");
       socket.on("receiveMessage", (msg) {

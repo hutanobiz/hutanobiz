@@ -7,8 +7,10 @@ class ChatProvider extends ChangeNotifier {
   List<Message> messages = [];
 
   void add(Message message) {
-    messages.insert(0, message);
-    notifyListeners();
+    if (messages.first.sId != message.sId) {
+      messages.insert(0, message);
+      notifyListeners();
+    }
   }
 
   void addAll(List<Message> previousMessages) {
@@ -20,6 +22,7 @@ class ChatProvider extends ChangeNotifier {
     messages.clear();
     notifyListeners();
   }
+
   List<Message> get players {
     return messages;
   }
