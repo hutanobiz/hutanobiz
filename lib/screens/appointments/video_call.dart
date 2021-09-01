@@ -10,6 +10,7 @@ import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 
@@ -26,6 +27,7 @@ class CallPage extends StatefulWidget {
 class _CallPageState extends State<CallPage> {
   bool muted = false;
   bool mutedVideo = false;
+  bool isLoading = false;
   RtcEngine _engine;
   final _users = <int>[];
   final _infoStrings = <String>[];
@@ -164,7 +166,14 @@ class _CallPageState extends State<CallPage> {
       // updateSubscriptionList();
       setState(() {
         final info = 'userOffline: $uid';
-        showConfirmDialog();
+        showConfirmDialog(() {
+          _onCallEnd(context);
+        }, () {
+          Map<String, String> map = {};
+          map['appointmentId'] = widget.channelName['_id'].toString();
+          api.cancelCallEndNotification(token, map).then((value) {});
+          Navigator.pop(context);
+        });
         _infoStrings.add(info);
         _users.remove(uid);
       });
@@ -178,11 +187,13 @@ class _CallPageState extends State<CallPage> {
   }
 
   void _onCallEnd(BuildContext context) {
+    Navigator.pop(context);
+    setLoading(true);
     var stopMap = {};
     stopMap['appid'] = appid;
     stopMap['appointmentId'] = widget.channelName['_id'];
     api.stopVideoCall(context, token, stopMap).then((value) {
-      Navigator.pop(context);
+      setLoading(false);
       var appointmentCompleteMap = {};
       appointmentCompleteMap['type'] = '2';
       appointmentCompleteMap['appointmentId'] = widget.channelName['_id'];
@@ -195,6 +206,7 @@ class _CallPageState extends State<CallPage> {
           appointmentResponse["data"]['doctor']['avatar'];
       appointmentCompleteMap["dateTime"] =
           DateFormat('dd MMM yyyy, HH:mm').format(DateTime.now());
+
       Navigator.of(context).pushReplacementNamed(
         Routes.appointmentCompleteConfirmation,
         arguments: appointmentCompleteMap,
@@ -229,90 +241,95 @@ class _CallPageState extends State<CallPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[200],
-      body: Center(
-        child: Column(
-          children: [
-            Expanded(
-              child: Stack(
-                children: <Widget>[
-                  _viewRows(),
-                  // _panel(),
+      body: Stack(
+        children: [
+          Center(
+            child: Column(
+              children: [
+                Expanded(
+                  child: Stack(
+                    children: <Widget>[
+                      _viewRows(),
+                      // _panel(),
 
-                  Align(
-                      alignment: Alignment.centerLeft,
-                      child: Row(
-                        children: [
-                          remoteAudio
-                              ? SizedBox()
-                              : Expanded(
-                                  child: Icon(
-                                  Icons.mic_off,
-                                  color: Colors.red,
-                                  size: 48,
-                                )),
-                          remoteVideo
-                              ? SizedBox()
-                              : Expanded(
-                                  child: Icon(Icons.videocam_off,
-                                      color: Colors.red, size: 48)),
-                        ],
-                      )),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 22.0),
-                      child: RawMaterialButton(
-                        onPressed: () {
-                          Widgets.showConfirmationDialog(
-                              context: context,
-                              title: 'End Call',
-                              description: 'Are you sure to end Call?',
-                              leftText: 'yes',
-                              onLeftPressed: () {
-                                // Navigator.pop(context);
-                                var appointmentCompleteMap = {};
-                                appointmentCompleteMap['type'] = '2';
-                                appointmentCompleteMap['appointmentId'] =
-                                    widget.channelName['_id'];
-                                appointmentCompleteMap['name'] =
-                                    appointmentResponse["data"]['doctor']
-                                            ['title'] +
-                                        ' ' +
+                      Align(
+                          alignment: Alignment.centerLeft,
+                          child: Row(
+                            children: [
+                              remoteAudio
+                                  ? SizedBox()
+                                  : Expanded(
+                                      child: Icon(
+                                      Icons.mic_off,
+                                      color: Colors.red,
+                                      size: 48,
+                                    )),
+                              remoteVideo
+                                  ? SizedBox()
+                                  : Expanded(
+                                      child: Icon(Icons.videocam_off,
+                                          color: Colors.red, size: 48)),
+                            ],
+                          )),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 22.0),
+                          child: RawMaterialButton(
+                            onPressed: () {
+                              Widgets.showConfirmationDialog(
+                                  context: context,
+                                  title: 'End Call',
+                                  description: 'Are you sure to end Call?',
+                                  leftText: 'yes',
+                                  onLeftPressed: () {
+                                    // Navigator.pop(context);
+                                    var appointmentCompleteMap = {};
+                                    appointmentCompleteMap['type'] = '2';
+                                    appointmentCompleteMap['appointmentId'] =
+                                        widget.channelName['_id'];
+                                    appointmentCompleteMap['name'] =
                                         appointmentResponse["data"]['doctor']
-                                            ['fullName'];
+                                                ['title'] +
+                                            ' ' +
+                                            appointmentResponse["data"]
+                                                ['doctor']['fullName'];
 
-                                appointmentCompleteMap['avatar'] =
-                                    appointmentResponse["data"]['doctor']
-                                        ['avatar'];
-                                appointmentCompleteMap["dateTime"] =
-                                    DateFormat('dd MMM yyyy, HH:mm')
-                                        .format(DateTime.now());
-                                Navigator.of(context).pushReplacementNamed(
-                                  Routes.appointmentCompleteConfirmation,
-                                  arguments: appointmentCompleteMap,
-                                );
-                              },
-                              rightText: 'No',
-                              onRightPressed: () {});
-                        },
-                        child: Icon(
-                          Icons.call_end,
-                          color: Colors.white,
-                          size: 35.0,
+                                    appointmentCompleteMap['avatar'] =
+                                        appointmentResponse["data"]['doctor']
+                                            ['avatar'];
+                                    appointmentCompleteMap["dateTime"] =
+                                        DateFormat('dd MMM yyyy, HH:mm')
+                                            .format(DateTime.now());
+                                    Navigator.of(context).pushReplacementNamed(
+                                      Routes.appointmentCompleteConfirmation,
+                                      arguments: appointmentCompleteMap,
+                                    );
+                                  },
+                                  rightText: 'No',
+                                  onRightPressed: () {});
+                            },
+                            child: Icon(
+                              Icons.call_end,
+                              color: Colors.white,
+                              size: 35.0,
+                            ),
+                            shape: CircleBorder(),
+                            elevation: 2.0,
+                            fillColor: Colors.redAccent,
+                            padding: const EdgeInsets.all(15.0),
+                          ),
                         ),
-                        shape: CircleBorder(),
-                        elevation: 2.0,
-                        fillColor: Colors.redAccent,
-                        padding: const EdgeInsets.all(15.0),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                _toolbar()
+              ],
             ),
-            _toolbar()
-          ],
-        ),
+          ),
+          isLoading ? CustomLoader() : SizedBox()
+        ],
       ),
     );
   }
@@ -367,6 +384,12 @@ class _CallPageState extends State<CallPage> {
           ],
         ));
     }
+  }
+
+  setLoading(loading) {
+    setState(() {
+      isLoading = loading;
+    });
   }
 
   /// Helper function to get list of native views
@@ -514,7 +537,7 @@ class _CallPageState extends State<CallPage> {
     );
   }
 
-  void showConfirmDialog() {
+  void showConfirmDialog(Function onConfirmPressed, Function onCancelPressed) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -574,15 +597,7 @@ class _CallPageState extends State<CallPage> {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        onPressed: () {
-                          Map<String, String> map = {};
-                          map['appointmentId'] =
-                              widget.channelName['_id'].toString();
-                          api
-                              .cancelCallEndNotification(token, map)
-                              .then((value) {});
-                          Navigator.pop(context);
-                        }),
+                        onPressed: onCancelPressed),
                     Spacer(),
                     FlatButton(
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -600,9 +615,7 @@ class _CallPageState extends State<CallPage> {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        onPressed: () {
-                          _onCallEnd(context);
-                        }),
+                        onPressed: onConfirmPressed),
                     Spacer(),
                   ],
                 )
