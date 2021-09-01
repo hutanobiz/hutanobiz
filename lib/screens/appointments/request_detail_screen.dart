@@ -8,6 +8,7 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/problem_widget.dart';
 import 'package:intl/intl.dart';
 
@@ -77,22 +78,12 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: AppColors.goldenTainoi,
-        body: LoadingBackground(
-          title: "Request Detail",
-          isAddBack: false,
-          addBackButton: true,
-          color: Colors.white,
-          rightButtonText: "Medical History",
-          onRightButtonTap: () {
-            _medicalHistoryMap['isBottomButtonsShow'] = false;
-            _medicalHistoryMap['isFromAppointment'] = true;
-
-            Navigator.of(context).pushNamed(
-              Routes.viewMedicalHistory,
-              arguments: _medicalHistoryMap,
-            );
-          },
-          padding: EdgeInsets.zero,
+        body: LoadingBackgroundNew(
+          title: "",
+        padding: const EdgeInsets.only(top: 0),
+        isAddBack: false,
+        addHeader: true,
+        isBackRequired: true,
           child: FutureBuilder(
             future: _profileFuture,
             builder: (context, snapshot) {
@@ -151,11 +142,22 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
 
     averageRating = _data["averageRating"]?.toStringAsFixed(1) ?? "0";
 
-    if (_providerData['medicalHistory'] != null &&
-        _providerData['medicalHistory'].length > 0) {
-      this._medicalHistoryMap['medicalHistory'] =
-          _providerData['medicalHistory'];
-    }
+    this._medicalHistoryMap['medicalHistory'] = _providerData['medicalHistory'];
+
+    this._medicalHistoryMap['appointmentProblems'] =
+        _data['appointmentProblems'];
+
+    this._medicalHistoryMap['vitals'] = _providerData['vitals'];
+
+    this._medicalHistoryMap['medicalDiagnostics'] =
+        _providerData['medicalDiagnostics'];
+
+    this._medicalHistoryMap['medications'] = _providerData['medications'];
+
+    this._medicalHistoryMap['medicalImages'] = _providerData['medicalImages'];
+
+    this._medicalHistoryMap['medicalDocuments'] =
+        _providerData['medicalDocuments'];
     if (_providerData['medicalImages'] != null &&
         _providerData['medicalImages'].length > 0) {
       this._medicalHistoryMap['medicalImages'] = _providerData['medicalImages'];
@@ -367,6 +369,24 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
             ? SizedBox()
             : locationWidget(address, latLng, _data['distance']),
         divider(),
+        SizedBox(height: 10),
+        Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Text('Complaint summary',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.windsor,
+                  decoration: TextDecoration.underline,
+                ))).onClick(onTap: () {
+          _medicalHistoryMap['isBottomButtonsShow'] = false;
+          _medicalHistoryMap['isFromAppointment'] = true;
+
+          Navigator.of(context).pushNamed(
+            Routes.viewMedicalHistory,
+            arguments: _medicalHistoryMap,
+          );
+        }),
         seekingCareWidget(_providerData),
         divider(),
         feeWidget(

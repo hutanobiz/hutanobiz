@@ -14,6 +14,7 @@ import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/problem_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
@@ -150,22 +151,12 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: AppColors.goldenTainoi,
-        body: LoadingBackground(
-          title: "Appointment Detail",
+        body: LoadingBackgroundNew(
+          title: "",
+          padding: const EdgeInsets.only(bottom: 20),
           isAddBack: false,
-          addBackButton: true,
-          color: Colors.white,
-          rightButtonText: "Medical History",
-          onRightButtonTap: () {
-            _medicalHistoryMap['isBottomButtonsShow'] = false;
-            _medicalHistoryMap['isFromAppointment'] = true;
-
-            Navigator.of(context).pushNamed(
-              Routes.viewMedicalHistory,
-              arguments: _medicalHistoryMap,
-            );
-          },
-          padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+          addHeader: true,
+          isBackRequired: true,
           child: FutureBuilder(
             future: _profileFuture,
             builder: (context, snapshot) {
@@ -321,20 +312,22 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
     averageRating = _data["averageRating"]?.toStringAsFixed(1) ?? "0";
 
-    if (_providerData['medicalHistory'] != null &&
-        _providerData['medicalHistory'].length > 0) {
-      this._medicalHistoryMap['medicalHistory'] =
-          _providerData['medicalHistory'];
-    }
-    if (_providerData['medicalImages'] != null &&
-        _providerData['medicalImages'].length > 0) {
-      this._medicalHistoryMap['medicalImages'] = _providerData['medicalImages'];
-    }
-    if (_providerData['medicalDocuments'] != null &&
-        _providerData['medicalDocuments'].length > 0) {
-      this._medicalHistoryMap['medicalDocuments'] =
-          _providerData['medicalDocuments'];
-    }
+    this._medicalHistoryMap['medicalHistory'] = _providerData['medicalHistory'];
+
+    this._medicalHistoryMap['appointmentProblems'] =
+        _data['appointmentProblems'];
+
+    this._medicalHistoryMap['vitals'] = _providerData['vitals'];
+
+    this._medicalHistoryMap['medicalDiagnostics'] =
+        _providerData['medicalDiagnostics'];
+
+    this._medicalHistoryMap['medications'] = _providerData['medications'];
+
+    this._medicalHistoryMap['medicalImages'] = _providerData['medicalImages'];
+
+    this._medicalHistoryMap['medicalDocuments'] =
+        _providerData['medicalDocuments'];
 
     feeList.clear();
     feeList.add({
@@ -432,7 +425,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+          padding: const EdgeInsets.only(top: 20, left: 20.0, right: 20.0),
           child: Row(
             children: <Widget>[
               Container(
@@ -563,6 +556,24 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             ? divider(topPadding: 8.0)
             : SizedBox(height: 1),
         divider(),
+        SizedBox(height: 10),
+        Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Text('Complaint summary',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.windsor,
+                  decoration: TextDecoration.underline,
+                ))).onClick(onTap: () {
+          _medicalHistoryMap['isBottomButtonsShow'] = false;
+          _medicalHistoryMap['isFromAppointment'] = true;
+
+          Navigator.of(context).pushNamed(
+            Routes.viewMedicalHistory,
+            arguments: _medicalHistoryMap,
+          );
+        }),
         seekingCareWidget(_providerData),
         divider(),
         feeWidget(
@@ -736,7 +747,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         child: Padding(
                           padding: const EdgeInsets.only(right: 4.0),
                           child: Text(
-                            "I need help with my Appiontment",
+                            "I need help with my Appointment",
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(

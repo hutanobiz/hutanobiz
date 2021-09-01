@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
-import 'package:hutano/screens/appointments/medical_history.dart';
+import 'package:hutano/screens/appointments/current_medical_history.dart';
 import 'package:hutano/screens/appointments/upload_documents.dart';
 import 'package:hutano/screens/appointments/upload_images.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 
 class ViewMedicalHistoryScreen extends StatefulWidget {
   ViewMedicalHistoryScreen({Key key, this.isBottomButtonsShow})
@@ -34,7 +34,7 @@ class _ViewMedicalHistoryScreenState extends State<ViewMedicalHistoryScreen>
     }
 
     _children = [
-      MedicalHistoryScreen(isBottomButtonsShow: _map),
+      CurrentAppointmentMedicalHistory(isBottomButtonsShow: _map),
       UploadImagesScreen(isBottomButtonsShow: _map),
       UploadDocumentsScreen(isBottomButtonsShow: _map),
     ];
@@ -46,12 +46,12 @@ class _ViewMedicalHistoryScreenState extends State<ViewMedicalHistoryScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
-        title: 'Medical History',
-        isAddBack: true,
-        addBackButton: false,
-        color: Colors.white,
-        padding: const EdgeInsets.only(top: 0.0, bottom: 10.0),
+      body: LoadingBackgroundNew(
+        title: "",
+        padding: const EdgeInsets.only(top: 0),
+        isAddBack: false,
+        addHeader: true,
+        isBackRequired: true,
         child: tabBarWidget(),
       ),
     );
