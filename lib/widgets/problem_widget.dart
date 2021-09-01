@@ -8,7 +8,7 @@ class ProblemWidget extends StatelessWidget {
     @required this.dob,
     @required this.gender,
     @required this.appointmentProblem,
-    @required this.problemTimeSpanMap,
+   this.problemTimeSpanMap,
   }) : super(key: key);
 
   final dynamic appointmentProblem;
@@ -16,6 +16,13 @@ class ProblemWidget extends StatelessWidget {
   final String dob;
   final int gender;
   Map sidesMap = {1: "Left", 2: "Right", 3: "Top", 4: "Bottom", 5: "All Over"};
+  Map<String, String> timeSpanConfig = {
+    "1": "Hours",
+    "2": "Days",
+    "3": "Weeks",
+    "4": "Months",
+    "5": "Years"
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +77,7 @@ class ProblemWidget extends StatelessWidget {
     if (appointmentProblem['problemFacingTimeSpan']['type'] != '' &&
         appointmentProblem['problemFacingTimeSpan']['period'] != '')
       problemText +=
-          "Started ${appointmentProblem['problemFacingTimeSpan']['period']} ${problemTimeSpanMap[appointmentProblem['problemFacingTimeSpan']['type']]} ago. ";
+          "Started ${appointmentProblem['problemFacingTimeSpan']['period']} ${timeSpanConfig[appointmentProblem['problemFacingTimeSpan']['type']]} ago. ";
 
     //to check any treatment taken previously
     if (appointmentProblem['isTreatmentReceived'] == 0 ||

@@ -639,7 +639,7 @@ class Strings {
 
   static const String providerOfficeLabel = "At the provider's office";
 
-  static const String videoChatLabel = "Video Chat Appointment";
+  static const String videoChatLabel = "Telemedicine Appointment";
 
   static const String onSiteLabel = "Onsite Appointment";
 
