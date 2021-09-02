@@ -80,10 +80,10 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
         backgroundColor: AppColors.goldenTainoi,
         body: LoadingBackgroundNew(
           title: "",
-        padding: const EdgeInsets.only(top: 0),
-        isAddBack: false,
-        addHeader: true,
-        isBackRequired: true,
+          padding: const EdgeInsets.only(top: 0),
+          isAddBack: false,
+          addHeader: true,
+          isBackRequired: true,
           child: FutureBuilder(
             future: _profileFuture,
             builder: (context, snapshot) {

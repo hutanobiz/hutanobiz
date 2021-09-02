@@ -39,9 +39,12 @@ class _InviteFamilyScreenState extends State<InviteFamilyScreen> {
                 SizedBox(
                   height: spacing80,
                 ),
-                GestureDetector(onTap: () {
-                  Navigator.of(context).pushReplacementNamed(Routes.addFamilyMember);
-                }, child: _buildInviteText()),
+                GestureDetector(
+                    onTap: () {
+                      Navigator.of(context)
+                          .pushReplacementNamed(Routes.addFamilyMember);
+                    },
+                    child: _buildInviteText()),
                 Spacer(),
                 Padding(
                   padding: const EdgeInsets.all(15),
@@ -120,6 +123,7 @@ class _InviteFamilyScreenState extends State<InviteFamilyScreen> {
   }
 
   _skipTaskNow() {
-    Navigator.of(context).pushReplacementNamed(Routes.providerSearch);
+    Navigator.of(context)
+        .pushReplacementNamed(Routes.myProviderGroups, arguments: true);
   }
 }

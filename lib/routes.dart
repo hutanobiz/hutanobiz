@@ -94,6 +94,8 @@ import 'package:hutano/screens/payment/upload_insurance_images.dart';
 import 'package:hutano/screens/pharmacy/add_pharmacy.dart';
 import 'package:hutano/screens/providercicle/add_provider_complete.dart';
 import 'package:hutano/screens/providercicle/create_group/create_provider_group.dart';
+import 'package:hutano/screens/providercicle/my_provider_group_detail.dart';
+import 'package:hutano/screens/providercicle/my_provider_groups.dart';
 import 'package:hutano/screens/providercicle/my_provider_network/my_provider_network.dart';
 import 'package:hutano/screens/providercicle/provider_add_network/provider_add_network.dart';
 import 'package:hutano/screens/providercicle/provider_search/provider_search.dart';
@@ -266,6 +268,8 @@ class Routes {
   static const String routeVirtualTrackAppointment =
       '/routeVirtualTrackAppointment';
   static const String officeDirectionScreen = '/officeDirectionScreen';
+  static const String myProviderGroupDetail = '/myProviderGroupDetail';
+  static const String myProviderGroups = '/myProviderGroups';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final dynamic args = settings.arguments;
@@ -674,6 +678,17 @@ class Routes {
                 doctorName: args[ArgumentConstant.doctorName],
                 doctorAvatar: args[ArgumentConstant.doctorAvatar]));
         break;
+      case myProviderGroups:
+        return MaterialPageRoute(
+            builder: (_) => MyProviderGroups(
+                  showBack: args,
+                ));
+
+      case myProviderGroupDetail:
+        return MaterialPageRoute(
+            builder: (_) => MyProviderGroupDetail(
+                  providerGroup: args,
+                ));
       case createProviderGroup:
         return MaterialPageRoute(builder: (_) => CreateProviderGroup());
         break;

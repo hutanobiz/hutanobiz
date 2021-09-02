@@ -4,6 +4,7 @@ import 'package:hutano/screens/all_appointments/all_appointments.dart';
 import 'package:hutano/screens/chat/all_chats.dart';
 import 'package:hutano/screens/dashboard/dashboardScreen.dart';
 import 'package:hutano/screens/dashboard/setting.dart';
+import 'package:hutano/screens/providercicle/my_provider_groups.dart';
 import 'package:hutano/screens/providercicle/my_provider_network/my_provider_network.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
@@ -35,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
     AllAppointments(),
     // AppointmentsScreen(),
     // RequestAppointmentsScreen(),
-    MyProviderNetwrok(
+    MyProviderGroups(
       showBack: false,
     ),
     // BreathingIssue(

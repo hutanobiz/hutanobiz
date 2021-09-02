@@ -107,18 +107,20 @@ class ItemProviderDetail extends StatelessWidget {
         SizedBox(
           width: 15,
         ),
-        RippleEffect(
-          onTap: () {
-            onMakeAppointment(index, subIndex);
-          },
-          child: IntrinsicWidth(
-            child: TextWithImage(
-                textStyle:
-                    TextStyle(color: colorPurple100, fontSize: fontSize12),
-                image: FileConstants.icAppointmentBlue,
-                label: Localization.of(context).makeAppointment),
-          ),
-        ),
+        onMakeAppointment == null
+            ? SizedBox()
+            : RippleEffect(
+                onTap: () {
+                  onMakeAppointment(index, subIndex);
+                },
+                child: IntrinsicWidth(
+                  child: TextWithImage(
+                      textStyle: TextStyle(
+                          color: colorPurple100, fontSize: fontSize12),
+                      image: FileConstants.icAppointmentBlue,
+                      label: Localization.of(context).makeAppointment),
+                ),
+              ),
       ],
     );
   }
