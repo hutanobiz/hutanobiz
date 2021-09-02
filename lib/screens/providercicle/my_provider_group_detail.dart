@@ -199,7 +199,6 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: spacing20),
               // fromHome
               //     ? Padding(
               //         padding: const EdgeInsets.only(left: 15, bottom: 20),
@@ -210,15 +209,38 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
               //         ),
               //       )
               //     : SizedBox.shrink(),
-              fromHome ? SizedBox() : CustomBackButton(),
-
               fromHome
-                  ? SizedBox()
-                  : AppHeader(
-                      progressSteps: HutanoProgressSteps.four,
+                  ? SizedBox(height: 16)
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CustomBackButton(),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 12.0),
+                            child: Text(
+                              "Add new providers",
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  color: colorBlack2,
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: gilroyBold,
+                                  fontStyle: FontStyle.normal,
+                                  fontSize: 20.0),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-              fromHome ? SizedBox() : _buildHeader(),
-              fromHome ? SizedBox() : SizedBox(height: spacing25),
+
+              // fromHome
+              //     ? SizedBox()
+              //     : AppHeader(
+              //         progressSteps: HutanoProgressSteps.four,
+              //       ),
+              // fromHome ? SizedBox() : _buildHeader(),
+              fromHome ? SizedBox() : SizedBox(height: 20),
               searchProvider(context),
               SizedBox(
                 height: 20,
