@@ -63,8 +63,8 @@ class ProviderInfo extends StatelessWidget {
                       if (icon != null)
                         Image.asset(
                           icon,
-                          height: 30,
-                          width: 30,
+                          height: 20,
+                          width: 20,
                         )
                     ],
                   ),

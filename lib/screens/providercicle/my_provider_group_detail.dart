@@ -27,8 +27,10 @@ import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/utils/preference_key.dart';
 import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/utils/progress_dialog.dart';
+import 'package:hutano/widgets/app_header.dart';
 import 'package:hutano/widgets/app_logo.dart';
 import 'package:hutano/widgets/custom_back_button.dart';
+import 'package:hutano/widgets/hutano_progressbar.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/widgets.dart';
 
@@ -197,12 +199,30 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: spacing10),
+              SizedBox(height: spacing20),
+              // fromHome
+              //     ? Padding(
+              //         padding: const EdgeInsets.only(left: 15, bottom: 20),
+              //         child: Text(
+              //           "Add new providers",
+              //           style:
+              //               TextStyle(fontSize: 17, fontWeight: fontWeightBold),
+              //         ),
+              //       )
+              //     : SizedBox.shrink(),
               fromHome ? SizedBox() : CustomBackButton(),
-              fromHome ? SizedBox() : AppLogo(),
+
+              fromHome
+                  ? SizedBox()
+                  : AppHeader(
+                      progressSteps: HutanoProgressSteps.four,
+                    ),
               fromHome ? SizedBox() : _buildHeader(),
               fromHome ? SizedBox() : SizedBox(height: spacing25),
               searchProvider(context),
+              SizedBox(
+                height: 20,
+              ),
               Expanded(
                 child: ListView.separated(
                     padding: EdgeInsets.symmetric(horizontal: 16),
@@ -268,7 +288,7 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
     return Align(
       alignment: Alignment.center,
       child: Text(
-        Localization.of(context).myProviderNetwork,
+        "Add new providers",
         textAlign: TextAlign.center,
         style: const TextStyle(
             color: colorBlack2,
@@ -283,6 +303,8 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
   Widget searchProvider(BuildContext context) => Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         child: TypeAheadFormField(
+          suggestionsBoxDecoration:
+              SuggestionsBoxDecoration(borderRadius: BorderRadius.circular(5)),
           textFieldConfiguration: TextFieldConfiguration(
               controller: seachProviderController,
               focusNode: searchProviderFocusNode,
@@ -291,6 +313,16 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
               onTap: () {},
               onChanged: (value) {},
               decoration: InputDecoration(
+                filled: true,
+                fillColor: AppColors.mineShaft.withOpacity(0.06),
+                suffixIcon: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Image.asset(
+                    "images/search.png",
+                    height: 16,
+                    width: 16,
+                  ),
+                ),
                 hintText: 'Search provider',
                 isDense: true,
                 hintStyle: TextStyle(
@@ -298,15 +330,14 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
                     fontSize: fontSize13,
                     fontWeight: fontWeightRegular),
                 border: OutlineInputBorder(),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: colorBlack20, width: 1)),
                 enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: colorBlack20, width: 1)),
-                disabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: colorBlack20, width: 1)),
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  borderSide: BorderSide(color: Colors.black12, width: 0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  borderSide: BorderSide(color: Colors.black12, width: 0),
+                ),
               )),
           suggestionsCallback: (pattern) async {
             return await _searchProvider(pattern);
@@ -333,11 +364,7 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
       );
 
   Future<List<DoctorData>> _searchProvider(String pattern) async {
-    final param = <String, dynamic>{
-      'search': pattern,
-      'page': 1,
-      'limit': 10
-    };
+    final param = <String, dynamic>{'search': pattern, 'page': 1, 'limit': 10};
     if (locationData != null) {
       param['lattitude'] = locationData.latitude;
       param['longitude'] = locationData.longitude;

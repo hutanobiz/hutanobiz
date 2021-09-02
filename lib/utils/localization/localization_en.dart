@@ -463,7 +463,7 @@ class LocalizationEN implements Localization {
   String get add => "Add";
 
   @override
-  String get addCreateGroup => "Add to new group";
+  String get addCreateGroup => "Create new group";
 
   @override
   String get addDoctorNetwork => "Add {{doctor}} to your Provider Network.";
@@ -1445,7 +1445,7 @@ class LocalizationEN implements Localization {
   @override
   String get uploadDocument => "Upload Document";
 
-   @override
+  @override
   String get leftSide => "Left";
 
   @override
@@ -1479,5 +1479,4 @@ class LocalizationEN implements Localization {
 
   @override
   String get stayingSameProblem => "Staying the same";
-
 }

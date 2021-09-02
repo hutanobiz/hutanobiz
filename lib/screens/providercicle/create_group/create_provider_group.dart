@@ -70,42 +70,45 @@ class _CreateProviderGroupState extends State<CreateProviderGroup> {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomBackButton(margin: EdgeInsets.only(top: 20)),
-              SizedBox(height: spacing25),
-              Text(
-                Localization.of(context).addCreateGroup,
-                style: const TextStyle(
-                    color: colorDarkPurple,
-                    fontSize: fontSize20,
-                    fontWeight: fontWeightSemiBold),
+    // SizeConfig().init(context);
+    return AlertDialog(
+      insetPadding: EdgeInsets.symmetric(horizontal: 15),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      content: Container(
+        // padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // CustomBackButton(margin: EdgeInsets.only(top: 20)),
+            // SizedBox(height: spacing10),
+            Text(
+              Localization.of(context).addCreateGroup,
+              style: const TextStyle(
+                  color: colorDarkPurple,
+                  fontSize: fontSize20,
+                  fontWeight: fontWeightBold),
+            ),
+            SizedBox(height: spacing20),
+            Form(
+              key: _key,
+              child: _buildEmailField(context),
+            ),
+            SizedBox(height: spacing20),
+            Align(
+              alignment: Alignment.center,
+              child: HutanoButton(
+                fontSize: 14,
+                iconSize: 20,
+                width: SizeConfig.screenWidth / 1.5,
+                onPressed: _enableButton ? _addGroup : null,
+                color: colorPurple,
+                icon: FileConstants.icAddGroup,
+                buttonType: HutanoButtonType.withPrefixIcon,
+                label: Localization.of(context).addCreateGroup,
               ),
-              SizedBox(height: spacing60),
-              Form(
-                key: _key,
-                child: _buildEmailField(context),
-              ),
-              SizedBox(height: spacing20),
-              Align(
-                alignment: Alignment.center,
-                child: HutanoButton(
-                  width: SizeConfig.screenWidth / 1.5,
-                  onPressed: _enableButton ? _addGroup : null,
-                  color: colorPurple,
-                  icon: FileConstants.icAddGroup,
-                  buttonType: HutanoButtonType.withPrefixIcon,
-                  label: Localization.of(context).addCreateGroup,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

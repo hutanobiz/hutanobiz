@@ -355,7 +355,7 @@ class Strings {
 
   static const String add = "Add";
 
-  static const String addCreateGroup = "Add to new group";
+  static const String addCreateGroup = "Create new group";
 
   static const String addDoctorNetwork =
       "Add {{doctor}} to your Provider Network.";

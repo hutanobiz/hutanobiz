@@ -131,7 +131,7 @@ class ItemProviderDetail extends StatelessWidget {
     return Column(
       children: [
         Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
               flex: 1,
@@ -139,35 +139,42 @@ class ItemProviderDetail extends StatelessWidget {
                 providerDetail: _getProviderDetail(),
               ),
             ),
-            Container(
-              height: spacing50,
-              margin: EdgeInsets.only(top: 20, right: 5),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    '\$${_getFee()}',
-                    style: const TextStyle(
-                        color: colorBlack2,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: gilroySemiBold,
-                        fontStyle: FontStyle.normal,
-                        fontSize: 16.0),
-                  ),
-                  Text(
-                    Localization.of(context).consultationFee,
-                    style: const TextStyle(
-                      color: colorBlack2,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: gilroyRegular,
-                      fontStyle: FontStyle.normal,
-                    ),
-                  ),
-                ],
+            Padding(
+              padding: const EdgeInsetsDirectional.only(end: 20),
+              child: Image.asset(
+                "images/ic_add_card.png",
+                height: 30,
               ),
             )
+            // Container(
+            //   height: spacing50,
+            //   margin: EdgeInsets.only(top: 20, right: 5),
+            //   child: Column(
+            //     mainAxisAlignment: MainAxisAlignment.start,
+            //     crossAxisAlignment: CrossAxisAlignment.end,
+            //     children: [
+            //       Text(
+            //         '\$${_getFee()}',
+            //         style: const TextStyle(
+            //             color: colorBlack2,
+            //             fontWeight: FontWeight.w600,
+            //             fontFamily: gilroySemiBold,
+            //             fontStyle: FontStyle.normal,
+            //             fontSize: 16.0),
+            //       ),
+            //       Text(
+            //         Localization.of(context).consultationFee,
+            //         style: const TextStyle(
+            //           color: colorBlack2,
+            //           fontSize: 11,
+            //           fontWeight: FontWeight.w400,
+            //           fontFamily: gilroyRegular,
+            //           fontStyle: FontStyle.normal,
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // )
           ],
         )
       ],
@@ -225,29 +232,32 @@ class ItemProviderDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomCard(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            child: Column(
-              children: [
-                _buildProviderInfo(context),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Divider(
-                    color: colorBorder,
-                    height: 0.5,
-                  ),
-                ),
-                _buildLocationInfo(context)
-              ],
-            ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          child: Column(
+            children: [
+              _buildProviderInfo(context),
+              Divider(
+                height: 5,
+                thickness: 3,
+                color: Colors.grey[100],
+              )
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 10),
+              //   child: Divider(
+              //     color: colorBorder,
+              //     height: 0.5,
+              //   ),
+              // ),
+              // _buildLocationInfo(context)
+            ],
           ),
-          // _buildButton(context)
-        ],
-      ),
+        ),
+        // _buildButton(context)
+      ],
     );
   }
 }

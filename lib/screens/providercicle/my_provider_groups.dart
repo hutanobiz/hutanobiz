@@ -4,6 +4,7 @@ import 'package:hutano/apis/error_model.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/providercicle/create_group/create_provider_group.dart';
 import 'package:hutano/screens/providercicle/provider_add_network/list_item.dart';
 import 'package:hutano/screens/providercicle/provider_add_network/model/provider_network.dart';
 import 'package:hutano/utils/color_utils.dart';
@@ -54,8 +55,13 @@ class _MyProviderGroupsState extends State<MyProviderGroups> {
   }
 
   void _createGroup() async {
-    final res =
-        await Navigator.of(context).pushNamed(Routes.createProviderGroup);
+    // final res =
+    //     await Navigator.of(context).pushNamed(Routes.createProviderGroup);
+    final res = await showDialog(
+        context: context,
+        builder: (context) {
+          return CreateProviderGroup();
+        });
     if (res != null) {
       _getProvidersGroup();
     }
@@ -79,23 +85,49 @@ class _MyProviderGroupsState extends State<MyProviderGroups> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              widget.showBack ? CustomBackButton() : SizedBox(),
+              widget.showBack ? CustomBackButton() : SizedBox.shrink(),
               widget.showBack
                   ? AppHeader(
                       progressSteps: HutanoProgressSteps.four,
                     )
                   : SizedBox(),
+              widget.showBack
+                  ? Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Provider Network",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: fontWeightBold),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "Add providers to your network",
+                            style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.black.withOpacity(0.85)),
+                          ),
+                        ],
+                      ),
+                    )
+                  : SizedBox.shrink(),
               SizedBox(height: spacing25),
-              Text(
-                Localization.of(context).addToExistinGroup,
-                style: const TextStyle(
-                  color: colorBlack2,
-                  fontSize: fontSize16,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: gilroySemiBold,
-                  fontStyle: FontStyle.normal,
-                ),
-              ),
+              widget.showBack
+                  ? SizedBox.shrink()
+                  : Text(
+                      Localization.of(context).addToExistinGroup,
+                      style: const TextStyle(
+                        color: colorBlack2,
+                        fontSize: fontSize16,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: gilroySemiBold,
+                        fontStyle: FontStyle.normal,
+                      ),
+                    ),
               SizedBox(height: spacing15),
               _buildList(),
               widget.showBack ? _buildBottomButtons() : SizedBox(),
@@ -109,7 +141,7 @@ class _MyProviderGroupsState extends State<MyProviderGroups> {
 
   Widget _buildList() {
     return Expanded(
-      child: Column(
+      child: ListView(
         children: [
           ListView.separated(
               separatorBuilder: (_, pos) => Padding(
@@ -127,14 +159,45 @@ class _MyProviderGroupsState extends State<MyProviderGroups> {
                   child: ListItem(specialityList[index]),
                 );
               }),
-          SizedBox(height: spacing10),
-          HutanoButton(
-            onPressed: _createGroup,
-            color: colorPurple,
-            icon: FileConstants.icAddGroup,
-            buttonType: HutanoButtonType.withPrefixIcon,
-            label: Localization.of(context).addCreateGroup,
+          SizedBox(height: spacing20),
+          GestureDetector(
+            onTap: _createGroup,
+            child: Container(
+              height: 60,
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 9),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                        color: AppColors.windsor.withOpacity(0.01),
+                        offset: Offset(0, 2),
+                        spreadRadius: 5,
+                        blurRadius: 5)
+                  ]),
+              child: Row(
+                children: [
+                  Image.asset(
+                    "images/blue_add.png",
+                    height: 43,
+                    width: 43,
+                  ),
+                  SizedBox(width: 12),
+                  Text(
+                    "Create New Group",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  )
+                ],
+              ),
+            ),
           ),
+          // HutanoButton(
+          //   onPressed: _createGroup,
+          //   color: colorPurple,
+          //   icon: FileConstants.icAddGroup,
+          //   buttonType: HutanoButtonType.withPrefixIcon,
+          //   label: Localization.of(context).addCreateGroup,
+          // ),
           SizedBox(height: spacing5),
         ],
       ),

@@ -22,9 +22,11 @@ class AppColors {
   static const emerald = Color(0xFF44C963);
   static const seashell = Color(0xFFF1F1F1);
   static const haiti = Color(0xFF1C1235);
-  static const containerBorderColor=Color(0x8B8B8B80);
+  static const containerBorderColor = Color(0x8B8B8B80);
   static const errorColor = Color(0xFFE22D2D);
- static const Color primaryColor = Color(0xff392981);
+  static const Color primaryColor = Color(0xff392981);
+  static const Color mineShaft = Color(0xff202020);
+
 // static const Color accentColor = Color(0xffFFC259);
 
 }

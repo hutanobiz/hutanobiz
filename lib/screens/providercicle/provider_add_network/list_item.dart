@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/colors.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
@@ -12,42 +13,52 @@ class ListItem extends StatelessWidget {
   ListItem(this._item);
   @override
   Widget build(BuildContext context) {
-    return CustomCard(
-      margin: EdgeInsets.symmetric(vertical: 0, horizontal: 4),
-      child: Container(
-        padding: EdgeInsets.all(spacing10),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: PlaceHolderImage(
-                width: 34,
-                height: 34,
-                image: ' ',
-                placeholder: FileConstants.icDoctorSpecialist,
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+                color: AppColors.windsor.withOpacity(0.01),
+                offset: Offset(0, 2),
+                spreadRadius: 5,
+                blurRadius: 10)
+          ]),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          // ClipRRect(
+          //   borderRadius: BorderRadius.circular(10),
+          //   child: PlaceHolderImage(
+          //     width: 34,
+          //     height: 34,
+          //     image: ' ',
+          //     placeholder: FileConstants.icDoctorSpecialist,
+          //   ),
+          // ),
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.only(left: 10.0),
+              child: Text(
+                _item.groupName,
+                style: const TextStyle(
+                    color: colorBlack85,
+                    fontSize: fontSize14,
+                    fontWeight: FontWeight.w500),
               ),
             ),
-            Expanded(
-              child: Container(
-                margin: const EdgeInsets.only(left: 10.0),
-                child: Text(
-                  _item.groupName,
-                  style: const TextStyle(
-                      color: colorBlack85, fontSize: fontSize14),
-                ),
-              ),
-            ),
-            Image.asset(
-              _item.isSelected
-                  ? FileConstants.icCheck
-                  : FileConstants.icUncheckSquare,
-              height: 22,
-              fit: BoxFit.cover,
-              width: 22,
-            )
-          ],
-        ),
+          ),
+          Image.asset(
+            // _item.isSelected
+            //     ? FileConstants.icCheck
+            //     : FileConstants.icUncheckSquare,
+            "images/right_arrow.png",
+            height: 22,
+            fit: BoxFit.cover,
+            width: 22,
+          )
+        ],
       ),
     );
   }

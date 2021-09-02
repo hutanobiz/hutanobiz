@@ -12,21 +12,28 @@ class AppHeader extends StatelessWidget {
   final bool isAppLogoVisible;
 
   const AppHeader(
-      {Key key, this.margin, this.progressSteps, this.title, this.subTitle,this.isFromTab=false,this.isAppLogoVisible=true})
+      {Key key,
+      this.margin,
+      this.progressSteps,
+      this.title,
+      this.subTitle,
+      this.isFromTab = false,
+      this.isAppLogoVisible = true})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if(isAppLogoVisible)SizedBox(
-          height: margin ?? 40,
-        ),
-        isAppLogoVisible?const AppLogo():SizedBox(),
+        if (isAppLogoVisible)
+          SizedBox(
+            height: margin ?? 20,
+          ),
+        isAppLogoVisible ? const AppLogo() : SizedBox(),
         const SizedBox(
           height: 5,
         ),
         if (progressSteps != null)
-          if(!isFromTab)HutanoProgressBar(progressSteps: progressSteps),
+          if (!isFromTab) HutanoProgressBar(progressSteps: progressSteps),
         const SizedBox(
           height: 15,
         ),

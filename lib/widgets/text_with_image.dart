@@ -12,7 +12,7 @@ class TextWithImage extends StatelessWidget {
       {this.image,
       this.label,
       this.textStyle,
-      this.size = 18,
+      this.size = 14,
       this.imageSpacing});
   @override
   Widget build(BuildContext context) {
@@ -30,8 +30,8 @@ class TextWithImage extends StatelessWidget {
         Expanded(
           child: Text(
             label,
-            style: textStyle ??
-                const TextStyle(color: colorBlack70, fontSize: 12),
+            style:
+                textStyle ?? const TextStyle(color: colorBlack70, fontSize: 12),
             textAlign: TextAlign.start,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
