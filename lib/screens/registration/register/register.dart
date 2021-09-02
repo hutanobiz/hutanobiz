@@ -409,12 +409,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
       //   (Route<dynamic> route) => false,
       //   arguments: _insuranceMap,
       // );
-
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          _registerModel.haveHealthInsurance
-              ? Routes.addInsurance
-              : Routes.welcome,
-          (Route<dynamic> route) => false);
+      ProgressDialogUtils.dismissProgressDialog();
+      Navigator.of(context).pushNamed(
+        _registerModel.haveHealthInsurance
+            ? Routes.addInsurance
+            : Routes.welcome,
+      );
+      // Navigator.of(context).pushNamedAndRemoveUntil(
+      //     _registerModel.haveHealthInsurance
+      //         ? Routes.addInsurance
+      //         : Routes.welcome,
+      //     (Route<dynamic> route) => false);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);

@@ -126,12 +126,19 @@ class _AddInsuranceState extends State<AddInsurance> {
     ApiManager().getPatientInsurance().then((value) {
       if (value.status == success) {
         ProgressDialogUtils.dismissProgressDialog();
+
         setState(() {
           myInsuranceList = value.response;
-          if (myInsuranceList.isNotEmpty && _insuranceList.isNotEmpty) {
-            _insuranceList.removeWhere((element) {
-              return myInsuranceList.any((item) => item.title == element.title);
-            });
+          if (myInsuranceList.isNotEmpty &&
+              widget.insuranceType == InsuranceType.primary) {
+            Navigator.pushReplacementNamed(context, Routes.welcome);
+          } else {
+            if (myInsuranceList.isNotEmpty && _insuranceList.isNotEmpty) {
+              _insuranceList.removeWhere((element) {
+                return myInsuranceList
+                    .any((item) => item.title == element.title);
+              });
+            }
           }
         });
       }
@@ -177,8 +184,12 @@ class _AddInsuranceState extends State<AddInsurance> {
               backImage: _backImage)
           .then((value) {
         ProgressDialogUtils.dismissProgressDialog();
-        Navigator.pushReplacementNamed(context, Routes.addInsuranceComplete);
+        Navigator.pushNamed(context, Routes.addInsuranceComplete);
       }, onError: (e) {
+        setState(() {
+          showSecondaryInsurance = true;
+        });
+
         ProgressDialogUtils.dismissProgressDialog();
         DialogUtils.showAlertDialog(context, "${e.response}");
       });
@@ -278,8 +289,7 @@ class _AddInsuranceState extends State<AddInsurance> {
                   if (showSecondaryInsurance)
                     GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pushReplacementNamed(
-                            Routes.addInsurance,
+                        Navigator.of(context).pushNamed(Routes.addInsurance,
                             arguments: {
                               ArgumentConstant.argsinsuranceType:
                                   InsuranceType.secondary
@@ -350,9 +360,8 @@ class _AddInsuranceState extends State<AddInsurance> {
                 onPressed: () {
                   (widget.insuranceType == InsuranceType.primary)
                       ? Navigator.of(context)
-                          .pushReplacementNamed(Routes.addInsuranceComplete)
-                      : Navigator.of(context)
-                          .pushReplacementNamed(Routes.welcome);
+                          .pushNamed(Routes.addInsuranceComplete)
+                      : Navigator.of(context).pushNamed(Routes.welcome);
                 },
               )
             ],
@@ -361,8 +370,7 @@ class _AddInsuranceState extends State<AddInsurance> {
       );
 
   _skipTaskNow() {
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil(Routes.welcome, (route) => false);
+    Navigator.of(context).pushNamed(Routes.welcome);
     setBool(PreferenceKey.skipStep, true);
   }
 
