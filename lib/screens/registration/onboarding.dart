@@ -9,8 +9,9 @@ import 'package:hutano/utils/preference_key.dart';
 import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/hutano_button.dart';
-import 'package:introduction_screen/introduction_screen.dart';
+// import 'package:introduction_screen/introduction_screen.dart';
 import 'package:hutano/utils/color_utils.dart';
+import 'package:introduction_screen/introduction_screen.dart';
 
 class OnBoardingPage extends StatefulWidget {
   @override
@@ -146,6 +147,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                           _pageContnet.map((item) => _buildPage(item)).toList(),
                       onDone: () => {},
                       showSkipButton: false,
+                      showNextButton: false,
                       skipFlex: 0,
                       nextFlex: 0,
                       globalBackgroundColor: Colors.white,

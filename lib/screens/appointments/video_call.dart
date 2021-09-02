@@ -89,7 +89,7 @@ class _CallPageState extends State<CallPage> {
     _addAgoraEventHandlers();
     // await _engine.enableWebSdkInteroperability(true);
     VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
-    configuration.dimensions = VideoDimensions(1280, 720);
+    configuration.dimensions = VideoDimensions(width: 1280, height: 720);
     await _engine.setVideoEncoderConfiguration(configuration);
     // final key = Encrypt.Key.fromLength(32);
     // final iv = Encrypt.IV.fromLength(16);
