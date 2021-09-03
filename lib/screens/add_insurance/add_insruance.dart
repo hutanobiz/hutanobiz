@@ -130,6 +130,7 @@ class _AddInsuranceState extends State<AddInsurance> {
         setState(() {
           myInsuranceList = value.response;
           if (myInsuranceList.isNotEmpty &&
+              myInsuranceList[0].sId != null &&
               widget.insuranceType == InsuranceType.primary) {
             Navigator.pushReplacementNamed(context, Routes.welcome);
           } else {

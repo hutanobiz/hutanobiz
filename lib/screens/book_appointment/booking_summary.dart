@@ -306,9 +306,6 @@ class _BookingsummaryState extends State<Bookingsummary> {
             physics: NeverScrollableScrollPhysics(),
             itemCount: medicalImages.length,
             itemBuilder: (context, index) {
-              String date = medicalImages[index].date.length > 15
-                  ? medicalImages[index].date.substring(0, 15)
-                  : medicalImages[index].date;
               return Row(
                 children: [
                   Container(
@@ -359,7 +356,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
                     child: Text('${(index + 1)}. ' +
                         medicalImages[index].name +
                         ' taken on ' +
-                        date),
+                        medicalImages[index].date),
                   ),
                 ],
               );

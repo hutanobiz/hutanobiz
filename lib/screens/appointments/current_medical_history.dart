@@ -182,6 +182,7 @@ class _CurrentAppointmentMedicalHistoryState
         ),
         SizedBox(height: 14),
         medicationWidget(medications),
+        SizedBox(height: 20),
       ],
     );
   }
@@ -286,10 +287,7 @@ class _CurrentAppointmentMedicalHistoryState
                             ' ' +
                             medicalDiagnostics[index]['type'] +
                             ' taken on ' +
-                            (medicalDiagnostics[index]['date'].length > 15
-                                ? medicalDiagnostics[index]['date']
-                                    .substring(0, 15)
-                                : medicalDiagnostics[index]['date'])),
+                            (medicalDiagnostics[index]['date'])),
                         // ),
                       ],
                     ),
@@ -321,9 +319,9 @@ class _CurrentAppointmentMedicalHistoryState
             physics: NeverScrollableScrollPhysics(),
             itemCount: medicalHistory.length,
             itemBuilder: (context, index) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+              return Wrap(
+                // mainAxisAlignment: MainAxisAlignment.start,
+                // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(medicalHistory[index]['name'],
                       style: AppTextStyle.semiBoldStyle(fontSize: 14)),

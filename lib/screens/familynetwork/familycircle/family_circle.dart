@@ -3,6 +3,7 @@ import 'package:hutano/apis/api_manager.dart';
 import 'package:hutano/apis/common_res.dart';
 import 'package:hutano/apis/error_model.dart';
 import 'package:hutano/dimens.dart';
+import 'package:hutano/screens/familynetwork/add_family_member/model/res_relation_list.dart';
 import 'package:hutano/screens/familynetwork/familycircle/model/member_permission_model.dart';
 import 'package:hutano/screens/familynetwork/familycircle/model/req_remove_family_member.dart';
 import 'package:hutano/screens/familynetwork/familycircle/model/res_family_circle.dart';
@@ -38,17 +39,41 @@ class _FamilyCircleState extends State<FamilyCircle> {
   List<MemberPermissionModel> permissionList = [];
   bool _enableButton = false;
   final int _page = 1;
+  List<Relations> _relationList = [];
 
   @override
   void initState() {
     super.initState();
-
+    _getRelation();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _getUserPermission();
     });
   }
 
+  _getRelation() async {
+    ProgressDialogUtils.showProgressDialog(context);
+    try {
+      var res = await ApiManager().getRelations();
+      setState(() {
+        _relationList = res.response;
+      });
+      ProgressDialogUtils.dismissProgressDialog();
+    } on ErrorModel catch (e) {
+      ProgressDialogUtils.dismissProgressDialog();
+      DialogUtils.showAlertDialog(context, e.response);
+    } catch (e) {
+      ProgressDialogUtils.dismissProgressDialog();
+    }
+  }
+
   _openStatePicker(BuildContext context, int index) {
+    var relationName = '';
+    for (Relations r in _relationList) {
+      if (r.relationId == list[index].relationId) {
+        relationName = r.relation;
+        break;
+      }
+    }
     showDropDownSheet(
         isFromFamilyCircle: true,
         list: SingleChildScrollView(
@@ -66,7 +91,7 @@ class _FamilyCircleState extends State<FamilyCircle> {
                   member: FamilyMember(
                     image: list[index].name,
                     name: list[index].name,
-                    relation: list[index].relationName,
+                    relation: relationName,
                   ),
                 ),
                 Padding(
@@ -455,6 +480,13 @@ class _FamilyCircleState extends State<FamilyCircle> {
         },
         itemCount: list.length,
         itemBuilder: (context, i) {
+          var relationName = '';
+          for (Relations r in _relationList) {
+            if (r.relationId == list[i].relationId) {
+              relationName = r.relation;
+              break;
+            }
+          }
           return PopupMenuButton(
             offset: Offset(300, 0),
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
@@ -511,7 +543,7 @@ class _FamilyCircleState extends State<FamilyCircle> {
                 member: FamilyMember(
                   image: list[i].name,
                   name: list[i].name,
-                  relation: list[i].relationName,
+                  relation: relationName,
                 ),
               ),
               trailing: Icon(Icons.more_vert),
