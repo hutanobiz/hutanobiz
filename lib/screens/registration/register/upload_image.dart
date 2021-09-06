@@ -27,11 +27,11 @@ class _UploadImageState extends State<UploadImage> {
   final _picker = ImagePicker();
 
   _openImageDialog(source) {
-    PermissionUtils.requestPermission(
-        [source == ImageSource.gallery ? Permission.photos : Permission.camera],
-        context, permissionGrant: () {
-      _pickImage(source);
-    });
+    // PermissionUtils.requestPermission(
+    //     [source == ImageSource.gallery ? Permission.photos : Permission.camera],
+    //     context, permissionGrant: () {
+    _pickImage(source);
+    // });
   }
 
   void showPickerDialog() {

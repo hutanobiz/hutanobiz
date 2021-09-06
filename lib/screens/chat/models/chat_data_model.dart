@@ -58,13 +58,13 @@ class Message {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['message'] = this.message;
-    data['_id'] = this.sId;
+    // data['_id'] = this.sId;
     data['sender'] = this.sender;
     data['receiver'] = this.receiver;
     data['appointmentId'] = this.appointmentId;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['__v'] = this.iV;
+    // data['createdAt'] = this.createdAt;
+    // data['updatedAt'] = this.updatedAt;
+    // data['__v'] = this.iV;
     return data;
   }
 }

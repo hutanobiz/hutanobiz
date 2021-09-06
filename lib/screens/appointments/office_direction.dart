@@ -28,7 +28,7 @@ class OfficeDirectionScreen extends StatefulWidget {
   const OfficeDirectionScreen({Key key, this.trackOfficeModel})
       : super(key: key);
 
-  final TrackOfficeModel trackOfficeModel;
+  final dynamic trackOfficeModel;
 
   @override
   _OfficeDirectionScreenState createState() => _OfficeDirectionScreenState();
@@ -177,10 +177,10 @@ class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
         "images/ic_destination_marker.png");
   }
 
-  Widget widgetList(TrackOfficeModel appointment) {
-    if (appointment.data.doctorAddress != null) {
-      if (appointment.data.doctorAddress.coordinates != null) {
-        List location = appointment.data.doctorAddress.coordinates;
+  Widget widgetList(dynamic appointment) {
+    if (appointment['data']['doctorAddress'] != null) {
+      if (appointment['data']['doctorAddress']['coordinates'] != null) {
+        List location = appointment['data']['doctorAddress']['coordinates'];
 
         if (location.length > 0) {
           _desPosition = LatLng(
@@ -379,7 +379,7 @@ class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
     SharedPref().getToken().then((token) {
       api
           .updateAppointmentCoordinates(
-              token, map, widget.trackOfficeModel.data.sId)
+              token, map, widget.trackOfficeModel['data']['_id'])
           .then((value) {
         value.toString().debugLog();
       }).futureError((error) {
@@ -391,10 +391,10 @@ class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
 
   sendChatMessage() {
     sendMessage(Message(
-        sender: widget.trackOfficeModel.data.user.sId,
-        receiver: widget.trackOfficeModel.data.doctor.sId,
+        sender: widget.trackOfficeModel['data']['user']['_id'],
+        receiver: widget.trackOfficeModel['data']['doctor']['_id'],
         message: textEditingController.text,
-        appointmentId: widget.trackOfficeModel.data.sId));
+        appointmentId: widget.trackOfficeModel['data']['_id']));
   }
 
   sendMessage(Message message) {

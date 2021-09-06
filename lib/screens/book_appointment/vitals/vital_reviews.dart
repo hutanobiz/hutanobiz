@@ -100,6 +100,7 @@ class _VitalReviewsState extends State<VitalReviews> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackgroundNew(
           title: "",
@@ -127,77 +128,79 @@ class _VitalReviewsState extends State<VitalReviews> {
             //   arguments: true,
             // );
           },
-          child: SingleChildScrollView(
-            child: Form(
-              key: _vitalFormKey,
-              autovalidate: true,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _takeAnyMedicines(context),
-                  _commonTextFormField(
-                      context,
-                      Localization.of(context).dateFieldHeader,
-                      _dateController,
-                      _dateFocusNode,
-                      AppConstants.vitalReviewsDateFormat.toLowerCase(),
-                      "",
-                      TextInputType.text,
-                      isFieldEnable: false,
-                      isForTime: false),
-                  _commonTextFormField(
-                      context,
-                      Localization.of(context).timeFieldHeader,
-                      _timeController,
-                      _timeFocusNode,
-                      "",
-                      "",
-                      TextInputType.text,
-                      isFieldEnable: false,
-                      isForTime: true,
-                      isAmPMVisible: true),
-                  _commonTextFormField(
-                      context,
-                      Localization.of(context).bloodPressureFieldHeader,
-                      _sbpController,
-                      _sbpFocusNode,
-                      Localization.of(context).sbpHint,
-                      "/",
-                      TextInputType.number,
-                      isForBloodPressure: true,
-                      dbpController: _dbpController,
-                      dbpFocusNode: _dbpFocusNode,
-                      hint: Localization.of(context).dbpHint),
-                  _commonTextFormField(
-                      context,
-                      Localization.of(context).heartRateFieldHeader,
-                      _heartRateController,
-                      _heartRateFocusNode,
-                      "",
-                      Localization.of(context).beatsPerMinuteLabel,
-                      TextInputType.number),
-                  _commonTextFormField(
-                      context,
-                      Localization.of(context).oxygenFieldHeader,
-                      _oxygenController,
-                      _oxygenFocusNode,
-                      "",
-                      "%",
-                      TextInputType.number),
-                  _commonTextFormField(
-                      context,
-                      Localization.of(context).temperatureFieldHeader,
-                      _tempController,
-                      _tempFocusNode,
-                      "",
-                      "\u2109",
-                      TextInputType.number,
-                      maxLength: 5,
-                      isForTemp: true),
-                ],
-              ),
+          // child: SingleChildScrollView(
+          child: Form(
+            key: _vitalFormKey,
+            autovalidate: true,
+            child: ListView(
+              // crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _takeAnyMedicines(context),
+                _commonTextFormField(
+                    context,
+                    Localization.of(context).dateFieldHeader,
+                    _dateController,
+                    _dateFocusNode,
+                    AppConstants.vitalReviewsDateFormat.toLowerCase(),
+                    "",
+                    TextInputType.text,
+                    isFieldEnable: false,
+                    isForTime: false),
+                _commonTextFormField(
+                    context,
+                    Localization.of(context).timeFieldHeader,
+                    _timeController,
+                    _timeFocusNode,
+                    "",
+                    "",
+                    TextInputType.text,
+                    isFieldEnable: false,
+                    isForTime: true,
+                    isAmPMVisible: true),
+                _commonTextFormField(
+                    context,
+                    Localization.of(context).bloodPressureFieldHeader,
+                    _sbpController,
+                    _sbpFocusNode,
+                    Localization.of(context).sbpHint,
+                    "/",
+                    TextInputType.number,
+                    isForBloodPressure: true,
+                    dbpController: _dbpController,
+                    dbpFocusNode: _dbpFocusNode,
+                    hint: Localization.of(context).dbpHint),
+                _commonTextFormField(
+                    context,
+                    Localization.of(context).heartRateFieldHeader,
+                    _heartRateController,
+                    _heartRateFocusNode,
+                    "",
+                    Localization.of(context).beatsPerMinuteLabel,
+                    TextInputType.number),
+                _commonTextFormField(
+                    context,
+                    Localization.of(context).oxygenFieldHeader,
+                    _oxygenController,
+                    _oxygenFocusNode,
+                    "",
+                    "%",
+                    TextInputType.number),
+                _commonTextFormField(
+                    context,
+                    Localization.of(context).temperatureFieldHeader,
+                    _tempController,
+                    _tempFocusNode,
+                    "",
+                    "\u2109",
+                    TextInputType.number,
+                    maxLength: 5,
+                    isForTemp: true),
+              ],
             ),
-          )),
+            // ),
+          )).onClick(onTap: () {
+        FocusScope.of(context).unfocus();
+      }),
     );
   }
 

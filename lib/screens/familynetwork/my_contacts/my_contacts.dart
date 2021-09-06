@@ -11,6 +11,7 @@ import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/permission_utils.dart';
 import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/list_picker.dart';
+import 'package:keyboard_actions/external/platform_check/platform_check.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
@@ -56,13 +57,20 @@ class _MyContactsState extends State<MyContacts> {
         filterContacts();
       });
     } else {
-      PermissionUtils.requestPermission([Permission.contacts], context,
-          permissionGrant: () {
+      if (PlatformCheck.isAndroid) {
+        PermissionUtils.requestPermission([Permission.contacts], context,
+            permissionGrant: () {
+          getAllContacts();
+          searchController.addListener(() {
+            filterContacts();
+          });
+        });
+      } else {
         getAllContacts();
         searchController.addListener(() {
           filterContacts();
         });
-      });
+      }
     }
   }
 

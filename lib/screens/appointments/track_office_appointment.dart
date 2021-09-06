@@ -520,7 +520,11 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                                         onTap: () {
                                           Navigator.pushNamed(context,
                                               Routes.officeDirectionScreen,
-                                              arguments: TrackOfficeModel.fromJson(appointmentResponse));
+                                              arguments:
+                                                  // TrackOfficeModel.fromJson(
+                                                      appointmentResponse
+                                                      // )
+                                                      );
                                         }),
                                   ],
                                 )
