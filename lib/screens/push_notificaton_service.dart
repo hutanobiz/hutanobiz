@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -45,7 +43,7 @@ class PushNotificationService {
         navigateUser(message);
       }
     });
-    await FirebaseMessaging.instance.getToken();
+    // await FirebaseMessaging.instance.getToken();
     FirebaseMessaging.onMessage.listen(
       (RemoteMessage message) {
         print("onMessage: $message");
@@ -242,8 +240,7 @@ class PushNotificationService {
   }
 
   void showNotification(RemoteMessage message) async {
-    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-      Platform.isAndroid ? 'xyz.appening.hutano' : 'xyz.appening.hutano',
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails('xyz.appening.hutano',
       'Hutano Patient',
       'your channel description',
       playSound: true,

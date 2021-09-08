@@ -33,14 +33,14 @@
 	<string>This app requires access to the camera.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>This app requires contacts access to function properly.</string>
-		<key>NSMicrophoneUsageDescription</key>
-	<string>Need to access your microphone to record a video and upload.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Why is my app authenticating using face id?</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Application wants to use your location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Application wants to use your location</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Need to access your microphone to record a video and upload.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app requires access to the photo library.</string>
 	<key>UIBackgroundModes</key>
