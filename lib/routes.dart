@@ -279,7 +279,7 @@ class Routes {
         // if (args is bool) {
         return _buildRoute(settings, SignInScreen());
         // }
-        return _errorRoute();
+        // return _errorRoute();
         break;
       case dashboardScreen:
         if (args is int) {

@@ -1340,12 +1340,12 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
       formWidget.add(servicesExpandedWidget(groupOfficeList));
     }
 
-    formWidget.add(officeData != null
+    formWidget.add(videoData != null
         ? consultancyFeeWidget('Telemedicine', videoData.fee.toDouble(),
             videoData.duration.toString())
         : SizedBox());
 
-    formWidget.add(officeData != null
+    formWidget.add(onsiteData != null
         ? consultancyFeeWidget(
             'Onsite', onsiteData.fee.toDouble(), onsiteData.duration.toString())
         : SizedBox());
