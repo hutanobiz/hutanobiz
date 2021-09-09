@@ -3,7 +3,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/screens/appointments/medical_history.dart';
 import 'package:hutano/screens/appointments/upload_documents.dart';
 import 'package:hutano/screens/appointments/upload_images.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 
 class UpdateMedicalHistory extends StatefulWidget {
   UpdateMedicalHistory({Key key, this.isBottomButtonsShow}) : super(key: key);
@@ -44,7 +44,8 @@ class _UpdateMedicalHistoryState extends State<UpdateMedicalHistory>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
+        addHeader: true,
         title: 'Medical History',
         isAddBack: true,
         addBackButton: false,

@@ -21,7 +21,7 @@ import 'package:hutano/utils/progress_dialog.dart';
 import 'package:hutano/widgets/controller.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';

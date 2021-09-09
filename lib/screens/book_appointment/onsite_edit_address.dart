@@ -12,7 +12,7 @@ import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/utils/validations.dart';
 import 'package:hutano/widgets/fancy_button.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/textform_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:uuid/uuid.dart';
@@ -143,7 +143,8 @@ class _OnsiteEditAddressState extends State<OnsiteEditAddress> {
       key: _scaffoldKey,
       backgroundColor: AppColors.goldenTainoi,
       resizeToAvoidBottomInset: true,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
+        addHeader: true,
         title: 'Add address',
         isAddBack: true,
         isAddAppBar: true,

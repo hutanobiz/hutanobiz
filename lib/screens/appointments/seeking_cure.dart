@@ -5,7 +5,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:hutano/widgets/yes_no_check.dart';
 
@@ -44,7 +44,8 @@ class _SeekingCureScreenState extends State<SeekingCureScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
+        addHeader: true,
         title: "Reason for seeking care.",
         isAddBack: false,
         addBottomArrows: true,

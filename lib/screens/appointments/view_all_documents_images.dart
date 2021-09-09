@@ -9,7 +9,7 @@ import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/widgets/custom_loader.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:url_launcher/url_launcher.dart';
 

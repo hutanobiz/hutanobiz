@@ -49,7 +49,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
       resizeToAvoidBottomInset: false,
       // backgroundColor: AppColors.goldenTainoi,
       body:
-          //  LoadingBackground(
+          //  LoadingBackgroundNew(
+        // addHeader: true,
           //   title: "Appointments",
           //   isAddBack: false,
           //   color: Colors.white,

@@ -4,7 +4,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:intl/intl.dart';
 import 'package:hutano/routes.dart';
-import 'package:hutano/widgets/loading_widgets.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 
 class ActivityNotifications extends StatefulWidget {
   @override
@@ -30,7 +30,8 @@ class _ActivityNotificationsState extends State<ActivityNotifications> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppColors.goldenTainoi,
-        body: LoadingBackground(
+        body: LoadingBackgroundNew(
+            addHeader: true,
             title: "Activity",
             isAddBack: true,
             color: AppColors.snow,

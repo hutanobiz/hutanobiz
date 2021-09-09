@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hutano/colors.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/review_widget.dart';
 import 'package:intl/intl.dart';
 
@@ -19,7 +19,8 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
+        addHeader: true,
         title: "Reviews",
         color: Colors.white,
         isAddBack: false,

@@ -5,7 +5,7 @@ import 'package:hutano/models/filter_radio_model.dart';
 import 'package:hutano/utils/dimens.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/fancy_button.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/round_corner_checkbox.dart';
 
 class ProviderFiltersScreen extends StatefulWidget {
@@ -112,7 +112,8 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
+        addHeader: true,
         title: "Filters",
         isAddBack: false,
         isLoading: _isLoading,

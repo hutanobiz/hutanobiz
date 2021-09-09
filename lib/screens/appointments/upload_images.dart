@@ -20,7 +20,7 @@ import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/round_corner_checkbox.dart';
 import 'package:hutano/widgets/show_common_upload_dialog.dart';
@@ -472,7 +472,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
               onConfirm: (date) {
                 if (date != null)
                   _imageDateController.text =
-                   DateFormat(Strings.datePattern).format(date);
+                      DateFormat(Strings.datePattern).format(date);
               },
               currentTime: DateTime.now(),
               maxTime: DateTime.now(),
@@ -628,9 +628,3 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
     }
   }
 }
-  
-                      
-                       
-                   
-                    
-                    

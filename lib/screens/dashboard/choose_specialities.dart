@@ -4,7 +4,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 
 class ChooseSpecialities extends StatefulWidget {
   ChooseSpecialities({Key key, this.professionaltitleId}) : super(key: key);
@@ -42,7 +42,8 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
+        addHeader: true,
         title: "Select Specialties",
         color: AppColors.snow,
         isAddBack: false,

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:photo_view/photo_view.dart';
 
 class ProviderImageScreen extends StatefulWidget {
@@ -24,7 +24,8 @@ class _ProviderImageScreenState extends State<ProviderImageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
+        addHeader: true,
         title: "",
         color: Colors.black,
         padding: EdgeInsets.zero,

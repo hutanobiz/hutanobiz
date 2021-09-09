@@ -8,7 +8,7 @@ import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/circular_countdown_timer.dart';
 import 'package:hutano/widgets/controller.dart';
 import 'package:hutano/widgets/fancy_button.dart';
-import 'package:hutano/widgets/loading_widgets.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/simple_timer_text.dart';
 import 'package:intl/intl.dart';
 import 'package:hutano/utils/extensions.dart';
@@ -49,7 +49,8 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
+        addHeader: true,
         title: "Telemedicine",
         isAddBack: true,
         addBackButton: false,
@@ -371,7 +372,6 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
           dynamic business = detail["businessLocation"];
 
           address = Extensions.addressFormat(
-            
             business["address"]?.toString(),
             business["street"]?.toString(),
             business["city"]?.toString(),

@@ -6,7 +6,7 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 
 class RateDoctorScreen extends StatefulWidget {
   final dynamic rateFromAppointmentId;
@@ -85,7 +85,8 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
+        addHeader: true,
         title: "Rate Provider",
         isAddBack: true,
         isLoading: _isLoading,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
 import 'package:intl/intl.dart';
 
@@ -36,7 +36,8 @@ class _AvailableTimingsScreenState extends State<AvailableTimingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
+        addHeader: true,
         title: "Schedule",
         color: Colors.white,
         padding: const EdgeInsets.only(top: 20, bottom: 20),

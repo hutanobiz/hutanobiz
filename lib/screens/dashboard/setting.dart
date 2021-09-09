@@ -80,15 +80,20 @@ class _SettingsScreenState extends State<SettingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: AppColors.goldenTainoi,
       body: SafeArea(
-        child: Stack(
-          children: <Widget>[
-            ListView(
-              children: getFormWidget(),
-              padding: EdgeInsets.only(left: 0, right: 0, top: 0),
-            ),
-            _isLoading ? CircularLoader() : Container(),
-          ],
+        child: Container(
+          color: Colors.white,
+          child: Stack(
+            children: <Widget>[
+              ListView(
+                physics: ClampingScrollPhysics(),
+                children: getFormWidget(),
+                padding: EdgeInsets.only(left: 0, right: 0, top: 0),
+              ),
+              _isLoading ? CircularLoader() : Container(),
+            ],
+          ),
         ),
       ),
     );

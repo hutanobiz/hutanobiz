@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/utils/extensions.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 
 class SavedCardsScreen extends StatefulWidget {
   SavedCardsScreen({Key key}) : super(key: key);
@@ -26,7 +26,8 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
+        addHeader: true,
         title: "Saved Cards",
         addBackButton: true,
         isAddBack: false,

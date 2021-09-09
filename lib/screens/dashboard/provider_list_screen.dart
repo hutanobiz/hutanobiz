@@ -6,7 +6,7 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
 
 class ProviderListScreen extends StatefulWidget {
@@ -114,7 +114,8 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
+        addHeader: true,
         title: "Providers List",
         color: AppColors.snow,
         isAddBack: false,

@@ -8,7 +8,7 @@ import 'package:hutano/widgets/circular_countdown_timer.dart';
 import 'package:hutano/widgets/controller.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
-import 'package:hutano/widgets/loading_widgets.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/simple_timer_text.dart';
 import 'package:intl/intl.dart';
 import 'package:hutano/utils/extensions.dart';
@@ -69,7 +69,8 @@ class _TelemedicineTrackTreatmentScreenState
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
+        addHeader: true,
         isLoading: isLoading,
         title: "Telemedicine",
         isAddBack: true,
@@ -345,14 +346,17 @@ class _TelemedicineTrackTreatmentScreenState
 
                           Navigator.of(context).pushNamed(
                               Routes.selectAppointmentTimeScreen,
-                              arguments: SelectDateTimeArguments(fromScreen: 2,appointmentId: widget.appointmentId ));
+                              arguments: SelectDateTimeArguments(
+                                  fromScreen: 2,
+                                  appointmentId: widget.appointmentId));
                         } else {
                           _container.setServicesData("status", "0");
                           _container.setServicesData("consultaceFee", '10');
                           Navigator.of(context).pushNamed(
-                            Routes.selectAppointmentTimeScreen,
-                            arguments:SelectDateTimeArguments(fromScreen: 2,appointmentId: widget.appointmentId )
-                          );
+                              Routes.selectAppointmentTimeScreen,
+                              arguments: SelectDateTimeArguments(
+                                  fromScreen: 2,
+                                  appointmentId: widget.appointmentId));
                         }
                       });
 
@@ -415,7 +419,6 @@ class _TelemedicineTrackTreatmentScreenState
           dynamic business = detail["businessLocation"];
 
           address = Extensions.addressFormat(
-            
             business["address"]?.toString(),
             business["street"]?.toString(),
             business["city"]?.toString(),

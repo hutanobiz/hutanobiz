@@ -5,7 +5,7 @@ import 'package:hutano/strings.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 
@@ -64,7 +64,8 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
+        addHeader: true,
         title: "Cancel Appointment",
         isLoading: _isLoading,
         isAddBack: false,
@@ -272,7 +273,6 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
         dynamic business = detail["businessLocation"];
 
         address = Extensions.addressFormat(
-         
           business["address"]?.toString(),
           business["street"]?.toString(),
           business["city"]?.toString(),

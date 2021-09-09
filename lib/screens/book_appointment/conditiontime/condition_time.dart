@@ -20,7 +20,7 @@ import 'package:hutano/utils/preference_constants.dart';
 import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/utils/progress_dialog.dart';
 import 'package:hutano/widgets/hutano_button.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:provider/provider.dart';
 

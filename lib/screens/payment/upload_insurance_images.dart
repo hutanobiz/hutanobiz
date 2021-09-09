@@ -13,7 +13,7 @@ import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/dashed_border.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -96,9 +96,11 @@ class _UploadInsuranceImagesScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
-        title:
-            _insuranceViewMap['isViewDetail'] ? insuranceName : "Upload insurance images",
+      body: LoadingBackgroundNew(
+        addHeader: true,
+        title: _insuranceViewMap['isViewDetail']
+            ? insuranceName
+            : "Upload insurance images",
         isLoading: _isLoading,
         isAddBack: !_insuranceViewMap['isPayment'],
         addBackButton: _insuranceViewMap['isPayment'],
@@ -389,7 +391,7 @@ class _UploadInsuranceImagesScreenState
               : backImagePath = croppedFile.path,
         );
 
-        if (userInsuranceId == ''){ 
+        if (userInsuranceId == '') {
           _uploadImage(
             'Insurance images uploaded successfully',
           );

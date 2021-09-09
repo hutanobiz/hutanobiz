@@ -20,7 +20,7 @@ import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/round_corner_checkbox.dart';
 import 'package:hutano/widgets/show_common_upload_dialog.dart';
@@ -105,7 +105,6 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
   }
 
   @override

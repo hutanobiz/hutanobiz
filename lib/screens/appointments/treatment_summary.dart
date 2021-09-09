@@ -7,7 +7,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/models/services.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:intl/intl.dart';
 
 class TreatmentSummaryScreen extends StatefulWidget {
@@ -67,7 +67,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
           .getAppointmentDetails(
         token,
         widget.appointmentMap['id'],
-        widget.appointmentMap['latLng']?? LatLng(0.00, 0.00),
+        widget.appointmentMap['latLng'] ?? LatLng(0.00, 0.00),
       )
           .then((response) {
         setLoading(false);
@@ -242,7 +242,8 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
+        addHeader: true,
         title: "Treatment Summary",
         isLoading: _isLoading,
         color: Colors.white,
@@ -700,7 +701,11 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                 ? "Hours"
                 : hours == "2"
                     ? "Days"
-                    : hours == "3" ? "Weeks" : hours == "4" ? "Months" : "---",
+                    : hours == "3"
+                        ? "Weeks"
+                        : hours == "4"
+                            ? "Months"
+                            : "---",
           ),
         ],
       ),

@@ -4,8 +4,6 @@ import 'package:hutano/screens/appointments/upload_documents.dart';
 import 'package:hutano/screens/appointments/view_all_documents_images.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/widgets/coming_soon.dart';
-
-import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 
 import '../../colors.dart';

@@ -3,7 +3,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/provider_tile_widget.dart';
 
 class SeeAllSearchScreeen extends StatefulWidget {
@@ -35,7 +35,8 @@ class _SeeAllSearchScreeenState extends State<SeeAllSearchScreeen> {
 
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
+        addHeader: true,
         title: title,
         color: Colors.white,
         isAddBack: true,
@@ -78,12 +79,12 @@ class _SeeAllSearchScreeenState extends State<SeeAllSearchScreeen> {
 
                         if (type == 1) {
                           _container.setProjectsResponse(
-                             "specialtyId[${index.toString()}]",
+                              "specialtyId[${index.toString()}]",
                               // "specialtyId[${_list[index].toString()}]",
                               _list[index]["_id"]);
                         } else if (type == 3) {
                           _container.setProjectsResponse(
-                            "subServices[${index.toString()}]",
+                              "subServices[${index.toString()}]",
                               // "subServices[${_list[index].toString()}]",
                               _list[index]["_id"]);
                         }

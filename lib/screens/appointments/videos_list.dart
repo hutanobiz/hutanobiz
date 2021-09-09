@@ -4,7 +4,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/appointments/video_player.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 
 class VideoListScreen extends StatefulWidget {
   VideoListScreen({Key key, this.appointmentId}) : super(key: key);
@@ -37,7 +37,8 @@ class _VideoListScreenState extends State<VideoListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
+        addHeader: true,
         title: "Videos",
         color: AppColors.snow,
         isAddBack: true,
@@ -81,15 +82,18 @@ class _VideoListScreenState extends State<VideoListScreen> {
               color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(14.0)),
               border: Border.all(color: Colors.grey[300])),
-          child: InkWell(onTap: (){
-             Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SamplePlayer(videoPath: _responseData[index]['videoLink'],),
-                            ),
-                          );
-          },
-                      child: Column(
+          child: InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SamplePlayer(
+                    videoPath: _responseData[index]['videoLink'],
+                  ),
+                ),
+              );
+            },
+            child: Column(
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.all(12.0),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:intl/intl.dart';
 
 class PaymentHistory extends StatefulWidget {
@@ -35,7 +35,8 @@ class _PaymentHistoryState extends State<PaymentHistory> {
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
       resizeToAvoidBottomInset: true,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
+        addHeader: true,
         title: "Payment History",
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
         isAddBack: true,

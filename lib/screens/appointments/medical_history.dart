@@ -26,7 +26,6 @@ import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
-import 'package:hutano/widgets/loading_background.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/month_year_item.dart';
 import 'package:provider/provider.dart';

@@ -4,7 +4,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 
 class AllTitlesSpecialtesScreen extends StatefulWidget {
   AllTitlesSpecialtesScreen({Key key}) : super(key: key);
@@ -35,7 +35,8 @@ class _AllTitlesSpecialtesScreenState extends State<AllTitlesSpecialtesScreen> {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
+        addHeader: true,
         title: "Choose Speciality",
         padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
         color: AppColors.snow,

@@ -8,7 +8,7 @@ import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/widgets/hutano_button.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 
 import 'model/associated_symptoms_model.dart';
@@ -60,7 +60,7 @@ class _ImmunizationScreenState extends State<ImmunizationScreen> {
                 left: spacing20, right: spacing10, bottom: spacing70),
             addBottomArrows: true,
             onForwardTap: () {
-              Navigator.pushNamed(context,Routes. routeEffectAbility);
+              Navigator.pushNamed(context, Routes.routeEffectAbility);
             },
             // isCameraVisible: true,
             // onCameraForTap: () {},

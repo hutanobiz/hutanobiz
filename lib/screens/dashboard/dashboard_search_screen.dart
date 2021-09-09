@@ -7,7 +7,7 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/provider_tile_widget.dart';
 
 class DashboardSearchScreen extends StatefulWidget {
@@ -86,7 +86,8 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
+        addHeader: true,
         title: "Find a provider",
         isLoading: _isLoading,
         color: Colors.white,

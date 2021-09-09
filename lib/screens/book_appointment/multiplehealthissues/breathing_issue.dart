@@ -10,7 +10,7 @@ import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/common_methods.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/localization/localization.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:provider/provider.dart';
 
@@ -392,7 +392,7 @@ class _BreathingIssueState extends State<BreathingIssue> {
       } else if (Provider.of<HealthConditionProvider>(context, listen: false)
           .healthConditions
           .contains(12)) {
-        Navigator.pushNamed(context,Routes. routeImmunization);
+        Navigator.pushNamed(context, Routes.routeImmunization);
       } else {
         Navigator.pushNamed(context, Routes.routeEffectAbility);
       }

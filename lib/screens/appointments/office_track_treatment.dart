@@ -19,7 +19,7 @@ import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/circular_countdown_timer.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
 import 'package:hutano/widgets/simple_timer_text.dart';
 import 'package:hutano/widgets/widgets.dart';
@@ -231,7 +231,8 @@ class _OfficeTrackTreatmentScreenState extends State<OfficeTrackTreatmentScreen>
       key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
+        addHeader: true,
         title: "Office",
         isLoading: _isLoading,
         isAddBack: true,
@@ -333,7 +334,6 @@ class _OfficeTrackTreatmentScreenState extends State<OfficeTrackTreatmentScreen>
           dynamic business = detail["businessLocation"];
 
           address = Extensions.addressFormat(
-           
             business["address"]?.toString(),
             business["street"]?.toString(),
             business["city"]?.toString(),

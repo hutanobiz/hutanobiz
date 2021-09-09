@@ -15,7 +15,7 @@ import 'package:hutano/utils/date_picker.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/widgets/hutano_textfield.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:provider/provider.dart';
 
@@ -650,9 +650,9 @@ class _AbnormalSensationState extends State<AbnormalSensation> {
       } else if (Provider.of<HealthConditionProvider>(context, listen: false)
           .healthConditions
           .contains(12)) {
-        Navigator.pushNamed(context,Routes. routeImmunization);
+        Navigator.pushNamed(context, Routes.routeImmunization);
       } else {
-        Navigator.pushNamed(context,Routes. routeEffectAbility);
+        Navigator.pushNamed(context, Routes.routeEffectAbility);
       }
     } else if (widget.maleHealth) {
       if (Provider.of<HealthConditionProvider>(context, listen: false)
@@ -672,7 +672,7 @@ class _AbnormalSensationState extends State<AbnormalSensation> {
           .contains(11)) {
         antiAgingNavigation(context);
       } else {
-        Navigator.pushNamed(context,Routes. routeEffectAbility);
+        Navigator.pushNamed(context, Routes.routeEffectAbility);
       }
     } else if (widget.femaleHealth) {
       if (Provider.of<HealthConditionProvider>(context, listen: false)
@@ -698,9 +698,9 @@ class _AbnormalSensationState extends State<AbnormalSensation> {
       } else if (Provider.of<HealthConditionProvider>(context, listen: false)
           .healthConditions
           .contains(12)) {
-        Navigator.pushNamed(context,Routes. routeImmunization);
+        Navigator.pushNamed(context, Routes.routeImmunization);
       } else {
-        Navigator.pushNamed(context,Routes. routeEffectAbility);
+        Navigator.pushNamed(context, Routes.routeEffectAbility);
       }
     } else if (widget.woundSkin) {
       if (Provider.of<HealthConditionProvider>(context, listen: false)
@@ -720,7 +720,7 @@ class _AbnormalSensationState extends State<AbnormalSensation> {
           .contains(12)) {
         Navigator.pushNamed(context, Routes.routeImmunization);
       } else {
-        Navigator.pushNamed(context,Routes. routeEffectAbility);
+        Navigator.pushNamed(context, Routes.routeEffectAbility);
       }
     } else if (widget.dentalCare) {
       if (Provider.of<HealthConditionProvider>(context, listen: false)
@@ -730,9 +730,9 @@ class _AbnormalSensationState extends State<AbnormalSensation> {
       } else if (Provider.of<HealthConditionProvider>(context, listen: false)
           .healthConditions
           .contains(12)) {
-        Navigator.pushNamed(context,Routes. routeImmunization);
+        Navigator.pushNamed(context, Routes.routeImmunization);
       } else {
-        Navigator.pushNamed(context,Routes. routeEffectAbility);
+        Navigator.pushNamed(context, Routes.routeEffectAbility);
       }
     }
   }

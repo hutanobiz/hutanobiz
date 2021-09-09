@@ -4,7 +4,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/widgets.dart';
 
 class InsuranceListScreen extends StatefulWidget {
@@ -87,7 +87,8 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
+        addHeader: true,
         title: !_insuranceViewMap['isPayment'] && isFromRegister
             ? 'Add Insurance'
             : "Insurances",
@@ -97,7 +98,8 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
         onRightButtonTap: !_insuranceViewMap['isPayment'] && isFromRegister
             ? () {
                 Navigator.of(context).pushNamedAndRemoveUntil(
-                    Routes.dashboardScreen, (Route<dynamic> route) => false,arguments: 0);
+                    Routes.dashboardScreen, (Route<dynamic> route) => false,
+                    arguments: 0);
               }
             : null,
         child: Stack(

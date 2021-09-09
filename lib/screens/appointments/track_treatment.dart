@@ -18,7 +18,7 @@ import 'package:hutano/utils/pin_info.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
-import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:location/location.dart';
 
@@ -209,7 +209,8 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackground(
+      body: LoadingBackgroundNew(
+        addHeader: true,
         title: "Appointment Status",
         isLoading: _isLoading,
         isAddBack: true,
@@ -310,7 +311,6 @@ class _TrackTreatmentScreenState extends State<TrackTreatmentScreen> {
           dynamic business = detail["businessLocation"];
 
           address = Extensions.addressFormat(
-           
             business["address"]?.toString(),
             business["street"]?.toString(),
             business["city"]?.toString(),
