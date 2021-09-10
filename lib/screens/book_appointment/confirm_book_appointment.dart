@@ -16,7 +16,6 @@ import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/home.dart';
 import 'package:hutano/screens/registration/payment/utils/card_utils.dart';
-import 'package:hutano/screens/stripe/stripe_payment.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/constants.dart';
@@ -32,6 +31,7 @@ import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
+import 'package:stripe_payment/stripe_payment.dart';
 
 import 'morecondition/providers/health_condition_provider.dart';
 

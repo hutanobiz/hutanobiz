@@ -3,10 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/screens/home.dart';
-import 'package:hutano/screens/stripe/payment_intent.dart';
-import 'package:hutano/screens/stripe/payment_method.dart';
-import 'package:hutano/screens/stripe/stripe_payment.dart';
-import 'package:hutano/screens/stripe/token.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/utils/validations.dart';
@@ -14,6 +10,7 @@ import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/mask_input_formatter.dart';
 import 'package:hutano/widgets/widgets.dart';
+import 'package:stripe_payment/stripe_payment.dart';
 
 class AddNewCardScreen extends StatefulWidget {
   AddNewCardScreen({Key key}) : super(key: key);
@@ -79,7 +76,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackgroundNew(
           addHeader: true,

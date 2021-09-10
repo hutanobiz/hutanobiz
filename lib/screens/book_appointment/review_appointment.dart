@@ -13,7 +13,6 @@ import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/screens/home.dart';
-import 'package:hutano/screens/stripe/stripe_payment.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
@@ -25,6 +24,7 @@ import 'package:hutano/widgets/provider_list_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:stripe_payment/stripe_payment.dart';
 
 class ReviewAppointmentScreen extends StatefulWidget {
   @override

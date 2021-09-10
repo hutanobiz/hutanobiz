@@ -13,7 +13,7 @@ import 'package:hutano/models/services.dart';
 import 'package:hutano/screens/appointments/model/req_booking_appointment_model.dart';
 import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/screens/registration/payment/utils/card_utils.dart';
-import 'package:hutano/screens/stripe/stripe_payment.dart';
+
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/app_constants.dart';
 import 'package:hutano/utils/color_utils.dart';
@@ -33,6 +33,7 @@ import 'package:intl/intl.dart';
 import 'package:location/location.dart' as Loc;
 import 'package:provider/provider.dart';
 import 'package:hutano/utils/caps_extension.dart';
+import 'package:stripe_payment/stripe_payment.dart';
 
 import '../../colors.dart';
 import '../../routes.dart';
