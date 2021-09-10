@@ -160,7 +160,7 @@ class Routes {
       '/uploadInsuranceImagesScreen';
   static const String treatmentSummaryScreen = '/treatmentSummaryScreen';
   static const String appointmentsScreen = '/appointmentsScreen';
-  static const String trackTreatmentScreen = '/trackTreatmentScreen';
+  // static const String trackTreatmentScreen = '/trackTreatmentScreen';
   static const String telemedicineTrackTreatmentScreen =
       '/telemedicineTrackTreatmentScreen';
   static const String virtualWaitingRoom = '/virtualWaitingRoom';
@@ -178,8 +178,8 @@ class Routes {
   static const String cancelAppointmentScreen = '/cancelAppointmentScreen';
   static const String requestDetailScreen = '/requestDetailScreen';
   static const String callPage = '/callPage';
-  static const String officeTrackTreatmentScreen =
-      '/officeTrackTreatmentScreen';
+  // static const String officeTrackTreatmentScreen =
+  //     '/officeTrackTreatmentScreen';
   static const String homeMain = '/homeMain';
   static const String activityNotification = '/activityNotification';
   static const String myProviders = '/myProviders';
@@ -463,22 +463,22 @@ class Routes {
       case appointmentsScreen:
         return _buildRoute(settings, AppointmentsScreen());
         break;
-      case officeTrackTreatmentScreen:
-        return _buildRoute(
-          settings,
-          OfficeTrackTreatmentScreen(
-            appointmentId: args,
-          ),
-        );
-        break;
-      case trackTreatmentScreen:
-        return _buildRoute(
-          settings,
-          TrackTreatmentScreen(
-            appointmentId: args,
-          ),
-        );
-        break;
+      // case officeTrackTreatmentScreen:
+      //   return _buildRoute(
+      //     settings,
+      //     OfficeTrackTreatmentScreen(
+      //       appointmentId: args,
+      //     ),
+      //   );
+      //   break;
+      // case trackTreatmentScreen:
+      //   return _buildRoute(
+      //     settings,
+      //     TrackTreatmentScreen(
+      //       appointmentId: args,
+      //     ),
+      //   );
+      //   break;
 
       case officeDirectionScreen:
         return _buildRoute(

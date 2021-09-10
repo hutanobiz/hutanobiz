@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:135216344614:android:338b33613556f1b77f80e7",
+        "mobilesdk_app_id": "1:135216344614:android:077cf80edd8a6aa47f80e7",
         "android_client_info": {
-          "package_name": "com.example.hutano"
+          "package_name": "xyz.appening.hutano"
         }
       },
       "oauth_client": [
@@ -44,9 +44,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:135216344614:android:077cf80edd8a6aa47f80e7",
+        "mobilesdk_app_id": "1:135216344614:android:d0eb27399fdd9d5c7f80e7",
         "android_client_info": {
-          "package_name": "xyz.appening.hutano"
+          "package_name": "xyz.appening.hutano_provider"
         }
       },
       "oauth_client": [

@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:isolate';
 import 'dart:ui';
-import 'package:background_locator/background_locator.dart';
-import 'package:background_locator/location_dto.dart';
-import 'package:background_locator/settings/android_settings.dart';
+// import 'package:background_locator/background_locator.dart';
+// import 'package:background_locator/location_dto.dart';
+// import 'package:background_locator/settings/android_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -310,25 +310,25 @@ class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
           );
   }
 
-  static void callback(LocationDto locationDto) async {
-    final SendPort send = IsolateNameServer.lookupPortByName(_isolateName);
-    send?.send(locationDto);
-  }
+  // static void callback(LocationDto locationDto) async {
+  //   final SendPort send = IsolateNameServer.lookupPortByName(_isolateName);
+  //   send?.send(locationDto);
+  // }
 
-  void startLocationService() {
-    BackgroundLocator.registerLocationUpdate(
-      callback,
-      androidSettings: AndroidSettings(
-        androidNotificationSettings: AndroidNotificationSettings(
-          notificationTitle: "Start Location Tracking",
-          notificationMsg: "Track location in background",
-          //wakeLockTime: 20,
-          //autoStop: false,
-          //interval: 5,
-        ),
-      ),
-    );
-  }
+  // void startLocationService() {
+  //   BackgroundLocator.registerLocationUpdate(
+  //     callback,
+  //     androidSettings: AndroidSettings(
+  //       androidNotificationSettings: AndroidNotificationSettings(
+  //         notificationTitle: "Start Location Tracking",
+  //         notificationMsg: "Track location in background",
+  //         //wakeLockTime: 20,
+  //         //autoStop: false,
+  //         //interval: 5,
+  //       ),
+  //     ),
+  //   );
+  // }
 
   void showPinsOnMap(LatLng _initialPosition) {
     var pinPosition =
