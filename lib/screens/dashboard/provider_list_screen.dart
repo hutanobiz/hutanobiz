@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
@@ -334,6 +335,14 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
       itemBuilder: (context, index) {
         dynamic _provider = _responseData[index]['provider'];
         dynamic subServices = _responseData[index]['subServices'];
+        List<Services> searchedSubService = [];
+        if (_projectResponse.containsKey('subServices[0]')) {
+          for (dynamic aa in subServices) {
+            if (aa['subServiceId'] == _projectResponse['subServices[0]']) {
+              searchedSubService.add(Services.fromJson(aa));
+            }
+          }
+        }
 
         Map _appointentTypeMap = {};
 
@@ -363,6 +372,9 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
             selectedAppointment: _selectedAppointmentType,
             averageRating:
                 _provider['averageRating']?.toStringAsFixed(1) ?? "0",
+            isService:
+                _projectResponse.containsKey('subServices[0]') ? true : false,
+            searchedSubService: searchedSubService,
             bookAppointment: () {
               FocusScope.of(context).requestFocus(FocusNode());
               // Navigator.of(context).pushNamed(Routes.providerProfileScreen,
@@ -393,24 +405,72 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                               : _provider["_id"],
                       locMap)
                   .then((value) {
-                Map _appointentTypeMap = {};
+                if (_projectResponse.containsKey('subServices[0]')) {
+                  if (searchedSubService.length > 1) {
+                    Map _appointentTypeMap = {};
 
-                dynamic response = value["data"][0];
+                    dynamic response = value["data"][0];
 
-                _appointentTypeMap["isOfficeEnabled"] =
-                    response["isOfficeEnabled"];
-                _appointentTypeMap["isVideoChatEnabled"] =
-                    response["isVideoChatEnabled"];
-                _appointentTypeMap["isOnsiteEnabled"] =
-                    response["isOnsiteEnabled"];
-                _container.providerResponse.clear();
+                    _appointentTypeMap["isOfficeEnabled"] =
+                        response["isOfficeEnabled"];
+                    _appointentTypeMap["isVideoChatEnabled"] = false;
+                    _appointentTypeMap["isOnsiteEnabled"] =
+                        response["isOnsiteEnabled"];
+                    _appointentTypeMap["services"] = searchedSubService;
+                    _container.providerResponse.clear();
 
-                _container.setProviderData("providerData", value);
-                setLoading(false);
-                Navigator.of(context).pushNamed(
-                  Routes.appointmentTypeScreen,
-                  arguments: _appointentTypeMap,
-                );
+                    _container.setProviderData("providerData", value);
+                    setLoading(false);
+
+                    Navigator.of(context).pushNamed(
+                      Routes.appointmentTypeScreen,
+                      arguments: _appointentTypeMap,
+                    );
+                  } else {
+                    Map _appointentTypeMap = {};
+
+                    dynamic response = value["data"][0];
+
+                    _appointentTypeMap["isOfficeEnabled"] =
+                        response["isOfficeEnabled"];
+                    _appointentTypeMap["isVideoChatEnabled"] =
+                        response["isVideoChatEnabled"];
+                    _appointentTypeMap["isOnsiteEnabled"] =
+                        response["isOnsiteEnabled"];
+                    _container.providerResponse.clear();
+
+                    _container.setProviderData("providerData", value);
+                    setLoading(false);
+                    _container.setProjectsResponse("serviceType",
+                        searchedSubService.first.serviceType.toString());
+                    _container.setServicesData("status", "1");
+                    _container.setServicesData("services", searchedSubService);
+
+                    Navigator.of(context).pushNamed(
+                        Routes.selectAppointmentTimeScreen,
+                        arguments: SelectDateTimeArguments(fromScreen: 0));
+                  }
+                  // subServices
+                } else {
+                  Map _appointentTypeMap = {};
+
+                  dynamic response = value["data"][0];
+
+                  _appointentTypeMap["isOfficeEnabled"] =
+                      response["isOfficeEnabled"];
+                  _appointentTypeMap["isVideoChatEnabled"] =
+                      response["isVideoChatEnabled"];
+                  _appointentTypeMap["isOnsiteEnabled"] =
+                      response["isOnsiteEnabled"];
+                  _container.providerResponse.clear();
+
+                  _container.setProviderData("providerData", value);
+                  setLoading(false);
+                  Navigator.of(context).pushNamed(
+                    Routes.appointmentTypeScreen,
+                    arguments: _appointentTypeMap,
+                  );
+                }
               });
 
               // _container.providerResponse.clear();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/dimens.dart';
+import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/constants/key_constant.dart';
@@ -20,7 +21,7 @@ class AppointmentTypeScreen extends StatefulWidget {
 }
 
 class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
- InheritedContainerState conatiner;
+  InheritedContainerState conatiner;
   Map _appointentTypeMap = {};
   bool isOfficeSelected = false;
   bool isVirtualSelected = false;
@@ -53,8 +54,26 @@ class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
         addBottomArrows: true,
         onForwardTap: () {
           if (selectedType.isNotEmpty) {
-            conatiner.setProjectsResponse("serviceType", selectedType);
-            Navigator.of(context).pushNamed(Routes.selectServicesScreen);
+            if (widget.appointmentTypeMap['services'] != null) {
+              List<Services> searchedSubService = [];
+              for (Services s in widget.appointmentTypeMap['services']) {
+                if (s.serviceType.toString() == selectedType) {
+                  searchedSubService.add(s);
+                  break;
+                }
+              }
+
+              conatiner.setProjectsResponse("serviceType",
+                  searchedSubService.first.serviceType.toString());
+              conatiner.setServicesData("status", "1");
+              conatiner.setServicesData("services", searchedSubService);
+              Navigator.of(context).pushNamed(
+                  Routes.selectAppointmentTimeScreen,
+                  arguments: SelectDateTimeArguments(fromScreen: 0));
+            } else {
+              conatiner.setProjectsResponse("serviceType", selectedType);
+              Navigator.of(context).pushNamed(Routes.selectServicesScreen);
+            }
           } else {
             Widgets.showToast(Localization.of(context).noAppointmentSelected);
           }

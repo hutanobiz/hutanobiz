@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/dimens.dart';
+import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/app_constants.dart';
 import 'package:hutano/utils/color_utils.dart';
@@ -15,29 +16,31 @@ import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/widgets/text_with_image.dart';
 
 class ProviderWidget extends StatelessWidget {
-  ProviderWidget({
-    Key key,
-    @required this.data,
-    this.selectedAppointment,
-    this.bookAppointment,
-    this.isOptionsShow = true,
-    this.averageRating,
-    this.isProverPicShow = false,
-    this.margin,
-    this.onRatingClick,
-    this.onLocationClick,
-    this.showPaymentProcced = false,
-    this.appointmentTime,
-  })  : assert(data != null),
+  ProviderWidget(
+      {Key key,
+      @required this.data,
+      this.selectedAppointment,
+      this.bookAppointment,
+      this.isOptionsShow = true,
+      this.averageRating,
+      this.isProverPicShow = false,
+      this.margin,
+      this.onRatingClick,
+      this.onLocationClick,
+      this.showPaymentProcced = false,
+      this.appointmentTime,
+      this.isService = false,
+      this.searchedSubService})
+      : assert(data != null),
         super(key: key);
 
   final data;
   final String averageRating, selectedAppointment;
   final Function bookAppointment;
-  final bool isOptionsShow, isProverPicShow;
+  final bool isOptionsShow, isProverPicShow, isService;
   final EdgeInsets margin;
   final Function onRatingClick, onLocationClick;
-
+  List<Services> searchedSubService;
   // Show extra details in confirm and pay screen
   final bool showPaymentProcced;
   final String appointmentTime;
@@ -180,7 +183,6 @@ class ProviderWidget extends StatelessWidget {
       }
 
       address = Extensions.addressFormat(
-        
         business["address"]?.toString(),
         business["street"]?.toString(),
         business["city"]?.toString(),
@@ -428,69 +430,99 @@ class ProviderWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-              Padding(
-                padding: isOptionsShow
-                    ? const EdgeInsets.only(left: 12.0, right: 12.0)
-                    : const EdgeInsets.only(
-                        left: spacing12,
-                        right: spacing12,
-                        bottom: spacing10,
-                        top: spacing10),
-                child: Row(
-                  children: <Widget>[
-                    if (appointmentTime == null) ...[
-                      'ic_location_grey'.imageIcon(height: 14.0, width: 11.0),
-                      SizedBox(width: 3.0),
-                      Expanded(
-                        child: Text(
-                          address,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontWeight: fontWeightRegular,
-                              fontSize: fontSize12),
-                        ).onClick(
-                          onTap:
-                              onLocationClick != null ? onLocationClick : null,
-                        ),
-                      )
-                    ],
-                    if (appointmentTime != null) ...[
-                      Expanded(
-                        child: TextWithImage(
-                            size: 20,
-                            imageSpacing: 3,
-                            textStyle: TextStyle(
-                                color: colorBlack.withOpacity(0.7),
-                                fontWeight: FontWeight.w400,
-                                fontFamily: gilroyRegular,
-                                fontStyle: FontStyle.normal,
-                                fontSize: 12.0),
-                            label: appointmentTime,
-                            image: FileConstants.icCalendarGrey),
-                      ),
-                    ],
-                    SizedBox(width: 15),
-                    Align(
-                      alignment: Alignment.centerRight,
+              isService
+                  ? Padding(
+                      padding: const EdgeInsets.only(left: 12.0, right: 12.0),
                       child: Row(
                         children: <Widget>[
-                          Image.asset(FileConstants.icMilesPointer,
-                              width: 15, height: 15),
-                          SizedBox(width: 5.0),
+                          Expanded(
+                            child: Text(
+                              searchedSubService.first.subServiceName,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontWeight: fontWeightMedium,
+                                  fontSize: fontSize13),
+                            ),
+                          ),
                           Text(
-                            distance,
+                            searchedSubService.length > 1
+                                ? "\$${searchedSubService[searchedSubService.indexWhere((element) => element.serviceType == 1)].amount.toStringAsFixed(2)}"
+                                : "\$${searchedSubService.first.amount.toStringAsFixed(2)}",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                                fontWeight: fontWeightRegular,
-                                fontSize: fontSize12),
+                                fontWeight: fontWeightSemiBold,
+                                fontSize: fontSize14),
                           ),
                         ],
                       ),
+                    )
+                  : Padding(
+                      padding: isOptionsShow
+                          ? const EdgeInsets.only(left: 12.0, right: 12.0)
+                          : const EdgeInsets.only(
+                              left: spacing12,
+                              right: spacing12,
+                              bottom: spacing10,
+                              top: spacing10),
+                      child: Row(
+                        children: <Widget>[
+                          if (appointmentTime == null) ...[
+                            'ic_location_grey'
+                                .imageIcon(height: 14.0, width: 11.0),
+                            SizedBox(width: 3.0),
+                            Expanded(
+                              child: Text(
+                                address,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontWeight: fontWeightRegular,
+                                    fontSize: fontSize12),
+                              ).onClick(
+                                onTap: onLocationClick != null
+                                    ? onLocationClick
+                                    : null,
+                              ),
+                            )
+                          ],
+                          if (appointmentTime != null) ...[
+                            Expanded(
+                              child: TextWithImage(
+                                  size: 20,
+                                  imageSpacing: 3,
+                                  textStyle: TextStyle(
+                                      color: colorBlack.withOpacity(0.7),
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: gilroyRegular,
+                                      fontStyle: FontStyle.normal,
+                                      fontSize: 12.0),
+                                  label: appointmentTime,
+                                  image: FileConstants.icCalendarGrey),
+                            ),
+                          ],
+                          SizedBox(width: 15),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Row(
+                              children: <Widget>[
+                                Image.asset(FileConstants.icMilesPointer,
+                                    width: 15, height: 15),
+                                SizedBox(width: 5.0),
+                                Text(
+                                  distance,
+                                  style: TextStyle(
+                                      fontWeight: fontWeightRegular,
+                                      fontSize: fontSize12),
+                                ),
+                              ],
+                            ),
+                          ),
+                          if (appointmentTime != null) SizedBox(width: 35),
+                        ],
+                      ),
                     ),
-                    if (appointmentTime != null) SizedBox(width: 35),
-                  ],
-                ),
-              ),
               if (appointmentTime != null)
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 8.0, 15.0),
@@ -593,7 +625,7 @@ class ProviderWidget extends StatelessWidget {
                                     color: AppColors.persian_indigo),
                               ),
                               child: Text(
-                                "Book Appointment",
+                                isService ? "Book Service" : "Book Appointment",
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 12.0,

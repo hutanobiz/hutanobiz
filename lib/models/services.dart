@@ -8,6 +8,7 @@ class Services {
   int iV;
   String serviceName;
   String subServiceName;
+  int serviceType;
   bool isSelected = false;
 
   Services(
@@ -19,7 +20,8 @@ class Services {
       this.sId,
       this.iV,
       this.serviceName,
-      this.subServiceName});
+      this.subServiceName,
+      this.serviceType});
 
   Services.fromJson(Map<String, dynamic> json) {
     userId = json['userId'];
@@ -31,6 +33,7 @@ class Services {
     iV = json['__v'];
     serviceName = json['serviceName'];
     subServiceName = json['subServiceName'];
+    serviceType = json['serviceType'];
   }
 
   Map<String, dynamic> toJson() {

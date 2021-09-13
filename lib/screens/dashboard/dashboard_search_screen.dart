@@ -359,12 +359,14 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
 
                           if (type == 1) {
                             _container.setProjectsResponse(
-                                "specialtyId[${index.toString()}]",
+                                // "specialtyId[${index.toString()}]",
+                                "specialtyId[0]",
                                 tempList[index]["_id"]);
                             _container.setProjectsResponse("serviceType", '0');
                           } else if (type == 3) {
                             _container.setProjectsResponse(
-                                "subServices[${index.toString()}]",
+                                // "subServices[${index.toString()}]",
+                                "subServices[0]",
                                 tempList[index]["_id"]);
                           }
 
@@ -434,12 +436,14 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
                     } else {
                       if (_searchType == 1) {
                         _container.setProjectsResponse(
-                            "specialtyId[${index.toString()}]",
+                            // "specialtyId[${index.toString()}]",
+                            "specialtyId[0]",
                             _list[index]["_id"]);
                         _container.setProjectsResponse("serviceType", '0');
                       } else if (_searchType == 3) {
                         _container.setProjectsResponse(
-                            "subServices[${index.toString()}]",
+                            // "subServices[${index.toString()}]",
+                            "subServices[0]",
                             _list[index]["_id"]);
                       }
 
