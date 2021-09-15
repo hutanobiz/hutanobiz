@@ -205,7 +205,7 @@ class ProviderWidget extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Container(
-                padding: EdgeInsets.only(top: 18, left: 12, right: 12),
+                padding: EdgeInsets.only(top: 18, left: 12, right: 0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -265,14 +265,17 @@ class ProviderWidget extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(
-                              name,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                  color: colorBlack,
-                                  fontWeight: fontWeightSemiBold,
-                                  fontSize: fontSize14),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 28.0),
+                              child: Text(
+                                name,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    color: colorBlack,
+                                    fontWeight: fontWeightSemiBold,
+                                    fontSize: fontSize14),
+                              ),
                             ),
                             SizedBox(height: spacing8),
                             Row(
@@ -290,7 +293,15 @@ class ProviderWidget extends StatelessWidget {
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontSize: fontSize12,
-                                            fontWeight: fontWeightRegular)))
+                                            fontWeight: fontWeightRegular))),
+                                if (appointmentTime == null)
+                                  Text(
+                                    "\$$fee",
+                                    style: TextStyle(
+                                      fontSize: fontSize16,
+                                      fontWeight: fontWeightSemiBold,
+                                    ),
+                                  ),
                               ],
                             ),
                             Padding(
@@ -361,49 +372,57 @@ class ProviderWidget extends StatelessWidget {
                                         // )
                                       ],
                                     ),
-                            )
+                            ),
+                            isService
+                                ? Text(
+                                    searchedSubService.first.subServiceName,
+                                    style: TextStyle(
+                                        fontWeight: fontWeightMedium,
+                                        fontSize: fontSize13),
+                                  )
+                                : SizedBox()
                           ],
                         ),
                       ),
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        SizedBox(
-                          height: 35,
-                        ),
-                        if (appointmentTime == null)
-                          Text(
-                            "\$$fee",
-                            style: TextStyle(
-                              fontSize: fontSize16,
-                              fontWeight: fontWeightSemiBold,
-                            ),
-                          ),
-                        selectedAppointment != null &&
-                                selectedAppointment != '0'
-                            ? Container()
-                            : SizedBox(height: 5),
-                        selectedAppointment != null &&
-                                selectedAppointment != '0'
-                            ? Container()
-                            : Text(
-                                // "Starting from",
-                                "",
-                                style: TextStyle(
-                                  fontSize: 13.0,
-                                  color: Colors.grey[600],
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                        SizedBox(
-                          height: selectedAppointment != null &&
-                                  selectedAppointment != '0'
-                              ? 20
-                              : 5,
-                        ),
-                      ],
-                    ),
+                    // Column(
+                    //   crossAxisAlignment: CrossAxisAlignment.end,
+                    //   children: <Widget>[
+                    //     SizedBox(
+                    //       height: 35,
+                    //     ),
+                    //     if (appointmentTime == null)
+                    //       Text(
+                    //         "\$$fee",
+                    //         style: TextStyle(
+                    //           fontSize: fontSize16,
+                    //           fontWeight: fontWeightSemiBold,
+                    //         ),
+                    //       ),
+                    //     selectedAppointment != null &&
+                    //             selectedAppointment != '0'
+                    //         ? Container()
+                    //         : SizedBox(height: 5),
+                    //     selectedAppointment != null &&
+                    //             selectedAppointment != '0'
+                    //         ? Container()
+                    //         : Text(
+                    //             // "Starting from",
+                    //             "",
+                    //             style: TextStyle(
+                    //               fontSize: 13.0,
+                    //               color: Colors.grey[600],
+                    //               fontWeight: FontWeight.w400,
+                    //             ),
+                    //           ),
+                    //     SizedBox(
+                    //       height: selectedAppointment != null &&
+                    //               selectedAppointment != '0'
+                    //           ? 20
+                    //           : 5,
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
               ),
@@ -433,30 +452,14 @@ class ProviderWidget extends StatelessWidget {
               isService
                   ? Padding(
                       padding: const EdgeInsets.only(left: 12.0, right: 12.0),
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Text(
-                              searchedSubService.first.subServiceName,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  fontWeight: fontWeightMedium,
-                                  fontSize: fontSize13),
-                            ),
-                          ),
-                          Text(
-                            searchedSubService.length > 1
-                                ? "\$${searchedSubService[searchedSubService.indexWhere((element) => element.serviceType == 1)].amount.toStringAsFixed(2)}"
-                                : "\$${searchedSubService.first.amount.toStringAsFixed(2)}",
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontWeight: fontWeightSemiBold,
-                                fontSize: fontSize14),
-                          ),
-                        ],
-                      ),
+                      child: Column(children: [
+                        searchedSubService.any((item) => item.serviceType == 1)
+                            ? officePriceWidget()
+                            : SizedBox(),
+                        searchedSubService.any((item) => item.serviceType == 3)
+                            ? onsitePriceWidget()
+                            : SizedBox(),
+                      ]),
                     )
                   : Padding(
                       padding: isOptionsShow
@@ -681,6 +684,52 @@ class ProviderWidget extends StatelessWidget {
                 ],
               )),
         )
+      ],
+    );
+  }
+
+  Row officePriceWidget() {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Text(
+            'Office Price',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style:
+                TextStyle(fontWeight: fontWeightMedium, fontSize: fontSize13),
+          ),
+        ),
+        Text(
+          "\$${searchedSubService[searchedSubService.indexWhere((element) => element.serviceType == 1)].amount.toStringAsFixed(2)}",
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style:
+              TextStyle(fontWeight: fontWeightSemiBold, fontSize: fontSize14),
+        ),
+      ],
+    );
+  }
+
+  Row onsitePriceWidget() {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Text(
+            'Onsite Price',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style:
+                TextStyle(fontWeight: fontWeightMedium, fontSize: fontSize13),
+          ),
+        ),
+        Text(
+          "\$${searchedSubService[searchedSubService.indexWhere((element) => element.serviceType == 3)].amount.toStringAsFixed(2)}",
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style:
+              TextStyle(fontWeight: fontWeightSemiBold, fontSize: fontSize14),
+        ),
       ],
     );
   }
