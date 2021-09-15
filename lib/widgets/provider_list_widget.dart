@@ -294,7 +294,7 @@ class ProviderWidget extends StatelessWidget {
                                             color: Colors.black,
                                             fontSize: fontSize12,
                                             fontWeight: fontWeightRegular))),
-                                if (appointmentTime == null)
+                                if (!isService && appointmentTime == null)
                                   Text(
                                     "\$$fee",
                                     style: TextStyle(
@@ -312,17 +312,6 @@ class ProviderWidget extends StatelessWidget {
                               ),
                               child: showPaymentProcced
                                   ? SizedBox()
-                                  // TextWithImage(
-                                  //         size: 16,
-                                  //         imageSpacing: 5,
-                                  //         textStyle: TextStyle(
-                                  //             color: colorDarkBlue3,
-                                  //             fontWeight: FontWeight.w600,
-                                  //             fontFamily: gilroySemiBold,
-                                  //             fontStyle: FontStyle.normal,
-                                  //             fontSize: 12.0),
-                                  //         label: "Payment Processed",
-                                  //         image: FileConstants.icCreditCard)
                                   : Wrap(
                                       runSpacing: 6,
                                       children: <Widget>[
@@ -385,44 +374,6 @@ class ProviderWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    // Column(
-                    //   crossAxisAlignment: CrossAxisAlignment.end,
-                    //   children: <Widget>[
-                    //     SizedBox(
-                    //       height: 35,
-                    //     ),
-                    //     if (appointmentTime == null)
-                    //       Text(
-                    //         "\$$fee",
-                    //         style: TextStyle(
-                    //           fontSize: fontSize16,
-                    //           fontWeight: fontWeightSemiBold,
-                    //         ),
-                    //       ),
-                    //     selectedAppointment != null &&
-                    //             selectedAppointment != '0'
-                    //         ? Container()
-                    //         : SizedBox(height: 5),
-                    //     selectedAppointment != null &&
-                    //             selectedAppointment != '0'
-                    //         ? Container()
-                    //         : Text(
-                    //             // "Starting from",
-                    //             "",
-                    //             style: TextStyle(
-                    //               fontSize: 13.0,
-                    //               color: Colors.grey[600],
-                    //               fontWeight: FontWeight.w400,
-                    //             ),
-                    //           ),
-                    //     SizedBox(
-                    //       height: selectedAppointment != null &&
-                    //               selectedAppointment != '0'
-                    //           ? 20
-                    //           : 5,
-                    //     ),
-                    //   ],
-                    // ),
                   ],
                 ),
               ),
