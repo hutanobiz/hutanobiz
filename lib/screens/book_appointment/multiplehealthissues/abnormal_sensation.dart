@@ -75,9 +75,9 @@ class _AbnormalSensationState extends State<AbnormalSensation> {
         _listOfSymptoms.add(DescribeSymptomsModel("Shooting", false, 3));
         _listOfSymptoms.add(DescribeSymptomsModel("Numb", false, 4));
       }
-      _listOfBodyPart.add(BodyPartModel("Knee", true, [], false, ""));
-      _listOfBodyPart.add(BodyPartModel("Arm muscle", false, [], false, ""));
-      _listOfBodyPart.add(BodyPartModel("Spine", false, [], false, ""));
+      _listOfBodyPart.add(BodyPartModel("Knee", true, [], false, 0));
+      _listOfBodyPart.add(BodyPartModel("Arm muscle", false, [], false, 0));
+      _listOfBodyPart.add(BodyPartModel("Spine", false, [], false, 0));
       _listOfAssociatedSymptoms
           .add(AssociatedSymptomsModel("Left arm weakness"));
       _listOfAssociatedSymptoms
@@ -294,7 +294,7 @@ class _AbnormalSensationState extends State<AbnormalSensation> {
                   suggestion.hasInternalPart,
                   suggestion.sides,
                   suggestion.isItClicked,
-                  ""));
+                  0));
             });
             _searchBodyPartController.text = "";
           },

@@ -3,7 +3,7 @@ class BodyPartModel {
   bool hasInternalPart;
   bool isItClicked;
   List<int> sides;
-  String selectedSide;
+  int selectedSide;
   BodyPartModel(this.bodyPart, this.hasInternalPart, this.sides,
       this.isItClicked, this.selectedSide);
 }

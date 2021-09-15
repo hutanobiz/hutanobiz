@@ -66,7 +66,14 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
   List<String> _selectedProblemWorstList = [];
   List<ProblemWorstBetterModel> _tempProblemBetterList = [];
   List<ProblemWorstBetterModel> _tempProblemWorstList = [];
-
+  Map sidesMap = {
+    0: "Select",
+    1: "Left",
+    2: "Right",
+    3: "Top",
+    4: "Bottom",
+    5: "All Over"
+  };
   //Ability
   List<MedicineTimeModel> _activityList = [];
   int radioVal;
@@ -481,7 +488,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                   suggestion.hasInternalPart,
                   suggestion.sides,
                   suggestion.isItClicked,
-                  ""));
+                  0));
             });
             _searchBodyPartController.text = "";
           },
@@ -510,7 +517,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                 contentPadding: EdgeInsets.all(0),
                 title: Text(
                   "${index + 1}. " +
-                      _listOfSelectedDisease[index].selectedSide +
+                      sidesMap[_listOfSelectedDisease[index].selectedSide] +
                       " ${_listOfSelectedDisease[index].bodyPart}",
                   style: TextStyle(
                       fontWeight: fontWeightMedium,
@@ -524,7 +531,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                   setState(() {
                     _listOfSelectedDisease[index].isItClicked = false;
                     _sideController.text =
-                        _listOfSelectedDisease[index].selectedSide;
+                        sidesMap[_listOfSelectedDisease[index].selectedSide];
                   });
                 } else {
                   setState(() {
@@ -659,41 +666,43 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
           ),
           context: context,
           builder: (context) => Container(
-                height: MediaQuery.of(context).size.height / 4,
+                // height: MediaQuery.of(context).size.height / 2,
                 child: Wrap(
                   children: <Widget>[_buildChooseSidePicker(context, index)],
                 ),
               ));
 
-  _buildChooseSidePicker(BuildContext context, int index) => Column(
+  _buildChooseSidePicker(BuildContext context, int index) => ListView(
+        shrinkWrap: true,
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(top: 10),
-            child: Text("Select Side",
-                style: TextStyle(fontSize: 20, fontWeight: fontWeightSemiBold)),
+            child: Center(
+              child: Text("Select Side",
+                  style:
+                      TextStyle(fontSize: 20, fontWeight: fontWeightSemiBold)),
+            ),
           ),
           Container(
-              height: MediaQuery.of(context).size.height / 4,
+              // height: MediaQuery.of(context).size.height / 2,
               child: ListView.builder(
+                  shrinkWrap: true,
                   itemCount: _listOfSelectedDisease[index].sides.length,
                   itemBuilder: (context, pos) {
                     return ListTile(
                       title: Text(
-                        _getSideText(
-                            _listOfSelectedDisease[index].sides[pos], context),
+                        sidesMap[_listOfSelectedDisease[index].sides[pos]],
                         style: TextStyle(
                             fontWeight: fontWeightMedium,
                             fontSize: fontSize14,
                             color: colorBlack2),
                       ),
                       onTap: () {
-                        _sideController.text = _getSideText(
-                            _listOfSelectedDisease[index].sides[pos], context);
+                        _sideController.text =
+                            sidesMap[_listOfSelectedDisease[index].sides[pos]];
                         _listOfSelectedDisease[index].isItClicked = true;
                         _listOfSelectedDisease[index].selectedSide =
-                            _getSideText(
-                                _listOfSelectedDisease[index].sides[pos],
-                                context);
+                            _listOfSelectedDisease[index].sides[pos];
                         setState(() {});
                         Navigator.pop(context);
                       },
@@ -1604,7 +1613,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
           int j = 1;
           result.response[0].bodyPart.forEach((element) {
             _listOfBodyPart.add(BodyPartModel(element.name,
-                element.sides.isNotEmpty, element.sides, false, ""));
+                element.sides.isNotEmpty, element.sides, false, 0));
             j++;
           });
           int i = 1;
@@ -1623,46 +1632,31 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
     });
   }
 
-  String _getSideText(int pos, BuildContext context) {
-    switch (pos) {
-      case 1:
-        return Localization.of(context).leftSide;
-        break;
-      case 2:
-        return Localization.of(context).rightSide;
-        break;
-      case 3:
-        return Localization.of(context).backSide;
-        break;
-      case 4:
-        return Localization.of(context).frontSide;
-        break;
-      default:
-        return 'All Over';
-        break;
-    }
-  }
-
-  String _getSelectedSide(String side) {
-    if (side == Localization.of(context).leftSide) {
-      return "1";
-    } else if (side == Localization.of(context).rightSide) {
-      return "2";
-    } else if (side == Localization.of(context).backSide) {
-      return "3";
-    } else if (side == "Front") {
-      return "4";
-    } else {
-      return "5";
-    }
-  }
+  // String _getSideText(int pos, BuildContext context) {
+  //   switch (pos) {
+  //     case 1:
+  //       return Localization.of(context).leftSide;
+  //       break;
+  //     case 2:
+  //       return Localization.of(context).rightSide;
+  //       break;
+  //     case 3:
+  //       return Localization.of(context).backSide;
+  //       break;
+  //     case 4:
+  //       return Localization.of(context).frontSide;
+  //       break;
+  //     default:
+  //       return 'All Over';
+  //       break;
+  //   }
+  // }
 
   void _onForwardTap(BuildContext context) {
     List<BodyPartWithSide> bodyPartWithSide = [];
     _listOfSelectedDisease.forEach((element) {
       bodyPartWithSide.add(BodyPartWithSide(
-          name: element.bodyPart,
-          sides: _getSelectedSide(element.selectedSide)));
+          name: element.bodyPart, sides: element.selectedSide.toString()));
     });
     List<String> selectedSymptoms = [];
     _listOfSymptoms.forEach((element) {

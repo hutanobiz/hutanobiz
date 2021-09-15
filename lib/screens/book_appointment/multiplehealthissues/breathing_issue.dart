@@ -48,11 +48,11 @@ class _BreathingIssueState extends State<BreathingIssue> {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       _listOfAssociatedSymptoms
-          .add(BodyPartModel("Feet Swelling", false, [], false, ""));
+          .add(BodyPartModel("Feet Swelling", false, [], false, 0));
       _listOfAssociatedSymptoms
-          .add(BodyPartModel("Swelling of hands", false, [], false, ""));
+          .add(BodyPartModel("Swelling of hands", false, [], false, 0));
       _listOfAssociatedSymptoms
-          .add(BodyPartModel("Anxiety", false, [], false, ""));
+          .add(BodyPartModel("Anxiety", false, [], false, 0));
       setState(() {});
     });
   }
@@ -188,7 +188,7 @@ class _BreathingIssueState extends State<BreathingIssue> {
                   suggestion.hasInternalPart,
                   suggestion.sides,
                   suggestion.isItClicked,
-                  ""));
+                  0));
             });
             _searchAssociatedSymptomsController.text = "";
           },
