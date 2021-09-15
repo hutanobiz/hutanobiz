@@ -201,17 +201,36 @@ class _RegisterNumberState extends State<RegisterNumber> {
                   ]),
             ),
           ),
-          BaseCheckBox(
-              activeColor: colorYellow,
-              value: _privacyPolicyChecked,
-              onChanged: (val) {
+
+          InkWell(
+              onTap: () {
                 setState(() {
-                  _privacyPolicyChecked = val;
-                  _enableButton = val &&
+                  _privacyPolicyChecked = !_privacyPolicyChecked;
+                  _enableButton = _privacyPolicyChecked &&
                       _controller.text.length > 0 &&
                       _key.currentState.validate();
                 });
-              })
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset(
+                  _privacyPolicyChecked
+                      ? 'images/checkedCheck.png'
+                      : 'images/uncheckedCheck.png',
+                  height: 20,
+                ),
+              )),
+          // BaseCheckBox(
+          //     activeColor: colorYellow,
+          //     value: _privacyPolicyChecked,
+          //     onChanged: (val) {
+          //       setState(() {
+          //         _privacyPolicyChecked = val;
+          //         _enableButton = val &&
+          //             _controller.text.length > 0 &&
+          //             _key.currentState.validate();
+          //       });
+          //     })
         ],
       ),
     );
