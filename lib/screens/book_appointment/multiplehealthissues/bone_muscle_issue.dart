@@ -67,7 +67,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
   List<ProblemWorstBetterModel> _tempProblemBetterList = [];
   List<ProblemWorstBetterModel> _tempProblemWorstList = [];
   Map sidesMap = {
-    0: "Select",
+    0: "",
     1: "Left",
     2: "Right",
     3: "Top",
