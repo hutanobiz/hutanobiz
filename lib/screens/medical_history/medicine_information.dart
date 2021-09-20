@@ -250,9 +250,9 @@ class _MedicineInformationState extends State<MedicineInformation> {
           });
           Provider.of<HealthConditionProvider>(context, listen: false)
               .updateMedicationData(_medicationList);
-              Provider.of<HealthConditionProvider>(context, listen: false)
+          Provider.of<HealthConditionProvider>(context, listen: false)
               .updateMedicationModelData(_getMedicineList);
-          
+
           Navigator.of(context).pushNamed(Routes.routeAddPharmacy);
           //   }
           // } else {
@@ -481,7 +481,7 @@ class _MedicineInformationState extends State<MedicineInformation> {
                         color: colorBlack2),
                   ),
                   Radio(
-                      activeColor: AppColors.persian_blue,
+                      activeColor: AppColors.windsor,
                       groupValue: radioVal,
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       value: _medicineTimeList[index].index,

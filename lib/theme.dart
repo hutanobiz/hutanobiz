@@ -13,15 +13,16 @@ class AppTheme {
     return ThemeData.light().copyWith(
         brightness: Brightness.light,
         primaryColor: AppColors.goldenTainoi,
-        accentColor: AppColors.accentColor,
-        buttonColor: Colors.white,
-        textSelectionColor: Colors.cyan[100],
+        // buttonColor: Colors.white,
+        // textSelectionColor: Colors.cyan[100],
         toggleableActiveColor: Colors.cyan[300],
         floatingActionButtonTheme: FloatingActionButtonThemeData(
           backgroundColor: Colors.cyan[300],
         ),
         textTheme: textTheme.apply(
           fontFamily: "Poppins",
-        ));
+        ),
+        colorScheme: ColorScheme.fromSwatch()
+            .copyWith(secondary: AppColors.accentColor));
   }
 }

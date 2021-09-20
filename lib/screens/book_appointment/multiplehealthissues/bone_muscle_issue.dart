@@ -1009,7 +1009,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                   color: colorBlack2),
             ),
             Radio(
-                activeColor: AppColors.persian_blue,
+                activeColor: AppColors.windsor,
                 groupValue: radioVal,
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 value: _activityList[index].index,

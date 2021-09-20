@@ -337,7 +337,7 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
 
   Widget checkBox(int index, dynamic insurance) => Expanded(
         child: Radio(
-          activeColor: AppColors.persian_blue,
+          activeColor: AppColors.windsor,
           value: index,
           groupValue: _searchText == null || _searchText == ''
               ? insuranceList.indexOf(selectedInsurance)

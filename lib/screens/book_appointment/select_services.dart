@@ -260,7 +260,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
             child: Align(
               alignment: Alignment.centerRight,
               child: Radio(
-                activeColor: AppColors.persian_blue,
+                activeColor: AppColors.windsor,
                 groupValue: _radioValue,
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 value: 0,
@@ -318,7 +318,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: Radio(
-                      activeColor: AppColors.persian_blue,
+                      activeColor: AppColors.windsor,
                       groupValue: _radioValue,
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       value: 1,

@@ -391,7 +391,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                   });
                                 })
                               : Radio(
-                                  activeColor: AppColors.persian_blue,
+                                  activeColor: AppColors.windsor,
                                   value: index,
                                   groupValue: _cardListRadioValue,
                                   materialTapTargetSize:
@@ -557,8 +557,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                                   .toString())
                                           ? Container()
                                           : Radio(
-                                              activeColor:
-                                                  AppColors.persian_blue,
+                                              activeColor: AppColors.windsor,
                                               value: index,
                                               groupValue: _listRadioValue,
                                               materialTapTargetSize:
@@ -751,7 +750,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: Radio(
-                        activeColor: AppColors.persian_blue,
+                        activeColor: AppColors.windsor,
                         value: value,
                         groupValue: _radioValue,
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -976,7 +975,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: Radio(
-                          activeColor: AppColors.persian_blue,
+                          activeColor: AppColors.windsor,
                           value: _huntaoCashRadioValue,
                           groupValue: _huntaoCashRadioGrupValue,
                           materialTapTargetSize:

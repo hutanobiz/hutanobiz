@@ -210,7 +210,7 @@ class ItemFamilyMember extends StatelessWidget {
                       color: Colors.white, shape: BoxShape.circle),
                   child: Icon(
                     Icons.cancel,
-                    color: AppColors.persian_blue,
+                    color: AppColors.windsor,
                     size: 17,
                   ),
                 ),
