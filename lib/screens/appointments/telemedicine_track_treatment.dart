@@ -6,6 +6,7 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/circular_countdown_timer.dart';
 import 'package:hutano/widgets/controller.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
@@ -83,7 +84,7 @@ class _TelemedicineTrackTreatmentScreenState
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
-                    child: new CircularProgressIndicator(),
+                    child: new CustomLoader(),
                   );
                 } else if (snapshot.hasError) {
                   return new Text('Error: ${snapshot.error}');
@@ -94,7 +95,7 @@ class _TelemedicineTrackTreatmentScreenState
                   return widgetList(profileMap);
                 } else {
                   return Center(
-                    child: new CircularProgressIndicator(),
+                    child: new CustomLoader(),
                   );
                 }
               }),

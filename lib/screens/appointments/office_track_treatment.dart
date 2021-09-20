@@ -275,7 +275,7 @@
 //               }
 
 //               return Center(
-//                 child: CircularProgressIndicator(),
+//                 child: CustomLoader(),
 //               );
 //             },
 //           ),

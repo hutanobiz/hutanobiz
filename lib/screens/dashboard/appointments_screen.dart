@@ -5,6 +5,7 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/appointment_list_widget.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 
 class AppointmentsScreen extends StatefulWidget {
   AppointmentsScreen({Key key}) : super(key: key);
@@ -50,7 +51,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
       // backgroundColor: AppColors.goldenTainoi,
       body:
           //  LoadingBackgroundNew(
-        // addHeader: true,
+          // addHeader: true,
           //   title: "Appointments",
           //   isAddBack: false,
           //   color: Colors.white,
@@ -66,7 +67,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
-            child: new CircularProgressIndicator(),
+            child: new CustomLoader(),
           );
         } else if (snapshot.hasError) {
           return new Text('Error: ${snapshot.error}');
@@ -114,7 +115,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           }
         } else {
           return Center(
-            child: new CircularProgressIndicator(),
+            child: new CustomLoader(),
           );
         }
       },

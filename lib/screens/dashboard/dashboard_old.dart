@@ -16,6 +16,7 @@ import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/utils/validations.dart';
 import 'package:hutano/widgets/circular_loader.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/provider_tile_widget.dart';
@@ -618,9 +619,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           //   child:
           Flexible(
             child: Text(
-              _currentddress == null
-                  ? '---'
-                  : _currentddress ,
+              _currentddress == null ? '---' : _currentddress,
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
               style: TextStyle(
@@ -767,7 +766,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           return Text("${snapshot.error}");
         }
         return Center(
-          child: CircularProgressIndicator(),
+          child: CustomLoader(),
         );
       },
     );
@@ -1524,7 +1523,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         return Padding(
           padding: const EdgeInsets.all(20),
           child: Center(
-            child: CircularProgressIndicator(),
+            child: CustomLoader(),
           ),
         );
       },
@@ -1719,7 +1718,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         return Padding(
           padding: const EdgeInsets.all(20),
           child: Center(
-            child: CircularProgressIndicator(),
+            child: CustomLoader(),
           ),
         );
       },
@@ -1821,7 +1820,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         return Padding(
           padding: const EdgeInsets.all(20),
           child: Center(
-            child: CircularProgressIndicator(),
+            child: CustomLoader(),
           ),
         );
       },
@@ -1939,7 +1938,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         return Padding(
           padding: const EdgeInsets.all(20),
           child: Center(
-            child: CircularProgressIndicator(),
+            child: CustomLoader(),
           ),
         );
       },

@@ -13,6 +13,7 @@ import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
@@ -533,7 +534,7 @@ class _SelectAppointmentTimeScreenState
           // break;
           case ConnectionState.waiting:
             return Center(
-              child: CircularProgressIndicator(),
+              child: CustomLoader(),
             );
             break;
           case ConnectionState.active:
@@ -653,7 +654,7 @@ class _SelectAppointmentTimeScreenState
             break;
           case ConnectionState.waiting:
             return Center(
-              child: CircularProgressIndicator(),
+              child: CustomLoader(),
             );
             break;
           case ConnectionState.active:

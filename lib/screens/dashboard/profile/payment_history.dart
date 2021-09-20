@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:intl/intl.dart';
 
@@ -75,7 +76,7 @@ class _PaymentHistoryState extends State<PaymentHistory> {
           return Text('No address.');
         }
         return Center(
-          child: CircularProgressIndicator(),
+          child: CustomLoader(),
         );
       },
     );

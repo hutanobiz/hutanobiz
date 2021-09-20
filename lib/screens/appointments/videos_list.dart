@@ -4,6 +4,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/appointments/video_player.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 
 class VideoListScreen extends StatefulWidget {
@@ -61,7 +62,7 @@ class _VideoListScreenState extends State<VideoListScreen> {
               return Text("${snapshot.error}");
             } else {
               return Center(
-                child: CircularProgressIndicator(),
+                child: CustomLoader(),
               );
             }
           },

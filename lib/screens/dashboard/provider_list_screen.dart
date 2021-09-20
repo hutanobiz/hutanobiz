@@ -6,6 +6,7 @@ import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
@@ -302,7 +303,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
               break;
             case ConnectionState.waiting:
               return Center(
-                child: CircularProgressIndicator(),
+                child: CustomLoader(),
               );
               break;
             case ConnectionState.active:

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:intl/intl.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
@@ -44,7 +45,7 @@ class _ActivityNotificationsState extends State<ActivityNotifications> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
-              child: new CircularProgressIndicator(),
+              child: new CustomLoader(),
             );
           } else if (snapshot.hasError) {
             return new Text('Error: ${snapshot.error}');
@@ -71,7 +72,7 @@ class _ActivityNotificationsState extends State<ActivityNotifications> {
             }
           } else {
             return Center(
-              child: new CircularProgressIndicator(),
+              child: new CustomLoader(),
             );
           }
         });

@@ -4,6 +4,7 @@ import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/screens/appointments/model/track_office_model.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'dart:async';
@@ -87,7 +88,7 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(
-                        child: new CircularProgressIndicator(),
+                        child: new CustomLoader(),
                       );
                     } else if (snapshot.hasError) {
                       return new Text('Error: ${snapshot.error}');
@@ -96,7 +97,7 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                       return widgetList(snapshot.data);
                     } else {
                       return Center(
-                        child: new CircularProgressIndicator(),
+                        child: new CustomLoader(),
                       );
                     }
                   }),
@@ -522,9 +523,9 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                                               Routes.officeDirectionScreen,
                                               arguments:
                                                   // TrackOfficeModel.fromJson(
-                                                      appointmentResponse
-                                                      // )
-                                                      );
+                                                  appointmentResponse
+                                              // )
+                                              );
                                         }),
                                   ],
                                 )

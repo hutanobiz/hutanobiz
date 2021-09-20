@@ -4,6 +4,7 @@ import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/utils/extensions.dart';
 
@@ -80,7 +81,7 @@ class _MyProvidersState extends State<MyProviders> {
           return Text('No providers.');
         }
         return Center(
-          child: CircularProgressIndicator(),
+          child: CustomLoader(),
         );
       },
     );

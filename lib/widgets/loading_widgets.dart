@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/widgets/arrow_button.dart';
 import 'package:hutano/widgets/bottom_arrows.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 
 class LoadingBackground extends StatelessWidget {
   LoadingBackground(
@@ -116,9 +117,9 @@ class LoadingBackground extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.4),
                   ),
-                  child: CircularProgressIndicator(
-                    backgroundColor: Colors.grey[200],
-                  ),
+                  child: CustomLoader(
+                      // backgroundColor: Colors.grey[200],
+                      ),
                 )
               : Container(),
           addBackButton

@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/request_list_widget.dart';
 
@@ -54,7 +55,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
       // backgroundColor: AppColors.goldenTainoi,
       body:
           // LoadingBackgroundNew(
-        // addHeader: true,
+          // addHeader: true,
           //   title: "Requests",
           //   isAddBack: false,
           //   color: Colors.white,
@@ -76,7 +77,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
             break;
           case ConnectionState.waiting:
             return Center(
-              child: CircularProgressIndicator(),
+              child: CustomLoader(),
             );
             break;
           case ConnectionState.active:

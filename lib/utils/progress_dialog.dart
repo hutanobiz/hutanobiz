@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/utils/color_utils.dart';
-
+import 'package:hutano/widgets/custom_loader.dart';
 
 class ProgressDialogUtils {
   static final ProgressDialogUtils _instance = ProgressDialogUtils.internal();
@@ -32,14 +32,12 @@ class ProgressDialogUtils {
             backgroundColor: Colors.transparent,
             children: <Widget>[
               Center(
-                child: CircularProgressIndicator(
-                  valueColor:
-                      AlwaysStoppedAnimation<Color>(primaryColor),
+                child: CustomLoader(
+                  // valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
                 ),
               )
             ],
           );
         });
   }
-  
 }

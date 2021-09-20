@@ -68,7 +68,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
-                  child: new CircularProgressIndicator(),
+                  child: new CustomLoader(),
                 );
               } else if (snapshot.hasError) {
                 return new Text('Error: ${snapshot.error}');

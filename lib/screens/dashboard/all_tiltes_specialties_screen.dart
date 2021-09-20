@@ -3,6 +3,7 @@ import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 
@@ -191,7 +192,7 @@ class _AllTitlesSpecialtesScreenState extends State<AllTitlesSpecialtesScreen> {
           return Text("${snapshot.error}");
         }
         return Center(
-          child: CircularProgressIndicator(),
+          child: CustomLoader(),
         );
       },
     );

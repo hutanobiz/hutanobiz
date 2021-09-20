@@ -7,6 +7,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/problem_widget.dart';
@@ -97,7 +98,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                 return Text("${snapshot.error}");
               }
               return Center(
-                child: CircularProgressIndicator(),
+                child: CustomLoader(),
               );
             },
           ),

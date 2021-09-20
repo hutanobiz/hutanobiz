@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/colors.dart';
 
 class CustomLoader extends StatefulWidget {
   @override
@@ -26,7 +27,9 @@ class _CustomLoaderState extends State<CustomLoader> {
               left: 0,
               right: 0,
               top: 0,
-              child: CircularProgressIndicator()),
+              child: CircularProgressIndicator(
+                color: AppColors.goldenTainoi,
+              )),
         ],
       ),
     );

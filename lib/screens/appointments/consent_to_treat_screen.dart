@@ -125,7 +125,7 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
             //   return Text("${snapshot.error}");
             // } else {
             //   return Center(
-            //     child: CircularProgressIndicator(),
+            //     child: CustomLoader(),
             //   );
             // }
           },
