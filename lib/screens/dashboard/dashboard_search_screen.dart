@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/custom_loader.dart';
@@ -120,22 +122,37 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
             decoration: InputDecoration(
               floatingLabelBehavior: FloatingLabelBehavior.never,
               filled: true,
-              fillColor: AppColors.snow,
+              isDense: true,
+              fillColor: Colors.grey[100],
               labelStyle: TextStyle(fontSize: 13.0, color: Colors.grey),
               labelText: "Type the name of a provider or speciality",
               prefixIcon: Icon(
                 Icons.search,
                 color: Colors.black,
               ),
+              hintStyle: TextStyle(
+                  color: colorBlack2,
+                  fontSize: fontSize13,
+                  fontWeight: fontWeightRegular),
+              border: OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: colorBlack20, width: 1)),
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              contentPadding: EdgeInsets.fromLTRB(12.0, 15.0, 14.0, 14.0),
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: colorBlack20, width: 1)),
+              disabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: colorBlack20, width: 1)),
+              // enabledBorder: OutlineInputBorder(
+              //   borderSide: BorderSide(color: Colors.white),
+              //   borderRadius: BorderRadius.circular(8.0),
+              // ),
+              // border: OutlineInputBorder(
+              //   borderSide: BorderSide(color: Colors.white),
+              //   borderRadius: BorderRadius.circular(8.0),
+              // ),
+              contentPadding: EdgeInsets.fromLTRB(12.0, 0.0, 14.0, 0.0),
             ),
           ),
         ),

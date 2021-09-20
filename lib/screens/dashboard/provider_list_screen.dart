@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/dimens.dart';
 import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/custom_loader.dart';
@@ -153,18 +155,25 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
         decoration: InputDecoration(
           floatingLabelBehavior: FloatingLabelBehavior.never,
           filled: true,
-          fillColor: Colors.white,
+          isDense: true,
+          fillColor: Colors.grey[100],
           labelStyle: TextStyle(fontSize: 13.0, color: Colors.grey),
           labelText: "Search for providers",
+          hintStyle: TextStyle(
+              color: colorBlack2,
+              fontSize: fontSize13,
+              fontWeight: fontWeightRegular),
+          border: OutlineInputBorder(),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: colorBlack20, width: 1)),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white),
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white),
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          contentPadding: EdgeInsets.fromLTRB(12.0, 15.0, 14.0, 14.0),
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: colorBlack20, width: 1)),
+          disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: colorBlack20, width: 1)),
+          contentPadding: EdgeInsets.fromLTRB(12.0, 12.0, 14.0, 12.0),
         ),
       ),
     );
