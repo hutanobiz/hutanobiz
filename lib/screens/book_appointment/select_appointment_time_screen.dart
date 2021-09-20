@@ -65,10 +65,6 @@ class _SelectAppointmentTimeScreenState
   void initState() {
     super.initState();
 
-    // if (widget.isEditDateTime != null) {
-    //   isEditDateTime = widget.isEditDateTime;
-    // }
-
     currentDate = DateFormat('MM/dd/yyyy').format(DateTime.now());
     _selectedDate = DateTime.utc(DateTime.now().year, DateTime.now().month,
         DateTime.now().day, 0, 0, 0, 0, 0);
@@ -80,19 +76,7 @@ class _SelectAppointmentTimeScreenState
         DateTime.now().day, 0, 0, 0, 0, 0);
     startDate = DateTime.utc(DateTime.now().year, DateTime.now().month,
         DateTime.now().day, 0, 0, 0, 0, 0);
-    // _initData();
   }
-
-  // Future<void> _initData() async {
-  //   try {
-  //     _timezone = await FlutterNativeTimezone.getLocalTimezone();
-  //   } catch (e) {
-  //     print('Could not get the local timezone');
-  //   }
-  //   if (mounted) {
-  //     setState(() {});
-  //   }
-  // }
 
   @override
   Future<void> didChangeDependencies() async {
@@ -163,30 +147,9 @@ class _SelectAppointmentTimeScreenState
             _dayDateMap["date"] = DateFormat('MM/dd/yyyy')
                 .format(DateTime.now().add(Duration(days: i + 1)));
             startDate = startDate.add(Duration(days: i + 1));
-            _selectedDate = startDate.add(Duration(days: i + 1));
+            _selectedDate = startDate;
             break;
           }
-        }
-      }
-
-      // if (mounted) {
-      //   setState(() {});
-      // }
-
-      while (true) {
-        if (_scheduleDaysList.contains(newDate.weekday)) {
-          setState(() {
-            _selectedDate = newDate;
-          });
-
-          break;
-        } else {
-          setState(() {
-            newDate = _selectedDate.add(
-              Duration(days: _initialDay),
-            );
-          });
-          _initialDay++;
         }
       }
     }
@@ -277,94 +240,11 @@ class _SelectAppointmentTimeScreenState
             Widgets.showToast("Please select a timing");
           }
         },
-        child:
-            // Column(
-            //   children: [
-            // Expanded(
-            // child:
-            ListView(
+        child: ListView(
           shrinkWrap: true,
           padding: const EdgeInsets.only(bottom: 70.0),
           children:
               _scheduleDaysList.length > 0 ? widgetList() : noScheduleAdded(),
-          // ),
-          // ),
-          // Divider(height: 0.5),
-          // Align(
-          //   alignment: FractionalOffset.bottomRight,
-          //   child: Container(
-          //     height: 55.0,
-          //     width: widget.arguments.fromScreen == 2
-          //         ? MediaQuery.of(context).size.width
-          //         : MediaQuery.of(context).size.width - 76.0,
-          //     margin: const EdgeInsets.only(top: 10),
-          //     padding: EdgeInsets.only(
-          //         right: 0.0,
-          //         left: widget.arguments.fromScreen == 2 ? 0 : 40.0),
-          //     child: FancyButton(
-          //       title: widget.arguments.fromScreen == 2
-          //           ? "Reschedule"
-          //           : "Book now",
-          //       onPressed: () {
-          //         if (_selectedDate != null && _selectedTiming != null) {
-          //           if (widget.arguments.fromScreen == 2) {
-          //             setState(() {
-          //               isLoading = true;
-          //             });
-          //             var map = {};
-          //             map['appointmentId'] = widget.arguments.appointmentId;
-          //             map['date'] = DateFormat("MM/dd/yyyy")
-          //                 .format(_selectedDate)
-          //                 .toString();
-          //             map['fromTime'] = _selectedTiming;
-
-          //             SharedPref().getToken().then((token) {
-          //               _apiBaseHelper
-          //                   .rescheduleAppointment(token, map)
-          //                   .then((value) {
-          //                 setState(() {
-          //                   isLoading = false;
-          //                 });
-          //                 Widgets.showAppDialog(
-          //                     context: context,
-          //                     description: 'Appointment Rescheduled',
-          //                     isCongrats: true,
-          //                     buttonText: 'Go To Appointment',
-          //                     onPressed: () {
-          //                       Navigator.of(context).pushNamedAndRemoveUntil(
-          //                           Routes.dashboardScreen,
-          //                           (Route<dynamic> route) => false,
-          //                           arguments: 1);
-          //                     });
-          //               }).futureError((onError) {
-          //                 setState(() {
-          //                   isLoading = false;
-          //                 });
-          //               });
-          //             });
-          //           } else {
-          //             _container.setAppointmentData("date", _selectedDate);
-          //             _container.setAppointmentData("time", _selectedTiming);
-          //             _container.setAppointmentData("isOndemand", '0');
-          //             if (selectedAddress != null) {
-          //               _container.setAppointmentData(
-          //                   'officeId', selectedAddress['_id']);
-          //             }
-          //             if (widget.arguments.fromScreen == 1) {
-          //               Navigator.pop(context, _container.appointmentData);
-          //             } else {
-          //               Navigator.of(context)
-          //                   .pushNamed(Routes.consentToTreatScreen);
-          //             }
-          //           }
-          //         } else {
-          //           Widgets.showToast("Please select a timing");
-          //         }
-          //       },
-          //     ),
-          //   ),
-          // )
-          // ],
         ),
       ),
     );
@@ -375,13 +255,16 @@ class _SelectAppointmentTimeScreenState
       List scheduleList = profileMap['schedules'];
 
       for (dynamic schedule in scheduleList) {
-        if (schedule['scheduleType'].toString() == '1') {
-          if (schedule['day'] != null) {
-            List _daysList = schedule["day"];
-
-            for (dynamic days in _daysList) {
-              if (!_scheduleDaysList.contains(int.parse(days.toString()))) {
-                _scheduleDaysList.add(int.parse(days.toString()));
+        if (_container.projectsResponse['serviceType'] ==
+            schedule['scheduleAppointmentType'].toString()) {
+          if (schedule['scheduleType'].toString() == '1' ||
+              schedule['scheduleType'].toString() == '2') {
+            if (schedule['day'] != null) {
+              List _daysList = schedule["day"];
+              for (dynamic days in _daysList) {
+                if (!_scheduleDaysList.contains(int.parse(days.toString()))) {
+                  _scheduleDaysList.add(int.parse(days.toString()));
+                }
               }
             }
           }
@@ -530,8 +413,6 @@ class _SelectAppointmentTimeScreenState
       builder: (_, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
-          // return Text("NO data available");
-          // break;
           case ConnectionState.waiting:
             return Center(
               child: CustomLoader(),
@@ -618,8 +499,6 @@ class _SelectAppointmentTimeScreenState
                               (error) => error.toString().debugLog(),
                             );
                       });
-
-                      _selectedDate = selectedDate;
                     },
                   ),
                   SizedBox(height: 20.0),
@@ -871,7 +750,7 @@ class _SelectAppointmentTimeScreenState
           color: currentSchedule.isBlock
               ? Colors.grey.withOpacity(0.05)
               : currentSchedule.isSelected
-                  ? Color(0xff009900)
+                  ? AppColors.goldenTainoi
                   : AppColors.snow,
           borderRadius: BorderRadius.all(Radius.circular(14.0)),
           border: Border.all(
@@ -888,7 +767,7 @@ class _SelectAppointmentTimeScreenState
             color: currentSchedule.isBlock
                 ? Colors.grey.withOpacity(0.6)
                 : currentSchedule.isSelected
-                    ? Colors.white
+                    ? AppColors.windsor
                     : AppColors.windsor,
           ),
         ),

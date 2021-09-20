@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:hutano/colors.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:intl/intl.dart';
 
@@ -208,6 +209,20 @@ class _ScrollingDayCalendarState extends State<ScrollingDayCalendar> {
         lastDate: DateTime(DateTime.now().year + 2),
         selectableDayPredicate: (DateTime val) =>
             scheduleDaysList.contains(val.weekday) ? true : false,
+        builder: (BuildContext context, Widget child) {
+          return Theme(
+            data: ThemeData.dark().copyWith(
+              colorScheme: ColorScheme.light(
+                primary: AppColors.goldenTainoi,
+                onPrimary: Colors.white,
+                surface: AppColors.goldenTainoi,
+                onSurface: AppColors.windsor,
+              ),
+              dialogBackgroundColor: Colors.white,
+            ),
+            child: child,
+          );
+        },
       ).then((date) {
         if (date != null)
           setState(() {

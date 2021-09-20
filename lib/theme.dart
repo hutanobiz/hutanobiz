@@ -22,6 +22,25 @@ class AppTheme {
         textTheme: textTheme.apply(
           fontFamily: "Poppins",
         ),
+        inputDecorationTheme: InputDecorationTheme(
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          labelStyle: TextStyle(
+            color: Colors.grey,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: AppColors.windsor,
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.grey[300],
+            ),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
         colorScheme: ColorScheme.fromSwatch()
             .copyWith(secondary: AppColors.accentColor));
   }
