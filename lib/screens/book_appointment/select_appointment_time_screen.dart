@@ -379,6 +379,14 @@ class _SelectAppointmentTimeScreenState
     } else if (profileMap["User"] != null is Map) {
       providerId = profileMap["User"][0]["_id"].toString();
     }
+    double servicesPrize = 0.0;
+    if (_container.selectServiceMap['status'] == '1') {
+      if (_container.selectServiceMap['services'].length > 0) {
+        for (Services s in _container.selectServiceMap['services']) {
+          servicesPrize += s.amount;
+        }
+      }
+    }
 
     List<Widget> formWidget = new List();
 
@@ -386,6 +394,7 @@ class _SelectAppointmentTimeScreenState
       data: profileMap,
       selectedAppointment:
           _container.projectsResponse['serviceType'].toString(),
+      servicesPrize: servicesPrize.toString(),
       isOptionsShow: false,
       averageRating: averageRating,
     ));

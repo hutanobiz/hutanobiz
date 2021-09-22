@@ -148,32 +148,20 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
         ),
       );
 
-  Widget _newAddAddressButton(BuildContext context) => Center(
-        child: IntrinsicWidth(
-          child: TextWithImage(
-            imageSpacing: spacing10,
-            image: FileConstants.icLocationPin,
-            label: Localization.of(context).addNewAddressLabel,
-            size: 18,
-            textStyle: TextStyle(
-                color: Color(0xff1d36b9),
-                fontWeight: fontWeightSemiBold,
-                fontSize: fontSize14),
-          ),
-        ).onClick(onTap: () {
-          Navigator.pushNamed(
-            context,
-            Routes.onsiteEditAddress,
-          ).then((value) {
-            if (value != null && value) {
-              setState(() {
-                _addressesFuture = api.getAddress(_token);
-                isAddressAdded = true;
-              });
-            }
-          });
-        }),
-      );
+  Widget _newAddAddressButton(BuildContext context) => Padding(
+      padding: EdgeInsets.only(left: 20),
+      child: IntrinsicWidth(
+        child: TextWithImage(
+          imageSpacing: spacing10,
+          image: FileConstants.icLocationPin,
+          label: Localization.of(context).addNewAddressLabel,
+          size: 18,
+          textStyle: TextStyle(
+              color: AppColors.windsor,
+              fontWeight: fontWeightSemiBold,
+              fontSize: fontSize14),
+        ),
+      ).onClick(onTap: () {}));
 
   Widget _buildList() {
     return FutureBuilder<List<dynamic>>(
@@ -191,7 +179,7 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
           addressList = snapshot.data;
 
           return ListView.separated(
-              padding: EdgeInsets.only(bottom: 65),
+              padding: EdgeInsets.only(bottom: 10),
               separatorBuilder: (BuildContext context, int index) => Divider(
                     color: AppColors.haiti.withOpacity(0.20),
                   ),

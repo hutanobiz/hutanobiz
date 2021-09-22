@@ -204,7 +204,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
                       TextSpan(
                         text: vitals.bloodPressureSbp != null ||
                                 vitals.bloodPressureDbp != null
-                            ? '${vitals.bloodPressureDbp}/${vitals.bloodPressureSbp}; \t'
+                            ? '${vitals.bloodPressureSbp}/${vitals.bloodPressureDbp}; \t'
                             : '',
                         style: AppTextStyle.mediumStyle(fontSize: 14),
                       ),

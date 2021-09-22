@@ -365,8 +365,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                             ),
                           ),
                           isPayment == false
-                              ? Icon(Icons.delete, color: Colors.red).onClick(
-                                  onTap: () {
+                              ? Icon(Icons.delete, color: AppColors.windsor)
+                                  .onClick(onTap: () {
                                   Widgets.showAlertDialog(
                                       context,
                                       "Delete Card",

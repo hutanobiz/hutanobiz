@@ -391,7 +391,7 @@ Widget vitalWidget(BuildContext context, Map<String, dynamic> vitals) {
                           vitals['bloodPressureDbp'] == null ||
                           vitals['bloodPressureDbp'] == ''
                       ? ''
-                      : '${vitals['bloodPressureDbp']}/${vitals['bloodPressureSbp']}; \t',
+                      : '${vitals['bloodPressureSbp']}/${vitals['bloodPressureDbp']}; \t',
                   style: AppTextStyle.mediumStyle(fontSize: 14),
                 ),
                 TextSpan(

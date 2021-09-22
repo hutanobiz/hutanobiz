@@ -29,6 +29,7 @@ class ProviderWidget extends StatelessWidget {
       this.onLocationClick,
       this.showPaymentProcced = false,
       this.appointmentTime,
+      this.servicesPrize,
       this.isService = false,
       this.searchedSubService})
       : assert(data != null),
@@ -44,6 +45,7 @@ class ProviderWidget extends StatelessWidget {
   // Show extra details in confirm and pay screen
   final bool showPaymentProcced;
   final String appointmentTime;
+  final String servicesPrize;
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +53,9 @@ class ProviderWidget extends StatelessWidget {
         name = "---",
         avatar,
         fee = "0.00",
+        officeConsultationFee = "0.00",
+        telemedicineConsultationFee = "0.00",
+        onsiteConsultationFee = "0.00",
         practicingSince = "---",
         professionalTitle = "---",
         distance = "0",
@@ -103,34 +108,18 @@ class ProviderWidget extends StatelessWidget {
     } else {
       if (data["officeConsultanceFee"] != null &&
           data["officeConsultanceFee"].length > 0) {
-        fee = data["officeConsultanceFee"][0]['fee'] == null
-            ? '0.00'
-            : data["officeConsultanceFee"][0]['fee'].toStringAsFixed(2) ??
-                '0.00';
+        officeConsultationFee =
+            data["officeConsultanceFee"][0]['fee'].toStringAsFixed(2) ?? '0.00';
       }
-
-      if (data["onsiteConsultanceFee"] != null &&
-          data["onsiteConsultanceFee"].length > 0) {
-        fee = data["onsiteConsultanceFee"][0]['fee'] == null
-            ? '0.00'
-            : min(
-                double.parse(fee),
-                double.parse(
-                  data["onsiteConsultanceFee"][0]['fee'].toStringAsFixed(2),
-                ),
-              ).toStringAsFixed(2);
-      }
-
       if (data["vedioConsultanceFee"] != null &&
           data["vedioConsultanceFee"].length > 0) {
-        fee = data["vedioConsultanceFee"][0]['fee'] == null
-            ? '0.00'
-            : min(
-                double.parse(fee),
-                double.parse(
-                  data["vedioConsultanceFee"][0]['fee'].toStringAsFixed(2),
-                ),
-              ).toStringAsFixed(2);
+        telemedicineConsultationFee =
+            data["vedioConsultanceFee"][0]['fee'].toStringAsFixed(2) ?? '0.00';
+      }
+      if (data["onsiteConsultanceFee"] != null &&
+          data["onsiteConsultanceFee"].length > 0) {
+        onsiteConsultationFee =
+            data["onsiteConsultanceFee"][0]['fee'].toStringAsFixed(2) ?? '0.00';
       }
     }
 
@@ -294,9 +283,15 @@ class ProviderWidget extends StatelessWidget {
                                             color: Colors.black,
                                             fontSize: fontSize12,
                                             fontWeight: fontWeightRegular))),
-                                if (!isService && appointmentTime == null)
+                                if (selectedAppointment != '0' &&
+                                    !isService &&
+                                    appointmentTime == null)
                                   Text(
-                                    "\$$fee",
+                                    servicesPrize == null ||
+                                            servicesPrize == '0.0' ||
+                                            servicesPrize == 'null'
+                                        ? "\$$fee"
+                                        : "\$$servicesPrize",
                                     style: TextStyle(
                                       fontSize: fontSize16,
                                       fontWeight: fontWeightSemiBold,
@@ -410,73 +405,116 @@ class ProviderWidget extends StatelessWidget {
                         searchedSubService.any((item) => item.serviceType == 3)
                             ? onsitePriceWidget()
                             : SizedBox(),
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(8.0, 3.0, 8.0, 3.0),
+                          child: Divider(
+                            thickness: 0.5,
+                            color: Colors.grey[300],
+                          ),
+                        ),
                       ]),
                     )
-                  : Padding(
-                      padding: isOptionsShow
-                          ? const EdgeInsets.only(left: 12.0, right: 12.0)
-                          : const EdgeInsets.only(
-                              left: spacing12,
-                              right: spacing12,
-                              bottom: spacing10,
-                              top: spacing10),
+                  : selectedAppointment == '0'
+                      ? Padding(
+                          padding:
+                              const EdgeInsets.only(left: 12.0, right: 12.0),
+                          child: Column(children: [
+                            officeConsultationFee != "0.00"
+                                ? consultationPriceWidget(
+                                    'Office price', officeConsultationFee)
+                                : SizedBox(),
+                            telemedicineConsultationFee != "0.00"
+                                ? consultationPriceWidget('Telemedicine price',
+                                    telemedicineConsultationFee)
+                                : SizedBox(),
+                            onsiteConsultationFee != "0.00"
+                                ? consultationPriceWidget(
+                                    'Onsite price', onsiteConsultationFee)
+                                : SizedBox(),
+
+                            // searchedSubService
+                            //         .any((item) => item.serviceType == 1)
+                            //     ? officePriceWidget()
+                            //     : SizedBox(),
+                            // searchedSubService
+                            //         .any((item) => item.serviceType == 3)
+                            //     ? onsitePriceWidget()
+                            //     : SizedBox(),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.fromLTRB(8.0, 3.0, 8.0, 3.0),
+                              child: Divider(
+                                thickness: 0.5,
+                                color: Colors.grey[300],
+                              ),
+                            ),
+                          ]),
+                        )
+                      : SizedBox(),
+              Padding(
+                padding: isOptionsShow
+                    ? const EdgeInsets.only(left: 12.0, right: 12.0)
+                    : const EdgeInsets.only(
+                        left: spacing12,
+                        right: spacing12,
+                        bottom: spacing10,
+                        top: spacing10),
+                child: Row(
+                  children: <Widget>[
+                    if (appointmentTime == null) ...[
+                      'ic_location_grey'.imageIcon(height: 14.0, width: 11.0),
+                      SizedBox(width: 3.0),
+                      Expanded(
+                        child: Text(
+                          address,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontWeight: fontWeightRegular,
+                              fontSize: fontSize12),
+                        ).onClick(
+                          onTap:
+                              onLocationClick != null ? onLocationClick : null,
+                        ),
+                      )
+                    ],
+                    if (appointmentTime != null) ...[
+                      Expanded(
+                        child: TextWithImage(
+                            size: 20,
+                            imageSpacing: 3,
+                            textStyle: TextStyle(
+                                color: colorBlack.withOpacity(0.7),
+                                fontWeight: FontWeight.w400,
+                                fontFamily: gilroyRegular,
+                                fontStyle: FontStyle.normal,
+                                fontSize: 12.0),
+                            label: appointmentTime,
+                            image: FileConstants.icCalendarGrey),
+                      ),
+                    ],
+                    SizedBox(width: 15),
+                    Align(
+                      alignment: Alignment.centerRight,
                       child: Row(
                         children: <Widget>[
-                          if (appointmentTime == null) ...[
-                            'ic_location_grey'
-                                .imageIcon(height: 14.0, width: 11.0),
-                            SizedBox(width: 3.0),
-                            Expanded(
-                              child: Text(
-                                address,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontWeight: fontWeightRegular,
-                                    fontSize: fontSize12),
-                              ).onClick(
-                                onTap: onLocationClick != null
-                                    ? onLocationClick
-                                    : null,
-                              ),
-                            )
-                          ],
-                          if (appointmentTime != null) ...[
-                            Expanded(
-                              child: TextWithImage(
-                                  size: 20,
-                                  imageSpacing: 3,
-                                  textStyle: TextStyle(
-                                      color: colorBlack.withOpacity(0.7),
-                                      fontWeight: FontWeight.w400,
-                                      fontFamily: gilroyRegular,
-                                      fontStyle: FontStyle.normal,
-                                      fontSize: 12.0),
-                                  label: appointmentTime,
-                                  image: FileConstants.icCalendarGrey),
-                            ),
-                          ],
-                          SizedBox(width: 15),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: Row(
-                              children: <Widget>[
-                                Image.asset(FileConstants.icMilesPointer,
-                                    width: 15, height: 15),
-                                SizedBox(width: 5.0),
-                                Text(
-                                  distance,
-                                  style: TextStyle(
-                                      fontWeight: fontWeightRegular,
-                                      fontSize: fontSize12),
-                                ),
-                              ],
-                            ),
+                          Image.asset(FileConstants.icMilesPointer,
+                              width: 15, height: 15),
+                          SizedBox(width: 5.0),
+                          Text(
+                            distance,
+                            style: TextStyle(
+                                fontWeight: fontWeightRegular,
+                                fontSize: fontSize12),
                           ),
-                          if (appointmentTime != null) SizedBox(width: 35),
                         ],
                       ),
                     ),
+                    if (appointmentTime != null) SizedBox(width: 35),
+                  ],
+                ),
+              ),
               if (appointmentTime != null)
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 8.0, 15.0),
@@ -635,6 +673,29 @@ class ProviderWidget extends StatelessWidget {
                 ],
               )),
         )
+      ],
+    );
+  }
+
+  Row consultationPriceWidget(String title, String price) {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Text(
+            title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style:
+                TextStyle(fontWeight: fontWeightMedium, fontSize: fontSize13),
+          ),
+        ),
+        Text(
+          price,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style:
+              TextStyle(fontWeight: fontWeightSemiBold, fontSize: fontSize14),
+        ),
       ],
     );
   }
