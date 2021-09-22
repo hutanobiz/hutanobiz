@@ -176,7 +176,7 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
                       _enableButton = true;
                     });
                   },
-                  child: ListItem(specialityList[index]),
+                  child: ListItem(specialityList[index], () {}),
                 );
               }),
           SizedBox(height: spacing10),

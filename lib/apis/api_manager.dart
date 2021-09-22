@@ -847,6 +847,16 @@ class ApiManager {
     }
   }
 
+   Future<CommonRes> deleteProviderGroup(Map model) async {
+    try {
+      final response =
+          await _apiService.post('api/patient/delete-provider-group', data:  model);
+      return CommonRes.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
   Future<ResMyProviderNetwork> getMyProviderNetwork() async {
     try {
       final response = await _apiService.get(api + apiMyProviderNetwork);

@@ -11,6 +11,7 @@ import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/constants.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/dialog_utils.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/utils/progress_dialog.dart';
 import 'package:hutano/widgets/app_header.dart';
@@ -18,6 +19,7 @@ import 'package:hutano/widgets/custom_back_button.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/hutano_progressbar.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
+import 'package:hutano/widgets/widgets.dart';
 
 class MyProviderGroups extends StatefulWidget {
   MyProviderGroups({Key key, this.showBack = false}) : super(key: key);
@@ -27,6 +29,7 @@ class MyProviderGroups extends StatefulWidget {
 }
 
 class _MyProviderGroupsState extends State<MyProviderGroups> {
+  bool isLoading = false;
   List<ProviderNetwork> specialityList = <ProviderNetwork>[];
   @override
   void initState() {
@@ -80,6 +83,7 @@ class _MyProviderGroupsState extends State<MyProviderGroups> {
         isBackRequired: false,
         centerTitle: !widget.showBack,
         addTitle: !widget.showBack,
+        isLoading: isLoading,
 
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -168,7 +172,15 @@ class _MyProviderGroupsState extends State<MyProviderGroups> {
                   Navigator.pushNamed(context, Routes.myProviderGroupDetail,
                       arguments: specialityList[index]);
                 },
-                child: ListItem(specialityList[index]),
+                child: ListItem(specialityList[index], () {
+                  Widgets.showConfirmationDialog(
+                    context: context,
+                    description: "Are you sure to delete this address?",
+                    onLeftPressed: () => _deleteAddress(
+                      specialityList[index],
+                    ),
+                  );
+                }),
               );
             }),
         SizedBox(height: spacing20),
@@ -215,6 +227,39 @@ class _MyProviderGroupsState extends State<MyProviderGroups> {
     );
   }
 
+  // void _deleteAddress(String id) {
+  //   // Navigator.pop(context);
+
+  //   setLoading(true);
+  //   api.deleteAddress(_token, id).whenComplete(() {
+  //     setLoading(false);
+
+  //     if (_selectedAddress['_id'].toString() == id) _selectedAddress = null;
+
+  //     addressList.removeWhere((element) => element['_id'].toString() == id);
+  //     setState(() {});
+  //   }).futureError((e) {
+  //     setLoading(false);
+  //     e.toString().debugLog();
+  //   });
+  // }
+
+  _deleteAddress(ProviderNetwork providerNetwork) async {
+    ProgressDialogUtils.showProgressDialog(context);
+    try {
+      var map = {'groupId': providerNetwork.sId};
+      var res = await ApiManager().deleteProviderGroup(map);
+      ProgressDialogUtils.dismissProgressDialog();
+      specialityList.remove(providerNetwork);
+      setState(() {});
+    } on ErrorModel catch (e) {
+      ProgressDialogUtils.dismissProgressDialog();
+      DialogUtils.showAlertDialog(context, e.response);
+    } catch (e) {
+      ProgressDialogUtils.dismissProgressDialog();
+    }
+  }
+
   Widget _buildBottomButtons() {
     return HutanoButton(
         label: 'Proceed',
@@ -224,5 +269,11 @@ class _MyProviderGroupsState extends State<MyProviderGroups> {
             Routes.addProviderSuccess,
           );
         });
+  }
+
+  setLoading(loading) {
+    setState(() {
+      isLoading = loading;
+    });
   }
 }

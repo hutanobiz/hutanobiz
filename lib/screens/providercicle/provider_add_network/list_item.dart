@@ -10,7 +10,8 @@ import 'model/provider_network.dart';
 
 class ListItem extends StatelessWidget {
   final ProviderNetwork _item;
-  ListItem(this._item);
+  final Function onDeleteGroup;
+  ListItem(this._item, this.onDeleteGroup);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -49,6 +50,21 @@ class ListItem extends StatelessWidget {
               ),
             ),
           ),
+
+          GestureDetector(
+            onTap: onDeleteGroup,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                Icons.delete,
+                size: 24,
+                color: AppColors.windsor,
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 20,
+          ),
           Image.asset(
             // _item.isSelected
             //     ? FileConstants.icCheck
@@ -57,7 +73,7 @@ class ListItem extends StatelessWidget {
             height: 22,
             fit: BoxFit.cover,
             width: 22,
-          )
+          ),
         ],
       ),
     );
