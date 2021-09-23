@@ -284,50 +284,53 @@ class LocationDialog {
                               children: [
                                 SizedBox(height: 130),
                                 Expanded(
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: _placeList.length,
-                                    itemBuilder: (context, index) {
-                                      return ListTile(
-                                        tileColor: Colors.white,
-                                        onTap: () async {
-                                          detail =
-                                              await _places.getDetailsByPlaceId(
-                                                  _placeList[index]
-                                                      ["place_id"]);
-                                          final lat = detail
-                                              .result.geometry.location.lat;
-                                          final lng = detail
-                                              .result.geometry.location.lng;
-                                          _myLocation = CameraPosition(
-                                            bearing: 0,
-                                            target: LatLng(lat, lng),
-                                            zoom: 17.0,
-                                          );
-                                          print(detail.result.adrAddress
-                                              .toString());
-                                          PlacesDetailsResponse aa = detail;
-                                          print(aa);
-                                          print(aa.result.adrAddress);
+                                  child: Container(
+                                    color: Colors.white,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: _placeList.length,
+                                      itemBuilder: (context, index) {
+                                        return ListTile(
+                                          tileColor: Colors.white,
+                                          onTap: () async {
+                                            detail = await _places
+                                                .getDetailsByPlaceId(
+                                                    _placeList[index]
+                                                        ["place_id"]);
+                                            final lat = detail
+                                                .result.geometry.location.lat;
+                                            final lng = detail
+                                                .result.geometry.location.lng;
+                                            _myLocation = CameraPosition(
+                                              bearing: 0,
+                                              target: LatLng(lat, lng),
+                                              zoom: 17.0,
+                                            );
+                                            print(detail.result.adrAddress
+                                                .toString());
+                                            PlacesDetailsResponse aa = detail;
+                                            print(aa);
+                                            print(aa.result.adrAddress);
 
-                                          _addressController.text =
-                                              aa.result.name;
-                                          if (controller == null) {
-                                            controller =
-                                                await _controller.future;
-                                          }
-                                          controller.animateCamera(
-                                              CameraUpdate.newCameraPosition(
-                                            _myLocation,
-                                          ));
-                                          setModalState(() {
-                                            isShowList = false;
-                                          });
-                                        },
-                                        title: Text(
-                                            _placeList[index]["description"]),
-                                      );
-                                    },
+                                            _addressController.text =
+                                                aa.result.name;
+                                            if (controller == null) {
+                                              controller =
+                                                  await _controller.future;
+                                            }
+                                            controller.animateCamera(
+                                                CameraUpdate.newCameraPosition(
+                                              _myLocation,
+                                            ));
+                                            setModalState(() {
+                                              isShowList = false;
+                                            });
+                                          },
+                                          title: Text(
+                                              _placeList[index]["description"]),
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
                               ],
@@ -340,23 +343,26 @@ class LocationDialog {
                                 children: [
                                   SizedBox(height: 200),
                                   Expanded(
-                                    child: ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: radiusList.length,
-                                      itemBuilder: (context, index) {
-                                        return ListTile(
-                                          tileColor: Colors.white,
-                                          onTap: () {
-                                            radiuscontroller.text =
-                                                radiusList[index] + ' Miles';
-                                            setModalState(() {
-                                              isShowRadiusList = false;
-                                            });
-                                          },
-                                          title: Text(
-                                              radiusList[index] + ' Miles'),
-                                        );
-                                      },
+                                    child: Container(
+                                      color: Colors.white,
+                                      child: ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: radiusList.length,
+                                        itemBuilder: (context, index) {
+                                          return ListTile(
+                                            tileColor: Colors.white,
+                                            onTap: () {
+                                              radiuscontroller.text =
+                                                  radiusList[index] + ' Miles';
+                                              setModalState(() {
+                                                isShowRadiusList = false;
+                                              });
+                                            },
+                                            title: Text(
+                                                radiusList[index] + ' Miles'),
+                                          );
+                                        },
+                                      ),
                                     ),
                                   ),
                                 ],
