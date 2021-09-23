@@ -151,17 +151,32 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
   Widget _newAddAddressButton(BuildContext context) => Padding(
       padding: EdgeInsets.only(left: 20),
       child: IntrinsicWidth(
-        child: TextWithImage(
-          imageSpacing: spacing10,
-          image: FileConstants.icLocationPin,
-          label: Localization.of(context).addNewAddressLabel,
-          size: 18,
-          textStyle: TextStyle(
-              color: AppColors.windsor,
-              fontWeight: fontWeightSemiBold,
-              fontSize: fontSize14),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextWithImage(
+            imageSpacing: spacing10,
+            image: FileConstants.icLocationPin,
+            label: Localization.of(context).addNewAddressLabel,
+            size: 18,
+            textStyle: TextStyle(
+                color: AppColors.windsor,
+                fontWeight: fontWeightSemiBold,
+                fontSize: fontSize14),
+          ),
         ),
-      ).onClick(onTap: () {}));
+      ).onClick(onTap: () {
+        Navigator.pushNamed(
+          context,
+          Routes.onsiteEditAddress,
+        ).then((value) {
+          if (value != null && value) {
+            setState(() {
+              _addressesFuture = api.getAddress(_token);
+              isAddressAdded = true;
+            });
+          }
+        });
+      }));
 
   Widget _buildList() {
     return FutureBuilder<List<dynamic>>(
