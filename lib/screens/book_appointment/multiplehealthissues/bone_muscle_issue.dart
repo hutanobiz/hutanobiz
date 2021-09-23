@@ -1736,7 +1736,8 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                 .listOfSelectedHealthIssues
                 .length -
             1) {
-      Navigator.of(context).pushNamed(Routes.allImagesTabsScreen);
+      // Navigator.of(context).pushNamed(Routes.allImagesTabsScreen);
+       Navigator.of(context).pushNamed(Routes.bookingUploadImages);
     } else {
       Provider.of<HealthConditionProvider>(context, listen: false)
           .incrementCurrentIndex();

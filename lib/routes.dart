@@ -27,6 +27,8 @@ import 'package:hutano/screens/appointments/video_call.dart';
 import 'package:hutano/screens/appointments/view_medical_history.dart';
 import 'package:hutano/screens/appointments/virtual_waiting_room.dart';
 import 'package:hutano/screens/book_appointment/booking_summary.dart';
+import 'package:hutano/screens/book_appointment/booking_upload_images.dart';
+import 'package:hutano/screens/book_appointment/booking_upload_medical_document.dart';
 import 'package:hutano/screens/book_appointment/conditiontime/condition_time.dart';
 import 'package:hutano/screens/book_appointment/confirm_book_appointment.dart';
 import 'package:hutano/screens/book_appointment/diagnosis/test_diagnosis.dart';
@@ -270,6 +272,9 @@ class Routes {
   static const String officeDirectionScreen = '/officeDirectionScreen';
   static const String myProviderGroupDetail = '/myProviderGroupDetail';
   static const String myProviderGroups = '/myProviderGroups';
+  static const String bookingUploadImages = '/bookingUploadImages';
+  static const String bookingUploadMedicalDocument =
+      '/bookingUploadMedicalDocument';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final dynamic args = settings.arguments;
@@ -909,6 +914,14 @@ class Routes {
       case allImagesTabsScreen:
         return _buildRoute(settings, AllImagesTabs());
         break;
+
+      case bookingUploadImages:
+        return _buildRoute(settings, BookingUploadImages());
+        break;
+      case bookingUploadMedicalDocument:
+        return _buildRoute(settings, BookingUploadMedicalDocument());
+        break;
+
       case allDocumentsTabsScreen:
         return _buildRoute(settings, AllDocumentsTabs());
         break;
