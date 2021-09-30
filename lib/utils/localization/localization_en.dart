@@ -1469,7 +1469,7 @@ class LocalizationEN implements Localization {
 
   @override
   String get actuallyMakesYourProblemWorst =>
-      "Activity that makes your problem worst";
+      "Activity that makes your problem worse";
 
   @override
   String get improvingProblem => "Improving";

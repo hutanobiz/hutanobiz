@@ -89,12 +89,14 @@ class _EffectAbilityScreenState extends State<EffectAbilityScreen> {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    _activityList[index].timeLabel,
-                    style: TextStyle(
-                        fontWeight: fontWeightRegular,
-                        fontSize: fontSize14,
-                        color: colorBlack2),
+                  Expanded(
+                    child: Text(
+                      _activityList[index].timeLabel,
+                      style: TextStyle(
+                          fontWeight: fontWeightRegular,
+                          fontSize: fontSize14,
+                          color: colorBlack2),
+                    ),
                   ),
                   Radio(
                       activeColor: AppColors.windsor,

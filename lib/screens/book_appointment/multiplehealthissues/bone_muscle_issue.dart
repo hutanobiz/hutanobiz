@@ -1001,12 +1001,14 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              _activityList[index].timeLabel,
-              style: TextStyle(
-                  fontWeight: fontWeightRegular,
-                  fontSize: fontSize14,
-                  color: colorBlack2),
+            Expanded(
+              child: Text(
+                _activityList[index].timeLabel,
+                style: TextStyle(
+                    fontWeight: fontWeightRegular,
+                    fontSize: fontSize14,
+                    color: colorBlack2),
+              ),
             ),
             Radio(
                 activeColor: AppColors.windsor,
@@ -1737,7 +1739,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                 .length -
             1) {
       // Navigator.of(context).pushNamed(Routes.allImagesTabsScreen);
-       Navigator.of(context).pushNamed(Routes.bookingUploadImages);
+      Navigator.of(context).pushNamed(Routes.bookingUploadImages);
     } else {
       Provider.of<HealthConditionProvider>(context, listen: false)
           .incrementCurrentIndex();

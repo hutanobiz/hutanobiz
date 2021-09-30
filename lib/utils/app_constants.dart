@@ -20,7 +20,7 @@ class AppConstants {
   static const String icProviderGreenMessageStr = 'ic_green_message';
   static const String icProviderGreenVideoStr = 'ic_green_video';
   static const String requestAppointmentDateTimeFormat = 'MMMM dd,';
-  static const String vitalReviewsDateFormat = "dd/MM/yy";
+  static const String vitalReviewsDateFormat = "MM/dd/yyyy";
   static const String hours = "Hours";
   static const String days = "Days";
   static const String weeks = "Weeks";
