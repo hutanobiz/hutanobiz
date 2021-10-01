@@ -59,56 +59,53 @@ class _InviteByTextScreenState extends State<InviteByTextScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      child: SingleChildScrollView(
-        child: ConstrainedBox(
-          constraints:
-              BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(
-                height: spacing50,
-              ),
-              Text(
-                Localization.of(context).text,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                    color: colorBlack85,
-                    fontWeight: fontWeightBold,
-                    fontSize: fontSize20),
-              ),
-              SizedBox(
-                height: spacing35,
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  Localization.of(context).typeMessage,
-                  style: TextStyle(
-                      color: colorBlack,
-                      fontWeight: fontWeightMedium,
-                      fontSize: fontSize14),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        // crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: ListView(
+              children: [
+                Text(
+                  Localization.of(context).text,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      color: colorBlack85,
+                      fontWeight: fontWeightBold,
+                      fontSize: fontSize20),
                 ),
-              ),
-              SizedBox(
-                height: spacing15,
-              ),
-              Expanded(child: Form(key: _key, child: _buildMessage())),
-              SizedBox(
-                height: spacing35,
-              ),
-              _buildSendButton(),
-              SizedBox(
-                height: 5,
-              ),
-              if (widget.shareMessage == null) _buildNextButton(),
-              SizedBox(
-                height: spacing20,
-              ),
-            ],
+                SizedBox(
+                  height: 15,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    Localization.of(context).typeMessage,
+                    style: TextStyle(
+                        color: colorBlack,
+                        fontWeight: fontWeightMedium,
+                        fontSize: fontSize14),
+                  ),
+                ),
+                SizedBox(
+                  height: spacing15,
+                ),
+                _buildMessage(),
+                SizedBox(
+                  height: spacing35,
+                ),
+              ],
+            ),
           ),
-        ),
+          _buildSendButton(),
+          SizedBox(
+            height: 5,
+          ),
+          if (widget.shareMessage == null) _buildNextButton(),
+          SizedBox(
+            height: spacing20,
+          ),
+        ],
       ),
     );
   }
@@ -125,32 +122,29 @@ class _InviteByTextScreenState extends State<InviteByTextScreen> {
   }
 
   Widget _buildSendButton() {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Row(
-        children: [
-          HutanoButton(
+    return Row(
+      children: [
+        HutanoButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: FileConstants.icBack,
+          buttonType: HutanoButtonType.onlyIcon,
+        ),
+        SizedBox(
+          width: spacing50,
+        ),
+        Flexible(
+          flex: 1,
+          child: HutanoButton(
+            label: Localization.of(context).send,
+            labelColor: colorBlack,
             onPressed: () {
-              Navigator.of(context).pop();
+              _sendButtonClick();
             },
-            icon: FileConstants.icBack,
-            buttonType: HutanoButtonType.onlyIcon,
           ),
-          SizedBox(
-            width: spacing50,
-          ),
-          Flexible(
-            flex: 1,
-            child: HutanoButton(
-              label: Localization.of(context).send,
-              labelColor: colorBlack,
-              onPressed: () {
-                _sendButtonClick();
-              },
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
