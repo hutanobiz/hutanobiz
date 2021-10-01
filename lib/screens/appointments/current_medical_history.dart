@@ -263,7 +263,7 @@ class _CurrentAppointmentMedicalHistoryState
                             Navigator.of(context).pushNamed(
                               Routes.providerImageScreen,
                               arguments: ApiBaseHelper.imageUrl +
-                                  medicalDiagnostics[index].image,
+                                  medicalDiagnostics[index]['image'],
                             );
                           },
                   ),
