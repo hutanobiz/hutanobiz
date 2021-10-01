@@ -438,9 +438,9 @@ class Strings {
 
   static const String confirmPinMessage = "New and Confirm pin should be same";
 
-  static const String searchByNetwork = "Search by Network";
+  static const String searchByNetwork = "Search by network";
 
-  static const String inviteByPhone = "Invite by Phone Number";
+  static const String inviteByPhone = "Invite by phone number";
 
   static const String refCode = "Promo Code / Coupon";
 

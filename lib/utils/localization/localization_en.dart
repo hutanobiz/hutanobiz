@@ -585,10 +585,10 @@ class LocalizationEN implements Localization {
   String get confirmPinMessage => "New and Confirm pin should be same";
 
   @override
-  String get searchByNetwork => "Search by Network";
+  String get searchByNetwork => "Search by network";
 
   @override
-  String get inviteByPhone => "Invite by Phone Number";
+  String get inviteByPhone => "Invite by phone number";
 
   @override
   String get refCode => "Promo Code / Coupon";
