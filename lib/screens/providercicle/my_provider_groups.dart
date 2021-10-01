@@ -175,7 +175,7 @@ class _MyProviderGroupsState extends State<MyProviderGroups> {
                 child: ListItem(specialityList[index], () {
                   Widgets.showConfirmationDialog(
                     context: context,
-                    description: "Are you sure to delete this address?",
+                    description: "Are you sure to delete this group?",
                     onLeftPressed: () => _deleteAddress(
                       specialityList[index],
                     ),
