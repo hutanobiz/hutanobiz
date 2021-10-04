@@ -14,6 +14,7 @@ import 'package:hutano/utils/progress_dialog.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/app_header.dart';
 import 'package:hutano/widgets/controller.dart';
+import 'package:hutano/widgets/custom_back_button.dart';
 import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/skip_later.dart';
 
@@ -80,7 +81,12 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 emailText = email.substring(0, email.length);
 
                 return Column(
-                  children: [
+                  children: <Widget>[
+                    Row(
+                      children: [
+                        CustomBackButton(),
+                      ],
+                    ),
                     Expanded(
                       child: ListView(
                         children: [

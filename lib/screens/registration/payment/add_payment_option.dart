@@ -13,8 +13,8 @@ import 'package:hutano/utils/preference_utils.dart';
 // import 'package:hutano/screens/stripe/stripe_payment.dart';
 // import 'package:hutano/screens/stripe/token.dart';
 import 'package:hutano/widgets/app_header.dart';
+import 'package:hutano/widgets/custom_back_button.dart';
 import 'package:stripe_payment/stripe_payment.dart';
-
 
 import '../../../apis/api_constants.dart';
 import '../../../apis/api_manager.dart';
@@ -109,44 +109,50 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                child: Column(children: [
-                  AppHeader(
-                    progressSteps: HutanoProgressSteps.two,
-                    title: Localization.of(context).paymentOptions,
-                    subTitle: _isPaymentComplete
-                        ? Localization.of(context).complete
-                        : Localization.of(context).addCreditCard,
-                  ),
-                  SizedBox(
-                    height: spacing10,
-                  ),
-                  _buildCard(),
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadiusDirectional.circular(10)),
-                    padding: EdgeInsets.all(10),
-                    child: _getCreditCardField(),
-                  ),
-                  SizedBox(
-                    height: spacing50,
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: HutanoButton(
-                      width: 55,
-                      height: 55,
-                      color: accentColor,
-                      iconSize: 20,
-                      buttonType: HutanoButtonType.onlyIcon,
-                      icon: FileConstants.icForward,
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushReplacementNamed(Routes.inviteFamilyMember);
-                      },
+                child: Column(
+                    children: <Widget>[
+                    Row(
+                      children: [
+                        CustomBackButton(),
+                      ],
                     ),
-                  ),
-                ]),
+                      AppHeader(
+                        progressSteps: HutanoProgressSteps.two,
+                        title: Localization.of(context).paymentOptions,
+                        subTitle: _isPaymentComplete
+                            ? Localization.of(context).complete
+                            : Localization.of(context).addCreditCard,
+                      ),
+                      SizedBox(
+                        height: spacing10,
+                      ),
+                      _buildCard(),
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadiusDirectional.circular(10)),
+                        padding: EdgeInsets.all(10),
+                        child: _getCreditCardField(),
+                      ),
+                      SizedBox(
+                        height: spacing50,
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: HutanoButton(
+                          width: 55,
+                          height: 55,
+                          color: accentColor,
+                          iconSize: 20,
+                          buttonType: HutanoButtonType.onlyIcon,
+                          icon: FileConstants.icForward,
+                          onPressed: () {
+                            Navigator.of(context).pushReplacementNamed(
+                                Routes.inviteFamilyMember);
+                          },
+                        ),
+                      ),
+                    ]),
               ),
             ),
           ),

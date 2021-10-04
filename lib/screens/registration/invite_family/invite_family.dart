@@ -7,6 +7,7 @@ import 'package:hutano/strings.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/localization/localization.dart';
+import 'package:hutano/widgets/custom_back_button.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/skip_later.dart';
 import '../../../widgets/app_header.dart';
@@ -30,7 +31,12 @@ class _InviteFamilyScreenState extends State<InviteFamilyScreen> {
           body: Container(
             margin: EdgeInsets.all(5),
             child: Column(
-              children: [
+              children: <Widget>[
+                Row(
+                  children: [
+                    CustomBackButton(),
+                  ],
+                ),
                 AppHeader(
                   progressSteps: HutanoProgressSteps.three,
                   title: Localization.of(context).inviteFamilyAndFriends,

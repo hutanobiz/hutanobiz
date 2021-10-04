@@ -13,6 +13,7 @@ import 'package:hutano/utils/preference_key.dart';
 import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/utils/progress_dialog.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
+import 'package:hutano/widgets/custom_back_button.dart';
 import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/hutano_header_info.dart';
@@ -66,6 +67,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   // crossAxisAlignment: CrossAxisAlignment.stretch,
                   // mainAxisSize: MainAxisSize.max,
                   children: [
+                    Row(
+                      children: [
+                        CustomBackButton(),
+                      ],
+                    ),
                     SizedBox(height: spacing30),
                     HutanoHeaderInfo(
                       showLogo: true,

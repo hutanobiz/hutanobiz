@@ -8,6 +8,7 @@ import 'package:hutano/utils/argument_const.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/widgets/controller.dart';
+import 'package:hutano/widgets/custom_back_button.dart';
 import '../../../../utils/dialog_utils.dart';
 import '../../../../utils/enum_utils.dart';
 import '../../../../utils/extensions.dart';
@@ -222,6 +223,11 @@ class _OtpVerificationState extends State<OtpVerification> {
           body: SingleChildScrollView(
             child: Column(
               children: <Widget>[
+                Row(
+                  children: [
+                    CustomBackButton(),
+                  ],
+                ),
                 HutanoHeader(
                   headerInfo: _buildHeader(context),
                 ),

@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/widgets/custom_back_button.dart';
 import 'package:hutano/widgets/widgets.dart';
 
 import '../../../apis/api_manager.dart';
@@ -129,18 +130,24 @@ class _RegisterNumberState extends State<RegisterNumber> {
             key: _key,
             child: Container(
               child: SingleChildScrollView(
-                child: Column(children: <Widget>[
-                  HutanoHeader(
-                    headerInfo: HutanoHeaderInfo(
-                      title: Localization.of(context).yourPhone,
-                      subTitle: Localization.of(context).msgVerification,
+                child: Column(
+                     children: <Widget>[
+                    Row(
+                      children: [
+                        CustomBackButton(),
+                      ],
                     ),
-                  ),
-                  _buildPhoneInput(),
-                  _buildPrivacyPolicy(context),
-                  _buildSubmitButton(),
-                  _buildBottomLabels()
-                ]),
+                      HutanoHeader(
+                        headerInfo: HutanoHeaderInfo(
+                          title: Localization.of(context).yourPhone,
+                          subTitle: Localization.of(context).msgVerification,
+                        ),
+                      ),
+                      _buildPhoneInput(),
+                      _buildPrivacyPolicy(context),
+                      _buildSubmitButton(),
+                      _buildBottomLabels()
+                    ]),
               ),
             ),
           ),

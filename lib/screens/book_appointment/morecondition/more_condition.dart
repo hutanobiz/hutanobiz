@@ -165,9 +165,20 @@ class _MoreConditionState extends State<MoreCondition> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Align(
-                  alignment: Alignment.topRight,
-                  child: InkWell(
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: Image.network(
+                      ApiBaseHelper.imageUrl + image,
+                      width: 40,
+                      height: 40,
+                    ),
+                  ),
+                  Spacer(),
+                  InkWell(
                     onTap: () {
                       setState(() {
                         _conditionList[viewNumber].isSelected =
@@ -179,12 +190,8 @@ class _MoreConditionState extends State<MoreCondition> {
                             height: 24, width: 24)
                         : Image.asset("images/uncheckedCheck.png",
                             height: 24, width: 24),
-                  )),
-              SizedBox(height: 10),
-              Image.network(
-                ApiBaseHelper.imageUrl + image,
-                width: 40,
-                height: 40,
+                  ),
+                ],
               ),
               Expanded(
                 child: Padding(
@@ -322,7 +329,8 @@ class _MoreConditionState extends State<MoreCondition> {
                 .currentIndexOfIssue) {
           Provider.of<HealthConditionProvider>(context, listen: false)
               .updateCurrentIndex(0);
-          Navigator.of(context).pushNamed(Routes.routeBoneAndMuscle, arguments: {
+          Navigator.of(context)
+              .pushNamed(Routes.routeBoneAndMuscle, arguments: {
             ArgumentConstant.problemIdKey:
                 Provider.of<HealthConditionProvider>(context, listen: false)
                     .listOfSelectedHealthIssues[i]

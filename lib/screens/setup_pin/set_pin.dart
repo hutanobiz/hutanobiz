@@ -16,6 +16,7 @@ import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/utils/progress_dialog.dart';
 import 'package:hutano/utils/size_config.dart';
 import 'package:hutano/widgets/app_header.dart';
+import 'package:hutano/widgets/custom_back_button.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/hutano_pin_input.dart';
 import 'package:hutano/widgets/skip_later.dart';
@@ -259,7 +260,12 @@ class _SetupPinState extends State<SetupPin> {
           key: _scaffoldKey,
           body: SingleChildScrollView(
             child: Column(
-              children: [
+               children: <Widget>[
+                    Row(
+                      children: [
+                        CustomBackButton(),
+                      ],
+                    ),
                 AppHeader(
                   title: Localization.of(context).fasterLogin,
                   subTitle: Localization.of(context).createPin,

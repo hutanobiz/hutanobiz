@@ -2,9 +2,6 @@
 // import 'dart:isolate';
 // import 'dart:ui';
 // import 'dart:math' as math;
-// // import 'package:background_locator/background_locator.dart';
-// // import 'package:background_locator/location_dto.dart';
-// // import 'package:background_locator/settings/android_settings.dart';
 // import 'package:flutter/material.dart';
 // import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 // import 'package:google_maps_flutter/google_maps_flutter.dart';
