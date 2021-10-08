@@ -30,23 +30,22 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>This app requires access to the camera.</string>
+    <string>We need Camera permission to update your profile picture.</string>
 	<key>NSContactsUsageDescription</key>
-	<string>This app requires contacts access to function properly.</string>
+    <string>We need Contacts permission to invite your friends/family.</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Why is my app authenticating using face id?</string>
+    <string>We need Face ID permission to protect your account using face unlock.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Application wants to use your location</string>
+    <string>We need Location permission to find service providers in your area</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Application wants to use your location</string>
+    <string>We need Location permission to find service providers in your area</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Need to access your microphone to record a video and upload.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app requires access to the photo library.</string>
+    <string>We need Microphone permission for video consultation.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>We need Photos permission to update your profile picture.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
-		<string>location</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
