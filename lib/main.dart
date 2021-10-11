@@ -1,4 +1,6 @@
 import 'package:country_code_picker/country_localizations.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -56,6 +58,8 @@ void main() async {
   await init();
   Widget _defaultHome = SignInScreen();
   await Firebase.initializeApp();
+  FirebaseAnalytics analytics = FirebaseAnalytics();
+
 // Set the background messaging handler early on, as a named top-level function
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
@@ -127,6 +131,9 @@ void main() async {
           title: "Hutano",
           debugShowCheckedModeBanner: false,
           theme: AppTheme.theme,
+           navigatorObservers: [
+          FirebaseAnalyticsObserver(analytics: analytics),
+        ],
           home: _defaultHome,
           onGenerateRoute: Routes.generateRoute,
           navigatorKey: navigatorKey,
