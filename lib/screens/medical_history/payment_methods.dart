@@ -369,6 +369,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
               child: HutanoTextField(
                 focusNode: FocusNode(),
                 labelText: "Card Number",
+                isSecureField:true,
                 textInputAction: TextInputAction.next,
                 textInputType: TextInputType.number,
                 controller: _cardNumberController,
@@ -413,6 +414,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
               child: HutanoTextField(
                 focusNode: FocusNode(),
                 controller: _cvvController,
+                isSecureField:true,
                 textInputType: TextInputType.number,
                 textInputAction: TextInputAction.next,
                 textInputFormatter: [

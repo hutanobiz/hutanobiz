@@ -109,57 +109,68 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                child: Column(
-                    children: <Widget>[
-                    Row(
-                      children: [
-                        CustomBackButton(),
-                      ],
+                child: Column(children: <Widget>[
+                  Row(
+                    children: [
+                      CustomBackButton(),
+                    ],
+                  ),
+                  AppHeader(
+                    progressSteps: HutanoProgressSteps.two,
+                    title: Localization.of(context).paymentOptions,
+                    subTitle: _isPaymentComplete
+                        ? Localization.of(context).complete
+                        : Localization.of(context).addCreditCard,
+                  ),
+                  SizedBox(
+                    height: spacing10,
+                  ),
+                  _buildCard(),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadiusDirectional.circular(10)),
+                    padding: EdgeInsets.all(10),
+                    child: _getCreditCardField(),
+                  ),
+                  SizedBox(
+                    height: spacing50,
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: HutanoButton(
+                      width: 55,
+                      height: 55,
+                      color: accentColor,
+                      iconSize: 20,
+                      buttonType: HutanoButtonType.onlyIcon,
+                      icon: FileConstants.icForward,
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushReplacementNamed(Routes.inviteFamilyMember);
+                      },
                     ),
-                      AppHeader(
-                        progressSteps: HutanoProgressSteps.two,
-                        title: Localization.of(context).paymentOptions,
-                        subTitle: _isPaymentComplete
-                            ? Localization.of(context).complete
-                            : Localization.of(context).addCreditCard,
-                      ),
-                      SizedBox(
-                        height: spacing10,
-                      ),
-                      _buildCard(),
-                      Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadiusDirectional.circular(10)),
-                        padding: EdgeInsets.all(10),
-                        child: _getCreditCardField(),
-                      ),
-                      SizedBox(
-                        height: spacing50,
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: HutanoButton(
-                          width: 55,
-                          height: 55,
-                          color: accentColor,
-                          iconSize: 20,
-                          buttonType: HutanoButtonType.onlyIcon,
-                          icon: FileConstants.icForward,
-                          onPressed: () {
-                            Navigator.of(context).pushReplacementNamed(
-                                Routes.inviteFamilyMember);
-                          },
-                        ),
-                      ),
-                    ]),
+                  ),
+                ]),
               ),
             ),
           ),
         ));
   }
 
+  String replaceCharAt(String oldString, int index, String newChar) {
+    return oldString.substring(0, index) +
+        newChar +
+        oldString.substring(index + 1);
+  }
+
   _buildCard() {
+    String newNumber = _cardNumberController.text;
+
+    for (int i = 0; i < _cardNumberController.text.length - 4; i++) {
+      newNumber = replaceCharAt(newNumber, i, "*");
+      print("PHONE_NUMBER_LOOP:$newNumber");
+    }
     return Stack(
       children: [
         Image.asset(FileConstants.icCardBackground),
@@ -181,7 +192,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
         ),
         Positioned(
           child: Text(
-            _cardNumberController.text,
+            newNumber,
             style: const TextStyle(color: colorBrown, fontSize: 12),
           ),
           bottom: 50,
@@ -345,6 +356,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
       key: _keyNumber,
       child: Container(
           child: HutanoTextField(
+        isSecureField: true,
         textInputAction: TextInputAction.next,
         textInputType: TextInputType.number,
         floatingBehaviour: FloatingLabelBehavior.always,
@@ -385,6 +397,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
       child: HutanoTextField(
         width: SizeConfig.screenWidth / 2.6,
         controller: _cvvController,
+        isSecureField: true,
         textInputType: TextInputType.number,
         textInputAction: TextInputAction.next,
         floatingBehaviour: FloatingLabelBehavior.always,

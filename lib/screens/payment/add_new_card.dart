@@ -125,6 +125,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                             RegExp('[\\.]')),
                                         LengthLimitingTextInputFormatter(19),
                                       ],
+                                      obscureText: true,
                                       decoration: InputDecoration(
                                         labelText: "Credit Card Number",
                                         enabledBorder: OutlineInputBorder(
@@ -213,6 +214,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                         child: TextFormField(
                                             controller: _cvvController,
                                             key: _cvvKey,
+                                            obscureText: true,
                                             autovalidate: true,
                                             keyboardType: TextInputType.number,
                                             validator: Validations.validateCVV,
