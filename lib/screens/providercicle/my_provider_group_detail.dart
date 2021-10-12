@@ -92,7 +92,8 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
 
   onShare(int index, int subIndex) async {
     ProgressDialogUtils.showProgressDialog(context);
-    final id = _providerGroup.providerNetwork.doctorId[subIndex];
+    final id = _providerGroup.doctor[subIndex].sId;
+   // _providerGroup.providerNetwork.doctorId[subIndex];
     final request = ReqShareProvider(doctorId: id);
     try {
       var res = await ApiManager().shareProvider(request);
@@ -109,7 +110,8 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
 
   onRemove(int index, int subIndex) async {
     _removeProvider = ReqRemoveProvider(
-        doctorId: _providerGroup.providerNetwork.doctorId[subIndex],
+        doctorId: _providerGroup
+            .doctor[subIndex].sId, // .providerNetwork.doctorId[subIndex],
         groupId: _providerGroup.providerNetwork.sId,
         userId: getString(PreferenceKey.id));
 
@@ -126,7 +128,7 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
 
   onMakeAppointment(int index, int subIndex) {
     Navigator.of(context).pushNamed(Routes.providerProfileScreen,
-        arguments: _providerGroup.providerNetwork.doctorId[subIndex]);
+        arguments: _providerGroup.doctor[subIndex].sId);// _providerGroup.providerNetwork.doctorId[subIndex]);
   }
 
   _onRemove(int subIndex) async {
