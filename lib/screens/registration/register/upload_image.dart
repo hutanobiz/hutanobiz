@@ -43,12 +43,12 @@ class _UploadImageState extends State<UploadImage> {
       Localization.of(context).uploadPhoto,
       onTop: () {
         Navigator.pop(context);
-         FocusScope.of(context).unfocus();
+        FocusScope.of(context).unfocus();
         _openImageDialog(ImageSource.camera);
       },
       onBottom: () {
         Navigator.pop(context);
-         FocusScope.of(context).unfocus();
+        FocusScope.of(context).unfocus();
         _openImageDialog(ImageSource.gallery);
       },
     );
