@@ -584,8 +584,10 @@ class _MedicineInformationState extends State<MedicineInformation> {
     await ApiManager().addMedicationDetail(reqModel).then(((result) {
       if (result is ResMedicationDetail) {
         ProgressDialogUtils.dismissProgressDialog();
-        _searchFocusNode.unfocus();
         _searchController.clear();
+        medicines = [];
+        _searchFocusNode.unfocus();
+
         setState(() {
           _selectedMedicine = null;
           _medicineDose = null;
