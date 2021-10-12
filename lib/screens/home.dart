@@ -11,7 +11,6 @@ import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/widgets/bottom_bar/fancy_bottom_navigation.dart';
 import 'package:hutano/widgets/coming_soon.dart';
 
-const kstripePublishKey = 'pk_test_LlxS6SLz0PrOm9IY9mxM0LHo006tjnSqWX';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key, this.currentIndex = 0}) : super(key: key);

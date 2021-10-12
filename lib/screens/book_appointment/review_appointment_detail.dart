@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hutano/apis/api_constants.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/apis/api_manager.dart';
 import 'package:hutano/apis/error_model.dart';
@@ -37,7 +38,6 @@ import 'package:stripe_payment/stripe_payment.dart';
 
 import '../../colors.dart';
 import '../../routes.dart';
-import '../home.dart';
 
 class ReviewAppointmentDetail extends StatefulWidget {
   @override
