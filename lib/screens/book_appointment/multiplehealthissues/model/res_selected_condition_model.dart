@@ -35,6 +35,9 @@ class SelectedCondition {
   List<BodyPart> bodyPart;
   String createdAt;
   String updatedAt;
+  int hasBodyParts;
+  int hasSymptoms;
+  int hasRatings;
   int iV;
 
   SelectedCondition(
@@ -48,6 +51,9 @@ class SelectedCondition {
       this.bodyPart,
       this.createdAt,
       this.updatedAt,
+      this.hasBodyParts,
+      this.hasSymptoms,
+      this.hasRatings,
       this.iV});
 
   SelectedCondition.fromJson(Map<String, dynamic> json) {
@@ -66,6 +72,9 @@ class SelectedCondition {
     }
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
+    hasBodyParts = json['hasBodyParts'];
+    hasSymptoms = json['hasSymptoms'];
+    hasRatings = json['hasRatings'];
     iV = json['__v'];
   }
 
@@ -83,6 +92,9 @@ class SelectedCondition {
     }
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
+    data['hasBodyParts'] = this.hasBodyParts;
+    data['hasSymptoms'] = this.hasSymptoms;
+    data['hasRatings'] = this.hasRatings;
     data['__v'] = this.iV;
     return data;
   }

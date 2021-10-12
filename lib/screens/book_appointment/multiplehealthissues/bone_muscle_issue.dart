@@ -76,6 +76,9 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
     4: "Bottom",
     5: "All Over"
   };
+  int hasBodyParts;
+  int hasSymptoms;
+  int hasRatings;
   //Ability
   List<MedicineTimeModel> _activityList = [];
   int radioVal;
@@ -222,35 +225,60 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                         context,
                         widget.problemName ?? "Health Issue",
                         widget.problemImage),
-                    _commonHeaderText(context, "Search for body part"),
+                    hasBodyParts == 1
+                        ? _commonHeaderText(context, "Search for body part",
+                            _listOfSelectedDisease.length > 0)
+                        : SizedBox(),
 
-                    _buildSearchForBodyPart(context),
-                    _currentDiseaseList(context),
+                    hasBodyParts == 1
+                        ? _buildSearchForBodyPart(context)
+                        : SizedBox(),
+                    hasBodyParts == 1
+                        ? _currentDiseaseList(context)
+                        : SizedBox(),
                     Container(),
-                    _commonHeaderText(context,
-                        Localization.of(context).describeSymptomsHeader),
-                    _symptomsList(context),
-                    _commonHeaderText(
-                        context, Localization.of(context).rateYourPainHeader),
-                    _rateDiscomfort(context),
+                    hasSymptoms == 1
+                        ? _commonHeaderText(
+                            context,
+                            Localization.of(context).describeSymptomsHeader,
+                            _listOfSymptoms.indexWhere(
+                                    (element) => element.isSelected ?? false) !=
+                                -1)
+                        : SizedBox(),
+                    hasSymptoms == 1 ? _symptomsList(context) : SizedBox(),
+                    hasRatings == 1
+                        ? _commonHeaderText(context,
+                            Localization.of(context).rateYourPainHeader, null)
+                        : SizedBox(),
+                    hasRatings == 1 ? _rateDiscomfort(context) : SizedBox(),
                     //Problem Better & Worst
                     _commonHeaderText(
                         context,
-                        Localization.of(context)
-                            .actuallyMakesYourProblemBetter),
+                        Localization.of(context).actuallyMakesYourProblemBetter,
+                        _problemBetterList.indexWhere(
+                                (element) => element.isSelected ?? false) !=
+                            -1),
                     // _buildSearchForProblemBetter(context),
                     _problemBetterListView(context),
-                    _commonHeaderText(context,
-                        Localization.of(context).actuallyMakesYourProblemWorst),
+                    _commonHeaderText(
+                        context,
+                        Localization.of(context).actuallyMakesYourProblemWorst,
+                        _problemWorstList.indexWhere(
+                                (element) => element.isSelected ?? false) !=
+                            -1),
                     // _buildSearchForProblemWorst(context),
                     _problemWorstListView(context),
                     //Ebility List
-                    _commonHeaderText(context,
-                        Localization.of(context).conditionAffectedHeader),
+                    _commonHeaderText(
+                        context,
+                        Localization.of(context).conditionAffectedHeader,
+                        radioVal != null),
                     _activityEffectList(context),
                     //Problem Condition Time
-                    _treatedConditionHeader(context,
-                        Localization.of(context).howLongHadProblemHeader),
+                    _treatedConditionHeader(
+                        context,
+                        Localization.of(context).howLongHadProblemHeader,
+                        _selectedProValue != '0'),
                     // SizedBox(height: spacing10),
                     _commonProblemHeaderWidget(
                         context,
@@ -294,18 +322,22 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                           context, _proYearsList, AppConstants.years, true),
                     if (_listOfDescribeSymptoms.isNotEmpty)
                       _treatedConditionHeader(
-                          context, Localization.of(context).theProblemIsHeader),
+                          context,
+                          Localization.of(context).theProblemIsHeader,
+                          _listOfDescribeSymptoms.indexWhere(
+                                  (element) => element.isSelected ?? false) !=
+                              -1),
                     _describeSymptomsList(context),
                     //Treatment Condition Time
-                    _treatedConditionHeader(
-                        context, Localization.of(context).treatedForCondition),
+                    _treatedConditionHeader(context,
+                        Localization.of(context).treatedForCondition, null),
                     // SizedBox(height: spacing10),
                     Row(children: [
                       _yesButtonWidget(context),
                       SizedBox(width: spacing15),
                       _noButtonWidget(context),
                     ]),
-                    _howLongAgoHeader(context),
+                    _howLongAgoHeader(context, _selectedValue != '0'),
                     _commonHeaderWidget(
                         context,
                         Localization.of(context).hoursLabel,
@@ -387,17 +419,30 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
         ),
       );
 
-  Widget _commonHeaderText(BuildContext context, String header) => Padding(
+  Widget _commonHeaderText(
+          BuildContext context, String header, bool isSelected) =>
+      Padding(
         padding: EdgeInsets.only(
           top: spacing20,
           bottom: 12,
         ),
-        child: Text(
-          header,
-          style: TextStyle(
-              color: Color(0xff0e1c2a),
-              fontSize: fontSize16,
-              fontWeight: fontWeightBold),
+        child: Row(
+          children: [
+            Flexible(
+              child: Text(
+                header,
+                style: TextStyle(
+                    color: Color(0xff0e1c2a),
+                    fontSize: fontSize16,
+                    fontWeight: fontWeightBold),
+              ),
+            ),
+            SizedBox(width: 10),
+            isSelected == null
+                ? SizedBox()
+                : Icon(Icons.check_circle_outline,
+                    size: 20, color: isSelected ? Colors.green : Colors.grey)
+          ],
         ),
       );
 
@@ -1089,15 +1134,27 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
         );
       });
 
-  Widget _treatedConditionHeader(BuildContext context, String header) =>
+  Widget _treatedConditionHeader(
+          BuildContext context, String header, bool isSelected) =>
       Padding(
         padding: EdgeInsets.only(top: spacing20, bottom: spacing10),
-        child: Text(
-          header,
-          style: TextStyle(
-              color: Color(0xff0e1c2a),
-              fontSize: fontSize16,
-              fontWeight: fontWeightBold),
+        child: Row(
+          children: [
+            Flexible(
+              child: Text(
+                header,
+                style: TextStyle(
+                    color: Color(0xff0e1c2a),
+                    fontSize: fontSize16,
+                    fontWeight: fontWeightBold),
+              ),
+            ),
+            SizedBox(width: 10),
+            isSelected == null
+                ? SizedBox()
+                : Icon(Icons.check_circle_outline,
+                    size: 20, color: isSelected ? Colors.green : Colors.grey)
+          ],
         ),
       );
 
@@ -1137,15 +1194,24 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
         height: 34,
       );
 
-  Widget _howLongAgoHeader(BuildContext context) => _isTreated
+  Widget _howLongAgoHeader(BuildContext context, bool isSelected) => _isTreated
       ? Padding(
           padding: EdgeInsets.only(top: spacing20, bottom: 0),
-          child: Text(
-            Localization.of(context).howLongAgoHeader,
-            style: TextStyle(
-                color: Color(0xff0e1c2a),
-                fontSize: fontSize16,
-                fontWeight: fontWeightBold),
+          child: Row(
+            children: [
+              Flexible(
+                child: Text(
+                  Localization.of(context).howLongAgoHeader,
+                  style: TextStyle(
+                      color: Color(0xff0e1c2a),
+                      fontSize: fontSize16,
+                      fontWeight: fontWeightBold),
+                ),
+              ),
+              SizedBox(width: 10),
+              Icon(Icons.check_circle_outline,
+                  size: 20, color: isSelected ? Colors.green : Colors.grey)
+            ],
           ),
         )
       : SizedBox();
@@ -1658,6 +1724,9 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
     await ApiManager().getHealthConditionDetails(reqModel).then(((result) {
       if (result is ResSelectConditionModel) {
         setState(() {
+          hasBodyParts = result.response[0].hasBodyParts ?? 1;
+          hasSymptoms = result.response[0].hasSymptoms ?? 1;
+          hasRatings = result.response[0].hasRatings ?? 1;
           result.response[0].problemBetter.forEach((element) {
             _problemBetterList.add(ProblemWorstBetterModel(element, false));
           });
@@ -1713,146 +1782,149 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
   // }
 
   void _onForwardTap(BuildContext context) {
-    if (_listOfSelectedDisease.length == 0) {
-      Widgets.showToast('Please select body part');
-    } else {
-      _listOfSelectedDisease.forEach((element) {
-        if (element.selectedSide == 0) {
-          Widgets.showToast('Please select body part side');
-          return;
-        } else {
-          List<BodyPartWithSide> bodyPartWithSide = [];
-          _listOfSelectedDisease.forEach((element) {
-            bodyPartWithSide.add(BodyPartWithSide(
-                name: element.bodyPart,
-                sides: element.selectedSide.toString()));
-          });
-          List<String> selectedSymptoms = [];
-          _listOfSymptoms.forEach((element) {
-            if (element.isSelected) {
-              selectedSymptoms.add(element.symptom);
-            }
-          });
-          _selectedProblemWorstList = [];
-          _problemWorstList.forEach((element) {
-            if (element.isSelected) {
-              _selectedProblemWorstList.add(element.reasonName);
-            }
-          });
-          _selectedProblemBetterList = [];
-          _problemBetterList.forEach((element) {
-            if (element.isSelected) {
-              _selectedProblemBetterList.add(element.reasonName);
-            }
-          });
-          Problems model = Problems(
-            problemId: widget.problemId,
-            image: widget.problemImage,
-            name: widget.problemName,
-            bodyPart: bodyPartWithSide,
-            problemRating: _discomfortIntensity.toInt(),
-            symptoms: selectedSymptoms,
-            dailyActivity: radioVal != null ? radioVal.toString() : "",
-            problemBetter: _selectedProblemBetterList,
-            problemWorst: _selectedProblemWorstList,
-            isProblemImproving: "",
-            isTreatmentReceived: _isTreated ? "1" : "0",
-            problemFacingTimeSpan: _selectedProValue != "0"
-                ? ProblemFacingTimeSpan(
-                    type: _selectedProType, period: _selectedProValue)
-                : ProblemFacingTimeSpan(type: "", period: ""),
-            treatmentReceived: !_isTreated
-                ? ProblemFacingTimeSpan(type: "", period: "")
-                : _selectedValue != "0"
-                    ? ProblemFacingTimeSpan(
-                        type: _selectedType, period: _selectedValue)
-                    : ProblemFacingTimeSpan(type: "", period: ""),
-          );
-          _listOfDescribeSymptoms.forEach((element) {
-            if (element.index == 1) {
-              if (element.isSelected) {
-                if (_isPressedOnProblemImproving) {
-                  model.isProblemImproving = "0";
-                }
-              }
-            } else if (element.index == 2) {
-              if (element.isSelected) {
-                if (_isPressedOnProblemImproving) {
-                  model.isProblemImproving = "1";
-                }
-              }
-            } else if (element.index == 3) {
-              if (element.isSelected) {
-                if (_isPressedOnProblemImproving) {
-                  model.isProblemImproving = "2";
-                }
-              }
-            }
-          });
-          List<Problems> finalProblems =
-              Provider.of<HealthConditionProvider>(context, listen: false)
-                  .allHealthIssuesData;
-          if ((finalProblems.singleWhere(
-                  (it) => it.problemId == model.problemId,
-                  orElse: () => null)) !=
-              null) {
-            finalProblems
-                .removeWhere((element) => element.problemId == model.problemId);
-            finalProblems.add(model);
-            print('Already exists!');
+    if (hasBodyParts == 1) {
+      if (_listOfSelectedDisease.length == 0) {
+        Widgets.showToast('Please select body part');
+      } else {
+        _listOfSelectedDisease.forEach((element) {
+          if (element.selectedSide == 0) {
+            Widgets.showToast('Please select body part side');
+            return;
           } else {
-            finalProblems.add(model);
+            addProblemData();
           }
+        });
+      }
+    } else {
+      addProblemData();
+    }
+  }
 
-          finalProblems.forEach((element) {
-            element.problemBetter.toString().debugLog();
-            element.problemWorst.toString().debugLog();
-          });
-          Provider.of<HealthConditionProvider>(context, listen: false)
-              .updateAllHealthIssuesData(finalProblems);
-          if (Provider.of<HealthConditionProvider>(context, listen: false)
-                  .currentIndexOfIssue ==
-              Provider.of<HealthConditionProvider>(context, listen: false)
-                      .listOfSelectedHealthIssues
-                      .length -
-                  1) {
-            // Navigator.of(context).pushNamed(Routes.allImagesTabsScreen);
-            Navigator.of(context).pushNamed(Routes.bookingUploadImages);
-          } else {
-            Provider.of<HealthConditionProvider>(context, listen: false)
-                .incrementCurrentIndex();
-            for (int i = 0;
-                i <
-                    Provider.of<HealthConditionProvider>(context, listen: false)
-                        .listOfSelectedHealthIssues
-                        .length;
-                i++) {
-              if (i ==
-                  Provider.of<HealthConditionProvider>(context, listen: false)
-                      .currentIndexOfIssue) {
-                Navigator.of(context)
-                    .pushNamed(Routes.routeBoneAndMuscle, arguments: {
-                  ArgumentConstant.problemIdKey:
-                      Provider.of<HealthConditionProvider>(context,
-                              listen: false)
-                          .listOfSelectedHealthIssues[i]
-                          .sId,
-                  ArgumentConstant.problemNameKey:
-                      Provider.of<HealthConditionProvider>(context,
-                              listen: false)
-                          .listOfSelectedHealthIssues[i]
-                          .name,
-                  ArgumentConstant.problemImageKey:
-                      Provider.of<HealthConditionProvider>(context,
-                              listen: false)
-                          .listOfSelectedHealthIssues[i]
-                          .image
-                });
-              }
-            }
+  addProblemData() {
+    List<BodyPartWithSide> bodyPartWithSide = [];
+    _listOfSelectedDisease.forEach((element) {
+      bodyPartWithSide.add(BodyPartWithSide(
+          name: element.bodyPart, sides: element.selectedSide.toString()));
+    });
+    List<String> selectedSymptoms = [];
+    _listOfSymptoms.forEach((element) {
+      if (element.isSelected) {
+        selectedSymptoms.add(element.symptom);
+      }
+    });
+    _selectedProblemWorstList = [];
+    _problemWorstList.forEach((element) {
+      if (element.isSelected) {
+        _selectedProblemWorstList.add(element.reasonName);
+      }
+    });
+    _selectedProblemBetterList = [];
+    _problemBetterList.forEach((element) {
+      if (element.isSelected) {
+        _selectedProblemBetterList.add(element.reasonName);
+      }
+    });
+    Problems model = Problems(
+      problemId: widget.problemId,
+      image: widget.problemImage,
+      name: widget.problemName,
+      bodyPart: bodyPartWithSide,
+      problemRating: _discomfortIntensity.toInt(),
+      symptoms: selectedSymptoms,
+      dailyActivity: radioVal != null ? radioVal.toString() : "",
+      problemBetter: _selectedProblemBetterList,
+      problemWorst: _selectedProblemWorstList,
+      isProblemImproving: "",
+      isTreatmentReceived: _isTreated ? "1" : "0",
+      problemFacingTimeSpan: _selectedProValue != "0"
+          ? ProblemFacingTimeSpan(
+              type: _selectedProType, period: _selectedProValue)
+          : ProblemFacingTimeSpan(type: "", period: ""),
+      treatmentReceived: !_isTreated
+          ? ProblemFacingTimeSpan(type: "", period: "")
+          : _selectedValue != "0"
+              ? ProblemFacingTimeSpan(
+                  type: _selectedType, period: _selectedValue)
+              : ProblemFacingTimeSpan(type: "", period: ""),
+    );
+    _listOfDescribeSymptoms.forEach((element) {
+      if (element.index == 1) {
+        if (element.isSelected) {
+          if (_isPressedOnProblemImproving) {
+            model.isProblemImproving = "0";
           }
         }
-      });
+      } else if (element.index == 2) {
+        if (element.isSelected) {
+          if (_isPressedOnProblemImproving) {
+            model.isProblemImproving = "1";
+          }
+        }
+      } else if (element.index == 3) {
+        if (element.isSelected) {
+          if (_isPressedOnProblemImproving) {
+            model.isProblemImproving = "2";
+          }
+        }
+      }
+    });
+    List<Problems> finalProblems =
+        Provider.of<HealthConditionProvider>(context, listen: false)
+            .allHealthIssuesData;
+    if ((finalProblems.singleWhere((it) => it.problemId == model.problemId,
+            orElse: () => null)) !=
+        null) {
+      finalProblems
+          .removeWhere((element) => element.problemId == model.problemId);
+      finalProblems.add(model);
+      print('Already exists!');
+    } else {
+      finalProblems.add(model);
+    }
+
+    finalProblems.forEach((element) {
+      element.problemBetter.toString().debugLog();
+      element.problemWorst.toString().debugLog();
+    });
+    Provider.of<HealthConditionProvider>(context, listen: false)
+        .updateAllHealthIssuesData(finalProblems);
+    if (Provider.of<HealthConditionProvider>(context, listen: false)
+            .currentIndexOfIssue ==
+        Provider.of<HealthConditionProvider>(context, listen: false)
+                .listOfSelectedHealthIssues
+                .length -
+            1) {
+      // Navigator.of(context).pushNamed(Routes.allImagesTabsScreen);
+      Navigator.of(context).pushNamed(Routes.bookingUploadImages);
+    } else {
+      Provider.of<HealthConditionProvider>(context, listen: false)
+          .incrementCurrentIndex();
+      for (int i = 0;
+          i <
+              Provider.of<HealthConditionProvider>(context, listen: false)
+                  .listOfSelectedHealthIssues
+                  .length;
+          i++) {
+        if (i ==
+            Provider.of<HealthConditionProvider>(context, listen: false)
+                .currentIndexOfIssue) {
+          Navigator.of(context)
+              .pushNamed(Routes.routeBoneAndMuscle, arguments: {
+            ArgumentConstant.problemIdKey:
+                Provider.of<HealthConditionProvider>(context, listen: false)
+                    .listOfSelectedHealthIssues[i]
+                    .sId,
+            ArgumentConstant.problemNameKey:
+                Provider.of<HealthConditionProvider>(context, listen: false)
+                    .listOfSelectedHealthIssues[i]
+                    .name,
+            ArgumentConstant.problemImageKey:
+                Provider.of<HealthConditionProvider>(context, listen: false)
+                    .listOfSelectedHealthIssues[i]
+                    .image
+          });
+        }
+      }
     }
   }
 
