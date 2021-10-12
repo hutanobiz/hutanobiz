@@ -180,17 +180,21 @@ class DialogUtils {
       bool isCancelEnable,
       Function cancelButtonAction) {
     return AlertDialog(
-      title: Text(Strings.appName),
-      content: Text(message),
-      actions: _okCancelActions(
-        context: context,
-        okButtonTitle: okButtonTitle,
-        cancelButtonTitle: cancelButtonTitle,
-        okButtonAction: okButtonAction,
-        isCancelEnable: isCancelEnable,
-        cancelButtonAction: cancelButtonAction,
-      ),
-    );
+        title: Text(Strings.appName),
+        content: Text(message),
+        actions: isCancelEnable
+            ? _okCancelActions(
+                context: context,
+                okButtonTitle: okButtonTitle,
+                cancelButtonTitle: cancelButtonTitle,
+                okButtonAction: okButtonAction,
+                isCancelEnable: isCancelEnable,
+                cancelButtonAction: cancelButtonAction,
+              )
+            : _okAction(
+                context: context,
+                okButtonAction: okButtonAction,
+                okButtonTitle: okButtonTitle));
   }
 
   static CupertinoAlertDialog _showOkCancelCupertinoAlertDialog(
