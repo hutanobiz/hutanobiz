@@ -59,7 +59,7 @@ class ProviderWidget extends StatelessWidget {
         practicingSince = "---",
         professionalTitle = "---",
         distance = "0",
-        address = '---';
+        address;
     bool isOnline = false;
 
     isOnline = data['ondemandavailabledoctor'] != null
@@ -162,22 +162,25 @@ class ProviderWidget extends StatelessWidget {
 
     if (data["businessLocation"] != null) {
       dynamic business = data["businessLocation"];
+      if (business['zipCode'] == null) {
+        address = null;
+      } else {
+        dynamic _state;
 
-      dynamic _state;
+        if (business["state"] is Map && business["state"].length > 0) {
+          _state = business["state"];
+        } else if (data['State'] != null && data["State"].length > 0) {
+          _state = data['State'][0];
+        }
 
-      if (business["state"] is Map && business["state"].length > 0) {
-        _state = business["state"];
-      } else if (data['State'] != null && data["State"].length > 0) {
-        _state = data['State'][0];
+        address = Extensions.addressFormat(
+          business["address"]?.toString(),
+          business["street"]?.toString(),
+          business["city"]?.toString(),
+          _state,
+          business["zipCode"]?.toString(),
+        );
       }
-
-      address = Extensions.addressFormat(
-        business["address"]?.toString(),
-        business["street"]?.toString(),
-        business["city"]?.toString(),
-        _state,
-        business["zipCode"]?.toString(),
-      );
     }
 
     return Stack(
@@ -372,13 +375,17 @@ class ProviderWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8.0, 3.0, 8.0, 3.0),
-                child: Divider(
-                  thickness: 0.5,
-                  color: Colors.grey[300],
-                ),
-              ),
+              address == null
+                  ? SizedBox(
+                      height: 12,
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.fromLTRB(8.0, 3.0, 8.0, 3.0),
+                      child: Divider(
+                        thickness: 0.5,
+                        color: Colors.grey[300],
+                      ),
+                    ),
               if (appointmentTime != null)
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 3.0, 8.0, 15.0),
@@ -452,97 +459,105 @@ class ProviderWidget extends StatelessWidget {
                           ]),
                         )
                       : SizedBox(),
-              Padding(
-                padding: isOptionsShow
-                    ? const EdgeInsets.only(left: 12.0, right: 12.0)
-                    : const EdgeInsets.only(
-                        left: spacing12,
-                        right: spacing12,
-                        bottom: spacing10,
-                        top: spacing10),
-                child: Row(
-                  children: <Widget>[
-                    if (appointmentTime == null) ...[
-                      'ic_location_grey'.imageIcon(height: 14.0, width: 11.0),
-                      SizedBox(width: 3.0),
-                      Expanded(
-                        child: Text(
-                          address,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontWeight: fontWeightRegular,
-                              fontSize: fontSize12),
-                        ).onClick(
-                          onTap:
-                              onLocationClick != null ? onLocationClick : null,
-                        ),
-                      )
-                    ],
-                    if (appointmentTime != null) ...[
-                      Expanded(
-                        child: TextWithImage(
-                            size: 20,
-                            imageSpacing: 3,
-                            textStyle: TextStyle(
-                                color: colorBlack.withOpacity(0.7),
-                                fontWeight: FontWeight.w400,
-                                fontFamily: gilroyRegular,
-                                fontStyle: FontStyle.normal,
-                                fontSize: 12.0),
-                            label: appointmentTime,
-                            image: FileConstants.icCalendarGrey),
-                      ),
-                    ],
-                    SizedBox(width: 15),
-                    Align(
-                      alignment: Alignment.centerRight,
+              address == null
+                  ? SizedBox()
+                  : Padding(
+                      padding: isOptionsShow
+                          ? const EdgeInsets.only(left: 12.0, right: 12.0)
+                          : const EdgeInsets.only(
+                              left: spacing12,
+                              right: spacing12,
+                              bottom: spacing10,
+                              top: spacing10),
                       child: Row(
                         children: <Widget>[
-                          Image.asset(FileConstants.icMilesPointer,
-                              width: 15, height: 15),
-                          SizedBox(width: 5.0),
-                          Text(
-                            distance,
-                            style: TextStyle(
-                                fontWeight: fontWeightRegular,
-                                fontSize: fontSize12),
+                          if (appointmentTime == null) ...[
+                            'ic_location_grey'
+                                .imageIcon(height: 14.0, width: 11.0),
+                            SizedBox(width: 3.0),
+                            Expanded(
+                              child: Text(
+                                address,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontWeight: fontWeightRegular,
+                                    fontSize: fontSize12),
+                              ).onClick(
+                                onTap: onLocationClick != null
+                                    ? onLocationClick
+                                    : null,
+                              ),
+                            )
+                          ],
+                          if (appointmentTime != null) ...[
+                            Expanded(
+                              child: TextWithImage(
+                                  size: 20,
+                                  imageSpacing: 3,
+                                  textStyle: TextStyle(
+                                      color: colorBlack.withOpacity(0.7),
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: gilroyRegular,
+                                      fontStyle: FontStyle.normal,
+                                      fontSize: 12.0),
+                                  label: appointmentTime,
+                                  image: FileConstants.icCalendarGrey),
+                            ),
+                          ],
+                          SizedBox(width: 15),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Row(
+                              children: <Widget>[
+                                Image.asset(FileConstants.icMilesPointer,
+                                    width: 15, height: 15),
+                                SizedBox(width: 5.0),
+                                Text(
+                                  distance,
+                                  style: TextStyle(
+                                      fontWeight: fontWeightRegular,
+                                      fontSize: fontSize12),
+                                ),
+                              ],
+                            ),
                           ),
+                          if (appointmentTime != null) SizedBox(width: 35),
                         ],
                       ),
                     ),
-                    if (appointmentTime != null) SizedBox(width: 35),
-                  ],
-                ),
-              ),
               if (appointmentTime != null)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 8.0, 15.0),
-                  child: Row(
-                    children: [
-                      'ic_location_grey'.imageIcon(height: 14.0, width: 11.0),
-                      SizedBox(width: 3.0),
-                      Expanded(
-                        child: Text(
-                          address,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            decoration: onLocationClick != null
-                                ? TextDecoration.underline
-                                : TextDecoration.none,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 12,
-                            color: Colors.black.withOpacity(0.6),
-                          ),
-                        ).onClick(
-                          onTap:
-                              onLocationClick != null ? onLocationClick : null,
+                address == null
+                    ? SizedBox()
+                    : Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 0, 8.0, 15.0),
+                        child: Row(
+                          children: [
+                            'ic_location_grey'
+                                .imageIcon(height: 14.0, width: 11.0),
+                            SizedBox(width: 3.0),
+                            Expanded(
+                              child: Text(
+                                address,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  decoration: onLocationClick != null
+                                      ? TextDecoration.underline
+                                      : TextDecoration.none,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                  color: Colors.black.withOpacity(0.6),
+                                ),
+                              ).onClick(
+                                onTap: onLocationClick != null
+                                    ? onLocationClick
+                                    : null,
+                              ),
+                            )
+                          ],
                         ),
-                      )
-                    ],
-                  ),
-                ),
+                      ),
               isOptionsShow
                   ? Row(
                       children: [
