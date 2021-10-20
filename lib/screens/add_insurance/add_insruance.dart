@@ -132,7 +132,8 @@ class _AddInsuranceState extends State<AddInsurance> {
           if (myInsuranceList.isNotEmpty &&
               myInsuranceList[0].sId != null &&
               widget.insuranceType == InsuranceType.primary) {
-            Navigator.pushReplacementNamed(context, Routes.addInsuranceComplete);
+            Navigator.pushReplacementNamed(
+                context, Routes.addInsuranceComplete);
           } else {
             if (myInsuranceList.isNotEmpty && _insuranceList.isNotEmpty) {
               _insuranceList.removeWhere((element) {
@@ -423,10 +424,10 @@ class _AddInsuranceState extends State<AddInsurance> {
           showError(AddInsuranceError.memberId.index);
         },
         textInputFormatter: [
-          FilteringTextInputFormatter.digitsOnly,
-          CustomInputFormatter()
+          // FilteringTextInputFormatter.digitsOnly,
+          // CustomInputFormatter()
         ],
-        textInputType: TextInputType.number,
+        textInputType: TextInputType.text,
         textInputAction: TextInputAction.next);
   }
 
@@ -451,10 +452,10 @@ class _AddInsuranceState extends State<AddInsurance> {
           showError(AddInsuranceError.groupNumber.index);
         },
         textInputFormatter: [
-          FilteringTextInputFormatter.digitsOnly,
-          CustomInputFormatter()
+          // FilteringTextInputFormatter.digitsOnly,
+          // CustomInputFormatter()
         ],
-        textInputType: TextInputType.number,
+        textInputType: TextInputType.text,
         textInputAction: TextInputAction.next);
   }
 
@@ -465,7 +466,7 @@ class _AddInsuranceState extends State<AddInsurance> {
         focusedBorderColor: colorBlack20,
         controller: _healthPlanController,
         focusNode: _healthPlan,
-        textInputType: TextInputType.number,
+        textInputType: TextInputType.text,
         maxLength: 6,
         onFieldTap: () {
           showError(AddInsuranceError.healthPlan.index);
@@ -478,7 +479,7 @@ class _AddInsuranceState extends State<AddInsurance> {
           });
         },
         errorText: _healthPlanError,
-        textInputFormatter: [FilteringTextInputFormatter.digitsOnly],
+        textInputFormatter: [],
         labelText: Localization.of(context).healthPlan,
         onFieldSubmitted: (s) {
           FocusScope.of(context).requestFocus(_effectiveDate);
