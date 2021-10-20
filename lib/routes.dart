@@ -26,6 +26,7 @@ import 'package:hutano/screens/appointments/upload_images.dart';
 import 'package:hutano/screens/appointments/video_call.dart';
 import 'package:hutano/screens/appointments/view_medical_history.dart';
 import 'package:hutano/screens/appointments/virtual_waiting_room.dart';
+import 'package:hutano/screens/book_appointment/allergies.dart';
 import 'package:hutano/screens/book_appointment/booking_summary.dart';
 import 'package:hutano/screens/book_appointment/booking_upload_images.dart';
 import 'package:hutano/screens/book_appointment/booking_upload_medical_document.dart';
@@ -49,6 +50,7 @@ import 'package:hutano/screens/book_appointment/review_appointment_detail.dart';
 import 'package:hutano/screens/book_appointment/select_appointment_time_screen.dart';
 import 'package:hutano/screens/book_appointment/select_parking_screen.dart';
 import 'package:hutano/screens/book_appointment/select_services.dart';
+import 'package:hutano/screens/book_appointment/social_history_screen.dart';
 import 'package:hutano/screens/book_appointment/vitals/vital_reviews.dart';
 import 'package:hutano/screens/chat/chat.dart';
 import 'package:hutano/screens/dashboard/all_reviews_screen.dart';
@@ -275,6 +277,8 @@ class Routes {
   static const String bookingUploadImages = '/bookingUploadImages';
   static const String bookingUploadMedicalDocument =
       '/bookingUploadMedicalDocument';
+  static const String socialHistory = '/socialHistory';
+  static const String allergiesScreen = '/allergiesScreen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final dynamic args = settings.arguments;
@@ -921,7 +925,12 @@ class Routes {
       case bookingUploadMedicalDocument:
         return _buildRoute(settings, BookingUploadMedicalDocument());
         break;
-
+      case socialHistory:
+        return _buildRoute(settings, SocialHistoryScreen());
+        break;
+      case allergiesScreen:
+        return _buildRoute(settings, AllergiesScreen());
+        break;
       case allDocumentsTabsScreen:
         return _buildRoute(settings, AllDocumentsTabs());
         break;

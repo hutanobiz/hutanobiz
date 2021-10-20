@@ -15,6 +15,7 @@ import 'package:hutano/screens/book_appointment/conditiontime/model/req_treated_
 import 'package:hutano/screens/book_appointment/diagnosis/model/req_add_diagnostic_test_model.dart';
 import 'package:hutano/screens/book_appointment/diagnosis/model/res_diagnostic_test_model.dart';
 import 'package:hutano/screens/book_appointment/diagnosis/model/res_diagnostic_test_result.dart';
+import 'package:hutano/screens/book_appointment/model/allergy.dart';
 import 'package:hutano/screens/book_appointment/morecondition/model/res_more_condition_model.dart';
 import 'package:hutano/screens/book_appointment/multiplehealthissues/model/req_selected_condition_model.dart';
 import 'package:hutano/screens/book_appointment/multiplehealthissues/model/res_selected_condition_model.dart';
@@ -135,6 +136,16 @@ class ApiManager {
     }
   }
 
+  Future<List<Allergy>> searchAllergies(searchString) async {
+    try {
+      final response =
+          await _apiService.get('api/search-allergy?search=$searchString');
+      return AllergiesData.fromJson(response.data).response;
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
   Future<List<SearchAppointment>> searchAppointments(searchString) async {
     try {
       final response = await _apiService.get(
@@ -194,6 +205,15 @@ class ApiManager {
     }
   }
 
+  Future<List<Allergy>> getMyAllergies() async {
+    try {
+      final response = await _apiService.get('api/patient/medical-allergy');
+      return MyAllergiesData.fromJson(response.data).response[0].allergy;
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
   Future<ResCommunicationReasonModel> getCommunicationCenterReason() async {
     try {
       final response = await _apiService.get(getCommunicationReasonEndPoint);
@@ -231,6 +251,16 @@ class ApiManager {
     try {
       final response = await _apiService.post('api/patient/medical-history',
           data: {'medicalHistory': reqAddDiseaseModel.toJson()});
+      return response;
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+  Future<dynamic> addPatientAllergy(Allergy allergyModel) async {
+    try {
+      final response = await _apiService.post('api/patient/medical-allergy',
+          data: allergyModel.toJson());
       return response;
     } on DioError catch (error) {
       throw ErrorModel.fromJson(error.response.data);
@@ -341,17 +371,15 @@ class ApiManager {
     }
   }
 
-  Future<CommonRes> deleteMedication(
-      String medicationId) async {
+  Future<CommonRes> deleteMedication(String medicationId) async {
     try {
-      final response = await _apiService.post('api/patient/delete-medications',
-          data: {'id':medicationId});
+      final response = await _apiService
+          .post('api/patient/delete-medications', data: {'id': medicationId});
       return CommonRes.fromJson(response.data);
     } on DioError catch (error) {
       throw ErrorModel.fromJson(error.response.data);
     }
   }
-
 
   // https://dev.hutano.com/api/patient/delete-medications
 
@@ -847,10 +875,10 @@ class ApiManager {
     }
   }
 
-   Future<CommonRes> deleteProviderGroup(Map model) async {
+  Future<CommonRes> deleteProviderGroup(Map model) async {
     try {
-      final response =
-          await _apiService.post('api/patient/delete-provider-group', data:  model);
+      final response = await _apiService
+          .post('api/patient/delete-provider-group', data: model);
       return CommonRes.fromJson(response.data);
     } on DioError catch (error) {
       throw ErrorModel.fromJson(error.response.data);

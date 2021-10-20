@@ -882,6 +882,25 @@ class ApiBaseHelper {
     });
   }
 
+  Future<String> deletePatientAllergyHistory(String token, String allergyId) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    Map diseaseMap = {};
+    diseaseMap['medicalAllergy'] = allergyId;
+
+    return _netUtil
+        .post(
+      base_url + "api/patient/delete-medical-allergy",
+      body: diseaseMap,
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
+
   Future<List<dynamic>> getLanguages() {
     return _netUtil.get(base_url + "api/languages").then((res) {
       return res["response"];
