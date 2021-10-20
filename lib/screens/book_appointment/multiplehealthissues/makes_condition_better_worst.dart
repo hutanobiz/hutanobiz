@@ -12,6 +12,7 @@ import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/utils/progress_dialog.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:provider/provider.dart';
 
@@ -134,6 +135,8 @@ class _MakesConditionBetterWorstState extends State<MakesConditionBetterWorst> {
                 ? await _getFilteredProblemBetterList()
                 : [];
           },
+          keepSuggestionsOnLoading: false,
+          loadingBuilder: (context) => CustomLoader(),
           errorBuilder: (_, object) {
             return Container();
           },
@@ -234,6 +237,8 @@ class _MakesConditionBetterWorstState extends State<MakesConditionBetterWorst> {
                 ? await _getFilteredProblemWorstLst()
                 : [];
           },
+          keepSuggestionsOnLoading: false,
+          loadingBuilder: (context) => CustomLoader(),
           errorBuilder: (_, object) {
             return Container();
           },

@@ -5,10 +5,9 @@ import 'package:hutano/screens/registration/register/model/res_insurance_list.da
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/localization/localization.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/hutano_textfield.dart';
 import 'package:hutano/widgets/list_picker.dart';
-
-
 
 class InsuranceList extends StatefulWidget {
   final TextEditingController controller;
@@ -39,8 +38,10 @@ class _InsuranceListState extends State<InsuranceList> {
                 },
                 child: ListTile(
                   title: Center(
-                    child: Text(widget.insuranceList[pos].title,
-                    textAlign: TextAlign.center,),
+                    child: Text(
+                      widget.insuranceList[pos].title,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ));
           },
@@ -48,7 +49,7 @@ class _InsuranceListState extends State<InsuranceList> {
         context: context);
   }
 
-    Widget _buildAddressField() {
+  Widget _buildAddressField() {
     return TypeAheadFormField(
       textFieldConfiguration: TextFieldConfiguration(
           controller: widget.controller,
@@ -99,6 +100,8 @@ class _InsuranceListState extends State<InsuranceList> {
       suggestionsCallback: (pattern) async {
         return pattern.length > 0 ? _getFilteredInsuranceList() : [];
       },
+      keepSuggestionsOnLoading: false,
+      loadingBuilder: (context) => CustomLoader(),
       errorBuilder: (_, object) {
         return Container();
       },
@@ -111,7 +114,7 @@ class _InsuranceListState extends State<InsuranceList> {
         return suggestionsBox;
       },
       onSuggestionSelected: (suggestion) {
-        widget.onInsuranceSelected(suggestion.title,suggestion.sId);
+        widget.onInsuranceSelected(suggestion.title, suggestion.sId);
         // widget.controller.text = suggestion.title;
       },
       hideOnError: true,
@@ -119,10 +122,12 @@ class _InsuranceListState extends State<InsuranceList> {
       hideOnEmpty: true,
     );
   }
-  _getFilteredInsuranceList(){
-  return widget.insuranceList.where((element) => element.title.toLowerCase().contains(widget.controller.text.toLowerCase()));
-  }
 
+  _getFilteredInsuranceList() {
+    return widget.insuranceList.where((element) => element.title
+        .toLowerCase()
+        .contains(widget.controller.text.toLowerCase()));
+  }
 
   Widget _getEmailTextField() {
     return Container(

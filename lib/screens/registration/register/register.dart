@@ -12,6 +12,7 @@ import 'package:hutano/utils/address_util.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/utils/validations.dart';
 import 'package:hutano/widgets/custom_back_button.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/text_with_image.dart';
 
 import '../../../apis/api_manager.dart';
@@ -852,6 +853,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       suggestionsCallback: (pattern) async {
         return pattern.length > 3 ? await _getPlaceSuggetion(pattern) : [];
       },
+      keepSuggestionsOnLoading: false,
+      loadingBuilder: (context) => CustomLoader(),
       errorBuilder: (_, object) {
         return Container();
       },

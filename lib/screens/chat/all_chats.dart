@@ -131,6 +131,8 @@ class _ChatMainState extends State<ChatMain> {
           suggestionsCallback: (pattern) async {
             return pattern.length > 0 ? await _searchAppointments(pattern) : [];
           },
+          keepSuggestionsOnLoading: false,
+          loadingBuilder: (context) => CustomLoader(),
           errorBuilder: (_, object) {
             return Container();
           },

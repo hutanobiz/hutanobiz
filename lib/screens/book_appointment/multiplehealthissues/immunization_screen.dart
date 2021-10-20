@@ -7,6 +7,7 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/localization/localization.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
@@ -125,6 +126,8 @@ class _ImmunizationScreenState extends State<ImmunizationScreen> {
           suggestionsCallback: (pattern) async {
             return pattern.length > 0 ? await _getFilteredVaccineList() : [];
           },
+          keepSuggestionsOnLoading: false,
+          loadingBuilder: (context) => CustomLoader(),
           errorBuilder: (_, object) {
             return Container();
           },
@@ -291,6 +294,8 @@ class _ImmunizationScreenState extends State<ImmunizationScreen> {
             suggestionsCallback: (pattern) async {
               return pattern.length > 0 ? await _getFilteredSymptomsList() : [];
             },
+            keepSuggestionsOnLoading: false,
+            loadingBuilder: (context) => CustomLoader(),
             errorBuilder: (_, object) {
               return Container();
             },

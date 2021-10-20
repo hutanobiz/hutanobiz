@@ -14,6 +14,7 @@ import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/date_picker.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/localization/localization.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/hutano_textfield.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
@@ -276,6 +277,8 @@ class _AbnormalSensationState extends State<AbnormalSensation> {
           suggestionsCallback: (pattern) async {
             return pattern.length > 0 ? await _getFilteredInsuranceList() : [];
           },
+          keepSuggestionsOnLoading: false,
+          loadingBuilder: (context) => CustomLoader(),
           errorBuilder: (_, object) {
             return Container();
           },
@@ -382,6 +385,8 @@ class _AbnormalSensationState extends State<AbnormalSensation> {
             suggestionsCallback: (pattern) async {
               return pattern.length > 0 ? await _getFilteredSymptomsList() : [];
             },
+            keepSuggestionsOnLoading: false,
+            loadingBuilder: (context) => CustomLoader(),
             errorBuilder: (_, object) {
               return Container();
             },

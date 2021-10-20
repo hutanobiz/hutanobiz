@@ -10,6 +10,7 @@ import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/common_methods.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/localization/localization.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:provider/provider.dart';
@@ -170,6 +171,8 @@ class _BreathingIssueState extends State<BreathingIssue> {
           suggestionsCallback: (pattern) async {
             return pattern.length > 0 ? await _getFilteredSymptomsList() : [];
           },
+           keepSuggestionsOnLoading: false,
+          loadingBuilder: (context) => CustomLoader(),
           errorBuilder: (_, object) {
             return Container();
           },

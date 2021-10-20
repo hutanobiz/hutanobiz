@@ -30,6 +30,7 @@ import 'package:hutano/utils/progress_dialog.dart';
 import 'package:hutano/widgets/app_header.dart';
 import 'package:hutano/widgets/app_logo.dart';
 import 'package:hutano/widgets/custom_back_button.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/hutano_progressbar.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/widgets.dart';
@@ -93,7 +94,7 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
   onShare(int index, int subIndex) async {
     ProgressDialogUtils.showProgressDialog(context);
     final id = _providerGroup.doctor[subIndex].sId;
-   // _providerGroup.providerNetwork.doctorId[subIndex];
+    // _providerGroup.providerNetwork.doctorId[subIndex];
     final request = ReqShareProvider(doctorId: id);
     try {
       var res = await ApiManager().shareProvider(request);
@@ -128,7 +129,8 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
 
   onMakeAppointment(int index, int subIndex) {
     Navigator.of(context).pushNamed(Routes.providerProfileScreen,
-        arguments: _providerGroup.doctor[subIndex].sId);// _providerGroup.providerNetwork.doctorId[subIndex]);
+        arguments: _providerGroup.doctor[subIndex]
+            .sId); // _providerGroup.providerNetwork.doctorId[subIndex]);
   }
 
   _onRemove(int subIndex) async {
@@ -364,8 +366,10 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
                 ),
               )),
           suggestionsCallback: (pattern) async {
-            return await _searchProvider(pattern);
+            return pattern.length > 0 ? await _searchProvider(pattern) : [];
           },
+          keepSuggestionsOnLoading: false,
+          loadingBuilder: (context) => CustomLoader(),
           errorBuilder: (_, object) {
             return Container();
           },

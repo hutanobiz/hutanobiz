@@ -544,6 +544,8 @@ class _AddPharmacyState extends State<AddPharmacy> {
               ? await ApiManager().getPreferredPharmacyList(pattern)
               : [];
         },
+        keepSuggestionsOnLoading: false,
+        loadingBuilder: (context) => CustomLoader(),
         errorBuilder: (_, object) {
           return Container();
         },
@@ -641,6 +643,8 @@ class _AddPharmacyState extends State<AddPharmacy> {
         suggestionsCallback: (pattern) async {
           return pattern.length > 3 ? await _getPlaceSuggetion(pattern) : [];
         },
+        keepSuggestionsOnLoading: false,
+        loadingBuilder: (context) => CustomLoader(),
         errorBuilder: (_, object) {
           return Container();
         },

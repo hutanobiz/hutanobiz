@@ -4,6 +4,7 @@ import 'package:hutano/screens/registration/register/model/res_insurance_list.da
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/hutano_textfield.dart';
 import 'package:hutano/widgets/list_picker.dart';
 
@@ -98,6 +99,8 @@ class _InsuranceListState extends State<InsuranceList> {
       suggestionsCallback: (pattern) async {
         return pattern.length > 0 ? _getFilteredInsuranceList() : [];
       },
+      keepSuggestionsOnLoading: false,
+      loadingBuilder: (context) => CustomLoader(),
       errorBuilder: (_, object) {
         return Container();
       },

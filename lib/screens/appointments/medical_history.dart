@@ -167,6 +167,8 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
           suggestionsCallback: (pattern) async {
             return pattern.length > 0 ? await _getDiseasesList(pattern) : [];
           },
+          keepSuggestionsOnLoading: false,
+          loadingBuilder: (context) => CustomLoader(),
           errorBuilder: (_, object) {
             return Container();
           },
