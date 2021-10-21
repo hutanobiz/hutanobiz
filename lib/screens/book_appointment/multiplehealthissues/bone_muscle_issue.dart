@@ -137,6 +137,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
   ScrollController _listOfWorstController = ScrollController();
   TextEditingController _typeLocationController = TextEditingController();
   FocusNode _typeLocationFocusNode = FocusNode();
+  int _currentPartSideIndex;
 
   @override
   void initState() {
@@ -241,35 +242,48 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                         widget.problemName ?? "Health Issue",
                         widget.problemImage),
                     hasBodyParts == 1
-                        ? _commonHeaderText(context, "Search for body part",
+                        ? _commonHeaderText(context, "1. Search for body part",
                             _listOfSelectedDisease.length > 0)
                         : SizedBox(),
 
                     hasBodyParts == 1
                         ? _buildSearchForBodyPart(context)
                         : SizedBox(),
+
+//  if (_listOfSelectedDisease[index].hasInternalPart)
+//               if (!_listOfSelectedDisease[index].isItClicked)
+                    hasBodyParts == 1
+                        ? _commonHeaderText(context, "2. Which Side hurts?",
+                            _listOfSelectedDisease.length > 0)
+                        : SizedBox(),
+                    _buildDropDownBottomSheet(context, _currentPartSideIndex),
+
                     hasBodyParts == 1
                         ? _currentDiseaseList(context)
                         : SizedBox(),
                     Container(),
+
+                    hasRatings == 1
+                        ? _commonHeaderText(
+                            context,
+                            '3. ${Localization.of(context).rateYourPainHeader}',
+                            null)
+                        : SizedBox(),
+                    hasRatings == 1 ? _rateDiscomfort(context) : SizedBox(),
+
                     hasSymptoms == 1
                         ? _commonHeaderText(
                             context,
-                            Localization.of(context).describeSymptomsHeader,
+                            '4. ${Localization.of(context).describeSymptomsHeader}',
                             _listOfSymptoms.indexWhere(
                                     (element) => element.isSelected ?? false) !=
                                 -1)
                         : SizedBox(),
                     hasSymptoms == 1 ? _symptomsList(context) : SizedBox(),
-                    hasRatings == 1
-                        ? _commonHeaderText(context,
-                            Localization.of(context).rateYourPainHeader, null)
-                        : SizedBox(),
-                    hasRatings == 1 ? _rateDiscomfort(context) : SizedBox(),
                     //Problem Better & Worst
                     _commonHeaderText(
                         context,
-                        Localization.of(context).actuallyMakesYourProblemBetter,
+                        '5. ${Localization.of(context).actuallyMakesYourProblemBetter}',
                         _problemBetterList.indexWhere(
                                 (element) => element.isSelected ?? false) !=
                             -1),
@@ -277,7 +291,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                     _problemBetterListView(context),
                     _commonHeaderText(
                         context,
-                        Localization.of(context).actuallyMakesYourProblemWorst,
+                        '6. ${Localization.of(context).actuallyMakesYourProblemWorst}',
                         _problemWorstList.indexWhere(
                                 (element) => element.isSelected ?? false) !=
                             -1),
@@ -286,13 +300,13 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                     //Ebility List
                     _commonHeaderText(
                         context,
-                        Localization.of(context).conditionAffectedHeader,
+                        '7. ${Localization.of(context).conditionAffectedHeader}',
                         radioVal != null),
                     _activityEffectList(context),
                     //Problem Condition Time
                     _treatedConditionHeader(
                         context,
-                        Localization.of(context).howLongHadProblemHeader,
+                        '8. ${Localization.of(context).howLongHadProblemHeader}',
                         _selectedProValue != '0'),
                     // SizedBox(height: spacing10),
                     _commonProblemHeaderWidget(
@@ -338,14 +352,16 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                     if (_listOfDescribeSymptoms.isNotEmpty)
                       _treatedConditionHeader(
                           context,
-                          Localization.of(context).theProblemIsHeader,
+                          '9. ${Localization.of(context).theProblemIsHeader}',
                           _listOfDescribeSymptoms.indexWhere(
                                   (element) => element.isSelected ?? false) !=
                               -1),
                     _describeSymptomsList(context),
                     //Treatment Condition Time
-                    _treatedConditionHeader(context,
-                        Localization.of(context).treatedForCondition, null),
+                    _treatedConditionHeader(
+                        context,
+                        '10. ${Localization.of(context).treatedForCondition}',
+                        null),
                     // SizedBox(height: spacing10),
                     Row(children: [
                       _yesButtonWidget(context),
@@ -485,16 +501,16 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
         padding: EdgeInsets.only(top: spacing20),
         child: Row(
           children: [
-            SizedBox(
-              width: 30,
-              child: Image.network(
-                ApiBaseHelper.image_base_url + image,
-                height: 30,
-                width: 30,
-                fit: BoxFit.cover,
-              ),
-            ),
-            SizedBox(width: 10),
+            // SizedBox(
+            //   width: 30,
+            //   child: Image.network(
+            //     ApiBaseHelper.image_base_url + image,
+            //     height: 30,
+            //     width: 30,
+            //     fit: BoxFit.cover,
+            //   ),
+            // ),
+            // SizedBox(width: 10),
             Text(
               header,
               style: TextStyle(
@@ -524,11 +540,11 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                     fontWeight: fontWeightBold),
               ),
             ),
-            SizedBox(width: 10),
-            isSelected == null
-                ? SizedBox()
-                : Icon(Icons.check_circle_outline,
-                    size: 20, color: isSelected ? Colors.green : Colors.grey)
+            // SizedBox(width: 10),
+            // isSelected == null
+            //     ? SizedBox()
+            //     : Icon(Icons.check_circle_outline,
+            //         size: 20, color: isSelected ? Colors.green : Colors.grey)
           ],
         ),
       );
@@ -660,6 +676,8 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                   suggestion.sides,
                   suggestion.isItClicked,
                   0));
+              _currentPartSideIndex = _listOfSelectedDisease.length - 1;
+              _sideController.text = '';
             });
             _searchBodyPartController.text = "";
           },
@@ -674,48 +692,53 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
       itemCount: _listOfSelectedDisease.length,
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        return Column(
-          children: [
-            PopupMenuButton(
-              offset: Offset(300, 50),
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                _popMenuCommonItem(context, Localization.of(context).edit,
-                    FileConstants.icEdit),
-                _popMenuCommonItem(context, Localization.of(context).remove,
-                    FileConstants.icRemoveBlack)
-              ],
-              child: ListTile(
-                contentPadding: EdgeInsets.all(0),
-                title: Text(
-                  "${index + 1}. " +
-                      sidesMap[_listOfSelectedDisease[index].selectedSide] +
-                      " ${_listOfSelectedDisease[index].bodyPart}",
-                  style: TextStyle(
-                      fontWeight: fontWeightMedium,
-                      fontSize: fontSize14,
-                      color: colorBlack2),
-                ),
-                trailing: Icon(Icons.more_vert, color: colorBlack2),
-              ),
-              onSelected: (value) {
-                if (value == Localization.of(context).edit) {
-                  setState(() {
-                    _listOfSelectedDisease[index].isItClicked = false;
-                    _sideController.text =
-                        sidesMap[_listOfSelectedDisease[index].selectedSide];
-                  });
-                } else {
-                  setState(() {
-                    _listOfSelectedDisease
-                        .remove(_listOfSelectedDisease[index]);
-                  });
-                }
-              },
-            ),
-            if (_listOfSelectedDisease[index].hasInternalPart)
-              if (!_listOfSelectedDisease[index].isItClicked)
-                _buildDropDownBottomSheet(context, index),
+        return PopupMenuButton(
+          offset: Offset(300, 50),
+          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+            _popMenuCommonItem(
+                context, Localization.of(context).edit, FileConstants.icEdit),
+            _popMenuCommonItem(context, Localization.of(context).remove,
+                FileConstants.icRemoveBlack)
           ],
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+                // contentPadding: EdgeInsets.all(0),
+                // title:
+                children: [
+                  Expanded(
+                    child: Text(
+                      "${index + 1}. " +
+                          sidesMap[_listOfSelectedDisease[index].selectedSide] +
+                          " ${_listOfSelectedDisease[index].bodyPart}",
+                      style: TextStyle(
+                          fontWeight: fontWeightMedium,
+                          fontSize: fontSize14,
+                          color: colorBlack2),
+                    ),
+                  ),
+                  // trailing:
+                  Icon(Icons.more_vert, color: colorBlack2),
+                ]),
+          ),
+          onSelected: (value) {
+            if (value == Localization.of(context).edit) {
+              setState(() {
+                _listOfSelectedDisease[index].isItClicked = false;
+                _currentPartSideIndex = index;
+                _sideController.text =
+                    sidesMap[_listOfSelectedDisease[index].selectedSide];
+              });
+            } else {
+              setState(() {
+                _listOfSelectedDisease.remove(_listOfSelectedDisease[index]);
+              });
+            }
+          },
+
+          // if (_listOfSelectedDisease[index].hasInternalPart)
+          //   if (!_listOfSelectedDisease[index].isItClicked)
+          //     _buildDropDownBottomSheet(context, index),
         );
       });
 
@@ -802,7 +825,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
   }
 
   _buildDropDownBottomSheet(BuildContext context, int index) => Padding(
-        padding: const EdgeInsets.all(spacing8),
+        padding: const EdgeInsets.all(0),
         child: InkWell(
           onTap: () {
             _openMaterialSidePickerSheet(context, index);
@@ -1239,10 +1262,10 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
               ),
             ),
             SizedBox(width: 10),
-            isSelected == null
-                ? SizedBox()
-                : Icon(Icons.check_circle_outline,
-                    size: 20, color: isSelected ? Colors.green : Colors.grey)
+            // isSelected == null
+            //     ? SizedBox()
+            //     : Icon(Icons.check_circle_outline,
+            //         size: 20, color: isSelected ? Colors.green : Colors.grey)
           ],
         ),
       );
@@ -1298,8 +1321,8 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                 ),
               ),
               SizedBox(width: 10),
-              Icon(Icons.check_circle_outline,
-                  size: 20, color: isSelected ? Colors.green : Colors.grey)
+              // Icon(Icons.check_circle_outline,
+              //     size: 20, color: isSelected ? Colors.green : Colors.grey)
             ],
           ),
         )
@@ -1875,14 +1898,14 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
       if (_listOfSelectedDisease.length == 0) {
         Widgets.showToast('Please select body part');
       } else {
-        _listOfSelectedDisease.forEach((element) {
-          if (element.selectedSide == 0) {
-            Widgets.showToast('Please select body part side');
-            return;
-          } else {
-            addProblemData();
-          }
-        });
+        if ((_listOfSelectedDisease.singleWhere((it) => it.selectedSide == 0,
+                orElse: () => null)) !=
+            null) {
+          Widgets.showToast('Please select body part side');
+          print('Please select body part side');
+        } else {
+          addProblemData();
+        }
       }
     } else {
       addProblemData();
