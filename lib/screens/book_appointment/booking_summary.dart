@@ -6,7 +6,9 @@ import 'package:hutano/screens/appointments/model/req_booking_appointment_model.
 import 'package:hutano/screens/appointments/model/res_uploaded_document_images_model.dart'
     as MedImg;
 import 'package:hutano/screens/book_appointment/diagnosis/model/res_diagnostic_test_model.dart';
+import 'package:hutano/screens/book_appointment/model/allergy.dart';
 import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
+import 'package:hutano/screens/book_appointment/vitals/model/social_history.dart';
 import 'package:hutano/screens/medical_history/model/res_get_medication_detail.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/text_style.dart';
@@ -36,6 +38,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
     "4": "Months",
     "5": "Years"
   };
+  List<String> socialHistoryUsages = ['Rarely', 'Socially', 'Daily'];
 
   InheritedContainerState _container;
 
@@ -68,7 +71,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
           );
         },
         isSkipLater: false,
-        padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+        padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
         child: profileWidget(),
       ),
     );
@@ -76,6 +79,13 @@ class _BookingsummaryState extends State<Bookingsummary> {
 
   Widget profileWidget() {
     return ListView(padding: EdgeInsets.all(20), children: [
+      socialHistoryWidget(
+        Provider.of<HealthConditionProvider>(context, listen: false)
+            .socialHistory,
+      ),
+      allergiesWidget(
+        Provider.of<HealthConditionProvider>(context, listen: false).allergies,
+      ),
       problemswidget(
         Provider.of<HealthConditionProvider>(context, listen: false)
             .allHealthIssuesData,
@@ -129,6 +139,121 @@ class _BookingsummaryState extends State<Bookingsummary> {
                   .medicalDiagnosticsTestsModelData)
           : SizedBox(),
     ]);
+  }
+
+  ListView socialHistoryWidget(SocialHistory socialHistory) {
+    return ListView(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      children: [
+        Text(
+          "Social history",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+        ),
+        SizedBox(
+          height: 14,
+        ),
+        Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            border: Border.all(color: Colors.grey[200]),
+          ),
+          child: ListView(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            children: [
+              Text(socialHistory.smoking != null &&
+                      socialHistory.smoking.frequency != null &&
+                      socialHistory.smoking.frequency != 0
+                  ? 'Patient smokes ${socialHistoryUsages[socialHistory.smoking.frequency - 1]}.'
+                  : 'Patient do not smokes.'),
+              socialHistory.drinker == null
+                  ? Text('Patient do not drink.')
+                  : ListView(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      children: [
+                          socialHistory.drinker != null &&
+                                  socialHistory.drinker.liquorQuantity !=
+                                      null &&
+                                  socialHistory.drinker.liquorQuantity != 0
+                              ? Text(
+                                  'Patient consumes ${socialHistory.drinker.liquorQuantity == 2 ? 'more than' : 'less than'} 1pt of liquor ${socialHistoryUsages[socialHistory.drinker.frequency - 1]}.')
+                              : SizedBox(),
+                          socialHistory.drinker != null &&
+                                  socialHistory.drinker.beerQuantity != null &&
+                                  socialHistory.drinker.beerQuantity != 0
+                              ? Text(
+                                  'Patient consumes ${socialHistory.drinker.beerQuantity == 2 ? 'more than' : 'less than'} 6 beer ${socialHistoryUsages[socialHistory.drinker.frequency - 1]}.')
+                              : SizedBox()
+                        ]),
+              socialHistory.recreationalDrugs == null ||
+                      socialHistory.recreationalDrugs.length == 0
+                  ? Text('Patient does not use recreational drugs.')
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: socialHistory.recreationalDrugs.length,
+                      itemBuilder: (context, index) {
+                        return Text(
+                          'Patient uses ${socialHistory.recreationalDrugs[index].type} ${socialHistoryUsages[socialHistory.recreationalDrugs[index].frequency - 1]}.',
+                        );
+                      },
+                    )
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
+  allergiesWidget(List<Allergy> allergies) {
+    String allergiesString = '';
+    if (allergies.length > 0) {
+      allergiesString = 'Patient is allergic to';
+
+      for (int i = 0; i < allergies.length; i++) {
+        if (i == 0) {
+          allergiesString += ' ${allergies[i].name}';
+          if (allergies.length == 1) {
+            allergiesString += '.';
+          }
+          continue;
+        }
+
+        if (i == allergies.length - 1) {
+          allergiesString += ' and ${allergies[i].name}.';
+        } else {
+          allergiesString += ', ${allergies[i].name}';
+        }
+      }
+
+//  latex, penicillin and morphine.'
+    }
+    return ListView(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      children: [
+        SizedBox(height: 20),
+        Text(
+          "Allergies",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+        ),
+        SizedBox(
+          height: 14,
+        ),
+        Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              border: Border.all(color: Colors.grey[200]),
+            ),
+            child: Text(allergies.length == 0
+                ? 'Patient does not have known allergies'
+                : allergiesString))
+      ],
+    );
   }
 
   ListView medicalHistoryWidget(List<BookedMedicalHistory> medicalHistories) {
@@ -237,16 +362,50 @@ class _BookingsummaryState extends State<Bookingsummary> {
                       TextSpan(
                         text: vitals.temperature != null
                             ? vitals.temperature.toString().contains('.0')
-                                ? '${vitals.temperature.toInt()} \u2109'
-                                : '${vitals.temperature} \u2109'
+                                ? '${vitals.temperature.toInt()} \u2109 ; \t'
+                                : '${vitals.temperature} \u2109 ; \t'
                             : '',
                         style: AppTextStyle.mediumStyle(fontSize: 14),
                       ),
-
-                      // TextSpan(
-                      //   text:
-                      //       'Blood Pressure ${widget.args['vitals']['bloodPressureSbp']}/${widget.args['vitals']['bloodPressureDbp']};\t Oxygen Saturation ${widget.args['vitals']['oxygenSaturation']}%;\t Heart Rate ${widget.args['vitals']['heartRate']} BPM',
-                      // ),
+                      TextSpan(
+                        text: vitals.weight != null ? 'Weight ' : '',
+                        style: AppTextStyle.regularStyle(fontSize: 14),
+                      ),
+                      TextSpan(
+                        text: vitals.weight != null
+                            ? '${vitals.weight} lbs; \t'
+                            : '',
+                        style: AppTextStyle.mediumStyle(fontSize: 14),
+                      ),
+                      TextSpan(
+                        text: vitals.height != null ? 'Height ' : '',
+                        style: AppTextStyle.regularStyle(fontSize: 14),
+                      ),
+                      TextSpan(
+                        text: vitals.height != null
+                            ? '${vitals.height} ; \t'
+                            : '',
+                        style: AppTextStyle.mediumStyle(fontSize: 14),
+                      ),
+                      TextSpan(
+                        text: vitals.bmi != null ? 'Bmi ' : '',
+                        style: AppTextStyle.regularStyle(fontSize: 14),
+                      ),
+                      TextSpan(
+                        text: vitals.bmi != null ? '${vitals.bmi} ; \t' : '',
+                        style: AppTextStyle.mediumStyle(fontSize: 14),
+                      ),
+                      TextSpan(
+                        text:
+                            vitals.bloodGlucose != null ? 'Blood Glucose ' : '',
+                        style: AppTextStyle.regularStyle(fontSize: 14),
+                      ),
+                      TextSpan(
+                        text: vitals.bloodGlucose != null
+                            ? '${vitals.bloodGlucose} g/dl'
+                            : '',
+                        style: AppTextStyle.mediumStyle(fontSize: 14),
+                      ),
                     ],
                   ),
                 ),
@@ -261,6 +420,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       children: [
+        SizedBox(height: 20),
         Text(
           "Problems",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),

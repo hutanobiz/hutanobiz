@@ -803,6 +803,8 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                   preferredPharmacy: Provider.of<HealthConditionProvider>(context, listen: false).preferredPharmacyData,
                   problems: Provider.of<HealthConditionProvider>(context, listen: false).allHealthIssuesData,
                   vitals: Provider.of<HealthConditionProvider>(context, listen: false).vitalsData,
+                  allergy: Provider.of<HealthConditionProvider>(context, listen: false).allergies,
+                  socialHistory: Provider.of<HealthConditionProvider>(context, listen: false).socialHistory,
                   medicationDetails: Provider.of<HealthConditionProvider>(context, listen: false).medicationData);
 
               finalModel.toJson().toString().debugLog();

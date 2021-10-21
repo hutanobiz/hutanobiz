@@ -1,3 +1,6 @@
+import 'package:hutano/screens/book_appointment/model/allergy.dart';
+import 'package:hutano/screens/book_appointment/vitals/model/social_history.dart';
+
 class ReqBookingAppointmentModel {
   String cardId;
   bool consentToTreat;
@@ -29,6 +32,8 @@ class ReqBookingAppointmentModel {
   String instruction;
   String userAddressId;
   String parkingBay;
+  List<Allergy> allergy;
+  SocialHistory socialHistory;
 
   ReqBookingAppointmentModel(
       {this.cardId,
@@ -60,7 +65,9 @@ class ReqBookingAppointmentModel {
       this.parkingType,
       this.instruction,
       this.userAddressId,
-      this.parkingBay});
+      this.parkingBay,
+      this.allergy,
+      this.socialHistory});
 
   ReqBookingAppointmentModel.fromJson(Map<String, dynamic> json) {
     cardId = json['cardId'];
@@ -106,6 +113,15 @@ class ReqBookingAppointmentModel {
     instruction = json['instruction'];
     userAddressId = json['userAddressId'];
     parkingBay = json['parkingBay'];
+    if (json['allergy'] != null) {
+      allergy = new List<Allergy>();
+      json['allergy'].forEach((v) {
+        allergy.add(new Allergy.fromJson(v));
+      });
+    }
+    socialHistory = json['socialHistory'] != null
+        ? new SocialHistory.fromJson(json['socialHistory'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -149,6 +165,12 @@ class ReqBookingAppointmentModel {
     data['instruction'] = this.instruction;
     data['userAddressId'] = this.userAddressId;
     data['parkingBay'] = this.parkingBay;
+    if (this.socialHistory != null) {
+      data['socialHistory'] = this.socialHistory.toJson();
+    }
+    if (this.allergy != null) {
+      data['allergy'] = this.allergy.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
@@ -205,6 +227,7 @@ class Problems {
   List<String> problemWorst;
   List<String> symptoms;
   ProblemFacingTimeSpan treatmentReceived;
+  String description;
 
   Problems(
       {this.bodyPart,
@@ -219,7 +242,8 @@ class Problems {
       this.problemRating,
       this.problemWorst,
       this.symptoms,
-      this.treatmentReceived});
+      this.treatmentReceived,
+      this.description});
 
   Problems.fromJson(Map<String, dynamic> json) {
     if (json['bodyPart'] != null) {
@@ -244,6 +268,7 @@ class Problems {
     treatmentReceived = json['treatmentReceived'] != null
         ? new ProblemFacingTimeSpan.fromJson(json['treatmentReceived'])
         : null;
+    description = json['description'];
   }
 
   Map<String, dynamic> toJson() {
@@ -267,6 +292,7 @@ class Problems {
     if (this.treatmentReceived != null) {
       data['treatmentReceived'] = this.treatmentReceived.toJson();
     }
+    data['description'] = description;
     return data;
   }
 }
@@ -293,18 +319,21 @@ class BodyPartWithSide {
 class ProblemFacingTimeSpan {
   String type;
   String period;
+  String typeOfCare;
 
-  ProblemFacingTimeSpan({this.type, this.period});
+  ProblemFacingTimeSpan({this.type, this.period, this.typeOfCare});
 
   ProblemFacingTimeSpan.fromJson(Map<String, dynamic> json) {
     type = json['type'];
     period = json['period'];
+    typeOfCare = json['typeOfCare'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['type'] = this.type;
     data['period'] = this.period;
+    data['typeOfCare'] = this.typeOfCare;
     return data;
   }
 }
@@ -317,6 +346,10 @@ class Vitals {
   int heartRate;
   int oxygenSaturation;
   double temperature;
+  double height;
+  double weight;
+  double bmi;
+  double bloodGlucose;
 
   Vitals(
       {this.date,
@@ -325,7 +358,11 @@ class Vitals {
       this.bloodPressureDbp,
       this.heartRate,
       this.oxygenSaturation,
-      this.temperature});
+      this.temperature,
+      this.height,
+      this.weight,
+      this.bmi,
+      this.bloodGlucose});
 
   Vitals.fromJson(Map<String, dynamic> json) {
     date = json['date'];
@@ -335,6 +372,10 @@ class Vitals {
     heartRate = json['heartRate'];
     oxygenSaturation = json['oxygenSaturation'];
     temperature = json['temperature'];
+    height = json['height'];
+    weight = json['weight'];
+    bmi = json['bmi'];
+    bloodGlucose = json['bloodGlucose'];
   }
 
   Map<String, dynamic> toJson() {
@@ -346,6 +387,10 @@ class Vitals {
     data['heartRate'] = this.heartRate;
     data['oxygenSaturation'] = this.oxygenSaturation;
     data['temperature'] = this.temperature;
+    data['height'] = this.height;
+    data['weight'] = this.weight;
+    data['bmi'] = this.bmi;
+    data['bloodGlucose'] = this.bloodGlucose;
     return data;
   }
 }

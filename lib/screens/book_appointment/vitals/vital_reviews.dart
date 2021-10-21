@@ -41,6 +41,12 @@ class _VitalReviewsState extends State<VitalReviews> {
   TextEditingController _heartRateController = TextEditingController();
   TextEditingController _oxygenController = TextEditingController();
   TextEditingController _tempController = TextEditingController();
+  TextEditingController _weightController = TextEditingController();
+  TextEditingController _feetController = TextEditingController();
+  TextEditingController _inchesController = TextEditingController();
+  TextEditingController _glucoseController = TextEditingController();
+  TextEditingController _bmiController = TextEditingController();
+  FocusNode _glucoseFocusNode = FocusNode();
   FocusNode _dateFocusNode = FocusNode();
   FocusNode _timeFocusNode = FocusNode();
   FocusNode _sbpFocusNode = FocusNode();
@@ -48,6 +54,9 @@ class _VitalReviewsState extends State<VitalReviews> {
   FocusNode _heartRateFocusNode = FocusNode();
   FocusNode _oxygenFocusNode = FocusNode();
   FocusNode _tempFocusNode = FocusNode();
+  FocusNode _feetFocusNode = FocusNode();
+  FocusNode _weightFocusNode = FocusNode();
+  FocusNode _inchesFocusNode = FocusNode();
   bool isSwitchSelected = false;
   OutlineInputBorder _borderStyle = OutlineInputBorder(
     borderSide: BorderSide(color: Colors.white, width: 0.5),
@@ -68,6 +77,15 @@ class _VitalReviewsState extends State<VitalReviews> {
   @override
   void initState() {
     super.initState();
+    _feetController.addListener(() {
+      calculateBmi();
+    });
+    _inchesController.addListener(() {
+      calculateBmi();
+    });
+    _weightController.addListener(() {
+      calculateBmi();
+    });
 
     _dateController.text =
         formattedDate(DateTime.now(), AppConstants.vitalReviewsDateFormat);
@@ -133,68 +151,152 @@ class _VitalReviewsState extends State<VitalReviews> {
             key: _vitalFormKey,
             autovalidate: true,
             child: ListView(
-              // crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _takeAnyMedicines(context),
-                _commonTextFormField(
-                    context,
-                    Localization.of(context).dateFieldHeader,
-                    _dateController,
-                    _dateFocusNode,
-                    AppConstants.vitalReviewsDateFormat.toLowerCase(),
-                    "",
-                    TextInputType.text,
-                    isFieldEnable: false,
-                    isForTime: false),
-                _commonTextFormField(
-                    context,
-                    Localization.of(context).timeFieldHeader,
-                    _timeController,
-                    _timeFocusNode,
-                    "",
-                    "",
-                    TextInputType.text,
-                    isFieldEnable: false,
-                    isForTime: true,
-                    isAmPMVisible: true),
-                _commonTextFormField(
-                    context,
-                    Localization.of(context).bloodPressureFieldHeader,
-                    _sbpController,
-                    _sbpFocusNode,
-                    Localization.of(context).sbpHint,
-                    "/",
-                    TextInputType.number,
-                    isForBloodPressure: true,
-                    dbpController: _dbpController,
-                    dbpFocusNode: _dbpFocusNode,
-                    hint: Localization.of(context).dbpHint),
-                _commonTextFormField(
-                    context,
-                    Localization.of(context).heartRateFieldHeader,
-                    _heartRateController,
-                    _heartRateFocusNode,
-                    "",
-                    Localization.of(context).beatsPerMinuteLabel,
-                    TextInputType.number),
-                _commonTextFormField(
-                    context,
-                    Localization.of(context).oxygenFieldHeader,
-                    _oxygenController,
-                    _oxygenFocusNode,
-                    "",
-                    "%",
-                    TextInputType.number),
-                _commonTextFormField(
-                    context,
-                    Localization.of(context).temperatureFieldHeader,
-                    _tempController,
-                    _tempFocusNode,
-                    "",
-                    "\u2109",
-                    TextInputType.number,
-                    maxLength: 5,
-                    isForTemp: true),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(14.0),
+                    ),
+                    border: Border.all(width: 0.5, color: Colors.grey[300]),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _commonTextFormField(
+                          context,
+                          Localization.of(context).dateFieldHeader,
+                          _dateController,
+                          _dateFocusNode,
+                          AppConstants.vitalReviewsDateFormat.toLowerCase(),
+                          "",
+                          TextInputType.text,
+                          isFieldEnable: false,
+                          isForTime: false),
+                      _commonTextFormField(
+                          context,
+                          Localization.of(context).timeFieldHeader,
+                          _timeController,
+                          _timeFocusNode,
+                          "",
+                          "",
+                          TextInputType.text,
+                          isFieldEnable: false,
+                          isForTime: true,
+                          isAmPMVisible: true),
+                      _commonTextFormField(
+                          context,
+                          Localization.of(context).bloodPressureFieldHeader,
+                          _sbpController,
+                          _sbpFocusNode,
+                          Localization.of(context).sbpHint,
+                          "/",
+                          TextInputType.number,
+                          isForBloodPressure: true,
+                          dbpController: _dbpController,
+                          dbpFocusNode: _dbpFocusNode,
+                          hint: Localization.of(context).dbpHint),
+                      _commonTextFormField(
+                          context,
+                          Localization.of(context).heartRateFieldHeader,
+                          _heartRateController,
+                          _heartRateFocusNode,
+                          "",
+                          Localization.of(context).beatsPerMinuteLabel,
+                          TextInputType.number),
+                      _commonTextFormField(
+                          context,
+                          Localization.of(context).oxygenFieldHeader,
+                          _oxygenController,
+                          _oxygenFocusNode,
+                          "",
+                          "%",
+                          TextInputType.number),
+                      _commonTextFormField(
+                          context,
+                          Localization.of(context).temperatureFieldHeader,
+                          _tempController,
+                          _tempFocusNode,
+                          "",
+                          "\u2109",
+                          TextInputType.number,
+                          maxLength: 5,
+                          isForTemp: true),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(14.0),
+                      ),
+                      border: Border.all(width: 0.5, color: Colors.grey[300]),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _commonTextFormField(
+                            context,
+                            'Weight',
+                            _weightController,
+                            _weightFocusNode,
+                            "",
+                            'Lbs',
+                            TextInputType.number),
+                        _heightTextFormField(
+                          context,
+                          'Height',
+                          _feetController,
+                          _feetFocusNode,
+                          'feet',
+                          "Feet",
+                          TextInputType.number,
+                          dbpController: _inchesController,
+                          dbpFocusNode: _inchesFocusNode,
+                          hint: 'inches',
+                        ),
+                        _bmiTextFormField(context, 'My BMI', _bmiController, "",
+                            "%", TextInputType.number),
+                      ],
+                    )),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(14.0),
+                      ),
+                      border: Border.all(width: 0.5, color: Colors.grey[300]),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _commonTextFormField(
+                            context,
+                            'Blood Glucose',
+                            _glucoseController,
+                            _glucoseFocusNode,
+                            "",
+                            'g/dL',
+                            TextInputType.number),
+                      ],
+                    )),
+                SizedBox(
+                  height: 20,
+                ),
               ],
             ),
             // ),
@@ -202,6 +304,18 @@ class _VitalReviewsState extends State<VitalReviews> {
         FocusScope.of(context).unfocus();
       }),
     );
+  }
+
+  calculateBmi() {
+    var aa = (703 * double.parse(_weightController.text)) /
+        (((12 * double.parse(_feetController.text)) +
+                double.parse(_inchesController.text)) *
+            ((12 * double.parse(_feetController.text)) +
+                double.parse(_inchesController.text)));
+    _bmiController.text = aa.toStringAsFixed(1);
+    //    = TextEditingController();
+    // TextEditingController _feetController = TextEditingController();
+    // TextEditingController _inchesController
   }
 
   Widget _takeAnyMedicines(BuildContext context) => Padding(
@@ -341,9 +455,22 @@ class _VitalReviewsState extends State<VitalReviews> {
                     hintStyle: TextStyle(
                         fontSize: fontSize13, fontWeight: fontWeightMedium),
                     contentPadding: EdgeInsets.all(spacing8),
-                    enabledBorder: _borderStyle,
-                    disabledBorder: _borderStyle,
-                    border: _borderStyle,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      borderSide: BorderSide(color: Colors.grey[100]),
+                    ),
+                    disabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      borderSide: BorderSide(color: Colors.grey[100]),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      borderSide: BorderSide(color: Colors.grey[100]),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      borderSide: BorderSide(color: AppColors.windsor),
+                    ),
                   ),
                 ),
               ),
@@ -386,12 +513,215 @@ class _VitalReviewsState extends State<VitalReviews> {
                     hintStyle: TextStyle(
                         fontSize: fontSize13, fontWeight: fontWeightMedium),
                     contentPadding: EdgeInsets.all(spacing8),
-                    enabledBorder: _borderStyle,
-                    disabledBorder: _borderStyle,
-                    border: _borderStyle,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      borderSide: BorderSide(color: Colors.grey[100]),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      borderSide: BorderSide(color: Colors.grey[100]),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      borderSide: BorderSide(color: AppColors.windsor),
+                    ),
                   ),
                 ),
               ),
+            SizedBox(width: spacing5),
+          ],
+        ),
+      );
+
+  Widget _bmiTextFormField(
+    BuildContext context,
+    String label,
+    TextEditingController controller,
+    String hintLabel,
+    String rightLabel,
+    TextInputType inputType,
+  ) =>
+      Padding(
+        padding: EdgeInsets.symmetric(vertical: spacing10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                color: colorBlack2,
+                fontSize: fontSize14,
+                fontWeight: fontWeightSemiBold,
+              ),
+            ),
+            SizedBox(width: spacing15),
+            Container(
+              width: 100,
+              height: 40,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  color: Colors.white),
+              child: TextFormField(
+                controller: controller,
+                keyboardType: inputType,
+                maxLength: 5,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color(0xb5000000),
+                  fontSize: fontSize14,
+                  fontWeight: fontWeightSemiBold,
+                ),
+                enabled: false,
+                decoration: InputDecoration(
+                  counterText: '',
+                  hintText: hintLabel,
+                  hintStyle: TextStyle(
+                      fontSize: fontSize13, fontWeight: fontWeightMedium),
+                  contentPadding: EdgeInsets.all(spacing8),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    borderSide: BorderSide(color: Colors.grey[100]),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    borderSide: BorderSide(color: Colors.grey[100]),
+                  ),
+                  disabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    borderSide: BorderSide(color: Colors.grey[100]),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    borderSide: BorderSide(color: AppColors.windsor),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: spacing15),
+            _bmiController.text == ''
+                ? SizedBox()
+                : Image.asset('assets/images/ic_card_check.png', width: 20)
+          ],
+        ),
+      );
+
+  Widget _heightTextFormField(
+          BuildContext context,
+          String label,
+          TextEditingController controller,
+          FocusNode focusNode,
+          String hintLabel,
+          String rightLabel,
+          TextInputType inputType,
+          {TextEditingController dbpController,
+          FocusNode dbpFocusNode,
+          String hint,
+          bool isFieldEnable = true,
+          int maxLength = 3}) =>
+      Padding(
+        padding: EdgeInsets.symmetric(vertical: spacing10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                color: colorBlack2,
+                fontSize: fontSize14,
+                fontWeight: fontWeightSemiBold,
+              ),
+            ),
+            Container(
+              width: 100,
+              height: 40,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  color: Colors.white),
+              child: TextFormField(
+                controller: controller,
+                keyboardType: inputType,
+                maxLength: maxLength,
+                textAlign: TextAlign.center,
+                textInputAction: TextInputAction.next,
+                style: TextStyle(
+                  color: Color(0xb5000000),
+                  fontSize: fontSize14,
+                  fontWeight: fontWeightSemiBold,
+                ),
+                focusNode: focusNode,
+                enabled: isFieldEnable,
+                decoration: InputDecoration(
+                  counterText: '',
+                  hintText: hintLabel,
+                  hintStyle: TextStyle(
+                      fontSize: fontSize13, fontWeight: fontWeightMedium),
+                  contentPadding: EdgeInsets.all(spacing8),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    borderSide: BorderSide(color: Colors.grey[100]),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    borderSide: BorderSide(color: Colors.grey[100]),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    borderSide: BorderSide(color: AppColors.windsor),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: 0),
+            Text(
+              rightLabel,
+              style:
+                  TextStyle(fontSize: fontSize13, fontWeight: fontWeightMedium),
+            ),
+            SizedBox(width: 0),
+            Container(
+              width: 90,
+              height: 40,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  color: Colors.white),
+              child: TextField(
+                controller: dbpController,
+                keyboardType: TextInputType.number,
+                maxLength: maxLength,
+                textAlign: TextAlign.center,
+                textInputAction: TextInputAction.next,
+                style: TextStyle(
+                  color: Color(0xb5000000),
+                  fontSize: fontSize14,
+                  fontWeight: fontWeightSemiBold,
+                ),
+                focusNode: dbpFocusNode,
+                decoration: InputDecoration(
+                  hintText: hint,
+                  counterText: '',
+                  hintStyle: TextStyle(
+                      fontSize: fontSize13, fontWeight: fontWeightMedium),
+                  contentPadding: EdgeInsets.all(spacing8),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    borderSide: BorderSide(color: Colors.grey[100]),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    borderSide: BorderSide(color: Colors.grey[100]),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    borderSide: BorderSide(color: AppColors.windsor),
+                  ),
+                ),
+              ),
+            ),
+            Text(
+              'inches',
+              style:
+                  TextStyle(fontSize: fontSize13, fontWeight: fontWeightMedium),
+            ),
             SizedBox(width: spacing5),
           ],
         ),
@@ -453,6 +783,22 @@ class _VitalReviewsState extends State<VitalReviews> {
           : null,
       temperature: _tempController.value.text != ''
           ? double.parse(_tempController.value.text.trim())
+          : null,
+      height: _feetController.value.text != ''
+          ? double.parse(_feetController.value.text.trim() +
+              '.' +
+              (_inchesController.value.text == ''
+                  ? 0
+                  : _inchesController.value.text.trim()))
+          : null,
+      weight: _weightController.value.text != ''
+          ? double.parse(_weightController.value.text.trim())
+          : null,
+      bmi: _bmiController.value.text != ''
+          ? double.parse(_bmiController.value.text.trim())
+          : null,
+      bloodGlucose: _glucoseController.value.text != ''
+          ? double.parse(_glucoseController.value.text.trim())
           : null,
     );
     Provider.of<HealthConditionProvider>(context, listen: false)

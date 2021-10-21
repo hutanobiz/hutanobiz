@@ -27,8 +27,10 @@ import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/utils/progress_dialog.dart';
 import 'package:hutano/widgets/controller.dart';
+import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/hutano_textfield.dart';
+import 'package:hutano/widgets/list_picker.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:provider/provider.dart';
 
@@ -53,6 +55,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
   List<BodyPartModel> _listOfBodyPart = [];
   TextEditingController _searchBodyPartController = TextEditingController();
   TextEditingController _sideController = TextEditingController();
+  TextEditingController notesController = TextEditingController();
   FocusNode _searchBodyPartFocusNode = FocusNode();
   List<BodyPartModel> _listOfSelectedDisease = [];
   ScrollController _wholeBodyController = ScrollController();
@@ -76,6 +79,16 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
     4: "Bottom",
     5: "All Over"
   };
+  static final List<String> locationTypeList = [
+    'Hospital Admission',
+    'Emergency Department',
+    'Primary Care',
+    'Urgent Care',
+    'Physical Therapy',
+    'Chiropractic',
+    'Massage Therapy',
+    'Acupuncture'
+  ];
   int hasBodyParts;
   int hasSymptoms;
   int hasRatings;
@@ -122,6 +135,8 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
   bool _isPressedOnProblemImproving = false;
   ScrollController _listOfBetterController = ScrollController();
   ScrollController _listOfWorstController = ScrollController();
+  TextEditingController _typeLocationController = TextEditingController();
+  FocusNode _typeLocationFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -378,11 +393,83 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                     if (_isYearVisible)
                       _horizontalSelectionWidget(
                           context, _yearsList, AppConstants.years, false),
-                    if (!_isTreated) SizedBox(height: spacing50),
+
+                    _isTreated ? _locationTypeOfCareWidget() : SizedBox(),
+                    SizedBox(height: spacing20),
+                    TextFormField(
+                        keyboardType: TextInputType.multiline,
+                        minLines: 3,
+                        maxLines: 4,
+                        controller: notesController,
+                        textInputAction: TextInputAction.done,
+                        decoration: InputDecoration(
+                          hintText: 'Additional notes',
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                            borderSide: BorderSide(color: Colors.black12),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                            borderSide: BorderSide(color: Colors.black12),
+                          ),
+                        )),
+                    SizedBox(height: spacing50),
                   ],
                 ),
               )),
         ));
+  }
+
+  _locationTypeOfCareWidget() {
+    return Container(
+        margin: EdgeInsets.only(top: 20),
+        child: GestureDetector(
+          onTap: _openTypeLocationPicker,
+          child: HutanoTextField(
+              labelTextStyle:
+                  TextStyle(fontSize: fontSize14, color: colorGrey60),
+              width: screenSize.width,
+              focusNode: FocusNode(),
+              controller: _typeLocationController,
+              suffixIcon: FileConstants.icDown,
+              suffixheight: spacing12,
+              suffixwidth: spacing12,
+              isFieldEnable: false,
+              labelText: 'Location and type of care',
+              hintText: 'Location and type of care',
+              textInputAction: TextInputAction.done),
+        ));
+  }
+
+  void _openTypeLocationPicker() {
+    showDropDownSheet(
+        list: ListView.builder(
+          shrinkWrap: true,
+          itemCount: locationTypeList.length,
+          itemBuilder: (context, pos) {
+            return InkWell(
+                onTap: () {
+                  _typeLocationController.text = locationTypeList[pos];
+                  Navigator.pop(context);
+                },
+                child: ListTile(
+                  title: Center(
+                    child: Text(locationTypeList[pos]),
+                  ),
+                ));
+          },
+        ),
+        context: context);
+  }
+
+  static List<String> getSuggestions(String query) {
+    List<String> matches = <String>[];
+    matches.addAll(locationTypeList);
+
+    matches.retainWhere((s) => s.toLowerCase().contains(query.toLowerCase()));
+    return matches;
   }
 
   Future<bool> _resetAction() async {
@@ -552,6 +639,8 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
           suggestionsCallback: (pattern) async {
             return pattern.length > 0 ? await _getFilteredInsuranceList() : [];
           },
+          keepSuggestionsOnLoading: false,
+          loadingBuilder: (context) => CustomLoader(),
           errorBuilder: (_, object) {
             return Container();
           },
@@ -1825,28 +1914,30 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
       }
     });
     Problems model = Problems(
-      problemId: widget.problemId,
-      image: widget.problemImage,
-      name: widget.problemName,
-      bodyPart: bodyPartWithSide,
-      problemRating: _discomfortIntensity.toInt(),
-      symptoms: selectedSymptoms,
-      dailyActivity: radioVal != null ? radioVal.toString() : "",
-      problemBetter: _selectedProblemBetterList,
-      problemWorst: _selectedProblemWorstList,
-      isProblemImproving: "",
-      isTreatmentReceived: _isTreated ? "1" : "0",
-      problemFacingTimeSpan: _selectedProValue != "0"
-          ? ProblemFacingTimeSpan(
-              type: _selectedProType, period: _selectedProValue)
-          : ProblemFacingTimeSpan(type: "", period: ""),
-      treatmentReceived: !_isTreated
-          ? ProblemFacingTimeSpan(type: "", period: "")
-          : _selectedValue != "0"
-              ? ProblemFacingTimeSpan(
-                  type: _selectedType, period: _selectedValue)
-              : ProblemFacingTimeSpan(type: "", period: ""),
-    );
+        problemId: widget.problemId,
+        image: widget.problemImage,
+        name: widget.problemName,
+        bodyPart: bodyPartWithSide,
+        problemRating: _discomfortIntensity.toInt(),
+        symptoms: selectedSymptoms,
+        dailyActivity: radioVal != null ? radioVal.toString() : "",
+        problemBetter: _selectedProblemBetterList,
+        problemWorst: _selectedProblemWorstList,
+        isProblemImproving: "",
+        isTreatmentReceived: _isTreated ? "1" : "0",
+        problemFacingTimeSpan: _selectedProValue != "0"
+            ? ProblemFacingTimeSpan(
+                type: _selectedProType, period: _selectedProValue)
+            : ProblemFacingTimeSpan(type: "", period: ""),
+        treatmentReceived: !_isTreated
+            ? ProblemFacingTimeSpan(type: "", period: "")
+            : _selectedValue != "0"
+                ? ProblemFacingTimeSpan(
+                    type: _selectedType,
+                    period: _selectedValue,
+                    typeOfCare: _typeLocationController.text)
+                : ProblemFacingTimeSpan(type: "", period: ""),
+        description: notesController.text);
     _listOfDescribeSymptoms.forEach((element) {
       if (element.index == 1) {
         if (element.isSelected) {

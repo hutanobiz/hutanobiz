@@ -8,7 +8,7 @@ class ProblemWidget extends StatelessWidget {
     @required this.dob,
     @required this.gender,
     @required this.appointmentProblem,
-   this.problemTimeSpanMap,
+    this.problemTimeSpanMap,
   }) : super(key: key);
 
   final dynamic appointmentProblem;
@@ -83,8 +83,19 @@ class ProblemWidget extends StatelessWidget {
     if (appointmentProblem['isTreatmentReceived'] == 0 ||
         appointmentProblem['isTreatmentReceived'] == '0')
       problemText += "First time receiving care for this problem. ";
-    else
-      problemText += "Second time receiving care for this problem. ";
+    else {
+      if (appointmentProblem['treatmentReceived']['typeOfCare'] != null &&
+          appointmentProblem['treatmentReceived']['type'] != '' &&
+          appointmentProblem['treatmentReceived']['period'] != '' &&
+          appointmentProblem['treatmentReceived']['typeOfCare'] != '') {
+        problemText +=
+            "Patient received care for this problem at ${appointmentProblem['treatmentReceived']['typeOfCare']} ${appointmentProblem['treatmentReceived']['period']} ${timeSpanConfig[appointmentProblem['treatmentReceived']['type']]} ago.";
+      } else {
+        problemText += "Second time receiving care for this problem. ";
+      }
+    }
+    // "Second time receiving care for this problem. ";
+    // typeOfCare
     // to check how worse the problem is
     if (appointmentProblem['problemWorst'].length > 0) {
       String listOfWorstProblems = '';
@@ -148,6 +159,7 @@ class ProblemWidget extends StatelessWidget {
           border: Border.all(color: Colors.grey[200]),
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
@@ -186,6 +198,21 @@ class ProblemWidget extends StatelessWidget {
               ],
             ),
             Text(problemText),
+            appointmentProblem['description'] == null ||
+                    appointmentProblem['description'] == ''
+                ? SizedBox()
+                : Text.rich(
+                    TextSpan(children: [
+                      TextSpan(
+                        text: 'Additional Notes: ',
+                        style: AppTextStyle.mediumStyle(fontSize: 14),
+                      ),
+                      TextSpan(
+                        text: appointmentProblem['description'],
+                        style: AppTextStyle.regularStyle(fontSize: 14),
+                      ),
+                    ]),
+                  )
           ],
         ));
   }

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/screens/appointments/model/req_booking_appointment_model.dart';
-import 'package:hutano/screens/appointments/model/res_uploaded_document_images_model.dart' as DocImg;
+import 'package:hutano/screens/appointments/model/res_uploaded_document_images_model.dart'
+    as DocImg;
 import 'package:hutano/screens/book_appointment/diagnosis/model/res_diagnostic_test_model.dart';
+import 'package:hutano/screens/book_appointment/model/allergy.dart';
 import 'package:hutano/screens/book_appointment/model/res_onsite_address_model.dart';
 import 'package:hutano/screens/book_appointment/morecondition/model/selection_health_issue_model.dart';
+import 'package:hutano/screens/book_appointment/vitals/model/social_history.dart';
 import 'package:hutano/screens/medical_history/model/res_get_medication_detail.dart';
 
 class HealthConditionProvider extends ChangeNotifier {
@@ -25,6 +28,8 @@ class HealthConditionProvider extends ChangeNotifier {
   List<Problems> allHealthIssuesData = [];
   String providerAddress = "";
   List<Medications> medicationModelData = [];
+  SocialHistory socialHistory;
+  List<Allergy> allergies = [];
 
   void updateHealthConditions(List<int> list) {
     healthConditions = list;
@@ -38,6 +43,11 @@ class HealthConditionProvider extends ChangeNotifier {
 
   void updatePharmacy(PreferredPharmacy preferredPharmacy) {
     preferredPharmacyData = preferredPharmacy;
+    notifyListeners();
+  }
+
+  void updateSocialHistory(SocialHistory sociaHistory) {
+    socialHistory = sociaHistory;
     notifyListeners();
   }
 
@@ -78,6 +88,11 @@ class HealthConditionProvider extends ChangeNotifier {
 
   void updateMedicationModelData(List<Medications> list) {
     medicationModelData = list;
+    notifyListeners();
+  }
+
+  void updateAllergies(List<Allergy> allergiesData) {
+    allergies = allergiesData;
     notifyListeners();
   }
 
@@ -141,5 +156,7 @@ class HealthConditionProvider extends ChangeNotifier {
     currentIndexOfIssue = 0;
     allHealthIssuesData = [];
     providerAddress = "";
+    // socialHistory = null;
+    // allergies = [];
   }
 }
