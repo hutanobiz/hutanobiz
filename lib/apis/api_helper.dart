@@ -58,9 +58,12 @@ class ApiBaseHelper {
   // static const String base_u = "staging.hutano.com/";
   // static const String base_url = "https://staging.hutano.com/";
   // static const String socket_url = "https://staging.hutano.com";
-  static const String base_u = "production.hutano.com/";
-  static const String base_url = "https://production.hutano.com/";
-  static const String socket_url = "https://production.hutano.com";
+  // static const String base_u = "production.hutano.com/";
+  // static const String base_url = "https://production.hutano.com/";
+  // static const String socket_url = "https://production.hutano.com";
+  static const String base_u = "hutano.com/";
+  static const String base_url = "https://hutano.com/";
+  static const String socket_url = "https://hutano.com";
 
   static const String image_base_url =
       "https://hutano-assets.s3.amazonaws.com/";
