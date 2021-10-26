@@ -307,7 +307,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                   _container.providerInsuranceList.clear();
                   Navigator.of(context).pushNamed(
                     Routes.paymentMethodScreen,
-                    arguments: false,
+                    arguments:  {'paymentType': 0},
                   );
                 },
               ),

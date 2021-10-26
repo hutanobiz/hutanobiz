@@ -411,15 +411,15 @@ class Routes {
         return _errorRoute();
         break;
       case paymentMethodScreen:
-        if (args is bool) {
+        // if (args is int) {
           return _buildRoute(
             settings,
             PaymentMethodScreen(
-              isPayment: args,
+              args: args,
             ),
           );
-        }
-        return _errorRoute();
+        // }
+        // return _errorRoute();
         break;
       case addNewCardScreen:
         return _buildRoute(settings, AddNewCardScreen());

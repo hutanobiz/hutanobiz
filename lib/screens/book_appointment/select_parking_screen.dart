@@ -115,7 +115,7 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
 
                     Navigator.of(context).pushNamed(
                       Routes.paymentMethodScreen,
-                      arguments: true,
+                      arguments: {'paymentType': 1},
                     );
                   },
                 ),

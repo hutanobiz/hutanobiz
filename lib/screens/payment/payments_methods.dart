@@ -18,9 +18,9 @@ import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 
 class PaymentMethodScreen extends StatefulWidget {
-  final bool isPayment;
+  final dynamic args; //0 , 1- normal payment, 2-change payment
 
-  PaymentMethodScreen({Key key, this.isPayment}) : super(key: key);
+  PaymentMethodScreen({Key key, this.args}) : super(key: key);
 
   @override
   _PaymentMethodScreenState createState() => _PaymentMethodScreenState();
@@ -41,13 +41,13 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   String name, avatar, cashPayment = "0";
   double totalFee = 0.0;
 
-  Map _profileMap = {};
+  Map<String, dynamic> _profileMap = {};
 
   List _providerInsuranceList = [];
 
   List _insuranceList = [];
 
-  bool isPayment = false;
+  int isPayment = 0;
 
   bool insuranceAdded = false;
   int hutanoCash = 0;
@@ -82,11 +82,11 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
     _container = InheritedContainer.of(context);
 
-    if (widget.isPayment != null) {
-      isPayment = widget.isPayment;
+    if (widget.args['paymentType'] != null) {
+      isPayment = widget.args['paymentType'];
     }
 
-    if (isPayment) {
+    if (isPayment == 1) {
       Map _providerData = _container.getProviderData();
       Map _servicesMap = _container.selectServiceMap;
 
@@ -142,13 +142,13 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
       body: LoadingBackgroundNew(
         addHeader: true,
         isLoading: _isLoading,
-        title: isPayment ? "Select Payment Methods" : "Payment Methods",
-        isAddBack: !isPayment,
+        title: isPayment != 0 ? "Select Payment Methods" : "Payment Methods",
+        isAddBack: isPayment == 0,
         color: Colors.white,
         child: Stack(
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(bottom: isPayment ? 60.0 : 0),
+              margin: EdgeInsets.only(bottom: isPayment != 0 ? 60.0 : 0),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -156,7 +156,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                 ),
               ),
             ),
-            !isPayment
+            isPayment == 0
                 ? Container()
                 : Align(
                     alignment: FractionalOffset.bottomRight,
@@ -170,32 +170,59 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                           Map _paymentMap = new Map();
 
                           if (_radioValue != null) {
-                            _paymentMap["paymentType"] = "3";
+                            if (isPayment == 2) {
+                              Map<String, dynamic> map = {};
+                              map['appointmentId'] =
+                                  widget.args['appointmentId'];
+                              map['paymentMethod'] = '3';
+                              map['paymentMethodId'] = null;
+                              updatePaymentMethod(map);
+                            } else {
+                              _paymentMap["paymentType"] = "3";
 
-                            _container.setConsentToTreatData(
-                                "paymentMap", _paymentMap);
+                              _container.setConsentToTreatData(
+                                  "paymentMap", _paymentMap);
 
-                            Navigator.of(context)
-                                .pushNamed(Routes.appointmentConfirmation);
+                              Navigator.of(context)
+                                  .pushNamed(Routes.appointmentConfirmation);
+                            }
                           } else if (_cardListRadioValue != null) {
-                            _paymentMap["paymentType"] = "1";
-                            _paymentMap["selectedCard"] = selectedCard;
+                            if (isPayment == 2) {
+                              Map<String, dynamic> map = {};
+                              map['appointmentId'] =
+                                  widget.args['appointmentId'];
+                              map['paymentMethod'] = '1';
+                              map['paymentMethodId'] = selectedCard;
+                              updatePaymentMethod(map);
+                            } else {
+                              _paymentMap["paymentType"] = "1";
+                              _paymentMap["selectedCard"] = selectedCard;
 
-                            _container.setConsentToTreatData(
-                                "paymentMap", _paymentMap);
-                            Navigator.of(context)
-                                .pushNamed(Routes.appointmentConfirmation);
+                              _container.setConsentToTreatData(
+                                  "paymentMap", _paymentMap);
+                              Navigator.of(context)
+                                  .pushNamed(Routes.appointmentConfirmation);
+                            }
                           } else if (_listRadioValue != null) {
-                            _paymentMap["paymentType"] = "2";
-                            _paymentMap["insuranceId"] = insuranceId;
-                            _paymentMap["insuranceName"] = insuranceName;
-                            _paymentMap["insuranceImage"] = insuranceImage;
+                            if (isPayment == 2) {
+                              Map<String, dynamic> map = {};
+                              map['appointmentId'] =
+                                  widget.args['appointmentId'];
+                              map['paymentMethod'] = '2';
+                              map['paymentMethodId'] = insuranceId;
+                              updatePaymentMethod(map);
+                            } else {
+                              _paymentMap["paymentType"] = "2";
+                              _paymentMap["insuranceId"] = insuranceId;
+                              _paymentMap["insuranceName"] = insuranceName;
+                              _paymentMap["insuranceImage"] = insuranceImage;
 
-                            _container.setConsentToTreatData(
-                                "paymentMap", _paymentMap);
+                              _container.setConsentToTreatData(
+                                  "paymentMap", _paymentMap);
 
-                            Navigator.of(context)
-                                .pushNamed(Routes.appointmentConfirmation);
+                              Navigator.of(context)
+                                  .pushNamed(Routes.appointmentConfirmation);
+                            }
                           } else {
                             Widgets.showToast("Please select a payment method");
                           }
@@ -207,6 +234,29 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         ),
       ),
     );
+  }
+
+  updatePaymentMethod(Map<String, dynamic> map) {
+    setState(() {
+      _isLoading = true;
+    });
+
+    ApiManager().updatePaymentMethod(map).then(((result) {
+      setState(() {
+        _isLoading = false;
+      });
+    })).catchError((dynamic e) {
+      setState(() {
+        _isLoading = false;
+      });
+      if (e is ErrorModel) {
+        Widgets.showErrorialog(
+          context: context,
+          description: e.response,
+        );
+        e.toString().debugLog();
+      }
+    });
   }
 
   List<Widget> _widgetList() {
@@ -234,7 +284,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
     _widgetList.add(SizedBox(height: 40.0));
 
     _widgetList.add(Text(
-      isPayment &&
+      isPayment == 0 &&
               (_providerInsuranceList == null || _providerInsuranceList.isEmpty)
           ? 'Insurance'
           : "Your Insurance",
@@ -247,17 +297,17 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
     _widgetList.add(SizedBox(height: 12.0));
 
-    _widgetList.add(isPayment &&
+    _widgetList.add(isPayment != 0 &&
             (_providerInsuranceList == null || _providerInsuranceList.isEmpty)
         ? Container()
         : _insuranceFutureWidget());
 
-    _widgetList.add(isPayment &&
+    _widgetList.add(isPayment != 0 &&
             (_providerInsuranceList == null || _providerInsuranceList.isEmpty)
         ? Container()
         : SizedBox(height: 10.0));
 
-    _widgetList.add(isPayment &&
+    _widgetList.add(isPayment != 0 &&
             (_providerInsuranceList == null || _providerInsuranceList.isEmpty)
         ? Padding(
             padding: const EdgeInsets.only(top: 10.0),
@@ -364,7 +414,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                               ],
                             ),
                           ),
-                          isPayment == false
+                          isPayment == 0
                               ? Icon(Icons.delete, color: AppColors.windsor)
                                   .onClick(onTap: () {
                                   Widgets.showAlertDialog(
@@ -428,7 +478,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
   Widget _insuranceFutureWidget() {
     Map _insuranceViewMap = {};
-    _insuranceViewMap['isPayment'] = isPayment;
+    _insuranceViewMap['isPayment'] = isPayment != 0;
     _insuranceViewMap['isViewDetail'] = true;
 
     return FutureBuilder<dynamic>(
@@ -530,7 +580,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                               Expanded(
                                 child: Align(
                                   alignment: Alignment.centerRight,
-                                  child: !isPayment
+                                  child: isPayment == 0
                                       ? PopupMenuButton<String>(
                                           onSelected: ((val) {
                                             handleClick(
@@ -585,7 +635,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                               )
                             ],
                           ).onClick(
-                            onTap: isPayment
+                            onTap: isPayment == 0
                                 ? null
                                 : () {
                                     _insuranceViewMap['insurance'] =
@@ -612,13 +662,13 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                   },
                           ),
                         ),
-                        (isPayment &&
+                        (isPayment == 0 &&
                                 _providerInsuranceList.contains(
                                     _insuranceList[index]["insuranceId"]
                                         .toString()))
                             ? Container()
                             : SizedBox(height: 3),
-                        (isPayment &&
+                        (isPayment == 0 &&
                                 !_providerInsuranceList.contains(
                                     _insuranceList[index]["insuranceId"]
                                         .toString()))
@@ -656,7 +706,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
     switch (value) {
       case 'Edit':
         Map _insuranceViewMap = {};
-        _insuranceViewMap['isPayment'] = isPayment;
+        _insuranceViewMap['isPayment'] = isPayment != 0;
         _insuranceViewMap['isViewDetail'] = true;
         _insuranceViewMap['insurance'] = _insurance;
 
@@ -744,7 +794,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                     ),
                   ],
                 ),
-          isPayment == false
+          isPayment == 0
               ? Container()
               : Expanded(
                   child: Align(
@@ -769,7 +819,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
     return FlatButton.icon(
       onPressed: () {
         Map _insuranceMap = {};
-        _insuranceMap['isPayment'] = isPayment;
+        _insuranceMap['isPayment'] = isPayment != 0;
         _insuranceMap['insuranceList'] = _insuranceList;
 
         title.toLowerCase().contains("insurance")
@@ -969,7 +1019,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            isPayment == false
+            isPayment == 0
                 ? Container()
                 : Expanded(
                     child: Align(

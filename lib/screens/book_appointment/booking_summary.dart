@@ -67,7 +67,12 @@ class _BookingsummaryState extends State<Bookingsummary> {
                     '3'
                 ? Routes.onsiteAddresses
                 : Routes.paymentMethodScreen,
-            arguments: true,
+            arguments: _container
+                        .projectsResponse[ArgumentConstant.serviceTypeKey]
+                        .toString() ==
+                    '3'
+                ? true
+                : {'paymentType': 1},
           );
         },
         isSkipLater: false,

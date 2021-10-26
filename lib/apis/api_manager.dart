@@ -1171,6 +1171,17 @@ class ApiManager {
     }
   }
 
+  Future<dynamic> updatePaymentMethod(
+      Map<String,dynamic> map) async {
+    try {
+      final response = await _apiService.post(updatePaymentMethodEndPoint,
+          data: map);
+      return response;
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
   // Future<ResRewardPoints> getHutanoCash() async {
   //   try {
   //     final response = await _apiService.get(

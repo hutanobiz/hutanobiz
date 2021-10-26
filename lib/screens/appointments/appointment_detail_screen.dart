@@ -175,9 +175,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                       alignment: FractionalOffset.bottomRight,
                       child: Container(
                           height: 55.0,
-                          width: MediaQuery.of(context).size.width - 90,
+                          // width: MediaQuery.of(context).size.width - 20,
                           margin: const EdgeInsets.only(top: 10),
-                          padding: const EdgeInsets.only(right: 20.0),
+                          padding: const EdgeInsets.only(left: 20, right: 20.0),
                           child:
                               //  _appointmentStatus == '4'
                               //     ? FancyButton(
@@ -199,52 +199,89 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                               _appointmentStatus == "2" ||
                                       _appointmentStatus == "6"
                                   ? SizedBox()
-                                  : profileMap['data']["type"] == 1
+                                  : (profileMap["data"]["paymentMethod"] == 1 &&
+                                          profileMap["data"]["paymentStatus"] ==
+                                              2)
                                       ? FancyButton(
-                                          title: "Track Appointment",
+                                          title: "Change Payment Method",
                                           onPressed: () {
-                                            Navigator.pushNamed(
-                                              context,
-                                              Routes.trackOfficeAppointment,
-                                              arguments: profileMap["data"]
-                                                  ["_id"],
-                                            ).whenComplete(() =>
+                                            _container.setProjectsResponse(
+                                                'serviceType',
+                                                profileMap['data']['type']
+                                                    .toString());
+
+                                            if (profileMap['subServices']
+                                                    .length >
+                                                0) {
+                                              _container.setServicesData(
+                                                  "status", "1");
+                                              _container.setServicesData(
+                                                  "services",
+                                                  profileMap['subServices']);
+                                            } else {
+                                              _container.setServicesData(
+                                                  "status", "0");
+                                              _container.setServicesData(
+                                                  "consultaceFee", '10');
+                                            }
+                                            Navigator.pushNamed(context,
+                                                Routes.paymentMethodScreen,
+                                                arguments: {
+                                                  'paymentType': 2,
+                                                  'appointmentId':
+                                                      profileMap["data"]["_id"]
+                                                }).whenComplete(() =>
                                                 appointmentDetailsFuture(
                                                     _userLocation));
                                           })
-                                      : profileMap['data']["type"] == 2
+                                      : profileMap['data']["type"] == 1
                                           ? FancyButton(
                                               title: "Track Appointment",
                                               onPressed: () {
                                                 Navigator.pushNamed(
                                                   context,
-                                                  Routes
-                                                      .trackTelemedicineAppointment,
+                                                  Routes.trackOfficeAppointment,
                                                   arguments: profileMap["data"]
                                                       ["_id"],
                                                 ).whenComplete(() =>
                                                     appointmentDetailsFuture(
                                                         _userLocation));
                                               })
-                                          : profileMap['data']["type"] == 3
+                                          : profileMap['data']["type"] == 2
                                               ? FancyButton(
-                                                  title: 'Track Appointment',
+                                                  title: "Track Appointment",
                                                   onPressed: () {
-                                                    Navigator.of(context)
-                                                        .pushNamed(
-                                                          Routes
-                                                              .trackOnsiteAppointment,
-                                                          arguments:
-                                                              profileMap["data"]
-                                                                  ["_id"],
-                                                        )
-                                                        .whenComplete(
-                                                          () =>
-                                                              appointmentDetailsFuture(
-                                                                  _userLocation),
-                                                        );
+                                                    Navigator.pushNamed(
+                                                      context,
+                                                      Routes
+                                                          .trackTelemedicineAppointment,
+                                                      arguments:
+                                                          profileMap["data"]
+                                                              ["_id"],
+                                                    ).whenComplete(() =>
+                                                        appointmentDetailsFuture(
+                                                            _userLocation));
                                                   })
-                                              : SizedBox()),
+                                              : profileMap['data']["type"] == 3
+                                                  ? FancyButton(
+                                                      title:
+                                                          'Track Appointment',
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pushNamed(
+                                                              Routes
+                                                                  .trackOnsiteAppointment,
+                                                              arguments:
+                                                                  profileMap[
+                                                                          "data"]
+                                                                      ["_id"],
+                                                            )
+                                                            .whenComplete(
+                                                              () => appointmentDetailsFuture(
+                                                                  _userLocation),
+                                                            );
+                                                      })
+                                                  : SizedBox()),
                     )
                   ],
                 );
@@ -1215,7 +1252,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   Widget paymentWidget(int paymentType,
       {List<String> insuranceImages,
       dynamic cardDetails,
-      String insuranceName}) {
+      String insuranceName,
+      isRejected = false}) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
       child: Column(

@@ -8,6 +8,8 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/custom_loader.dart';
+import 'package:hutano/widgets/fancy_button.dart';
+import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/problem_widget.dart';
@@ -27,7 +29,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
   double totalFee = 0;
   String _appointmentStatus = "0";
   Future<dynamic> _profileFuture;
-
+  InheritedContainerState _container;
   Map profileMap = {};
 
   Map _medicalHistoryMap = {};
@@ -60,6 +62,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _container = InheritedContainer.of(context);
 
     appointmentDetailsFuture(LatLng(0, 0));
   }
@@ -91,9 +94,53 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
               if (snapshot.hasData) {
                 profileMap = snapshot.data;
                 _appointmentStatus = profileMap['data']["status"].toString();
-                return SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 75),
-                    child: profileWidget(profileMap));
+                return Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                          padding: const EdgeInsets.fromLTRB(0, 20, 0, 75),
+                          child: profileWidget(profileMap)),
+                    ),
+                    (profileMap["data"]["paymentMethod"] == 1 &&
+                            profileMap["data"]["paymentStatus"] == 2)
+                        ? Align(
+                            alignment: FractionalOffset.bottomRight,
+                            child: Container(
+                              height: 55.0,
+                              // width: MediaQuery.of(context).size.width - 20,
+                              margin: const EdgeInsets.only(top: 10),
+                              padding:
+                                  const EdgeInsets.only(left: 20, right: 20.0),
+                              child: FancyButton(
+                                  title: "Change Payment Method",
+                                  onPressed: () {
+                                    _container.setProjectsResponse(
+                                        'serviceType',
+                                        profileMap['data']['type'].toString());
+
+                                    if (profileMap['subServices'].length > 0) {
+                                      _container.setServicesData("status", "1");
+                                      _container.setServicesData("services",
+                                          profileMap['subServices']);
+                                    } else {
+                                      _container.setServicesData("status", "0");
+                                      _container.setServicesData(
+                                          "consultaceFee", '10');
+                                    }
+                                    Navigator.pushNamed(
+                                        context, Routes.paymentMethodScreen,
+                                        arguments: {
+                                          'paymentType': 2,
+                                          'appointmentId': profileMap["data"]
+                                              ["_id"]
+                                        }).whenComplete(() =>
+                                        appointmentDetailsFuture(LatLng(0, 0)));
+                                  }),
+                            ),
+                          )
+                        : SizedBox()
+                  ],
+                );
               } else if (snapshot.hasError) {
                 return Text("${snapshot.error}");
               }
