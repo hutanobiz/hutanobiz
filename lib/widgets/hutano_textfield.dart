@@ -215,7 +215,7 @@ class _HutanoTextFieldState extends State<HutanoTextField> {
             keyboardType: widget.textInputType,
             onChanged: widget.onValueChanged,
             onTap: () {
-              widget.onFieldTap();
+              if (widget.onFieldTap != null) widget.onFieldTap();
             },
             // onSaved: widget.onSaved,
           ),

@@ -338,6 +338,6 @@ class _OtpVerificationState extends State<OtpVerification> {
   @override
   void dispose() {
     super.dispose();
-    _otpController.dispose();
+    // _otpController.dispose();
   }
 }
