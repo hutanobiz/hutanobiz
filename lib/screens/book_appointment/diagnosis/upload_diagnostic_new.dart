@@ -45,16 +45,15 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/strings.dart';
 
 class UploadDiagnosticNew extends StatefulWidget {
-  UploadDiagnosticNew({Key key, this.isBottomButtonsShow}) : super(key: key);
+  UploadDiagnosticNew({Key key, this.args}) : super(key: key);
 
-  final Map isBottomButtonsShow;
+  final Map args;
 
   @override
   _UploadDiagnosticNewState createState() => _UploadDiagnosticNewState();
 }
 
 class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
-  List<MedicalDocuments> _allDocuments = List();
   bool _getData = false;
   bool _indicatorLoading = true;
   ApiBaseHelper _api = ApiBaseHelper();
@@ -76,10 +75,8 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
 
   List<Map> docsList = List();
   Map<String, String> filesPaths;
-
-  bool isBottomButtonsShow = true;
-  bool isFromAppointment = false;
   List<Map> _selectedDocsList = [];
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -115,22 +112,45 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
           setState(() {
             if (value['medicalDiagnostics'] != null &&
                 value['medicalDiagnostics'].isNotEmpty) {
-              if (isBottomButtonsShow && isAdd) {
+              if (isAdd) {
                 docsList.add(value['medicalDiagnostics'].last);
+                _selectedDocsList.add(docsList.last);
               } else {
-                docsList.clear();
-                for (dynamic docs in value['medicalDiagnostics']) {
-                  docsList.add(docs);
+                if (widget.args['isEdit']) {
+                  if (widget.args['medicalDiagnostics'] != null &&
+                      widget.args['medicalDiagnostics'].length > 0) {
+                    for (dynamic img in widget.args['medicalDiagnostics']) {
+                      // img['isArchive'] = false;
+                      docsList.add(img);
+                      _selectedDocsList.add(img);
+                    }
+                    for (dynamic images in value['medicalDiagnostics']) {
+                      if ((docsList.singleWhere(
+                              (img) => img['_id'] == images['_id'],
+                              orElse: () => null)) !=
+                          null) {
+                        docsList.removeWhere(
+                            (element) => element['_id'] == images['_id']);
+                        _selectedDocsList.removeWhere(
+                            (element) => element['_id'] == images['_id']);
+                        // images['isArchive'] = false;
+                        _selectedDocsList.add(images);
+                        docsList.add(images);
+                        print('Already exists!');
+                      } else {
+                        docsList.add(images);
+                      }
+                    }
+                  }
+                } else {
+                  docsList.clear();
+                  for (dynamic docs in value['medicalDiagnostics']) {
+                    docsList.add(docs);
+                  }
                 }
               }
             }
           });
-
-          if (isBottomButtonsShow && isAdd) {
-            setState(() {
-              _selectedDocsList.add(docsList.last);
-            });
-          }
         }
       }).futureError((error) {
         error.toString().debugLog();
@@ -148,6 +168,7 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
         title: "",
         addHeader: true,
         addBottomArrows: true,
+        isLoading:isLoading,
         onForwardTap: () {
           _forwardButtonPressed(context);
         },
@@ -264,80 +285,77 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
                                   width: 180.0,
                                   fit: BoxFit.cover,
                                 ))),
-                  isBottomButtonsShow
-                      ? Padding(
-                          padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
-                          child: Align(
-                            alignment: Alignment.topLeft,
-                            child: SizedBox(
-                              height: 32,
-                              width: 32,
-                              child: RoundCornerCheckBox(
-                                value:
-                                    _selectedDocsList.contains(docsList[index]),
-                                onCheck: (value) {
-                                  if (value) {
-                                    if (!_selectedDocsList
-                                        .contains(docsList[index])) {
-                                      setState(() {
-                                        _selectedDocsList.add(docsList[index]);
-                                      });
-                                    }
-                                  } else {
-                                    setState(() {
-                                      _selectedDocsList.remove(docsList[index]);
-                                    });
-                                  }
-                                },
-                              ),
-                            ),
-                          ),
-                        )
-                      : isFromAppointment
-                          ? Container()
-                          : Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Align(
-                                alignment: Alignment.topRight,
-                                child: SizedBox(
-                                  height: 22,
-                                  width: 22,
-                                  child: RawMaterialButton(
-                                    onPressed: () {
-                                      ProgressDialogUtils.showProgressDialog(
-                                          context);
-                                      _api
-                                          .deletePatientMedicalDocs(
-                                        token,
-                                        docsList[index]['_id'],
-                                      )
-                                          .whenComplete(() {
-                                        ProgressDialogUtils
-                                            .dismissProgressDialog();
-                                        setState(() =>
-                                            docsList.remove(docsList[index]));
-                                      }).futureError((error) {
-                                        ProgressDialogUtils
-                                            .dismissProgressDialog();
-                                        error.toString().debugLog();
-                                      });
-                                    },
-                                    child: Icon(
-                                      Icons.close,
-                                      color: Colors.grey,
-                                      size: 16.0,
-                                    ),
-                                    shape: CircleBorder(),
-                                    elevation: 2.0,
-                                    fillColor: Colors.white,
-                                    constraints: const BoxConstraints(
-                                      minWidth: 22.0,
-                                      minHeight: 22.0,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: SizedBox(
+                        height: 32,
+                        width: 32,
+                        child: RoundCornerCheckBox(
+                          value: _selectedDocsList.contains(docsList[index]),
+                          onCheck: (value) {
+                            if (value) {
+                              if (!_selectedDocsList
+                                  .contains(docsList[index])) {
+                                setState(() {
+                                  _selectedDocsList.add(docsList[index]);
+                                });
+                              }
+                            } else {
+                              setState(() {
+                                _selectedDocsList.remove(docsList[index]);
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // : Padding(
+                  //     padding: const EdgeInsets.all(8.0),
+                  //     child: Align(
+                  //       alignment: Alignment.topRight,
+                  //       child: SizedBox(
+                  //         height: 22,
+                  //         width: 22,
+                  //         child: RawMaterialButton(
+                  //           onPressed: () {
+                  //             ProgressDialogUtils.showProgressDialog(
+                  //                 context);
+                  //             _api
+                  //                 .deletePatientMedicalDocs(
+                  //               token,
+                  //               docsList[index]['_id'],
+                  //             )
+                  //                 .whenComplete(() {
+                  //               ProgressDialogUtils
+                  //                   .dismissProgressDialog();
+                  //               setState(() =>
+                  //                   docsList.remove(docsList[index]));
+                  //             }).futureError((error) {
+                  //               ProgressDialogUtils
+                  //                   .dismissProgressDialog();
+                  //               error.toString().debugLog();
+                  //             });
+                  //           },
+                  //           child: Icon(
+                  //             Icons.close,
+                  //             color: Colors.grey,
+                  //             size: 16.0,
+                  //           ),
+                  //           shape: CircleBorder(),
+                  //           elevation: 2.0,
+                  //           fillColor: Colors.white,
+                  //           constraints: const BoxConstraints(
+                  //             minWidth: 22.0,
+                  //             minHeight: 22.0,
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
@@ -768,16 +786,34 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
   }
 
   void _forwardButtonPressed(BuildContext context) {
-    List<DiagnosticTest> selectedTestsModel = [];
-    if (_selectedDocsList != null && _selectedDocsList.length > 0) {
-      _selectedDocsList.forEach((element) {
-        selectedTestsModel.add(DiagnosticTest.fromJson(element));
+    if (widget.args['isEdit']) {
+      List<String> selectedTestsId = [];
+      if (_selectedDocsList != null && _selectedDocsList.length > 0) {
+        _selectedDocsList.forEach((element) {
+          selectedTestsId.add(MedicalImages.fromJson(element).sId);
+        });
+      }
+      Map<String, dynamic> model = {};
+      model['medicalDiagnosticsTests'] = selectedTestsId;
+      model['appointmentId'] = widget.args['appointmentId'];
+      setLoading(true);
+      ApiManager().updateAppointmentData(model).then((value) {
+        setLoading(false);
+        Navigator.pop(context);
       });
-    }
+    } else {
+      List<DiagnosticTest> selectedTestsModel = [];
+      if (_selectedDocsList != null && _selectedDocsList.length > 0) {
+        _selectedDocsList.forEach((element) {
+          selectedTestsModel.add(DiagnosticTest.fromJson(element));
+        });
+      }
 
-    Provider.of<HealthConditionProvider>(context, listen: false)
-        .updateDiagnosticsModel(selectedTestsModel);
-    Navigator.of(context).pushNamed(Routes.routeMedicineInformation);
+      Provider.of<HealthConditionProvider>(context, listen: false)
+          .updateDiagnosticsModel(selectedTestsModel);
+      Navigator.of(context).pushNamed(Routes.routeMedicineInformation,
+          arguments: {'isEdit': false});
+    }
   }
 
   void _getTestDiagnostics(BuildContext context) async {
@@ -791,6 +827,12 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
       if (e is ErrorModel) {
         e.toString().debugLog();
       }
+    });
+  }
+
+  setLoading(bool isLoading) {
+    setState(() {
+      isLoading = isLoading;
     });
   }
 }

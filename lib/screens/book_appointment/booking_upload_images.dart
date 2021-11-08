@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hutano/apis/api_manager.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/screens/appointments/upload_images.dart';
 import 'package:hutano/screens/appointments/view_all_documents_images.dart';
@@ -35,6 +36,8 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BookingUploadImages extends StatefulWidget {
+  dynamic args;
+  BookingUploadImages({Key key, this.args}) : super(key: key);
   @override
   _BookingUploadImagesState createState() => _BookingUploadImagesState();
 }
@@ -70,11 +73,11 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
     super.initState();
     setLoading(true);
     SharedPref().getToken().then((token) {
-      if (mounted) {
-        setState(() {
-          this.token = token;
-        });
-      }
+      // if (mounted) {
+      //   setState(() {
+      this.token = token;
+      //   });
+      // }
 
       _api.getPatientDocuments(token).then((value) {
         if (value != null) {
@@ -83,8 +86,36 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
             setState(() {
               if (value['medicalImages'] != null &&
                   value['medicalImages'].isNotEmpty) {
-                for (dynamic images in value['medicalImages']) {
-                  imagesList.add(images);
+                if (widget.args['isEdit']) {
+                  if (widget.args['medicalImages'] != null &&
+                      widget.args['medicalImages'].length > 0) {
+                    for (dynamic img in widget.args['medicalImages']) {
+                      img['isArchive'] = false;
+                      imagesList.add(img);
+                      _selectedImagesList.add(img);
+                    }
+                    for (dynamic images in value['medicalImages']) {
+                      if ((imagesList.singleWhere(
+                              (img) => img['_id'] == images['_id'],
+                              orElse: () => null)) !=
+                          null) {
+                        imagesList.removeWhere(
+                            (element) => element['_id'] == images['_id']);
+                        _selectedImagesList.removeWhere(
+                            (element) => element['_id'] == images['_id']);
+                        images['isArchive'] = false;
+                        _selectedImagesList.add(images);
+                        imagesList.add(images);
+                        print('Already exists!');
+                      } else {
+                        imagesList.add(images);
+                      }
+                    }
+                  }
+                } else {
+                  for (dynamic images in value['medicalImages']) {
+                    imagesList.add(images);
+                  }
                 }
               }
             });
@@ -122,20 +153,43 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
         isLoading: _isLoading,
         addBottomArrows: true,
         onSkipForTap: () {
-          Provider.of<HealthConditionProvider>(context, listen: false)
-              .updateImages([]);
-          Navigator.of(context).pushNamed(Routes.bookingUploadMedicalDocument);
+          if (widget.args['isEdit']) {
+            Navigator.pop(context);
+          } else {
+            Provider.of<HealthConditionProvider>(context, listen: false)
+                .updateImages([]);
+            Navigator.of(context).pushNamed(Routes.bookingUploadMedicalDocument,
+                arguments: {'isEdit': false});
+          }
         },
         onForwardTap: () {
-          List<MedicalImages> _selectedMedicalImages = [];
-          if (_selectedImagesList != null && _selectedImagesList.length > 0) {
-            _selectedImagesList.forEach((element) {
-              _selectedMedicalImages.add(MedicalImages.fromJson(element));
+          if (widget.args['isEdit']) {
+            List<String> selectedImagesId = [];
+            if (_selectedImagesList != null && _selectedImagesList.length > 0) {
+              _selectedImagesList.forEach((element) {
+                selectedImagesId.add(MedicalImages.fromJson(element).sId);
+              });
+            }
+            Map<String, dynamic> model = {};
+            model['medicalImages'] = selectedImagesId;
+            model['appointmentId'] = widget.args['appointmentId'];
+            setLoading(true);
+            ApiManager().updateAppointmentData(model).then((value) {
+              setLoading(false);
+              Navigator.pop(context);
             });
-            Provider.of<HealthConditionProvider>(context, listen: false)
-                .updateImages(_selectedMedicalImages);
+          } else {
+            List<MedicalImages> _selectedMedicalImages = [];
+            if (_selectedImagesList != null && _selectedImagesList.length > 0) {
+              _selectedImagesList.forEach((element) {
+                _selectedMedicalImages.add(MedicalImages.fromJson(element));
+              });
+              Provider.of<HealthConditionProvider>(context, listen: false)
+                  .updateImages(_selectedMedicalImages);
+            }
+            Navigator.of(context).pushNamed(Routes.bookingUploadMedicalDocument,
+                arguments: {'isEdit': false});
           }
-          Navigator.of(context).pushNamed(Routes.bookingUploadMedicalDocument);
         },
         padding: EdgeInsets.fromLTRB(0, 0, 0, 70),
         child: Column(
@@ -558,8 +612,7 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
                                       value['medicalImages'].isNotEmpty) {
                                     value['medicalImages'].last['isArchive'] =
                                         false;
-                                    imagesList
-                                        .add(value['medicalImages'].last);
+                                    imagesList.add(value['medicalImages'].last);
                                   }
 
                                   if (isBottomButtonsShow) {

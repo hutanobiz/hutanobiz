@@ -30,17 +30,19 @@ import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/month_year_item.dart';
 import 'package:provider/provider.dart';
 
-class MedicalHistoryScreen extends StatefulWidget {
-  MedicalHistoryScreen({Key key, this.args}) : super(key: key);
+class MedicalHistorySettingScreen extends StatefulWidget {
+  MedicalHistorySettingScreen({Key key, this.isBottomButtonsShow})
+      : super(key: key);
 
-  final dynamic args;
-  // final bool isFromTreat;
+  final Map isBottomButtonsShow;
 
   @override
-  _MedicalHistoryScreenState createState() => _MedicalHistoryScreenState();
+  _MedicalHistorySettingScreenState createState() =>
+      _MedicalHistorySettingScreenState();
 }
 
-class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
+class _MedicalHistorySettingScreenState
+    extends State<MedicalHistorySettingScreen> {
   ApiBaseHelper api = ApiBaseHelper();
   List<MedicalHistory> _showDiseaseData = [];
   List<Disease> _newDiseaseList = [];
@@ -58,23 +60,26 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.args['isEdit']) {
-      if (widget.args['medicalHistory'] != null &&
-          widget.args['medicalHistory'].length > 0) {
-        for (dynamic aa in widget.args['medicalHistory']) {
-          _showDiseaseData.add(MedicalHistory.fromJson(aa));
-        }
+    if (widget.isBottomButtonsShow != null) {
+      if (widget.isBottomButtonsShow['isBottomButtonsShow'] != null) {
+        isBottomButtonsShow = widget.isBottomButtonsShow['isBottomButtonsShow'];
       }
-    } else {
-      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-        SharedPref().getToken().then((token) {
-          setState(() {
-            this.token = token;
-          });
-          _getMyDiseaseList();
-        });
-      });
+      if (widget.isBottomButtonsShow['isFromAppointment'] != null) {
+        isFromAppointment = widget.isBottomButtonsShow['isFromAppointment'];
+      }
     }
+    // if (!isFromAppointment) {
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      SharedPref().getToken().then((token) {
+        setState(() {
+          this.token = token;
+        });
+        _getMyDiseaseList();
+      });
+    });
+    // }else{
+
+    // }
   }
 
   @override
@@ -349,51 +354,24 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
   }
 
   void saveMedicalHistory() {
-    if (widget.args['isEdit']) {
-      List<BookedMedicalHistory> _listOfHistory = [];
-
-      if (_showDiseaseData != null && _showDiseaseData.length > 0) {
-        _showDiseaseData.forEach((element) {
-          _listOfHistory.add(BookedMedicalHistory(
-              name: element.name,
-              year: int.parse(element.year),
-              month: element.month));
-        });
-      }
-      Map<String, dynamic> model = {};
-      model['medicalHistory'] = _listOfHistory;
-      model['appointmentId'] = widget.args['appointmentId'];
-      setLoading(true);
-      ApiManager().updateAppointmentData(model).then((value) {
-        setLoading(false);
-        Navigator.pop(context);
-      });
-    } else {
-      if (_showDiseaseData != null) {
-        if (_showDiseaseData.length > 0) {
-          final _gender = getInt(PreferenceKey.gender);
-          Provider.of<SymptomsInfoProvider>(context, listen: false)
-              .setBodyType(_gender);
-          List<BookedMedicalHistory> _listOfHistory = [];
-          if (isBottomButtonsShow) {
-            if (_showDiseaseData != null && _showDiseaseData.length > 0) {
-              _showDiseaseData.forEach((element) {
-                _container.setConsentToTreatData(
-                    "medicalHistory", element.name);
-                _listOfHistory.add(BookedMedicalHistory(
-                    name: element.name,
-                    year: int.parse(element.year),
-                    month: element.month));
-              });
-            }
-            Provider.of<HealthConditionProvider>(context, listen: false)
-                .updateMedicalHistory(_listOfHistory);
-            // Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
-            Navigator.of(context).pushNamed(Routes.routeMoreCondition);
+    if (_showDiseaseData != null) {
+      if (_showDiseaseData.length > 0) {
+        final _gender = getInt(PreferenceKey.gender);
+        Provider.of<SymptomsInfoProvider>(context, listen: false)
+            .setBodyType(_gender);
+        List<BookedMedicalHistory> _listOfHistory = [];
+        if (isBottomButtonsShow) {
+          if (_showDiseaseData != null && _showDiseaseData.length > 0) {
+            _showDiseaseData.forEach((element) {
+              _container.setConsentToTreatData("medicalHistory", element.name);
+              _listOfHistory.add(BookedMedicalHistory(
+                  name: element.name,
+                  year: int.parse(element.year),
+                  month: element.month));
+            });
           }
-        } else {
           Provider.of<HealthConditionProvider>(context, listen: false)
-              .updateMedicalHistory([]);
+              .updateMedicalHistory(_listOfHistory);
           // Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
           Navigator.of(context).pushNamed(Routes.routeMoreCondition);
         }
@@ -403,6 +381,11 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
         // Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
         Navigator.of(context).pushNamed(Routes.routeMoreCondition);
       }
+    } else {
+      Provider.of<HealthConditionProvider>(context, listen: false)
+          .updateMedicalHistory([]);
+      // Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
+      Navigator.of(context).pushNamed(Routes.routeMoreCondition);
     }
   }
 
@@ -466,22 +449,18 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
         await ApiManager()
             .updatePatientDisease(reqAddDiseaseModel)
             .then(((result) {
-          int indexToUpdate = _showDiseaseData
-              .indexWhere((disease) => disease.sId == reqAddDiseaseModel.sId);
-          _showDiseaseData[indexToUpdate] = MedicalHistory(
-              name: reqAddDiseaseModel.name,
-              year: reqAddDiseaseModel.year,
-              month: reqAddDiseaseModel.month,
-              sId: reqAddDiseaseModel.sId);
           setLoading(false);
+          _getMyDiseaseList();
         }));
+
+        //  _getUpdatedDiseaseData();
+
       } else {
         await ApiManager()
             .addPatientDisease(reqAddDiseaseModel)
             .then(((result) {
-          _showDiseaseData.add(MedicalHistory.fromJson(
-              result['response']['medicalHistory'].last));
           setLoading(false);
+          _getMyDiseaseList();
         }));
       }
     } catch (e) {

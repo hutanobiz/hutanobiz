@@ -412,12 +412,12 @@ class Routes {
         break;
       case paymentMethodScreen:
         // if (args is int) {
-          return _buildRoute(
-            settings,
-            PaymentMethodScreen(
-              args: args,
-            ),
-          );
+        return _buildRoute(
+          settings,
+          PaymentMethodScreen(
+            args: args,
+          ),
+        );
         // }
         // return _errorRoute();
         break;
@@ -428,7 +428,7 @@ class Routes {
         return _buildRoute(settings, ConsentToTreatScreen());
         break;
       case medicalHistoryScreen:
-        return _buildRoute(settings, MedicalHistoryScreen());
+        return _buildRoute(settings, MedicalHistoryScreen(args: args));
         break;
       case seekingCureScreen:
         return _buildRoute(settings, SeekingCureScreen());
@@ -815,11 +815,15 @@ class Routes {
         String problemId = args[ArgumentConstant.problemIdKey];
         String problemName = args[ArgumentConstant.problemNameKey];
         String problemImage = args[ArgumentConstant.problemImageKey];
+        dynamic problem = args[ArgumentConstant.problem];
+        String appointmentId = args[ArgumentConstant.appointmentId];
         return MaterialPageRoute(
             builder: (_) => BoneMuscleIssue(
                 problemId: problemId,
                 problemName: problemName,
-                problemImage: problemImage));
+                problemImage: problemImage,
+                problem: problem,
+                appointmentId: appointmentId));
       case routeConditionBetterWorst:
         String problemId = args[ArgumentConstant.problemIdKey];
         return MaterialPageRoute(
@@ -860,7 +864,7 @@ class Routes {
                 healthChest: healthChest,
                 nutrition: nutrition));
       case routeVitalReviews:
-        return MaterialPageRoute(builder: (_) => VitalReviews());
+        return MaterialPageRoute(builder: (_) => VitalReviews(args: args));
       case routeTestDiagnosis:
         return MaterialPageRoute(builder: (_) => TestDiagnosisScreen());
       case routeConditionTimeScreen:
@@ -888,7 +892,7 @@ class Routes {
         );
       case routeMedicineInformation:
         return MaterialPageRoute(
-          builder: (_) => MedicineInformation(),
+          builder: (_) => MedicineInformation(args: args),
         );
       case routeUploadTestDocuments:
         return MaterialPageRoute(builder: (_) => UploadTestDocuments());
@@ -914,22 +918,26 @@ class Routes {
                   insuranceId: args[ArgumentConstant.insuranceId],
                 ));
       case routeAddPharmacy:
-        return MaterialPageRoute(builder: (_) => AddPharmacy());
+        return MaterialPageRoute(builder: (_) => AddPharmacy(args: args));
       case allImagesTabsScreen:
         return _buildRoute(settings, AllImagesTabs());
         break;
 
       case bookingUploadImages:
-        return _buildRoute(settings, BookingUploadImages());
+        return _buildRoute(settings, BookingUploadImages(args: args));
         break;
       case bookingUploadMedicalDocument:
-        return _buildRoute(settings, BookingUploadMedicalDocument());
+        return _buildRoute(settings, BookingUploadMedicalDocument(args: args));
         break;
       case socialHistory:
-        return _buildRoute(settings, SocialHistoryScreen());
+        return _buildRoute(
+            settings,
+            SocialHistoryScreen(
+              map: args,
+            ));
         break;
       case allergiesScreen:
-        return _buildRoute(settings, AllergiesScreen());
+        return _buildRoute(settings, AllergiesScreen(args: args));
         break;
       case allDocumentsTabsScreen:
         return _buildRoute(settings, AllDocumentsTabs());
@@ -938,7 +946,8 @@ class Routes {
         return _buildRoute(settings, Chat(appointment: args));
         break;
       case routeUploadDiagnosticNew:
-        return MaterialPageRoute(builder: (_) => UploadDiagnosticNew());
+        return MaterialPageRoute(
+            builder: (_) => UploadDiagnosticNew(args: args));
 
       default:
         return _errorRoute();

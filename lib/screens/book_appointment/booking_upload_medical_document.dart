@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:hutano/apis/api_manager.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/screens/appointments/upload_images.dart';
 import 'package:hutano/screens/appointments/view_all_documents_images.dart';
@@ -36,6 +37,8 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BookingUploadMedicalDocument extends StatefulWidget {
+  dynamic args;
+  BookingUploadMedicalDocument({Key key, this.args}) : super(key: key);
   @override
   _BookingUploadMedicalDocumentState createState() =>
       _BookingUploadMedicalDocumentState();
@@ -112,10 +115,43 @@ class _BookingUploadMedicalDocumentState
                 value['medicalDocuments'].last['isArchive'] = false;
                 docsList.add(value['medicalDocuments'].last);
               } else {
-                docsList.clear();
-                for (dynamic docs in value['medicalDocuments']) {
-                  docsList.add(docs);
+                if (widget.args['isEdit']) {
+                  if (widget.args['medicalDocuments'] != null &&
+                      widget.args['medicalDocuments'].length > 0) {
+                    for (dynamic img in widget.args['medicalDocuments']) {
+                      img['isArchive'] = false;
+                      docsList.add(img);
+                      _selectedDocsList.add(img);
+                    }
+                    for (dynamic images in value['medicalDocuments']) {
+                      if ((docsList.singleWhere(
+                              (img) => img['_id'] == images['_id'],
+                              orElse: () => null)) !=
+                          null) {
+                        docsList.removeWhere(
+                            (element) => element['_id'] == images['_id']);
+                        _selectedDocsList.removeWhere(
+                            (element) => element['_id'] == images['_id']);
+                        images['isArchive'] = false;
+                        _selectedDocsList.add(images);
+                        docsList.add(images);
+                        print('Already exists!');
+                      } else {
+                        docsList.add(images);
+                      }
+                    }
+                  }
+                } else {
+                  docsList.clear();
+                  for (dynamic docs in value['medicalDocuments']) {
+                    docsList.add(docs);
+                  }
                 }
+
+                // docsList.clear();
+                // for (dynamic docs in value['medicalDocuments']) {
+                //   docsList.add(docs);
+                // }
               }
             }
           });
@@ -152,20 +188,43 @@ class _BookingUploadMedicalDocumentState
         isLoading: _isLoading,
         addBottomArrows: true,
         onSkipForTap: () {
-          Provider.of<HealthConditionProvider>(context, listen: false)
-              .updateDocuments([]);
-          Navigator.of(context).pushNamed(Routes.routeUploadDiagnosticNew);
+          if (widget.args['isEdit']) {
+            Navigator.pop(context);
+          } else {
+            Provider.of<HealthConditionProvider>(context, listen: false)
+                .updateDocuments([]);
+            Navigator.of(context).pushNamed(Routes.routeUploadDiagnosticNew,
+                arguments: {'isEdit': false});
+          }
         },
         onForwardTap: () {
-          List<MedicalDocuments> _selectedMedicalDocs = [];
-          if (_selectedDocsList != null && _selectedDocsList.length > 0) {
-            _selectedDocsList.forEach((element) {
-              _selectedMedicalDocs.add(MedicalDocuments.fromJson(element));
+          if (widget.args['isEdit']) {
+            List<String> selectedDocsId = [];
+            if (_selectedDocsList != null && _selectedDocsList.length > 0) {
+              _selectedDocsList.forEach((element) {
+                selectedDocsId.add(MedicalImages.fromJson(element).sId);
+              });
+            }
+            Map<String, dynamic> model = {};
+            model['medicalDocuments'] = selectedDocsId;
+            model['appointmentId'] = widget.args['appointmentId'];
+            setLoading(true);
+            ApiManager().updateAppointmentData(model).then((value) {
+              setLoading(false);
+              Navigator.pop(context);
             });
-            Provider.of<HealthConditionProvider>(context, listen: false)
-                .updateDocuments(_selectedMedicalDocs);
+          } else {
+            List<MedicalDocuments> _selectedMedicalDocs = [];
+            if (_selectedDocsList != null && _selectedDocsList.length > 0) {
+              _selectedDocsList.forEach((element) {
+                _selectedMedicalDocs.add(MedicalDocuments.fromJson(element));
+              });
+              Provider.of<HealthConditionProvider>(context, listen: false)
+                  .updateDocuments(_selectedMedicalDocs);
+            }
+            Navigator.of(context).pushNamed(Routes.routeUploadDiagnosticNew,
+                arguments: {'isEdit': false});
           }
-          Navigator.of(context).pushNamed(Routes.routeUploadDiagnosticNew);
         },
         padding: EdgeInsets.fromLTRB(0, 0, 0, 70),
         child: Column(

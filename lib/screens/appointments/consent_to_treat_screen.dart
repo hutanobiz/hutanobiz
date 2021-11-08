@@ -98,7 +98,7 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
           // Navigator.of(context).pushNamed(routeMyMedicalHistory)
           isAgree
               ? Navigator.of(context)
-                  .pushNamed(Routes.socialHistory, arguments: true)
+                  .pushNamed(Routes.socialHistory, arguments: {'isEdit':false})
               : Widgets.showToast("Please agree to continue");
         },
         color: Colors.white,

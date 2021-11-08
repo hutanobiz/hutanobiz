@@ -29,6 +29,8 @@ import 'package:provider/provider.dart';
 import '../../../routes.dart';
 
 class VitalReviews extends StatefulWidget {
+  VitalReviews({Key key, this.args}) : super(key: key);
+  dynamic args;
   @override
   _VitalReviewsState createState() => _VitalReviewsState();
 }
@@ -66,6 +68,7 @@ class _VitalReviewsState extends State<VitalReviews> {
   InheritedContainerState _container;
   String _selectedDate = "";
   String _selectedTime = "";
+  bool isLoading = false;
 
   @override
   void didChangeDependencies() {
@@ -87,19 +90,52 @@ class _VitalReviewsState extends State<VitalReviews> {
       calculateBmi();
     });
 
-    _dateController.text =
-        formattedDate(DateTime.now(), AppConstants.vitalReviewsDateFormat);
-    _selectedDate =
-        formattedDate(DateTime.now(), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z");
-    _selectedTime = DateFormat("hh:mm a").format(DateTime.now());
-    _timeController.text = DateFormat("h:mm a")
-        .format(DateTime.now())
-        .replaceAll("PM", "")
-        .replaceAll("AM", "");
-    if (DateTime.now().hour >= 12) {
-      isSwitchSelected = false;
+    if (widget.args['isEdit'] && widget.args['vitals'] != null) {
+      String height = widget.args['vitals']['height'] ?? '';
+      String time = widget.args['vitals']['time'] ?? '';
+
+      _dateController.text = widget.args['vitals'][''];
+      _timeController.text = time.contains(' ') ? time.split(' ')[0] : '';
+      _sbpController.text = widget.args['vitals']['bloodPressureSbp'] ?? '';
+      _dbpController.text = widget.args['vitals']['bloodPressureDbp'] ?? '';
+      _heartRateController.text = widget.args['vitals']['heartRate'] ?? '';
+      _oxygenController.text = widget.args['vitals']['oxygenSaturation'] ?? '';
+      _tempController.text = widget.args['vitals']['temperature'] ?? '';
+      _weightController.text = widget.args['vitals']['weight'] ?? '';
+      _feetController.text = height.contains('.') ? height.split('.')[0] : '';
+      _inchesController.text = height.contains('.') ? height.split('.')[1] : '';
+      _glucoseController.text = widget.args['vitals']['bloodGlucose'] ?? '';
+      _bmiController.text = widget.args['vitals']['bmi'] ?? '';
+
+      _dateController.text = widget.args['vitals']['date'] != null
+          ? formattedDate(DateTime.parse(widget.args['vitals']['date']),
+              AppConstants.vitalReviewsDateFormat)
+          : '';
+      _selectedDate = widget.args['vitals']['date'] != null
+          ? formattedDate(DateTime.parse(widget.args['vitals']['date']),
+              "yyyy-MM-dd'T'HH:mm:ss.SSS'Z")
+          : formattedDate(DateTime.now(), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z");
+      _selectedTime = time;
+      if (time.contains('PM')) {
+        isSwitchSelected = false;
+      } else {
+        isSwitchSelected = true;
+      }
     } else {
-      isSwitchSelected = true;
+      _dateController.text =
+          formattedDate(DateTime.now(), AppConstants.vitalReviewsDateFormat);
+      _selectedDate =
+          formattedDate(DateTime.now(), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z");
+      _selectedTime = DateFormat("hh:mm a").format(DateTime.now());
+      _timeController.text = DateFormat("h:mm a")
+          .format(DateTime.now())
+          .replaceAll("PM", "")
+          .replaceAll("AM", "");
+      if (DateTime.now().hour >= 12) {
+        isSwitchSelected = false;
+      } else {
+        isSwitchSelected = true;
+      }
     }
   }
 
@@ -123,6 +159,7 @@ class _VitalReviewsState extends State<VitalReviews> {
       body: LoadingBackgroundNew(
           title: "",
           addHeader: true,
+          isLoading: isLoading,
           addBottomArrows: MediaQuery.of(context).viewInsets.bottom == 0,
           onForwardTap: () {
             _onForwardTapButton(context);
@@ -801,19 +838,36 @@ class _VitalReviewsState extends State<VitalReviews> {
           ? double.parse(_glucoseController.value.text.trim())
           : null,
     );
-    Provider.of<HealthConditionProvider>(context, listen: false)
-        .updateVitals(vitalsModel);
-    Navigator.pushNamed(context, Routes.bookingSummary);
-    // Navigator.of(context).pushNamed(
-    //   _container.projectsResponse[ArgumentConstant.serviceTypeKey].toString() ==
-    //           '3'
-    //       ? Routes.onsiteAddresses
-    //       : Routes.paymentMethodScreen,
-    //   arguments: true,
-    // );
-    // } else {
-    //   Widgets.showToast("Please add vital details");
-    // }
+    if (widget.args['isEdit']) {
+      Map<String, dynamic> model = {};
+      model['vitals'] = vitalsModel;
+      model['appointmentId'] = widget.args['appointmentId'];
+      setLoading(true);
+      ApiManager().updateAppointmentData(model).then((value) {
+        setLoading(false);
+        Navigator.pop(context);
+      });
+    } else {
+      Provider.of<HealthConditionProvider>(context, listen: false)
+          .updateVitals(vitalsModel);
+      Navigator.pushNamed(context, Routes.bookingSummary);
+      // Navigator.of(context).pushNamed(
+      //   _container.projectsResponse[ArgumentConstant.serviceTypeKey].toString() ==
+      //           '3'
+      //       ? Routes.onsiteAddresses
+      //       : Routes.paymentMethodScreen,
+      //   arguments: true,
+      // );
+      // } else {
+      //   Widgets.showToast("Please add vital details");
+      // }
+    }
+  }
+
+  setLoading(bool loading) {
+    setState(() {
+      isLoading = loading;
+    });
   }
 
   void _addVitalsData(BuildContext context, ReqAddVitalsModel reqModel) async {

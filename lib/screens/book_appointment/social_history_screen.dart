@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:hutano/apis/api_helper.dart';
+import 'package:hutano/apis/api_manager.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
@@ -6,12 +10,14 @@ import 'package:hutano/screens/book_appointment/morecondition/providers/health_c
 import 'package:hutano/screens/book_appointment/vitals/model/social_history.dart';
 import 'package:hutano/screens/medical_history/provider/appoinment_provider.dart';
 import 'package:hutano/utils/color_utils.dart';
+import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:provider/provider.dart';
 
 class SocialHistoryScreen extends StatefulWidget {
-  SocialHistoryScreen({Key key}) : super(key: key);
+  SocialHistoryScreen({Key key, this.map}) : super(key: key);
+  dynamic map;
 
   @override
   _SocialHistoryScreenState createState() => _SocialHistoryScreenState();
@@ -31,6 +37,51 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
       heroineGroupValue = 0;
   bool isLiquor = false, isBeer = false;
   bool _isBeerMore = false, _isLiquorMore = false;
+
+  @override
+  void initState() {
+    if (widget.map['isEdit']) {
+      if (widget.map['socialHistory'] != null) {
+        if (widget.map['socialHistory']['smoking'] != null &&
+            widget.map['socialHistory']['smoking']['frequency'] != null &&
+            widget.map['socialHistory']['smoking']['frequency'] != '0') {
+          isSmoker = true;
+          smokerGroupValue =
+              int.parse(widget.map['socialHistory']['smoking']['frequency']);
+        }
+
+        if (widget.map['socialHistory']['Drinker'] != null &&
+            widget.map['socialHistory']['Drinker']['frequency'] != null &&
+            widget.map['socialHistory']['Drinker']['frequency'] != '0') {
+          isDrinker = true;
+
+          drinkGroupValue =
+              int.parse(widget.map['socialHistory']['Drinker']['frequency']);
+          if (widget.map['socialHistory']['Drinker']['liquorQuantity'] !=
+                  null &&
+              widget.map['socialHistory']['Drinker']['liquorQuantity'] != '0') {
+            isLiquor = true;
+            _isLiquorMore =
+                widget.map['socialHistory']['Drinker']['liquorQuantity'] == '2'
+                    ? true
+                    : false;
+          }
+
+          if (widget.map['socialHistory']['Drinker']['BeerQuantity'] != null &&
+              widget.map['socialHistory']['Drinker']['BeerQuantity'] != '0') {
+            isBeer = true;
+            _isBeerMore =
+                widget.map['socialHistory']['Drinker']['BeerQuantity'] == '2'
+                    ? true
+                    : false;
+          }
+        }
+        setState(() {});
+      }
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -199,7 +250,7 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
                       isRecreationalDrug
                           ? Column(
                               children: [
-                                titleWidget(4, 'marijuana', isMarijuana),
+                                titleWidget(4, 'Marijuana', isMarijuana),
                                 isMarijuana
                                     ? Column(children: [
                                         smokerRadioListItem(4, 1, 'Rarely',
@@ -470,16 +521,33 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
 
       socialHistory.drinker = drinker;
     }
+    if (widget.map['isEdit']) {
+      Map<String, dynamic> model = {};
+      model['socialHistory'] = socialHistory.toJson();
+      model['appointmentId'] = widget.map['appointmentId'];
+      setLoading(true);
+      ApiManager().updateAppointmentData(model).then((value) {
+        setLoading(false);
+        Navigator.pop(context);
+      });
+      // ApiBaseHelper api = ApiBaseHelper();
+      // SharedPref().getToken().then((token) {
+      //   api.updateAppointmentData(token, {
+      //     'socialHistory': socialHistory.toJson(),
+      //     'appointmentId': widget.map['appointmentId']
+      //   });
+      // });
+    } else {
+      Provider.of<HealthConditionProvider>(context, listen: false)
+          .updateSocialHistory(socialHistory);
+      Navigator.of(context)
+          .pushNamed(Routes.allergiesScreen, arguments: {'isEdit': false});
+    }
+  }
 
-    // "Drinker": {"type": "wine", "frequency": 3,
-
-    //       "liquorQuantity": 6, "BeerQuantity": 3}
-
-    //  bool isSmoker = false, isDrinker = false, isRecreationalDrug = false;
-
-    Provider.of<HealthConditionProvider>(context, listen: false)
-        .updateSocialHistory(socialHistory);
-    // Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
-    Navigator.of(context).pushNamed(Routes.allergiesScreen);
+  setLoading(bool loading) {
+    setState(() {
+      isLoading = loading;
+    });
   }
 }

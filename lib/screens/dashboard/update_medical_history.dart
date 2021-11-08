@@ -3,6 +3,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/screens/appointments/medical_history.dart';
 import 'package:hutano/screens/appointments/upload_documents.dart';
 import 'package:hutano/screens/appointments/upload_images.dart';
+import 'package:hutano/screens/dashboard/profile/medical_history_setting_screen.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 
 class UpdateMedicalHistory extends StatefulWidget {
@@ -32,7 +33,7 @@ class _UpdateMedicalHistoryState extends State<UpdateMedicalHistory>
     }
 
     _children = [
-      MedicalHistoryScreen(isBottomButtonsShow: _map),
+      MedicalHistorySettingScreen(isBottomButtonsShow: _map),
       UploadImagesScreen(isBottomButtonsShow: _map),
       UploadDocumentsScreen(isBottomButtonsShow: _map),
     ];

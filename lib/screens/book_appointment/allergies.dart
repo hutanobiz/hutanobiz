@@ -22,7 +22,8 @@ import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:provider/provider.dart';
 
 class AllergiesScreen extends StatefulWidget {
-  AllergiesScreen({Key key}) : super(key: key);
+  AllergiesScreen({Key key, this.args}) : super(key: key);
+  dynamic args;
 
   @override
   _AllergiesScreenState createState() => _AllergiesScreenState();
@@ -42,14 +43,22 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
   void initState() {
     super.initState();
 
-    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      SharedPref().getToken().then((token) {
-        setState(() {
-          this.token = token;
+    if (widget.args['isEdit']) {
+      if (widget.args['allergy'] != null && widget.args['allergy'].length > 0) {
+        for (dynamic aa in widget.args['allergy']) {
+          myAllergiesList.add(Allergy.fromJson(aa));
+        }
+      }
+    } else {
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+        SharedPref().getToken().then((token) {
+          setState(() {
+            this.token = token;
+          });
+          _getMyAllergiesList();
         });
-        _getMyAllergiesList();
       });
-    });
+    }
   }
 
   @override
@@ -279,14 +288,27 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
   }
 
   void saveAllergies() {
-    if (myAllergiesList.length > 0) {
-      Provider.of<HealthConditionProvider>(context, listen: false)
-          .updateAllergies(myAllergiesList);
-      Navigator.of(context).pushNamed(Routes.medicalHistoryScreen);
+    if (widget.args['isEdit']) {
+      Map<String, dynamic> model = {};
+      model['allergy'] = myAllergiesList;
+      model['appointmentId'] = widget.args['appointmentId'];
+      setLoading(true);
+      ApiManager().updateAppointmentData(model).then((value) {
+        setLoading(false);
+        Navigator.pop(context);
+      });
     } else {
-      Provider.of<HealthConditionProvider>(context, listen: false)
-          .updateAllergies([]);
-      Navigator.of(context).pushNamed(Routes.medicalHistoryScreen);
+      if (myAllergiesList.length > 0) {
+        Provider.of<HealthConditionProvider>(context, listen: false)
+            .updateAllergies(myAllergiesList);
+        Navigator.of(context).pushNamed(Routes.medicalHistoryScreen,
+            arguments: {'isEdit': false});
+      } else {
+        Provider.of<HealthConditionProvider>(context, listen: false)
+            .updateAllergies([]);
+        Navigator.of(context).pushNamed(Routes.medicalHistoryScreen,
+            arguments: {'isEdit': false});
+      }
     }
   }
 
@@ -324,8 +346,9 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
     setLoading(true);
     try {
       await ApiManager().addPatientAllergy(allergy).then(((result) {
+        myAllergiesList
+            .add(Allergy.fromJson(result['response']['allergy'].last));
         setLoading(false);
-        _getMyAllergiesList();
       }));
     } catch (e) {
       setLoading(false);

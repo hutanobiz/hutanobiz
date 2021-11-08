@@ -35,6 +35,8 @@ import 'model/places.dart';
 import 'model/res_preferred_pharmacy_list.dart';
 
 class AddPharmacy extends StatefulWidget {
+  AddPharmacy({Key key, this.args}) : super(key: key);
+  dynamic args;
   @override
   _AddPharmacyState createState() => _AddPharmacyState();
 }
@@ -109,8 +111,21 @@ class _AddPharmacyState extends State<AddPharmacy> {
           setState(() {
             pharmacyList = result.response.preferredPharmacy;
             if (defaultPharmacy == null) {
-              if (result.response.preferredPharmacy.isNotEmpty) {
-                defaultPharmacy = result.response.preferredPharmacy[0];
+              if (widget.args['isEdit']) {
+                for (Pharmacy parmacy in result.response.preferredPharmacy) {
+                  if (widget.args['preferredPharmacy'] != null &&
+                      widget.args['preferredPharmacy']['name'] != null) {
+                    if (parmacy.name ==
+                        widget.args['preferredPharmacy']['name']) {
+                      defaultPharmacy = parmacy;
+                      break;
+                    }
+                  }
+                }
+              } else {
+                if (result.response.preferredPharmacy.isNotEmpty) {
+                  defaultPharmacy = result.response.preferredPharmacy[0];
+                }
               }
             }
           });
@@ -169,11 +184,25 @@ class _AddPharmacyState extends State<AddPharmacy> {
                 MediaQuery.of(context).viewInsets.bottom == 0 ? spacing70 : 0),
         onForwardTap: defaultPharmacy != null
             ? () {
-                PreferredPharmacy preferredPharmacy =
-                    PreferredPharmacy(pharmacyId: defaultPharmacy.sId);
-                Provider.of<HealthConditionProvider>(context, listen: false)
-                    .updatePharmacy(preferredPharmacy);
-                Navigator.of(context).pushNamed(Routes.routeVitalReviews);
+                if (widget.args['isEdit']) {
+                  PreferredPharmacy preferredPharmacy =
+                      PreferredPharmacy(pharmacyId: defaultPharmacy.sId);
+                  Map<String, dynamic> model = {};
+                  model['preferredPharmacy'] = preferredPharmacy;
+                  model['appointmentId'] = widget.args['appointmentId'];
+                  setLoading(true);
+                  ApiManager().updateAppointmentData(model).then((value) {
+                    setLoading(false);
+                    Navigator.pop(context);
+                  });
+                } else {
+                  PreferredPharmacy preferredPharmacy =
+                      PreferredPharmacy(pharmacyId: defaultPharmacy.sId);
+                  Provider.of<HealthConditionProvider>(context, listen: false)
+                      .updatePharmacy(preferredPharmacy);
+                  Navigator.of(context).pushNamed(Routes.routeVitalReviews,
+                      arguments: {'isEdit': false});
+                }
               }
             : () {
                 Widgets.showToast("Please add pharmacy details");

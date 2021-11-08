@@ -122,9 +122,10 @@ class _MonthYearItemState extends State<MonthYearItem> {
           BuildContext context, List<String> months, List<int> years) =>
       InkWell(
         onTap: () {
-          Platform.isIOS
-              ? _openCupertinoMonthAndYearPickerSheet(context, months, years)
-              : _openMaterialMonthAndYearPickerSheet(context, months, years);
+          // Platform.isIOS
+          //     ? _openCupertinoMonthAndYearPickerSheet(context, months, years)
+          //     :
+          _openMaterialMonthAndYearPickerSheet(context, months, years);
         },
         child: HutanoTextField(
           width: (MediaQuery.of(context).size.width - 35) * 0.4,

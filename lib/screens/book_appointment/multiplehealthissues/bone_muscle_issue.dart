@@ -26,6 +26,7 @@ import 'package:hutano/utils/constants/key_constant.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/utils/progress_dialog.dart';
+import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/controller.dart';
 import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/hutano_button.dart';
@@ -43,12 +44,26 @@ class BoneMuscleIssue extends StatefulWidget {
   final String problemId;
   final String problemName;
   final String problemImage;
-  BoneMuscleIssue({this.problemId, this.problemName, this.problemImage});
+  final dynamic problem;
+  final String appointmentId;
+  BoneMuscleIssue(
+      {this.problemId,
+      this.problemName,
+      this.problemImage,
+      this.problem,
+      this.appointmentId});
   @override
   _BoneMuscleIssueState createState() => _BoneMuscleIssueState();
 }
 
 class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
+  Map<String, String> timeSpanConfig = {
+    "1": "Hours",
+    "2": "Days",
+    "3": "Weeks",
+    "4": "Months",
+    "5": "Years"
+  };
   double _discomfortIntensity = 0;
   GlobalKey _rangeSliderKey = GlobalKey();
   List<DescribeSymptomsModel> _listOfSymptoms = [];
@@ -131,13 +146,14 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
   String _selectedType = "0";
   String _selectedValue = "0";
 
-  List<HealthCondition> _conditionList = [];
+  // List<HealthCondition> _conditionList = [];
   bool _isPressedOnProblemImproving = false;
   ScrollController _listOfBetterController = ScrollController();
   ScrollController _listOfWorstController = ScrollController();
   TextEditingController _typeLocationController = TextEditingController();
   FocusNode _typeLocationFocusNode = FocusNode();
   int _currentPartSideIndex;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -215,6 +231,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
           child: LoadingBackgroundNew(
               title: "",
               addHeader: true,
+              isLoading: isLoading,
               padding: EdgeInsets.only(
                   left: spacing20,
                   right: spacing10,
@@ -1350,9 +1367,9 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
             )),
       ).onClick(onTap: () {
         if (isProblem) {
-          updateVisibility(header, isProblem);
+          updateVisibility(header, isProblem, true);
         } else {
-          updateVisibility(header, isProblem);
+          updateVisibility(header, isProblem, true);
         }
       });
 
@@ -1379,9 +1396,9 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                   )),
             ).onClick(onTap: () {
               if (isProblem) {
-                updateVisibility(header, isProblem);
+                updateVisibility(header, isProblem, true);
               } else {
-                updateVisibility(header, isProblem);
+                updateVisibility(header, isProblem, true);
               }
             })
           : SizedBox();
@@ -1593,7 +1610,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
     });
   }
 
-  void updateVisibility(String val, bool isProblem) {
+  void updateVisibility(String val, bool isProblem, bool isReset) {
     setState(() {
       if (val == AppConstants.hours) {
         if (isProblem) {
@@ -1602,14 +1619,14 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
           _isProWeekVisible = false;
           _isProMonthVisible = false;
           _isProYearVisible = false;
-          _resetValues(val, isProblem);
+          if (isReset) _resetValues(val, isProblem);
         } else {
           _isHourVisible = true;
           _isDayVisible = false;
           _isWeekVisible = false;
           _isMonthVisible = false;
           _isYearVisible = false;
-          _resetValues(val, isProblem);
+          if (isReset) _resetValues(val, isProblem);
         }
       } else if (val == AppConstants.days) {
         if (isProblem) {
@@ -1618,14 +1635,14 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
           _isProWeekVisible = false;
           _isProMonthVisible = false;
           _isProYearVisible = false;
-          _resetValues(val, isProblem);
+          if (isReset) _resetValues(val, isProblem);
         } else {
           _isHourVisible = false;
           _isDayVisible = true;
           _isWeekVisible = false;
           _isMonthVisible = false;
           _isYearVisible = false;
-          _resetValues(val, isProblem);
+          if (isReset) _resetValues(val, isProblem);
         }
       } else if (val == AppConstants.weeks) {
         if (isProblem) {
@@ -1634,14 +1651,14 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
           _isProWeekVisible = true;
           _isProMonthVisible = false;
           _isProYearVisible = false;
-          _resetValues(val, isProblem);
+          if (isReset) _resetValues(val, isProblem);
         } else {
           _isHourVisible = false;
           _isDayVisible = false;
           _isWeekVisible = true;
           _isMonthVisible = false;
           _isYearVisible = false;
-          _resetValues(val, isProblem);
+          if (isReset) _resetValues(val, isProblem);
         }
       } else if (val == AppConstants.monthsConst) {
         if (isProblem) {
@@ -1650,14 +1667,14 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
           _isProWeekVisible = false;
           _isProMonthVisible = true;
           _isProYearVisible = false;
-          _resetValues(val, isProblem);
+          if (isReset) _resetValues(val, isProblem);
         } else {
           _isHourVisible = false;
           _isDayVisible = false;
           _isWeekVisible = false;
           _isMonthVisible = true;
           _isYearVisible = false;
-          _resetValues(val, isProblem);
+          if (isReset) _resetValues(val, isProblem);
         }
       } else if (val == AppConstants.years) {
         if (isProblem) {
@@ -1666,14 +1683,14 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
           _isProWeekVisible = false;
           _isProMonthVisible = false;
           _isProYearVisible = true;
-          _resetValues(val, isProblem);
+          if (isReset) _resetValues(val, isProblem);
         } else {
           _isHourVisible = false;
           _isDayVisible = false;
           _isWeekVisible = false;
           _isMonthVisible = false;
           _isYearVisible = true;
-          _resetValues(val, isProblem);
+          if (isReset) _resetValues(val, isProblem);
         }
       }
     });
@@ -1835,63 +1852,166 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
     ProgressDialogUtils.showProgressDialog(context);
     await ApiManager().getHealthConditionDetails(reqModel).then(((result) {
       if (result is ResSelectConditionModel) {
-        setState(() {
-          hasBodyParts = result.response[0].hasBodyParts ?? 1;
-          hasSymptoms = result.response[0].hasSymptoms ?? 1;
-          hasRatings = result.response[0].hasRatings ?? 1;
-          result.response[0].problemBetter.forEach((element) {
+        hasBodyParts = result.response[0].hasBodyParts ?? 1;
+        hasSymptoms = result.response[0].hasSymptoms ?? 1;
+        hasRatings = result.response[0].hasRatings ?? 1;
+        result.response[0].problemBetter.forEach((element) {
+          if (widget.problem != null &&
+              widget.problem['problemBetter'] != null) {
+            if (widget.problem['problemBetter'].contains(element)) {
+              _problemBetterList.add(ProblemWorstBetterModel(element, true));
+              _tempProblemBetterList
+                  .add(ProblemWorstBetterModel(element, true));
+            } else {
+              _problemBetterList.add(ProblemWorstBetterModel(element, false));
+              _tempProblemBetterList
+                  .add(ProblemWorstBetterModel(element, false));
+            }
+          } else {
             _problemBetterList.add(ProblemWorstBetterModel(element, false));
-          });
-          result.response[0].problemBetter.forEach((element) {
             _tempProblemBetterList.add(ProblemWorstBetterModel(element, false));
-          });
-          result.response[0].problemWorst.forEach((element) {
-            _problemWorstList.add(ProblemWorstBetterModel(element, false));
-          });
-          result.response[0].problemWorst.forEach((element) {
-            _tempProblemWorstList.add(ProblemWorstBetterModel(element, false));
-          });
-          int j = 1;
-          result.response[0].bodyPart.forEach((element) {
-            _listOfBodyPart.add(BodyPartModel(element.name,
-                element.sides.isNotEmpty, element.sides, false, 0));
-            j++;
-          });
-          int i = 1;
-          result.response[0].symptoms.forEach((element) {
-            _listOfSymptoms.add(DescribeSymptomsModel(element, false, i));
-            i++;
-          });
+          }
         });
-        _getAllHealthConditions(context);
+        result.response[0].problemWorst.forEach((element) {
+          if (widget.problem != null &&
+              widget.problem['problemWorst'] != null) {
+            if (widget.problem['problemWorst'].contains(element)) {
+              _problemWorstList.add(ProblemWorstBetterModel(element, true));
+              _tempProblemWorstList.add(ProblemWorstBetterModel(element, true));
+            } else {
+              _problemWorstList.add(ProblemWorstBetterModel(element, false));
+              _tempProblemWorstList
+                  .add(ProblemWorstBetterModel(element, false));
+            }
+          } else {
+            _problemWorstList.add(ProblemWorstBetterModel(element, false));
+            _tempProblemWorstList.add(ProblemWorstBetterModel(element, false));
+          }
+        });
+        int j = 1;
+        result.response[0].bodyPart.forEach((element) {
+          _listOfBodyPart.add(BodyPartModel(
+              element.name, element.sides.isNotEmpty, element.sides, false, 0));
+
+          j++;
+
+          if (widget.problem != null &&
+              widget.problem['bodyPart'] != null &&
+              widget.problem['bodyPart'].length > 0) {
+            for (dynamic body in widget.problem['bodyPart']) {
+              if (element.name == body['name']) {
+                _listOfSelectedDisease.add(BodyPartModel(body['name'], false,
+                    element.sides, false, body['sides'].first));
+              }
+            }
+          }
+        });
+        int i = 1;
+        result.response[0].symptoms.forEach((element) {
+          if (widget.problem != null && widget.problem['symptoms'] != null) {
+            if (widget.problem['symptoms'].contains(element)) {
+              _listOfSymptoms.add(DescribeSymptomsModel(element, true, i));
+            } else {
+              _listOfSymptoms.add(DescribeSymptomsModel(element, false, i));
+            }
+          } else {
+            _listOfSymptoms.add(DescribeSymptomsModel(element, false, i));
+          }
+          i++;
+        });
+
+        if (widget.problem != null) {
+          _discomfortIntensity =
+              double.parse("${widget.problem['problemRating']}" ?? '0');
+          radioVal = widget.problem['dailyActivity'] != null
+              ? int.parse(widget.problem['dailyActivity'])
+              : null;
+          if (widget.problem['isProblemImproving'] != null) {
+            _listOfDescribeSymptoms[widget.problem['isProblemImproving']]
+                .isSelected = true;
+          }
+          notesController.text = widget.problem['description'] ?? '';
+          _isTreated =
+              (widget.problem['isTreatmentReceived'] ?? 0) == 1 ? true : false;
+
+          if (widget.problem['problemFacingTimeSpan'] != null) {
+            _selectedProType = widget.problem['problemFacingTimeSpan']['type'];
+            _selectedProValue =
+                widget.problem['problemFacingTimeSpan']['period'] ?? '0';
+            updateVisibility(timeSpanConfig[_selectedProType], true, false);
+            updateSelectedValue(
+                timeSpanConfig[_selectedProType], _selectedProValue, true);
+            setSelectedValue(timeSpanConfig[_selectedProType],
+                int.parse(_selectedProValue), true);
+          }
+
+          if (widget.problem['treatmentReceived'] != null) {
+            _selectedType = widget.problem['treatmentReceived']['type'];
+            _selectedValue =
+                widget.problem['treatmentReceived']['period'] ?? '0';
+            updateVisibility(timeSpanConfig[_selectedType], false, false);
+            updateSelectedValue(
+                timeSpanConfig[_selectedType], _selectedValue, false);
+            setSelectedValue(timeSpanConfig[_selectedType],
+                int.parse(_selectedValue), false);
+            _typeLocationController.text =
+                widget.problem['treatmentReceived']['typeOfCare'];
+          }
+
+// "_id"
+// value:"6177b0a475b8471224fd6371"
+// "problemId"
+// value:"60c639040777230d83773dd2"
+
+        }
+        ProgressDialogUtils.dismissProgressDialog();
+        // _getAllHealthConditions(context);
+        setState(() {});
       }
     })).catchError((dynamic e) {
-      _getAllHealthConditions(context);
+      ProgressDialogUtils.dismissProgressDialog();
+      // _getAllHealthConditions(context);
       if (e is ErrorModel) {
         e.toString().debugLog();
       }
     });
   }
 
-  // String _getSideText(int pos, BuildContext context) {
-  //   switch (pos) {
-  //     case 1:
-  //       return Localization.of(context).leftSide;
-  //       break;
-  //     case 2:
-  //       return Localization.of(context).rightSide;
-  //       break;
-  //     case 3:
-  //       return Localization.of(context).backSide;
-  //       break;
-  //     case 4:
-  //       return Localization.of(context).frontSide;
-  //       break;
-  //     default:
-  //       return 'All Over';
-  //       break;
-  //   }
-  // }
+  void setSelectedValue(String labelStr, int val, bool isForProblem) {
+    setState(() {
+      if (labelStr == AppConstants.hours) {
+        if (!isForProblem) {
+          _hoursList[val - 1].isSelected = true;
+        } else {
+          _proHoursList[val - 1].isSelected = true;
+        }
+      } else if (labelStr == AppConstants.days) {
+        if (!isForProblem) {
+          _daysList[val - 1].isSelected = true;
+        } else {
+          _proDaysList[val - 1].isSelected = true;
+        }
+      } else if (labelStr == AppConstants.weeks) {
+        if (!isForProblem) {
+          _weeksList[val - 1].isSelected = true;
+        } else {
+          _proWeeksList[val - 1].isSelected = true;
+        }
+      } else if (labelStr == AppConstants.monthsConst) {
+        if (!isForProblem) {
+          _monthsList[val - 1].isSelected = true;
+        } else {
+          _proMonthsList[val - 1].isSelected = true;
+        }
+      } else if (labelStr == AppConstants.years) {
+        if (!isForProblem) {
+          _yearsList[val - 1].isSelected = true;
+        } else {
+          _proYearsList[val - 1].isSelected = true;
+        }
+      }
+    });
+  }
 
   void _onForwardTap(BuildContext context) {
     if (hasBodyParts == 1) {
@@ -2008,8 +2128,32 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                 .listOfSelectedHealthIssues
                 .length -
             1) {
-      // Navigator.of(context).pushNamed(Routes.allImagesTabsScreen);
-      Navigator.of(context).pushNamed(Routes.bookingUploadImages);
+      if (widget.appointmentId != null) {
+        // ApiBaseHelper api = ApiBaseHelper();
+        // SharedPref().getToken().then((token) {
+        //   api.updateAppointmentData(token, {
+        //     'problems': finalProblems,
+        //     'appointmentId': widget.appointmentId
+        //   });
+        // });
+        Map<String, dynamic> model = {};
+        model['problems'] = finalProblems;
+        model['appointmentId'] = widget.appointmentId;
+        setLoading(true);
+        ApiManager().updateAppointmentData(model).then((value) {
+          setLoading(false);
+          // Navigator.pop(context);
+          int count = 0;
+          Navigator.of(context).popUntil((_) =>
+              count++ >=
+              Provider.of<HealthConditionProvider>(context, listen: false)
+                  .listOfSelectedHealthIssues
+                  .length);
+        });
+      } else {
+        Navigator.of(context).pushNamed(Routes.bookingUploadImages,
+            arguments: {'isEdit': false});
+      }
     } else {
       Provider.of<HealthConditionProvider>(context, listen: false)
           .incrementCurrentIndex();
@@ -2035,26 +2179,35 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
             ArgumentConstant.problemImageKey:
                 Provider.of<HealthConditionProvider>(context, listen: false)
                     .listOfSelectedHealthIssues[i]
-                    .image
+                    .image,
+            ArgumentConstant.problem:
+                Provider.of<HealthConditionProvider>(context, listen: false)
+                    .listOfSelectedHealthIssues[i]
+                    .problem,
+            ArgumentConstant.appointmentId: widget.appointmentId
           });
         }
       }
     }
   }
 
-  void _getAllHealthConditions(BuildContext context) async {
-    await ApiManager().getMoreConditions().then((result) {
-      ProgressDialogUtils.dismissProgressDialog();
-      if (result is ResMoreConditionModel) {
-        setState(() {
-          _conditionList = result.response;
-        });
-      }
-    }).catchError((dynamic e) {
-      ProgressDialogUtils.dismissProgressDialog();
-      if (e is ErrorModel) {
-        e.toString().debugLog();
-      }
-    });
+  void setLoading(bool value) {
+    setState(() => isLoading = value);
   }
+
+  // void _getAllHealthConditions(BuildContext context) async {
+  //   await ApiManager().getMoreConditions().then((result) {
+  //     ProgressDialogUtils.dismissProgressDialog();
+  //     if (result is ResMoreConditionModel) {
+  //       setState(() {
+  //         _conditionList = result.response;
+  //       });
+  //     }
+  //   }).catchError((dynamic e) {
+  //     ProgressDialogUtils.dismissProgressDialog();
+  //     if (e is ErrorModel) {
+  //       e.toString().debugLog();
+  //     }
+  //   });
+  // }
 }

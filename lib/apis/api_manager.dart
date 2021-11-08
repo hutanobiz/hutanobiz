@@ -240,7 +240,7 @@ class ApiManager {
       final response = await _apiService.post(
           'api/patient/medical-history-update',
           data: reqAddDiseaseModel.toJson());
-      return response;
+      return response.data;
     } on DioError catch (error) {
       throw ErrorModel.fromJson(error.response.data);
     }
@@ -251,7 +251,7 @@ class ApiManager {
     try {
       final response = await _apiService.post('api/patient/medical-history',
           data: {'medicalHistory': reqAddDiseaseModel.toJson()});
-      return response;
+      return response.data;
     } on DioError catch (error) {
       throw ErrorModel.fromJson(error.response.data);
     }
@@ -261,7 +261,7 @@ class ApiManager {
     try {
       final response = await _apiService.post('api/patient/medical-allergy',
           data: allergyModel.toJson());
-      return response;
+      return response.data;
     } on DioError catch (error) {
       throw ErrorModel.fromJson(error.response.data);
     }
@@ -536,6 +536,18 @@ class ApiManager {
         data: model.toMap(),
       );
       return ResResetPassword.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+  Future<dynamic> updateAppointmentData(Map<String, dynamic> model) async {
+    try {
+      final response = await _apiService.post(
+        "api/patient/appointment-booking-v1/update",
+        data: model,
+      );
+      return response.data;
     } on DioError catch (error) {
       throw ErrorModel.fromJson(error.response.data);
     }
@@ -1171,11 +1183,10 @@ class ApiManager {
     }
   }
 
-  Future<dynamic> updatePaymentMethod(
-      Map<String,dynamic> map) async {
+  Future<dynamic> updatePaymentMethod(Map<String, dynamic> map) async {
     try {
-      final response = await _apiService.post(updatePaymentMethodEndPoint,
-          data: map);
+      final response =
+          await _apiService.post(updatePaymentMethodEndPoint, data: map);
       return response;
     } on DioError catch (error) {
       throw ErrorModel.fromJson(error.response.data);
