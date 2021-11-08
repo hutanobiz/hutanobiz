@@ -59,6 +59,11 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
   void initState() {
     super.initState();
     if (widget.args['isEdit']) {
+      SharedPref().getToken().then((token) {
+        setState(() {
+          this.token = token;
+        });
+      });
       if (widget.args['medicalHistory'] != null &&
           widget.args['medicalHistory'].length > 0) {
         for (dynamic aa in widget.args['medicalHistory']) {

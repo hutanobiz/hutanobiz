@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/book_appointment/vitals/model/social_history.dart';
 import 'package:hutano/text_style.dart';
 import 'package:hutano/utils/preference_constants.dart';
 import 'package:hutano/utils/preference_key.dart';
@@ -24,21 +25,29 @@ class CurrentAppointmentMedicalHistory extends StatefulWidget {
 
 class _CurrentAppointmentMedicalHistoryState
     extends State<CurrentAppointmentMedicalHistory> {
+  List<String> socialHistoryUsages = ['Rarely', 'Socially', 'Daily'];
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: ListView(
         children: <Widget>[
-          Text(
-            "Description of problem",
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 14.0,
-              fontWeight: FontWeight.w600,
-            ),
+          socialHistoryWidget(
+            widget.isBottomButtonsShow['socialHistory'],
           ),
-          SizedBox(height: 12),
+          allergiesWidget(
+            widget.isBottomButtonsShow['allergies'] ?? [],
+          ),
+          widget.isBottomButtonsShow['appointmentProblems'].length > 0
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: Text(
+                    "Description of problem",
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                  ),
+                )
+              : SizedBox(),
           ListView.separated(
             separatorBuilder: (context, index) => SizedBox(height: 20),
             shrinkWrap: true,
@@ -90,6 +99,124 @@ class _CurrentAppointmentMedicalHistoryState
               : SizedBox()
         ],
       ),
+    );
+  }
+
+  ListView socialHistoryWidget(dynamic socialHistory) {
+    return ListView(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      children: [
+        Text(
+          "Social history",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+        ),
+        SizedBox(
+          height: 14,
+        ),
+        Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            border: Border.all(color: Colors.grey[200]),
+          ),
+          child: ListView(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            children: [
+              Text(socialHistory['smoking'] != null &&
+                      socialHistory['smoking']['frequency'] != null &&
+                      socialHistory['smoking']['frequency'] != 0
+                  ? 'Patient smokes ${socialHistoryUsages[int.parse(socialHistory['smoking']['frequency']) - 1]}.'
+                  : 'Patient do not smokes.'),
+              socialHistory['drinker'] == null
+                  ? Text('Patient do not drink.')
+                  : ListView(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      children: [
+                          socialHistory['drinker'] != null &&
+                                  socialHistory['drinker']['liquorQuantity'] !=
+                                      null &&
+                                  socialHistory['drinker']['liquorQuantity'] !=
+                                      0
+                              ? Text(
+                                  'Patient consumes ${socialHistory['drinker']['liquorQuantity'] == 2 ? 'more than' : 'less than'} 1pt of liquor ${socialHistoryUsages[socialHistory['drinker']['frequency'] - 1]}.')
+                              : SizedBox(),
+                          socialHistory.drinker != null &&
+                                  socialHistory['drinker']['beerQuantity'] !=
+                                      null &&
+                                  socialHistory['drinker']['beerQuantity'] != 0
+                              ? Text(
+                                  'Patient consumes ${socialHistory['drinker']['beerQuantity'] == 2 ? 'more than' : 'less than'} 6 beer ${socialHistoryUsages[socialHistory['drinker']['frequency'] - 1]}.')
+                              : SizedBox()
+                        ]),
+              socialHistory['recreationalDrugs'] == null ||
+                      socialHistory['recreationalDrugs'].length == 0 ||
+                      socialHistory['recreationalDrugs']['type'] == null
+                  ? Text('Patient does not use recreational drugs.')
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: socialHistory['recreationalDrugs'].length,
+                      itemBuilder: (context, index) {
+                        return Text(
+                          'Patient uses ${socialHistory['recreationalDrugs'][index]['type']} ${socialHistoryUsages[int.parse(socialHistory['recreationalDrugs'][index]['frequency']) - 1]}.',
+                        );
+                      },
+                    )
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
+  allergiesWidget(List<String> allergies) {
+    String allergiesString = '';
+    if (allergies.length > 0) {
+      allergiesString = 'Patient is allergic to';
+
+      for (int i = 0; i < allergies.length; i++) {
+        if (i == 0) {
+          allergiesString += ' ${allergies[i]}';
+          if (allergies.length == 1) {
+            allergiesString += '.';
+          }
+          continue;
+        }
+
+        if (i == allergies.length - 1) {
+          allergiesString += ' and ${allergies[i]}.';
+        } else {
+          allergiesString += ', ${allergies[i]}';
+        }
+      }
+
+//  latex, penicillin and morphine.'
+    }
+    return ListView(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      children: [
+        SizedBox(height: 20),
+        Text(
+          "Allergies",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+        ),
+        SizedBox(
+          height: 14,
+        ),
+        Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              border: Border.all(color: Colors.grey[200]),
+            ),
+            child: Text(allergies.length == 0
+                ? 'Patient does not have known allergies'
+                : allergiesString))
+      ],
     );
   }
 
@@ -432,6 +559,44 @@ Widget vitalWidget(BuildContext context, Map<String, dynamic> vitals) {
                           vitals['temperature'] == ''
                       ? ''
                       : '${vitals['temperature']} \u2109',
+                  style: AppTextStyle.mediumStyle(fontSize: 14),
+                ),
+                TextSpan(
+                  text: vitals['weight'] != null ? 'Weight ' : '',
+                  style: AppTextStyle.regularStyle(fontSize: 14),
+                ),
+                TextSpan(
+                  text: vitals['weight'] != null
+                      ? '${vitals['weight']} lbs; \t'
+                      : '',
+                  style: AppTextStyle.mediumStyle(fontSize: 14),
+                ),
+                TextSpan(
+                  text: vitals['height'] != null ? 'Height ' : '',
+                  style: AppTextStyle.regularStyle(fontSize: 14),
+                ),
+                TextSpan(
+                  text: vitals['height'] != null
+                      ? '${vitals['height']} ; \t'
+                      : '',
+                  style: AppTextStyle.mediumStyle(fontSize: 14),
+                ),
+                TextSpan(
+                  text: vitals['bmi'] != null ? 'Bmi ' : '',
+                  style: AppTextStyle.regularStyle(fontSize: 14),
+                ),
+                TextSpan(
+                  text: vitals['bmi'] != null ? '${vitals['bmi']} ; \t' : '',
+                  style: AppTextStyle.mediumStyle(fontSize: 14),
+                ),
+                TextSpan(
+                  text: vitals['bloodGlucose'] != null ? 'Blood Glucose ' : '',
+                  style: AppTextStyle.regularStyle(fontSize: 14),
+                ),
+                TextSpan(
+                  text: vitals['bloodGlucose'] != null
+                      ? '${vitals['bloodGlucose']} g/dl'
+                      : '',
                   style: AppTextStyle.mediumStyle(fontSize: 14),
                 ),
               ],

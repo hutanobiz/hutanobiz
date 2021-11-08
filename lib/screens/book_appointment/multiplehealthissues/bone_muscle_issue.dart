@@ -273,7 +273,10 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                         ? _commonHeaderText(context, "2. Which Side hurts?",
                             _listOfSelectedDisease.length > 0)
                         : SizedBox(),
-                    _buildDropDownBottomSheet(context, _currentPartSideIndex),
+                    hasBodyParts == 1
+                        ? _buildDropDownBottomSheet(
+                            context, _currentPartSideIndex)
+                        : SizedBox(),
 
                     hasBodyParts == 1
                         ? _currentDiseaseList(context)
@@ -291,7 +294,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                     hasSymptoms == 1
                         ? _commonHeaderText(
                             context,
-                            '4. ${Localization.of(context).describeSymptomsHeader}',
+                            '${hasRatings == 1 ? '4.' : '1.'} ${Localization.of(context).describeSymptomsHeader}',
                             _listOfSymptoms.indexWhere(
                                     (element) => element.isSelected ?? false) !=
                                 -1)
@@ -300,7 +303,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                     //Problem Better & Worst
                     _commonHeaderText(
                         context,
-                        '5. ${Localization.of(context).actuallyMakesYourProblemBetter}',
+                        '${hasRatings == 1 ? '5.' : '2.'} ${Localization.of(context).actuallyMakesYourProblemBetter}',
                         _problemBetterList.indexWhere(
                                 (element) => element.isSelected ?? false) !=
                             -1),
@@ -308,7 +311,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                     _problemBetterListView(context),
                     _commonHeaderText(
                         context,
-                        '6. ${Localization.of(context).actuallyMakesYourProblemWorst}',
+                        '${hasRatings == 1 ? '6.' : '3.'} ${Localization.of(context).actuallyMakesYourProblemWorst}',
                         _problemWorstList.indexWhere(
                                 (element) => element.isSelected ?? false) !=
                             -1),
@@ -317,13 +320,13 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                     //Ebility List
                     _commonHeaderText(
                         context,
-                        '7. ${Localization.of(context).conditionAffectedHeader}',
+                        '${hasRatings == 1 ? '7.' : '4.'} ${Localization.of(context).conditionAffectedHeader}',
                         radioVal != null),
                     _activityEffectList(context),
                     //Problem Condition Time
                     _treatedConditionHeader(
                         context,
-                        '8. ${Localization.of(context).howLongHadProblemHeader}',
+                        '${hasRatings == 1 ? '8.' : '5.'} ${Localization.of(context).howLongHadProblemHeader}',
                         _selectedProValue != '0'),
                     // SizedBox(height: spacing10),
                     _commonProblemHeaderWidget(
@@ -369,7 +372,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                     if (_listOfDescribeSymptoms.isNotEmpty)
                       _treatedConditionHeader(
                           context,
-                          '9. ${Localization.of(context).theProblemIsHeader}',
+                          '${hasRatings == 1 ? '9.' : '6.'} ${Localization.of(context).theProblemIsHeader}',
                           _listOfDescribeSymptoms.indexWhere(
                                   (element) => element.isSelected ?? false) !=
                               -1),
@@ -377,7 +380,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                     //Treatment Condition Time
                     _treatedConditionHeader(
                         context,
-                        '10. ${Localization.of(context).treatedForCondition}',
+                        '${hasRatings == 1 ? '10.' : '7.'} ${Localization.of(context).treatedForCondition}',
                         null),
                     // SizedBox(height: spacing10),
                     Row(children: [

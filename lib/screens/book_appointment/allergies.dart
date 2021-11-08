@@ -44,6 +44,11 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
     super.initState();
 
     if (widget.args['isEdit']) {
+      SharedPref().getToken().then((token) {
+        setState(() {
+          this.token = token;
+        });
+      });
       if (widget.args['allergy'] != null && widget.args['allergy'].length > 0) {
         for (dynamic aa in widget.args['allergy']) {
           myAllergiesList.add(Allergy.fromJson(aa));

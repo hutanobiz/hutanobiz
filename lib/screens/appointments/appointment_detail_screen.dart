@@ -365,6 +365,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
     this._medicalHistoryMap['medicalDocuments'] =
         _providerData['medicalDocuments'];
+    this._medicalHistoryMap['socialHistory'] = _providerData['socialHistory'];
+
+    this._medicalHistoryMap['allergies'] = _providerData['allergy'];
 
     feeList.clear();
     feeList.add({
