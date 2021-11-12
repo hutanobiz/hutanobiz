@@ -32,15 +32,9 @@ class _CurrentAppointmentMedicalHistoryState
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: ListView(
         children: <Widget>[
-          socialHistoryWidget(
-            widget.isBottomButtonsShow['socialHistory'],
-          ),
-          allergiesWidget(
-            widget.isBottomButtonsShow['allergies'] ?? [],
-          ),
           widget.isBottomButtonsShow['appointmentProblems'].length > 0
               ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  padding: const EdgeInsets.only(bottom: 20.0),
                   child: Text(
                     "Description of problem",
                     overflow: TextOverflow.ellipsis,
@@ -61,6 +55,16 @@ class _CurrentAppointmentMedicalHistoryState
                     widget.isBottomButtonsShow['appointmentProblems'][index],
               );
             },
+          ),
+          widget.isBottomButtonsShow['medicalHistory'].length > 0
+              ? medicalHistoryDetail(
+                  widget.isBottomButtonsShow['medicalHistory'])
+              : SizedBox(),
+          socialHistoryWidget(
+            widget.isBottomButtonsShow['socialHistory'],
+          ),
+          allergiesWidget(
+            widget.isBottomButtonsShow['allergies'] ?? [],
           ),
           ((widget.isBottomButtonsShow['vitals']['oxygenSaturation'] != null &&
                       widget.isBottomButtonsShow['vitals']
@@ -86,17 +90,14 @@ class _CurrentAppointmentMedicalHistoryState
                           ''))
               ? vitalsDetail(widget.isBottomButtonsShow['vitals'])
               : SizedBox(),
-          widget.isBottomButtonsShow['medicalHistory'].length > 0
-              ? medicalHistoryDetail(
-                  widget.isBottomButtonsShow['medicalHistory'])
+          widget.isBottomButtonsShow['medications'].length > 0
+              ? medicationDetail(widget.isBottomButtonsShow['medications'])
               : SizedBox(),
           widget.isBottomButtonsShow['medicalDiagnostics'].length > 0
               ? dianosticTestDetail(
                   widget.isBottomButtonsShow['medicalDiagnostics'])
               : SizedBox(),
-          widget.isBottomButtonsShow['medications'].length > 0
-              ? medicationDetail(widget.isBottomButtonsShow['medications'])
-              : SizedBox()
+          SizedBox(height: 20),
         ],
       ),
     );
@@ -107,6 +108,9 @@ class _CurrentAppointmentMedicalHistoryState
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       children: [
+        SizedBox(
+          height: 20,
+        ),
         Text(
           "Social history",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
@@ -172,14 +176,14 @@ class _CurrentAppointmentMedicalHistoryState
     );
   }
 
-  allergiesWidget(List<String> allergies) {
+  allergiesWidget(List<dynamic> allergies) {
     String allergiesString = '';
     if (allergies.length > 0) {
       allergiesString = 'Patient is allergic to';
 
       for (int i = 0; i < allergies.length; i++) {
         if (i == 0) {
-          allergiesString += ' ${allergies[i]}';
+          allergiesString += ' ${allergies[i]['name']}';
           if (allergies.length == 1) {
             allergiesString += '.';
           }
@@ -187,9 +191,9 @@ class _CurrentAppointmentMedicalHistoryState
         }
 
         if (i == allergies.length - 1) {
-          allergiesString += ' and ${allergies[i]}.';
+          allergiesString += ' and ${allergies[i]['name']}.';
         } else {
-          allergiesString += ', ${allergies[i]}';
+          allergiesString += ', ${allergies[i]['name']}';
         }
       }
 
@@ -261,6 +265,9 @@ class _CurrentAppointmentMedicalHistoryState
           "Vitals",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
         ),
+        SizedBox(
+          height: 14,
+        ),
         vitalWidget(context, vitals),
       ],
     );
@@ -309,7 +316,6 @@ class _CurrentAppointmentMedicalHistoryState
         ),
         SizedBox(height: 14),
         medicationWidget(medications),
-        SizedBox(height: 20),
       ],
     );
   }

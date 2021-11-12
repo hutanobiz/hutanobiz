@@ -19,6 +19,7 @@ import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
+import 'package:hutano/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 class AllergiesScreen extends StatefulWidget {
@@ -137,7 +138,7 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
                         padding: const EdgeInsets.all(spacing8),
                         child: Image.asset(FileConstants.icSearchBlack,
                             color: colorBlack2, width: 20, height: 20))),
-                hintText: 'Search Allergy',
+                hintText: 'Search Allergies',
                 isDense: true,
                 hintStyle: TextStyle(
                     color: colorBlack2,
@@ -208,47 +209,58 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
                       bottom: MediaQuery.of(context).viewInsets.bottom),
                   physics: ClampingScrollPhysics(),
                   children: <Widget>[
-                    ListView.builder(
-                        padding: EdgeInsets.only(bottom: 65),
-                        shrinkWrap: true,
-                        physics: ClampingScrollPhysics(),
-                        itemCount: myAllergiesList.length,
-                        itemBuilder: (context, index) {
-                          return PopupMenuButton(
-                            offset: Offset(300, 50),
-                            itemBuilder: (BuildContext context) =>
-                                <PopupMenuEntry<String>>[
-                              _popMenuCommonItem(
-                                  context,
-                                  Localization.of(context).remove,
-                                  FileConstants.icRemoveBlack)
-                            ],
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 8),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.rectangle,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(14.0),
-                                ),
-                                border: Border.all(
-                                    width: 0.5, color: Colors.grey[300]),
+                    ListView.separated(
+                      padding: EdgeInsets.only(bottom: 65),
+                      shrinkWrap: true,
+                      physics: ClampingScrollPhysics(),
+                      itemCount: myAllergiesList.length,
+                      itemBuilder: (context, index) {
+                        return PopupMenuButton(
+                          offset: Offset(300, 50),
+                          itemBuilder: (BuildContext context) =>
+                              <PopupMenuEntry<String>>[
+                            _popMenuCommonItem(
+                                context,
+                                Localization.of(context).remove,
+                                FileConstants.icRemoveBlack)
+                          ],
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(14.0),
                               ),
-                              child: ListTile(
-                                contentPadding: EdgeInsets.all(0),
-                                title: Text(
-                                  myAllergiesList[index].name,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                trailing: Icon(Icons.more_vert),
-                              ),
+                              border: Border.all(
+                                  width: 0.5, color: Colors.grey[300]),
                             ),
-                            onSelected: (value) {
-                              _removeAllergy(context, myAllergiesList[index]);
-                            },
-                          );
-                        })
+                            child: ListTile(
+                              contentPadding: EdgeInsets.all(0),
+                              title: Text(
+                                myAllergiesList[index].name,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              trailing: Icon(Icons.more_vert),
+                            ),
+                          ),
+                          onSelected: (value) {
+                            Widgets.showConfirmationDialog(
+                              context: context,
+                              description:
+                                  "Are you sure to delete this allergy?",
+                              onLeftPressed: () => _removeAllergy(
+                                  context, myAllergiesList[index]),
+                            );
+                            // _removeAllergy(context, myAllergiesList[index]);
+                          },
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return SizedBox(height: 10);
+                      },
+                    )
                   ],
                 ),
               ),

@@ -196,7 +196,7 @@ class LocalizationEN implements Localization {
   String get errorEnterAddress => "Please enter address";
 
   @override
-  String get errorShortPassword => "Password should be min 8 characaters";
+  String get errorShortPassword => "Password should be more than 6 characters";
 
   @override
   String get errorZipCode => "Please enter zip code";
@@ -207,7 +207,7 @@ class LocalizationEN implements Localization {
   String get errorPassword => "Please enter Password";
 
   @override
-  String get errorValidPassword => """Password should not be less than 6""";
+  String get errorValidPassword => "Password should be more than 6 characters";
 
   @override
   String get accNowActive => "Your account is now active.";

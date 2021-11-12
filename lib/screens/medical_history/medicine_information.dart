@@ -583,7 +583,12 @@ class _MedicineInformationState extends State<MedicineInformation> {
             // },
           ),
           onSelected: (value) {
-            _removeMedicine(context, _getMedicineList[index]);
+            Widgets.showConfirmationDialog(
+              context: context,
+              description: "Are you sure to delete this medication?",
+              onLeftPressed: () =>
+                  _removeMedicine(context, _getMedicineList[index]),
+            );
           },
         );
       });

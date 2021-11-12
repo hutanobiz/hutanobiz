@@ -240,7 +240,8 @@ class PushNotificationService {
   }
 
   void showNotification(RemoteMessage message) async {
-    var androidPlatformChannelSpecifics = new AndroidNotificationDetails('xyz.appening.hutano',
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+      'xyz.appening.hutano',
       'Hutano Patient',
       'your channel description',
       playSound: true,
@@ -357,14 +358,18 @@ class PushNotificationService {
         }
         break;
       case 'chatNotification':
-        SharedPref().getToken().then((token) {
-          api
-              .getChatAppointmentDetails(token, message.data['appointmentId'])
-              .then((value) {
-            Navigator.of(navigatorContext).pushNamed(Routes.chat,
-                arguments: SearchAppointment.fromJson(value));
+        if (!isCurrentChatAppointment(
+            Routes.chat, message.data['appointmentId'])) {
+          SharedPref().getToken().then((token) {
+            api
+                .getChatAppointmentDetails(token, message.data['appointmentId'])
+                .then((value) {
+              Navigator.of(navigatorContext).pushNamed(Routes.chat,
+                  arguments: SearchAppointment.fromJson(value));
+            });
           });
-        });
+        } else {}
+
         break;
 
       default:

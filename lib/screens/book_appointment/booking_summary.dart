@@ -84,16 +84,24 @@ class _BookingsummaryState extends State<Bookingsummary> {
 
   Widget profileWidget() {
     return ListView(padding: EdgeInsets.all(20), children: [
+      problemswidget(
+        Provider.of<HealthConditionProvider>(context, listen: false)
+            .allHealthIssuesData,
+      ),
+      Provider.of<HealthConditionProvider>(context, listen: false)
+                  .medicalHistoryData
+                  .length >
+              0
+          ? medicalHistoryWidget(
+              Provider.of<HealthConditionProvider>(context, listen: false)
+                  .medicalHistoryData)
+          : SizedBox(),
       socialHistoryWidget(
         Provider.of<HealthConditionProvider>(context, listen: false)
             .socialHistory,
       ),
       allergiesWidget(
         Provider.of<HealthConditionProvider>(context, listen: false).allergies,
-      ),
-      problemswidget(
-        Provider.of<HealthConditionProvider>(context, listen: false)
-            .allHealthIssuesData,
       ),
       Provider.of<HealthConditionProvider>(context, listen: false)
                   .vitalsData
@@ -102,14 +110,6 @@ class _BookingsummaryState extends State<Bookingsummary> {
           ? vitalsDetailWidgets(
               Provider.of<HealthConditionProvider>(context, listen: false)
                   .vitalsData)
-          : SizedBox(),
-      Provider.of<HealthConditionProvider>(context, listen: false)
-                  .medicalHistoryData
-                  .length >
-              0
-          ? medicalHistoryWidget(
-              Provider.of<HealthConditionProvider>(context, listen: false)
-                  .medicalHistoryData)
           : SizedBox(),
       Provider.of<HealthConditionProvider>(context, listen: false)
                   .medicationModelData
@@ -148,6 +148,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
 
   ListView socialHistoryWidget(SocialHistory socialHistory) {
     return ListView(
+      padding: EdgeInsets.only(top: 20),
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       children: [
@@ -425,7 +426,6 @@ class _BookingsummaryState extends State<Bookingsummary> {
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       children: [
-        SizedBox(height: 20),
         Text(
           "Problems",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
@@ -521,7 +521,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
                     child: Text('${(index + 1)}. ' +
                         medicalImages[index].name +
                         ' taken on ' +
-                        medicalImages[index].date),
+                        (medicalImages[index].date ?? '')),
                   ),
                 ],
               );

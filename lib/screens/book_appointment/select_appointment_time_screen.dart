@@ -237,7 +237,7 @@ class _SelectAppointmentTimeScreenState
               }
             }
           } else {
-            Widgets.showToast("Please select a timing");
+            Widgets.showToast("Please select a time");
           }
         },
         child: ListView(
@@ -438,9 +438,9 @@ class _SelectAppointmentTimeScreenState
 
               for (Schedule schedule in _scheduleList) {
                 var fromTime = new DateTime.utc(
-                    DateTime.now().year,
-                    DateTime.now().month,
-                    9,
+                    int.parse(_dayDateMap["date"].split('/')[2]),
+                    int.parse(_dayDateMap["date"].split('/')[0]),
+                    int.parse(_dayDateMap["date"].split('/')[1]),
                     int.parse(schedule.startTime.toString().split(':')[0]),
                     int.parse(schedule.startTime.toString().split(':')[1]));
 
@@ -477,47 +477,57 @@ class _SelectAppointmentTimeScreenState
                   }
                 }
               }
+              if (_morningList.isEmpty &&
+                  _afternoonList.isEmpty &&
+                  _eveningList.isEmpty) {
+                callNextDayApi();
 
-              _morningList.sort((a, b) => a.startTime.compareTo(b.startTime));
-              _afternoonList.sort((a, b) => a.startTime.compareTo(b.startTime));
-              _eveningList.sort((a, b) => a.startTime.compareTo(b.startTime));
+                return Center(
+                  child: CustomLoader(),
+                );
+              } else {
+                _morningList.sort((a, b) => a.startTime.compareTo(b.startTime));
+                _afternoonList
+                    .sort((a, b) => a.startTime.compareTo(b.startTime));
+                _eveningList.sort((a, b) => a.startTime.compareTo(b.startTime));
 
-              return Column(
-                children: <Widget>[
-                  ScrollingDayCalendar(
-                    startDate: startDate,
-                    endDate: DateTime(DateTime.now().year + 2),
-                    selectedDate: _selectedDate,
-                    displayDateFormat: "EEE, dd MMM",
-                    scheduleDaysList: _scheduleDaysList,
-                    onDateChange: (DateTime selectedDate) {
-                      _dayDateMap["day"] = selectedDate.weekday.toString();
-                      _dayDateMap["date"] = DateFormat("MM/dd/yyyy")
-                          .format(selectedDate)
-                          .toString();
-                      _selectedDate = selectedDate;
-                      _dayDateMap["timezone"] = _timezone;
+                return Column(
+                  children: <Widget>[
+                    ScrollingDayCalendar(
+                      startDate: startDate,
+                      endDate: DateTime(DateTime.now().year + 2),
+                      selectedDate: _selectedDate,
+                      displayDateFormat: "EEE, dd MMM",
+                      scheduleDaysList: _scheduleDaysList,
+                      onDateChange: (DateTime selectedDate) {
+                        _dayDateMap["day"] = selectedDate.weekday.toString();
+                        _dayDateMap["date"] = DateFormat("MM/dd/yyyy")
+                            .format(selectedDate)
+                            .toString();
+                        _selectedDate = selectedDate;
+                        _dayDateMap["timezone"] = _timezone;
 
-                      setState(() {
-                        _scheduleFuture = _apiBaseHelper
-                            .getScheduleList(
-                              providerId,
-                              _dayDateMap,
-                            )
-                            .futureError(
-                              (error) => error.toString().debugLog(),
-                            );
-                      });
-                    },
-                  ),
-                  SizedBox(height: 20.0),
-                  _timingWidget("Morning", "ic_morning", _morningList),
-                  SizedBox(height: 40.0),
-                  _timingWidget("Afternoon", "ic_afternoon", _afternoonList),
-                  SizedBox(height: 40.0),
-                  _timingWidget("Evening", "ic_night", _eveningList),
-                ],
-              );
+                        setState(() {
+                          _scheduleFuture = _apiBaseHelper
+                              .getScheduleList(
+                                providerId,
+                                _dayDateMap,
+                              )
+                              .futureError(
+                                (error) => error.toString().debugLog(),
+                              );
+                        });
+                      },
+                    ),
+                    SizedBox(height: 20.0),
+                    _timingWidget("Morning", "ic_morning", _morningList),
+                    SizedBox(height: 40.0),
+                    _timingWidget("Afternoon", "ic_afternoon", _afternoonList),
+                    SizedBox(height: 40.0),
+                    _timingWidget("Evening", "ic_night", _eveningList),
+                  ],
+                );
+              }
             } else if (snapshot.hasError) {
               snapshot.error.toString().debugLog();
               return Center(
@@ -529,6 +539,100 @@ class _SelectAppointmentTimeScreenState
         }
         return Container();
       },
+    );
+  }
+
+  callNextDayApi() {
+    for (int i = 0; i < 7; i++) {
+      if (_scheduleDaysList.contains(DateTime.utc(
+              int.parse(_dayDateMap["date"].split('/')[2]),
+              int.parse(_dayDateMap["date"].split('/')[0]),
+              int.parse(_dayDateMap["date"].split('/')[1]))
+          .add(Duration(days: i + 1))
+          .weekday)) {
+        _dayDateMap["day"] = DateTime.utc(
+                int.parse(_dayDateMap["date"].split('/')[2]),
+                int.parse(_dayDateMap["date"].split('/')[0]),
+                int.parse(_dayDateMap["date"].split('/')[1]))
+            .add(Duration(days: i + 1))
+            .weekday
+            .toString();
+        _dayDateMap["date"] = DateFormat('MM/dd/yyyy').format(DateTime.utc(
+                int.parse(_dayDateMap["date"].split('/')[2]),
+                int.parse(_dayDateMap["date"].split('/')[0]),
+                int.parse(_dayDateMap["date"].split('/')[1]))
+            .add(Duration(days: i + 1)));
+        startDate = startDate.add(Duration(days: i + 1));
+        _selectedDate = startDate;
+        break;
+      }
+    }
+    _dayDateMap["day"] = _selectedDate.weekday.toString();
+    _dayDateMap["date"] =
+        DateFormat("MM/dd/yyyy").format(_selectedDate).toString();
+    _apiBaseHelper
+        .getScheduleList(
+      providerId,
+      _dayDateMap,
+    )
+        .then((value) {
+      setState(() {
+        for (Schedule schedule in _scheduleList) {
+          var fromTime = new DateTime.utc(
+              int.parse(_dayDateMap["date"].split('/')[2]),
+              int.parse(_dayDateMap["date"].split('/')[0]),
+              int.parse(_dayDateMap["date"].split('/')[1]),
+              int.parse(schedule.startTime.toString().split(':')[0]),
+              int.parse(schedule.startTime.toString().split(':')[1]));
+
+          int prefixValue = fromTime.hour;
+          int minuteValue = fromTime.minute;
+
+          if (currentDate == _dayDateMap["date"]) {
+            if (DateTime.now().hour < prefixValue) {
+              if (prefixValue < 12) {
+                _morningList.add(schedule);
+              } else if (12 <= prefixValue && prefixValue < 18) {
+                _afternoonList.add(schedule);
+              } else {
+                _eveningList.add(schedule);
+              }
+            } else if (DateTime.now().hour == prefixValue) {
+              if (DateTime.now().minute < minuteValue) {
+                if (prefixValue < 12) {
+                  _morningList.add(schedule);
+                } else if (12 <= prefixValue && prefixValue < 18) {
+                  _afternoonList.add(schedule);
+                } else {
+                  _eveningList.add(schedule);
+                }
+              }
+            }
+          } else {
+            if (prefixValue < 12) {
+              _morningList.add(schedule);
+            } else if (12 <= prefixValue && prefixValue < 18) {
+              _afternoonList.add(schedule);
+            } else {
+              _eveningList.add(schedule);
+            }
+          }
+        }
+        // if (_morningList.isEmpty &&
+        //     _afternoonList.isEmpty &&
+        //     _eveningList.isEmpty) {
+        //   callNextDayApi();
+
+        //   return Center(
+        //     child: CustomLoader(),
+        //   );
+        // } else {
+        _morningList.sort((a, b) => a.startTime.compareTo(b.startTime));
+        _afternoonList.sort((a, b) => a.startTime.compareTo(b.startTime));
+        _eveningList.sort((a, b) => a.startTime.compareTo(b.startTime));
+      });
+    }).futureError(
+      (error) => error.toString().debugLog(),
     );
   }
 

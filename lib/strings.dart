@@ -5,7 +5,7 @@ class Strings {
   static const String enterEmail = "Please enter email address";
   static const String enterPassword = "Please enter password";
   static const String enterValidEmail = "Enter a valid email address";
-  static const String enterValidPassword = "Password should not be less than 6";
+  static const String enterValidPassword = "Password should be more than 6 characters";
   static const String noInternet = "No Internet connection. Please try again";
   static const String loggedIn = "Logged in successfully";
   static const String datePattern = 'MMMM dd, yyyy';
@@ -170,7 +170,7 @@ class Strings {
   static const String errorEnterAddress = "Please enter address";
 
   static const String errorShortPassword =
-      "Password should be min 8 characaters";
+      "Password should be more than 6 characters";
 
   static const String errorZipCode = "Please enter zip code";
 
@@ -179,7 +179,7 @@ class Strings {
   static const String errorPassword = "Please enter Password";
 
   static const String errorValidPassword =
-      """Password should not be less than 6""";
+      "Password should be more than 6 characters";
 
   static const String accNowActive = "Your account is now active.";
 

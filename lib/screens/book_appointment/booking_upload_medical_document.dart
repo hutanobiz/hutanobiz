@@ -72,6 +72,8 @@ class _BookingUploadMedicalDocumentState
   final documentDateController = TextEditingController();
 
   String documentName = '';
+  String defaultBodyPart;
+  Map sidesMap = {1: "Left", 2: "Right", 3: "Top", 4: "Bottom", 5: "All Over"};
   List<Map> _selectedDocsList = [];
 
   @override
@@ -167,6 +169,35 @@ class _BookingUploadMedicalDocumentState
         setLoading(false);
       });
     });
+    if (Provider.of<HealthConditionProvider>(context, listen: false)
+                .allHealthIssuesData !=
+            null &&
+        Provider.of<HealthConditionProvider>(context, listen: false)
+                .allHealthIssuesData
+                .length >
+            0) {
+      if (Provider.of<HealthConditionProvider>(context, listen: false)
+                  .allHealthIssuesData[0]
+                  .bodyPart !=
+              null &&
+          Provider.of<HealthConditionProvider>(context, listen: false)
+                  .allHealthIssuesData[0]
+                  .bodyPart
+                  .length >
+              0) {
+        var part = Provider.of<HealthConditionProvider>(context, listen: false)
+            .allHealthIssuesData[0]
+            .bodyPart[0]
+            .name;
+        var side = sidesMap[int.parse(
+            Provider.of<HealthConditionProvider>(context, listen: false)
+                .allHealthIssuesData[0]
+                .bodyPart[0]
+                .sides[0])];
+
+        defaultBodyPart = side + ' ' + part;
+      }
+    }
   }
 
   void _handleTabControllerTick() {
@@ -503,6 +534,7 @@ class _BookingUploadMedicalDocumentState
   }
 
   void uploadDocsBottomSheet(File file) {
+    documentName = defaultBodyPart;
     Widgets.uploadBottomSheet(
       context,
       Column(
@@ -545,6 +577,7 @@ class _BookingUploadMedicalDocumentState
           SizedBox(height: 25),
           textField(
             'What is the body part',
+            documentName ?? '',
             (value) {
               documentName = value;
             },
@@ -682,9 +715,10 @@ class _BookingUploadMedicalDocumentState
         });
   }
 
-  Widget textField(String label, Function onChanged) {
-    return TextField(
+  Widget textField(String label, String initVal, Function onChanged) {
+    return TextFormField(
       onChanged: onChanged,
+      initialValue: initVal,
       decoration: getInputDecoration(label),
     );
   }

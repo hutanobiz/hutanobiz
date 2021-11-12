@@ -25,11 +25,13 @@ import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/utils/progress_dialog.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/utils/size_config.dart';
-import 'package:hutano/widgets/controller.dart';
+// import 'package:hutano/widgets/controller.dart';
+
 import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/hutano_textfield.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
+import 'package:hutano/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 import 'model/places.dart';
 import 'model/res_preferred_pharmacy_list.dart';
@@ -461,8 +463,14 @@ class _AddPharmacyState extends State<AddPharmacy> {
                                                 pharmacyList[index];
                                             setState(() {});
                                           } else {
-                                            _removePharmacy(
-                                                context, pharmacyList[index]);
+                                            Widgets.showConfirmationDialog(
+                                              context: context,
+                                              description:
+                                                  "Are you sure to delete this pharmacy?",
+                                              onLeftPressed: () =>
+                                                  _removePharmacy(context,
+                                                      pharmacyList[index]),
+                                            );
                                           }
                                         },
                                       );

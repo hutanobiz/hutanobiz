@@ -43,7 +43,6 @@ class _TrackTelemedicineAppointmentState
   String token;
   int _appointmentType = 0;
   bool _isLoading = false;
-  bool isEdit = false;
   String _trackStatusKey = TRACK_STATUS_PROVIDER;
 
   var _userLocation = LatLng(0.00, 0.00);
@@ -57,7 +56,9 @@ class _TrackTelemedicineAppointmentState
   var appointmentTime;
   var currentTime;
   String name = "---", avatar;
-
+  bool isEdit = false;
+  ScrollController scrollController = ScrollController();
+  double animateTo = 0.0;
   @override
   void initState() {
     super.initState();
@@ -165,7 +166,10 @@ class _TrackTelemedicineAppointmentState
     name = appointment["data"]['doctor']['title'] +
         appointment["data"]['doctor']['fullName'];
     avatar = appointment["data"]['doctor']['avatar'];
-
+    Timer(
+      Duration(milliseconds: 100),
+      () => scrollController.jumpTo(animateTo),
+    );
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -174,6 +178,7 @@ class _TrackTelemedicineAppointmentState
       ),
       padding: EdgeInsets.all(20),
       child: ListView(
+        controller: scrollController,
         shrinkWrap: true,
         children: <Widget>[
           SimpleCountDownTimer(
@@ -282,6 +287,12 @@ class _TrackTelemedicineAppointmentState
                 // isEdit
                 //     ? Column(
                 child: ExpansionTile(
+                  initiallyExpanded: isEdit,
+                  onExpansionChanged: ((val) {
+                    // setState(() {
+                    isEdit = !isEdit;
+                    // });
+                  }),
                   tilePadding: EdgeInsets.zero,
                   textColor: Colors.black,
                   collapsedTextColor: Colors.black,
@@ -295,6 +306,7 @@ class _TrackTelemedicineAppointmentState
                   children: [
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context)
                               .pushNamed(Routes.socialHistory, arguments: {
                             'isEdit': true,
@@ -311,6 +323,7 @@ class _TrackTelemedicineAppointmentState
                         title: 'Social history'),
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context)
                               .pushNamed(Routes.allergiesScreen, arguments: {
                             'isEdit': true,
@@ -326,6 +339,7 @@ class _TrackTelemedicineAppointmentState
                         title: 'Allergies'),
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context).pushNamed(
                               Routes.medicalHistoryScreen,
                               arguments: {
@@ -343,6 +357,7 @@ class _TrackTelemedicineAppointmentState
                         title: 'Medical history'),
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context).pushNamed(
                               Routes.bookingUploadImages,
                               arguments: {
@@ -360,6 +375,7 @@ class _TrackTelemedicineAppointmentState
                         title: 'Mediacal images'),
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context).pushNamed(
                               Routes.bookingUploadMedicalDocument,
                               arguments: {
@@ -377,6 +393,7 @@ class _TrackTelemedicineAppointmentState
                         title: 'Medical documents'),
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context).pushNamed(
                               Routes.routeUploadDiagnosticNew,
                               arguments: {
@@ -395,6 +412,7 @@ class _TrackTelemedicineAppointmentState
                         title: 'Diagnostic tests'),
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context).pushNamed(
                               Routes.routeMedicineInformation,
                               arguments: {
@@ -412,6 +430,7 @@ class _TrackTelemedicineAppointmentState
                         title: 'Medication details'),
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context)
                               .pushNamed(Routes.routeAddPharmacy, arguments: {
                             'isEdit': true,
@@ -428,6 +447,7 @@ class _TrackTelemedicineAppointmentState
                         title: 'Preferred pharmacy '),
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context)
                               .pushNamed(Routes.routeVitalReviews, arguments: {
                             'isEdit': true,
@@ -443,6 +463,7 @@ class _TrackTelemedicineAppointmentState
                         title: 'Vitals'),
                     editWidget(
                       onTap: () {
+                        animateTo = scrollController.position.pixels;
                         List<SelectionHealthIssueModel> _selectedConditionList =
                             [];
                         List<int> tempList = [];

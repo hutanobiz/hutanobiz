@@ -12,6 +12,7 @@ import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/show_common_upload_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/provider.dart';
 
 import '../../colors.dart';
 
@@ -61,6 +62,8 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
 
   List<Map> _selectedImagesList = [];
   TextEditingController _imageDateController = TextEditingController();
+  String defaultBodyPart;
+  Map sidesMap = {1: "Left", 2: "Right", 3: "Top", 4: "Bottom", 5: "All Over"};
 
   @override
   void dispose() {
@@ -132,6 +135,36 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
     tabs = ['Recent', 'Archive', 'View all'];
     _tabController = TabController(length: tabs.length, vsync: this);
     _tabController.addListener(_handleTabControllerTick);
+
+    if (Provider.of<HealthConditionProvider>(context, listen: false)
+                .allHealthIssuesData !=
+            null &&
+        Provider.of<HealthConditionProvider>(context, listen: false)
+                .allHealthIssuesData
+                .length >
+            0) {
+      if (Provider.of<HealthConditionProvider>(context, listen: false)
+                  .allHealthIssuesData[0]
+                  .bodyPart !=
+              null &&
+          Provider.of<HealthConditionProvider>(context, listen: false)
+                  .allHealthIssuesData[0]
+                  .bodyPart
+                  .length >
+              0) {
+        var part = Provider.of<HealthConditionProvider>(context, listen: false)
+            .allHealthIssuesData[0]
+            .bodyPart[0]
+            .name;
+        var side = sidesMap[int.parse(
+            Provider.of<HealthConditionProvider>(context, listen: false)
+                .allHealthIssuesData[0]
+                .bodyPart[0]
+                .sides[0])];
+
+        defaultBodyPart = side + ' ' + part;
+      }
+    }
   }
 
   void _handleTabControllerTick() {
@@ -470,7 +503,7 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
   }
 
   void uploadImageBottomSheet(File imageFile) {
-    imageName = null;
+    imageName = defaultBodyPart;
 
     Widgets.uploadBottomSheet(
       context,
@@ -496,10 +529,11 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
             ),
           ),
           SizedBox(height: 39),
-          TextField(
+          TextFormField(
             onChanged: (value) {
               imageName = value;
             },
+            initialValue: imageName ?? '',
             decoration: InputDecoration(
               labelStyle: TextStyle(color: Colors.grey),
               labelText: "what body part is this?",

@@ -36,7 +36,7 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
       metaGroupValue = 0,
       heroineGroupValue = 0;
   bool isLiquor = false, isBeer = false;
-  bool _isBeerMore = false, _isLiquorMore = false;
+  int _isBeerMore = 0, _isLiquorMore = 0;
 
   @override
   void initState() {
@@ -63,8 +63,8 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
             isLiquor = true;
             _isLiquorMore =
                 widget.map['socialHistory']['Drinker']['liquorQuantity'] == '2'
-                    ? true
-                    : false;
+                    ? 2
+                    : 1;
           }
 
           if (widget.map['socialHistory']['Drinker']['BeerQuantity'] != null &&
@@ -72,8 +72,8 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
             isBeer = true;
             _isBeerMore =
                 widget.map['socialHistory']['Drinker']['BeerQuantity'] == '2'
-                    ? true
-                    : false;
+                    ? 2
+                    : 1;
           }
         }
         setState(() {});
@@ -122,11 +122,17 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
                           ? Column(
                               children: [
                                 smokerRadioListItem(
-                                    1, 1, 'Rarely', smokerGroupValue),
+                                    1,
+                                    1,
+                                    '1-10 cigarettes per day',
+                                    smokerGroupValue),
                                 smokerRadioListItem(
-                                    1, 2, 'Socially', smokerGroupValue),
+                                    1, 2, 'Pack a day', smokerGroupValue),
                                 smokerRadioListItem(
-                                    1, 3, 'Daily', smokerGroupValue)
+                                    1,
+                                    3,
+                                    'More than one pack a day',
+                                    smokerGroupValue)
                               ],
                             )
                           : SizedBox()
@@ -158,73 +164,102 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
                                     2, 2, 'Socially', drinkGroupValue),
                                 smokerRadioListItem(
                                     2, 3, 'Daily', drinkGroupValue),
-                                SizedBox(height: 12),
-                                Row(
-                                  children: [
-                                    Text('Liquor'),
-                                    Spacer(),
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          isLiquor = !isLiquor;
-                                        });
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Image.asset(
+                                drinkGroupValue == 3
+                                    ? SizedBox(height: 12)
+                                    : SizedBox(),
+                                drinkGroupValue == 3
+                                    ? Row(
+                                        children: [
+                                          Text('Liquor'),
+                                          // SizedBox(
+                                          //   width: 50,
+                                          // ),
+                                          Spacer(),
+                                          GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                isLiquor = !isLiquor;
+                                              });
+                                            },
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(16.0),
+                                              child: Image.asset(
+                                                isLiquor
+                                                    ? 'images/checkedCheck.png'
+                                                    : 'images/uncheckedCheck.png',
+                                                height: 20,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 16),
                                           isLiquor
-                                              ? 'images/checkedCheck.png'
-                                              : 'images/uncheckedCheck.png',
-                                          height: 20,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 16),
-                                    Column(
-                                      children: [
-                                        _yesButtonWidget(context, 1,
-                                            'Less than 1pt', _isLiquorMore),
-                                        SizedBox(height: 2),
-                                        _noButtonWidget(context, 1,
-                                            'More than 1pt', _isLiquorMore),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 8),
-                                Row(
-                                  // crossAxisAlignment: WrapCrossAlignment.center,
-                                  children: [
-                                    Text('Beer   '),
-                                    Spacer(),
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          isBeer = !isBeer;
-                                        });
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Image.asset(
+                                              ? Column(
+                                                  children: [
+                                                    _yesButtonWidget(
+                                                        context,
+                                                        1,
+                                                        'Less than 1pt',
+                                                        _isLiquorMore),
+                                                    SizedBox(height: 2),
+                                                    _noButtonWidget(
+                                                        context,
+                                                        1,
+                                                        'More than 1pt',
+                                                        _isLiquorMore),
+                                                  ],
+                                                )
+                                              : Spacer(),
+                                        ],
+                                      )
+                                    : SizedBox(),
+                                drinkGroupValue == 3
+                                    ? SizedBox(height: 8)
+                                    : SizedBox(),
+                                drinkGroupValue == 3
+                                    ? Row(
+                                        // crossAxisAlignment: WrapCrossAlignment.center,
+                                        children: [
+                                          Text('Beer   '),
+                                          Spacer(),
+                                          GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                isBeer = !isBeer;
+                                              });
+                                            },
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(16.0),
+                                              child: Image.asset(
+                                                isBeer
+                                                    ? 'images/checkedCheck.png'
+                                                    : 'images/uncheckedCheck.png',
+                                                height: 20,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 16),
                                           isBeer
-                                              ? 'images/checkedCheck.png'
-                                              : 'images/uncheckedCheck.png',
-                                          height: 20,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 16),
-                                    Column(
-                                      children: [
-                                        _yesButtonWidget(context, 2,
-                                            'Less than 6', _isBeerMore),
-                                        SizedBox(height: 2),
-                                        _noButtonWidget(context, 2,
-                                            'More than 6', _isBeerMore),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                              ? Column(
+                                                  children: [
+                                                    _yesButtonWidget(
+                                                        context,
+                                                        2,
+                                                        'Less than 6',
+                                                        _isBeerMore),
+                                                    SizedBox(height: 2),
+                                                    _noButtonWidget(
+                                                        context,
+                                                        2,
+                                                        'More than 6',
+                                                        _isBeerMore),
+                                                  ],
+                                                )
+                                              : Spacer(),
+                                        ],
+                                      )
+                                    : SizedBox(),
                               ],
                             )
                           : SizedBox()
@@ -305,55 +340,54 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
             ])));
   }
 
-  Row titleWidget(int type, String title, bool isDrugChecked) {
-    return Row(
-      children: [
-        Expanded(
-            child: Text(
-          title,
-          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-        )),
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              switch (type) {
-                case 1:
-                  isSmoker = !isSmoker;
-                  break;
-                case 2:
-                  isDrinker = !isDrinker;
-                  break;
-                case 3:
-                  isRecreationalDrug = !isRecreationalDrug;
-                  break;
-                case 4:
-                  isMarijuana = !isMarijuana;
-                  break;
-                case 5:
-                  isCoccine = !isCoccine;
-                  break;
-                case 6:
-                  isMetaphetamin = !isMetaphetamin;
-                  break;
-                case 7:
-                  isHeroine = !isHeroine;
-                  break;
-                default:
-              }
-            });
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset(
-              isDrugChecked
-                  ? 'images/checkedCheck.png'
-                  : 'images/uncheckedCheck.png',
-              height: 20,
+  titleWidget(int type, String title, bool isDrugChecked) {
+    return GestureDetector(
+        onTap: () {
+          setState(() {
+            switch (type) {
+              case 1:
+                isSmoker = !isSmoker;
+                break;
+              case 2:
+                isDrinker = !isDrinker;
+                break;
+              case 3:
+                isRecreationalDrug = !isRecreationalDrug;
+                break;
+              case 4:
+                isMarijuana = !isMarijuana;
+                break;
+              case 5:
+                isCoccine = !isCoccine;
+                break;
+              case 6:
+                isMetaphetamin = !isMetaphetamin;
+                break;
+              case 7:
+                isHeroine = !isHeroine;
+                break;
+              default:
+            }
+          });
+        },
+        child: Row(
+          children: [
+            Expanded(
+                child: Text(
+              title,
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+            )),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset(
+                isDrugChecked
+                    ? 'images/checkedCheck.png'
+                    : 'images/uncheckedCheck.png',
+                height: 20,
+              ),
             ),
-          ),
-        ),
-      ],
-    );
+          ],
+        ));
   }
 
   recreationaltitleWidget(int type, String title, bool isDrugChecked) {
@@ -384,7 +418,7 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
   }
 
   Widget _yesButtonWidget(
-          BuildContext context, int type, String title, bool isMore) =>
+          BuildContext context, int type, String title, int isMore) =>
       HutanoButton(
         width: 140,
         borderColor: colorGrey,
@@ -393,10 +427,10 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
           setState(() {
             switch (type) {
               case 1:
-                _isLiquorMore = true;
+                _isLiquorMore = 1;
                 break;
               default:
-                _isBeerMore = true;
+                _isBeerMore = 1;
             }
           });
           // _wholeBodyController
@@ -409,13 +443,13 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
         buttonType: HutanoButtonType.onlyLabel,
         // width: 65,
         borderWidth: 1,
-        labelColor: isMore ? colorWhite : Colors.grey,
-        color: isMore ? colorPurple100 : colorWhite,
+        labelColor: isMore == 1 ? colorWhite : Colors.grey,
+        color: isMore == 1 ? colorPurple100 : colorWhite,
         height: 34,
       );
 
   Widget _noButtonWidget(
-          BuildContext context, int type, String title, bool isMore) =>
+          BuildContext context, int type, String title, int isMore) =>
       HutanoButton(
         borderColor: colorGrey,
         label: title,
@@ -424,17 +458,17 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
           setState(() {
             switch (type) {
               case 1:
-                _isLiquorMore = false;
+                _isLiquorMore = 2;
                 break;
               default:
-                _isBeerMore = false;
+                _isBeerMore = 2;
             }
           });
         },
         buttonType: HutanoButtonType.onlyLabel,
         // width: 65,
-        labelColor: !isMore ? colorWhite : Colors.grey,
-        color: !isMore ? colorPurple100 : colorWhite,
+        labelColor: isMore == 2 ? colorWhite : Colors.grey,
+        color: isMore == 2 ? colorPurple100 : colorWhite,
         borderWidth: 1,
         height: 34,
       );
@@ -455,6 +489,10 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
                     break;
                   case 2:
                     drinkGroupValue = val;
+                    isBeer = false;
+                    isLiquor = false;
+                    _isBeerMore = 0;
+                    _isLiquorMore = 0;
                     break;
                   case 3:
                     recreationalGroupValue = val;
@@ -509,12 +547,12 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
       Drinker drinker = Drinker(
           frequency: drinkGroupValue,
           liquorQuantity: isLiquor
-              ? _isLiquorMore
+              ? _isLiquorMore == 2
                   ? 2
                   : 1
               : 0,
           beerQuantity: isBeer
-              ? _isBeerMore
+              ? _isBeerMore == 2
                   ? 2
                   : 1
               : 0);

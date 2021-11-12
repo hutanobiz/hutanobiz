@@ -272,6 +272,7 @@ class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
                           minLines: 1,
                           decoration: InputDecoration(
                             border: InputBorder.none,
+                            focusedBorder: InputBorder.none,
                             hintText: "Quick message",
                             hintStyle: TextStyle(color: Colors.grey),
                             contentPadding:

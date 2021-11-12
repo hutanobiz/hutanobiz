@@ -420,11 +420,15 @@ class _ConfirmBookAppointmentScreenState
                 paymentType == "1"
                     ? getCardIcon(CardType.Master)
                     : (paymentType == "2" && insuranceImage == null)
-                        ? Image.network(
-                            ApiBaseHelper.imageUrl + insuranceImage,
+                        ? Container(
                             height: 42,
                             width: 42,
-                            fit: BoxFit.cover,
+                            child: Image.network(
+                              ApiBaseHelper.imageUrl + (insuranceImage ?? ''),
+                              height: 42,
+                              width: 42,
+                              fit: BoxFit.cover,
+                            ),
                           )
                         : Image.asset(
                             image,
@@ -432,33 +436,34 @@ class _ConfirmBookAppointmentScreenState
                             height: 28,
                           ),
                 SizedBox(width: spacing25),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                          fontSize: fontSize14,
-                          color: colorBorder2,
-                          fontWeight: fontWeightSemiBold),
-                    ),
-                    if (paymentType == "1") ...[
-                      SizedBox(
-                        height: 13,
-                      ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
                       Text(
-                        'Expires ${_card["exp_month"]}/${_card["exp_year"].toString().substring(2, 4)}',
+                        title,
                         style: TextStyle(
-                            fontSize: fontSize12,
+                            fontSize: fontSize14,
                             color: colorBorder2,
-                            fontWeight: fontWeightRegular),
+                            fontWeight: fontWeightSemiBold),
                       ),
-                    ]
-                  ],
+                      if (paymentType == "1") ...[
+                        SizedBox(
+                          height: 13,
+                        ),
+                        Text(
+                          'Expires ${_card["exp_month"]}/${_card["exp_year"].toString().substring(2, 4)}',
+                          style: TextStyle(
+                              fontSize: fontSize12,
+                              color: colorBorder2,
+                              fontWeight: fontWeightRegular),
+                        ),
+                      ]
+                    ],
+                  ),
                 ),
-                Spacer(),
                 InkWell(
                   onTap: () {
                     Navigator.popUntil(context,

@@ -131,6 +131,8 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
   List<DescribeSymptomsModel> _listOfDescribeSymptoms = [];
   String _selectedProType = "0";
   String _selectedProValue = "0";
+  bool bodyPartNotSelected = false;
+  bool bodyPartSideNotSelected = false;
 
   //Treatment Condition Time
   List<CommonTimeModel> _hoursList = [];
@@ -180,6 +182,54 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
               ]));
         }
       }
+    });
+    _wholeBodyController.addListener(() {
+      if (_wholeBodyController.position.pixels > 49 && hasBodyParts == 1) {
+        if (_listOfSelectedDisease.length == 0) {
+          if (bodyPartNotSelected) {
+          } else {
+            setState(() {
+              bodyPartNotSelected = true;
+              bodyPartSideNotSelected = false;
+            });
+          }
+
+          // Widgets.showToast('Please select body part');
+        } else {
+          if (bodyPartNotSelected) {
+            setState(() {
+              bodyPartNotSelected = false;
+            });
+          }
+          if ((_listOfSelectedDisease.singleWhere((it) => it.selectedSide == 0,
+                  orElse: () => null)) !=
+              null) {
+            if (bodyPartSideNotSelected) {
+            } else {
+              setState(() {
+                bodyPartSideNotSelected = true;
+              });
+            }
+            // Widgets.showToast('Please select body part side');
+            // print('Please select body part side');
+          } else {
+            if (bodyPartSideNotSelected) {
+              setState(() {
+                bodyPartSideNotSelected = false;
+              });
+            }
+          }
+        }
+      } else {
+        if (bodyPartNotSelected) {
+          setState(() {
+            bodyPartNotSelected = false;
+          });
+        }
+      }
+      // Widgets.showToast('Please select body part');
+
+      print('scrolling');
     });
   }
 
@@ -643,6 +693,10 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
         height: 40,
         decoration: BoxDecoration(
             color: colorBlack2.withOpacity(0.06),
+            border: Border.all(
+              color: bodyPartNotSelected ? Colors.red : Colors.grey[300],
+              width: 1.0,
+            ),
             borderRadius: BorderRadius.all(Radius.circular(8))),
         child: TypeAheadFormField(
           textFieldConfiguration: TextFieldConfiguration(
@@ -690,6 +744,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
           },
           onSuggestionSelected: (suggestion) {
             setState(() {
+              bodyPartNotSelected = false;
               _listOfSelectedDisease.add(BodyPartModel(
                   suggestion.bodyPart,
                   suggestion.hasInternalPart,
@@ -844,11 +899,24 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
     }
   }
 
-  _buildDropDownBottomSheet(BuildContext context, int index) => Padding(
+  _buildDropDownBottomSheet(BuildContext context, int index) => Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: bodyPartSideNotSelected ? Colors.red : Colors.grey[300],
+            width: bodyPartSideNotSelected ? 1.0 : 0,
+          ),
+        ),
         padding: const EdgeInsets.all(0),
         child: InkWell(
           onTap: () {
-            _openMaterialSidePickerSheet(context, index);
+            if (_listOfSelectedDisease.length == 0) {
+              Widgets.showToast('Please select body part');
+              _wholeBodyController.animateTo(50.0,
+                  duration: Duration(milliseconds: 500), curve: Curves.ease);
+            } else {
+              _openMaterialSidePickerSheet(context, index);
+            }
           },
           child: HutanoTextField(
             hintText: Localization.of(context).selectSideLabel,
@@ -937,6 +1005,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                           _listOfSelectedDisease[index].isItClicked = true;
                           _listOfSelectedDisease[index].selectedSide =
                               _listOfSelectedDisease[index].sides[pos];
+                          bodyPartSideNotSelected = false;
                           setState(() {});
                           Navigator.pop(context);
                         }
@@ -2020,12 +2089,16 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
     if (hasBodyParts == 1) {
       if (_listOfSelectedDisease.length == 0) {
         Widgets.showToast('Please select body part');
+        _wholeBodyController.animateTo(50.0,
+            duration: Duration(milliseconds: 500), curve: Curves.ease);
       } else {
         if ((_listOfSelectedDisease.singleWhere((it) => it.selectedSide == 0,
                 orElse: () => null)) !=
             null) {
           Widgets.showToast('Please select body part side');
           print('Please select body part side');
+          _wholeBodyController.animateTo(110.0,
+              duration: Duration(milliseconds: 500), curve: Curves.ease);
         } else {
           addProblemData();
         }

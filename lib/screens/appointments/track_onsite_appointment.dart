@@ -43,7 +43,6 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
   String token;
   int _appointmentType = 0;
   bool _isLoading = false;
-  bool isEdit = false;
 
   String _trackStatusKey = TRACK_STATUS_PROVIDER;
   String _startDrivingStatusKey = PROVIDER_START_DRIVING;
@@ -60,6 +59,9 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
   var appointmentTime;
   var currentTime;
   String name = "---", avatar;
+  bool isEdit = false;
+  ScrollController scrollController = ScrollController();
+  double animateTo = 0.0;
 
   @override
   void initState() {
@@ -173,7 +175,10 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
     name = appointment["data"]['doctor']['title'] +
         appointment["data"]['doctor']['fullName'];
     avatar = appointment["data"]['doctor']['avatar'];
-
+    Timer(
+      Duration(milliseconds: 100),
+      () => scrollController.jumpTo(animateTo),
+    );
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -183,6 +188,7 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
       child: ListView(
         padding: EdgeInsets.symmetric(horizontal: 20),
         shrinkWrap: true,
+        controller: scrollController,
         children: <Widget>[
           SizedBox(
             height: 20,
@@ -332,6 +338,12 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                 // isEdit
                 //     ? Column(
                 child: ExpansionTile(
+                  initiallyExpanded: isEdit,
+                  onExpansionChanged: ((val) {
+                    // setState(() {
+                    isEdit = !isEdit;
+                    // });
+                  }),
                   tilePadding: EdgeInsets.zero,
                   textColor: Colors.black,
                   collapsedTextColor: Colors.black,
@@ -345,6 +357,7 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                   children: [
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context)
                               .pushNamed(Routes.socialHistory, arguments: {
                             'isEdit': true,
@@ -361,6 +374,7 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                         title: 'Social history'),
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context)
                               .pushNamed(Routes.allergiesScreen, arguments: {
                             'isEdit': true,
@@ -376,6 +390,7 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                         title: 'Allergies'),
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context).pushNamed(
                               Routes.medicalHistoryScreen,
                               arguments: {
@@ -393,6 +408,7 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                         title: 'Medical history'),
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context).pushNamed(
                               Routes.bookingUploadImages,
                               arguments: {
@@ -410,6 +426,7 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                         title: 'Mediacal images'),
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context).pushNamed(
                               Routes.bookingUploadMedicalDocument,
                               arguments: {
@@ -427,6 +444,7 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                         title: 'Medical documents'),
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context).pushNamed(
                               Routes.routeUploadDiagnosticNew,
                               arguments: {
@@ -445,6 +463,7 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                         title: 'Diagnostic tests'),
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context).pushNamed(
                               Routes.routeMedicineInformation,
                               arguments: {
@@ -462,6 +481,7 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                         title: 'Medication details'),
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context)
                               .pushNamed(Routes.routeAddPharmacy, arguments: {
                             'isEdit': true,
@@ -478,6 +498,7 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                         title: 'Preferred pharmacy '),
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context)
                               .pushNamed(Routes.routeVitalReviews, arguments: {
                             'isEdit': true,
@@ -493,6 +514,7 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                         title: 'Vitals'),
                     editWidget(
                       onTap: () {
+                        animateTo = scrollController.position.pixels;
                         List<SelectionHealthIssueModel> _selectedConditionList =
                             [];
                         List<int> tempList = [];

@@ -77,6 +77,8 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
   Map<String, String> filesPaths;
   List<Map> _selectedDocsList = [];
   bool isLoading = false;
+  String defaultBodyPart;
+  Map sidesMap = {1: "Left", 2: "Right", 3: "Top", 4: "Bottom", 5: "All Over"};
 
   @override
   void initState() {
@@ -90,6 +92,36 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
       });
       getMedicalDocuments();
     });
+
+    if (Provider.of<HealthConditionProvider>(context, listen: false)
+                .allHealthIssuesData !=
+            null &&
+        Provider.of<HealthConditionProvider>(context, listen: false)
+                .allHealthIssuesData
+                .length >
+            0) {
+      if (Provider.of<HealthConditionProvider>(context, listen: false)
+                  .allHealthIssuesData[0]
+                  .bodyPart !=
+              null &&
+          Provider.of<HealthConditionProvider>(context, listen: false)
+                  .allHealthIssuesData[0]
+                  .bodyPart
+                  .length >
+              0) {
+        var part = Provider.of<HealthConditionProvider>(context, listen: false)
+            .allHealthIssuesData[0]
+            .bodyPart[0]
+            .name;
+        var side = sidesMap[int.parse(
+            Provider.of<HealthConditionProvider>(context, listen: false)
+                .allHealthIssuesData[0]
+                .bodyPart[0]
+                .sides[0])];
+
+        defaultBodyPart = side + ' ' + part;
+      }
+    }
   }
 
   @override
@@ -168,7 +200,7 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
         title: "",
         addHeader: true,
         addBottomArrows: true,
-        isLoading:isLoading,
+        isLoading: isLoading,
         onForwardTap: () {
           _forwardButtonPressed(context);
         },
@@ -558,6 +590,7 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
   }
 
   void uploadDocsBottomSheet(File file) {
+    documentName = defaultBodyPart;
     Widgets.uploadBottomSheet(
       context,
       Column(
@@ -601,6 +634,7 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
           SizedBox(height: spacing25),
           textField(
             Localization.of(context).whatBodyPartLabel,
+            documentName ?? '',
             (value) {
               documentName = value;
             },
@@ -713,9 +747,10 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
     );
   }
 
-  Widget textField(String label, Function onChanged) {
-    return TextField(
+  Widget textField(String label, String initVal, Function onChanged) {
+    return TextFormField(
       onChanged: onChanged,
+      initialValue: initVal,
       decoration: getInputDecoration(label),
     );
   }

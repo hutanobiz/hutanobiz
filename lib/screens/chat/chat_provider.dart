@@ -7,7 +7,10 @@ class ChatProvider extends ChangeNotifier {
   List<Message> messages = [];
 
   void add(Message message) {
-    if (messages.first.sId != message.sId) {
+    if (message.sId == null) {
+      messages.insert(0, message);
+      notifyListeners();
+    } else if (messages.first.sId != message.sId) {
       messages.insert(0, message);
       notifyListeners();
     }

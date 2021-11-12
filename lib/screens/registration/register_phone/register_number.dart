@@ -4,6 +4,7 @@ import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/widgets/custom_back_button.dart';
 import 'package:hutano/widgets/widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../apis/api_manager.dart';
 import '../../../apis/error_model.dart';
@@ -41,12 +42,22 @@ class _RegisterNumberState extends State<RegisterNumber> {
   void initState() {
     super.initState();
     _termsAndConditionTap
-      ..onTap = () {
-        _navigate();
+      ..onTap = () async {
+        var url = 'https://hutano.com/terms-and-conditions';
+        if (await canLaunch(url)) {
+          await launch(url);
+        } else {
+          throw 'Could not launch $url';
+        }
       };
     _privacyPolicyTap
-      ..onTap = () {
-        _navigate();
+      ..onTap = () async {
+        var url = 'https://hutano.com/privacy-policy';
+        if (await canLaunch(url)) {
+          await launch(url);
+        } else {
+          throw 'Could not launch $url';
+        }
       };
   }
 
@@ -130,24 +141,23 @@ class _RegisterNumberState extends State<RegisterNumber> {
             key: _key,
             child: Container(
               child: SingleChildScrollView(
-                child: Column(
-                     children: <Widget>[
-                    Row(
-                      children: [
-                        CustomBackButton(),
-                      ],
+                child: Column(children: <Widget>[
+                  Row(
+                    children: [
+                      CustomBackButton(),
+                    ],
+                  ),
+                  HutanoHeader(
+                    headerInfo: HutanoHeaderInfo(
+                      title: Localization.of(context).yourPhone,
+                      subTitle: Localization.of(context).msgVerification,
                     ),
-                      HutanoHeader(
-                        headerInfo: HutanoHeaderInfo(
-                          title: Localization.of(context).yourPhone,
-                          subTitle: Localization.of(context).msgVerification,
-                        ),
-                      ),
-                      _buildPhoneInput(),
-                      _buildPrivacyPolicy(context),
-                      _buildSubmitButton(),
-                      _buildBottomLabels()
-                    ]),
+                  ),
+                  _buildPhoneInput(),
+                  _buildPrivacyPolicy(context),
+                  _buildSubmitButton(),
+                  _buildBottomLabels()
+                ]),
               ),
             ),
           ),

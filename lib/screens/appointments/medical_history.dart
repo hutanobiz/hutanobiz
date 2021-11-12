@@ -28,6 +28,7 @@ import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/month_year_item.dart';
+import 'package:hutano/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 class MedicalHistoryScreen extends StatefulWidget {
@@ -271,8 +272,15 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                                 showAddDiseaseDialog(context, true,
                                     medical: _showDiseaseData[index]);
                               } else {
-                                _removeDisease(
-                                    context, _showDiseaseData[index]);
+                                Widgets.showConfirmationDialog(
+                                  context: context,
+                                  description:
+                                      "Are you sure to delete this medical history?",
+                                  onLeftPressed: () => _removeDisease(
+                                      context, _showDiseaseData[index]),
+                                );
+                                // _removeDisease(
+                                //     context, _showDiseaseData[index]);
                               }
                             },
                           );

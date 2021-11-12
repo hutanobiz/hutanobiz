@@ -685,6 +685,22 @@ class ApiBaseHelper {
     });
   }
 
+  Future<dynamic> updateAppointmentData(
+      String token, Map<String, dynamic> rateDoctorData) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    return _netUtil
+        .post(
+      base_url + "api/patient/appointment-booking-v1/update",
+      body: rateDoctorData,
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
+    });
+  }
+
   Future<dynamic> deleteinsurance(String token, String insuranceId) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,

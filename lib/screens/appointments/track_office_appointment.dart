@@ -55,6 +55,8 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
   var currentTime;
   String name = '', avatar;
   bool isEdit = false;
+  ScrollController scrollController = ScrollController();
+  double animateTo = 0.0;
 
   @override
   void initState() {
@@ -150,7 +152,10 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
     name = appointment["data"]['doctor']['title'] +
         appointment["data"]['doctor']['fullName'];
     avatar = appointment["data"]['doctor']['avatar'];
-
+    Timer(
+      Duration(milliseconds: 100),
+      () => scrollController.jumpTo(animateTo),
+    );
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -160,6 +165,7 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
       child: ListView(
         padding: EdgeInsets.symmetric(horizontal: 20),
         shrinkWrap: true,
+        controller: scrollController,
         children: <Widget>[
           SizedBox(
             height: 20,
@@ -332,6 +338,12 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                 child: ExpansionTile(
                   tilePadding: EdgeInsets.zero,
                   textColor: Colors.black,
+                  initiallyExpanded: isEdit,
+                  onExpansionChanged: ((val) {
+                    // setState(() {
+                    isEdit = !isEdit;
+                    // });
+                  }),
                   collapsedTextColor: Colors.black,
                   iconColor: Colors.black,
                   collapsedIconColor: Colors.black,
@@ -343,6 +355,7 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                   children: [
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context)
                               .pushNamed(Routes.socialHistory, arguments: {
                             'isEdit': true,
@@ -359,6 +372,7 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                         title: 'Social history'),
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context)
                               .pushNamed(Routes.allergiesScreen, arguments: {
                             'isEdit': true,
@@ -374,6 +388,7 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                         title: 'Allergies'),
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context).pushNamed(
                               Routes.medicalHistoryScreen,
                               arguments: {
@@ -391,6 +406,7 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                         title: 'Medical history'),
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context).pushNamed(
                               Routes.bookingUploadImages,
                               arguments: {
@@ -408,6 +424,7 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                         title: 'Mediacal images'),
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context).pushNamed(
                               Routes.bookingUploadMedicalDocument,
                               arguments: {
@@ -425,6 +442,7 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                         title: 'Medical documents'),
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context).pushNamed(
                               Routes.routeUploadDiagnosticNew,
                               arguments: {
@@ -443,6 +461,7 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                         title: 'Diagnostic tests'),
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context).pushNamed(
                               Routes.routeMedicineInformation,
                               arguments: {
@@ -460,6 +479,7 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                         title: 'Medication details'),
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context)
                               .pushNamed(Routes.routeAddPharmacy, arguments: {
                             'isEdit': true,
@@ -476,6 +496,7 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                         title: 'Preferred pharmacy '),
                     editWidget(
                         onTap: () {
+                          animateTo = scrollController.position.pixels;
                           Navigator.of(context)
                               .pushNamed(Routes.routeVitalReviews, arguments: {
                             'isEdit': true,
@@ -491,6 +512,7 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                         title: 'Vitals'),
                     editWidget(
                       onTap: () {
+                        animateTo = scrollController.position.pixels;
                         List<SelectionHealthIssueModel> _selectedConditionList =
                             [];
                         List<int> tempList = [];
