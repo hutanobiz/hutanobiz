@@ -75,6 +75,8 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
   void initState() {
     super.initState();
     setLoading(true);
+    _imageDateController.text =
+                      DateFormat(Strings.datePattern).format(DateTime.now());
     SharedPref().getToken().then((token) {
       // if (mounted) {
       //   setState(() {
@@ -182,7 +184,7 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
         isAddAppBar: false,
         addHeader: true,
         title: "",
-        isSkipLater: true,
+        isSkipLater: !widget.args['isEdit'],
         isLoading: _isLoading,
         addBottomArrows: true,
         onSkipForTap: () {

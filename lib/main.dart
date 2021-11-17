@@ -131,9 +131,9 @@ void main() async {
           title: "Hutano",
           debugShowCheckedModeBanner: false,
           theme: AppTheme.theme,
-           navigatorObservers: [
-          FirebaseAnalyticsObserver(analytics: analytics),
-        ],
+          navigatorObservers: [
+            FirebaseAnalyticsObserver(analytics: analytics),
+          ],
           home: _defaultHome,
           onGenerateRoute: Routes.generateRoute,
           navigatorKey: navigatorKey,

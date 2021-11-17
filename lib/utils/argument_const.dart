@@ -62,4 +62,5 @@ class ArgumentConstant {
   static const String nameKey = 'name';
   static const String sizeKey = 'size';
   static const String serviceTypeKey = 'serviceType';
+   static const String isFromSetting = 'isFromSetting';
 }

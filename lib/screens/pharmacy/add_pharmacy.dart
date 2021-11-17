@@ -156,7 +156,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
         if (pharmacyList.contains(pharmacy)) {
           pharmacyList.remove(pharmacy);
         }
-        if (pharmacy == defaultPharmacy) {
+        if (pharmacy.name == defaultPharmacy.name) {
           if (pharmacyList.isNotEmpty) {
             defaultPharmacy = pharmacyList.first;
           } else {
@@ -210,11 +210,12 @@ class _AddPharmacyState extends State<AddPharmacy> {
                 Widgets.showToast("Please add pharmacy details");
               },
         addBottomArrows: MediaQuery.of(context).viewInsets.bottom == 0,
-        isSkipLater: true,
+        isSkipLater: !widget.args['isEdit'],
         onSkipForTap: () {
           Provider.of<HealthConditionProvider>(context, listen: false)
               .updatePharmacy(PreferredPharmacy(pharmacyId: ""));
-          Navigator.of(context).pushNamed(Routes.routeVitalReviews);
+          Navigator.of(context).pushNamed(Routes.routeVitalReviews,
+              arguments: {'isEdit': false});
         },
         child: SingleChildScrollView(
           child: Column(

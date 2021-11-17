@@ -8,6 +8,7 @@ import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/localization/localization.dart';
+import 'package:hutano/widgets/arrow_button.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
@@ -116,14 +117,9 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
             ),
             Align(
               alignment: Alignment.centerRight,
-              child: HutanoButton(
-                width: 55,
-                height: 55,
-                color: accentColor,
-                iconSize: 20,
-                buttonType: HutanoButtonType.onlyIcon,
-                icon: FileConstants.icForward,
-                onPressed: () {
+              child: ArrowButton(
+                iconData: Icons.arrow_forward,
+                onTap: () {
                   if (_radioValue == 1) {
                     if (_selectedServicesMap.values.toList().length > 0) {
                       _container.setServicesData("status", "1");

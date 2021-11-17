@@ -30,11 +30,11 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
       isCoccine = false,
       isMetaphetamin = false,
       isHeroine = false;
-  int smokerGroupValue = 0, drinkGroupValue = 0, recreationalGroupValue = 0;
-  int marijuanaGroupValue = 0,
-      coccineGroupValue = 0,
-      metaGroupValue = 0,
-      heroineGroupValue = 0;
+  int smokerGroupValue = 1, drinkGroupValue = 1, recreationalGroupValue = 1;
+  int marijuanaGroupValue = 1,
+      coccineGroupValue = 1,
+      metaGroupValue = 1,
+      heroineGroupValue = 1;
   bool isLiquor = false, isBeer = false;
   int _isBeerMore = 0, _isLiquorMore = 0;
 

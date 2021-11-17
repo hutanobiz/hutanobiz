@@ -97,11 +97,12 @@ class _AddInsuranceCompleteState extends State<AddInsuranceComplete> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).pushNamed(Routes.addInsurance,
-                          arguments: {
-                            ArgumentConstant.argsinsuranceType:
-                                InsuranceType.secondary
-                          });
+                      Navigator.of(context)
+                          .pushNamed(Routes.addInsurance, arguments: {
+                        ArgumentConstant.argsinsuranceType:
+                            InsuranceType.secondary,
+                        ArgumentConstant.isFromSetting: false
+                      });
                     },
                     child: Text(
                         Localization.of(context)

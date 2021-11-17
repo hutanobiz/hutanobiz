@@ -87,6 +87,8 @@ class _BookingUploadMedicalDocumentState
   void initState() {
     super.initState();
     setLoading(true);
+    documentDateController.text =
+                      DateFormat(Strings.datePattern).format(DateTime.now());
     getMedicalDocuments();
     documentTypeController.addListener(() {
       setState(() {});
@@ -215,7 +217,7 @@ class _BookingUploadMedicalDocumentState
         isAddAppBar: false,
         addHeader: true,
         title: "",
-        isSkipLater: true,
+        isSkipLater: !widget.args['isEdit'],
         isLoading: _isLoading,
         addBottomArrows: true,
         onSkipForTap: () {

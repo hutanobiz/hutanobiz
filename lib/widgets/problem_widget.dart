@@ -89,7 +89,7 @@ class ProblemWidget extends StatelessWidget {
           appointmentProblem['treatmentReceived']['period'] != '' &&
           appointmentProblem['treatmentReceived']['typeOfCare'] != '') {
         problemText +=
-            "Patient received care for this problem at ${appointmentProblem['treatmentReceived']['typeOfCare']} ${appointmentProblem['treatmentReceived']['period']} ${timeSpanConfig[appointmentProblem['treatmentReceived']['type']]} ago.";
+            "Patient received care for this problem via ${appointmentProblem['treatmentReceived']['typeOfCare']} ${appointmentProblem['treatmentReceived']['period']} ${timeSpanConfig[appointmentProblem['treatmentReceived']['type']]} ago. ";
       } else {
         problemText += "Second time receiving care for this problem. ";
       }

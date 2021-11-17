@@ -84,4 +84,5 @@ class ArgumentConstant {
   static const String isFromSettingKey = 'isFromSetting';
   static const String indexKey = 'index';
   static const String problem = 'problem';
+  static const String isFromSetting = 'isFromSetting';
 }

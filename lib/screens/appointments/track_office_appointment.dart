@@ -153,7 +153,7 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
         appointment["data"]['doctor']['fullName'];
     avatar = appointment["data"]['doctor']['avatar'];
     Timer(
-      Duration(milliseconds: 100),
+      Duration(milliseconds: 2),
       () => scrollController.jumpTo(animateTo),
     );
     return Container(
@@ -421,7 +421,7 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                             });
                           });
                         },
-                        title: 'Mediacal images'),
+                        title: 'Medical images'),
                     editWidget(
                         onTap: () {
                           animateTo = scrollController.position.pixels;

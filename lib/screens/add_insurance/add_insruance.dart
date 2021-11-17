@@ -41,8 +41,12 @@ enum InsuranceType { primary, secondary }
 
 class AddInsurance extends StatefulWidget {
   final InsuranceType insuranceType;
+  final bool isFromSetting;
 
-  const AddInsurance({Key key, this.insuranceType = InsuranceType.primary})
+  const AddInsurance(
+      {Key key,
+      this.insuranceType = InsuranceType.primary,
+      this.isFromSetting = false})
       : super(key: key);
   @override
   _AddInsuranceState createState() => _AddInsuranceState();
@@ -186,7 +190,11 @@ class _AddInsuranceState extends State<AddInsurance> {
               backImage: _backImage)
           .then((value) {
         ProgressDialogUtils.dismissProgressDialog();
-        Navigator.pushNamed(context, Routes.addInsuranceComplete);
+        if (widget.isFromSetting) {
+          Navigator.pop(context);
+        } else {
+          Navigator.pushNamed(context, Routes.addInsuranceComplete);
+        }
       }, onError: (e) {
         setState(() {
           showSecondaryInsurance = true;
@@ -291,11 +299,12 @@ class _AddInsuranceState extends State<AddInsurance> {
                   if (showSecondaryInsurance)
                     GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pushNamed(Routes.addInsurance,
-                            arguments: {
-                              ArgumentConstant.argsinsuranceType:
-                                  InsuranceType.secondary
-                            });
+                        Navigator.of(context)
+                            .pushNamed(Routes.addInsurance, arguments: {
+                          ArgumentConstant.argsinsuranceType:
+                              InsuranceType.secondary,
+                          ArgumentConstant.isFromSetting: widget.isFromSetting
+                        });
                       },
                       child: Text(
                           Localization.of(context)
@@ -467,7 +476,7 @@ class _AddInsuranceState extends State<AddInsurance> {
         controller: _healthPlanController,
         focusNode: _healthPlan,
         textInputType: TextInputType.text,
-        maxLength: 6,
+        // maxLength: 6,
         onFieldTap: () {
           showError(AddInsuranceError.healthPlan.index);
         },

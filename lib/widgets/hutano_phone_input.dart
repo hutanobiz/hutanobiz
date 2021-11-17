@@ -49,31 +49,42 @@ class HutanoPhoneInput extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-                child: CountryCodePicker(
-                  builder: (code) => SizedBox.fromSize(
-                    size: Size(24, 24),
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(5),
-                        child: Image(
-                          fit: BoxFit.cover,
-                          image: AssetImage(code.flagUri,
-                              package: FileConstants.libCountryPicker),
-                        )),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+                  child: SizedBox.fromSize(
+                      size: Size(24, 24),
+                      child: ClipRRect(
+                          child: Image(
+                        fit: BoxFit.cover,
+                        image: AssetImage(
+                          'assets/images/usFlag.png',
+                        ),
+                      )))
+                  // child: CountryCodePicker(
+
+                  //   builder: (code) => SizedBox.fromSize(
+                  //     size: Size(24, 24),
+                  //     child: ClipRRect(
+                  //         borderRadius: BorderRadius.circular(5),
+                  //         child: Image(
+                  //           fit: BoxFit.cover,
+                  //           image: AssetImage(code.flagUri,
+                  //               package: FileConstants.libCountryPicker),
+                  //         )),
+                  //   ),
+                  //   onChanged: onCountryChanged,
+                  //   hideMainText: true,
+                  //   showFlagMain: true,
+                  //   showFlag: true,
+                  //   enabled: false,
+                  //   initialSelection: 'US',
+                  //   hideSearch: false,
+                  //   showCountryOnly: false,
+                  //   showOnlyCountryWhenClosed: true,
+                  //   showFlagDialog: true,
+                  //   alignLeft: false,
+                  // ),
                   ),
-                  onChanged: onCountryChanged,
-                  hideMainText: true,
-                  showFlagMain: true,
-                  showFlag: true,
-                  initialSelection: 'US',
-                  hideSearch: false,
-                  showCountryOnly: false,
-                  showOnlyCountryWhenClosed: true,
-                  showFlagDialog: true,
-                  alignLeft: false,
-                ),
-              ),
               const Icon(
                 Icons.keyboard_arrow_down,
                 size: 14,

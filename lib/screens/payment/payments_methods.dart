@@ -6,6 +6,8 @@ import 'package:hutano/apis/error_model.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/add_insurance/add_insruance.dart';
+import 'package:hutano/utils/argument_const.dart';
 import 'package:hutano/utils/dialog_utils.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
@@ -662,27 +664,29 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                   },
                           ),
                         ),
-                        (isPayment == 0 &&
-                                _providerInsuranceList.contains(
-                                    _insuranceList[index]["insuranceId"]
-                                        .toString()))
+                        isPayment == 0
                             ? Container()
-                            : SizedBox(height: 3),
-                        (isPayment == 0 &&
-                                !_providerInsuranceList.contains(
+                            : _providerInsuranceList.contains(
                                     _insuranceList[index]["insuranceId"]
-                                        .toString()))
-                            ? Text(
-                                "Insurance not accepted by the provider",
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 12.0,
-                                  color: Colors.grey[500],
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              )
-                            : Container(),
+                                        .toString())
+                                ? Container()
+                                : SizedBox(height: 3),
+                        isPayment == 0
+                            ? Container()
+                            : !_providerInsuranceList.contains(
+                                    _insuranceList[index]["insuranceId"]
+                                        .toString())
+                                ? Text(
+                                    "Insurance not accepted by the provider",
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 12.0,
+                                      color: Colors.grey[500],
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  )
+                                : Container(),
                       ],
                     );
                   },
@@ -729,11 +733,11 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         });
         break;
       case 'Remove':
-        Widgets.showAlertDialog(
-          context,
-          "Delete Insurance",
-          "Are you sure you want to delete the insurance?",
-          () {
+        Widgets.showConfirmationDialog(
+          context: context,
+          title: 'Delete Insurance',
+          description: "Are you sure you want to delete the insurance?",
+          onLeftPressed: () {
             setState(() {
               _isLoading = true;
             });
@@ -823,28 +827,26 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         _insuranceMap['insuranceList'] = _insuranceList;
 
         title.toLowerCase().contains("insurance")
-            ? Navigator.of(context)
-                .pushNamed(
-                  Routes.insuranceListScreen,
-                  arguments: _insuranceMap,
-                )
-                .whenComplete(
-                  () => SharedPref().getToken().then(
-                    (token) {
-                      setState(() {
-                        _listRadioValue = null;
-                        _radioValue = null;
-                        _cardListRadioValue = null;
+            ? Navigator.of(context).pushNamed(Routes.addInsurance, arguments: {
+                ArgumentConstant.argsinsuranceType: InsuranceType.secondary,
+                ArgumentConstant.isFromSetting: true
+              }).whenComplete(
+                () => SharedPref().getToken().then(
+                  (token) {
+                    setState(() {
+                      _listRadioValue = null;
+                      _radioValue = null;
+                      _cardListRadioValue = null;
 
-                        _insuranceFuture = _api
-                            .getUserDetails(token)
-                            .timeout(Duration(seconds: 20));
+                      _insuranceFuture = _api
+                          .getUserDetails(token)
+                          .timeout(Duration(seconds: 20));
 
-                        insuranceAdded = true;
-                      });
-                    },
-                  ),
-                )
+                      insuranceAdded = true;
+                    });
+                  },
+                ),
+              )
             : Navigator.of(context)
                 .pushNamed(Routes.addNewCardScreen)
                 .whenComplete(

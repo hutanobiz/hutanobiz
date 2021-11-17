@@ -167,7 +167,7 @@ class _TrackTelemedicineAppointmentState
         appointment["data"]['doctor']['fullName'];
     avatar = appointment["data"]['doctor']['avatar'];
     Timer(
-      Duration(milliseconds: 100),
+      Duration(milliseconds: 2),
       () => scrollController.jumpTo(animateTo),
     );
     return Container(
@@ -372,7 +372,7 @@ class _TrackTelemedicineAppointmentState
                             });
                           });
                         },
-                        title: 'Mediacal images'),
+                        title: 'Medical images'),
                     editWidget(
                         onTap: () {
                           animateTo = scrollController.position.pixels;

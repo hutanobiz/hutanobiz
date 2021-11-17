@@ -26,6 +26,11 @@ class CurrentAppointmentMedicalHistory extends StatefulWidget {
 class _CurrentAppointmentMedicalHistoryState
     extends State<CurrentAppointmentMedicalHistory> {
   List<String> socialHistoryUsages = ['Rarely', 'Socially', 'Daily'];
+  List<String> socialHistorySmokingUsages = [
+    '1-10 cigarettes per day',
+    'Pack a day',
+    'More than one pack a day'
+  ];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -131,7 +136,7 @@ class _CurrentAppointmentMedicalHistoryState
               Text(socialHistory['smoking'] != null &&
                       socialHistory['smoking']['frequency'] != null &&
                       socialHistory['smoking']['frequency'] != 0
-                  ? 'Patient smokes ${socialHistoryUsages[int.parse(socialHistory['smoking']['frequency']) - 1]}.'
+                  ? 'Patient smokes ${socialHistorySmokingUsages[int.parse(socialHistory['smoking']['frequency']) - 1]}.'
                   : 'Patient do not smokes.'),
               socialHistory['drinker'] == null
                   ? Text('Patient do not drink.')

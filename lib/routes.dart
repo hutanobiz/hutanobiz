@@ -649,11 +649,11 @@ class Routes {
           return _buildRoute(settings, AddInsurance());
         }
         final insuranceType = args[ArgumentConstant.argsinsuranceType];
+        final isFromSetting = args[ArgumentConstant.isFromSetting];
         return _buildRoute(
             settings,
             AddInsurance(
-              insuranceType: insuranceType,
-            ));
+                insuranceType: insuranceType, isFromSetting: isFromSetting));
         break;
       case addFamilyMember:
         return _buildRoute(settings, AddFamilyMember());

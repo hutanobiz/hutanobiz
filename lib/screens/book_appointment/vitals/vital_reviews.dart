@@ -93,20 +93,6 @@ class _VitalReviewsState extends State<VitalReviews> {
     if (widget.args['isEdit'] && widget.args['vitals'] != null) {
       String height = widget.args['vitals']['height'] ?? '';
       String time = widget.args['vitals']['time'] ?? '';
-
-      _dateController.text = widget.args['vitals'][''];
-      _timeController.text = time.contains(' ') ? time.split(' ')[0] : '';
-      _sbpController.text = widget.args['vitals']['bloodPressureSbp'] ?? '';
-      _dbpController.text = widget.args['vitals']['bloodPressureDbp'] ?? '';
-      _heartRateController.text = widget.args['vitals']['heartRate'] ?? '';
-      _oxygenController.text = widget.args['vitals']['oxygenSaturation'] ?? '';
-      _tempController.text = widget.args['vitals']['temperature'] ?? '';
-      _weightController.text = widget.args['vitals']['weight'] ?? '';
-      _feetController.text = height.contains('.') ? height.split('.')[0] : '';
-      _inchesController.text = height.contains('.') ? height.split('.')[1] : '';
-      _glucoseController.text = widget.args['vitals']['bloodGlucose'] ?? '';
-      _bmiController.text = widget.args['vitals']['bmi'] ?? '';
-
       _dateController.text = widget.args['vitals']['date'] != null
           ? formattedDate(DateTime.parse(widget.args['vitals']['date']),
               AppConstants.vitalReviewsDateFormat)
@@ -121,6 +107,36 @@ class _VitalReviewsState extends State<VitalReviews> {
       } else {
         isSwitchSelected = true;
       }
+      _timeController.text = time.contains(' ') ? time.split(' ')[0] : '';
+      if (time == '') {
+        _dateController.text =
+            formattedDate(DateTime.now(), AppConstants.vitalReviewsDateFormat);
+        _selectedDate =
+            formattedDate(DateTime.now(), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z");
+        _selectedTime = DateFormat("hh:mm a").format(DateTime.now());
+        _timeController.text = DateFormat("h:mm a")
+            .format(DateTime.now())
+            .replaceAll("PM", "")
+            .replaceAll("AM", "");
+        if (DateTime.now().hour >= 12) {
+          isSwitchSelected = false;
+        } else {
+          isSwitchSelected = true;
+        }
+      }
+
+      _dateController.text = widget.args['vitals'][''];
+
+      _sbpController.text = widget.args['vitals']['bloodPressureSbp'] ?? '';
+      _dbpController.text = widget.args['vitals']['bloodPressureDbp'] ?? '';
+      _heartRateController.text = widget.args['vitals']['heartRate'] ?? '';
+      _oxygenController.text = widget.args['vitals']['oxygenSaturation'] ?? '';
+      _tempController.text = widget.args['vitals']['temperature'] ?? '';
+      _weightController.text = widget.args['vitals']['weight'] ?? '';
+      _feetController.text = height.contains('.') ? height.split('.')[0] : '';
+      _inchesController.text = height.contains('.') ? height.split('.')[1] : '';
+      _glucoseController.text = widget.args['vitals']['bloodGlucose'] ?? '';
+      _bmiController.text = widget.args['vitals']['bmi'] ?? '';
     } else {
       _dateController.text =
           formattedDate(DateTime.now(), AppConstants.vitalReviewsDateFormat);
@@ -164,7 +180,7 @@ class _VitalReviewsState extends State<VitalReviews> {
           onForwardTap: () {
             _onForwardTapButton(context);
           },
-          isSkipLater: true,
+          isSkipLater: !widget.args['isEdit'],
           padding: EdgeInsets.only(
               left: spacing20,
               bottom: MediaQuery.of(context).viewInsets.bottom == 0
@@ -805,7 +821,9 @@ class _VitalReviewsState extends State<VitalReviews> {
       date: _tempController.text.isNotEmpty || _sbpController.text.isNotEmpty
           ? _selectedDate
           : null,
-      time: _selectedTime ?? '',
+      time: _tempController.text.isNotEmpty || _sbpController.text.isNotEmpty
+          ? _selectedTime
+          : null,
       bloodPressureSbp: _sbpController.value.text != ''
           ? int.parse(_sbpController.value.text.trim())
           : null,

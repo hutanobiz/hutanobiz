@@ -27,6 +27,7 @@ import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/round_corner_checkbox.dart';
+import 'package:hutano/widgets/show_common_upload_dialog.dart';
 import 'package:hutano/widgets/text_with_image.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -92,6 +93,9 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
       });
       getMedicalDocuments();
     });
+
+    documentDateController.text =
+        DateFormat(Strings.datePattern).format(DateTime.now());
 
     if (Provider.of<HealthConditionProvider>(context, listen: false)
                 .allHealthIssuesData !=
@@ -238,6 +242,33 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
           ],
         ),
       ),
+    );
+  }
+
+  void showPickerDialog() {
+    showCommonUploadDialog(context, Localization.of(context).picker,
+        Localization.of(context).uploadDocument, onTop: () {
+      Navigator.pop(context);
+      showImagePickerDialog();
+    }, onBottom: () {
+      getDocumentType();
+      Navigator.pop(context);
+    }, isForDocument: true);
+  }
+
+  void showImagePickerDialog() {
+    showCommonUploadDialog(
+      context,
+      Localization.of(context).picker,
+      Localization.of(context).uploadPhoto,
+      onTop: () {
+        getImage(1);
+        Navigator.pop(context);
+      },
+      onBottom: () {
+        getImage(2);
+        Navigator.pop(context);
+      },
     );
   }
 
@@ -485,61 +516,61 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
         ).onClick(onTap: showPickerDialog),
       );
 
-  void showPickerDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(Localization.of(context).picker),
-          content: Text(Localization.of(context).selectDocPickerTypeLabel),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(Localization.of(context).imageLabel),
-              onPressed: () {
-                Navigator.pop(context);
-                showImagePickerDialog();
-              },
-            ),
-            FlatButton(
-              child: Text(Localization.of(context).pdfLabel),
-              onPressed: () {
-                getDocumentType();
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // void showPickerDialog() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text(Localization.of(context).picker),
+  //         content: Text(Localization.of(context).selectDocPickerTypeLabel),
+  //         actions: <Widget>[
+  //           FlatButton(
+  //             child: Text(Localization.of(context).imageLabel),
+  //             onPressed: () {
+  //               Navigator.pop(context);
+  //               showImagePickerDialog();
+  //             },
+  //           ),
+  //           FlatButton(
+  //             child: Text(Localization.of(context).pdfLabel),
+  //             onPressed: () {
+  //               getDocumentType();
+  //               Navigator.pop(context);
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
-  void showImagePickerDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(Localization.of(context).picker),
-          content: Text(Localization.of(context).selectImagePickerTypeLabel),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(Localization.of(context).camera),
-              onPressed: () {
-                getImage(1);
-                Navigator.pop(context);
-              },
-            ),
-            FlatButton(
-              child: Text(Localization.of(context).gallery),
-              onPressed: () {
-                getImage(2);
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // void showImagePickerDialog() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text(Localization.of(context).picker),
+  //         content: Text(Localization.of(context).selectImagePickerTypeLabel),
+  //         actions: <Widget>[
+  //           FlatButton(
+  //             child: Text(Localization.of(context).camera),
+  //             onPressed: () {
+  //               getImage(1);
+  //               Navigator.pop(context);
+  //             },
+  //           ),
+  //           FlatButton(
+  //             child: Text(Localization.of(context).gallery),
+  //             onPressed: () {
+  //               getImage(2);
+  //               Navigator.pop(context);
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   Future getImage(int source) async {
     ImagePicker _picker = ImagePicker();

@@ -39,6 +39,11 @@ class _BookingsummaryState extends State<Bookingsummary> {
     "5": "Years"
   };
   List<String> socialHistoryUsages = ['Rarely', 'Socially', 'Daily'];
+  List<String> socialHistorySmokingUsages = [
+    '1-10 cigarettes per day',
+    'Pack a day',
+    'More than one pack a day'
+  ];
 
   InheritedContainerState _container;
 
@@ -172,11 +177,14 @@ class _BookingsummaryState extends State<Bookingsummary> {
               Text(socialHistory.smoking != null &&
                       socialHistory.smoking.frequency != null &&
                       socialHistory.smoking.frequency != 0
-                  ? 'Patient smokes ${socialHistoryUsages[socialHistory.smoking.frequency - 1]}.'
+                  ? 'Patient smokes ${socialHistorySmokingUsages[socialHistory.smoking.frequency - 1]}.'
                   : 'Patient do not smokes.'),
               socialHistory.drinker == null
                   ? Text('Patient do not drink.')
-                  : ListView(
+                  : socialHistory.drinker.frequency  == 1?
+                  Text('Patient drink Rarely.'):socialHistory.drinker.frequency  == 2?
+                  Text('Patient drink Socially.'):
+                     ListView(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       children: [
@@ -185,13 +193,13 @@ class _BookingsummaryState extends State<Bookingsummary> {
                                       null &&
                                   socialHistory.drinker.liquorQuantity != 0
                               ? Text(
-                                  'Patient consumes ${socialHistory.drinker.liquorQuantity == 2 ? 'more than' : 'less than'} 1pt of liquor ${socialHistoryUsages[socialHistory.drinker.frequency - 1]}.')
+                                  'Patient consumes ${socialHistory.drinker.liquorQuantity == 2 ? 'more than' : 'less than'} 1pt of liquor ${socialHistoryUsages[socialHistory.drinker.frequency - 1]} daily.')
                               : SizedBox(),
                           socialHistory.drinker != null &&
                                   socialHistory.drinker.beerQuantity != null &&
                                   socialHistory.drinker.beerQuantity != 0
                               ? Text(
-                                  'Patient consumes ${socialHistory.drinker.beerQuantity == 2 ? 'more than' : 'less than'} 6 beer ${socialHistoryUsages[socialHistory.drinker.frequency - 1]}.')
+                                  'Patient consumes ${socialHistory.drinker.beerQuantity == 2 ? 'more than' : 'less than'} 6 beer ${socialHistoryUsages[socialHistory.drinker.frequency - 1]} daily.')
                               : SizedBox()
                         ]),
               socialHistory.recreationalDrugs == null ||
