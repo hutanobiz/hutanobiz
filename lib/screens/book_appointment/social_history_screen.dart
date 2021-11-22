@@ -378,7 +378,7 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
             )),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8.0),
               child: Image.asset(
                 isDrugChecked
                     ? 'images/checkedCheck.png'

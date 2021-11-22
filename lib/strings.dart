@@ -179,7 +179,7 @@ class Strings {
   static const String errorPassword = "Please enter Password";
 
   static const String errorValidPassword =
-      "Password should be more than 6 characters";
+      "Password should be more than 5 characters";
 
   static const String accNowActive = "Your account is now active.";
 
@@ -569,7 +569,7 @@ class Strings {
 
   static const String fasterLogin = "Faster Login";
 
-  static const String addToExistinGroup = "Add to my existing group";
+  static const String addToExistinGroup = "Add providers to a network";
 
   static const String errorHealthInsurance = "Please select health insurance";
 

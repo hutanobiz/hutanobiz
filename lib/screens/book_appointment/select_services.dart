@@ -227,7 +227,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
                 RichText(
                     text: TextSpan(children: <TextSpan>[
                   TextSpan(
-                      text: 'Fee \$ ',
+                      text: 'Amount \$',
                       style: TextStyle(
                           fontSize: fontSize13,
                           fontWeight: fontWeightMedium,
@@ -408,7 +408,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
           ),
           children: <TextSpan>[
             TextSpan(
-              text: 'Amount \$ ',
+              text: 'Amount \$',
               style: TextStyle(
                 fontSize: 13.0,
                 fontWeight: FontWeight.w500,

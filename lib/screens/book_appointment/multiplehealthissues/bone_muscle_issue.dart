@@ -807,6 +807,13 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
             } else {
               setState(() {
                 _listOfSelectedDisease.remove(_listOfSelectedDisease[index]);
+                if (_listOfSelectedDisease.length > 0) {
+                  _listOfSelectedDisease.last.isItClicked = false;
+                  _currentPartSideIndex = _listOfSelectedDisease
+                      .indexOf(_listOfSelectedDisease.last);
+                  _sideController.text =
+                      sidesMap[_listOfSelectedDisease.last.selectedSide];
+                }
               });
             }
           },

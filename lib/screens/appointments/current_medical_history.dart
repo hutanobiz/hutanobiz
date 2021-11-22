@@ -569,7 +569,7 @@ Widget vitalWidget(BuildContext context, Map<String, dynamic> vitals) {
                   text: vitals['temperature'] == null ||
                           vitals['temperature'] == ''
                       ? ''
-                      : '${vitals['temperature']} \u2109',
+                      : '${vitals['temperature']} \u2109; \t',
                   style: AppTextStyle.mediumStyle(fontSize: 14),
                 ),
                 TextSpan(

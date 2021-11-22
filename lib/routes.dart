@@ -688,11 +688,20 @@ class Routes {
                 doctorAvatar: args[ArgumentConstant.doctorAvatar]));
         break;
       case myProviderGroups:
-        return MaterialPageRoute(
-            builder: (_) => MyProviderGroups(
-                  showBack: args,
-                ));
-
+        if (args is bool) {
+          return MaterialPageRoute(
+              builder: (_) => MyProviderGroups(
+                    showBack: args,
+                  ));
+        } else {
+          return MaterialPageRoute(
+              builder: (_) => MyProviderGroups(
+                  showBack: args[ArgumentConstant.showBack],
+                  doctorId: args[ArgumentConstant.doctorId],
+                  doctorName: args[ArgumentConstant.doctorName],
+                  doctorAvatar: args[ArgumentConstant.doctorAvatar]));
+        }
+        break;
       case myProviderGroupDetail:
         return MaterialPageRoute(
             builder: (_) => MyProviderGroupDetail(

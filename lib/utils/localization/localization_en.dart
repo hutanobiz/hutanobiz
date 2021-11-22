@@ -207,7 +207,7 @@ class LocalizationEN implements Localization {
   String get errorPassword => "Please enter Password";
 
   @override
-  String get errorValidPassword => "Password should be more than 6 characters";
+  String get errorValidPassword => "Password should be more than 5 characters";
 
   @override
   String get accNowActive => "Your account is now active.";
@@ -812,7 +812,7 @@ class LocalizationEN implements Localization {
   String get fasterLogin => "Faster Login";
 
   @override
-  String get addToExistinGroup => "Add to my existing group";
+  String get addToExistinGroup => "Add providers to a network";
 
   @override
   String get errorHealthInsurance => "Please select health insurance";

@@ -343,13 +343,14 @@ class _SelectAppointmentTimeScreenState
                           'officeId', selectedAddress['_id']);
                       _container.setAppointmentData(
                           'selectedAddress', selectedAddress);
-                    }
-
-                    if (widget.arguments.fromScreen == 1) {
-                      Navigator.pop(context, _container.appointmentData);
+                      if (widget.arguments.fromScreen == 1) {
+                        Navigator.pop(context, _container.appointmentData);
+                      } else {
+                        Navigator.of(context)
+                            .pushNamed(Routes.consentToTreatScreen);
+                      }
                     } else {
-                      Navigator.of(context)
-                          .pushNamed(Routes.consentToTreatScreen);
+                      Widgets.showToast("Please select address");
                     }
                   }),
                   SizedBox(height: 20)

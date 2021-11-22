@@ -601,8 +601,9 @@ class ProviderWidget extends StatelessWidget {
                                 }
 
                                 Navigator.of(context).pushNamed(
-                                    Routes.providerAddNetwork,
+                                    Routes.myProviderGroups,
                                     arguments: {
+                                      ArgumentConstant.showBack: false,
                                       ArgumentConstant.doctorId: data["userId"],
                                       ArgumentConstant.doctorName: name,
                                       ArgumentConstant.doctorAvatar:

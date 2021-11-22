@@ -7,29 +7,45 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/screens/providercicle/create_group/create_provider_group.dart';
 import 'package:hutano/screens/providercicle/provider_add_network/list_item.dart';
 import 'package:hutano/screens/providercicle/provider_add_network/model/provider_network.dart';
+import 'package:hutano/screens/providercicle/provider_add_network/model/req_add_provider.dart';
+import 'package:hutano/screens/providercicle/provider_add_network/provider_list_item.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/constants.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/dialog_utils.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/localization/localization.dart';
+import 'package:hutano/utils/preference_key.dart';
+import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/utils/progress_dialog.dart';
 import 'package:hutano/widgets/app_header.dart';
 import 'package:hutano/widgets/custom_back_button.dart';
+import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/hutano_progressbar.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/widgets.dart';
 
 class MyProviderGroups extends StatefulWidget {
-  MyProviderGroups({Key key, this.showBack = false}) : super(key: key);
+  MyProviderGroups(
+      {Key key,
+      this.showBack = false,
+      this.doctorId,
+      this.doctorName,
+      this.doctorAvatar})
+      : super(key: key);
+  final String doctorName;
+  final String doctorId;
+  final String doctorAvatar;
   bool showBack;
+
   @override
   _MyProviderGroupsState createState() => _MyProviderGroupsState();
 }
 
 class _MyProviderGroupsState extends State<MyProviderGroups> {
   bool isLoading = false;
+  ProviderNetwork selectedGroup;
   List<ProviderNetwork> specialityList = <ProviderNetwork>[];
   @override
   void initState() {
@@ -77,10 +93,10 @@ class _MyProviderGroupsState extends State<MyProviderGroups> {
       body: LoadingBackgroundNew(
         title: "Provider Network",
         padding: const EdgeInsets.all(0),
-        isAddBack: false,
+        isAddBack: widget.doctorId != null ? true : false,
         addHeader: !widget.showBack, // !fromHome,
         isAddAppBar: !widget.showBack, // !fromHome,
-        isBackRequired: false,
+        isBackRequired: widget.doctorId != null ? true : false,
         centerTitle: !widget.showBack,
         addTitle: !widget.showBack,
         isLoading: isLoading,
@@ -144,7 +160,15 @@ class _MyProviderGroupsState extends State<MyProviderGroups> {
                   _buildList(),
                 ]),
               ),
-              widget.showBack ? _buildBottomButtons() : SizedBox(),
+              widget.doctorId != null && selectedGroup != null
+                  ? FancyButton(
+                      title: 'Add',
+                      onPressed: () {
+                        _addDoctorToGroup();
+                      })
+                  : widget.showBack
+                      ? _buildBottomButtons()
+                      : SizedBox(),
               SizedBox(height: spacing10),
             ],
           ),
@@ -167,20 +191,37 @@ class _MyProviderGroupsState extends State<MyProviderGroups> {
             itemCount: specialityList.length,
             itemBuilder: (context, index) {
               return InkWell(
-                onTap: () {
-                  specialityList[index].isSelected = !widget.showBack;
-                  Navigator.pushNamed(context, Routes.myProviderGroupDetail,
-                      arguments: specialityList[index]);
-                },
-                child: ListItem(specialityList[index], () {
-                  Widgets.showConfirmationDialog(
-                    context: context,
-                    description: "Are you sure to delete this group?",
-                    onLeftPressed: () => _deleteAddress(
-                      specialityList[index],
-                    ),
-                  );
-                }),
+                onTap: widget.doctorId != null
+                    ? () {
+                        setState(() {
+                          selectedGroup = specialityList[index];
+                        });
+                      }
+                    : () {
+                        specialityList[index].isSelected = !widget.showBack;
+                        Navigator.pushNamed(
+                            context, Routes.myProviderGroupDetail,
+                            arguments: specialityList[index]);
+                      },
+                child: widget.doctorId != null
+                    ? GroupListItem(specialityList[index], selectedGroup, () {
+                        Widgets.showConfirmationDialog(
+                          context: context,
+                          description: "Are you sure to delete this group?",
+                          onLeftPressed: () => _deleteAddress(
+                            specialityList[index],
+                          ),
+                        );
+                      })
+                    : ListItem(specialityList[index], () {
+                        Widgets.showConfirmationDialog(
+                          context: context,
+                          description: "Are you sure to delete this group?",
+                          onLeftPressed: () => _deleteAddress(
+                            specialityList[index],
+                          ),
+                        );
+                      }),
               );
             }),
         SizedBox(height: spacing20),
@@ -225,6 +266,31 @@ class _MyProviderGroupsState extends State<MyProviderGroups> {
         SizedBox(height: spacing5),
       ],
     );
+  }
+
+  void _addDoctorToGroup() async {
+    ProgressDialogUtils.showProgressDialog(context);
+    final request = ReqAddProvider(
+        doctorId: widget.doctorId,
+        userId: getString(PreferenceKey.id),
+        groupId: selectedGroup.sId);
+    try {
+      var res = await ApiManager().addProviderNetwork(request);
+      ProgressDialogUtils.dismissProgressDialog();
+      Widgets.showErrorDialog(
+          context: context,
+          description: res.response.toString(),
+          onPressed: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            // _getMyProviderGroupList(showProgress: true);
+          });
+    } on ErrorModel catch (e) {
+      ProgressDialogUtils.dismissProgressDialog();
+      DialogUtils.showAlertDialog(context, e.response);
+    } catch (e) {
+      ProgressDialogUtils.dismissProgressDialog();
+    }
   }
 
   // void _deleteAddress(String id) {

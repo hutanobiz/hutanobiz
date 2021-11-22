@@ -321,272 +321,71 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
           true,
         ),
         SizedBox(height: 20),
-        Container(
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(
-                Radius.circular(14.0),
-              ),
-              border: Border.all(width: 0.5, color: Colors.grey[300]),
-            ),
-            child: Theme(
-                data: Theme.of(context)
-                    .copyWith(dividerColor: Colors.transparent),
-                // recreationaltitleWidget('Edit appointment details', isEdit),
-                // isEdit
-                //     ? Column(
-                child: ExpansionTile(
-                  initiallyExpanded: isEdit,
-                  onExpansionChanged: ((val) {
-                    // setState(() {
-                    isEdit = !isEdit;
-                    // });
-                  }),
-                  tilePadding: EdgeInsets.zero,
-                  textColor: Colors.black,
-                  collapsedTextColor: Colors.black,
-                  iconColor: Colors.black,
-                  collapsedIconColor: Colors.black,
-                  title: Text(
-                    'Edit appointment details',
-                    style:
-                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
+        response['status'] == 2 || response['status'] == 6
+            ? SizedBox()
+            : Container(
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(14.0),
                   ),
-                  children: [
-                    editWidget(
-                        onTap: () {
-                          animateTo = scrollController.position.pixels;
-                          Navigator.of(context)
-                              .pushNamed(Routes.socialHistory, arguments: {
-                            'isEdit': true,
-                            'socialHistory': appointmentResponse['data']
-                                ['socialHistory'],
-                            'appointmentId': widget.appointmentId
-                          }).then((value) {
-                            setState(() {
-                              _profileFuture = api.getAppointmentDetails(
-                                  token, widget.appointmentId, _userLocation);
-                            });
-                          });
-                        },
-                        title: 'Social history'),
-                    editWidget(
-                        onTap: () {
-                          animateTo = scrollController.position.pixels;
-                          Navigator.of(context)
-                              .pushNamed(Routes.allergiesScreen, arguments: {
-                            'isEdit': true,
-                            'allergy': appointmentResponse['data']['allergy'],
-                            'appointmentId': widget.appointmentId
-                          }).then((value) {
-                            setState(() {
-                              _profileFuture = api.getAppointmentDetails(
-                                  token, widget.appointmentId, _userLocation);
-                            });
-                          });
-                        },
-                        title: 'Allergies'),
-                    editWidget(
-                        onTap: () {
-                          animateTo = scrollController.position.pixels;
-                          Navigator.of(context).pushNamed(
-                              Routes.medicalHistoryScreen,
-                              arguments: {
+                  border: Border.all(width: 0.5, color: Colors.grey[300]),
+                ),
+                child: Theme(
+                    data: Theme.of(context)
+                        .copyWith(dividerColor: Colors.transparent),
+                    // recreationaltitleWidget('Edit appointment details', isEdit),
+                    // isEdit
+                    //     ? Column(
+                    child: ExpansionTile(
+                      initiallyExpanded: isEdit,
+                      onExpansionChanged: ((val) {
+                        // setState(() {
+                        isEdit = !isEdit;
+                        // });
+                      }),
+                      tilePadding: EdgeInsets.zero,
+                      textColor: Colors.black,
+                      collapsedTextColor: Colors.black,
+                      iconColor: Colors.black,
+                      collapsedIconColor: Colors.black,
+                      title: Text(
+                        'Edit appointment details',
+                        style: TextStyle(
+                            fontSize: 16.0, fontWeight: FontWeight.w500),
+                      ),
+                      children: [
+                        editWidget(
+                            onTap: () {
+                              animateTo = scrollController.position.pixels;
+                              Navigator.of(context)
+                                  .pushNamed(Routes.socialHistory, arguments: {
                                 'isEdit': true,
-                                'medicalHistory': appointmentResponse['data']
-                                    ['medicalHistory'],
+                                'socialHistory': appointmentResponse['data']
+                                    ['socialHistory'],
                                 'appointmentId': widget.appointmentId
                               }).then((value) {
-                            setState(() {
-                              _profileFuture = api.getAppointmentDetails(
-                                  token, widget.appointmentId, _userLocation);
-                            });
-                          });
-                        },
-                        title: 'Medical history'),
-                    editWidget(
-                        onTap: () {
-                          animateTo = scrollController.position.pixels;
-                          Navigator.of(context).pushNamed(
-                              Routes.bookingUploadImages,
-                              arguments: {
-                                'isEdit': true,
-                                'medicalImages': appointmentResponse['data']
-                                    ['medicalImages'],
-                                'appointmentId': widget.appointmentId
-                              }).then((value) {
-                            setState(() {
-                              _profileFuture = api.getAppointmentDetails(
-                                  token, widget.appointmentId, _userLocation);
-                            });
-                          });
-                        },
-                        title: 'Medical images'),
-                    editWidget(
-                        onTap: () {
-                          animateTo = scrollController.position.pixels;
-                          Navigator.of(context).pushNamed(
-                              Routes.bookingUploadMedicalDocument,
-                              arguments: {
-                                'isEdit': true,
-                                'medicalDocuments': appointmentResponse['data']
-                                    ['medicalDocuments'],
-                                'appointmentId': widget.appointmentId
-                              }).then((value) {
-                            setState(() {
-                              _profileFuture = api.getAppointmentDetails(
-                                  token, widget.appointmentId, _userLocation);
-                            });
-                          });
-                        },
-                        title: 'Medical documents'),
-                    editWidget(
-                        onTap: () {
-                          animateTo = scrollController.position.pixels;
-                          Navigator.of(context).pushNamed(
-                              Routes.routeUploadDiagnosticNew,
-                              arguments: {
-                                'isEdit': true,
-                                'medicalDiagnostics':
-                                    appointmentResponse['data']
-                                        ['medicalDiagnostics'],
-                                'appointmentId': widget.appointmentId
-                              }).then((value) {
-                            setState(() {
-                              _profileFuture = api.getAppointmentDetails(
-                                  token, widget.appointmentId, _userLocation);
-                            });
-                          });
-                        },
-                        title: 'Diagnostic tests'),
-                    editWidget(
-                        onTap: () {
-                          animateTo = scrollController.position.pixels;
-                          Navigator.of(context).pushNamed(
-                              Routes.routeMedicineInformation,
-                              arguments: {
-                                'isEdit': true,
-                                'medicationDetails': appointmentResponse['data']
-                                    ['medications'],
-                                'appointmentId': widget.appointmentId
-                              }).then((value) {
-                            setState(() {
-                              _profileFuture = api.getAppointmentDetails(
-                                  token, widget.appointmentId, _userLocation);
-                            });
-                          });
-                        },
-                        title: 'Medication details'),
-                    editWidget(
-                        onTap: () {
-                          animateTo = scrollController.position.pixels;
-                          Navigator.of(context)
-                              .pushNamed(Routes.routeAddPharmacy, arguments: {
-                            'isEdit': true,
-                            'preferredPharmacy': appointmentResponse['data']
-                                ['pharmacy'],
-                            'appointmentId': widget.appointmentId
-                          }).then((value) {
-                            setState(() {
-                              _profileFuture = api.getAppointmentDetails(
-                                  token, widget.appointmentId, _userLocation);
-                            });
-                          });
-                        },
-                        title: 'Preferred pharmacy '),
-                    editWidget(
-                        onTap: () {
-                          animateTo = scrollController.position.pixels;
-                          Navigator.of(context)
-                              .pushNamed(Routes.routeVitalReviews, arguments: {
-                            'isEdit': true,
-                            'vitals': appointmentResponse['data']['vitals'],
-                            'appointmentId': widget.appointmentId
-                          }).then((value) {
-                            setState(() {
-                              _profileFuture = api.getAppointmentDetails(
-                                  token, widget.appointmentId, _userLocation);
-                            });
-                          });
-                        },
-                        title: 'Vitals'),
-                    editWidget(
-                      onTap: () {
-                        animateTo = scrollController.position.pixels;
-                        List<SelectionHealthIssueModel> _selectedConditionList =
-                            [];
-                        List<int> tempList = [];
-                        int i = 0;
-                        appointmentResponse['appointmentProblems']
-                            .forEach((element) {
-                          // if (element.isSelected) {
-                          _selectedConditionList.add(SelectionHealthIssueModel(
-                              index: i,
-                              sId: element['problemId'],
-                              name: element['name'],
-                              image: element['image'],
-                              problem:
-                                  appointmentResponse['appointmentProblems'][i],
-                              isSelected: true));
-                          tempList.add(i);
-                          i++;
-                          // } else {
-                          //   i++;
-                          // }
-                        });
-                        if (tempList.isNotEmpty) {
-                          Provider.of<HealthConditionProvider>(context,
-                                  listen: false)
-                              .updateHealthConditions(tempList);
-                          Provider.of<HealthConditionProvider>(context,
-                                  listen: false)
-                              .updateListOfSelectedHealthIssues(
-                                  _selectedConditionList);
-                          for (int i = 0;
-                              i <
-                                  Provider.of<HealthConditionProvider>(context,
-                                          listen: false)
-                                      .listOfSelectedHealthIssues
-                                      .length;
-                              i++) {
-                            if (i ==
-                                Provider.of<HealthConditionProvider>(context,
-                                        listen: false)
-                                    .currentIndexOfIssue) {
-                              Provider.of<HealthConditionProvider>(context,
-                                      listen: false)
-                                  .updateCurrentIndex(0);
+                                setState(() {
+                                  _profileFuture = api.getAppointmentDetails(
+                                      token,
+                                      widget.appointmentId,
+                                      _userLocation);
+                                });
+                              });
+                            },
+                            title: 'Social history'),
+                        editWidget(
+                            onTap: () {
+                              animateTo = scrollController.position.pixels;
                               Navigator.of(context).pushNamed(
-                                  Routes.routeBoneAndMuscle,
+                                  Routes.allergiesScreen,
                                   arguments: {
-                                    ArgumentConstant.problemIdKey:
-                                        Provider.of<HealthConditionProvider>(
-                                                context,
-                                                listen: false)
-                                            .listOfSelectedHealthIssues[i]
-                                            .sId,
-                                    ArgumentConstant.problemNameKey:
-                                        Provider.of<HealthConditionProvider>(
-                                                context,
-                                                listen: false)
-                                            .listOfSelectedHealthIssues[i]
-                                            .name,
-                                    ArgumentConstant.problemImageKey:
-                                        Provider.of<HealthConditionProvider>(
-                                                context,
-                                                listen: false)
-                                            .listOfSelectedHealthIssues[i]
-                                            .image,
-                                    ArgumentConstant.problem:
-                                        Provider.of<HealthConditionProvider>(
-                                                context,
-                                                listen: false)
-                                            .listOfSelectedHealthIssues[i]
-                                            .problem,
-                                    ArgumentConstant.appointmentId:
-                                        widget.appointmentId
+                                    'isEdit': true,
+                                    'allergy': appointmentResponse['data']
+                                        ['allergy'],
+                                    'appointmentId': widget.appointmentId
                                   }).then((value) {
                                 setState(() {
                                   _profileFuture = api.getAppointmentDetails(
@@ -595,20 +394,255 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                                       _userLocation);
                                 });
                               });
+                            },
+                            title: 'Allergies'),
+                        editWidget(
+                            onTap: () {
+                              animateTo = scrollController.position.pixels;
+                              Navigator.of(context).pushNamed(
+                                  Routes.medicalHistoryScreen,
+                                  arguments: {
+                                    'isEdit': true,
+                                    'medicalHistory':
+                                        appointmentResponse['data']
+                                            ['medicalHistory'],
+                                    'appointmentId': widget.appointmentId
+                                  }).then((value) {
+                                setState(() {
+                                  _profileFuture = api.getAppointmentDetails(
+                                      token,
+                                      widget.appointmentId,
+                                      _userLocation);
+                                });
+                              });
+                            },
+                            title: 'Medical history'),
+                        editWidget(
+                            onTap: () {
+                              animateTo = scrollController.position.pixels;
+                              Navigator.of(context).pushNamed(
+                                  Routes.bookingUploadImages,
+                                  arguments: {
+                                    'isEdit': true,
+                                    'medicalImages': appointmentResponse['data']
+                                        ['medicalImages'],
+                                    'appointmentId': widget.appointmentId
+                                  }).then((value) {
+                                setState(() {
+                                  _profileFuture = api.getAppointmentDetails(
+                                      token,
+                                      widget.appointmentId,
+                                      _userLocation);
+                                });
+                              });
+                            },
+                            title: 'Medical images'),
+                        editWidget(
+                            onTap: () {
+                              animateTo = scrollController.position.pixels;
+                              Navigator.of(context).pushNamed(
+                                  Routes.bookingUploadMedicalDocument,
+                                  arguments: {
+                                    'isEdit': true,
+                                    'medicalDocuments':
+                                        appointmentResponse['data']
+                                            ['medicalDocuments'],
+                                    'appointmentId': widget.appointmentId
+                                  }).then((value) {
+                                setState(() {
+                                  _profileFuture = api.getAppointmentDetails(
+                                      token,
+                                      widget.appointmentId,
+                                      _userLocation);
+                                });
+                              });
+                            },
+                            title: 'Medical documents'),
+                        editWidget(
+                            onTap: () {
+                              animateTo = scrollController.position.pixels;
+                              Navigator.of(context).pushNamed(
+                                  Routes.routeUploadDiagnosticNew,
+                                  arguments: {
+                                    'isEdit': true,
+                                    'medicalDiagnostics':
+                                        appointmentResponse['data']
+                                            ['medicalDiagnostics'],
+                                    'appointmentId': widget.appointmentId
+                                  }).then((value) {
+                                setState(() {
+                                  _profileFuture = api.getAppointmentDetails(
+                                      token,
+                                      widget.appointmentId,
+                                      _userLocation);
+                                });
+                              });
+                            },
+                            title: 'Diagnostic tests'),
+                        editWidget(
+                            onTap: () {
+                              animateTo = scrollController.position.pixels;
+                              Navigator.of(context).pushNamed(
+                                  Routes.routeMedicineInformation,
+                                  arguments: {
+                                    'isEdit': true,
+                                    'medicationDetails':
+                                        appointmentResponse['data']
+                                            ['medications'],
+                                    'appointmentId': widget.appointmentId
+                                  }).then((value) {
+                                setState(() {
+                                  _profileFuture = api.getAppointmentDetails(
+                                      token,
+                                      widget.appointmentId,
+                                      _userLocation);
+                                });
+                              });
+                            },
+                            title: 'Medication details'),
+                        editWidget(
+                            onTap: () {
+                              animateTo = scrollController.position.pixels;
+                              Navigator.of(context).pushNamed(
+                                  Routes.routeAddPharmacy,
+                                  arguments: {
+                                    'isEdit': true,
+                                    'preferredPharmacy':
+                                        appointmentResponse['data']['pharmacy'],
+                                    'appointmentId': widget.appointmentId
+                                  }).then((value) {
+                                setState(() {
+                                  _profileFuture = api.getAppointmentDetails(
+                                      token,
+                                      widget.appointmentId,
+                                      _userLocation);
+                                });
+                              });
+                            },
+                            title: 'Preferred pharmacy '),
+                        editWidget(
+                            onTap: () {
+                              animateTo = scrollController.position.pixels;
+                              Navigator.of(context).pushNamed(
+                                  Routes.routeVitalReviews,
+                                  arguments: {
+                                    'isEdit': true,
+                                    'vitals': appointmentResponse['data']
+                                        ['vitals'],
+                                    'appointmentId': widget.appointmentId
+                                  }).then((value) {
+                                setState(() {
+                                  _profileFuture = api.getAppointmentDetails(
+                                      token,
+                                      widget.appointmentId,
+                                      _userLocation);
+                                });
+                              });
+                            },
+                            title: 'Vitals'),
+                        editWidget(
+                          onTap: () {
+                            animateTo = scrollController.position.pixels;
+                            List<SelectionHealthIssueModel>
+                                _selectedConditionList = [];
+                            List<int> tempList = [];
+                            int i = 0;
+                            appointmentResponse['appointmentProblems']
+                                .forEach((element) {
+                              // if (element.isSelected) {
+                              _selectedConditionList.add(
+                                  SelectionHealthIssueModel(
+                                      index: i,
+                                      sId: element['problemId'],
+                                      name: element['name'],
+                                      image: element['image'],
+                                      problem: appointmentResponse[
+                                          'appointmentProblems'][i],
+                                      isSelected: true));
+                              tempList.add(i);
+                              i++;
+                              // } else {
+                              //   i++;
+                              // }
+                            });
+                            if (tempList.isNotEmpty) {
+                              Provider.of<HealthConditionProvider>(context,
+                                      listen: false)
+                                  .updateHealthConditions(tempList);
+                              Provider.of<HealthConditionProvider>(context,
+                                      listen: false)
+                                  .updateListOfSelectedHealthIssues(
+                                      _selectedConditionList);
+                              for (int i = 0;
+                                  i <
+                                      Provider.of<HealthConditionProvider>(
+                                              context,
+                                              listen: false)
+                                          .listOfSelectedHealthIssues
+                                          .length;
+                                  i++) {
+                                if (i ==
+                                    Provider.of<HealthConditionProvider>(
+                                            context,
+                                            listen: false)
+                                        .currentIndexOfIssue) {
+                                  Provider.of<HealthConditionProvider>(context,
+                                          listen: false)
+                                      .updateCurrentIndex(0);
+                                  Navigator.of(context).pushNamed(
+                                      Routes.routeBoneAndMuscle,
+                                      arguments: {
+                                        ArgumentConstant.problemIdKey: Provider
+                                                .of<HealthConditionProvider>(
+                                                    context,
+                                                    listen: false)
+                                            .listOfSelectedHealthIssues[i]
+                                            .sId,
+                                        ArgumentConstant
+                                            .problemNameKey: Provider.of<
+                                                    HealthConditionProvider>(
+                                                context,
+                                                listen: false)
+                                            .listOfSelectedHealthIssues[i]
+                                            .name,
+                                        ArgumentConstant
+                                            .problemImageKey: Provider.of<
+                                                    HealthConditionProvider>(
+                                                context,
+                                                listen: false)
+                                            .listOfSelectedHealthIssues[i]
+                                            .image,
+                                        ArgumentConstant.problem: Provider.of<
+                                                    HealthConditionProvider>(
+                                                context,
+                                                listen: false)
+                                            .listOfSelectedHealthIssues[i]
+                                            .problem,
+                                        ArgumentConstant.appointmentId:
+                                            widget.appointmentId
+                                      }).then((value) {
+                                    setState(() {
+                                      _profileFuture =
+                                          api.getAppointmentDetails(
+                                              token,
+                                              widget.appointmentId,
+                                              _userLocation);
+                                    });
+                                  });
+                                }
+                              }
+                            } else {
+                              Widgets.showToast(
+                                  "Please select any health condition");
                             }
-                          }
-                        } else {
-                          Widgets.showToast(
-                              "Please select any health condition");
-                        }
-                      },
-                      title: 'Problems',
+                          },
+                          title: 'Problems',
+                        )
+                      ],
                     )
-                  ],
-                )
-                // : SizedBox(),
+                    // : SizedBox(),
 
-                )),
+                    )),
       ],
     );
   }
