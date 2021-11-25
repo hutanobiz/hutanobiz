@@ -240,22 +240,28 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                                       width: 22,
                                       child: RawMaterialButton(
                                         onPressed: () {
-                                          setLoading(true);
-
-                                          _api
-                                              .deletePatientImage(
-                                            token,
-                                            imagesList[index]
-                                                [ArgumentConstant.idKey],
-                                          )
-                                              .whenComplete(() {
-                                            setLoading(false);
-                                            setState(() => imagesList
-                                                .remove(imagesList[index]));
-                                          }).futureError((error) {
-                                            setLoading(false);
-                                            error.toString().debugLog();
-                                          });
+                                          Widgets.showConfirmationDialog(
+                                              context: context,
+                                              description:
+                                                  "Are you sure to delete this image?",
+                                              onLeftPressed: () {
+                                                setLoading(true);
+                                                _api
+                                                    .deletePatientImage(
+                                                  token,
+                                                  imagesList[index]
+                                                      [ArgumentConstant.idKey],
+                                                )
+                                                    .whenComplete(() {
+                                                  setLoading(false);
+                                                  setState(() =>
+                                                      imagesList.remove(
+                                                          imagesList[index]));
+                                                }).futureError((error) {
+                                                  setLoading(false);
+                                                  error.toString().debugLog();
+                                                });
+                                              });
                                         },
                                         child: Icon(
                                           Icons.close,

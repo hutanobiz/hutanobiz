@@ -27,12 +27,12 @@ import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/utils/progress_dialog.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
-import 'package:hutano/widgets/controller.dart';
 import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/hutano_textfield.dart';
 import 'package:hutano/widgets/list_picker.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
+import 'package:hutano/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 import 'model/body_part_model.dart';
@@ -805,16 +805,23 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                     sidesMap[_listOfSelectedDisease[index].selectedSide];
               });
             } else {
-              setState(() {
-                _listOfSelectedDisease.remove(_listOfSelectedDisease[index]);
-                if (_listOfSelectedDisease.length > 0) {
-                  _listOfSelectedDisease.last.isItClicked = false;
-                  _currentPartSideIndex = _listOfSelectedDisease
-                      .indexOf(_listOfSelectedDisease.last);
-                  _sideController.text =
-                      sidesMap[_listOfSelectedDisease.last.selectedSide];
-                }
-              });
+              Widgets.showConfirmationDialog(
+                context: context,
+                description: "Are you sure to delete this body part?",
+                onLeftPressed: () {
+                  setState(() {
+                    _listOfSelectedDisease
+                        .remove(_listOfSelectedDisease[index]);
+                    if (_listOfSelectedDisease.length > 0) {
+                      _listOfSelectedDisease.last.isItClicked = false;
+                      _currentPartSideIndex = _listOfSelectedDisease
+                          .indexOf(_listOfSelectedDisease.last);
+                      _sideController.text =
+                          sidesMap[_listOfSelectedDisease.last.selectedSide];
+                    }
+                  });
+                },
+              );
             }
           },
 

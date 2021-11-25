@@ -278,21 +278,27 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                                   width: 22,
                                   child: RawMaterialButton(
                                     onPressed: () {
-                                      setLoading(true);
+                                      Widgets.showConfirmationDialog(
+                                          context: context,
+                                          description:
+                                              "Are you sure to delete this document?",
+                                          onLeftPressed: () {
+                                            setLoading(true);
 
-                                      _api
-                                          .deletePatientMedicalDocs(
-                                        token,
-                                        docsList[index]['_id'],
-                                      )
-                                          .whenComplete(() {
-                                        setLoading(false);
-                                        setState(() =>
-                                            docsList.remove(docsList[index]));
-                                      }).futureError((error) {
-                                        setLoading(false);
-                                        error.toString().debugLog();
-                                      });
+                                            _api
+                                                .deletePatientMedicalDocs(
+                                              token,
+                                              docsList[index]['_id'],
+                                            )
+                                                .whenComplete(() {
+                                              setLoading(false);
+                                              setState(() => docsList
+                                                  .remove(docsList[index]));
+                                            }).futureError((error) {
+                                              setLoading(false);
+                                              error.toString().debugLog();
+                                            });
+                                          });
                                     },
                                     child: Icon(
                                       Icons.close,
