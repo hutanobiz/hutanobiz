@@ -76,6 +76,31 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
                     : 1;
           }
         }
+        if (widget.map['socialHistory']['recreationalDrugs'] != null &&
+            widget.map['socialHistory']['recreationalDrugs'].length > 0) {
+          isRecreationalDrug = true;
+
+          for (dynamic map in widget.map['socialHistory']
+              ['recreationalDrugs']) {
+            // Marijuana,Coccine,Metaphetamin,Heroine
+            if (map['type'].toString().toLowerCase() == 'marijuana') {
+              isMarijuana = true;
+              marijuanaGroupValue = map['frequency'];
+            }
+            if (map['type'].toString().toLowerCase() == 'coccine') {
+              isCoccine = true;
+              coccineGroupValue = map['frequency'];
+            }
+            if (map['type'].toString().toLowerCase() == 'metaphetamin') {
+              isMetaphetamin = true;
+              metaGroupValue = map['frequency'];
+            }
+            if (map['type'].toString().toLowerCase() == 'heroine') {
+              isHeroine = true;
+              heroineGroupValue = map['frequency'];
+            }
+          }
+        }
         setState(() {});
       }
     }
