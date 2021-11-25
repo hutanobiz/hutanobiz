@@ -338,19 +338,29 @@ class _SelectAppointmentTimeScreenState
                     _container.setAppointmentData("date", DateTime.now());
                     _container.setAppointmentData("time", '00:00');
                     _container.setAppointmentData("isOndemand", '1');
-                    if (selectedAddress != null) {
-                      _container.setAppointmentData(
-                          'officeId', selectedAddress['_id']);
-                      _container.setAppointmentData(
-                          'selectedAddress', selectedAddress);
+                    if (_container.projectsResponse['serviceType'].toString() ==
+                        '1') {
+                      if (selectedAddress != null) {
+                        _container.setAppointmentData(
+                            'officeId', selectedAddress['_id']);
+                        _container.setAppointmentData(
+                            'selectedAddress', selectedAddress);
+                        if (widget.arguments.fromScreen == 1) {
+                          Navigator.pop(context, _container.appointmentData);
+                        } else {
+                          Navigator.of(context)
+                              .pushNamed(Routes.consentToTreatScreen);
+                        }
+                      } else {
+                        Widgets.showToast("Please select address");
+                      }
+                    } else {
                       if (widget.arguments.fromScreen == 1) {
                         Navigator.pop(context, _container.appointmentData);
                       } else {
                         Navigator.of(context)
                             .pushNamed(Routes.consentToTreatScreen);
                       }
-                    } else {
-                      Widgets.showToast("Please select address");
                     }
                   }),
                   SizedBox(height: 20)
