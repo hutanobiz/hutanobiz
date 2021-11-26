@@ -161,10 +161,8 @@ class _CurrentAppointmentMedicalHistoryState
                               : SizedBox()
                         ]),
               socialHistory['recreationalDrugs'] == null ||
-                      socialHistory['recreationalDrugs'].length == 0 ||
-                      socialHistory['recreationalDrugs']['type'] == null
-                  ? Text('Patient does not use recreational drugs.')
-                  : ListView.builder(
+                      socialHistory['recreationalDrugs'] is List
+                  ? ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemCount: socialHistory['recreationalDrugs'].length,
@@ -174,6 +172,7 @@ class _CurrentAppointmentMedicalHistoryState
                         );
                       },
                     )
+                  : Text('Patient does not use recreational drugs.')
             ],
           ),
         )

@@ -609,7 +609,7 @@ class LocalizationEN implements Localization {
   String get errorDob => "Please select date of birth.";
 
   @override
-  String get errorGender => "Please select gender";
+  String get errorGender => "Please select sex";
 
   @override
   String get errorState => "Please select state";

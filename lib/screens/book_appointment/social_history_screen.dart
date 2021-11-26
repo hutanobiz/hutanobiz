@@ -85,19 +85,19 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
             // Marijuana,Coccine,Metaphetamin,Heroine
             if (map['type'].toString().toLowerCase() == 'marijuana') {
               isMarijuana = true;
-              marijuanaGroupValue = map['frequency'];
+              marijuanaGroupValue = int.parse(map['frequency']);
             }
             if (map['type'].toString().toLowerCase() == 'coccine') {
               isCoccine = true;
-              coccineGroupValue = map['frequency'];
+              coccineGroupValue = int.parse(map['frequency']);
             }
             if (map['type'].toString().toLowerCase() == 'metaphetamin') {
               isMetaphetamin = true;
-              metaGroupValue = map['frequency'];
+              metaGroupValue = int.parse(map['frequency']);
             }
             if (map['type'].toString().toLowerCase() == 'heroine') {
               isHeroine = true;
-              heroineGroupValue = map['frequency'];
+              heroineGroupValue = int.parse(map['frequency']);
             }
           }
         }

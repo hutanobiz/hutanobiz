@@ -455,7 +455,7 @@ class Strings {
 
   static const String errorDob = "Please select date of birth.";
 
-  static const String errorGender = "Please select gender";
+  static const String errorGender = "Please select sex";
 
   static const String errorState = "Please select state";
 
