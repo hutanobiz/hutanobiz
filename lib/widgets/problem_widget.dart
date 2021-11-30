@@ -115,7 +115,7 @@ class ProblemWidget extends StatelessWidget {
         }
       }
       problemText +=
-          "Problem worsen with${listOfWorstProblems.substring(0, listOfWorstProblems.length - 1)} ";
+          "Problem worsens with${listOfWorstProblems.substring(0, listOfWorstProblems.length - 1)} ";
     } else {
       problemText += '';
     }
@@ -192,7 +192,7 @@ class ProblemWidget extends StatelessWidget {
                   appointmentProblem['name'] +
                       ' associated with' +
                       problemTitle +
-                      ' discomfort',
+                      ' discomfort.',
                   style: AppTextStyle.mediumStyle(),
                 ))
               ],
