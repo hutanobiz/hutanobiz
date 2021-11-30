@@ -467,14 +467,11 @@ class _CurrentAppointmentMedicalHistoryState
             physics: NeverScrollableScrollPhysics(),
             itemCount: medicalHistory.length,
             itemBuilder: (context, index) {
-              return Wrap(
-                // mainAxisAlignment: MainAxisAlignment.start,
-                // crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+              return 
                   Text(
                       '${medicalHistory[index]['name']}: diagnosed ${medicalHistory[index]['month']} ${medicalHistory[index]['year']}',
-                      style: AppTextStyle.regularStyle(fontSize: 14))
-                ],
+                      style: AppTextStyle.regularStyle(fontSize: 14)
+              
               );
             }));
     // Column(
