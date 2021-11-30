@@ -664,7 +664,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             _registerModel.lastName = value;
             setState(() {
               lastNameError = value.toString().isBlank(
-                  context, Localization.of(context).errorEnterFirstName);
+                  context, Localization.of(context).errorEnterLastName);
             });
           },
           onFieldTap: () {

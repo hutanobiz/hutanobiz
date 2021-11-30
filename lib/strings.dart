@@ -159,7 +159,7 @@ class Strings {
 
   static const String createAccount = "Let's start creating your account.";
 
-  static const String errorEnterFirstName = "Please enter fist name";
+  static const String errorEnterFirstName = "Please enter first name";
 
   static const String errorEnterLastName = "Please enter last name";
 

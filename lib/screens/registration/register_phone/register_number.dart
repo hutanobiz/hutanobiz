@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/widgets/custom_back_button.dart';
@@ -43,7 +44,7 @@ class _RegisterNumberState extends State<RegisterNumber> {
     super.initState();
     _termsAndConditionTap
       ..onTap = () async {
-        var url = 'https://hutano.com/terms-and-conditions';
+        var url = '${ApiBaseHelper.base_url}terms-and-conditions';
         if (await canLaunch(url)) {
           await launch(url);
         } else {
@@ -52,7 +53,7 @@ class _RegisterNumberState extends State<RegisterNumber> {
       };
     _privacyPolicyTap
       ..onTap = () async {
-        var url = 'https://hutano.com/privacy-policy';
+        var url = '${ApiBaseHelper.base_url}privacy-policy';
         if (await canLaunch(url)) {
           await launch(url);
         } else {

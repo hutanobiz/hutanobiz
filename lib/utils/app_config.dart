@@ -25,7 +25,7 @@ dynamic get apiBaseUrl {
   // return "https://staging.hutano.com/";
 
   // return "https://production.hutano.com/";
-  return "https://hutano.com/";
+  return "https://www.hutano.com/";
 }
 
 dynamic get imageUrl {
