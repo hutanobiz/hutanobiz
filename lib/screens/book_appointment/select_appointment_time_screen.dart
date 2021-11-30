@@ -54,6 +54,7 @@ class _SelectAppointmentTimeScreenState
   String averageRating = "0";
   dynamic selectedAddress;
   bool firstLoad = true;
+  bool isAutoNextDay = false;
   Future<dynamic> _addressFuture;
   String providerId = '';
   List<int> _scheduleDaysList = [];
@@ -165,6 +166,7 @@ class _SelectAppointmentTimeScreenState
       if (mounted) {
         setState(() {});
       }
+      isAutoNextDay = false;
       _scheduleFuture = _apiBaseHelper
           .getScheduleList(
             providerId,
@@ -442,33 +444,25 @@ class _SelectAppointmentTimeScreenState
             break;
           case ConnectionState.done:
             if (snapshot.hasData) {
-              _morningList.clear();
-              _eveningList.clear();
-              _afternoonList.clear();
-              _scheduleList = snapshot.data;
+              if (!isAutoNextDay) {
+                _morningList.clear();
+                _eveningList.clear();
+                _afternoonList.clear();
+                _scheduleList = snapshot.data;
 
-              for (Schedule schedule in _scheduleList) {
-                var fromTime = new DateTime.utc(
-                    int.parse(_dayDateMap["date"].split('/')[2]),
-                    int.parse(_dayDateMap["date"].split('/')[0]),
-                    int.parse(_dayDateMap["date"].split('/')[1]),
-                    int.parse(schedule.startTime.toString().split(':')[0]),
-                    int.parse(schedule.startTime.toString().split(':')[1]));
+                for (Schedule schedule in _scheduleList) {
+                  var fromTime = new DateTime.utc(
+                      int.parse(_dayDateMap["date"].split('/')[2]),
+                      int.parse(_dayDateMap["date"].split('/')[0]),
+                      int.parse(_dayDateMap["date"].split('/')[1]),
+                      int.parse(schedule.startTime.toString().split(':')[0]),
+                      int.parse(schedule.startTime.toString().split(':')[1]));
 
-                int prefixValue = fromTime.hour;
-                int minuteValue = fromTime.minute;
+                  int prefixValue = fromTime.hour;
+                  int minuteValue = fromTime.minute;
 
-                if (currentDate == _dayDateMap["date"]) {
-                  if (DateTime.now().hour < prefixValue) {
-                    if (prefixValue < 12) {
-                      _morningList.add(schedule);
-                    } else if (12 <= prefixValue && prefixValue < 18) {
-                      _afternoonList.add(schedule);
-                    } else {
-                      _eveningList.add(schedule);
-                    }
-                  } else if (DateTime.now().hour == prefixValue) {
-                    if (DateTime.now().minute < minuteValue) {
+                  if (currentDate == _dayDateMap["date"]) {
+                    if (DateTime.now().hour < prefixValue) {
                       if (prefixValue < 12) {
                         _morningList.add(schedule);
                       } else if (12 <= prefixValue && prefixValue < 18) {
@@ -476,15 +470,25 @@ class _SelectAppointmentTimeScreenState
                       } else {
                         _eveningList.add(schedule);
                       }
+                    } else if (DateTime.now().hour == prefixValue) {
+                      if (DateTime.now().minute < minuteValue) {
+                        if (prefixValue < 12) {
+                          _morningList.add(schedule);
+                        } else if (12 <= prefixValue && prefixValue < 18) {
+                          _afternoonList.add(schedule);
+                        } else {
+                          _eveningList.add(schedule);
+                        }
+                      }
                     }
-                  }
-                } else {
-                  if (prefixValue < 12) {
-                    _morningList.add(schedule);
-                  } else if (12 <= prefixValue && prefixValue < 18) {
-                    _afternoonList.add(schedule);
                   } else {
-                    _eveningList.add(schedule);
+                    if (prefixValue < 12) {
+                      _morningList.add(schedule);
+                    } else if (12 <= prefixValue && prefixValue < 18) {
+                      _afternoonList.add(schedule);
+                    } else {
+                      _eveningList.add(schedule);
+                    }
                   }
                 }
               }
@@ -492,6 +496,7 @@ class _SelectAppointmentTimeScreenState
                   _afternoonList.isEmpty &&
                   _eveningList.isEmpty) {
                 callNextDayApi();
+                isAutoNextDay = true;
 
                 return Center(
                   child: CustomLoader(),
@@ -519,6 +524,7 @@ class _SelectAppointmentTimeScreenState
                         _dayDateMap["timezone"] = _timezone;
 
                         setState(() {
+                          isAutoNextDay = false;
                           _scheduleFuture = _apiBaseHelper
                               .getScheduleList(
                                 providerId,
@@ -587,39 +593,19 @@ class _SelectAppointmentTimeScreenState
       _dayDateMap,
     )
         .then((value) {
-      setState(() {
-        for (Schedule schedule in _scheduleList) {
-          var fromTime = new DateTime.utc(
-              int.parse(_dayDateMap["date"].split('/')[2]),
-              int.parse(_dayDateMap["date"].split('/')[0]),
-              int.parse(_dayDateMap["date"].split('/')[1]),
-              int.parse(schedule.startTime.toString().split(':')[0]),
-              int.parse(schedule.startTime.toString().split(':')[1]));
+      for (Schedule schedule in value) {
+        var fromTime = new DateTime.utc(
+            int.parse(_dayDateMap["date"].split('/')[2]),
+            int.parse(_dayDateMap["date"].split('/')[0]),
+            int.parse(_dayDateMap["date"].split('/')[1]),
+            int.parse(schedule.startTime.toString().split(':')[0]),
+            int.parse(schedule.startTime.toString().split(':')[1]));
 
-          int prefixValue = fromTime.hour;
-          int minuteValue = fromTime.minute;
+        int prefixValue = fromTime.hour;
+        int minuteValue = fromTime.minute;
 
-          if (currentDate == _dayDateMap["date"]) {
-            if (DateTime.now().hour < prefixValue) {
-              if (prefixValue < 12) {
-                _morningList.add(schedule);
-              } else if (12 <= prefixValue && prefixValue < 18) {
-                _afternoonList.add(schedule);
-              } else {
-                _eveningList.add(schedule);
-              }
-            } else if (DateTime.now().hour == prefixValue) {
-              if (DateTime.now().minute < minuteValue) {
-                if (prefixValue < 12) {
-                  _morningList.add(schedule);
-                } else if (12 <= prefixValue && prefixValue < 18) {
-                  _afternoonList.add(schedule);
-                } else {
-                  _eveningList.add(schedule);
-                }
-              }
-            }
-          } else {
+        if (currentDate == _dayDateMap["date"]) {
+          if (DateTime.now().hour < prefixValue) {
             if (prefixValue < 12) {
               _morningList.add(schedule);
             } else if (12 <= prefixValue && prefixValue < 18) {
@@ -627,17 +613,37 @@ class _SelectAppointmentTimeScreenState
             } else {
               _eveningList.add(schedule);
             }
+          } else if (DateTime.now().hour == prefixValue) {
+            if (DateTime.now().minute < minuteValue) {
+              if (prefixValue < 12) {
+                _morningList.add(schedule);
+              } else if (12 <= prefixValue && prefixValue < 18) {
+                _afternoonList.add(schedule);
+              } else {
+                _eveningList.add(schedule);
+              }
+            }
+          }
+        } else {
+          if (prefixValue < 12) {
+            _morningList.add(schedule);
+          } else if (12 <= prefixValue && prefixValue < 18) {
+            _afternoonList.add(schedule);
+          } else {
+            _eveningList.add(schedule);
           }
         }
-        // if (_morningList.isEmpty &&
-        //     _afternoonList.isEmpty &&
-        //     _eveningList.isEmpty) {
-        //   callNextDayApi();
+      }
+      // if (_morningList.isEmpty &&
+      //     _afternoonList.isEmpty &&
+      //     _eveningList.isEmpty) {
+      //   callNextDayApi();
 
-        //   return Center(
-        //     child: CustomLoader(),
-        //   );
-        // } else {
+      //   return Center(
+      //     child: CustomLoader(),
+      //   );
+      // } else {
+      setState(() {
         _morningList.sort((a, b) => a.startTime.compareTo(b.startTime));
         _afternoonList.sort((a, b) => a.startTime.compareTo(b.startTime));
         _eveningList.sort((a, b) => a.startTime.compareTo(b.startTime));
@@ -671,10 +677,10 @@ class _SelectAppointmentTimeScreenState
               if (_addressList == null || _addressList.isEmpty) {
                 return Container();
               } else {
-                if (firstLoad == true) {
+                if (firstLoad) {
                   selectedAddress = _addressList.first;
                   _dayDateMap['officeId'] = selectedAddress['_id'];
-
+                  isAutoNextDay = false;
                   _scheduleFuture = _apiBaseHelper.getScheduleList(
                     providerId,
                     _dayDateMap,
@@ -706,7 +712,7 @@ class _SelectAppointmentTimeScreenState
                                 selectedAddress = _addressList[index];
                                 _dayDateMap['officeId'] =
                                     selectedAddress['_id'];
-
+                                isAutoNextDay = false;
                                 _scheduleFuture =
                                     _apiBaseHelper.getScheduleList(
                                   providerId,
