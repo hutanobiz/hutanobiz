@@ -200,6 +200,16 @@ class _BookingUploadMedicalDocumentState
         defaultBodyPart = side + ' ' + part;
       }
     }
+     if (widget.args['appointmentProblems'] != null) {
+      if (widget.args['appointmentProblems']['bodyPart'] != null &&
+          widget.args['appointmentProblems']['bodyPart'].length > 0) {
+        var part = widget.args['appointmentProblems']['bodyPart'][0]['name'];
+        var side = sidesMap[widget.args['appointmentProblems']['bodyPart'][0]
+            ['sides'][0]];
+
+        defaultBodyPart = side + ' ' + part;
+      }
+    }
   }
 
   void _handleTabControllerTick() {

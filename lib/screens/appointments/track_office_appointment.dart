@@ -424,7 +424,9 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                                     'isEdit': true,
                                     'medicalImages': appointmentResponse['data']
                                         ['medicalImages'],
-                                    'appointmentId': widget.appointmentId
+                                    'appointmentId': widget.appointmentId,
+                                    'appointmentProblems':appointmentResponse['appointmentProblems'][0]
+                                    
                                   }).then((value) {
                                 setState(() {
                                   _profileFuture = api.getAppointmentDetails(
@@ -445,7 +447,8 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                                     'medicalDocuments':
                                         appointmentResponse['data']
                                             ['medicalDocuments'],
-                                    'appointmentId': widget.appointmentId
+                                    'appointmentId': widget.appointmentId,
+                                    'appointmentProblems':appointmentResponse['appointmentProblems'][0]
                                   }).then((value) {
                                 setState(() {
                                   _profileFuture = api.getAppointmentDetails(
@@ -466,7 +469,8 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                                     'medicalDiagnostics':
                                         appointmentResponse['data']
                                             ['medicalDiagnostics'],
-                                    'appointmentId': widget.appointmentId
+                                    'appointmentId': widget.appointmentId,
+                                    'appointmentProblems':appointmentResponse['appointmentProblems'][0]
                                   }).then((value) {
                                 setState(() {
                                   _profileFuture = api.getAppointmentDetails(
