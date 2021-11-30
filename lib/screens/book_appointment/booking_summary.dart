@@ -181,31 +181,37 @@ class _BookingsummaryState extends State<Bookingsummary> {
                   : 'Patient do not smokes.'),
               socialHistory.drinker == null
                   ? Text('Patient do not drink.')
-                  : socialHistory.drinker.frequency  == 1?
-                  Text('Patient drink Rarely.'):socialHistory.drinker.frequency  == 2?
-                  Text('Patient drink Socially.'):
-                     ListView(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      children: [
-                          socialHistory.drinker != null &&
-                                  socialHistory.drinker.liquorQuantity !=
-                                      null &&
-                                  socialHistory.drinker.liquorQuantity != 0
-                              ? Text(
-                                  'Patient consumes ${socialHistory.drinker.liquorQuantity == 2 ? 'more than' : 'less than'} 1pt of liquor ${socialHistoryUsages[socialHistory.drinker.frequency - 1]} daily.')
-                              : SizedBox(),
-                          socialHistory.drinker != null &&
-                                  socialHistory.drinker.beerQuantity != null &&
-                                  socialHistory.drinker.beerQuantity != 0
-                              ? Text(
-                                  'Patient consumes ${socialHistory.drinker.beerQuantity == 2 ? 'more than' : 'less than'} 6 beer ${socialHistoryUsages[socialHistory.drinker.frequency - 1]} daily.')
-                              : SizedBox()
-                        ]),
-              socialHistory.recreationalDrugs == null ||
-                      socialHistory.recreationalDrugs.length == 0
-                  ? Text('Patient does not use recreational drugs.')
-                  : ListView.builder(
+                  : socialHistory.drinker.frequency == 1
+                      ? Text('Patient drink Rarely.')
+                      : socialHistory.drinker.frequency == 2
+                          ? Text('Patient drink Socially.')
+                          : ListView(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              children: [
+                                  socialHistory.drinker != null &&
+                                          socialHistory
+                                                  .drinker.liquorQuantity !=
+                                              null &&
+                                          socialHistory
+                                                  .drinker.liquorQuantity !=
+                                              0
+                                      ? Text(
+                                          'Patient consumes ${socialHistory.drinker.liquorQuantity == 2 ? 'more than' : 'less than'} 1pt of liquor ${socialHistoryUsages[socialHistory.drinker.frequency - 1]}.')
+                                      : SizedBox(),
+                                  socialHistory.drinker != null &&
+                                          socialHistory.drinker.beerQuantity !=
+                                              null &&
+                                          socialHistory.drinker.beerQuantity !=
+                                              0
+                                      ? Text(
+                                          'Patient consumes ${socialHistory.drinker.beerQuantity == 2 ? 'more than' : 'less than'} 6 beer ${socialHistoryUsages[socialHistory.drinker.frequency - 1]}.')
+                                      : SizedBox()
+                                ]),
+              socialHistory.recreationalDrugs != null &&
+                      socialHistory.recreationalDrugs is List &&
+                      socialHistory.recreationalDrugs.length > 0
+                  ? ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemCount: socialHistory.recreationalDrugs.length,
@@ -215,6 +221,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
                         );
                       },
                     )
+                  : Text('Patient does not use recreational drugs.')
             ],
           ),
         )
@@ -296,8 +303,8 @@ class _BookingsummaryState extends State<Bookingsummary> {
               itemCount: medicalHistories.length,
               itemBuilder: (context, index) {
                 return Text(
-                  '${index + 1}. ${medicalHistories[index].name} from ${medicalHistories[index].month}, ${medicalHistories[index].year}',
-                  style: AppTextStyle.mediumStyle(fontSize: 14),
+                  '${index + 1}. ${medicalHistories[index].name}: diagnosed ${medicalHistories[index].month} ${medicalHistories[index].year}',
+                  style: AppTextStyle.regularStyle(fontSize: 14),
                 );
               },
             )),

@@ -77,6 +77,7 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
           }
         }
         if (widget.map['socialHistory']['recreationalDrugs'] != null &&
+            widget.map['socialHistory']['recreationalDrugs'] is List &&
             widget.map['socialHistory']['recreationalDrugs'].length > 0) {
           isRecreationalDrug = true;
 

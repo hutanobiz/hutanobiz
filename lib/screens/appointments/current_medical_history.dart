@@ -138,30 +138,41 @@ class _CurrentAppointmentMedicalHistoryState
                       socialHistory['smoking']['frequency'] != 0
                   ? 'Patient smokes ${socialHistorySmokingUsages[int.parse(socialHistory['smoking']['frequency']) - 1]}.'
                   : 'Patient do not smokes.'),
-              socialHistory['drinker'] == null
+              socialHistory['Drinker'] == null ||
+                      socialHistory['Drinker']['frequency'] == null
                   ? Text('Patient do not drink.')
-                  : ListView(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      children: [
-                          socialHistory['drinker'] != null &&
-                                  socialHistory['drinker']['liquorQuantity'] !=
-                                      null &&
-                                  socialHistory['drinker']['liquorQuantity'] !=
-                                      0
-                              ? Text(
-                                  'Patient consumes ${socialHistory['drinker']['liquorQuantity'] == 2 ? 'more than' : 'less than'} 1pt of liquor ${socialHistoryUsages[socialHistory['drinker']['frequency'] - 1]}.')
-                              : SizedBox(),
-                          socialHistory.drinker != null &&
-                                  socialHistory['drinker']['beerQuantity'] !=
-                                      null &&
-                                  socialHistory['drinker']['beerQuantity'] != 0
-                              ? Text(
-                                  'Patient consumes ${socialHistory['drinker']['beerQuantity'] == 2 ? 'more than' : 'less than'} 6 beer ${socialHistoryUsages[socialHistory['drinker']['frequency'] - 1]}.')
-                              : SizedBox()
-                        ]),
-              socialHistory['recreationalDrugs'] == null ||
-                      socialHistory['recreationalDrugs'] is List
+                  : int.parse(socialHistory['Drinker']['frequency']) == 1
+                      ? Text('Patient drink Rarely.')
+                      : int.parse(socialHistory['Drinker']['frequency']) == 2
+                          ? Text('Patient drink Socially.')
+                          : ListView(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              children: [
+                                  socialHistory['Drinker'] != null &&
+                                          socialHistory['Drinker']
+                                                  ['liquorQuantity'] !=
+                                              null &&
+                                          socialHistory['Drinker']
+                                                  ['liquorQuantity'] !=
+                                              0
+                                      ? Text(
+                                          'Patient consumes ${socialHistory['Drinker']['liquorQuantity'] == 2 ? 'more than' : 'less than'} 1pt of liquor ${socialHistoryUsages[int.parse(socialHistory['Drinker']['frequency']) - 1]}.')
+                                      : SizedBox(),
+                                  socialHistory['Drinker'] != null &&
+                                          socialHistory['Drinker']
+                                                  ['beerQuantity'] !=
+                                              null &&
+                                          socialHistory['Drinker']
+                                                  ['beerQuantity'] !=
+                                              0
+                                      ? Text(
+                                          'Patient consumes ${socialHistory['Drinker']['beerQuantity'] == 2 ? 'more than' : 'less than'} 6 beer ${socialHistoryUsages[int.parse(socialHistory['Drinker']['frequency']) - 1]}.')
+                                      : SizedBox()
+                                ]),
+              socialHistory['recreationalDrugs'] != null &&
+                      socialHistory['recreationalDrugs'] is List &&
+                      socialHistory['recreationalDrugs'].length > 0
                   ? ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
@@ -460,16 +471,9 @@ class _CurrentAppointmentMedicalHistoryState
                 // mainAxisAlignment: MainAxisAlignment.start,
                 // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(medicalHistory[index]['name'],
-                      style: AppTextStyle.semiBoldStyle(fontSize: 14)),
-                  SizedBox(
-                    width: 8,
-                  ),
                   Text(
-                      medicalHistory[index]['month'] +
-                          ', ' +
-                          medicalHistory[index]['year'],
-                      style: AppTextStyle.regularStyle(fontSize: 13))
+                      '${medicalHistory[index]['name']}: diagnosed ${medicalHistory[index]['month']} ${medicalHistory[index]['year']}',
+                      style: AppTextStyle.regularStyle(fontSize: 14))
                 ],
               );
             }));
