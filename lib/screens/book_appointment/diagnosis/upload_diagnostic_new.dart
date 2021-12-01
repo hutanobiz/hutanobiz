@@ -772,7 +772,7 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
                           .then((value) {
                         ProgressDialogUtils.dismissProgressDialog();
                         documentTypeController.text = '';
-                        documentDateController.text = '';
+                        // documentDateController.text = '';
                         getMedicalDocuments(isAdd: true);
                       }).futureError((error) {
                         ProgressDialogUtils.dismissProgressDialog();

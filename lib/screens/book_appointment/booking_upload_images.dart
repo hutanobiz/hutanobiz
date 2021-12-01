@@ -646,7 +646,7 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
                         multipartList,
                       )
                           .then((value) {
-                        _imageDateController.text = '';
+                        // _imageDateController.text = '';
                         setState(() {
                           _api.getPatientDocuments(token).then((value) {
                             if (value != null) {

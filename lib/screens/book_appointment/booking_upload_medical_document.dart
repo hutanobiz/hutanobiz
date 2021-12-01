@@ -88,7 +88,7 @@ class _BookingUploadMedicalDocumentState
     super.initState();
     setLoading(true);
     documentDateController.text =
-                      DateFormat(Strings.datePattern).format(DateTime.now());
+        DateFormat(Strings.datePattern).format(DateTime.now());
     getMedicalDocuments();
     documentTypeController.addListener(() {
       setState(() {});
@@ -200,7 +200,7 @@ class _BookingUploadMedicalDocumentState
         defaultBodyPart = side + ' ' + part;
       }
     }
-     if (widget.args['appointmentProblems'] != null) {
+    if (widget.args['appointmentProblems'] != null) {
       if (widget.args['appointmentProblems']['bodyPart'] != null &&
           widget.args['appointmentProblems']['bodyPart'].length > 0) {
         var part = widget.args['appointmentProblems']['bodyPart'][0]['name'];
@@ -355,14 +355,14 @@ class _BookingUploadMedicalDocumentState
         crossAxisCount: 2,
       ),
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      // physics: NeverScrollableScrollPhysics(),
       itemBuilder: (BuildContext context, int index) {
-        String document = filteredImagesList[index]['medicalDocuments'];
+        // String document = filteredImagesList[index]['medicalDocuments'];
 
-        if (!document.contains('data/')) {
-          document = ApiBaseHelper.imageUrl +
-              filteredImagesList[index]['medicalDocuments'];
-        }
+        // if (!document.contains('data/')) {
+        //   document = ApiBaseHelper.imageUrl +
+        //       filteredImagesList[index]['medicalDocuments'];
+        // }
         return Padding(
           padding: const EdgeInsets.all(spacing5),
           child: Card(
@@ -374,18 +374,30 @@ class _BookingUploadMedicalDocumentState
               children: <Widget>[
                 ClipRRect(
                     borderRadius: BorderRadius.circular(16.0),
-                    child: document.toLowerCase().endsWith("pdf")
+                    child: (ApiBaseHelper.imageUrl +
+                                filteredImagesList[index]['medicalDocuments'])
+                            .toLowerCase()
+                            .endsWith("pdf")
                         ? "ic_pdf".imageIcon()
-                        : (document.contains('http') ||
-                                document.contains('https')
+                        : ((ApiBaseHelper.imageUrl +
+                                        filteredImagesList[index]
+                                            ['medicalDocuments'])
+                                    .contains('http') ||
+                                (ApiBaseHelper.imageUrl +
+                                        filteredImagesList[index]
+                                            ['medicalDocuments'])
+                                    .contains('https')
                             ? Image.network(
-                                document,
+                                (ApiBaseHelper.imageUrl +
+                                    filteredImagesList[index]
+                                        ['medicalDocuments']),
                                 height: 125.0,
                                 width: 180.0,
                                 fit: BoxFit.cover,
                               )
                             : Image.file(
-                                File(document),
+                                File(filteredImagesList[index]
+                                    ['medicalDocuments']),
                                 height: 125.0,
                                 width: 180.0,
                                 fit: BoxFit.cover,
@@ -411,7 +423,8 @@ class _BookingUploadMedicalDocumentState
                             }
                           } else {
                             setState(() {
-                              _selectedDocsList.remove(docsList[index]);
+                              _selectedDocsList
+                                  .remove(filteredImagesList[index]);
                             });
                           }
                         },
@@ -433,7 +446,8 @@ class _BookingUploadMedicalDocumentState
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              docsList[index][ArgumentConstant.nameKey],
+                              filteredImagesList[index]
+                                  [ArgumentConstant.nameKey],
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   fontSize: fontSize14,
@@ -444,7 +458,8 @@ class _BookingUploadMedicalDocumentState
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              docsList[index][ArgumentConstant.typeKey],
+                              filteredImagesList[index]
+                                  [ArgumentConstant.typeKey],
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   fontSize: fontSize12,
@@ -455,7 +470,8 @@ class _BookingUploadMedicalDocumentState
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              docsList[index][ArgumentConstant.dateKey],
+                              filteredImagesList[index]
+                                  [ArgumentConstant.dateKey],
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   fontSize: fontSize12,
@@ -467,22 +483,27 @@ class _BookingUploadMedicalDocumentState
                   ).onClick(onTap: () {
                     _selectedDocsList.toString().debugLog();
 
-                    if (!_selectedDocsList.contains(docsList[index])) {
+                    if (!_selectedDocsList
+                        .contains(filteredImagesList[index])) {
                       setState(() {
-                        _selectedDocsList.add(docsList[index]);
+                        _selectedDocsList.add(filteredImagesList[index]);
                       });
                     } else {
                       setState(() {
-                        _selectedDocsList.remove(docsList[index]);
+                        _selectedDocsList.remove(filteredImagesList[index]);
                       });
                     }
                   }),
                 ),
               ],
             ).onClick(
-              onTap: document.toLowerCase().endsWith("pdf")
+              onTap: (ApiBaseHelper.imageUrl +
+                          filteredImagesList[index]['medicalDocuments'])
+                      .toLowerCase()
+                      .endsWith("pdf")
                   ? () async {
-                      var url = document;
+                      var url = (ApiBaseHelper.imageUrl +
+                          filteredImagesList[index]['medicalDocuments']);
                       if (await canLaunch(url)) {
                         await launch(url);
                       } else {
@@ -492,7 +513,8 @@ class _BookingUploadMedicalDocumentState
                   : () {
                       Navigator.of(context).pushNamed(
                         Routes.providerImageScreen,
-                        arguments: document,
+                        arguments: (ApiBaseHelper.imageUrl +
+                            filteredImagesList[index]['medicalDocuments']),
                       );
                     },
             ),
@@ -678,7 +700,7 @@ class _BookingUploadMedicalDocumentState
                               multipartList)
                           .then((value) {
                         documentTypeController.text = '';
-                        documentDateController.text = '';
+                        // documentDateController.text = '';
 
                         getMedicalDocuments(isAdd: true);
                       }).futureError((error) => setLoading(false));
