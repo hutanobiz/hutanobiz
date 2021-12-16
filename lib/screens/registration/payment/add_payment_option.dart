@@ -12,6 +12,7 @@ import 'package:hutano/screens/registration/payment/provider/credit_card_provide
 // import 'package:hutano/screens/stripe/token.dart';
 import 'package:hutano/widgets/app_header.dart';
 import 'package:hutano/widgets/custom_back_button.dart';
+import 'package:hutano/widgets/skip_later.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 
 import '../../../apis/api_constants.dart';
@@ -132,6 +133,9 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
                   ),
                   SizedBox(
                     height: spacing50,
+                  ),
+                  SkipLater(
+                    onTap: _skipTaskNow,
                   ),
                   Align(
                     alignment: Alignment.centerRight,
@@ -588,12 +592,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
             Navigator.of(context).pushReplacementNamed(Routes.addCardComplete);
           }).catchError((dynamic e) {
             ProgressDialogUtils.dismissProgressDialog();
-            if (e is ErrorModel) {
-              if (e.response != null) {
-                ProgressDialogUtils.dismissProgressDialog();
-                DialogUtils.showAlertDialog(context, e.response);
-              }
-            }
+            DialogUtils.showAlertDialog(context, e.message);
           });
         }).catchError((dynamic e) {
           if (e is ErrorModelStripe) {
