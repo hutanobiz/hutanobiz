@@ -155,19 +155,25 @@ class _CurrentAppointmentMedicalHistoryState
                                               null &&
                                           socialHistory['Drinker']
                                                   ['liquorQuantity'] !=
-                                              0
+                                              '0' &&
+                                          socialHistory['Drinker']
+                                                  ['frequency'] !=
+                                              '0'
                                       ? Text(
-                                          'Patient consumes ${socialHistory['Drinker']['liquorQuantity'] == 2 ? 'more than' : 'less than'} 1pt of liquor ${socialHistoryUsages[int.parse(socialHistory['Drinker']['frequency']) - 1]}.')
+                                          'Patient consumes ${socialHistory['Drinker']['liquorQuantity'] == '2' ? 'more than' : 'less than'} 1pt of liquor ${socialHistoryUsages[int.parse(socialHistory['Drinker']['frequency']) - 1]}.')
                                       : SizedBox(),
                                   socialHistory['Drinker'] != null &&
                                           socialHistory['Drinker']
-                                                  ['beerQuantity'] !=
+                                                  ['BeerQuantity'] !=
                                               null &&
                                           socialHistory['Drinker']
-                                                  ['beerQuantity'] !=
-                                              0
+                                                  ['BeerQuantity'] !=
+                                              '0' &&
+                                          socialHistory['Drinker']
+                                                  ['frequency'] !=
+                                              '0'
                                       ? Text(
-                                          'Patient consumes ${socialHistory['Drinker']['beerQuantity'] == 2 ? 'more than' : 'less than'} 6 beer ${socialHistoryUsages[int.parse(socialHistory['Drinker']['frequency']) - 1]}.')
+                                          'Patient consumes ${socialHistory['Drinker']['BeerQuantity'] == '2' ? 'more than' : 'less than'} 6 beer ${socialHistoryUsages[int.parse(socialHistory['Drinker']['frequency']) - 1]}.')
                                       : SizedBox()
                                 ]),
               socialHistory['recreationalDrugs'] != null &&
@@ -467,12 +473,9 @@ class _CurrentAppointmentMedicalHistoryState
             physics: NeverScrollableScrollPhysics(),
             itemCount: medicalHistory.length,
             itemBuilder: (context, index) {
-              return 
-                  Text(
-                      '${medicalHistory[index]['name']}: diagnosed ${medicalHistory[index]['month']} ${medicalHistory[index]['year']}',
-                      style: AppTextStyle.regularStyle(fontSize: 14)
-              
-              );
+              return Text(
+                  '${medicalHistory[index]['name']}: diagnosed ${medicalHistory[index]['month']} ${medicalHistory[index]['year']}',
+                  style: AppTextStyle.regularStyle(fontSize: 14));
             }));
     // Column(
     //   children: [
