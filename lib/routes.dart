@@ -8,6 +8,7 @@ import 'package:hutano/screens/appointments/all_images_tabs.dart';
 import 'package:hutano/screens/appointments/appointment_complete.dart';
 import 'package:hutano/screens/appointments/appointment_detail_screen.dart';
 import 'package:hutano/screens/appointments/cancel_appointment.dart';
+import 'package:hutano/screens/appointments/completed_appointment_summary.dart';
 import 'package:hutano/screens/appointments/consent_to_treat_screen.dart';
 import 'package:hutano/screens/appointments/medical_history.dart';
 import 'package:hutano/screens/appointments/office_direction.dart';
@@ -26,6 +27,7 @@ import 'package:hutano/screens/appointments/upload_images.dart';
 import 'package:hutano/screens/appointments/video_call.dart';
 import 'package:hutano/screens/appointments/view_medical_history.dart';
 import 'package:hutano/screens/appointments/virtual_waiting_room.dart';
+import 'package:hutano/screens/appointments/widgets/image_slider.dart';
 import 'package:hutano/screens/book_appointment/allergies.dart';
 import 'package:hutano/screens/book_appointment/booking_summary.dart';
 import 'package:hutano/screens/book_appointment/booking_upload_images.dart';
@@ -279,6 +281,9 @@ class Routes {
       '/bookingUploadMedicalDocument';
   static const String socialHistory = '/socialHistory';
   static const String allergiesScreen = '/allergiesScreen';
+  static const String imageSlider = '/imageSlider';
+  static const String completedAppointmentSummary =
+      '/completedAppointmentSummary';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final dynamic args = settings.arguments;
@@ -957,6 +962,21 @@ class Routes {
       case routeUploadDiagnosticNew:
         return MaterialPageRoute(
             builder: (_) => UploadDiagnosticNew(args: args));
+        break;
+      case imageSlider:
+        return _buildRoute(
+          settings,
+          ImageSlider(imageVideoList: args),
+        );
+        break;
+      case completedAppointmentSummary:
+        return _buildRoute(
+          settings,
+          CompletedAppointmentSummary(
+            appointmentId: args,
+          ),
+        );
+        break;
 
       default:
         return _errorRoute();

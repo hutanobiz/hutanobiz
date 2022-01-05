@@ -26,6 +26,7 @@ class AppColors {
   static const errorColor = Color(0xFFE22D2D);
   static const Color primaryColor = Color(0xff392981);
   static const Color mineShaft = Color(0xff202020);
+  static const borderGreyShadow = Color.fromRGBO(139, 139, 139, 0.08);
 
 // static const Color accentColor = Color(0xffFFC259);
 

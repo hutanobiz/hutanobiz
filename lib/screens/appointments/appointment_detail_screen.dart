@@ -178,25 +178,23 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                           // width: MediaQuery.of(context).size.width - 20,
                           margin: const EdgeInsets.only(top: 10),
                           padding: const EdgeInsets.only(left: 20, right: 20.0),
-                          child:
-                              //  _appointmentStatus == '4'
-                              //     ? FancyButton(
-                              //         title: 'Treatment Summary',
-                              //         onPressed: () {
-                              //           Map _map = {};
-                              //           _map['id'] =
-                              //               profileMap['data']["_id"].toString();
-                              //           _map['appointmentType'] =
-                              //               profileMap['data']["type"];
-                              //           _map['latLng'] = _userLocation;
+                          child: _appointmentStatus == '4'
+                              ? FancyButton(
+                                  title: 'Treatment Summary',
+                                  onPressed: () {
+                                    // Map _map = {};
+                                    // _map['id'] =
+                                    //     profileMap['data']["_id"].toString();
+                                    // _map['appointmentType'] =
+                                    //     profileMap['data']["type"];
+                                    // _map['latLng'] = _userLocation;
 
-                              //           Navigator.of(context).pushNamed(
-                              //             Routes.treatmentSummaryScreen,
-                              //             arguments: _map,
-                              //           );
-                              //         })
-                              //     :
-                              _appointmentStatus == "2" ||
+                                    Navigator.of(context).pushNamed(
+                                      Routes.completedAppointmentSummary,
+                                      arguments: profileMap['data']["_id"],
+                                    );
+                                  })
+                              : _appointmentStatus == "2" ||
                                       _appointmentStatus == "6"
                                   ? SizedBox()
                                   : (profileMap["data"]["paymentMethod"] == 1 &&
