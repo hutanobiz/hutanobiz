@@ -17,7 +17,7 @@ func registerPlugins(registry: FlutterPluginRegistry) -> () {
       UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
     }
  FirebaseApp.configure() 
-    GMSServices.provideAPIKey("AIzaSyAkq7DnUBTkddWXddoHAX02Srw6570ktx8")
+    GMSServices.provideAPIKey("AIzaSyB0oMSYks73MwXluaDyBXqG9u_SCaCFs-I")
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

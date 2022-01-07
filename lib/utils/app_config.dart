@@ -43,17 +43,17 @@ dynamic get googleApiKey {
 Map<String, dynamic> devConstants = {
   _baseUrl: "https://api.stage.hutano.com/",
   _baseImageUrl: "https://sa-dev.hutano.xyz/uploads/",
-  _googleApiKey: "AIzaSyAkq7DnUBTkddWXddoHAX02Srw6570ktx8"
+  _googleApiKey: "AIzaSyB0oMSYks73MwXluaDyBXqG9u_SCaCFs-I"
 };
 
 Map<String, dynamic> stageConstants = {
   _baseUrl: "https://sa-staging.hutano.xyz/",
   _baseImageUrl: "https://sa-staging.hutano.xyz/uploads/",
-  _googleApiKey: "AIzaSyAkq7DnUBTkddWXddoHAX02Srw6570ktx8"
+  _googleApiKey: "AIzaSyB0oMSYks73MwXluaDyBXqG9u_SCaCFs-I"
 };
 
 Map<String, dynamic> prodConstants = {
   _baseUrl: "https://sa-staging.hutano.xyz/",
   _baseImageUrl: "https://sa-staging.hutano.xyz/uploads/",
-  _googleApiKey: "AIzaSyAkq7DnUBTkddWXddoHAX02Srw6570ktx8"
+  _googleApiKey: "AIzaSyB0oMSYks73MwXluaDyBXqG9u_SCaCFs-I"
 };

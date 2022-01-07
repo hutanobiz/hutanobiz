@@ -5,14 +5,15 @@ class Strings {
   static const String enterEmail = "Please enter email address";
   static const String enterPassword = "Please enter password";
   static const String enterValidEmail = "Enter a valid email address";
-  static const String enterValidPassword = "Password should be more than 6 characters";
+  static const String enterValidPassword =
+      "Password should be more than 6 characters";
   static const String noInternet = "No Internet connection. Please try again";
   static const String loggedIn = "Logged in successfully";
   static const String datePattern = 'MMMM dd, yyyy';
   static const String dateTimePattern = 'MMMM dd, yyyy, HH:mm';
   static const String timePattern = 'hh:mm a';
   static const String appointmentTimePattern = 'MMM dd, hh:mm';
-  static const String kGoogleApiKey = "AIzaSyAkq7DnUBTkddWXddoHAX02Srw6570ktx8";
+  static const String kGoogleApiKey = "AIzaSyB0oMSYks73MwXluaDyBXqG9u_SCaCFs-I";
   static const String ddMMMMyyyy = 'MM/dd/yyyy';
   static const String introTitle1 = "Flexible Scheduling";
 
