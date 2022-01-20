@@ -84,6 +84,7 @@ import 'package:hutano/screens/medical_history/checkout.dart';
 import 'package:hutano/screens/medical_history/current_medical_history.dart';
 import 'package:hutano/screens/medical_history/generalized_pain_symptoms.dart';
 import 'package:hutano/screens/medical_history/medicine_information.dart';
+import 'package:hutano/screens/medical_history/medicine_information_new.dart';
 import 'package:hutano/screens/medical_history/my_medical_history.dart';
 import 'package:hutano/screens/medical_history/pain_symptoms.dart';
 import 'package:hutano/screens/medical_history/payment_methods.dart';

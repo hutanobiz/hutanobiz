@@ -349,23 +349,23 @@ class ApiManager {
     }
   }
 
-  Future<ResMedicine> searchMedicine(String search) async {
+  Future<dynamic> searchMedicine(String search) async {
     try {
       final response = await ApiService().get(
         "api/search-prescription?searchString=$search",
       );
-      return ResMedicine.fromJson(response.data);
+      return response.data['response'];
     } on DioError catch (error) {
       throw ErrorModel.fromJson(error.response.data);
     }
   }
 
-  Future<ResMedicationDetail> addMedicationDetail(
+  Future<dynamic> addMedicationDetail(
       ReqMedicationDetail reqMedicationDetail) async {
     try {
       final response = await _apiService.post(addMedicationDetailEndPoint,
           data: reqMedicationDetail.toJson());
-      return ResMedicationDetail.fromJson(response.data);
+      return response.data['response'];
     } on DioError catch (error) {
       throw ErrorModel.fromJson(error.response.data);
     }
@@ -383,10 +383,12 @@ class ApiManager {
 
   // https://dev.hutano.com/api/patient/delete-medications
 
-  Future<ResGetMedicationDetail> getMedicationDetails() async {
+  Future<PatientMedicationResponse> getMedicationDetails(
+      String patientId, int page, String search, filters) async {
     try {
-      final response = await _apiService.get(getMedicationDetailEndPoint);
-      return ResGetMedicationDetail.fromJson(response.data);
+      final response = await _apiService.get(
+          'api/user/patient/medication-timeline?user=$patientId&page=$page&search=$search$filters');
+      return PatientMedicationResponseData.fromJson(response.data).response;
     } on DioError catch (error) {
       throw ErrorModel.fromJson(error.response.data);
     }
