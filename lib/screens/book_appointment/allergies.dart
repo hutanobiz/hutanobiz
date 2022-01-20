@@ -298,6 +298,9 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
       }
     } else {
       setLoading(true);
+      if (profileAllergiesList.contains(allergy)) {
+        profileAllergiesList.remove(allergy);
+      }
       api.deletePatientAllergyHistory(token, allergy.sId).then((value) {
         setLoading(false);
         setState(() {
@@ -371,10 +374,12 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
   }
 
   _addMedicalAllergy(Allergy allergy) async {
-    var _item = profileAllergiesList
-        .firstWhere((element) => element.name == allergy.name);
-    if (_item != null) {
-      myAllergiesList.add(_item);
+    if (widget.args['isEdit']) {
+      var _item = profileAllergiesList
+          .firstWhere((element) => element.name == allergy.name);
+      if (_item != null) {
+        myAllergiesList.add(_item);
+      }
     } else {
       allergy.allergyId = allergy.sId;
       setLoading(true);
@@ -386,7 +391,6 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
         }));
       } catch (e) {
         setLoading(false);
-        myAllergiesList.add(allergy);
         ProgressDialogUtils.dismissProgressDialog();
         print(e);
       }
