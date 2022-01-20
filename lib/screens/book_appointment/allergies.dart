@@ -33,6 +33,7 @@ class AllergiesScreen extends StatefulWidget {
 class _AllergiesScreenState extends State<AllergiesScreen> {
   ApiBaseHelper api = ApiBaseHelper();
   List<Allergy> myAllergiesList = [];
+  List<Allergy> profileAllergiesList = [];
   String token = '';
   bool _isLoading = false;
   final _searchDiseaseController = TextEditingController();
@@ -55,16 +56,15 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
           myAllergiesList.add(Allergy.fromJson(aa));
         }
       }
-    } else {
-      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-        SharedPref().getToken().then((token) {
-          setState(() {
-            this.token = token;
-          });
-          _getMyAllergiesList();
-        });
-      });
     }
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      SharedPref().getToken().then((token) {
+        setState(() {
+          this.token = token;
+        });
+        _getMyAllergiesList();
+      });
+    });
   }
 
   @override
@@ -290,18 +290,26 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
       );
 
   void _removeAllergy(BuildContext context, Allergy allergy) {
-    setLoading(true);
-    api.deletePatientAllergyHistory(token, allergy.sId).then((value) {
-      setLoading(false);
-      setState(() {
-        if (myAllergiesList.contains(allergy)) {
+    if (widget.args['isEdit']) {
+      if (myAllergiesList.contains(allergy)) {
+        setState(() {
           myAllergiesList.remove(allergy);
-        }
+        });
+      }
+    } else {
+      setLoading(true);
+      api.deletePatientAllergyHistory(token, allergy.sId).then((value) {
+        setLoading(false);
+        setState(() {
+          if (myAllergiesList.contains(allergy)) {
+            myAllergiesList.remove(allergy);
+          }
+        });
+      }).futureError((error) {
+        setLoading(false);
+        error.toString().debugLog();
       });
-    }).futureError((error) {
-      setLoading(false);
-      error.toString().debugLog();
-    });
+    }
   }
 
   void saveAllergies() {
@@ -343,7 +351,11 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
     });
     await ApiManager().getMyAllergies().then((result) {
       setLoading(false);
-      myAllergiesList = result;
+      profileAllergiesList = result;
+
+      if (!widget.args['isEdit']) {
+        myAllergiesList = profileAllergiesList;
+      }
       setState(() {
         isIndicatorLoading = false;
       });
@@ -359,18 +371,25 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
   }
 
   _addMedicalAllergy(Allergy allergy) async {
-    allergy.allergyId = allergy.sId;
-    setLoading(true);
-    try {
-      await ApiManager().addPatientAllergy(allergy).then(((result) {
-        myAllergiesList
-            .add(Allergy.fromJson(result['response']['allergy'].last));
+    var _item = profileAllergiesList
+        .firstWhere((element) => element.name == allergy.name);
+    if (_item != null) {
+      myAllergiesList.add(_item);
+    } else {
+      allergy.allergyId = allergy.sId;
+      setLoading(true);
+      try {
+        await ApiManager().addPatientAllergy(allergy).then(((result) {
+          myAllergiesList
+              .add(Allergy.fromJson(result['response']['allergy'].last));
+          setLoading(false);
+        }));
+      } catch (e) {
         setLoading(false);
-      }));
-    } catch (e) {
-      setLoading(false);
-      ProgressDialogUtils.dismissProgressDialog();
-      print(e);
+        myAllergiesList.add(allergy);
+        ProgressDialogUtils.dismissProgressDialog();
+        print(e);
+      }
     }
   }
 }
