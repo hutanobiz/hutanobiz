@@ -135,7 +135,8 @@ class _CurrentAppointmentMedicalHistoryState
             children: [
               Text(socialHistory['smoking'] != null &&
                       socialHistory['smoking']['frequency'] != null &&
-                      socialHistory['smoking']['frequency'] != 0
+                      socialHistory['smoking']['frequency'] != 0 &&
+                      socialHistory['smoking']['frequency'] != '0'
                   ? 'Patient smokes ${socialHistorySmokingUsages[int.parse(socialHistory['smoking']['frequency']) - 1]}.'
                   : 'Patient do not smokes.'),
               socialHistory['Drinker'] == null ||

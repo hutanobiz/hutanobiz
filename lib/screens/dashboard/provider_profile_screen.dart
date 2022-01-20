@@ -1077,7 +1077,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
                 height: 15,
               ),
               Text(
-                subTitle,
+                subTitle ?? '',
                 style: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontStyle: FontStyle.normal,
