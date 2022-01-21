@@ -76,6 +76,7 @@ class Medications {
     return data;
   }
 }
+
 class PatientMedicationResponseData {
   String status;
   PatientMedicationResponse response;
@@ -241,31 +242,15 @@ class User {
   int genderType;
   List<String> language;
   String email;
-  String password;
-  bool isAbleTOReceiveOffersAndPromotions;
-  bool isAgreeTermsAndCondition;
-  String mobileCountryCode;
-  String verificationCodeSendAt;
-  String verificationCode;
-  bool isContactInformationVerified;
-  bool isEmailVerified;
   int status;
   bool isReferred;
   int type;
-  String resetPasswordVerificationCode;
-  String resetPasswordVerificationCodeSentAt;
-  bool isResetPasswordOTPVerified;
-  String stripeCustomerId;
-  String stripeConnectAccount;
-  bool isStripeAcoountVerified;
   String ssn;
   String signature;
   bool isOtpValid;
   int wallet;
   bool isResetPinOTPVerified;
-  String resetPinVerificationCode;
-  String resetPinVerificationCodeSentAt;
-  String pin;
+
   String referredByUserId;
   List<String> doctorTestAndMeasurePreference;
   List<String> doctorTreatmentPreference;
@@ -299,31 +284,14 @@ class User {
       this.genderType,
       this.language,
       this.email,
-      this.password,
-      this.isAbleTOReceiveOffersAndPromotions,
-      this.isAgreeTermsAndCondition,
-      this.mobileCountryCode,
-      this.verificationCodeSendAt,
-      this.verificationCode,
-      this.isContactInformationVerified,
-      this.isEmailVerified,
       this.status,
       this.isReferred,
       this.type,
-      this.resetPasswordVerificationCode,
-      this.resetPasswordVerificationCodeSentAt,
-      this.isResetPasswordOTPVerified,
-      this.stripeCustomerId,
-      this.stripeConnectAccount,
-      this.isStripeAcoountVerified,
       this.ssn,
       this.signature,
       this.isOtpValid,
       this.wallet,
       this.isResetPinOTPVerified,
-      this.resetPinVerificationCode,
-      this.resetPinVerificationCodeSentAt,
-      this.pin,
       this.referredByUserId,
       this.doctorTestAndMeasurePreference,
       this.doctorTreatmentPreference,
@@ -364,33 +332,13 @@ class User {
       });
     }
     email = json['email'];
-    password = json['password'];
-    isAbleTOReceiveOffersAndPromotions =
-        json['isAbleTOReceiveOffersAndPromotions'];
-    isAgreeTermsAndCondition = json['isAgreeTermsAndCondition'];
-    mobileCountryCode = json['mobileCountryCode'];
-    verificationCodeSendAt = json['verificationCodeSendAt'];
-    verificationCode = json['verificationCode'];
-    isContactInformationVerified = json['isContactInformationVerified'];
-    isEmailVerified = json['isEmailVerified'];
     status = json['status'];
     isReferred = json['isReferred'];
     type = json['type'];
-    resetPasswordVerificationCode = json['resetPasswordVerificationCode'];
-    resetPasswordVerificationCodeSentAt =
-        json['resetPasswordVerificationCodeSentAt'];
-    isResetPasswordOTPVerified = json['isResetPasswordOTPVerified'];
-    stripeCustomerId = json['stripeCustomerId'];
-    stripeConnectAccount = json['stripeConnectAccount'];
-    isStripeAcoountVerified = json['isStripeAcoountVerified'];
     ssn = json['ssn'];
     signature = json['signature'];
     isOtpValid = json['isOtpValid'];
     wallet = json['wallet'];
-    isResetPinOTPVerified = json['isResetPinOTPVerified'];
-    resetPinVerificationCode = json['resetPinVerificationCode'];
-    resetPinVerificationCodeSentAt = json['resetPinVerificationCodeSentAt'];
-    pin = json['pin'];
     referredByUserId = json['referredByUserId'];
     if (json['doctorTestAndMeasurePreference'] != null) {
       doctorTestAndMeasurePreference = <String>[];
@@ -465,34 +413,13 @@ class User {
       data['language'] = this.language.map((v) => v).toList();
     }
     data['email'] = this.email;
-    data['password'] = this.password;
-    data['isAbleTOReceiveOffersAndPromotions'] =
-        this.isAbleTOReceiveOffersAndPromotions;
-    data['isAgreeTermsAndCondition'] = this.isAgreeTermsAndCondition;
-    data['mobileCountryCode'] = this.mobileCountryCode;
-    data['verificationCodeSendAt'] = this.verificationCodeSendAt;
-    data['verificationCode'] = this.verificationCode;
-    data['isContactInformationVerified'] = this.isContactInformationVerified;
-    data['isEmailVerified'] = this.isEmailVerified;
     data['status'] = this.status;
     data['isReferred'] = this.isReferred;
     data['type'] = this.type;
-    data['resetPasswordVerificationCode'] = this.resetPasswordVerificationCode;
-    data['resetPasswordVerificationCodeSentAt'] =
-        this.resetPasswordVerificationCodeSentAt;
-    data['isResetPasswordOTPVerified'] = this.isResetPasswordOTPVerified;
-    data['stripeCustomerId'] = this.stripeCustomerId;
-    data['stripeConnectAccount'] = this.stripeConnectAccount;
-    data['isStripeAcoountVerified'] = this.isStripeAcoountVerified;
     data['ssn'] = this.ssn;
     data['signature'] = this.signature;
     data['isOtpValid'] = this.isOtpValid;
     data['wallet'] = this.wallet;
-    data['isResetPinOTPVerified'] = this.isResetPinOTPVerified;
-    data['resetPinVerificationCode'] = this.resetPinVerificationCode;
-    data['resetPinVerificationCodeSentAt'] =
-        this.resetPinVerificationCodeSentAt;
-    data['pin'] = this.pin;
     data['referredByUserId'] = this.referredByUserId;
     if (this.doctorTestAndMeasurePreference != null) {
       data['doctorTestAndMeasurePreference'] =
@@ -629,14 +556,13 @@ class FamilyMembers {
   // List<Null> userPermissions;
   String sId;
 
-  FamilyMembers(
-      {this.name, this.phone, this.relationId, this.sId});
+  FamilyMembers({this.name, this.phone, this.relationId, this.sId});
 
   FamilyMembers.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     phone = json['phone'];
     relationId = json['relationId'];
-   
+
     sId = json['_id'];
   }
 
@@ -645,7 +571,7 @@ class FamilyMembers {
     data['name'] = this.name;
     data['phone'] = this.phone;
     data['relationId'] = this.relationId;
-   
+
     data['_id'] = this.sId;
     return data;
   }
@@ -693,92 +619,55 @@ class Doctor {
   // int? genderType;
   List<String> language;
   String email;
-  String password;
-  bool isAbleTOReceiveOffersAndPromotions;
-  bool isAgreeTermsAndCondition;
-  String mobileCountryCode;
-  String verificationCodeSendAt;
-  String verificationCode;
-  bool isContactInformationVerified;
-  bool isEmailVerified;
   int status;
   bool isReferred;
   int type;
-  String resetPasswordVerificationCode;
-  String resetPasswordVerificationCodeSentAt;
-  bool isResetPasswordOTPVerified;
-  String stripeCustomerId;
-  String stripeConnectAccount;
-  bool isStripeAcoountVerified;
+
   String ssn;
   String signature;
   bool isOtpValid;
   int wallet;
-  bool isResetPinOTPVerified;
-  String resetPinVerificationCode;
-  String resetPinVerificationCodeSentAt;
-  String pin;
+
   String referredByUserId;
-  List<String> doctorTestAndMeasurePreference;
-  List<String> doctorTreatmentPreference;
+
   String sId;
- 
+
   String createdAt;
   String updatedAt;
   int iV;
 
-
-  Doctor(
-      {this.location,
-      this.title,
-      this.fullName,
-      this.firstName,
-      this.lastName,
-      this.dob,
-      this.address,
-      this.addressTitle,
-      this.addresstype,
-      this.addressNumber,
-      this.city,
-      this.state,
-      this.avatar,
-      this.zipCode,
-      this.phoneNumber,
-      this.gender,
-      this.language,
-      this.email,
-      this.password,
-      this.isAbleTOReceiveOffersAndPromotions,
-      this.isAgreeTermsAndCondition,
-      this.mobileCountryCode,
-      this.verificationCodeSendAt,
-      this.verificationCode,
-      this.isContactInformationVerified,
-      this.isEmailVerified,
-      this.status,
-      this.isReferred,
-      this.type,
-      this.resetPasswordVerificationCode,
-      this.resetPasswordVerificationCodeSentAt,
-      this.isResetPasswordOTPVerified,
-      this.stripeCustomerId,
-      this.stripeConnectAccount,
-      this.isStripeAcoountVerified,
-      this.ssn,
-      this.signature,
-      this.isOtpValid,
-      this.wallet,
-      this.isResetPinOTPVerified,
-      this.resetPinVerificationCode,
-      this.resetPinVerificationCodeSentAt,
-      this.pin,
-      this.referredByUserId,
-      this.doctorTestAndMeasurePreference,
-      this.doctorTreatmentPreference,
-      this.sId,
-      this.createdAt,
-      this.updatedAt,
-      this.iV,});
+  Doctor({
+    this.location,
+    this.title,
+    this.fullName,
+    this.firstName,
+    this.lastName,
+    this.dob,
+    this.address,
+    this.addressTitle,
+    this.addresstype,
+    this.addressNumber,
+    this.city,
+    this.state,
+    this.avatar,
+    this.zipCode,
+    this.phoneNumber,
+    this.gender,
+    this.language,
+    this.email,
+    this.status,
+    this.isReferred,
+    this.type,
+    this.ssn,
+    this.signature,
+    this.isOtpValid,
+    this.wallet,
+    this.referredByUserId,
+    this.sId,
+    this.createdAt,
+    this.updatedAt,
+    this.iV,
+  });
 
   Doctor.fromJson(Map<String, dynamic> json) {
     location = json['location'] != null
@@ -801,37 +690,17 @@ class Doctor {
     gender = json['gender'];
     language = json['language'].cast<String>();
     email = json['email'];
-    password = json['password'];
-    isAbleTOReceiveOffersAndPromotions =
-        json['isAbleTOReceiveOffersAndPromotions'];
-    isAgreeTermsAndCondition = json['isAgreeTermsAndCondition'];
-    mobileCountryCode = json['mobileCountryCode'];
-    verificationCodeSendAt = json['verificationCodeSendAt'];
-    verificationCode = json['verificationCode'];
-    isContactInformationVerified = json['isContactInformationVerified'];
-    isEmailVerified = json['isEmailVerified'];
     status = json['status'];
     isReferred = json['isReferred'];
     type = json['type'];
-    resetPasswordVerificationCode = json['resetPasswordVerificationCode'];
-    resetPasswordVerificationCodeSentAt =
-        json['resetPasswordVerificationCodeSentAt'];
-    isResetPasswordOTPVerified = json['isResetPasswordOTPVerified'];
-    stripeCustomerId = json['stripeCustomerId'];
-    stripeConnectAccount = json['stripeConnectAccount'];
-    isStripeAcoountVerified = json['isStripeAcoountVerified'];
+
     ssn = json['ssn'];
     signature = json['signature'];
     isOtpValid = json['isOtpValid'];
     wallet = json['wallet'];
-    isResetPinOTPVerified = json['isResetPinOTPVerified'];
-    resetPinVerificationCode = json['resetPinVerificationCode'];
-    resetPinVerificationCodeSentAt = json['resetPinVerificationCodeSentAt'];
-    pin = json['pin'];
+
     referredByUserId = json['referredByUserId'];
-    doctorTestAndMeasurePreference =
-        json['doctorTestAndMeasurePreference'].cast<String>();
-   
+
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     iV = json['__v'];
@@ -859,47 +728,22 @@ class Doctor {
     data['gender'] = this.gender;
     data['language'] = this.language;
     data['email'] = this.email;
-    data['password'] = this.password;
-    data['isAbleTOReceiveOffersAndPromotions'] =
-        this.isAbleTOReceiveOffersAndPromotions;
-    data['isAgreeTermsAndCondition'] = this.isAgreeTermsAndCondition;
-    data['mobileCountryCode'] = this.mobileCountryCode;
-    data['verificationCodeSendAt'] = this.verificationCodeSendAt;
-    data['verificationCode'] = this.verificationCode;
-    data['isContactInformationVerified'] = this.isContactInformationVerified;
-    data['isEmailVerified'] = this.isEmailVerified;
+
     data['status'] = this.status;
     data['isReferred'] = this.isReferred;
     data['type'] = this.type;
-    data['resetPasswordVerificationCode'] = this.resetPasswordVerificationCode;
-    data['resetPasswordVerificationCodeSentAt'] =
-        this.resetPasswordVerificationCodeSentAt;
-    data['isResetPasswordOTPVerified'] = this.isResetPasswordOTPVerified;
-    data['stripeCustomerId'] = this.stripeCustomerId;
-    data['stripeConnectAccount'] = this.stripeConnectAccount;
-    data['isStripeAcoountVerified'] = this.isStripeAcoountVerified;
     data['ssn'] = this.ssn;
     data['signature'] = this.signature;
     data['isOtpValid'] = this.isOtpValid;
     data['wallet'] = this.wallet;
-    data['isResetPinOTPVerified'] = this.isResetPinOTPVerified;
-    data['resetPinVerificationCode'] = this.resetPinVerificationCode;
-    data['resetPinVerificationCodeSentAt'] =
-        this.resetPinVerificationCodeSentAt;
-    data['pin'] = this.pin;
     data['referredByUserId'] = this.referredByUserId;
-    data['doctorTestAndMeasurePreference'] =
-        this.doctorTestAndMeasurePreference;
-    
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
     data['__v'] = this.iV;
-    
+
     return data;
   }
 }
-
-
 
 class PreviousRef {
   String user;
