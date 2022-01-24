@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/apis/api_helper.dart';
+import 'package:hutano/apis/api_manager.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/appointments/model/appointment_detail.dart';
 import 'package:hutano/screens/appointments/widgets/completed_concern_widget.dart';
 import 'package:hutano/screens/appointments/widgets/summary_provider_widget.dart';
 import 'package:hutano/screens/appointments/widgets/vital_complete_widget.dart';
+import 'package:hutano/screens/medical_history/model/res_get_medication_detail.dart';
 import 'package:hutano/text_style.dart';
+import 'package:hutano/utils/preference_key.dart';
+import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/loading_background.dart';
@@ -25,8 +29,8 @@ class CompletedAppointmentSummary extends StatefulWidget {
 
 class _CompletedAppointmentSummaryState
     extends State<CompletedAppointmentSummary> {
-  Future<dynamic> _profileFuture;
-
+  Future<dynamic> appointmentDetailFuture;
+  Future<PatientMedicationResponse> medicationChangesFuture;
   Map profileMap = {};
 
   Map<int, String> followUpType = {
@@ -34,21 +38,27 @@ class _CompletedAppointmentSummaryState
     2: "Telemedicine appointment",
     3: "Onsite Appointment"
   };
+  List<String> medChangeString = ['Added', 'Reviewed', 'Discontinued'];
 
   ApiBaseHelper _api = ApiBaseHelper();
   String token = '';
+  List<Data> appointmentMedication = [];
 
   @override
   void initState() {
     super.initState();
 
-    SharedPref().getToken().then((usertoken) {
-      token = usertoken;
-      setState(() {
-        _profileFuture = _api.getAppointmentDetails(
-            usertoken, widget.appointmentId, LatLng(0.00, 0.00));
-      });
-    });
+    appointmentDetailFuture = _api.getAppointmentDetails(
+        "Bearer ${getString(PreferenceKey.tokens)}",
+        widget.appointmentId,
+        LatLng(0.00, 0.00));
+    getMedicationHistoryApi();
+  }
+
+  getMedicationHistoryApi() {
+    var filterString = '&appointment=${widget.appointmentId}';
+    medicationChangesFuture = ApiManager()
+        .getMedicationDetails(getString(PreferenceKey.id), 1, '', filterString);
   }
 
   @override
@@ -64,7 +74,7 @@ class _CompletedAppointmentSummaryState
           color: Colors.white,
           padding: const EdgeInsets.only(top: 0.0, bottom: 20.0),
           child: FutureBuilder(
-            future: _profileFuture,
+            future: appointmentDetailFuture,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 profileMap = snapshot.data;
@@ -558,10 +568,28 @@ class _CompletedAppointmentSummaryState
                           .exerciseDetails
                           .exercises)
                       : SizedBox(),
-                  // prescriptions.length > 0 ? prescriptionWidget() : SizedBox(),
-                  // preferredPhramacy != null
-                  //     ? preffredPharmacyWidget()
-                  //     : SizedBox(),
+                  prescriptionWidget(),
+                  AppointmentData.fromJson(appointmentData)
+                                  .doctorFeedback[0]
+                                  .prescriptionDetails !=
+                              null &&
+                          AppointmentData.fromJson(appointmentData)
+                                  .doctorFeedback[0]
+                                  .prescriptionDetails
+                                  .preferredPharmacy !=
+                              null &&
+                          AppointmentData.fromJson(appointmentData)
+                                  .doctorFeedback[0]
+                                  .prescriptionDetails
+                                  .preferredPharmacy
+                                  .name !=
+                              null
+                      ? preffredPharmacyWidget(
+                          AppointmentData.fromJson(appointmentData)
+                              .doctorFeedback[0]
+                              .prescriptionDetails
+                              .preferredPharmacy)
+                      : SizedBox(),
                   AppointmentData.fromJson(appointmentData)
                                   .doctorFeedback[0]
                                   .therapeuticIntervention !=
@@ -582,15 +610,13 @@ class _CompletedAppointmentSummaryState
                               .therapeuticIntervention)
                       : SizedBox(),
                   appointmentData['followUpAppointment'].length > 0
-                      ? followUpWidget(
-                          appointmentData['followUpAppointment'][0])
+                      ? followUpWidget(appointmentData['followUpAppointment'])
                       : noFollowUpWidget(),
                   SizedBox(height: 10),
                   Text(
                     'Signature',
                     style: AppTextStyle.semiBoldStyle(fontSize: 16),
                   ),
-
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(16.0)),
@@ -611,6 +637,36 @@ class _CompletedAppointmentSummaryState
         ],
       ),
     ]);
+  }
+
+  Column preffredPharmacyWidget(Pharmacy preferredPhramacy) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 20),
+        Text(
+          'Preffred Pharmacy',
+          style: AppTextStyle.semiBoldStyle(fontSize: 16),
+        ),
+        SizedBox(height: 4),
+        Text(
+          preferredPhramacy.name,
+          style: AppTextStyle.mediumStyle(fontSize: 14),
+        ),
+        Text(
+          preferredPhramacy.address != null
+              ? preferredPhramacy.address.address +
+                  ', ' +
+                  preferredPhramacy.address.city +
+                  ', ' +
+                  preferredPhramacy.address.state +
+                  ', ' +
+                  preferredPhramacy.address.zipCode
+              : '---',
+          style: AppTextStyle.regularStyle(fontSize: 14),
+        )
+      ],
+    );
   }
 
   Column therapyWidget(List<Intervention> intervention,
@@ -952,6 +1008,68 @@ class _CompletedAppointmentSummaryState
     );
   }
 
+  prescriptionWidget() {
+    return FutureBuilder(
+      future: medicationChangesFuture,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          appointmentMedication = snapshot.data.data;
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 20),
+              Text(
+                'Prescription',
+                style: AppTextStyle.semiBoldStyle(fontSize: 16),
+              ),
+              SizedBox(height: 4),
+              Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  border: Border.all(color: Colors.grey[200]),
+                ),
+                child: ListView.separated(
+                  separatorBuilder: (context, index) => SizedBox(height: 2),
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: appointmentMedication.length,
+                  itemBuilder: (context, index) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '\u2022  ${appointmentMedication[index].name} ${medChangeString[appointmentMedication[index].status]}',
+                          style: AppTextStyle.mediumStyle(fontSize: 14),
+                        ),
+                        appointmentMedication[index].status == 2
+                            ? SizedBox()
+                            : Text(
+                                '${appointmentMedication[index].dose} , ${appointmentMedication[index].frequency}',
+                                style: AppTextStyle.regularStyle(fontSize: 14),
+                              ),
+                        Text(
+                          '${appointmentMedication[index].providerReason}',
+                          style: AppTextStyle.regularStyle(fontSize: 14),
+                        )
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+        return Center(
+          child: CustomLoader(),
+        );
+      },
+    );
+  }
+
   Column followUpWidget(dynamic followUp) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -962,9 +1080,22 @@ class _CompletedAppointmentSummaryState
           style: AppTextStyle.semiBoldStyle(fontSize: 16),
         ),
         SizedBox(height: 4),
-        Text(
-          '${followUpType[followUp['type']]} at: ${DateFormat("yyyy-MM-dd, h:mm a").format(DateFormat("yyyy-MM-ddThh:mm:ss.000Z").parse(followUp['date'], true).toLocal())}',
-          style: AppTextStyle.mediumStyle(fontSize: 14),
+        ListView.separated(
+          separatorBuilder: (context, index) => SizedBox(height: 2),
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: followUp.length,
+          itemBuilder: (context, index) {
+            return followUp[index]['isReferred']
+                ? Text(
+                    '\u2022 ${followUpType[followUp[index]['type']]} at: ${DateFormat("yyyy-MM-dd, h:mm a").format(DateFormat("yyyy-MM-ddThh:mm:ss.000Z").parse(followUp[index]['date'], true).toLocal())}',
+                    style: AppTextStyle.mediumStyle(fontSize: 14),
+                  )
+                : Text(
+                    '\u2022 ${followUpType[followUp[index]['type']]} with ${followUp[index]['doctorName']} at: ${DateFormat("yyyy-MM-dd, h:mm a").format(DateFormat("yyyy-MM-ddThh:mm:ss.000Z").parse(followUp[index]['date'], true).toLocal())}',
+                    style: AppTextStyle.mediumStyle(fontSize: 14),
+                  );
+          },
         ),
       ],
     );
