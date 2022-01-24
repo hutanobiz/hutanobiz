@@ -334,8 +334,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                    '${DateFormat("MMM dd,yyyy").format(DateTime.parse(vitals.date))}, ${vitals.time}',
+                Text('${vitals.date}, ${vitals.time}',
                     style: AppTextStyle.semiBoldStyle(fontSize: 14)),
                 Text.rich(
                   TextSpan(

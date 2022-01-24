@@ -94,13 +94,11 @@ class _VitalReviewsState extends State<VitalReviews> {
       String height = widget.args['vitals']['height'] ?? '';
       String time = widget.args['vitals']['time'] ?? '';
       _dateController.text = widget.args['vitals']['date'] != null
-          ? formattedDate(DateTime.parse(widget.args['vitals']['date']),
-              AppConstants.vitalReviewsDateFormat)
+          ? widget.args['vitals']['date']
           : '';
       _selectedDate = widget.args['vitals']['date'] != null
-          ? formattedDate(DateTime.parse(widget.args['vitals']['date']),
-              "yyyy-MM-dd'T'HH:mm:ss.SSS'Z")
-          : formattedDate(DateTime.now(), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z");
+          ? widget.args['vitals']['date']
+          : DateFormat("MMM dd,yyyy").format(DateTime.now());
       _selectedTime = time;
       if (time.contains('PM')) {
         isSwitchSelected = false;
@@ -111,8 +109,7 @@ class _VitalReviewsState extends State<VitalReviews> {
       if (time == '') {
         _dateController.text =
             formattedDate(DateTime.now(), AppConstants.vitalReviewsDateFormat);
-        _selectedDate =
-            formattedDate(DateTime.now(), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z");
+        _selectedDate = DateFormat("MM-dd-yyyy").format(DateTime.now());
         _selectedTime = DateFormat("hh:mm a").format(DateTime.now());
         _timeController.text = DateFormat("h:mm a")
             .format(DateTime.now())
@@ -138,10 +135,8 @@ class _VitalReviewsState extends State<VitalReviews> {
       _glucoseController.text = widget.args['vitals']['bloodGlucose'] ?? '';
       _bmiController.text = widget.args['vitals']['bmi'] ?? '';
     } else {
-      _dateController.text =
-          formattedDate(DateTime.now(), AppConstants.vitalReviewsDateFormat);
-      _selectedDate =
-          formattedDate(DateTime.now(), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z");
+      _dateController.text = DateFormat("MM-dd-yyyy").format(DateTime.now());
+      _selectedDate = DateFormat("MM-dd-yyyy").format(DateTime.now());
       _selectedTime = DateFormat("hh:mm a").format(DateTime.now());
       _timeController.text = DateFormat("h:mm a")
           .format(DateTime.now())
@@ -453,12 +448,12 @@ class _VitalReviewsState extends State<VitalReviews> {
                               initialDate: DateTime.now(),
                               lastDate: DateTime.now(), onDateChanged: (value) {
                             if (value != null) {
-                              var date = formattedDate(
-                                  value, AppConstants.vitalReviewsDateFormat);
-                              _dateController.text = date.toString();
+                              var date = DateFormat("MM-dd-yyyy")
+                                  .format(DateTime.parse(value));
+                              _dateController.text = date;
                               setState(() {
-                                _selectedDate = formattedDate(
-                                    value, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z");
+                                _selectedDate = DateFormat("MM-dd-yyyy")
+                                    .format(DateTime.parse(value));
                               });
                             }
                           });
@@ -469,12 +464,12 @@ class _VitalReviewsState extends State<VitalReviews> {
                               initialDate: DateTime.now(),
                               onDateChanged: (value) {
                             if (value != null) {
-                              var date = formattedDate(
-                                  value, AppConstants.vitalReviewsDateFormat);
-                              _dateController.text = date.toString();
+                              var date = DateFormat("MM-dd-yyyy")
+                                  .format(DateTime.parse(value));
+                              _dateController.text = date;
                               setState(() {
-                                _selectedDate = formattedDate(
-                                    value, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z");
+                                _selectedDate = DateFormat("MM-dd-yyyy")
+                                    .format(DateTime.parse(value));
                               });
                             }
                           });

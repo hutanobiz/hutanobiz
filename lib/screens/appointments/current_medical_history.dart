@@ -507,9 +507,7 @@ Widget vitalWidget(BuildContext context, Map<String, dynamic> vitals) {
           Text(
             vitals['date'] == null || vitals['date'] == ''
                 ? '---'
-                : DateFormat("MMM dd, yyyy")
-                    .format(DateTime.parse(vitals['date']).toLocal())
-                    .toString(),
+                : vitals['date'],
             style: AppTextStyle.mediumStyle(fontSize: 15),
           ),
           SizedBox(
