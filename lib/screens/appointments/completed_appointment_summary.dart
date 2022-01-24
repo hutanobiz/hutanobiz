@@ -697,6 +697,22 @@ class _CompletedAppointmentSummaryState
                 children: [
                   Text(
                     '\u2022 ${intervention[index].name}',
+                    style: AppTextStyle.semiBoldStyle(fontSize: 14),
+                  ),
+                  Text(
+                    'Reason: ${intervention[index].reason}',
+                    style: AppTextStyle.mediumStyle(fontSize: 14),
+                  ),
+                  Text(
+                    'Time: ${intervention[index].time}',
+                    style: AppTextStyle.mediumStyle(fontSize: 14),
+                  ),
+                  Text(
+                    'Patient response: ${intervention[index].patientResponse}',
+                    style: AppTextStyle.mediumStyle(fontSize: 14),
+                  ),
+                  Text(
+                    'Body Part: ${intervention[index].bodyPart}',
                     style: AppTextStyle.mediumStyle(fontSize: 14),
                   ),
                 ],
@@ -742,9 +758,46 @@ class _CompletedAppointmentSummaryState
             physics: NeverScrollableScrollPhysics(),
             itemCount: educationCategories.length,
             itemBuilder: (context, index) {
-              return Text(
-                '\u2022 ${educationCategories[index].name}',
-                style: AppTextStyle.mediumStyle(fontSize: 14),
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${educationCategories[index].category}, ${educationCategories[index].name}',
+                    style: AppTextStyle.semiBoldStyle(fontSize: 14),
+                  ),
+                  RichText(
+                      text: TextSpan(
+                          style: TextStyle(
+                            fontSize: 13.0,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          children: <TextSpan>[
+                        TextSpan(
+                          text: 'Reference: ',
+                          style: AppTextStyle.semiBoldStyle(fontSize: 14),
+                        ),
+                        TextSpan(
+                            text: educationCategories[index].reference,
+                            style: AppTextStyle.mediumStyle(fontSize: 13)),
+                      ])),
+                  RichText(
+                      text: TextSpan(
+                          style: TextStyle(
+                            fontSize: 13.0,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          children: <TextSpan>[
+                        TextSpan(
+                          text: 'Comments: ',
+                          style: AppTextStyle.semiBoldStyle(fontSize: 14),
+                        ),
+                        TextSpan(
+                            text: educationCategories[index].comments,
+                            style: AppTextStyle.mediumStyle(fontSize: 13)),
+                      ])),
+                ],
               );
             },
           ),
@@ -913,7 +966,7 @@ class _CompletedAppointmentSummaryState
                 children: [
                   Text(
                     '\u2022 ${exercise[index].name}',
-                    style: AppTextStyle.mediumStyle(fontSize: 14),
+                    style: AppTextStyle.semiBoldStyle(fontSize: 14),
                   ),
                   Row(
                     children: [
@@ -999,6 +1052,7 @@ class _CompletedAppointmentSummaryState
                       )
                     ],
                   ),
+                  Text('Instruction: ${exercise[index].instructions}')
                 ],
               );
             },

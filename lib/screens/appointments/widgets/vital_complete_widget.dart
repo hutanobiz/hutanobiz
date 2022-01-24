@@ -452,7 +452,7 @@ class HeartLungsCompleteWidget extends StatelessWidget {
 }
 
 class LungsCompleteWidget extends StatelessWidget {
-  const LungsCompleteWidget({
+  LungsCompleteWidget({
     Key key,
     @required this.lungSounds,
     @required this.heartLungConcernList,
@@ -466,6 +466,7 @@ class LungsCompleteWidget extends StatelessWidget {
   final List heartLungTreatmentlist;
   final List heartLungDiagnosisList;
   final String title;
+  List<String> radioValues = ['', "Bilateral", "Left", "Right"];
 
   @override
   Widget build(BuildContext context) {
@@ -500,7 +501,7 @@ class LungsCompleteWidget extends StatelessWidget {
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 5),
                   child: Text(
-                    "\u2022 " + lungSounds[index].sound,
+                    "\u2022 ${radioValues[int.parse(lungSounds[index].type)]} ${lungSounds[index].sound}",
                     style: AppTextStyle.mediumStyle(fontSize: 14),
                   ),
                 );
@@ -623,6 +624,7 @@ class NeurologicalCompleteListWidget extends StatelessWidget {
       : super(key: key);
   String title;
   List<SensoryDeficits> list;
+  List<String> radioValues = ['', "Bilateral", "Left", "Right"];
 
   @override
   Widget build(BuildContext context) {
@@ -643,7 +645,7 @@ class NeurologicalCompleteListWidget extends StatelessWidget {
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 5),
                 child: Text(
-                  "\u2022 " + list[index].deficits,
+                  "\u2022 ${radioValues[int.parse(list[index].type)]} ${list[index].deficits}",
                   style: AppTextStyle.mediumStyle(fontSize: 14),
                 ),
               );
@@ -654,7 +656,7 @@ class NeurologicalCompleteListWidget extends StatelessWidget {
 }
 
 class SpecialTestCompleteWidget extends StatelessWidget {
-  const SpecialTestCompleteWidget({
+  SpecialTestCompleteWidget({
     Key key,
     @required this.specialTests,
     @required this.specialTestsConcernList,
@@ -730,7 +732,7 @@ class SpecialTestCompleteListWidget extends StatelessWidget {
       : super(key: key);
   String title;
   List<TestsCompleted> list;
-
+  List<String> radioValues = ['', "Bilateral", "Left", "Right"];
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -750,7 +752,7 @@ class SpecialTestCompleteListWidget extends StatelessWidget {
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 5),
                 child: Text(
-                  "\u2022 " + list[index].name,
+                  "\u2022 ${radioValues[int.parse(list[index].type)]} ${list[index].name}",
                   style: AppTextStyle.mediumStyle(fontSize: 14),
                 ),
               );
@@ -840,7 +842,7 @@ class MuscleCompleteListWidget extends StatelessWidget {
   MuscleCompleteListWidget({Key key, this.title, this.list}) : super(key: key);
   String title;
   List<Muscle> list;
-
+  List<String> radioValues = ['', "Bilateral", "Left", "Right"];
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -859,9 +861,16 @@ class MuscleCompleteListWidget extends StatelessWidget {
           itemBuilder: (BuildContext context, int index) {
             return Padding(
               padding: EdgeInsets.symmetric(vertical: 5),
-              child: Text(
-                "\u2022 " + list[index].name,
-                style: AppTextStyle.mediumStyle(fontSize: 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "\u2022 ${radioValues[int.parse(list[index].type)]} ${list[index].name}",
+                    style: AppTextStyle.mediumStyle(fontSize: 14),
+                  ),
+                  Text(
+                      "Strength: ${list[index].strength}, Functional Strenght: ${list[index].functionalStrength}")
+                ],
               ),
             );
           },
@@ -875,6 +884,7 @@ class JointCompleteListWidget extends StatelessWidget {
   JointCompleteListWidget({Key key, this.title, this.list}) : super(key: key);
   String title;
   List<Joint> list;
+  List<String> radioValues = ['', "Bilateral", "Left", "Right"];
 
   @override
   Widget build(BuildContext context) {
@@ -894,9 +904,18 @@ class JointCompleteListWidget extends StatelessWidget {
           itemBuilder: (BuildContext context, int index) {
             return Padding(
               padding: EdgeInsets.symmetric(vertical: 5),
-              child: Text(
-                "\u2022 " + list[index].name,
-                style: AppTextStyle.mediumStyle(fontSize: 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "\u2022 ${radioValues[int.parse(list[index].type)]} ${list[index].name}",
+                    style: AppTextStyle.mediumStyle(fontSize: 14),
+                  ),
+                  Text(
+                    "Range of Motion: ${list[index].rangeOfMotion}, Functional Range of Motion: ${list[index].functionalRangeOfMotion}",
+                    style: AppTextStyle.mediumStyle(fontSize: 14),
+                  ),
+                ],
               ),
             );
           },
