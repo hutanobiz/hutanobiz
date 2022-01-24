@@ -462,6 +462,12 @@ class _CompletedAppointmentSummaryState
                                   .doctorFeedback[0]
                                   .labDetails
                                   .preferredLabs !=
+                              null &&
+                          AppointmentData.fromJson(appointmentData)
+                                  .doctorFeedback[0]
+                                  .labDetails
+                                  .preferredLabs
+                                  .name !=
                               null
                       ? prefferedLabWidget(
                           AppointmentData.fromJson(appointmentData)
@@ -508,6 +514,12 @@ class _CompletedAppointmentSummaryState
                                   .doctorFeedback[0]
                                   .imagingDetails
                                   .preferredImagingCenters !=
+                              null &&
+                          AppointmentData.fromJson(appointmentData)
+                                  .doctorFeedback[0]
+                                  .imagingDetails
+                                  .preferredImagingCenters
+                                  .name !=
                               null
                       ? preferredImagingWidget(
                           AppointmentData.fromJson(appointmentData)
