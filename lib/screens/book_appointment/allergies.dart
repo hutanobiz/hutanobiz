@@ -378,7 +378,9 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
       var _item = profileAllergiesList
           .firstWhere((element) => element.name == allergy.name);
       if (_item != null) {
-        myAllergiesList.add(_item);
+        setState(() {
+          myAllergiesList.add(_item);
+        });
       }
     } else {
       allergy.allergyId = allergy.sId;

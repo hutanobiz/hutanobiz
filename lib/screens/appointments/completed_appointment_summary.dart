@@ -5,7 +5,10 @@ import 'package:hutano/apis/api_manager.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/appointments/model/appointment_detail.dart';
+import 'package:hutano/screens/appointments/widgets/anthropometric_completed_summary_widget.dart';
 import 'package:hutano/screens/appointments/widgets/completed_concern_widget.dart';
+import 'package:hutano/screens/appointments/widgets/gait_completed_widget.dart';
+import 'package:hutano/screens/appointments/widgets/integumentry_completed_widget.dart';
 import 'package:hutano/screens/appointments/widgets/summary_provider_widget.dart';
 import 'package:hutano/screens/appointments/widgets/vital_complete_widget.dart';
 import 'package:hutano/screens/medical_history/model/res_get_medication_detail.dart';
@@ -394,6 +397,56 @@ class _CompletedAppointmentSummaryState
                           .doctorFeedback[0]
                           .musculoskeletal
                           .icd)
+              : SizedBox(),
+          AppointmentData.fromJson(appointmentData)
+                          .doctorFeedback[0]
+                          .anthropometricMeasurements !=
+                      null &&
+                  AppointmentData.fromJson(appointmentData)
+                          .doctorFeedback[0]
+                          .anthropometricMeasurements
+                          .weight !=
+                      null &&
+                  AppointmentData.fromJson(appointmentData)
+                          .doctorFeedback[0]
+                          .anthropometricMeasurements
+                          .weight
+                          .current !=
+                      null
+              ? AnthopometricCompletedSummaryWidget(
+                  anthropometricMeasurements:
+                      AppointmentData.fromJson(appointmentData)
+                          .doctorFeedback[0]
+                          .anthropometricMeasurements)
+              : SizedBox(),
+          AppointmentData.fromJson(appointmentData)
+                          .doctorFeedback[0]
+                          .integumentary !=
+                      null &&
+                  AppointmentData.fromJson(appointmentData)
+                          .doctorFeedback[0]
+                          .integumentary
+                          .summary
+                          .length >
+                      0
+              ? IntegumentryCompletedWidget(
+                  integumentry: AppointmentData.fromJson(appointmentData)
+                      .doctorFeedback[0]
+                      .integumentary,
+                )
+              : SizedBox(),
+          AppointmentData.fromJson(appointmentData).doctorFeedback[0].gait !=
+                      null &&
+                  AppointmentData.fromJson(appointmentData)
+                          .doctorFeedback[0]
+                          .gait
+                          .summary
+                          .length >
+                      0
+              ? GaitCompletedWidget(
+                  gait: AppointmentData.fromJson(appointmentData)
+                      .doctorFeedback[0]
+                      .gait)
               : SizedBox(),
         ],
       ),
@@ -1069,51 +1122,55 @@ class _CompletedAppointmentSummaryState
         if (snapshot.hasData) {
           appointmentMedication = snapshot.data.data;
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 20),
-              Text(
-                'Prescription',
-                style: AppTextStyle.semiBoldStyle(fontSize: 16),
-              ),
-              SizedBox(height: 4),
-              Container(
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  border: Border.all(color: Colors.grey[200]),
-                ),
-                child: ListView.separated(
-                  separatorBuilder: (context, index) => SizedBox(height: 2),
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: appointmentMedication.length,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '\u2022  ${appointmentMedication[index].name} ${medChangeString[appointmentMedication[index].status]}',
-                          style: AppTextStyle.mediumStyle(fontSize: 14),
-                        ),
-                        appointmentMedication[index].status == 2
-                            ? SizedBox()
-                            : Text(
-                                '${appointmentMedication[index].dose} , ${appointmentMedication[index].frequency}',
-                                style: AppTextStyle.regularStyle(fontSize: 14),
+          return appointmentMedication.length > 0
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 20),
+                    Text(
+                      'Prescription',
+                      style: AppTextStyle.semiBoldStyle(fontSize: 16),
+                    ),
+                    SizedBox(height: 4),
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        border: Border.all(color: Colors.grey[200]),
+                      ),
+                      child: ListView.separated(
+                        separatorBuilder: (context, index) =>
+                            SizedBox(height: 2),
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: appointmentMedication.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '\u2022  ${appointmentMedication[index].name} ${medChangeString[appointmentMedication[index].status]}',
+                                style: AppTextStyle.mediumStyle(fontSize: 14),
                               ),
-                        Text(
-                          '${appointmentMedication[index].providerReason}',
-                          style: AppTextStyle.regularStyle(fontSize: 14),
-                        )
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ],
-          );
+                              appointmentMedication[index].status == 2
+                                  ? SizedBox()
+                                  : Text(
+                                      '${appointmentMedication[index].dose} , ${appointmentMedication[index].frequency}',
+                                      style: AppTextStyle.regularStyle(
+                                          fontSize: 14),
+                                    ),
+                              Text(
+                                '${appointmentMedication[index].providerReason}',
+                                style: AppTextStyle.regularStyle(fontSize: 14),
+                              )
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                )
+              : SizedBox();
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }
@@ -1142,11 +1199,11 @@ class _CompletedAppointmentSummaryState
           itemBuilder: (context, index) {
             return followUp[index]['isReferred']
                 ? Text(
-                    '\u2022 ${followUpType[followUp[index]['type']]} at: ${DateFormat("yyyy-MM-dd, h:mm a").format(DateFormat("yyyy-MM-ddThh:mm:ss.000Z").parse(followUp[index]['date'], true).toLocal())}',
+                    '\u2022 ${followUpType[followUp[index]['type']]} with ${followUp[index]['doctorName']} at: ${DateFormat("yyyy-MM-dd, h:mm a").format(DateFormat("yyyy-MM-ddThh:mm:ss.000Z").parse(followUp[index]['date'], true).toLocal())}',
                     style: AppTextStyle.mediumStyle(fontSize: 14),
                   )
                 : Text(
-                    '\u2022 ${followUpType[followUp[index]['type']]} with ${followUp[index]['doctorName']} at: ${DateFormat("yyyy-MM-dd, h:mm a").format(DateFormat("yyyy-MM-ddThh:mm:ss.000Z").parse(followUp[index]['date'], true).toLocal())}',
+                    '\u2022 ${followUpType[followUp[index]['type']]} at: ${DateFormat("yyyy-MM-dd, h:mm a").format(DateFormat("yyyy-MM-ddThh:mm:ss.000Z").parse(followUp[index]['date'], true).toLocal())}',
                     style: AppTextStyle.mediumStyle(fontSize: 14),
                   );
           },

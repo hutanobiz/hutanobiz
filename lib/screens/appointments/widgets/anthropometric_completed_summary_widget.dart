@@ -1,0 +1,325 @@
+import 'package:flutter/material.dart';
+import 'package:hutano/colors.dart';
+import 'package:hutano/screens/appointments/model/appointment_detail.dart';
+
+import 'package:hutano/text_style.dart';
+
+class AnthopometricCompletedSummaryWidget extends StatelessWidget {
+  AnthopometricCompletedSummaryWidget({
+    Key key,
+    @required this.anthropometricMeasurements,
+  }) : super(key: key);
+
+  final AnthropometricMeasurements anthropometricMeasurements;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Row(
+            children: [
+              Image.asset(
+                "images/anthro.png",
+                height: 36,
+                width: 36,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text("Anthropometric Measurements",
+                  style: AppTextStyle.boldStyle(fontSize: 18)),
+            ],
+          ),
+        ),
+        Column(children: [
+          Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              margin: EdgeInsets.only(bottom: 10),
+              decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                        color: AppColors.borderGreyShadow,
+                        offset: Offset(0, 2),
+                        spreadRadius: 2,
+                        blurRadius: 30),
+                  ],
+                  border: Border.all(color: Colors.grey.shade100),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12)),
+              child: ListView(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                children: [
+                  anthropometricMeasurements.height != null &&
+                          anthropometricMeasurements.height.feet != null &&
+                          anthropometricMeasurements.height.inches != null
+                      ? RichText(
+                          text: TextSpan(
+                              style: TextStyle(
+                                fontSize: 13.0,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              children: <TextSpan>[
+                              TextSpan(
+                                text: 'Height: ',
+                                style: AppTextStyle.semiBoldStyle(fontSize: 14),
+                              ),
+                              TextSpan(
+                                text:
+                                    '${anthropometricMeasurements.height.feet}.${anthropometricMeasurements.height.inches} feet',
+                                style: AppTextStyle.mediumStyle(fontSize: 13),
+                              ),
+                            ]))
+                      : SizedBox(),
+                  anthropometricMeasurements.weight != null &&
+                          anthropometricMeasurements.weight.current != null
+                      ? Padding(
+                          padding: EdgeInsets.only(top: 16.0),
+                          child: RichText(
+                              text: TextSpan(
+                                  style: TextStyle(
+                                    fontSize: 13.0,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  children: <TextSpan>[
+                                TextSpan(
+                                  text: 'Weight: ',
+                                  style:
+                                      AppTextStyle.semiBoldStyle(fontSize: 14),
+                                ),
+                                TextSpan(
+                                  text: anthropometricMeasurements
+                                          .weight.current +
+                                      ' lbs',
+                                  style: AppTextStyle.mediumStyle(fontSize: 13),
+                                ),
+                              ])),
+                        )
+                      : SizedBox(),
+                  anthropometricMeasurements.weight.goal != null
+                      ? GoalWidget(goal: anthropometricMeasurements.weight.goal)
+                      : SizedBox(),
+                  anthropometricMeasurements.bmi != null
+                      ? Padding(
+                          padding: EdgeInsets.only(top: 16.0),
+                          child: RichText(
+                              text: TextSpan(
+                                  style: TextStyle(
+                                    fontSize: 13.0,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  children: <TextSpan>[
+                                TextSpan(
+                                  text: 'Bmi: ',
+                                  style:
+                                      AppTextStyle.semiBoldStyle(fontSize: 14),
+                                ),
+                                TextSpan(
+                                  text: anthropometricMeasurements.bmi,
+                                  style: AppTextStyle.mediumStyle(fontSize: 13),
+                                ),
+                              ])),
+                        )
+                      : SizedBox(),
+                  anthropometricMeasurements.hip != null &&
+                          anthropometricMeasurements.hip.current != null
+                      ? Padding(
+                          padding: EdgeInsets.only(top: 16.0),
+                          child: RichText(
+                              text: TextSpan(
+                                  style: TextStyle(
+                                    fontSize: 13.0,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  children: <TextSpan>[
+                                TextSpan(
+                                  text: 'Hip Circumference: ',
+                                  style:
+                                      AppTextStyle.semiBoldStyle(fontSize: 14),
+                                ),
+                                TextSpan(
+                                  text: anthropometricMeasurements.hip.current +
+                                      ' inches',
+                                  style: AppTextStyle.mediumStyle(fontSize: 13),
+                                ),
+                              ])),
+                        )
+                      : SizedBox(),
+                  anthropometricMeasurements.hip.goal != null
+                      ? GoalWidget(goal: anthropometricMeasurements.hip.goal)
+                      : SizedBox(),
+                  anthropometricMeasurements.waist != null &&
+                          anthropometricMeasurements.waist.current != null
+                      ? Padding(
+                          padding: EdgeInsets.only(top: 16.0),
+                          child: RichText(
+                              text: TextSpan(
+                                  style: TextStyle(
+                                    fontSize: 13.0,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  children: <TextSpan>[
+                                TextSpan(
+                                  text: 'Waist Cicumference: ',
+                                  style:
+                                      AppTextStyle.semiBoldStyle(fontSize: 14),
+                                ),
+                                TextSpan(
+                                  text:
+                                      anthropometricMeasurements.waist.current +
+                                          ' inches',
+                                  style: AppTextStyle.mediumStyle(fontSize: 13),
+                                ),
+                              ])),
+                        )
+                      : SizedBox(),
+                  anthropometricMeasurements.waist.goal != null
+                      ? GoalWidget(goal: anthropometricMeasurements.waist.goal)
+                      : SizedBox(),
+                  anthropometricMeasurements.calf != null &&
+                          anthropometricMeasurements.calf.current != null
+                      ? Padding(
+                          padding: EdgeInsets.only(top: 16.0),
+                          child: RichText(
+                              text: TextSpan(
+                                  style: TextStyle(
+                                    fontSize: 13.0,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  children: <TextSpan>[
+                                TextSpan(
+                                  text: 'Calf Cicumference: ',
+                                  style:
+                                      AppTextStyle.semiBoldStyle(fontSize: 14),
+                                ),
+                                TextSpan(
+                                  text:
+                                      anthropometricMeasurements.calf.current +
+                                          ' inches',
+                                  style: AppTextStyle.mediumStyle(fontSize: 13),
+                                ),
+                              ])),
+                        )
+                      : SizedBox(),
+                  anthropometricMeasurements.calf.goal != null
+                      ? GoalWidget(goal: anthropometricMeasurements.calf.goal)
+                      : SizedBox(),
+                  anthropometricMeasurements.arm != null &&
+                          anthropometricMeasurements.arm.current != null
+                      ? Padding(
+                          padding: EdgeInsets.only(top: 16.0),
+                          child: RichText(
+                              text: TextSpan(
+                                  style: TextStyle(
+                                    fontSize: 13.0,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  children: <TextSpan>[
+                                TextSpan(
+                                  text: 'Arm Cicumference: ',
+                                  style:
+                                      AppTextStyle.semiBoldStyle(fontSize: 14),
+                                ),
+                                TextSpan(
+                                  text: anthropometricMeasurements.arm.current +
+                                      ' inches',
+                                  style: AppTextStyle.mediumStyle(fontSize: 13),
+                                ),
+                              ])),
+                        )
+                      : SizedBox(),
+                  anthropometricMeasurements.arm.goal != null
+                      ? GoalWidget(goal: anthropometricMeasurements.arm.goal)
+                      : SizedBox(),
+                ],
+              )),
+        ]),
+      ],
+    );
+  }
+}
+
+class GoalWidget extends StatelessWidget {
+  GoalWidget({
+    Key key,
+    @required this.goal,
+  }) : super(key: key);
+
+  final Goal goal;
+  Map<String, String> timeSpanConfig = {
+    "1": "Hours",
+    "2": "Days",
+    "3": "Weeks",
+    "4": "Months",
+    "5": "Years"
+  };
+  @override
+  Widget build(BuildContext context) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      goal.achieve != null
+          ? RichText(
+              text: TextSpan(
+                  style: TextStyle(
+                    fontSize: 13.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  children: <TextSpan>[
+                  TextSpan(
+                    text: 'Goal: ',
+                    style: AppTextStyle.semiBoldStyle(fontSize: 14),
+                  ),
+                  TextSpan(
+                      text: goal.achieve + ' ' + goal.unit,
+                      style: AppTextStyle.mediumStyle(fontSize: 13)),
+                ]))
+          : SizedBox(),
+      goal.timeFrame != null
+          ? RichText(
+              text: TextSpan(
+                  style: TextStyle(
+                    fontSize: 13.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  children: <TextSpan>[
+                  TextSpan(
+                    text: 'Timeframe: ',
+                    style: AppTextStyle.semiBoldStyle(fontSize: 14),
+                  ),
+                  TextSpan(
+                      text:
+                          '${goal.timeFrame} ${timeSpanConfig[goal.timeUnit]}',
+                      style: AppTextStyle.mediumStyle(fontSize: 13)),
+                ]))
+          : SizedBox(),
+      goal.improvements != null && goal.improvements.length > 0
+          ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(
+                'Functional Improvement: ',
+                style: AppTextStyle.semiBoldStyle(fontSize: 14),
+              ),
+              ListView.builder(
+                  shrinkWrap: true,
+                  physics: ClampingScrollPhysics(),
+                  itemCount: goal.improvements.length,
+                  itemBuilder: (context, index) {
+                    return Text(
+                      goal.improvements[index],
+                      style: AppTextStyle.mediumStyle(fontSize: 13),
+                    );
+                  })
+            ])
+          : SizedBox(),
+    ]);
+  }
+}

@@ -317,6 +317,8 @@ class DoctorFeedback {
   String doctorId;
   ExerciseDetails exerciseDetails;
   List<Education> education;
+  Integumentary integumentary;
+  Gait gait;
   String createdAt;
   String updatedAt;
   int iV;
@@ -338,6 +340,8 @@ class DoctorFeedback {
       this.doctorId,
       this.exerciseDetails,
       this.education,
+       this.integumentary,
+      this.gait,
       this.createdAt,
       this.updatedAt,
       this.iV});
@@ -387,6 +391,11 @@ class DoctorFeedback {
         education.add(new Education.fromJson(v));
       });
     }
+     integumentary = json['integumentary'] != null
+        ? new Integumentary.fromJson(json['integumentary'])
+        : null;
+    gait = json['gait'] != null ? new Gait.fromJson(json['gait']) : null;
+
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     iV = json['__v'];
@@ -435,6 +444,12 @@ class DoctorFeedback {
 
     if (this.education != null) {
       data['education'] = this.education.map((v) => v.toJson()).toList();
+    }
+    if (this.integumentary != null) {
+      data['integumentary'] = this.integumentary.toJson();
+    }
+    if (this.gait != null) {
+      data['gait'] = this.gait.toJson();
     }
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
@@ -823,9 +838,21 @@ class BloodPressureSummaryCompleted {
       {this.clinicalConcern, this.treatment, this.icd});
 
   BloodPressureSummaryCompleted.fromJson(Map<String, dynamic> json) {
-    clinicalConcern = json['clinicalConcern'].cast<String>();
-    treatment = json['treatment'].cast<String>();
-    icd = json['icd'].cast<String>();
+    if (json['clinicalConcern'] != null) {
+      clinicalConcern = json['clinicalConcern'].cast<String>();
+    } else {
+      clinicalConcern = [];
+    }
+    if (json['treatment'] != null) {
+      treatment = json['treatment'].cast<String>();
+    } else {
+      treatment = [];
+    }
+    if (json['icd'] != null) {
+      icd = json['icd'].cast<String>();
+    } else {
+      icd = [];
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -876,9 +903,21 @@ class Heart {
   Heart.fromJson(Map<String, dynamic> json) {
     sound = json['sound'].cast<String>();
     type = json['type'];
-    clinicalConcern = json['clinicalConcern'].cast<String>();
-    treatment = json['treatment'].cast<String>();
-    icd = json['icd'].cast<String>();
+    if (json['clinicalConcern'] != null) {
+      clinicalConcern = json['clinicalConcern'].cast<String>();
+    } else {
+      clinicalConcern = [];
+    }
+    if (json['treatment'] != null) {
+      treatment = json['treatment'].cast<String>();
+    } else {
+      treatment = [];
+    }
+    if (json['icd'] != null) {
+      icd = json['icd'].cast<String>();
+    } else {
+      icd = [];
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -901,9 +940,21 @@ class Lung {
   Lung({this.clinicalConcern, this.treatment, this.icd, this.summary});
 
   Lung.fromJson(Map<String, dynamic> json) {
-    clinicalConcern = json['clinicalConcern'].cast<String>();
-    treatment = json['treatment'].cast<String>();
-    icd = json['icd'].cast<String>();
+    if (json['clinicalConcern'] != null) {
+      clinicalConcern = json['clinicalConcern'].cast<String>();
+    } else {
+      clinicalConcern = [];
+    }
+    if (json['treatment'] != null) {
+      treatment = json['treatment'].cast<String>();
+    } else {
+      treatment = [];
+    }
+    if (json['icd'] != null) {
+      icd = json['icd'].cast<String>();
+    } else {
+      icd = [];
+    }
     if (json['summary'] != null) {
       summary = new List<Summary>();
       json['summary'].forEach((v) {
@@ -967,9 +1018,21 @@ class Neurological {
       this.positiveTests});
 
   Neurological.fromJson(Map<String, dynamic> json) {
-    clinicalConcern = json['clinicalConcern'].cast<String>();
-    treatment = json['treatment'].cast<String>();
-    icd = json['icd'].cast<String>();
+    if (json['clinicalConcern'] != null) {
+      clinicalConcern = json['clinicalConcern'].cast<String>();
+    } else {
+      clinicalConcern = [];
+    }
+    if (json['treatment'] != null) {
+      treatment = json['treatment'].cast<String>();
+    } else {
+      treatment = [];
+    }
+    if (json['icd'] != null) {
+      icd = json['icd'].cast<String>();
+    } else {
+      icd = [];
+    }
     if (json['sensoryDeficits'] != null) {
       sensoryDeficits = new List<SensoryDeficits>();
       json['sensoryDeficits'].forEach((v) {
@@ -1066,9 +1129,21 @@ class Musculoskeletal {
       this.joint});
 
   Musculoskeletal.fromJson(Map<String, dynamic> json) {
-    clinicalConcern = json['clinicalConcern'].cast<String>();
-    treatment = json['treatment'].cast<String>();
-    icd = json['icd'].cast<String>();
+    if (json['clinicalConcern'] != null) {
+      clinicalConcern = json['clinicalConcern'].cast<String>();
+    } else {
+      clinicalConcern = [];
+    }
+    if (json['treatment'] != null) {
+      treatment = json['treatment'].cast<String>();
+    } else {
+      treatment = [];
+    }
+    if (json['icd'] != null) {
+      icd = json['icd'].cast<String>();
+    } else {
+      icd = [];
+    }
     if (json['muscle'] != null) {
       muscle = new List<Muscle>();
       json['muscle'].forEach((v) {
@@ -1169,9 +1244,21 @@ class SpecialTests {
   SpecialTests({this.clinicalConcern, this.treatment, this.icd, this.tests});
 
   SpecialTests.fromJson(Map<String, dynamic> json) {
-    clinicalConcern = json['clinicalConcern'].cast<String>();
-    treatment = json['treatment'].cast<String>();
-    icd = json['icd'].cast<String>();
+    if (json['clinicalConcern'] != null) {
+      clinicalConcern = json['clinicalConcern'].cast<String>();
+    } else {
+      clinicalConcern = [];
+    }
+    if (json['treatment'] != null) {
+      treatment = json['treatment'].cast<String>();
+    } else {
+      treatment = [];
+    }
+    if (json['icd'] != null) {
+      icd = json['icd'].cast<String>();
+    } else {
+      icd = [];
+    }
     if (json['tests'] != null) {
       tests = new List<TestsCompleted>();
       json['tests'].forEach((v) {
@@ -1352,9 +1439,21 @@ class TherapeuticIntervention {
       {this.clinicalConcern, this.treatment, this.icd, this.intervention});
 
   TherapeuticIntervention.fromJson(Map<String, dynamic> json) {
-    clinicalConcern = json['clinicalConcern'].cast<String>();
-    treatment = json['treatment'].cast<String>();
-    icd = json['icd'].cast<String>();
+    if (json['clinicalConcern'] != null) {
+      clinicalConcern = json['clinicalConcern'].cast<String>();
+    } else {
+      clinicalConcern = [];
+    }
+    if (json['treatment'] != null) {
+      treatment = json['treatment'].cast<String>();
+    } else {
+      treatment = [];
+    }
+    if (json['icd'] != null) {
+      icd = json['icd'].cast<String>();
+    } else {
+      icd = [];
+    }
     if (json['intervention'] != null) {
       intervention = new List<Intervention>();
       json['intervention'].forEach((v) {
@@ -1614,6 +1713,277 @@ class PhaAddress {
     data['_id'] = this.sId;
     data['pharmacyId'] = this.pharmacyId;
     data['name'] = this.name;
+    return data;
+  }
+}
+
+class Integumentary {
+  WoundCareSummary woundCareSummary;
+  PainSummary painSummary;
+  List<IntegumentarySummary> summary;
+
+  Integumentary({this.woundCareSummary, this.painSummary, this.summary});
+
+  Integumentary.fromJson(Map<String, dynamic> json) {
+    woundCareSummary = json['woundCareSummary'] != null
+        ? new WoundCareSummary.fromJson(json['woundCareSummary'])
+        : null;
+    painSummary = json['painSummary'] != null
+        ? new PainSummary.fromJson(json['painSummary'])
+        : null;
+    if (json['summary'] != null) {
+      summary = <IntegumentarySummary>[];
+      json['summary'].forEach((v) {
+        summary.add(new IntegumentarySummary.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.woundCareSummary != null) {
+      data['woundCareSummary'] = this.woundCareSummary.toJson();
+    }
+    if (this.painSummary != null) {
+      data['painSummary'] = this.painSummary.toJson();
+    }
+    if (this.summary != null) {
+      data['summary'] = this.summary.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class WoundCareSummary {
+  List<String> clinicalConcern;
+  List<String> treatment;
+  List<String> icd;
+
+  WoundCareSummary({this.clinicalConcern, this.treatment, this.icd});
+
+  WoundCareSummary.fromJson(Map<String, dynamic> json) {
+    clinicalConcern = json['clinicalConcern'].cast<String>();
+    treatment = json['treatment'].cast<String>();
+    icd = json['icd'].cast<String>();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['clinicalConcern'] = this.clinicalConcern;
+    data['treatment'] = this.treatment;
+    data['icd'] = this.icd;
+    return data;
+  }
+}
+
+class PainSummary {
+  List<String> clinicalConcern;
+  List<String> treatment;
+  List<String> icd;
+
+  PainSummary({this.clinicalConcern, this.treatment, this.icd});
+
+  PainSummary.fromJson(Map<String, dynamic> json) {
+    clinicalConcern = json['clinicalConcern'].cast<String>();
+    treatment = json['treatment'].cast<String>();
+    icd = json['icd'].cast<String>();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['clinicalConcern'] = this.clinicalConcern;
+    data['treatment'] = this.treatment;
+    data['icd'] = this.icd;
+    return data;
+  }
+}
+
+class IntegumentarySummary {
+  String location;
+  String type;
+  String length;
+  String width;
+  String depth;
+  String staging;
+  String granulation;
+  String slough;
+  String necrosis;
+  String drainageType;
+  String drainageAmount;
+  String odor;
+  String mechanismOfInjury;
+  String pain;
+  String notes;
+  String image;
+  String sId;
+
+  IntegumentarySummary(
+      {this.location,
+      this.type,
+      this.length,
+      this.width,
+      this.depth,
+      this.staging,
+      this.granulation,
+      this.slough,
+      this.necrosis,
+      this.drainageType,
+      this.drainageAmount,
+      this.odor,
+      this.mechanismOfInjury,
+      this.pain,
+      this.notes,
+      this.image,
+      this.sId});
+
+  IntegumentarySummary.fromJson(Map<String, dynamic> json) {
+    location = json['location'];
+    type = json['type'];
+    length = json['length'];
+    width = json['width'];
+    depth = json['depth'];
+    staging = json['staging'];
+    granulation = json['granulation'];
+    slough = json['slough'];
+    necrosis = json['necrosis'];
+    drainageType = json['drainageType'];
+    drainageAmount = json['drainageAmount'];
+    odor = json['odor'];
+    mechanismOfInjury = json['mechanismOfInjury'];
+    pain = json['pain'];
+    notes = json['notes'];
+    image = json['image'];
+    sId = json['_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['location'] = this.location;
+    data['type'] = this.type;
+    data['length'] = this.length;
+    data['width'] = this.width;
+    data['depth'] = this.depth;
+    data['staging'] = this.staging;
+    data['granulation'] = this.granulation;
+    data['slough'] = this.slough;
+    data['necrosis'] = this.necrosis;
+    data['drainageType'] = this.drainageType;
+    data['drainageAmount'] = this.drainageAmount;
+    data['odor'] = this.odor;
+    data['mechanismOfInjury'] = this.mechanismOfInjury;
+    data['pain'] = this.pain;
+    data['notes'] = this.notes;
+    data['image'] = this.image;
+    data['_id'] = this.sId;
+    return data;
+  }
+}
+
+class Gait {
+  GaitSummary gaitSummary;
+  List<GaitData> summary;
+
+  Gait({this.gaitSummary, this.summary});
+
+  Gait.fromJson(Map<String, dynamic> json) {
+    gaitSummary = json['gaitSummary'] != null
+        ? new GaitSummary.fromJson(json['gaitSummary'])
+        : null;
+    if (json['summary'] != null) {
+      summary = <GaitData>[];
+      json['summary'].forEach((v) {
+        summary.add(new GaitData.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.gaitSummary != null) {
+      data['gaitSummary'] = this.gaitSummary.toJson();
+    }
+    if (this.summary != null) {
+      data['summary'] = this.summary.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class GaitSummary {
+  List<String> clinicalConcern;
+  List<String> treatment;
+  List<String> icd;
+
+  GaitSummary({this.clinicalConcern, this.treatment, this.icd});
+
+  GaitSummary.fromJson(Map<String, dynamic> json) {
+    clinicalConcern = json['clinicalConcern'].cast<String>();
+    treatment = json['treatment'].cast<String>();
+    icd = json['icd'].cast<String>();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['clinicalConcern'] = this.clinicalConcern;
+    data['treatment'] = this.treatment;
+    data['icd'] = this.icd;
+    return data;
+  }
+}
+
+class GaitData {
+  String type;
+  String distance;
+  String assistance;
+  String assistiveDevice;
+  String cuing;
+  String terraine;
+  String ambulationTrainer;
+  String time;
+  String patientResponse;
+  String notes;
+  String sId;
+
+  GaitData(
+      {this.type,
+      this.distance,
+      this.assistance,
+      this.assistiveDevice,
+      this.cuing,
+      this.terraine,
+      this.ambulationTrainer,
+      this.time,
+      this.patientResponse,
+      this.notes,
+      this.sId});
+
+  GaitData.fromJson(Map<String, dynamic> json) {
+    type = json['type'];
+    distance = json['distance'];
+    assistance = json['assistance'];
+    assistiveDevice = json['assistiveDevice'];
+    cuing = json['cuing'];
+    terraine = json['terraine'];
+    ambulationTrainer = json['ambulationTrainer'];
+    time = json['time'];
+    patientResponse = json['patientResponse'];
+    notes = json['notes'];
+    sId = json['_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['type'] = this.type;
+    data['distance'] = this.distance;
+    data['assistance'] = this.assistance;
+    data['assistiveDevice'] = this.assistiveDevice;
+    data['cuing'] = this.cuing;
+    data['terraine'] = this.terraine;
+    data['ambulationTrainer'] = this.ambulationTrainer;
+    data['time'] = this.time;
+    data['patientResponse'] = this.patientResponse;
+    data['notes'] = this.notes;
+    data['_id'] = this.sId;
     return data;
   }
 }

@@ -197,7 +197,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
               "---";
         }
       } else {
-        if (response["doctorData"][0]["professionalTitle"].isNotEmpty) {
+        if (response["doctorData"][0]["professionalTitle"] != null) {
           professionalTitle = response["doctorData"][0]["professionalTitle"]
                       ["title"]
                   ?.toString() ??
