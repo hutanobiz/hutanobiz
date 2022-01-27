@@ -55,49 +55,19 @@ class AnthopometricCompletedSummaryWidget extends StatelessWidget {
                   anthropometricMeasurements.height != null &&
                           anthropometricMeasurements.height.feet != null &&
                           anthropometricMeasurements.height.inches != null
-                      ? RichText(
-                          text: TextSpan(
-                              style: TextStyle(
-                                fontSize: 13.0,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              children: <TextSpan>[
-                              TextSpan(
-                                text: 'Height: ',
-                                style: AppTextStyle.semiBoldStyle(fontSize: 14),
-                              ),
-                              TextSpan(
-                                text:
-                                    '${anthropometricMeasurements.height.feet}.${anthropometricMeasurements.height.inches} feet',
-                                style: AppTextStyle.mediumStyle(fontSize: 13),
-                              ),
-                            ]))
+                      ? Text(
+                          'Height: ${anthropometricMeasurements.height.feet}.${anthropometricMeasurements.height.inches} feet',
+                          style: AppTextStyle.mediumStyle(fontSize: 14),
+                        )
                       : SizedBox(),
                   anthropometricMeasurements.weight != null &&
                           anthropometricMeasurements.weight.current != null
                       ? Padding(
                           padding: EdgeInsets.only(top: 16.0),
-                          child: RichText(
-                              text: TextSpan(
-                                  style: TextStyle(
-                                    fontSize: 13.0,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  children: <TextSpan>[
-                                TextSpan(
-                                  text: 'Weight: ',
-                                  style:
-                                      AppTextStyle.semiBoldStyle(fontSize: 14),
-                                ),
-                                TextSpan(
-                                  text: anthropometricMeasurements
-                                          .weight.current +
-                                      ' lbs',
-                                  style: AppTextStyle.mediumStyle(fontSize: 13),
-                                ),
-                              ])),
+                          child: Text(
+                            'Weight: ${anthropometricMeasurements.weight.current} lbs',
+                            style: AppTextStyle.mediumStyle(fontSize: 14),
+                          ),
                         )
                       : SizedBox(),
                   anthropometricMeasurements.weight.goal != null
@@ -106,49 +76,20 @@ class AnthopometricCompletedSummaryWidget extends StatelessWidget {
                   anthropometricMeasurements.bmi != null
                       ? Padding(
                           padding: EdgeInsets.only(top: 16.0),
-                          child: RichText(
-                              text: TextSpan(
-                                  style: TextStyle(
-                                    fontSize: 13.0,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  children: <TextSpan>[
-                                TextSpan(
-                                  text: 'Bmi: ',
-                                  style:
-                                      AppTextStyle.semiBoldStyle(fontSize: 14),
-                                ),
-                                TextSpan(
-                                  text: anthropometricMeasurements.bmi,
-                                  style: AppTextStyle.mediumStyle(fontSize: 13),
-                                ),
-                              ])),
+                          child: Text(
+                            'Bmi: ${anthropometricMeasurements.bmi}',
+                            style: AppTextStyle.mediumStyle(fontSize: 14),
+                          ),
                         )
                       : SizedBox(),
                   anthropometricMeasurements.hip != null &&
                           anthropometricMeasurements.hip.current != null
                       ? Padding(
                           padding: EdgeInsets.only(top: 16.0),
-                          child: RichText(
-                              text: TextSpan(
-                                  style: TextStyle(
-                                    fontSize: 13.0,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  children: <TextSpan>[
-                                TextSpan(
-                                  text: 'Hip Circumference: ',
-                                  style:
-                                      AppTextStyle.semiBoldStyle(fontSize: 14),
-                                ),
-                                TextSpan(
-                                  text: anthropometricMeasurements.hip.current +
-                                      ' inches',
-                                  style: AppTextStyle.mediumStyle(fontSize: 13),
-                                ),
-                              ])),
+                          child: Text(
+                            'Hip Circumference: ${anthropometricMeasurements.hip.current} inches',
+                            style: AppTextStyle.mediumStyle(fontSize: 14),
+                          ),
                         )
                       : SizedBox(),
                   anthropometricMeasurements.hip.goal != null
@@ -158,26 +99,10 @@ class AnthopometricCompletedSummaryWidget extends StatelessWidget {
                           anthropometricMeasurements.waist.current != null
                       ? Padding(
                           padding: EdgeInsets.only(top: 16.0),
-                          child: RichText(
-                              text: TextSpan(
-                                  style: TextStyle(
-                                    fontSize: 13.0,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  children: <TextSpan>[
-                                TextSpan(
-                                  text: 'Waist Cicumference: ',
-                                  style:
-                                      AppTextStyle.semiBoldStyle(fontSize: 14),
-                                ),
-                                TextSpan(
-                                  text:
-                                      anthropometricMeasurements.waist.current +
-                                          ' inches',
-                                  style: AppTextStyle.mediumStyle(fontSize: 13),
-                                ),
-                              ])),
+                          child: Text(
+                            'Waist Cicumference: ${anthropometricMeasurements.waist.current} inches',
+                            style: AppTextStyle.mediumStyle(fontSize: 14),
+                          ),
                         )
                       : SizedBox(),
                   anthropometricMeasurements.waist.goal != null
@@ -187,26 +112,10 @@ class AnthopometricCompletedSummaryWidget extends StatelessWidget {
                           anthropometricMeasurements.calf.current != null
                       ? Padding(
                           padding: EdgeInsets.only(top: 16.0),
-                          child: RichText(
-                              text: TextSpan(
-                                  style: TextStyle(
-                                    fontSize: 13.0,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  children: <TextSpan>[
-                                TextSpan(
-                                  text: 'Calf Cicumference: ',
-                                  style:
-                                      AppTextStyle.semiBoldStyle(fontSize: 14),
-                                ),
-                                TextSpan(
-                                  text:
-                                      anthropometricMeasurements.calf.current +
-                                          ' inches',
-                                  style: AppTextStyle.mediumStyle(fontSize: 13),
-                                ),
-                              ])),
+                          child: Text(
+                            'Calf Cicumference: ${anthropometricMeasurements.calf.current} inches',
+                            style: AppTextStyle.mediumStyle(fontSize: 14),
+                          ),
                         )
                       : SizedBox(),
                   anthropometricMeasurements.calf.goal != null
@@ -216,25 +125,10 @@ class AnthopometricCompletedSummaryWidget extends StatelessWidget {
                           anthropometricMeasurements.arm.current != null
                       ? Padding(
                           padding: EdgeInsets.only(top: 16.0),
-                          child: RichText(
-                              text: TextSpan(
-                                  style: TextStyle(
-                                    fontSize: 13.0,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  children: <TextSpan>[
-                                TextSpan(
-                                  text: 'Arm Cicumference: ',
-                                  style:
-                                      AppTextStyle.semiBoldStyle(fontSize: 14),
-                                ),
-                                TextSpan(
-                                  text: anthropometricMeasurements.arm.current +
-                                      ' inches',
-                                  style: AppTextStyle.mediumStyle(fontSize: 13),
-                                ),
-                              ])),
+                          child: Text(
+                            'Arm Cicumference: ${anthropometricMeasurements.arm.current} inches',
+                            style: AppTextStyle.mediumStyle(fontSize: 14),
+                          ),
                         )
                       : SizedBox(),
                   anthropometricMeasurements.arm.goal != null
@@ -266,41 +160,13 @@ class GoalWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       goal.achieve != null
-          ? RichText(
-              text: TextSpan(
-                  style: TextStyle(
-                    fontSize: 13.0,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  children: <TextSpan>[
-                  TextSpan(
-                    text: 'Goal: ',
-                    style: AppTextStyle.semiBoldStyle(fontSize: 14),
-                  ),
-                  TextSpan(
-                      text: goal.achieve + ' ' + goal.unit,
-                      style: AppTextStyle.mediumStyle(fontSize: 13)),
-                ]))
+          ? Text('Goal: ${goal.achieve} ${goal.unit}',
+              style: AppTextStyle.mediumStyle(fontSize: 14))
           : SizedBox(),
       goal.timeFrame != null
-          ? RichText(
-              text: TextSpan(
-                  style: TextStyle(
-                    fontSize: 13.0,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  children: <TextSpan>[
-                  TextSpan(
-                    text: 'Timeframe: ',
-                    style: AppTextStyle.semiBoldStyle(fontSize: 14),
-                  ),
-                  TextSpan(
-                      text:
-                          '${goal.timeFrame} ${timeSpanConfig[goal.timeUnit]}',
-                      style: AppTextStyle.mediumStyle(fontSize: 13)),
-                ]))
+          ? Text(
+              'Timeframe: ${goal.timeFrame} ${timeSpanConfig[goal.timeUnit]}',
+              style: AppTextStyle.mediumStyle(fontSize: 14))
           : SizedBox(),
       goal.improvements != null && goal.improvements.length > 0
           ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -315,7 +181,7 @@ class GoalWidget extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return Text(
                       goal.improvements[index],
-                      style: AppTextStyle.mediumStyle(fontSize: 13),
+                      style: AppTextStyle.mediumStyle(fontSize: 14),
                     );
                   })
             ])

@@ -1203,7 +1203,7 @@ class _CompletedAppointmentSummaryState
                     style: AppTextStyle.mediumStyle(fontSize: 14),
                   )
                 : Text(
-                    '\u2022 ${followUpType[followUp[index]['type']]} at: ${DateFormat("yyyy-MM-dd, h:mm a").format(DateFormat("yyyy-MM-ddThh:mm:ss.000Z").parse(followUp[index]['date'], true).toLocal())}',
+                    '\u2022 ${followUpType[followUp[index]['type']]} with ${followUp[index]['doctorName']} at: ${DateFormat("yyyy-MM-dd, h:mm a").format(DateFormat("yyyy-MM-ddThh:mm:ss.000Z").parse(followUp[index]['date'], true).toLocal())}',
                     style: AppTextStyle.mediumStyle(fontSize: 14),
                   );
           },
