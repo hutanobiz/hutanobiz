@@ -44,6 +44,8 @@ import 'package:hutano/screens/registration/register/model/res_insurance_list.da
 import 'package:hutano/screens/setup_pin/model/req_setup_pin.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/utils/common_res.dart';
+import 'package:hutano/utils/preference_key.dart';
+import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/utils/progress_dialog.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/widgets.dart';
@@ -443,9 +445,10 @@ class ApiBaseHelper {
     });
   }
 
-  Future<Map> getAllNotifications(BuildContext context, token) {
+  Future<Map> getAllNotifications(BuildContext context) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader:
+          "Bearer ${getString(PreferenceKey.tokens)}",
     };
     return _netUtil
         .get(base_url + "api/patient/notification-list", headers: headers)
@@ -455,9 +458,24 @@ class ApiBaseHelper {
     });
   }
 
-  Future<Map> readNotifications(BuildContext context, token) {
+  Future<Map> checkCardInsuranceAdded(BuildContext context) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader:
+          "Bearer ${getString(PreferenceKey.tokens)}",
+    };
+    return _netUtil
+        .get(base_url + "api/patient/check-card-insurence-added",
+            headers: headers)
+        .then((res) {
+      print(res.toString());
+      return res;
+    });
+  }
+
+  Future<Map> readNotifications(BuildContext context) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader:
+          "Bearer ${getString(PreferenceKey.tokens)}",
     };
     return _netUtil
         .get(base_url + "api/patient/notification-read", headers: headers)

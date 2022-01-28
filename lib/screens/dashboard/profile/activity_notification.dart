@@ -3,6 +3,7 @@ import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/custom_loader.dart';
+import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
@@ -16,13 +17,15 @@ class _ActivityNotificationsState extends State<ActivityNotifications> {
   List<dynamic> appointmentNotification = List();
   ApiBaseHelper api = new ApiBaseHelper();
   Future<Map> _requestsFuture;
-  String userToken = "";
+  bool cardAdded = true;
+  bool insuranceAdded = true;
+
   void initState() {
-    SharedPref().getToken().then((token) {
-      userToken = token;
-      setState(() {
-        _requestsFuture = api.getAllNotifications(context, token);
-      });
+    _requestsFuture = api.getAllNotifications(context);
+    api.checkCardInsuranceAdded(context).then((value) {
+      cardAdded = value['response']['CardAdded'];
+      insuranceAdded = value['response']['InsuranceAdded'];
+      setState(() {});
     });
     super.initState();
   }
@@ -54,7 +57,7 @@ class _ActivityNotificationsState extends State<ActivityNotifications> {
               return Center(child: Text('No Activity'));
             } else {
               appointmentNotification.clear();
-              api.readNotifications(context, userToken);
+              api.readNotifications(context);
 
               appointmentNotification.addAll(snapshot.data['response']);
 
@@ -64,6 +67,65 @@ class _ActivityNotificationsState extends State<ActivityNotifications> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       SizedBox(height: 16.0),
+                      !cardAdded && !insuranceAdded
+                          ? InkWell(
+                              onTap: () {
+                                InheritedContainerState _container =
+                                    InheritedContainer.of(context);
+                                _container.providerInsuranceList.clear();
+                                Navigator.of(context).pushNamed(
+                                  Routes.paymentMethodScreen,
+                                  arguments: {'paymentType': 0},
+                                );
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.only(bottom: 22.0),
+                                padding: EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(14.0),
+                                  border: Border.all(color: Colors.grey[300]),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 24.0,
+                                      height: 24.0,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: AssetImage(
+                                              'images/verification_failed.png'),
+                                          fit: BoxFit.cover,
+                                        ),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(50.0)),
+                                        border: Border.all(
+                                          color: Colors.grey[300],
+                                          width: 1.0,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 8,
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        'Please add a payment method i.e card, insurance.',
+                                        overflow: TextOverflow.ellipsis,
+                                        softWrap: false,
+                                        maxLines: 4,
+                                        style: TextStyle(
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ))
+                          : SizedBox(),
                       appointmentNotification.isNotEmpty
                           ? _listWidget(appointmentNotification, 'notification')
                           : Container(),

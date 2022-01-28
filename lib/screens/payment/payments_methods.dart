@@ -990,18 +990,21 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   Widget hutanoCashWidget(String imageIcon, String title, int value) {
     return GestureDetector(
       onTap: () {
-        if (hutanoCash == 0) {
-          _container.setConsentToTreatData("hutanoCashApplied", false);
-          Widgets.showErrorDialog(
-              context: context, description: 'Insufficient Points');
-          return;
+        if (isPayment == 0) {
+        } else {
+          if (hutanoCash == 0) {
+            _container.setConsentToTreatData("hutanoCashApplied", false);
+            Widgets.showErrorDialog(
+                context: context, description: 'Insufficient Points');
+            return;
+          }
+          var value = (_huntaoCashRadioGrupValue == 0) ? 1 : 0;
+          setState(() {
+            _huntaoCashRadioGrupValue = value;
+          });
+          _container.setConsentToTreatData("hutanoCashApplied", value);
+          _container.setConsentToTreatData("hutanoCash", hutanoCash);
         }
-        var value = (_huntaoCashRadioGrupValue == 0) ? 1 : 0;
-        setState(() {
-          _huntaoCashRadioGrupValue = value;
-        });
-        _container.setConsentToTreatData("hutanoCashApplied", value);
-        _container.setConsentToTreatData("hutanoCash", hutanoCash);
       },
       child: Container(
         padding: const EdgeInsets.all(8.0),
