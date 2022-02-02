@@ -600,17 +600,27 @@ class ProviderWidget extends StatelessWidget {
                                       'Dr. $name , ${occupation.getInitials()}';
                                 }
 
+                                // Navigator.of(context).pushNamed(
+                                //     Routes.myProviderGroups,
+                                //     arguments: {
+                                //       ArgumentConstant.showBack: false,
+                                //       ArgumentConstant.doctorId: data["userId"],
+                                //       ArgumentConstant.doctorName: name,
+                                //       ArgumentConstant.doctorAvatar:
+                                //           data["User"][0]["avatar"]
+                                //     });
+
                                 Navigator.of(context).pushNamed(
-                                    Routes.myProviderGroups,
+                                    Routes.providerAddToNetwork,
                                     arguments: {
-                                      ArgumentConstant.showBack: false,
                                       ArgumentConstant.doctorId: data["userId"],
                                       ArgumentConstant.doctorName: name,
                                       ArgumentConstant.doctorAvatar:
-                                          data["User"][0]["avatar"]
+                                          data["User"][0]["avatar"],
+                                      'isOnBoarding': false,
+                                      "onCompleteRoute":Routes.providerListScreen
                                     });
 
-                                print(data);
                               },
                             ),
                           ),

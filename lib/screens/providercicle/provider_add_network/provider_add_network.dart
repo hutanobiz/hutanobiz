@@ -84,15 +84,15 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
     try {
       var res = await ApiManager().addProviderNetwork(request);
       ProgressDialogUtils.dismissProgressDialog();
-      Widgets.showErrorDialog(
-          context: context,
-          description: res.response.toString(),
-          onPressed: () {
-            Navigator.of(context).pop();
-            Navigator.of(context).pushNamed(
-              Routes.addProviderSuccess,
-            );
-          });
+      Widgets.showAlertDialog(
+        context,
+        Localization.of(context).appName,
+        res.response.toString(),
+        () {
+          Navigator.of(context).pop();
+          Navigator.of(context).pop(true);
+        },
+      ); //isConfirmationDialog: false, buttonText: "OK");
       // DialogUtils.showOkCancelAlertDialog(
       //     context: context,
       //     message: res.response.toString(),
@@ -146,6 +146,15 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
               ),
               SizedBox(height: spacing15),
               _buildList(),
+              SizedBox(height: spacing10),
+              HutanoButton(
+                onPressed: _createGroup,
+                color: colorPurple,
+                icon: FileConstants.icAddGroup,
+                buttonType: HutanoButtonType.withPrefixIcon,
+                label: Localization.of(context).addCreateGroup,
+              ),
+              SizedBox(height: spacing5),
               _buildBottomButtons(),
               SizedBox(height: spacing10),
             ],
@@ -157,39 +166,25 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
 
   Widget _buildList() {
     return Expanded(
-      child: Column(
-        children: [
-          ListView.separated(
-              separatorBuilder: (_, pos) => Padding(
-                    padding: EdgeInsets.symmetric(vertical: spacing10),
-                  ),
-              shrinkWrap: true,
-              itemCount: specialityList.length,
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {
-                    specialityList
-                        .forEach((element) => element.isSelected = false);
-                    _index = index;
-                    setState(() {
-                      specialityList[index].isSelected = true;
-                      _enableButton = true;
-                    });
-                  },
-                  child: ListItem(specialityList[index], () {}),
-                );
-              }),
-          SizedBox(height: spacing10),
-          HutanoButton(
-            onPressed: _createGroup,
-            color: colorPurple,
-            icon: FileConstants.icAddGroup,
-            buttonType: HutanoButtonType.withPrefixIcon,
-            label: Localization.of(context).addCreateGroup,
-          ),
-          SizedBox(height: spacing5),
-        ],
-      ),
+      child: ListView.separated(
+          separatorBuilder: (_, pos) => Padding(
+                padding: EdgeInsets.symmetric(vertical: spacing10),
+              ),
+          shrinkWrap: true,
+          itemCount: specialityList.length,
+          itemBuilder: (context, index) {
+            return InkWell(
+              onTap: () {
+                specialityList.forEach((element) => element.isSelected = false);
+                _index = index;
+                setState(() {
+                  specialityList[index].isSelected = true;
+                  _enableButton = true;
+                });
+              },
+              child: ListItem(specialityList[index]),
+            );
+          }),
     );
   }
 

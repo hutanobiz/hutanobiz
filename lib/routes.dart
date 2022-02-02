@@ -100,11 +100,13 @@ import 'package:hutano/screens/payment/saved_cards.dart';
 import 'package:hutano/screens/payment/upload_insurance_images.dart';
 import 'package:hutano/screens/pharmacy/add_pharmacy.dart';
 import 'package:hutano/screens/providercicle/add_provider_complete.dart';
+import 'package:hutano/screens/providercicle/create_group/add_more_provider_screen.dart';
 import 'package:hutano/screens/providercicle/create_group/create_provider_group.dart';
 import 'package:hutano/screens/providercicle/my_provider_group_detail.dart';
 import 'package:hutano/screens/providercicle/my_provider_groups.dart';
 import 'package:hutano/screens/providercicle/my_provider_network/my_provider_network.dart';
 import 'package:hutano/screens/providercicle/provider_add_network/provider_add_network.dart';
+import 'package:hutano/screens/providercicle/provider_add_network/provider_add_to_network.dart';
 import 'package:hutano/screens/providercicle/provider_search/provider_search.dart';
 import 'package:hutano/screens/providercicle/search/search_screen.dart';
 import 'package:hutano/screens/providercicle/search_member/search_member.dart';
@@ -285,6 +287,8 @@ class Routes {
   static const String imageSlider = '/imageSlider';
   static const String completedAppointmentSummary =
       '/completedAppointmentSummary';
+  static const String providerAddToNetwork = '/providerAddToNetwork';
+  static const String addMoreProviderScreen = '/addMoreProviderScreen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final dynamic args = settings.arguments;
@@ -676,7 +680,11 @@ class Routes {
             ));
         break;
       case myProviderNetwork:
-        return _buildRoute(settings, MyProviderNetwrok());
+        return _buildRoute(
+            settings,
+            MyProviderNetwrok(
+              isOnBoarding: args,
+            ));
         break;
       case memberMessage:
         return _buildRoute(
@@ -692,6 +700,15 @@ class Routes {
                 doctorId: args[ArgumentConstant.doctorId],
                 doctorName: args[ArgumentConstant.doctorName],
                 doctorAvatar: args[ArgumentConstant.doctorAvatar]));
+        break;
+      case providerAddToNetwork:
+        return MaterialPageRoute(
+            builder: (_) => ProivderAddToNetwork(
+                doctorId: args[ArgumentConstant.doctorId],
+                doctorName: args[ArgumentConstant.doctorName],
+                doctorAvatar: args[ArgumentConstant.doctorAvatar],
+                isOnBoarding: args['isOnBoarding'],
+                onCompleteRoute:args['onCompleteRoute']??null));
         break;
       case myProviderGroups:
         if (args is bool) {
@@ -713,8 +730,25 @@ class Routes {
             builder: (_) => MyProviderGroupDetail(
                   providerGroup: args,
                 ));
+        break;
+      case addMoreProviderScreen:
+        return MaterialPageRoute(
+            builder: (_) => AddMoreProviderScreen(
+                doctorId: args[ArgumentConstant.doctorId],
+                doctorName: args[ArgumentConstant.doctorName],
+                doctorAvatar: args[ArgumentConstant.doctorAvatar],
+                isOnBoarding: args['isOnBoarding'],
+                groupName: args['groupName'],
+                onCompleteRoute:args["onCompleteRoute"]));
+        break;
       case createProviderGroup:
-        return MaterialPageRoute(builder: (_) => CreateProviderGroup());
+        return MaterialPageRoute(
+            builder: (_) => CreateProviderGroup(
+                doctorId: args[ArgumentConstant.doctorId],
+                doctorName: args[ArgumentConstant.doctorName],
+                doctorAvatar: args[ArgumentConstant.doctorAvatar],
+                isOnBoarding: args['isOnBoarding'],
+                onCompleteRoute:args["onCompleteRoute"]));
         break;
       case inviteSuccess:
         return MaterialPageRoute(builder: (_) => InviteFamilySuccess());

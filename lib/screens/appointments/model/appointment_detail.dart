@@ -340,7 +340,7 @@ class DoctorFeedback {
       this.doctorId,
       this.exerciseDetails,
       this.education,
-       this.integumentary,
+      this.integumentary,
       this.gait,
       this.createdAt,
       this.updatedAt,
@@ -391,7 +391,7 @@ class DoctorFeedback {
         education.add(new Education.fromJson(v));
       });
     }
-     integumentary = json['integumentary'] != null
+    integumentary = json['integumentary'] != null
         ? new Integumentary.fromJson(json['integumentary'])
         : null;
     gait = json['gait'] != null ? new Gait.fromJson(json['gait']) : null;
@@ -1382,7 +1382,7 @@ class Goal {
   String unit;
   String timeFrame;
   String timeUnit;
-  List<String> improvements;
+  List<String> improvements = [];
 
   Goal(
       {this.achieve,
@@ -1396,7 +1396,9 @@ class Goal {
     unit = json['unit'];
     timeFrame = json['timeFrame'];
     timeUnit = json['timeUnit'];
-    improvements = json['improvements'].cast<String>();
+    if (json['improvements'] != null) {
+      improvements = json['improvements'].cast<String>();
+    }
   }
 
   Map<String, dynamic> toJson() {

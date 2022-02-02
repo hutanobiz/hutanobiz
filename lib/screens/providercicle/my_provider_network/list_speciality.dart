@@ -13,10 +13,16 @@ class ListSpeciality extends StatefulWidget {
   final List<ProviderGroupList> providerGroupList;
   final Function onShare;
   final Function onRemove;
-   final Function onMakeAppointment;
+  final Function onMakeAppointment;
+  final Function onGroupDelete;
 
   const ListSpeciality(
-      {Key key, this.providerGroupList, this.onShare, this.onRemove,this.onMakeAppointment})
+      {Key key,
+      this.providerGroupList,
+      this.onShare,
+      this.onRemove,
+      this.onMakeAppointment,
+      this.onGroupDelete})
       : super(key: key);
   @override
   _ListSpecialityState createState() => _ListSpecialityState();
@@ -47,7 +53,11 @@ class _ListSpecialityState extends State<ListSpeciality> {
                   iconSize: spacing30,
                   iconColor: colorBlack60,
                   iconPadding: EdgeInsets.only(top: spacing15)),
-              header: ExpandableHeader(providerGroup: _getProviderGroup(pos)),
+              header: ExpandableHeader(
+                providerGroup: _getProviderGroup(pos),
+                onDelete: widget.onGroupDelete,
+                pos:pos
+              ),
               expanded: Column(
                 children: [
                   Divider(
@@ -61,16 +71,16 @@ class _ListSpecialityState extends State<ListSpeciality> {
                         return SizedBox(height: spacing15);
                       },
                       shrinkWrap: true,
-                      itemCount: widget.providerGroupList[pos].docInfo.length,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: widget.providerGroupList[pos].doctor.length,
                       itemBuilder: (_, position) {
                         return ItemProviderDetail(
-                          providerDetail: _getProviderDetail(pos, position),
-                          index: pos,
-                          subIndex: position,
-                          onShare: widget.onShare,
-                          onRemove: widget.onRemove,
-                          onMakeAppointment:widget.onMakeAppointment
-                        );
+                            providerDetail: _getProviderDetail(pos, position),
+                            index: pos,
+                            subIndex: position,
+                            onShare: widget.onShare,
+                            onRemove: widget.onRemove,
+                            onMakeAppointment: widget.onMakeAppointment);
                       }),
                   SizedBox(height: spacing15),
                 ],
@@ -103,11 +113,10 @@ class _ListSpecialityState extends State<ListSpeciality> {
   }
 
   _getProviderGroup(index) {
-    final providerNetwork = widget.providerGroupList[index].providerNetwork;
     return ProviderGroup(
-      count: providerNetwork.doctorId.length,
+      count: widget.providerGroupList[index].doctor.length,
       image: " ",
-      groupType: providerNetwork.groupName,
+      groupType: widget.providerGroupList[index].providerNetwork.groupName,
     );
   }
 }

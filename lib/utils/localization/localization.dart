@@ -529,4 +529,7 @@ abstract class Localization {
   String get improvingProblem;
   String get worseningProblem;
   String get stayingSameProblem;
+  String get addNewProviderLabel;
+
+
 }

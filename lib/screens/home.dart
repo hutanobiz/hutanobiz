@@ -11,7 +11,6 @@ import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/widgets/bottom_bar/fancy_bottom_navigation.dart';
 import 'package:hutano/widgets/coming_soon.dart';
 
-
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key, this.currentIndex = 0}) : super(key: key);
   int currentIndex;
@@ -35,8 +34,8 @@ class _HomeScreenState extends State<HomeScreen> {
     AllAppointments(),
     // AppointmentsScreen(),
     // RequestAppointmentsScreen(),
-    MyProviderGroups(
-      showBack: false,
+    MyProviderNetwrok(
+      isOnBoarding: false,
     ),
     // BreathingIssue(
     //     breathing: false,

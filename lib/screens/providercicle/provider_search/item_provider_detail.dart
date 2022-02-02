@@ -18,8 +18,11 @@ import 'provider_info.dart';
 
 class ItemProviderDetail extends StatelessWidget {
   final DoctorData providerDetail;
+  final bool isOnBoarding;
+  final Function onAddPressed;
 
-  const ItemProviderDetail({Key key, this.providerDetail}) : super(key: key);
+  const ItemProviderDetail({Key key, this.providerDetail, this.isOnBoarding,this.onAddPressed})
+      : super(key: key);
 
   RoundedRectangleBorder _getBorder({double bottomLeft, double bottomRight}) {
     return RoundedRectangleBorder(
@@ -38,31 +41,14 @@ class ItemProviderDetail extends StatelessWidget {
             flex: 1,
             child: HutanoButton(
               onPressed: () {
-                final user = providerDetail.user[0];
-                var occupation = "";
-                if (providerDetail?.professionalTitle != null &&
-                    providerDetail.professionalTitle.length > 0) {
-                  occupation =
-                      providerDetail?.professionalTitle[0]?.title ?? "";
-                }
-                var name = user?.fullName ?? "";
-                if (occupation.isNotEmpty) {
-                  name = 'Dr. $name , ${occupation.getInitials()}';
-                }
-
-                Navigator.of(context)
-                    .pushNamed(Routes.providerAddNetwork, arguments: {
-                  ArgumentConstant.doctorId: providerDetail.userId,
-                  ArgumentConstant.doctorName: name,
-                  ArgumentConstant.doctorAvatar: providerDetail.user[0].avatar
-                });
+                onAddPressed();
               },
               label: Localization.of(context).addToNetwork,
               height: 45,
               fontSize: fontSize12,
               labelColor: colorWhite,
               color: colorPurple,
-              buttonShape: _getBorder(bottomLeft: 14, bottomRight: 0),
+              buttonShape: _getBorder(bottomLeft: 14, bottomRight: 14),
             )),
       ],
     );
@@ -130,53 +116,47 @@ class ItemProviderDetail extends StatelessWidget {
   Widget _buildProviderInfo(context) {
     return Column(
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              flex: 1,
-              child: ProviderInfo(
-                providerDetail: _getProviderDetail(),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsetsDirectional.only(end: 20),
-              child: Image.asset(
-                "images/ic_add_card.png",
-                height: 30,
-              ),
-            )
-            // Container(
-            //   height: spacing50,
-            //   margin: EdgeInsets.only(top: 20, right: 5),
-            //   child: Column(
-            //     mainAxisAlignment: MainAxisAlignment.start,
-            //     crossAxisAlignment: CrossAxisAlignment.end,
-            //     children: [
-            //       Text(
-            //         '\$${_getFee()}',
-            //         style: const TextStyle(
-            //             color: colorBlack2,
-            //             fontWeight: FontWeight.w600,
-            //             fontFamily: gilroySemiBold,
-            //             fontStyle: FontStyle.normal,
-            //             fontSize: 16.0),
-            //       ),
-            //       Text(
-            //         Localization.of(context).consultationFee,
-            //         style: const TextStyle(
-            //           color: colorBlack2,
-            //           fontSize: 11,
-            //           fontWeight: FontWeight.w400,
-            //           fontFamily: gilroyRegular,
-            //           fontStyle: FontStyle.normal,
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // )
-          ],
-        )
+        // Row(
+        //   crossAxisAlignment: CrossAxisAlignment.start,
+        //   children: [
+        // Expanded(
+        //   flex: 1,
+        //   child:
+        ProviderInfo(
+          providerDetail: _getProviderDetail(),
+        ),
+        // ),
+        // Container(
+        //   height: spacing50,
+        //   margin: EdgeInsets.only(top: 20, right: 5),
+        //   child: Column(
+        //     mainAxisAlignment: MainAxisAlignment.start,
+        //     crossAxisAlignment: CrossAxisAlignment.end,
+        //     children: [
+        //       Text(
+        //         '\$${_getFee()}',
+        //         style: const TextStyle(
+        //             color: colorBlack2,
+        //             fontWeight: FontWeight.w600,
+        //             fontFamily: gilroySemiBold,
+        //             fontStyle: FontStyle.normal,
+        //             fontSize: 16.0),
+        //       ),
+        //       Text(
+        //         Localization.of(context).consultationFee,
+        //         style: const TextStyle(
+        //           color: colorBlack2,
+        //           fontSize: 11,
+        //           fontWeight: FontWeight.w400,
+        //           fontFamily: gilroyRegular,
+        //           fontStyle: FontStyle.normal,
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // )
+        // ],
+        // )
       ],
     );
   }
@@ -232,32 +212,30 @@ class ItemProviderDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          child: Column(
-            children: [
-              _buildProviderInfo(context),
-              Divider(
-                height: 5,
-                thickness: 3,
-                color: Colors.grey[100],
-              )
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(horizontal: 10),
-              //   child: Divider(
-              //     color: colorBorder,
-              //     height: 0.5,
-              //   ),
-              // ),
-              // _buildLocationInfo(context)
-            ],
-          ),
-        ),
-        // _buildButton(context)
-      ],
+    return CustomCard(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Container(
+          //   child:
+          // Column(
+          //   children: [
+          _buildProviderInfo(context),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 10),
+          //   child: Divider(
+          //     color: colorBorder,
+          //     height: 0.5,
+          //   ),
+          // ),
+          // _buildLocationInfo(context)
+          //   ],
+          // ),
+          // ),
+          _buildButton(context)
+        ],
+      ),
     );
   }
 }

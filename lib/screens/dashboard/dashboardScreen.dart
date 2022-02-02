@@ -203,16 +203,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: Text(
-                                  'What are you looking for?',
-                                  style: TextStyle(
-                                      color: colorBlack2,
-                                      fontWeight: FontWeight.w700,
-                                      fontFamily: gilroyBold,
-                                      fontStyle: FontStyle.normal,
-                                      fontSize: 16.0),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).pushNamed(
+                                      Routes.myProviderNetwork,
+                                      arguments: true);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 20),
+                                  child: Text(
+                                    'What are you looking for?',
+                                    style: TextStyle(
+                                        color: colorBlack2,
+                                        fontWeight: FontWeight.w700,
+                                        fontFamily: gilroyBold,
+                                        fontStyle: FontStyle.normal,
+                                        fontSize: 16.0),
+                                  ),
                                 ),
                               ),
                               topProviderWidget(),

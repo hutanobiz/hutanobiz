@@ -86,4 +86,9 @@ class ArgumentConstant {
   static const String problem = 'problem';
   static const String isFromSetting = 'isFromSetting';
   static const String showBack = 'showBack';
+  static const String isFromTabKey = 'isFromTab';
+  static const String showSkipKey = 'showSkip';
+  static const String isForAddKey = 'isForAdd';
+
+
 }

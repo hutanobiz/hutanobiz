@@ -111,7 +111,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   final labelStyle = TextStyle(fontSize: fontSize14, color: colorGrey60);
   List<Genders> genders = [
-    Genders(0, 'Same as sex'),
+    Genders(0, 'Binary'),
     Genders(1, 'Lesbian'),
     Genders(2, 'Gay'),
     Genders(3, 'Bisexual'),

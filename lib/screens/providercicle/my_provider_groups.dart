@@ -191,38 +191,40 @@ class _MyProviderGroupsState extends State<MyProviderGroups> {
             itemCount: specialityList.length,
             itemBuilder: (context, index) {
               return InkWell(
-                onTap: widget.doctorId != null
-                    ? () {
-                        setState(() {
-                          selectedGroup = specialityList[index];
-                        });
-                      }
-                    : () {
-                        specialityList[index].isSelected = !widget.showBack;
-                        Navigator.pushNamed(
-                            context, Routes.myProviderGroupDetail,
-                            arguments: specialityList[index]);
-                      },
-                child: widget.doctorId != null
-                    ? GroupListItem(specialityList[index], selectedGroup, () {
-                        Widgets.showConfirmationDialog(
-                          context: context,
-                          description: "Are you sure to delete this group?",
-                          onLeftPressed: () => _deleteAddress(
-                            specialityList[index],
-                          ),
-                        );
-                      })
-                    : ListItem(specialityList[index], () {
-                        Widgets.showConfirmationDialog(
-                          context: context,
-                          description: "Are you sure to delete this group?",
-                          onLeftPressed: () => _deleteAddress(
-                            specialityList[index],
-                          ),
-                        );
-                      }),
-              );
+                  onTap: widget.doctorId != null
+                      ? () {
+                          setState(() {
+                            selectedGroup = specialityList[index];
+                          });
+                        }
+                      : () {
+                          specialityList[index].isSelected = !widget.showBack;
+                          Navigator.pushNamed(
+                              context, Routes.myProviderGroupDetail,
+                              arguments: specialityList[index]);
+                        },
+                  child:
+                      //  widget.doctorId != null
+                      //     ?
+                      GroupListItem(specialityList[index], selectedGroup, () {
+                    Widgets.showConfirmationDialog(
+                      context: context,
+                      description: "Are you sure to delete this group?",
+                      onLeftPressed: () => _deleteAddress(
+                        specialityList[index],
+                      ),
+                    );
+                  })
+                  // : ListItem(specialityList[index], () {
+                  //     Widgets.showConfirmationDialog(
+                  //       context: context,
+                  //       description: "Are you sure to delete this group?",
+                  //       onLeftPressed: () => _deleteAddress(
+                  //         specialityList[index],
+                  //       ),
+                  //     );
+                  //   }),
+                  );
             }),
         SizedBox(height: spacing20),
         GestureDetector(

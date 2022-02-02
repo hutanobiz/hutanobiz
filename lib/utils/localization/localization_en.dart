@@ -1479,4 +1479,6 @@ class LocalizationEN implements Localization {
 
   @override
   String get stayingSameProblem => "Staying the same";
+  @override
+  String get addNewProviderLabel => "Add new provider";
 }

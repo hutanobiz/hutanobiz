@@ -376,6 +376,7 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
           itemBuilder: (context, suggestion) {
             return ItemProviderDetail(
               providerDetail: suggestion,
+              
             );
           },
           transitionBuilder: (context, suggestionsBox, controller) {

@@ -18,6 +18,7 @@ import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/loading_background.dart';
+import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/problem_widget.dart';
 import 'package:intl/intl.dart';
 
@@ -70,7 +71,7 @@ class _CompletedAppointmentSummaryState
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: AppColors.goldenTainoi,
-        body: LoadingBackground(
+        body: LoadingBackgroundNew(
           title: "Appointment Summary",
           isAddBack: true,
           addBackButton: false,

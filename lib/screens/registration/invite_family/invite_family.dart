@@ -130,6 +130,6 @@ class _InviteFamilyScreenState extends State<InviteFamilyScreen> {
 
   _skipTaskNow() {
     Navigator.of(context)
-        .pushReplacementNamed(Routes.myProviderGroups, arguments: true);
+        .pushReplacementNamed(Routes.myProviderNetwork, arguments: true);
   }
 }
