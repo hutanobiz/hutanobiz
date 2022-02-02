@@ -73,8 +73,9 @@ class _CompletedAppointmentSummaryState
         backgroundColor: AppColors.goldenTainoi,
         body: LoadingBackgroundNew(
           title: "Appointment Summary",
-          isAddBack: true,
-          addBackButton: false,
+          isAddBack: false,
+          addHeader: true,
+          isBackRequired: true,
           color: Colors.white,
           padding: const EdgeInsets.only(top: 0.0, bottom: 20.0),
           child: FutureBuilder(

@@ -307,7 +307,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                   _container.providerInsuranceList.clear();
                   Navigator.of(context).pushNamed(
                     Routes.paymentMethodScreen,
-                    arguments:  {'paymentType': 0},
+                    arguments: {'paymentType': 0},
                   );
                 },
               ),
@@ -318,6 +318,15 @@ class _SettingsScreenState extends State<SettingScreen> {
                   Navigator.of(context).pushNamed(
                     Routes.onsiteAddresses,
                     arguments: false,
+                  );
+                },
+              ),
+              customListButton(
+                "My Medical Documents",
+                "images/profile_payment_method.png",
+                () {
+                  Navigator.of(context).pushNamed(
+                    Routes.myMedicalDocuments,
                   );
                 },
               ),

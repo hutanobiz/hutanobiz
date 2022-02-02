@@ -64,6 +64,7 @@ import 'package:hutano/screens/dashboard/choose_location_screen.dart';
 import 'package:hutano/screens/dashboard/choose_specialities.dart';
 import 'package:hutano/screens/dashboard/dashboard_search_screen.dart';
 import 'package:hutano/screens/dashboard/profile/activity_notification.dart';
+import 'package:hutano/screens/dashboard/profile/medical_document.dart';
 import 'package:hutano/screens/dashboard/profile/my_providers.dart';
 import 'package:hutano/screens/dashboard/profile/payment_history.dart';
 import 'package:hutano/screens/dashboard/provider_filters.dart';
@@ -289,6 +290,7 @@ class Routes {
       '/completedAppointmentSummary';
   static const String providerAddToNetwork = '/providerAddToNetwork';
   static const String addMoreProviderScreen = '/addMoreProviderScreen';
+  static const String myMedicalDocuments = '/myMedicalDocuments';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final dynamic args = settings.arguments;
@@ -708,7 +710,7 @@ class Routes {
                 doctorName: args[ArgumentConstant.doctorName],
                 doctorAvatar: args[ArgumentConstant.doctorAvatar],
                 isOnBoarding: args['isOnBoarding'],
-                onCompleteRoute:args['onCompleteRoute']??null));
+                onCompleteRoute: args['onCompleteRoute'] ?? null));
         break;
       case myProviderGroups:
         if (args is bool) {
@@ -739,7 +741,7 @@ class Routes {
                 doctorAvatar: args[ArgumentConstant.doctorAvatar],
                 isOnBoarding: args['isOnBoarding'],
                 groupName: args['groupName'],
-                onCompleteRoute:args["onCompleteRoute"]));
+                onCompleteRoute: args["onCompleteRoute"]));
         break;
       case createProviderGroup:
         return MaterialPageRoute(
@@ -748,7 +750,7 @@ class Routes {
                 doctorName: args[ArgumentConstant.doctorName],
                 doctorAvatar: args[ArgumentConstant.doctorAvatar],
                 isOnBoarding: args['isOnBoarding'],
-                onCompleteRoute:args["onCompleteRoute"]));
+                onCompleteRoute: args["onCompleteRoute"]));
         break;
       case inviteSuccess:
         return MaterialPageRoute(builder: (_) => InviteFamilySuccess());
@@ -1010,6 +1012,13 @@ class Routes {
           CompletedAppointmentSummary(
             appointmentId: args,
           ),
+        );
+        break;
+
+      case myMedicalDocuments:
+        return _buildRoute(
+          settings,
+          MedicalDocumentsScreen(),
         );
         break;
 
