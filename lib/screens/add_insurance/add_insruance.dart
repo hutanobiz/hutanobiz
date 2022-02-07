@@ -40,10 +40,10 @@ enum AddInsuranceError {
 enum InsuranceType { primary, secondary }
 
 class AddInsurance extends StatefulWidget {
-  final InsuranceType insuranceType;
+  InsuranceType insuranceType;
   final bool isFromSetting;
 
-  const AddInsurance(
+  AddInsurance(
       {Key key,
       this.insuranceType = InsuranceType.primary,
       this.isFromSetting = false})
@@ -189,6 +189,16 @@ class _AddInsuranceState extends State<AddInsurance> {
           .addInsuranceDoc(_frontImage, _addInsuranceModel,
               backImage: _backImage)
           .then((value) {
+        _frontImage = null;
+        _backImage = null;
+        _companyController.text = '';
+        _memberController.text = '';
+        _groupNumberController.text = '';
+        _healthPlanController.text = '';
+        _memberIdController.text = '';
+        _effectiveDateController.text = '';
+        widget.insuranceType = InsuranceType.secondary;
+
         ProgressDialogUtils.dismissProgressDialog();
         if (widget.isFromSetting) {
           Navigator.pop(context);
