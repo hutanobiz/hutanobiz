@@ -287,7 +287,7 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
         title: ListTile(
           contentPadding: EdgeInsets.all(0),
           title: Text(
-            Localization.of(context).uploadDocumentsLabel,
+            'Upload other medical documents',
             style: TextStyle(
                 fontSize: fontSize15,
                 fontWeight: fontWeightSemiBold,
