@@ -290,25 +290,28 @@ class _AddPharmacyState extends State<AddPharmacy> {
                                           })),
                                           onPressed: _enableButton
                                               ? () async {
-                                                  Pharmacy reqAddPharmacyModel = Pharmacy(
-                                                      name:
-                                                          selectedPharmacy.name,
-                                                      sId: selectedPharmacy.sId,
-                                                      address: AddressPharmacy(
-                                                          address:
-                                                              _addressController
-                                                                  .text,
-                                                          city: _cityController
+                                                  Pharmacy reqAddPharmacyModel =
+                                                      Pharmacy(
+                                                          name: _nameController
                                                               .text,
-                                                          state:
-                                                              _stateController
-                                                                  .text,
-                                                          zipCode:
-                                                              _zipCodeController
-                                                                  .text,
-                                                          phone:
-                                                              _phoneNoController
-                                                                  .text));
+                                                          // .name,
+                                                          // sId: selectedPharmacy.sId,
+                                                          address: AddressPharmacy(
+                                                              address:
+                                                                  _addressController
+                                                                      .text,
+                                                              city:
+                                                                  _cityController
+                                                                      .text,
+                                                              state:
+                                                                  _stateController
+                                                                      .text,
+                                                              zipCode:
+                                                                  _zipCodeController
+                                                                      .text,
+                                                              phone:
+                                                                  _phoneNoController
+                                                                      .text));
                                                   setLoading(true);
                                                   await ApiManager()
                                                       .addPreferredPharmacy(
@@ -578,9 +581,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
               disabledBorder: InputBorder.none,
             )),
         suggestionsCallback: (pattern) async {
-          return pattern.length > 0
-              ? await ApiManager().getPreferredPharmacyList(pattern)
-              : [];
+          return pattern.length > 0 ? await _getPharmacySuggetion(pattern) : [];
         },
         keepSuggestionsOnLoading: false,
         loadingBuilder: (context) => CustomLoader(),
@@ -588,44 +589,46 @@ class _AddPharmacyState extends State<AddPharmacy> {
           return Container();
         },
         itemBuilder: (context, suggestion) {
-          String addressData = '';
-          if (suggestion.address != null) {
-            if (suggestion.address.address != null) {
-              addressData = suggestion.address.address + ', ';
-            }
-            if (suggestion.address.city != null) {
-              addressData += suggestion.address.city + ', ';
-            }
-            if (suggestion.address.state != null) {
-              addressData += suggestion.address.state + ', ';
-            }
-            if (suggestion.address.zipCode != null) {
-              addressData += suggestion.address.zipCode + ', ';
-            }
-            if (suggestion.address.phone != null) {
-              addressData += suggestion.address.phone;
-            }
-          }
+          // String addressData = '';
+          // if (suggestion.address != null) {
+          //   if (suggestion.address.address != null) {
+          //     addressData = suggestion.address.address + ', ';
+          //   }
+          //   if (suggestion.address.city != null) {
+          //     addressData += suggestion.address.city + ', ';
+          //   }
+          //   if (suggestion.address.state != null) {
+          //     addressData += suggestion.address.state + ', ';
+          //   }
+          //   if (suggestion.address.zipCode != null) {
+          //     addressData += suggestion.address.zipCode + ', ';
+          //   }
+          //   if (suggestion.address.phone != null) {
+          //     addressData += suggestion.address.phone;
+          //   }
+          // }
           return ListTile(
-              title: Text(suggestion.name), subtitle: Text(addressData));
+              title: Text(suggestion.name),
+              subtitle: Text(suggestion.formattedAddress));
         },
         transitionBuilder: (context, suggestionsBox, controller) {
           return suggestionsBox;
         },
         onSuggestionSelected: (suggestion) {
-          isAdding = true;
-          selectedPharmacy = suggestion;
+          // isAdding = true;
+          // selectedPharmacy = suggestion;
           _nameController.text = suggestion.name;
           _pharmacyController.text = suggestion.name;
-          if (suggestion.address != null) {
-            _addressController.text = suggestion.address.address;
-            _cityController.text = suggestion.address.city;
-            _stateController.text = suggestion.address.state;
-            _zipCodeController.text = suggestion.address.zipCode;
-            _phoneNoController.text = suggestion.address.phone;
-          }
+          // if (suggestion.address != null) {
+          //   _addressController.text = suggestion.address.address;
+          //   _cityController.text = suggestion.address.city;
+          //   _stateController.text = suggestion.address.state;
+          //   _zipCodeController.text = suggestion.address.zipCode;
+          //   _phoneNoController.text = suggestion.address.phone;
+          // }
 
-          setState(() {});
+          // setState(() {});
+          _getPlaceDetail(suggestion.placeId);
         },
         hideOnError: true,
         hideSuggestionsOnKeyboardHide: true,
@@ -649,20 +652,20 @@ class _AddPharmacyState extends State<AddPharmacy> {
             },
             decoration: InputDecoration(
                 errorText: addressError,
-                suffixIconConstraints: BoxConstraints(),
-                suffixIcon: GestureDetector(
-                  onTap: () {
-                    _addressController.text = "";
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.all(spacing14),
-                    child: Image.asset(
-                      FileConstants.icClose,
-                      width: 30,
-                      height: 30,
-                    ),
-                  ),
-                ),
+                // suffixIconConstraints: BoxConstraints(),
+                // suffixIcon: GestureDetector(
+                //   onTap: () {
+                //     _addressController.text = "";
+                //   },
+                //   child: Padding(
+                //     padding: EdgeInsets.all(spacing14),
+                //     child: Image.asset(
+                //       FileConstants.icClose,
+                //       width: 30,
+                //       height: 30,
+                //     ),
+                //   ),
+                // ),
                 labelText: Localization.of(context).address,
                 hintText: "",
                 isDense: true,
@@ -679,7 +682,9 @@ class _AddPharmacyState extends State<AddPharmacy> {
                     borderSide: BorderSide(color: colorBlack20, width: 1)),
                 labelStyle: labelStyle)),
         suggestionsCallback: (pattern) async {
-          return pattern.length > 3 ? await _getPlaceSuggetion(pattern) : [];
+          return
+              // pattern.length > 3 ? await _getPlaceSuggetion(pattern) :
+              [];
         },
         keepSuggestionsOnLoading: false,
         loadingBuilder: (context) => CustomLoader(),
@@ -728,21 +733,38 @@ class _AddPharmacyState extends State<AddPharmacy> {
 
   _parseAddress() {
     var _addressParser = AddressUtil();
+
+    isAdding = true;
+    // selectedPharmacy = suggestion;
+    // _nameController.text = suggestion.name;
+    // _pharmacyController.text = suggestion.name;
+    // if (suggestion.address != null) {
+    //   _addressController.text = suggestion.address.address;
+    //   _cityController.text = suggestion.address.city;
+    //   _stateController.text = suggestion.address.state;
+    //   _zipCodeController.text = suggestion.address.zipCode;
+    //   _phoneNoController.text = suggestion.address.phone;
+    // }
+
+    // setState(() {});
+
     _addressParser.parseAddress(_placeDetail);
     debugPrint("{${geometry.location.lat} ${geometry.location.lng}");
     _addressController.text = _addressParser.address;
     _zipCodeController.text = _addressParser.zipCode;
+    _stateController.text = _addressParser.state;
     _cityController.text = _addressParser.city;
+    // _phoneNoController.text = _addressParser.p.phone
     addressError = null;
     zipCodeError = null;
     cityError = null;
 
-    final index = _stateList
-        .indexWhere((element) => _addressParser.state == element.title);
+    // final index = _stateList
+    //     .indexWhere((element) => _addressParser.state == element.title);
 
-    if (index != -1) {
-      _stateController.text = _stateList[index].title;
-    }
+    // if (index != -1) {
+    //   _stateController.text = _stateList[index].title;
+    // }
 
     setState(() {});
   }
@@ -860,6 +882,22 @@ class _AddPharmacyState extends State<AddPharmacy> {
           ? res.predictions.sublist(0, 5)
           : res.predictions;
       return _placeList;
+    } on ErrorModel catch (e) {
+      print(e);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  _getPharmacySuggetion(String query) async {
+    final params = <String, String>{
+      'query': query,
+      'type': 'pharmacy',
+      'region': 'us'
+    };
+    try {
+      var res = await ApiManager().getPlaceSuggetions(params);
+      return res.results.length >= 5 ? res.results.sublist(0, 5) : res.results;
     } on ErrorModel catch (e) {
       print(e);
     } catch (e) {
