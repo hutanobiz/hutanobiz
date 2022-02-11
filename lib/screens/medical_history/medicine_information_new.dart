@@ -156,14 +156,11 @@ class _MedicineInformationState extends State<MedicineInformation>
                 height: 5,
               ),
               Container(
-                padding: const EdgeInsets.only(top: spacing2),
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 2),
                 height: 40,
                 decoration: BoxDecoration(
                     color: colorBlack2.withOpacity(0.06),
-                    border: Border.all(
-                      color: Colors.grey[300],
-                      width: 1.0,
-                    ),
                     borderRadius: BorderRadius.all(Radius.circular(8))),
                 child: TextFormField(
                   maxLines: 1,
@@ -175,15 +172,13 @@ class _MedicineInformationState extends State<MedicineInformation>
                   controller: medSearchController,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
-                    floatingLabelBehavior: FloatingLabelBehavior.never,
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                    labelStyle: TextStyle(fontSize: 13.0, color: Colors.grey),
-                    labelText: "",
-                    prefixIcon: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image.asset(FileConstants.icSearchBlack,
-                            color: colorBlack2, width: 20, height: 20)),
+                    prefixIconConstraints: BoxConstraints(),
+                    prefixIcon: GestureDetector(
+                        onTap: () {},
+                        child: Padding(
+                            padding: const EdgeInsets.all(spacing8),
+                            child: Image.asset(FileConstants.icSearchBlack,
+                                color: colorBlack2, width: 20, height: 20))),
                     isDense: true,
                     hintStyle: TextStyle(
                         color: colorBlack2,
