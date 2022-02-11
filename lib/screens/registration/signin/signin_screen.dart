@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -320,6 +321,8 @@ class _SignInScreenState extends State<SignInScreen> {
           setString(PreferenceKey.tokens, value.response.token);
           setString(PreferenceKey.phone, value.response.phoneNumber.toString());
           setInt(PreferenceKey.gender, value.response.gender);
+          setString('patientSocialHistory',
+              jsonEncode(value.response.patientSocialHistory));
           setBool(PreferenceKey.intro, true);
           //TODO
           //Note : Duplication of pref code

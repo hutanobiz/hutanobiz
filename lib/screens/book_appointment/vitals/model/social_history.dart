@@ -35,7 +35,7 @@ class SocialHistory {
 }
 
 class Smoking {
-  int frequency;
+  String frequency;
 
   Smoking({this.frequency});
 
@@ -52,7 +52,7 @@ class Smoking {
 
 class RecreationalDrugs {
   String type;
-  int frequency;
+  String frequency;
 
   RecreationalDrugs({this.type, this.frequency});
 
@@ -71,9 +71,9 @@ class RecreationalDrugs {
 
 class Drinker {
   String type;
-  int frequency;
-  int liquorQuantity;
-  int beerQuantity;
+  String frequency;
+  String liquorQuantity;
+  String beerQuantity;
 
   Drinker({this.type, this.frequency, this.liquorQuantity, this.beerQuantity});
 

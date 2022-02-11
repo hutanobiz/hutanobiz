@@ -30,6 +30,7 @@ class ResLogin {
 }
 
 class Response {
+  PatientSocialHistory _patientSocialHistory;
   Location _location;
   String _title;
   String _fullName;
@@ -71,6 +72,7 @@ class Response {
 
   Response(
       {Location location,
+      PatientSocialHistory patientSocialHistory,
       String title,
       String fullName,
       String firstName,
@@ -109,6 +111,7 @@ class Response {
       List<FamilyNetwork> familyNetwork,
       String token}) {
     this._location = location;
+    this._patientSocialHistory = patientSocialHistory;
     this._title = title;
     this._fullName = fullName;
     this._firstName = firstName;
@@ -153,6 +156,11 @@ class Response {
 
   Location get location => _location;
   set location(Location location) => _location = location;
+
+  PatientSocialHistory get patientSocialHistory => _patientSocialHistory;
+  set patientSocialHistory(PatientSocialHistory patientSocialHistory) =>
+      _patientSocialHistory = patientSocialHistory;
+
   String get title => _title;
   set title(String title) => _title = title;
   String get fullName => _fullName;
@@ -250,6 +258,10 @@ class Response {
     _location = json['location'] != null
         ? new Location.fromJson(json['location'])
         : null;
+    patientSocialHistory = json['patientSocialHistory'] != null
+        ? new PatientSocialHistory.fromJson(json['patientSocialHistory'])
+        : null;
+
     _title = json['title'];
     _fullName = json['fullName'];
     _firstName = json['firstName'];
@@ -317,6 +329,10 @@ class Response {
     if (this._location != null) {
       data['location'] = this._location.toJson();
     }
+    if (this.patientSocialHistory != null) {
+      data['patientSocialHistory'] = this.patientSocialHistory.toJson();
+    }
+
     data['title'] = this._title;
     data['fullName'] = this._fullName;
     data['firstName'] = this._firstName;
@@ -366,6 +382,102 @@ class Response {
           this._familyNetwork.map((v) => v.toJson()).toList();
     }
     data['token'] = this._token;
+    return data;
+  }
+}
+
+class PatientSocialHistory {
+  Smoking smoking;
+  Drinker drinker;
+  List<RecreationalDrugs> recreationalDrugs;
+
+  PatientSocialHistory({this.smoking, this.drinker, this.recreationalDrugs});
+
+  PatientSocialHistory.fromJson(Map<String, dynamic> json) {
+    smoking =
+        json['smoking'] != null ? new Smoking.fromJson(json['smoking']) : null;
+    drinker =
+        json['Drinker'] != null ? new Drinker.fromJson(json['Drinker']) : null;
+    if (json['recreationalDrugs'] != null) {
+      recreationalDrugs = <RecreationalDrugs>[];
+      json['recreationalDrugs'].forEach((v) {
+        recreationalDrugs.add(new RecreationalDrugs.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.smoking != null) {
+      data['smoking'] = this.smoking.toJson();
+    }
+    if (this.drinker != null) {
+      data['Drinker'] = this.drinker.toJson();
+    }
+    if (this.recreationalDrugs != null) {
+      data['recreationalDrugs'] =
+          this.recreationalDrugs.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Smoking {
+  String frequency;
+
+  Smoking({this.frequency});
+
+  Smoking.fromJson(Map<String, dynamic> json) {
+    frequency = json['frequency'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['frequency'] = this.frequency;
+    return data;
+  }
+}
+
+class Drinker {
+  String frequency;
+  String liquorQuantity;
+  String beerQuantity;
+
+  Drinker({this.frequency, this.liquorQuantity, this.beerQuantity});
+
+  Drinker.fromJson(Map<String, dynamic> json) {
+    frequency = json['frequency'];
+    liquorQuantity = json['liquorQuantity'];
+    beerQuantity = json['BeerQuantity'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['frequency'] = this.frequency;
+    data['liquorQuantity'] = this.liquorQuantity;
+    data['BeerQuantity'] = this.beerQuantity;
+    return data;
+  }
+}
+
+class RecreationalDrugs {
+  String type;
+  String frequency;
+  String sId;
+
+  RecreationalDrugs({this.type, this.frequency, this.sId});
+
+  RecreationalDrugs.fromJson(Map<String, dynamic> json) {
+    type = json['type'];
+    frequency = json['frequency'];
+    sId = json['_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['type'] = this.type;
+    data['frequency'] = this.frequency;
+    data['_id'] = this.sId;
     return data;
   }
 }

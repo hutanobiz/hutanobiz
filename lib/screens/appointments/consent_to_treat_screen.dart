@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
@@ -5,6 +7,7 @@ import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/localization/localization.dart';
+import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
@@ -98,7 +101,10 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
           // Navigator.of(context).pushNamed(routeMyMedicalHistory)
           isAgree
               ? Navigator.of(context)
-                  .pushNamed(Routes.socialHistory, arguments: {'isEdit':false})
+                  .pushNamed(Routes.socialHistory, arguments: {
+                  'isEdit': false,
+                  'socialHistory': jsonDecode(getString('patientSocialHistory'))
+                })
               : Widgets.showToast("Please agree to continue");
         },
         color: Colors.white,

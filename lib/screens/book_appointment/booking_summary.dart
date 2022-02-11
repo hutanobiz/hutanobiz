@@ -176,14 +176,14 @@ class _BookingsummaryState extends State<Bookingsummary> {
             children: [
               Text(socialHistory.smoking != null &&
                       socialHistory.smoking.frequency != null &&
-                      socialHistory.smoking.frequency != 0
-                  ? 'Patient smokes ${socialHistorySmokingUsages[socialHistory.smoking.frequency - 1]}.'
+                      socialHistory.smoking.frequency != "0"
+                  ? 'Patient smokes ${socialHistorySmokingUsages[int.parse(socialHistory.smoking.frequency) - 1]}.'
                   : 'Patient do not smokes.'),
               socialHistory.drinker == null
                   ? Text('Patient do not drink.')
-                  : socialHistory.drinker.frequency == 1
+                  : socialHistory.drinker.frequency == "1"
                       ? Text('Patient drink Rarely.')
-                      : socialHistory.drinker.frequency == 2
+                      : socialHistory.drinker.frequency == "2"
                           ? Text('Patient drink Socially.')
                           : ListView(
                               shrinkWrap: true,
@@ -195,17 +195,17 @@ class _BookingsummaryState extends State<Bookingsummary> {
                                               null &&
                                           socialHistory
                                                   .drinker.liquorQuantity !=
-                                              0
+                                              "0"
                                       ? Text(
-                                          'Patient consumes ${socialHistory.drinker.liquorQuantity == 2 ? 'more than' : 'less than'} 1pt of liquor ${socialHistoryUsages[socialHistory.drinker.frequency - 1]}.')
+                                          'Patient consumes ${socialHistory.drinker.liquorQuantity == "2" ? 'more than' : 'less than'} 1pt of liquor ${socialHistoryUsages[int.parse(socialHistory.drinker.frequency) - 1]}.')
                                       : SizedBox(),
                                   socialHistory.drinker != null &&
                                           socialHistory.drinker.beerQuantity !=
                                               null &&
                                           socialHistory.drinker.beerQuantity !=
-                                              0
+                                              "0"
                                       ? Text(
-                                          'Patient consumes ${socialHistory.drinker.beerQuantity == 2 ? 'more than' : 'less than'} 6 beer ${socialHistoryUsages[socialHistory.drinker.frequency - 1]}.')
+                                          'Patient consumes ${socialHistory.drinker.beerQuantity == "2" ? 'more than' : 'less than'} 6 beer ${socialHistoryUsages[int.parse(socialHistory.drinker.frequency) - 1]}.')
                                       : SizedBox()
                                 ]),
               socialHistory.recreationalDrugs != null &&
@@ -217,7 +217,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
                       itemCount: socialHistory.recreationalDrugs.length,
                       itemBuilder: (context, index) {
                         return Text(
-                          'Patient uses ${socialHistory.recreationalDrugs[index].type} ${socialHistoryUsages[socialHistory.recreationalDrugs[index].frequency - 1]}.',
+                          'Patient uses ${socialHistory.recreationalDrugs[index].type} ${socialHistoryUsages[int.parse(socialHistory.recreationalDrugs[index].frequency) - 1]}.',
                         );
                       },
                     )

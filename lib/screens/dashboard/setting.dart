@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/circular_loader.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
@@ -328,6 +331,29 @@ class _SettingsScreenState extends State<SettingScreen> {
                   Navigator.of(context).pushNamed(
                     Routes.myMedicalDocuments,
                   );
+                },
+              ),
+              customListButton(
+                "My Medications",
+                "images/profile_payment_method.png",
+                () {
+                  Navigator.of(context)
+                      .pushNamed(Routes.routeMedicineInformation, arguments: {
+                    'isEdit': true,
+                  });
+                },
+              ),
+              customListButton(
+                "Social History",
+                "images/profile_payment_method.png",
+                () {
+                  Navigator.of(context)
+                      .pushNamed(Routes.socialHistory, arguments: {
+                    'isEdit': true,
+                    'socialHistory':
+                        jsonDecode(getString('patientSocialHistory')),
+                    'appointmentId': null
+                  });
                 },
               ),
               customListButton(
