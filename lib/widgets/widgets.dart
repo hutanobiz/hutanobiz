@@ -427,9 +427,10 @@ class Widgets {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   side: BorderSide(color: AppColors.windsor)),
-                              onPressed: () {
-                                yyDialog.dismiss();
-                              },
+                              onPressed: onRightPressed ??
+                                  () {
+                                    Navigator.of(context).pop();
+                                  },
                               child: Padding(
                                 padding: EdgeInsets.all(10),
                                 child: Text(

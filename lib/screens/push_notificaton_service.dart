@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/chat/models/seach_doctor_data.dart';
+import 'package:hutano/utils/preference_key.dart';
+import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:permission_handler/permission_handler.dart' as Permission;
@@ -109,20 +111,23 @@ class PushNotificationService {
                     },
                     rightText: 'Waiting Room',
                     onRightPressed: () {
-                      SharedPref().getToken().then((token) {
-                        var appointmentId = {};
-                        appointmentId['appointmentId'] =
-                            message.data['appointmentId'];
-                        api
-                            .patientAvailableForCall(token, appointmentId)
-                            .then((value) {
-                          Navigator.pop(navigatorContext);
-                          Navigator.of(navigatorContext).pushNamed(
-                              Routes.trackTelemedicineAppointment,
-                              arguments: message.data['appointmentId']);
-                        });
+                      // SharedPref().getToken().then((token) {
+                      var appointmentId = {};
+                      appointmentId['appointmentId'] =
+                          message.data['appointmentId'];
+                      api
+                          .patientAvailableForCall(
+                              "Bearer ${getString(PreferenceKey.tokens)}",
+                              appointmentId)
+                          .then((value) {
+                        Navigator.pop(navigatorContext);
+                        Navigator.of(navigatorContext).pushNamed(
+                            Routes.trackTelemedicineAppointment,
+                            arguments: message.data['appointmentId']);
                       });
                     });
+                // });
+                showNotification(message);
               } else {
                 SharedPref().getToken().then((token) {
                   var appointmentId = {};
@@ -212,7 +217,9 @@ class PushNotificationService {
             if (!isCurrentChatAppointment(
                 Routes.chat, message.data['appointmentId'])) {
               showNotification(message);
-            } else {}
+            } else {
+              showNotification(message);
+            }
             break;
           default:
             showNotification(message);
