@@ -297,7 +297,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
       ),
     ));
 
-    _widgetList.add(SizedBox(height: 12.0));
+    _widgetList.add(SizedBox(height: 8.0));
 
     _widgetList.add(isPayment != 0 &&
             (_providerInsuranceList == null || _providerInsuranceList.isEmpty)
@@ -539,6 +539,29 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+                        isPayment == 0
+                            ? Container()
+                            : !_providerInsuranceList.contains(
+                                    _insuranceList[index]["insuranceId"]
+                                        .toString())
+                                ? Text(
+                                    "Insurance not accepted by the provider",
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 12.0,
+                                      color: Colors.grey[500],
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  )
+                                : Container(),
+                        isPayment == 0
+                            ? Container()
+                            : _providerInsuranceList.contains(
+                                    _insuranceList[index]["insuranceId"]
+                                        .toString())
+                                ? Container()
+                                : SizedBox(height: 8),
                         Container(
                           padding: const EdgeInsets.all(8.0),
                           decoration: BoxDecoration(
@@ -664,29 +687,6 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                   },
                           ),
                         ),
-                        isPayment == 0
-                            ? Container()
-                            : _providerInsuranceList.contains(
-                                    _insuranceList[index]["insuranceId"]
-                                        .toString())
-                                ? Container()
-                                : SizedBox(height: 3),
-                        isPayment == 0
-                            ? Container()
-                            : !_providerInsuranceList.contains(
-                                    _insuranceList[index]["insuranceId"]
-                                        .toString())
-                                ? Text(
-                                    "Insurance not accepted by the provider",
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: 12.0,
-                                      color: Colors.grey[500],
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  )
-                                : Container(),
                       ],
                     );
                   },
