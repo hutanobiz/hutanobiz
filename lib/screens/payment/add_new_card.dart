@@ -174,10 +174,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                             controller: _expiryController,
                                             key: _expiryDateKey,
                                             autovalidate: true,
-                                            keyboardType:
-                                                TextInputType.numberWithOptions(
-                                                    signed: false,
-                                                    decimal: false),
+                                            keyboardType: TextInputType.number,
                                             inputFormatters: [
                                               WhitelistingTextInputFormatter
                                                   .digitsOnly,
