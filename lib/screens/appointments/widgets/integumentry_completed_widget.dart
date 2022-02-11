@@ -12,7 +12,13 @@ class IntegumentryCompletedWidget extends StatelessWidget {
 
   final Integumentary integumentry;
   List<String> radioValues = ['', "Bilateral", "Left", "Right"];
-
+  Map<String, String> timeSpanConfig = {
+    "1": "Hours",
+    "2": "Days",
+    "3": "Weeks",
+    "4": "Months",
+    "5": "Years"
+  };
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -71,15 +77,98 @@ class IntegumentryCompletedWidget extends StatelessWidget {
                                 border: Border.all(color: Colors.grey.shade100),
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(12)),
-                            child: Text(
-                              "\u2022 " +
-                                  radioValues[int.parse(
-                                      integumentry.summary[index].type)] +
-                                  ' ' +
-                                  integumentry.summary[index].location +
-                                  '; ' +
-                                  '${integumentry.summary[index].length}cm X ${integumentry.summary[index].width}cm X ${integumentry.summary[index].depth}cm; ${integumentry.summary[index].staging}; ${integumentry.summary[index].granulation}% granulation, ${integumentry.summary[index].slough}% slough, ${integumentry.summary[index].necrosis}% necrosis, ${integumentry.summary[index].drainageType}, ${integumentry.summary[index].drainageAmount}; ${integumentry.summary[index].odor}, ${integumentry.summary[index].mechanismOfInjury}; pain ${integumentry.summary[index].pain}/10.',
-                              style: AppTextStyle.semiBoldStyle(fontSize: 16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "\u2022 " +
+                                      radioValues[int.parse(
+                                          integumentry.summary[index].type)] +
+                                      ' ' +
+                                      integumentry.summary[index].location,
+                                  style:
+                                      AppTextStyle.semiBoldStyle(fontSize: 16),
+                                ),
+                                integumentry.summary[index].length != null
+                                    ? titleWidget('Length',
+                                        '${integumentry.summary[index].length.current} cm')
+                                    : SizedBox(),
+                                getGoalText(
+                                    integumentry.summary[index].length.goal),
+                                integumentry.summary[index].width != null
+                                    ? titleWidget('Width',
+                                        '${integumentry.summary[index].width.current} cm')
+                                    : SizedBox(),
+                                getGoalText(
+                                    integumentry.summary[index].width.goal),
+                                integumentry.summary[index].depth != null
+                                    ? titleWidget('Depth',
+                                        '${integumentry.summary[index].depth.current} cm')
+                                    : SizedBox(),
+                                getGoalText(
+                                    integumentry.summary[index].depth.goal),
+                                integumentry.summary[index].staging != null
+                                    ? titleWidget('Staging',
+                                        '${integumentry.summary[index].staging}')
+                                    : SizedBox(),
+                                integumentry.summary[index].granulation != null
+                                    ? titleWidget('Granulation',
+                                        '${integumentry.summary[index].granulation.current} %')
+                                    : SizedBox(),
+                                getGoalText(integumentry
+                                    .summary[index].granulation.goal),
+                                integumentry.summary[index].slough != null
+                                    ? titleWidget('Slough',
+                                        '${integumentry.summary[index].slough.current} %')
+                                    : SizedBox(),
+                                getGoalText(
+                                    integumentry.summary[index].slough.goal),
+                                integumentry.summary[index].necrosis != null
+                                    ? titleWidget('Necrosis',
+                                        '${integumentry.summary[index].necrosis.current} %')
+                                    : SizedBox(),
+                                integumentry.summary[index].periwound != null &&
+                                        integumentry.summary[index].periwound
+                                                .length >
+                                            0
+                                    ? periWoundWidget(
+                                        integumentry.summary[index].periwound)
+                                    : SizedBox(),
+                                getGoalText(
+                                    integumentry.summary[index].necrosis.goal),
+                                integumentry.summary[index].drainageType != null
+                                    ? titleWidget('Drainage Type',
+                                        '${integumentry.summary[index].drainageType.current}')
+                                    : SizedBox(),
+                                getGoalText(integumentry
+                                    .summary[index].drainageType.goal),
+                                integumentry.summary[index].drainageAmount !=
+                                        null
+                                    ? titleWidget('Drainage Amount',
+                                        '${integumentry.summary[index].drainageAmount.current}')
+                                    : SizedBox(),
+                                getGoalText(integumentry
+                                    .summary[index].drainageAmount.goal),
+                                integumentry.summary[index].odor != null
+                                    ? titleWidget('Odor',
+                                        '${integumentry.summary[index].odor.current}')
+                                    : SizedBox(),
+                                getGoalText(
+                                    integumentry.summary[index].odor.goal),
+                                integumentry.summary[index].mechanismOfInjury !=
+                                        null
+                                    ? titleWidget('Mechanism Of Injury',
+                                        '${integumentry.summary[index].mechanismOfInjury}')
+                                    : SizedBox(),
+                                integumentry.summary[index].pain != null
+                                    ? titleWidget('Pain',
+                                        '${integumentry.summary[index].pain}')
+                                    : SizedBox(),
+                                integumentry.summary[index].notes != null
+                                    ? titleWidget('Notes',
+                                        '${integumentry.summary[index].notes}')
+                                    : SizedBox(),
+                              ],
                             ));
                       },
                     )
@@ -130,6 +219,64 @@ class IntegumentryCompletedWidget extends StatelessWidget {
                   : SizedBox(),
             ])),
       ],
+    );
+  }
+
+  periWoundWidget(List<String> periWound) {
+    var periString = '';
+    periWound.forEach((element) {
+      periString += element + ', ';
+    });
+
+    if (periString.length > 2) {
+      periString = periString.substring(0, periString.length - 2);
+    }
+    return Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(
+            text: 'PeriWound: ',
+            style: AppTextStyle.semiBoldStyle(fontSize: 16),
+          ),
+          TextSpan(
+            text: periString,
+          ),
+        ],
+      ),
+    );
+  }
+
+  getGoalText(Goal goal) {
+    if (goal != null && goal.achieve != null) {
+      var improvements = '';
+      if (goal.improvements != null) {
+        goal.improvements.forEach((element) {
+          improvements += element + ', ';
+        });
+      }
+      if (improvements.length > 2) {
+        improvements = improvements.substring(0, improvements.length - 2);
+      }
+      return Text(
+          "Goal:${goal.achieve} within ${goal.timeFrame} ${timeSpanConfig[goal.timeUnit]}\nimprovements: $improvements");
+    } else {
+      return SizedBox();
+    }
+  }
+
+  titleWidget(String key, String value) {
+    return Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(
+            text: '$key: ',
+            style: AppTextStyle.semiBoldStyle(fontSize: 16),
+          ),
+          TextSpan(
+            text: value,
+          ),
+        ],
+      ),
     );
   }
 }

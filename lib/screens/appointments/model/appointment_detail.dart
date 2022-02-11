@@ -1803,80 +1803,111 @@ class PainSummary {
 class IntegumentarySummary {
   String location;
   String type;
-  String length;
-  String width;
-  String depth;
   String staging;
-  String granulation;
-  String slough;
-  String necrosis;
-  String drainageType;
-  String drainageAmount;
-  String odor;
   String mechanismOfInjury;
   String pain;
   String notes;
   String image;
+  List<String> periwound;
   String sId;
+  Weight length;
+  Weight width;
+  Weight depth;
+  Weight granulation;
+  Weight slough;
+  Weight necrosis;
+  Weight drainageType;
+  Weight drainageAmount;
+  Weight odor;
 
   IntegumentarySummary(
       {this.location,
       this.type,
+      this.staging,
+      this.mechanismOfInjury,
+      this.pain,
+      this.notes,
+      this.image,
+      this.periwound,
+      this.sId,
       this.length,
       this.width,
       this.depth,
-      this.staging,
       this.granulation,
       this.slough,
       this.necrosis,
       this.drainageType,
       this.drainageAmount,
-      this.odor,
-      this.mechanismOfInjury,
-      this.pain,
-      this.notes,
-      this.image,
-      this.sId});
+      this.odor});
 
   IntegumentarySummary.fromJson(Map<String, dynamic> json) {
     location = json['location'];
     type = json['type'];
-    length = json['length'];
-    width = json['width'];
-    depth = json['depth'];
     staging = json['staging'];
-    granulation = json['granulation'];
-    slough = json['slough'];
-    necrosis = json['necrosis'];
-    drainageType = json['drainageType'];
-    drainageAmount = json['drainageAmount'];
-    odor = json['odor'];
     mechanismOfInjury = json['mechanismOfInjury'];
     pain = json['pain'];
     notes = json['notes'];
     image = json['image'];
+    periwound = json['periwound'].cast<String>();
     sId = json['_id'];
+    length =
+        json['length'] != null ? new Weight.fromJson(json['length']) : null;
+    width = json['width'] != null ? new Weight.fromJson(json['width']) : null;
+    depth = json['depth'] != null ? new Weight.fromJson(json['depth']) : null;
+    granulation = json['granulation'] != null
+        ? new Weight.fromJson(json['granulation'])
+        : null;
+    slough =
+        json['slough'] != null ? new Weight.fromJson(json['slough']) : null;
+    necrosis =
+        json['necrosis'] != null ? new Weight.fromJson(json['necrosis']) : null;
+    drainageType = json['drainageType'] != null
+        ? new Weight.fromJson(json['drainageType'])
+        : null;
+    drainageAmount = json['drainageAmount'] != null
+        ? new Weight.fromJson(json['drainageAmount'])
+        : null;
+    odor = json['odor'] != null ? new Weight.fromJson(json['odor']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['location'] = this.location;
     data['type'] = this.type;
-    data['length'] = this.length;
-    data['width'] = this.width;
-    data['depth'] = this.depth;
     data['staging'] = this.staging;
-    data['granulation'] = this.granulation;
-    data['slough'] = this.slough;
-    data['necrosis'] = this.necrosis;
-    data['drainageType'] = this.drainageType;
-    data['drainageAmount'] = this.drainageAmount;
-    data['odor'] = this.odor;
     data['mechanismOfInjury'] = this.mechanismOfInjury;
     data['pain'] = this.pain;
     data['notes'] = this.notes;
     data['image'] = this.image;
+    data['periwound'] = this.periwound;
     data['_id'] = this.sId;
+    if (this.length != null) {
+      data['length'] = this.length.toJson();
+    }
+    if (this.width != null) {
+      data['width'] = this.width.toJson();
+    }
+    if (this.depth != null) {
+      data['depth'] = this.depth.toJson();
+    }
+    if (this.granulation != null) {
+      data['granulation'] = this.granulation.toJson();
+    }
+    if (this.slough != null) {
+      data['slough'] = this.slough.toJson();
+    }
+    if (this.necrosis != null) {
+      data['necrosis'] = this.necrosis.toJson();
+    }
+    if (this.drainageType != null) {
+      data['drainageType'] = this.drainageType.toJson();
+    }
+    if (this.drainageAmount != null) {
+      data['drainageAmount'] = this.drainageAmount.toJson();
+    }
+    if (this.odor != null) {
+      data['odor'] = this.odor.toJson();
+    }
     return data;
   }
 }
@@ -1934,11 +1965,11 @@ class GaitSummary {
 }
 
 class GaitData {
-  String type;
-  String distance;
-  String assistance;
-  String assistiveDevice;
-  String cuing;
+  Weight gaitType;
+  Weight distance;
+  Weight assistance;
+  Weight assistiveDevice;
+  Weight cuing;
   String terraine;
   String ambulationTrainer;
   String time;
@@ -1947,7 +1978,7 @@ class GaitData {
   String sId;
 
   GaitData(
-      {this.type,
+      {this.gaitType,
       this.distance,
       this.assistance,
       this.assistiveDevice,
@@ -1960,11 +1991,22 @@ class GaitData {
       this.sId});
 
   GaitData.fromJson(Map<String, dynamic> json) {
-    type = json['type'];
-    distance = json['distance'];
-    assistance = json['assistance'];
-    assistiveDevice = json['assistiveDevice'];
-    cuing = json['cuing'];
+    gaitType =
+        json['gaitType'] != null ? new Weight.fromJson(json['gaitType']) : null;
+    distance =
+        json['distance'] != null ? new Weight.fromJson(json['distance']) : null;
+    assistance = json['assistance'] != null
+        ? new Weight.fromJson(json['assistance'])
+        : null;
+    assistiveDevice = json['assistiveDevice'] != null
+        ? new Weight.fromJson(json['assistiveDevice'])
+        : null;
+    cuing = json['cuing'] != null ? new Weight.fromJson(json['cuing']) : null;
+    // gaitType = json['gaitType'];
+    // distance = json['distance'];
+    // assistance = json['assistance'];
+    // assistiveDevice = json['assistiveDevice'];
+    // cuing = json['cuing'];
     terraine = json['terraine'];
     ambulationTrainer = json['ambulationTrainer'];
     time = json['time'];
@@ -1975,11 +2017,26 @@ class GaitData {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['type'] = this.type;
-    data['distance'] = this.distance;
-    data['assistance'] = this.assistance;
-    data['assistiveDevice'] = this.assistiveDevice;
-    data['cuing'] = this.cuing;
+    if (this.gaitType != null) {
+      data['gaitType'] = this.gaitType.toJson();
+    }
+    if (this.distance != null) {
+      data['distance'] = this.distance.toJson();
+    }
+    if (this.assistance != null) {
+      data['assistance'] = this.assistance.toJson();
+    }
+    if (this.assistiveDevice != null) {
+      data['assistiveDevice'] = this.assistiveDevice.toJson();
+    }
+    if (this.cuing != null) {
+      data['cuing'] = this.cuing.toJson();
+    }
+    // data['gaitType'] = this.gaitType;
+    // data['distance'] = this.distance;
+    // data['assistance'] = this.assistance;
+    // data['assistiveDevice'] = this.assistiveDevice;
+    // data['cuing'] = this.cuing;
     data['terraine'] = this.terraine;
     data['ambulationTrainer'] = this.ambulationTrainer;
     data['time'] = this.time;

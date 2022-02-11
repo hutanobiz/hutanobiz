@@ -12,7 +12,13 @@ class GaitCompletedWidget extends StatelessWidget {
 
   final Gait gait;
   List<String> radioValues = ['', "Bilateral", "Left", "Right"];
-
+  Map<String, String> timeSpanConfig = {
+    "1": "Hours",
+    "2": "Days",
+    "3": "Weeks",
+    "4": "Months",
+    "5": "Years"
+  };
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -73,41 +79,52 @@ class GaitCompletedWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "\u2022 " + gait.summary[index].type,
+                            "\u2022 " + gait.summary[index].gaitType.current,
                             style: AppTextStyle.semiBoldStyle(fontSize: 16),
                           ),
+                          getGoalText(gait.summary[index].gaitType.goal),
                           gait.summary[index].distance != null
-                              ? Text(
-                                  'Distance: ${gait.summary[index].distance}')
+                              ? titleWidget('Distance',
+                                  '${gait.summary[index].distance.current} ft')
                               : SizedBox(),
+                          getGoalText(gait.summary[index].distance.goal),
                           gait.summary[index].assistance != null
-                              ? Text(
-                                  'Assistance: ${gait.summary[index].assistance}')
+                              ? titleWidget('Assistance',
+                                  '${gait.summary[index].assistance.current}')
+                              : SizedBox(),
+                          getGoalText(gait.summary[index].assistance.goal),
+                          gait.summary[index].assistiveDevice != null
+                              ? titleWidget('Assistance Device',
+                                  '${gait.summary[index].assistiveDevice.current}')
                               : SizedBox(),
                           gait.summary[index].assistiveDevice != null
-                              ? Text(
-                                  'Assistance Device: ${gait.summary[index].assistiveDevice}')
+                              ? getGoalText(
+                                  gait.summary[index].assistiveDevice.goal)
                               : SizedBox(),
                           gait.summary[index].cuing != null
-                              ? Text('Cuing: ${gait.summary[index].cuing}')
+                              ? titleWidget('Cuing',
+                                  '${gait.summary[index].cuing.current}')
                               : SizedBox(),
+                          getGoalText(gait.summary[index].cuing.goal),
                           gait.summary[index].terraine != null
-                              ? Text(
-                                  'Terraine: ${gait.summary[index].terraine}')
+                              ? titleWidget(
+                                  'Terraine', '${gait.summary[index].terraine}')
                               : SizedBox(),
                           gait.summary[index].ambulationTrainer != null
-                              ? Text(
-                                  'Ambulation Trainer: ${gait.summary[index].ambulationTrainer}')
+                              ? titleWidget('Ambulation Trainer',
+                                  '${gait.summary[index].ambulationTrainer}')
                               : SizedBox(),
                           gait.summary[index].time != null
-                              ? Text('Time: ${gait.summary[index].time}')
+                              ? titleWidget(
+                                  'Time', '${gait.summary[index].time}')
                               : SizedBox(),
                           gait.summary[index].patientResponse != null
-                              ? Text(
-                                  'Patient Response: ${gait.summary[index].patientResponse}')
+                              ? titleWidget('Patient Response',
+                                  '${gait.summary[index].patientResponse}')
                               : SizedBox(),
                           gait.summary[index].notes != null
-                              ? Text('Notes: ${gait.summary[index].notes}')
+                              ? titleWidget(
+                                  'Notes', '${gait.summary[index].notes}')
                               : SizedBox(),
                         ],
                       ));
@@ -127,6 +144,40 @@ class GaitCompletedWidget extends StatelessWidget {
                   : SizedBox(),
             ])),
       ],
+    );
+  }
+
+  getGoalText(Goal goal) {
+    if (goal != null && goal.achieve != null) {
+      var improvements = '';
+      if (goal.improvements != null) {
+        goal.improvements.forEach((element) {
+          improvements += element + ', ';
+        });
+      }
+      if (improvements.length > 2) {
+        improvements = improvements.substring(0, improvements.length - 2);
+      }
+      return Text(
+          "Goal:${goal.achieve} within ${goal.timeFrame} ${timeSpanConfig[goal.timeUnit]}\nimprovements: $improvements");
+    } else {
+      return SizedBox();
+    }
+  }
+
+  titleWidget(String key, String value) {
+    return Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(
+            text: '$key: ',
+            style: AppTextStyle.semiBoldStyle(fontSize: 16),
+          ),
+          TextSpan(
+            text: value,
+          ),
+        ],
+      ),
     );
   }
 }
