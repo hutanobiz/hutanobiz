@@ -183,8 +183,45 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
                       isAddBack: false,
                       addHeader: true,
                       padding: const EdgeInsets.only(bottom: 20),
-                      child: ListView(
-                        children: _buildProivderidget(profileMapResponse),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: ListView(
+                              children: _buildProivderidget(profileMapResponse),
+                            ),
+                          ),
+                          Container(
+                            height: 55.0,
+                            width: MediaQuery.of(context).size.width,
+                            margin: const EdgeInsets.only(top: 10),
+                            padding:
+                                const EdgeInsets.only(right: 20.0, left: 20.0),
+                            child: FancyButton(
+                              title: "Book Appointment",
+                              onPressed: () {
+                                Map _appointentTypeMap = {};
+
+                                dynamic response =
+                                    profileMapResponse["data"][0];
+
+                                _appointentTypeMap["isOfficeEnabled"] =
+                                    response["isOfficeEnabled"];
+                                _appointentTypeMap["isVideoChatEnabled"] =
+                                    response["isVideoChatEnabled"];
+                                _appointentTypeMap["isOnsiteEnabled"] =
+                                    response["isOnsiteEnabled"];
+                                _container.providerResponse.clear();
+
+                                _container.setProviderData(
+                                    "providerData", profileMapResponse);
+                                Navigator.of(context).pushNamed(
+                                  Routes.appointmentTypeScreen,
+                                  arguments: _appointentTypeMap,
+                                );
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     );
                   } else if (snapshot.hasError) {
@@ -811,39 +848,39 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
       ),
     ));
 
-    formWidget.add(Align(
-      alignment: FractionalOffset.center,
-      child: Container(
-        height: 55.0,
-        width: MediaQuery.of(context).size.width,
-        margin: const EdgeInsets.only(top: 10),
-        padding: const EdgeInsets.only(right: 20.0, left: 20.0),
-        child: FancyButton(
-          title: "Book Appointment",
-          onPressed: () {
-            Map _appointentTypeMap = {};
+    // formWidget.add(Align(
+    //   alignment: FractionalOffset.center,
+    //   child: Container(
+    //     height: 55.0,
+    //     width: MediaQuery.of(context).size.width,
+    //     margin: const EdgeInsets.only(top: 10),
+    //     padding: const EdgeInsets.only(right: 20.0, left: 20.0),
+    //     child: FancyButton(
+    //       title: "Book Appointment",
+    //       onPressed: () {
+    //         Map _appointentTypeMap = {};
 
-            dynamic response = profileMapResponse["data"][0];
+    //         dynamic response = profileMapResponse["data"][0];
 
-            _appointentTypeMap["isOfficeEnabled"] = response["isOfficeEnabled"];
-            _appointentTypeMap["isVideoChatEnabled"] =
-                response["isVideoChatEnabled"];
-            _appointentTypeMap["isOnsiteEnabled"] = response["isOnsiteEnabled"];
-            _container.providerResponse.clear();
+    //         _appointentTypeMap["isOfficeEnabled"] = response["isOfficeEnabled"];
+    //         _appointentTypeMap["isVideoChatEnabled"] =
+    //             response["isVideoChatEnabled"];
+    //         _appointentTypeMap["isOnsiteEnabled"] = response["isOnsiteEnabled"];
+    //         _container.providerResponse.clear();
 
-            _container.setProviderData("providerData", profileMapResponse);
-            Navigator.of(context).pushNamed(
-              Routes.appointmentTypeScreen,
-              arguments: _appointentTypeMap,
-            );
-          },
-        ),
-      ),
-    ));
+    //         _container.setProviderData("providerData", profileMapResponse);
+    //         Navigator.of(context).pushNamed(
+    //           Routes.appointmentTypeScreen,
+    //           arguments: _appointentTypeMap,
+    //         );
+    //       },
+    //     ),
+    //   ),
+    // ));
 
-    formWidget.add(SizedBox(
-      height: 15,
-    ));
+    // formWidget.add(SizedBox(
+    //   height: 15,
+    // ));
     formWidget.add(
       Padding(
         padding: const EdgeInsets.only(left: 20, bottom: 16, top: 16),
