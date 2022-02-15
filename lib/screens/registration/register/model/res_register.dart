@@ -1,3 +1,5 @@
+import 'package:hutano/screens/registration/signin/model/res_login.dart';
+
 class ResRegister {
   String _status;
   Response _response;
@@ -30,6 +32,7 @@ class ResRegister {
 }
 
 class Response {
+  PatientSocialHistory _patientSocialHistory;
   Location _location;
   String _title;
   String _fullName;
@@ -78,6 +81,7 @@ class Response {
 
   Response(
       {Location location,
+      PatientSocialHistory patientSocialHistory,
       String title,
       String fullName,
       String firstName,
@@ -123,6 +127,7 @@ class Response {
       int iV,
       String token}) {
     this._location = location;
+    this._patientSocialHistory = patientSocialHistory;
     this._title = title;
     this._fullName = fullName;
     this._firstName = firstName;
@@ -173,6 +178,9 @@ class Response {
 
   Location get location => _location;
   set location(Location location) => _location = location;
+  PatientSocialHistory get patientSocialHistory => _patientSocialHistory;
+  set patientSocialHistory(PatientSocialHistory patientSocialHistory) =>
+      _patientSocialHistory = patientSocialHistory;
   String get title => _title;
   set title(String title) => _title = title;
   String get fullName => _fullName;
@@ -288,6 +296,9 @@ class Response {
     _location = json['location'] != String
         ? new Location.fromJson(json['location'])
         : String;
+    patientSocialHistory = json['patientSocialHistory'] != null
+        ? new PatientSocialHistory.fromJson(json['patientSocialHistory'])
+        : null;
     _title = json['title'];
     _fullName = json['fullName'];
     _firstName = json['firstName'];
@@ -367,6 +378,9 @@ class Response {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this._location != String) {
       data['location'] = this._location.toJson();
+    }
+    if (this.patientSocialHistory != null) {
+      data['patientSocialHistory'] = this.patientSocialHistory.toJson();
     }
     data['title'] = this._title;
     data['fullName'] = this._fullName;

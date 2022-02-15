@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -392,6 +393,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       // SharedPref().setValue(PreferenceKey.gender, res.response.gender);
       setInt(PreferenceKey.gender, res.response.gender);
       setString(PreferenceKey.tokens, res.response.token);
+      setString('patientSocialHistory',
+          jsonEncode(res.response.patientSocialHistory));
       SharedPref()
           .setValue(PreferenceKey.phone, res.response.phoneNumber.toString());
 
