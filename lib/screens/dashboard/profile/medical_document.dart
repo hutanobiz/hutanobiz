@@ -102,34 +102,37 @@ class _MedicalDocumentsScreenState extends State<MedicalDocumentsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.symmetric(vertical:8.0,horizontal: 20),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 20),
                             child: Text('Appointment Documents',
                                 style: AppTextStyle.boldStyle(fontSize: 16)),
                           ),
-                          ListView.separated(
-                            // padding: EdgeInsets.symmetric(horizontal: 20),
-                            physics: ClampingScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: _closedAppointmentsList.length,
-                            itemBuilder: (context, index) {
-                              if (_closedAppointmentsList == null ||
-                                  _closedAppointmentsList.length == 0)
-                                return Container();
+                          Expanded(
+                            child: ListView.separated(
+                              // padding: EdgeInsets.symmetric(horizontal: 20),
+                              physics: ClampingScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: _closedAppointmentsList.length,
+                              itemBuilder: (context, index) {
+                                if (_closedAppointmentsList == null ||
+                                    _closedAppointmentsList.length == 0)
+                                  return Container();
 
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 8.0),
-                                child: _requestList(
-                                    _closedAppointmentsList[index]),
-                              );
-                            },
-                            separatorBuilder:
-                                (BuildContext context, int index) {
-                              return Container(
-                                height: 1,
-                                color: Colors.grey[400],
-                              );
-                            },
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: _requestList(
+                                      _closedAppointmentsList[index]),
+                                );
+                              },
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return Container(
+                                  height: 1,
+                                  color: Colors.grey[400],
+                                );
+                              },
+                            ),
                           ),
                         ],
                       );
