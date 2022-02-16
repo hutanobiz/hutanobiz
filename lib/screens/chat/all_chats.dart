@@ -143,6 +143,7 @@ class _ChatMainState extends State<ChatMain> {
             return suggestionsBox;
           },
           onSuggestionSelected: (suggestion) {
+            seachAppointmentController.text = '';
             Navigator.pushNamed(context, Routes.chat, arguments: suggestion);
           },
           hideOnError: true,
