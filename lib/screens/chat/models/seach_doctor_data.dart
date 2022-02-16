@@ -84,10 +84,10 @@ class SearchAppointment {
   bool isOndemandExpire;
   String user;
   List<Doctor> doctor;
-  CardDetails cardDetails;
+  // CardDetails cardDetails;
   // List<Null> medications;
   // List<Null> medicalDiagnostics;
-  String referenceId;
+  // String referenceId;
   // List<Null> medicalImages;
   // List<Null> medicalDocuments;
   // List<Null> medicalHistory;
@@ -157,10 +157,10 @@ class SearchAppointment {
       this.isOndemandExpire,
       this.user,
       this.doctor,
-      this.cardDetails,
+      // this.cardDetails,
       // this.medications,
       // this.medicalDiagnostics,
-      this.referenceId,
+      // this.referenceId,
       // this.medicalImages,
       // this.medicalDocuments,
       // this.medicalHistory,
@@ -240,10 +240,10 @@ class SearchAppointment {
     status = json['status'];
     // payment = json['payment'];
     paymentMethod = json['paymentMethod'];
-    fees = json['fees'];
-    providerFees = json['providerFees'];
-    applicationFees = json['applicationFees'];
-    paymentIntentId = json['paymentIntentId'];
+    // fees = json['fees'];
+    // providerFees = json['providerFees'];
+    // applicationFees = json['applicationFees'];
+    // paymentIntentId = json['paymentIntentId'];
     // if (json['disease'] != null) {
     //   disease = new List<Null>();
     //   json['disease'].forEach((v) {
@@ -268,9 +268,9 @@ class SearchAppointment {
         doctor.add(new Doctor.fromJson(v));
       });
     }
-    cardDetails = json['cardDetails'] != null
-        ? new CardDetails.fromJson(json['cardDetails'])
-        : null;
+    // cardDetails = json['cardDetails'] != null
+    //     ? new CardDetails.fromJson(json['cardDetails'])
+    //     : null;
     // if (json['medications'] != null) {
     //   medications = new List<Null>();
     //   json['medications'].forEach((v) {
@@ -414,9 +414,9 @@ class SearchAppointment {
     if (this.doctor != null) {
       data['doctor'] = this.doctor.map((v) => v.toJson()).toList();
     }
-    if (this.cardDetails != null) {
-      data['cardDetails'] = this.cardDetails.toJson();
-    }
+    // if (this.cardDetails != null) {
+    //   data['cardDetails'] = this.cardDetails.toJson();
+    // }
     // if (this.medications != null) {
     //   data['medications'] = this.medications.map((v) => v.toJson()).toList();
     // }
@@ -913,8 +913,8 @@ class Doctor {
   String lastName;
   String dob;
   String address;
-  Null addressTitle;
-  Null addresstype;
+  // Null addressTitle;
+  // Null addresstype;
   String addressNumber;
   String city;
   String state;
@@ -924,96 +924,97 @@ class Doctor {
   int gender;
   List<String> language;
   String email;
-  String password;
-  bool isAbleTOReceiveOffersAndPromotions;
-  bool isAgreeTermsAndCondition;
-  Null mobileCountryCode;
-  String verificationCodeSendAt;
-  String verificationCode;
-  bool isContactInformationVerified;
-  bool isEmailVerified;
-  int status;
-  int type;
-  int resetPasswordVerificationCode;
-  String resetPasswordVerificationCodeSentAt;
-  bool isResetPasswordOTPVerified;
-  String stripeCustomerId;
-  String stripeConnectAccount;
-  bool isStripeAcoountVerified;
-  String ssn;
-  bool isOtpValid;
-  int wallet;
-  bool isResetPinOTPVerified;
-  Null resetPinVerificationCode;
-  Null resetPinVerificationCodeSentAt;
-  Null pin;
-  Null referredByUserId;
+  // String password;
+  // bool isAbleTOReceiveOffersAndPromotions;
+  // bool isAgreeTermsAndCondition;
+  // Null mobileCountryCode;
+  // String verificationCodeSendAt;
+  // String verificationCode;
+  // bool isContactInformationVerified;
+  // bool isEmailVerified;
+  // int status;
+  // int type;
+  // int resetPasswordVerificationCode;
+  // String resetPasswordVerificationCodeSentAt;
+  // bool isResetPasswordOTPVerified;
+  // String stripeCustomerId;
+  // String stripeConnectAccount;
+  // bool isStripeAcoountVerified;
+  // String ssn;
+  // bool isOtpValid;
+  // int wallet;
+  // bool isResetPinOTPVerified;
+  // Null resetPinVerificationCode;
+  // Null resetPinVerificationCodeSentAt;
+  // Null pin;
+  // Null referredByUserId;
   String sId;
-  List<Null> insurance;
-  List<Tokens> tokens;
-  String createdAt;
-  String updatedAt;
-  int iV;
-  StripeVerificationRequirements stripeVerificationRequirements;
-  String webhookTest;
-  List<Null> familyMembers;
-  List<Null> providerNetwork;
-  List<Null> familyNetwork;
+  // List<Null> insurance;
+  // List<Tokens> tokens;
+  // String createdAt;
+  // String updatedAt;
+  // int iV;
+  // StripeVerificationRequirements stripeVerificationRequirements;
+  // String webhookTest;
+  // List<Null> familyMembers;
+  // List<Null> providerNetwork;
+  // List<Null> familyNetwork;
 
-  Doctor(
-      {this.location,
-      this.title,
-      this.fullName,
-      this.firstName,
-      this.lastName,
-      this.dob,
-      this.address,
-      this.addressTitle,
-      this.addresstype,
-      this.addressNumber,
-      this.city,
-      this.state,
-      this.avatar,
-      this.zipCode,
-      this.phoneNumber,
-      this.gender,
-      this.language,
-      this.email,
-      this.password,
-      this.isAbleTOReceiveOffersAndPromotions,
-      this.isAgreeTermsAndCondition,
-      this.mobileCountryCode,
-      this.verificationCodeSendAt,
-      this.verificationCode,
-      this.isContactInformationVerified,
-      this.isEmailVerified,
-      this.status,
-      this.type,
-      this.resetPasswordVerificationCode,
-      this.resetPasswordVerificationCodeSentAt,
-      this.isResetPasswordOTPVerified,
-      this.stripeCustomerId,
-      this.stripeConnectAccount,
-      this.isStripeAcoountVerified,
-      this.ssn,
-      this.isOtpValid,
-      this.wallet,
-      this.isResetPinOTPVerified,
-      this.resetPinVerificationCode,
-      this.resetPinVerificationCodeSentAt,
-      this.pin,
-      this.referredByUserId,
-      this.sId,
-      this.insurance,
-      this.tokens,
-      this.createdAt,
-      this.updatedAt,
-      this.iV,
-      this.stripeVerificationRequirements,
-      this.webhookTest,
-      this.familyMembers,
-      this.providerNetwork,
-      this.familyNetwork});
+  Doctor({
+    this.location,
+    this.title,
+    this.fullName,
+    this.firstName,
+    this.lastName,
+    this.dob,
+    this.address,
+    // this.addressTitle,
+    // this.addresstype,
+    this.addressNumber,
+    this.city,
+    this.state,
+    this.avatar,
+    this.zipCode,
+    this.phoneNumber,
+    this.gender,
+    this.language,
+    this.email,
+    // this.password,
+    // this.isAbleTOReceiveOffersAndPromotions,
+    // this.isAgreeTermsAndCondition,
+    // this.mobileCountryCode,
+    // this.verificationCodeSendAt,
+    // this.verificationCode,
+    // this.isContactInformationVerified,
+    // this.isEmailVerified,
+    // this.status,
+    // this.type,
+    // this.resetPasswordVerificationCode,
+    // this.resetPasswordVerificationCodeSentAt,
+    // this.isResetPasswordOTPVerified,
+    // this.stripeCustomerId,
+    // this.stripeConnectAccount,
+    // this.isStripeAcoountVerified,
+    // this.ssn,
+    // this.isOtpValid,
+    // this.wallet,
+    // this.isResetPinOTPVerified,
+    // this.resetPinVerificationCode,
+    // this.resetPinVerificationCodeSentAt,
+    // this.pin,
+    // this.referredByUserId,
+    this.sId,
+    // this.insurance,
+    // this.tokens,
+    // this.createdAt,
+    // this.updatedAt,
+    // this.iV,
+    // this.stripeVerificationRequirements,
+    // this.webhookTest,
+    // this.familyMembers,
+    // this.providerNetwork,
+    // this.familyNetwork
+  });
 
   Doctor.fromJson(Map<String, dynamic> json) {
     location = json['location'] != null
@@ -1025,8 +1026,8 @@ class Doctor {
     lastName = json['lastName'];
     dob = json['dob'];
     address = json['address'];
-    addressTitle = json['addressTitle'];
-    addresstype = json['addresstype'];
+    // addressTitle = json['addressTitle'];
+    // addresstype = json['addresstype'];
     addressNumber = json['addressNumber'];
     city = json['city'];
     state = json['state'];
@@ -1036,72 +1037,72 @@ class Doctor {
     gender = json['gender'];
     language = json['language'].cast<String>();
     email = json['email'];
-    password = json['password'];
-    isAbleTOReceiveOffersAndPromotions =
-        json['isAbleTOReceiveOffersAndPromotions'];
-    isAgreeTermsAndCondition = json['isAgreeTermsAndCondition'];
-    mobileCountryCode = json['mobileCountryCode'];
-    verificationCodeSendAt = json['verificationCodeSendAt'];
-    verificationCode = json['verificationCode'];
-    isContactInformationVerified = json['isContactInformationVerified'];
-    isEmailVerified = json['isEmailVerified'];
-    status = json['status'];
-    type = json['type'];
-    resetPasswordVerificationCode = json['resetPasswordVerificationCode'];
-    resetPasswordVerificationCodeSentAt =
-        json['resetPasswordVerificationCodeSentAt'];
-    isResetPasswordOTPVerified = json['isResetPasswordOTPVerified'];
-    stripeCustomerId = json['stripeCustomerId'];
-    stripeConnectAccount = json['stripeConnectAccount'];
-    isStripeAcoountVerified = json['isStripeAcoountVerified'];
-    ssn = json['ssn'];
-    isOtpValid = json['isOtpValid'];
-    wallet = json['wallet'];
-    isResetPinOTPVerified = json['isResetPinOTPVerified'];
-    resetPinVerificationCode = json['resetPinVerificationCode'];
-    resetPinVerificationCodeSentAt = json['resetPinVerificationCodeSentAt'];
-    pin = json['pin'];
-    referredByUserId = json['referredByUserId'];
+    // password = json['password'];
+    // isAbleTOReceiveOffersAndPromotions =
+    //     json['isAbleTOReceiveOffersAndPromotions'];
+    // isAgreeTermsAndCondition = json['isAgreeTermsAndCondition'];
+    // mobileCountryCode = json['mobileCountryCode'];
+    // verificationCodeSendAt = json['verificationCodeSendAt'];
+    // verificationCode = json['verificationCode'];
+    // isContactInformationVerified = json['isContactInformationVerified'];
+    // isEmailVerified = json['isEmailVerified'];
+    // status = json['status'];
+    // type = json['type'];
+    // resetPasswordVerificationCode = json['resetPasswordVerificationCode'];
+    // resetPasswordVerificationCodeSentAt =
+    //     json['resetPasswordVerificationCodeSentAt'];
+    // isResetPasswordOTPVerified = json['isResetPasswordOTPVerified'];
+    // stripeCustomerId = json['stripeCustomerId'];
+    // stripeConnectAccount = json['stripeConnectAccount'];
+    // isStripeAcoountVerified = json['isStripeAcoountVerified'];
+    // ssn = json['ssn'];
+    // isOtpValid = json['isOtpValid'];
+    // wallet = json['wallet'];
+    // isResetPinOTPVerified = json['isResetPinOTPVerified'];
+    // resetPinVerificationCode = json['resetPinVerificationCode'];
+    // resetPinVerificationCodeSentAt = json['resetPinVerificationCodeSentAt'];
+    // pin = json['pin'];
+    // referredByUserId = json['referredByUserId'];
     sId = json['_id'];
-    // if (json['insurance'] != null) {
-    //   insurance = new List<Null>();
-    //   json['insurance'].forEach((v) {
-    //     insurance.add(new Null.fromJson(v));
+    // // if (json['insurance'] != null) {
+    // //   insurance = new List<Null>();
+    // //   json['insurance'].forEach((v) {
+    // //     insurance.add(new Null.fromJson(v));
+    // //   });
+    // // }
+    // if (json['tokens'] != null) {
+    //   tokens = new List<Tokens>();
+    //   json['tokens'].forEach((v) {
+    //     tokens.add(new Tokens.fromJson(v));
     //   });
     // }
-    if (json['tokens'] != null) {
-      tokens = new List<Tokens>();
-      json['tokens'].forEach((v) {
-        tokens.add(new Tokens.fromJson(v));
-      });
-    }
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
-    iV = json['__v'];
-    stripeVerificationRequirements =
-        json['stripeVerificationRequirements'] != null
-            ? new StripeVerificationRequirements.fromJson(
-                json['stripeVerificationRequirements'])
-            : null;
-    webhookTest = json['webhookTest'];
-    // if (json['familyMembers'] != null) {
-    //   familyMembers = new List<Null>();
-    //   json['familyMembers'].forEach((v) {
-    //     familyMembers.add(new Null.fromJson(v));
-    //   });
-    // }
-    // if (json['providerNetwork'] != null) {
-    //   providerNetwork = new List<Null>();
-    //   json['providerNetwork'].forEach((v) {
-    //     providerNetwork.add(new Null.fromJson(v));
-    //   });
-    // }
-    // if (json['familyNetwork'] != null) {
-    //   familyNetwork = new List<Null>();
-    //   json['familyNetwork'].forEach((v) {
-    //     familyNetwork.add(new Null.fromJson(v));
-    //   });
-    // }
+    // createdAt = json['createdAt'];
+    // updatedAt = json['updatedAt'];
+    // iV = json['__v'];
+    // stripeVerificationRequirements =
+    //     json['stripeVerificationRequirements'] != null
+    //         ? new StripeVerificationRequirements.fromJson(
+    //             json['stripeVerificationRequirements'])
+    //         : null;
+    // webhookTest = json['webhookTest'];
+    // // if (json['familyMembers'] != null) {
+    // //   familyMembers = new List<Null>();
+    // //   json['familyMembers'].forEach((v) {
+    // //     familyMembers.add(new Null.fromJson(v));
+    // //   });
+    // // }
+    // // if (json['providerNetwork'] != null) {
+    // //   providerNetwork = new List<Null>();
+    // //   json['providerNetwork'].forEach((v) {
+    // //     providerNetwork.add(new Null.fromJson(v));
+    // //   });
+    // // }
+    // // if (json['familyNetwork'] != null) {
+    // //   familyNetwork = new List<Null>();
+    // //   json['familyNetwork'].forEach((v) {
+    // //     familyNetwork.add(new Null.fromJson(v));
+    // //   });
+    // // }
   }
 
   Map<String, dynamic> toJson() {
@@ -1115,8 +1116,8 @@ class Doctor {
     data['lastName'] = this.lastName;
     data['dob'] = this.dob;
     data['address'] = this.address;
-    data['addressTitle'] = this.addressTitle;
-    data['addresstype'] = this.addresstype;
+    // data['addressTitle'] = this.addressTitle;
+    // data['addresstype'] = this.addresstype;
     data['addressNumber'] = this.addressNumber;
     data['city'] = this.city;
     data['state'] = this.state;
@@ -1126,60 +1127,60 @@ class Doctor {
     data['gender'] = this.gender;
     data['language'] = this.language;
     data['email'] = this.email;
-    data['password'] = this.password;
-    data['isAbleTOReceiveOffersAndPromotions'] =
-        this.isAbleTOReceiveOffersAndPromotions;
-    data['isAgreeTermsAndCondition'] = this.isAgreeTermsAndCondition;
-    data['mobileCountryCode'] = this.mobileCountryCode;
-    data['verificationCodeSendAt'] = this.verificationCodeSendAt;
-    data['verificationCode'] = this.verificationCode;
-    data['isContactInformationVerified'] = this.isContactInformationVerified;
-    data['isEmailVerified'] = this.isEmailVerified;
-    data['status'] = this.status;
-    data['type'] = this.type;
-    data['resetPasswordVerificationCode'] = this.resetPasswordVerificationCode;
-    data['resetPasswordVerificationCodeSentAt'] =
-        this.resetPasswordVerificationCodeSentAt;
-    data['isResetPasswordOTPVerified'] = this.isResetPasswordOTPVerified;
-    data['stripeCustomerId'] = this.stripeCustomerId;
-    data['stripeConnectAccount'] = this.stripeConnectAccount;
-    data['isStripeAcoountVerified'] = this.isStripeAcoountVerified;
-    data['ssn'] = this.ssn;
-    data['isOtpValid'] = this.isOtpValid;
-    data['wallet'] = this.wallet;
-    data['isResetPinOTPVerified'] = this.isResetPinOTPVerified;
-    data['resetPinVerificationCode'] = this.resetPinVerificationCode;
-    data['resetPinVerificationCodeSentAt'] =
-        this.resetPinVerificationCodeSentAt;
-    data['pin'] = this.pin;
-    data['referredByUserId'] = this.referredByUserId;
-    data['_id'] = this.sId;
-    // if (this.insurance != null) {
-    //   data['insurance'] = this.insurance.map((v) => v.toJson()).toList();
+    // data['password'] = this.password;
+    // data['isAbleTOReceiveOffersAndPromotions'] =
+    //     this.isAbleTOReceiveOffersAndPromotions;
+    // data['isAgreeTermsAndCondition'] = this.isAgreeTermsAndCondition;
+    // data['mobileCountryCode'] = this.mobileCountryCode;
+    // data['verificationCodeSendAt'] = this.verificationCodeSendAt;
+    // data['verificationCode'] = this.verificationCode;
+    // data['isContactInformationVerified'] = this.isContactInformationVerified;
+    // data['isEmailVerified'] = this.isEmailVerified;
+    // data['status'] = this.status;
+    // data['type'] = this.type;
+    // data['resetPasswordVerificationCode'] = this.resetPasswordVerificationCode;
+    // data['resetPasswordVerificationCodeSentAt'] =
+    //     this.resetPasswordVerificationCodeSentAt;
+    // data['isResetPasswordOTPVerified'] = this.isResetPasswordOTPVerified;
+    // data['stripeCustomerId'] = this.stripeCustomerId;
+    // data['stripeConnectAccount'] = this.stripeConnectAccount;
+    // data['isStripeAcoountVerified'] = this.isStripeAcoountVerified;
+    // data['ssn'] = this.ssn;
+    // data['isOtpValid'] = this.isOtpValid;
+    // data['wallet'] = this.wallet;
+    // data['isResetPinOTPVerified'] = this.isResetPinOTPVerified;
+    // data['resetPinVerificationCode'] = this.resetPinVerificationCode;
+    // data['resetPinVerificationCodeSentAt'] =
+    //     this.resetPinVerificationCodeSentAt;
+    // data['pin'] = this.pin;
+    // data['referredByUserId'] = this.referredByUserId;
+    // data['_id'] = this.sId;
+    // // if (this.insurance != null) {
+    // //   data['insurance'] = this.insurance.map((v) => v.toJson()).toList();
+    // // }
+    // if (this.tokens != null) {
+    //   data['tokens'] = this.tokens.map((v) => v.toJson()).toList();
     // }
-    if (this.tokens != null) {
-      data['tokens'] = this.tokens.map((v) => v.toJson()).toList();
-    }
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['__v'] = this.iV;
-    if (this.stripeVerificationRequirements != null) {
-      data['stripeVerificationRequirements'] =
-          this.stripeVerificationRequirements.toJson();
-    }
-    data['webhookTest'] = this.webhookTest;
-    // if (this.familyMembers != null) {
-    //   data['familyMembers'] =
-    //       this.familyMembers.map((v) => v.toJson()).toList();
+    // data['createdAt'] = this.createdAt;
+    // data['updatedAt'] = this.updatedAt;
+    // data['__v'] = this.iV;
+    // if (this.stripeVerificationRequirements != null) {
+    //   data['stripeVerificationRequirements'] =
+    //       this.stripeVerificationRequirements.toJson();
     // }
-    // if (this.providerNetwork != null) {
-    //   data['providerNetwork'] =
-    //       this.providerNetwork.map((v) => v.toJson()).toList();
-    // }
-    // if (this.familyNetwork != null) {
-    //   data['familyNetwork'] =
-    //       this.familyNetwork.map((v) => v.toJson()).toList();
-    // }
+    // data['webhookTest'] = this.webhookTest;
+    // // if (this.familyMembers != null) {
+    // //   data['familyMembers'] =
+    // //       this.familyMembers.map((v) => v.toJson()).toList();
+    // // }
+    // // if (this.providerNetwork != null) {
+    // //   data['providerNetwork'] =
+    // //       this.providerNetwork.map((v) => v.toJson()).toList();
+    // // }
+    // // if (this.familyNetwork != null) {
+    // //   data['familyNetwork'] =
+    // //       this.familyNetwork.map((v) => v.toJson()).toList();
+    // // }
     return data;
   }
 }
