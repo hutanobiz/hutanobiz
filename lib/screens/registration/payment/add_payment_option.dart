@@ -485,6 +485,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
             labelText: Localization.of(context).expiaryDate,
             contentPadding: EdgeInsets.all(10),
             hintText: "mm/yy",
+            textInputType: TextInputType.number,
             textInputFormatter: [
               WhitelistingTextInputFormatter.digitsOnly,
               LengthLimitingTextInputFormatter(4),
