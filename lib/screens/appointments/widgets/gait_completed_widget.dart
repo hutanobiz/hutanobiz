@@ -79,20 +79,29 @@ class GaitCompletedWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "\u2022 " + gait.summary[index].gaitType.current,
+                            gait.summary[index].gaitType != null
+                                ? "\u2022 " +
+                                    gait.summary[index].gaitType.current
+                                : "\u2022 ",
                             style: AppTextStyle.semiBoldStyle(fontSize: 16),
                           ),
-                          getGoalText(gait.summary[index].gaitType.goal),
+                          gait.summary[index].gaitType != null
+                              ? getGoalText(gait.summary[index].gaitType.goal)
+                              : SizedBox(),
                           gait.summary[index].distance != null
                               ? titleWidget('Distance',
                                   '${gait.summary[index].distance.current} ft')
                               : SizedBox(),
-                          getGoalText(gait.summary[index].distance.goal),
+                          gait.summary[index].distance != null
+                              ? getGoalText(gait.summary[index].distance.goal)
+                              : SizedBox(),
                           gait.summary[index].assistance != null
                               ? titleWidget('Assistance',
                                   '${gait.summary[index].assistance.current}')
                               : SizedBox(),
-                          getGoalText(gait.summary[index].assistance.goal),
+                          gait.summary[index].assistance != null
+                              ? getGoalText(gait.summary[index].assistance.goal)
+                              : SizedBox(),
                           gait.summary[index].assistiveDevice != null
                               ? titleWidget('Assistance Device',
                                   '${gait.summary[index].assistiveDevice.current}')
@@ -105,7 +114,9 @@ class GaitCompletedWidget extends StatelessWidget {
                               ? titleWidget('Cuing',
                                   '${gait.summary[index].cuing.current}')
                               : SizedBox(),
-                          getGoalText(gait.summary[index].cuing.goal),
+                          gait.summary[index].cuing != null
+                              ? getGoalText(gait.summary[index].cuing.goal)
+                              : SizedBox(),
                           gait.summary[index].terraine != null
                               ? titleWidget(
                                   'Terraine', '${gait.summary[index].terraine}')

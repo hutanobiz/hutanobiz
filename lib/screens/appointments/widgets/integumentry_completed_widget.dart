@@ -93,20 +93,26 @@ class IntegumentryCompletedWidget extends StatelessWidget {
                                     ? titleWidget('Length',
                                         '${integumentry.summary[index].length.current} cm')
                                     : SizedBox(),
-                                getGoalText(
-                                    integumentry.summary[index].length.goal),
+                                integumentry.summary[index].length != null
+                                    ? getGoalText(
+                                        integumentry.summary[index].length.goal)
+                                    : SizedBox(),
                                 integumentry.summary[index].width != null
                                     ? titleWidget('Width',
                                         '${integumentry.summary[index].width.current} cm')
                                     : SizedBox(),
-                                getGoalText(
-                                    integumentry.summary[index].width.goal),
+                                integumentry.summary[index].depth != null
+                                    ? getGoalText(
+                                        integumentry.summary[index].width.goal)
+                                    : SizedBox(),
                                 integumentry.summary[index].depth != null
                                     ? titleWidget('Depth',
                                         '${integumentry.summary[index].depth.current} cm')
                                     : SizedBox(),
-                                getGoalText(
-                                    integumentry.summary[index].depth.goal),
+                                integumentry.summary[index].depth != null
+                                    ? getGoalText(
+                                        integumentry.summary[index].depth.goal)
+                                    : SizedBox(),
                                 integumentry.summary[index].staging != null
                                     ? titleWidget('Staging',
                                         '${integumentry.summary[index].staging}')
@@ -115,17 +121,25 @@ class IntegumentryCompletedWidget extends StatelessWidget {
                                     ? titleWidget('Granulation',
                                         '${integumentry.summary[index].granulation.current} %')
                                     : SizedBox(),
-                                getGoalText(integumentry
-                                    .summary[index].granulation.goal),
+                                integumentry.summary[index].granulation != null
+                                    ? getGoalText(integumentry
+                                        .summary[index].granulation.goal)
+                                    : SizedBox(),
                                 integumentry.summary[index].slough != null
                                     ? titleWidget('Slough',
                                         '${integumentry.summary[index].slough.current} %')
                                     : SizedBox(),
-                                getGoalText(
-                                    integumentry.summary[index].slough.goal),
+                                integumentry.summary[index].slough != null
+                                    ? getGoalText(
+                                        integumentry.summary[index].slough.goal)
+                                    : SizedBox(),
                                 integumentry.summary[index].necrosis != null
                                     ? titleWidget('Necrosis',
                                         '${integumentry.summary[index].necrosis.current} %')
+                                    : SizedBox(),
+                                integumentry.summary[index].necrosis != null
+                                    ? getGoalText(integumentry
+                                        .summary[index].necrosis.goal)
                                     : SizedBox(),
                                 integumentry.summary[index].periwound != null &&
                                         integumentry.summary[index].periwound
@@ -134,27 +148,32 @@ class IntegumentryCompletedWidget extends StatelessWidget {
                                     ? periWoundWidget(
                                         integumentry.summary[index].periwound)
                                     : SizedBox(),
-                                getGoalText(
-                                    integumentry.summary[index].necrosis.goal),
                                 integumentry.summary[index].drainageType != null
                                     ? titleWidget('Drainage Type',
                                         '${integumentry.summary[index].drainageType.current}')
                                     : SizedBox(),
-                                getGoalText(integumentry
-                                    .summary[index].drainageType.goal),
+                                integumentry.summary[index].drainageType != null
+                                    ? getGoalText(integumentry
+                                        .summary[index].drainageType.goal)
+                                    : SizedBox(),
                                 integumentry.summary[index].drainageAmount !=
                                         null
                                     ? titleWidget('Drainage Amount',
                                         '${integumentry.summary[index].drainageAmount.current}')
                                     : SizedBox(),
-                                getGoalText(integumentry
-                                    .summary[index].drainageAmount.goal),
+                                integumentry.summary[index].drainageAmount !=
+                                        null
+                                    ? getGoalText(integumentry
+                                        .summary[index].drainageAmount.goal)
+                                    : SizedBox(),
                                 integumentry.summary[index].odor != null
                                     ? titleWidget('Odor',
                                         '${integumentry.summary[index].odor.current}')
                                     : SizedBox(),
-                                getGoalText(
-                                    integumentry.summary[index].odor.goal),
+                                integumentry.summary[index].odor != null
+                                    ? getGoalText(
+                                        integumentry.summary[index].odor.goal)
+                                    : SizedBox(),
                                 integumentry.summary[index].mechanismOfInjury !=
                                         null
                                     ? titleWidget('Mechanism Of Injury',
