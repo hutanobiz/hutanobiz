@@ -152,11 +152,10 @@ class _AddInsuranceCompleteState extends State<AddInsuranceComplete> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: PlaceHolderImage(
+                      child: Image.asset(
+                        FileConstants.icDoctorSpecialist,
                         width: 60,
                         height: 60,
-                        image: insuranceList[index].image ?? ' ',
-                        placeholder: FileConstants.icDoctorSpecialist,
                       ),
                     ),
                     SizedBox(width: spacing25),
