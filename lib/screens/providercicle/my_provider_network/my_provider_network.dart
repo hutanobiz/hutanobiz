@@ -333,6 +333,7 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
               providerDetail: suggestion,
               isOnBoarding: widget.isOnBoarding,
               onAddPressed: () {
+                searchController.text = '';
                 final user = suggestion.user[0];
                 var occupation = "";
                 if (suggestion?.professionalTitle != null &&
@@ -350,6 +351,10 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
                   ArgumentConstant.doctorName: name,
                   ArgumentConstant.doctorAvatar: suggestion.user[0].avatar,
                   'isOnBoarding': widget.isOnBoarding
+                }).then((value) {
+                  if (value) {
+                    _getMyProviderGroupList();
+                  }
                 });
               },
             );
@@ -358,6 +363,7 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
             return suggestionsBox;
           },
           onSuggestionSelected: (suggestion) {
+            searchController.text = '';
             // Navigator.pushNamed(context, Routes.chat, arguments: suggestion);
             final user = suggestion.user[0];
             var occupation = "";
@@ -376,6 +382,10 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
               ArgumentConstant.doctorName: name,
               ArgumentConstant.doctorAvatar: suggestion.user[0].avatar,
               'isOnBoarding': widget.isOnBoarding
+            }).then((value) {
+              if (value) {
+                _getMyProviderGroupList();
+              }
             });
           },
           hideOnError: true,

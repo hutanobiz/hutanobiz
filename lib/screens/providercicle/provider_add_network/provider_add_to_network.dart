@@ -120,8 +120,10 @@ class _ProivderAddToNetworkState extends State<ProivderAddToNetwork> {
                 Navigator.popUntil(
                     context, ModalRoute.withName(widget.onCompleteRoute));
               } else {
-                Navigator.popUntil(
-                    context, ModalRoute.withName(Routes.homeMain));
+                Navigator.pop(context);
+              Navigator.pop(context,true);
+                // Navigator.popUntil(
+                //     context, ModalRoute.withName(Routes.homeMain));
               }
             }
           },

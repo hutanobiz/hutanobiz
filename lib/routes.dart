@@ -64,9 +64,13 @@ import 'package:hutano/screens/dashboard/choose_location_screen.dart';
 import 'package:hutano/screens/dashboard/choose_specialities.dart';
 import 'package:hutano/screens/dashboard/dashboard_search_screen.dart';
 import 'package:hutano/screens/dashboard/profile/activity_notification.dart';
+import 'package:hutano/screens/dashboard/profile/calender_remainder_screen.dart';
+import 'package:hutano/screens/dashboard/profile/consultation_history.dart';
+import 'package:hutano/screens/dashboard/profile/health_monitoring_screen.dart';
 import 'package:hutano/screens/dashboard/profile/medical_document.dart';
 import 'package:hutano/screens/dashboard/profile/my_providers.dart';
 import 'package:hutano/screens/dashboard/profile/payment_history.dart';
+import 'package:hutano/screens/dashboard/profile/profile_screen.dart';
 import 'package:hutano/screens/dashboard/provider_filters.dart';
 import 'package:hutano/screens/dashboard/provider_list_screen.dart';
 import 'package:hutano/screens/dashboard/provider_profile_image.dart';
@@ -291,6 +295,10 @@ class Routes {
   static const String providerAddToNetwork = '/providerAddToNetwork';
   static const String addMoreProviderScreen = '/addMoreProviderScreen';
   static const String myMedicalDocuments = '/myMedicalDocuments';
+  static const String profileScreen = '/profileScreen';
+  static const String consultationHistoryScreen = '/consultationHistoryScreen';
+  static const String healthMonitoringScreen = '/healthMonitoringScreen';
+  static const String calendarReminderScreen = '/calendarReminderScreen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final dynamic args = settings.arguments;
@@ -678,7 +686,6 @@ class Routes {
         return _buildRoute(
             settings,
             ProviderSearch(
-              serachText: searchText,
             ));
         break;
       case myProviderNetwork:
@@ -1019,6 +1026,30 @@ class Routes {
         return _buildRoute(
           settings,
           MedicalDocumentsScreen(),
+        );
+        break;
+      case profileScreen:
+        return _buildRoute(
+          settings,
+          ProfileScreen(profileData: args),
+        );
+        break;
+      case consultationHistoryScreen:
+        return _buildRoute(
+          settings,
+          ConsultationHistoryScreen(),
+        );
+        break;
+      case healthMonitoringScreen:
+        return _buildRoute(
+          settings,
+          HealthMonitoringScreen(),
+        );
+        break;
+      case calendarReminderScreen:
+        return _buildRoute(
+          settings,
+          CalendarReminderScreen(),
         );
         break;
 

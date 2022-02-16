@@ -27,13 +27,11 @@ import 'model/doctor_data_model.dart';
 import 'search_bar.dart';
 
 class ProviderSearch extends StatefulWidget {
-  final String serachText;
   bool showSkip = true;
   final bool isOnBoarding;
 
   ProviderSearch({
     Key key,
-    this.serachText,
     this.isOnBoarding,
   }) : super(key: key);
   @override
@@ -49,21 +47,8 @@ class _ProviderSearchState extends State<ProviderSearch> {
   @override
   void initState() {
     super.initState();
-    controller.text = widget.serachText ?? "";
+    controller.text = "";
     _pagingController.addPageRequestListener(_searchProvider);
-  }
-
-  _fetchLocationData(int pageKey) async {
-    try {
-      if (LocationService().getLocationData() == null) {
-        await LocationService().checkLocation();
-        _searchProvider(pageKey);
-      } else {
-        _searchProvider(pageKey);
-      }
-    } catch (e) {
-      _searchProvider(pageKey);
-    }
   }
 
   _onSearch() {
@@ -140,6 +125,7 @@ class _ProviderSearchState extends State<ProviderSearch> {
                     providerDetail: item,
                     isOnBoarding: widget.isOnBoarding,
                     onAddPressed: () {
+                      controller.text = '';
                       final user = item.user[0];
                       var occupation = "";
                       if (item?.professionalTitle != null &&
@@ -158,6 +144,7 @@ class _ProviderSearchState extends State<ProviderSearch> {
                         ArgumentConstant.doctorAvatar: item.user[0].avatar,
                         'isOnBoarding': widget.isOnBoarding
                       }).then((value) {
+                        _onSearch();
                         if (value != null && value) {
                           setState(() {
                             isShowNext = true;
