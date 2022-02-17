@@ -109,7 +109,7 @@ class _VitalReviewsState extends State<VitalReviews> {
       if (time == '') {
         _dateController.text =
             formattedDate(DateTime.now(), AppConstants.vitalReviewsDateFormat);
-        _selectedDate = DateFormat("MM-dd-yyyy").format(DateTime.now());
+        _selectedDate = DateFormat("MM/dd/yyyy").format(DateTime.now());
         _selectedTime = DateFormat("hh:mm a").format(DateTime.now());
         _timeController.text = DateFormat("h:mm a")
             .format(DateTime.now())
@@ -135,8 +135,8 @@ class _VitalReviewsState extends State<VitalReviews> {
       _glucoseController.text = widget.args['vitals']['bloodGlucose'] ?? '';
       _bmiController.text = widget.args['vitals']['bmi'] ?? '';
     } else {
-      _dateController.text = DateFormat("MM-dd-yyyy").format(DateTime.now());
-      _selectedDate = DateFormat("MM-dd-yyyy").format(DateTime.now());
+      _dateController.text = DateFormat("MM/dd/yyyy").format(DateTime.now());
+      _selectedDate = DateFormat("MM/dd/yyyy").format(DateTime.now());
       _selectedTime = DateFormat("hh:mm a").format(DateTime.now());
       _timeController.text = DateFormat("h:mm a")
           .format(DateTime.now())
@@ -417,6 +417,20 @@ class _VitalReviewsState extends State<VitalReviews> {
                         showTimePicker(
                           initialTime: TimeOfDay.now(),
                           context: context,
+                          builder: (BuildContext context, Widget child) {
+                            return Theme(
+                              data: ThemeData.dark().copyWith(
+                                colorScheme: ColorScheme.light(
+                                  primary: AppColors.goldenTainoi,
+                                  // onPrimary: Colors.white,
+                                  // surface: AppColors.goldenTainoi,
+                                  // onSurface: AppColors.windsor,
+                                ),
+                                dialogBackgroundColor: Colors.white,
+                              ),
+                              child: child,
+                            );
+                          },
                         ).then((value) {
                           if (value != null) {
                             DateTime tempDate = DateFormat("hh:mm").parse(
@@ -448,12 +462,11 @@ class _VitalReviewsState extends State<VitalReviews> {
                               initialDate: DateTime.now(),
                               lastDate: DateTime.now(), onDateChanged: (value) {
                             if (value != null) {
-                              var date = DateFormat("MM-dd-yyyy")
-                                  .format(DateTime.parse(value));
+                              var date = DateFormat("MM/dd/yyyy").format(value);
                               _dateController.text = date;
                               setState(() {
-                                _selectedDate = DateFormat("MM-dd-yyyy")
-                                    .format(DateTime.parse(value));
+                                _selectedDate =
+                                    DateFormat("MM/dd/yyyy").format(value);
                               });
                             }
                           });
@@ -464,12 +477,11 @@ class _VitalReviewsState extends State<VitalReviews> {
                               initialDate: DateTime.now(),
                               onDateChanged: (value) {
                             if (value != null) {
-                              var date = DateFormat("MM-dd-yyyy")
-                                  .format(DateTime.parse(value));
+                              var date = DateFormat("MM/dd/yyyy").format(value);
                               _dateController.text = date;
                               setState(() {
-                                _selectedDate = DateFormat("MM-dd-yyyy")
-                                    .format(DateTime.parse(value));
+                                _selectedDate =
+                                    DateFormat("MM/dd/yyyy").format(value);
                               });
                             }
                           });
