@@ -519,9 +519,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
         _cityController.text.trim() != null &&
         _cityController.text.trim().isNotEmpty &&
         _zipCodeController.text.trim() != null &&
-        _zipCodeController.text.trim().isNotEmpty &&
-        _phoneNoController.text.trim() != null &&
-        _phoneNoController.text.trim().isNotEmpty) {
+        _zipCodeController.text.trim().isNotEmpty) {
       _enableButton = true;
     } else {
       _enableButton = false;
@@ -710,7 +708,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
   _getPlaceDetail(String placeId) async {
     ProgressDialogUtils.showProgressDialog(context);
     final params = <String, String>{
-      'fields': 'geometry,address_components',
+      'fields': 'geometry,address_components,international_phone_number',
       'place_id': placeId
     };
 
@@ -718,6 +716,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
       var res = await ApiManager().getPlaceDetail(params);
       _placeDetail = res.result.addressComponents;
       geometry = res.result.geometry;
+      _phoneNoController.text = res.result.international_phone_number ?? '';
       if (_placeDetail != null && _placeDetail.length > 0) {
         _parseAddress();
       }
@@ -754,7 +753,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
     _zipCodeController.text = _addressParser.zipCode;
     _stateController.text = _addressParser.state;
     _cityController.text = _addressParser.city;
-    // _phoneNoController.text = _addressParser.p.phone
+
     addressError = null;
     zipCodeError = null;
     cityError = null;

@@ -6,7 +6,7 @@ class ResGooglePlaceDetail {
 
   ResGooglePlaceDetail.fromJson(Map<String, dynamic> json) {
     result =
-    json['result'] != null ? new Result.fromJson(json['result']) : null;
+        json['result'] != null ? new Result.fromJson(json['result']) : null;
     status = json['status'];
   }
 
@@ -23,8 +23,10 @@ class ResGooglePlaceDetail {
 class Result {
   List<AddressComponents> addressComponents;
   Geometry geometry;
+  String international_phone_number;
 
-  Result({this.addressComponents, this.geometry});
+  Result(
+      {this.addressComponents, this.geometry, this.international_phone_number});
 
   Result.fromJson(Map<String, dynamic> json) {
     if (json['address_components'] != null) {
@@ -36,6 +38,7 @@ class Result {
     geometry = json['geometry'] != null
         ? new Geometry.fromJson(json['geometry'])
         : null;
+    international_phone_number = json['international_phone_number'];
   }
 
   Map<String, dynamic> toJson() {
@@ -47,6 +50,7 @@ class Result {
     if (this.geometry != null) {
       data['geometry'] = this.geometry.toJson();
     }
+    data['international_phone_number'] = this.international_phone_number;
     return data;
   }
 }
