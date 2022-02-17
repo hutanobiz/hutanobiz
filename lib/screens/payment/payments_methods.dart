@@ -612,7 +612,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                                 val, _insuranceList[index]);
                                           }),
                                           itemBuilder: (BuildContext context) {
-                                            return {'Edit', 'Remove'}
+                                            return {'Remove'}
                                                 .map((String choice) {
                                               return PopupMenuItem<String>(
                                                 value: choice,
@@ -708,30 +708,30 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
   void handleClick(String value, dynamic _insurance) {
     switch (value) {
-      case 'Edit':
-        Map _insuranceViewMap = {};
-        _insuranceViewMap['isPayment'] = isPayment != 0;
-        _insuranceViewMap['isViewDetail'] = true;
-        _insuranceViewMap['insurance'] = _insurance;
+      // case 'Edit':
+      //   Map _insuranceViewMap = {};
+      //   _insuranceViewMap['isPayment'] = isPayment != 0;
+      //   _insuranceViewMap['isViewDetail'] = true;
+      //   _insuranceViewMap['insurance'] = _insurance;
 
-        if (_container.insuranceDataMap != null) {
-          _container.insuranceDataMap.clear();
-        }
+      //   if (_container.insuranceDataMap != null) {
+      //     _container.insuranceDataMap.clear();
+      //   }
 
-        Navigator.of(context)
-            .pushNamed(
-          Routes.uploadInsuranceImagesScreen,
-          arguments: _insuranceViewMap,
-        )
-            .whenComplete(() {
-          SharedPref().getToken().then((token) {
-            setState(() {
-              _insuranceFuture =
-                  _api.getUserDetails(token).timeout(Duration(seconds: 10));
-            });
-          });
-        });
-        break;
+      //   Navigator.of(context)
+      //       .pushNamed(
+      //     Routes.uploadInsuranceImagesScreen,
+      //     arguments: _insuranceViewMap,
+      //   )
+      //       .whenComplete(() {
+      //     SharedPref().getToken().then((token) {
+      //       setState(() {
+      //         _insuranceFuture =
+      //             _api.getUserDetails(token).timeout(Duration(seconds: 10));
+      //       });
+      //     });
+      //   });
+      //   break;
       case 'Remove':
         Widgets.showConfirmationDialog(
           context: context,
