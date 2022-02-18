@@ -144,7 +144,10 @@ class _ChatMainState extends State<ChatMain> {
           },
           onSuggestionSelected: (suggestion) {
             seachAppointmentController.text = '';
-            Navigator.pushNamed(context, Routes.chat, arguments: suggestion);
+            Navigator.pushNamed(context, Routes.chat, arguments: suggestion)
+                .then((value) {
+              _getMyDiseaseList();
+            });
           },
           hideOnError: true,
           hideSuggestionsOnKeyboardHide: true,
@@ -352,7 +355,10 @@ class _ChatMainState extends State<ChatMain> {
                     ),
                     onPressed: () {
                       Navigator.pushNamed(context, Routes.chat,
-                          arguments: chatAppointment);
+                              arguments: chatAppointment)
+                          .then((value) {
+                        _getMyDiseaseList();
+                      });
                     },
                   ),
                 ),
