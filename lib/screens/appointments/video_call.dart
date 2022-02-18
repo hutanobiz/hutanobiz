@@ -307,7 +307,9 @@ class _CallPageState extends State<CallPage> {
                                     );
                                   },
                                   rightText: 'No',
-                                  onRightPressed: () {});
+                                  onRightPressed: () {
+                                    Navigator.pop(context);
+                                  });
                             },
                             child: Icon(
                               Icons.call_end,
