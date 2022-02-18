@@ -41,27 +41,36 @@ class ProviderSearch extends StatefulWidget {
 class _ProviderSearchState extends State<ProviderSearch> {
   final controller = TextEditingController();
   bool isShowNext = false;
-  final PagingController<int, DoctorData> _pagingController =
-      PagingController(firstPageKey: 1);
+  bool isLoading = false;
+  // final PagingController<int, DoctorData> _pagingController =
+  //     PagingController(firstPageKey: 1);
+  int current_page = 1, last_page = 1;
+  ScrollController scrollController = ScrollController();
+  List<DoctorData> appointmentMedication = [];
 
   @override
   void initState() {
     super.initState();
-    controller.text = "";
-    _pagingController.addPageRequestListener(_searchProvider);
+    scrollController.addListener(() {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
+        if (current_page < last_page) {
+          current_page++;
+          _searchProvider(current_page);
+        }
+      }
+    });
+    _searchProvider(1);
   }
 
-  _onSearch() {
-    _pagingController.refresh();
-  }
-
-  _searchProvider(int pageKey) async {
+  _searchProvider(int page) async {
     // FocusManager.instance.primaryFocus.unfocus();
+    setLoading(true);
 
     final locationData = LocationService().getLocationData();
     final param = <String, dynamic>{
       'search': controller.text.toString(),
-      'page': pageKey,
+      'page': page,
       'limit': 10
     };
     if (locationData != null) {
@@ -70,17 +79,24 @@ class _ProviderSearchState extends State<ProviderSearch> {
     }
     try {
       var res = await ApiManager().searchProvider(param);
-      var _totalPage = (res.response.count / res.response.limit).ceil();
-      if (pageKey < _totalPage) {
-        _pagingController.appendPage(res.response.doctorData, pageKey + 1);
+      last_page = (res.response.count / res.response.limit).ceil();
+      if (page == 1) {
+        appointmentMedication = res.response.doctorData;
       } else {
-        _pagingController.appendLastPage(res.response.doctorData);
+        appointmentMedication.addAll(res.response.doctorData);
       }
+      setLoading(false);
     } on ErrorModel catch (e) {
       DialogUtils.showAlertDialog(context, e.response);
     } catch (e) {
       debugPrint(e);
     }
+  }
+
+  setLoading(loading) {
+    setState(() {
+      isLoading = loading;
+    });
   }
 
   @override
@@ -94,6 +110,7 @@ class _ProviderSearchState extends State<ProviderSearch> {
         addHeader: !widget.isOnBoarding,
         isBackRequired: !widget.isOnBoarding,
         title: "",
+        isLoading: isLoading,
         isAddAppBar: !widget.isOnBoarding,
         addBottomArrows: false,
         padding: EdgeInsets.only(left: 20, right: 20, top: 0, bottom: 0),
@@ -110,27 +127,39 @@ class _ProviderSearchState extends State<ProviderSearch> {
             SizedBox(
               height: widget.isOnBoarding ? 10 : 10,
             ),
-            SearchBar(controller: controller, onSearch: _onSearch),
+            SearchBar(
+                controller: controller,
+                onSearch: () {
+                  _searchProvider(1);
+                }),
             SizedBox(
               height: 8,
             ),
             Expanded(
-              child: PagedListView<int, DoctorData>.separated(
-                pagingController: _pagingController,
-                builderDelegate: PagedChildBuilderDelegate<DoctorData>(
-                  noItemsFoundIndicatorBuilder: (_) =>
-                      Center(child: NoDataFound()),
-                  firstPageErrorIndicatorBuilder: (_) => Container(),
-                  itemBuilder: (context, item, index) => ItemProviderDetail(
-                    providerDetail: item,
+              child: ListView.separated(
+                shrinkWrap: true,
+                controller: scrollController,
+                separatorBuilder: (BuildContext context, int index) =>
+                    SizedBox(height: 10),
+                itemCount: appointmentMedication.length,
+                itemBuilder: (context, index) {
+                  return ItemProviderDetail(
+                    providerDetail: appointmentMedication[index],
                     isOnBoarding: widget.isOnBoarding,
                     onAddPressed: () {
                       controller.text = '';
-                      final user = item.user[0];
+                      final user = appointmentMedication[index].user[0];
                       var occupation = "";
-                      if (item?.professionalTitle != null &&
-                          item.professionalTitle.length > 0) {
-                        occupation = item?.professionalTitle[0]?.title ?? "";
+                      if (appointmentMedication[index]?.professionalTitle !=
+                              null &&
+                          appointmentMedication[index]
+                                  .professionalTitle
+                                  .length >
+                              0) {
+                        occupation = appointmentMedication[index]
+                                ?.professionalTitle[0]
+                                ?.title ??
+                            "";
                       }
                       var name = user?.fullName ?? "";
                       if (occupation.isNotEmpty) {
@@ -139,12 +168,14 @@ class _ProviderSearchState extends State<ProviderSearch> {
 
                       Navigator.of(context)
                           .pushNamed(Routes.providerAddToNetwork, arguments: {
-                        ArgumentConstant.doctorId: item.userId,
+                        ArgumentConstant.doctorId:
+                            appointmentMedication[index].userId,
                         ArgumentConstant.doctorName: name,
-                        ArgumentConstant.doctorAvatar: item.user[0].avatar,
+                        ArgumentConstant.doctorAvatar:
+                            appointmentMedication[index].user[0].avatar,
                         'isOnBoarding': widget.isOnBoarding
                       }).then((value) {
-                        _onSearch();
+                        _searchProvider(1);
                         if (value != null && value) {
                           setState(() {
                             isShowNext = true;
@@ -152,9 +183,8 @@ class _ProviderSearchState extends State<ProviderSearch> {
                         }
                       });
                     },
-                  ),
-                ),
-                separatorBuilder: (context, index) => const Divider(),
+                  );
+                },
               ),
             ),
             if (widget.isOnBoarding)

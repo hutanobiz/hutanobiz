@@ -49,9 +49,9 @@ class SearchBar extends StatelessWidget {
           disabledBorder: InputBorder.none,
         ),
         onChanged: (val) {
-          if (val.length == 0 || val.length > 2) {
-            onSearch();
-          }
+          // if (val.length > 0) {
+          onSearch();
+          // }
         },
         onFieldSubmitted: (val) {
           FocusManager.instance.primaryFocus.unfocus();
