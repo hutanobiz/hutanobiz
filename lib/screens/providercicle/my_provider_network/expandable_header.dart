@@ -33,23 +33,33 @@ class ExpandableHeader extends StatelessWidget {
           //       placeholder: AssetImage(FileConstants.icDoctorSpecialist)),
           // ),
           // SizedBox(width: spacing10),
-          Text(
-            providerGroup.groupType,
-            style: const TextStyle(color: colorBlack85, fontSize: fontSize14),
-          ),
-          SizedBox(width: spacing10),
-          Container(
-            alignment: Alignment.center,
-            height: spacing25,
-            width: spacing25,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(7), color: colorYellow),
-            child: Text(
-              providerGroup.count.toString(),
-              style: TextStyle(fontSize: fontSize15),
+          Expanded(
+            child: Row(
+              children: [
+                Flexible(
+                  child: Text(
+                    providerGroup.groupType,
+                    style: const TextStyle(
+                        color: colorBlack85, fontSize: fontSize14),
+                  ),
+                ),
+                SizedBox(width: spacing10),
+                Container(
+                  alignment: Alignment.center,
+                  height: spacing25,
+                  width: spacing25,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7),
+                      color: colorYellow),
+                  child: Text(
+                    providerGroup.count.toString(),
+                    style: TextStyle(fontSize: fontSize15),
+                  ),
+                ),
+              ],
             ),
           ),
-          Spacer(),
+
           IconButton(
             icon: Icon(
               Icons.delete,
