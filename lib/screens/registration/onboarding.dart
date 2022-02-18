@@ -148,8 +148,6 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                       onDone: () => {},
                       showSkipButton: false,
                       showNextButton: false,
-                      // skipFlex: 0,
-                      nextFlex: 0,
                       globalBackgroundColor: Colors.white,
                       skip: Text(Localization.of(context).swipeLeft),
                       done: const SizedBox(),
@@ -158,6 +156,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                           _pagePosition = i;
                         });
                       },
+
                       dotsDecorator: const DotsDecorator(
                         size: Size(8, 8),
                         color: colorLightYellow2,
