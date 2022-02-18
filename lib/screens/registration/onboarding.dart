@@ -148,7 +148,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                       onDone: () => {},
                       showSkipButton: false,
                       showNextButton: false,
-                      skipFlex: 0,
+                      // skipFlex: 0,
                       nextFlex: 0,
                       globalBackgroundColor: Colors.white,
                       skip: Text(Localization.of(context).swipeLeft),

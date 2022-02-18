@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:hutano/apis/api_helper.dart';
+import 'package:hutano/screens/registration/register/upload_image.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/text_style.dart';
 import 'package:uuid/uuid.dart';
@@ -303,74 +304,78 @@ class _SignUpFormState extends State<Register> {
                     )),
               )
             : SizedBox());
-
-    formWidget.add(Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Container(
-            width: 100.0,
-            height: 100.0,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: Colors.grey[100],
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: Colors.grey[300],
-              ),
-            ),
-            child: (avatar == null || avatar == "null")
-                ? profileImage == null
-                    ? "ic_profile".imageIcon(
-                        height: 27,
-                        width: 27,
-                      )
-                    : ClipOval(
-                        child: Image.file(
-                          profileImage,
-                          width: 100.0,
-                          height: 100.0,
-                          fit: BoxFit.cover,
-                        ),
-                      )
-                : ClipOval(
-                    child: Image.network(
-                      ApiBaseHelper.imageUrl + avatar,
-                      width: 100.0,
-                      height: 100.0,
-                      fit: BoxFit.cover,
-                    ),
-                  )),
-        SizedBox(height: 8),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Image.asset(
-                "images/ic_upload.png",
-                height: 14.0,
-                width: 17.0,
-                color: AppColors.persian_indigo,
-              ),
-              SizedBox(width: 6),
-              Text(
-                "Upload photo",
-                style: TextStyle(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        )
-      ],
-    ).onClick(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-        showPickerDialog();
-      },
-    ));
+    formWidget.add(
+      UploadImage(
+        onImagePicked: _onImagePicked,
+      ),
+    );
+    // formWidget.add(Column(
+    //   mainAxisSize: MainAxisSize.min,
+    //   mainAxisAlignment: MainAxisAlignment.center,
+    //   children: <Widget>[
+    //     Container(
+    //         width: 100.0,
+    //         height: 100.0,
+    //         alignment: Alignment.center,
+    //         decoration: BoxDecoration(
+    //           color: Colors.grey[100],
+    //           shape: BoxShape.circle,
+    //           border: Border.all(
+    //             color: Colors.grey[300],
+    //           ),
+    //         ),
+    //         child: (avatar == null || avatar == "null")
+    //             ? profileImage == null
+    //                 ? "ic_profile".imageIcon(
+    //                     height: 27,
+    //                     width: 27,
+    //                   )
+    //                 : ClipOval(
+    //                     child: Image.file(
+    //                       profileImage,
+    //                       width: 100.0,
+    //                       height: 100.0,
+    //                       fit: BoxFit.cover,
+    //                     ),
+    //                   )
+    //             : ClipOval(
+    //                 child: Image.network(
+    //                   ApiBaseHelper.imageUrl + avatar,
+    //                   width: 100.0,
+    //                   height: 100.0,
+    //                   fit: BoxFit.cover,
+    //                 ),
+    //               )),
+    //     SizedBox(height: 8),
+    //     Padding(
+    //       padding: const EdgeInsets.all(8.0),
+    //       child: Row(
+    //         mainAxisSize: MainAxisSize.min,
+    //         children: <Widget>[
+    //           Image.asset(
+    //             "images/ic_upload.png",
+    //             height: 14.0,
+    //             width: 17.0,
+    //             color: AppColors.persian_indigo,
+    //           ),
+    //           SizedBox(width: 6),
+    //           Text(
+    //             "Upload photo",
+    //             style: TextStyle(
+    //               fontSize: 14.0,
+    //               fontWeight: FontWeight.w500,
+    //             ),
+    //           ),
+    //         ],
+    //       ),
+    //     )
+    //   ],
+    // ).onClick(
+    //   onTap: () {
+    //     FocusScope.of(context).requestFocus(FocusNode());
+    //     showPickerDialog();
+    //   },
+    // ));
 
     formWidget.add(Widgets.sizedBox(height: 35.0));
 
@@ -1057,6 +1062,8 @@ class _SignUpFormState extends State<Register> {
       }
     }
   }
+
+  _onImagePicked(file) => profileImage = file;
 
   Widget picker(final controller, String labelText, onTap) {
     return Material(
