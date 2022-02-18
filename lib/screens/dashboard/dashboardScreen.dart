@@ -138,8 +138,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   getUnreadNotification() {
     _api.getUnreadNotifications(context, token).then((value) {
-      setState(() {
-        unreadCount = value['count'];
+      unreadCount = value['count'];
+      _api.checkCardInsuranceAdded(context).then((value) {
+        if ((value['response']['InsuranceAdded'] ?? true) ||
+                value['response']['CardAdded'] ??
+            true) {
+        } else {
+          unreadCount++;
+        }
+
+        setState(() {});
       });
     });
   }
