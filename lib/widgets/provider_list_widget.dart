@@ -618,9 +618,9 @@ class ProviderWidget extends StatelessWidget {
                                       ArgumentConstant.doctorAvatar:
                                           data["User"][0]["avatar"],
                                       'isOnBoarding': false,
-                                      "onCompleteRoute":Routes.providerListScreen
+                                      "onCompleteRoute":
+                                          Routes.providerListScreen
                                     });
-
                               },
                             ),
                           ),
@@ -663,7 +663,7 @@ class ProviderWidget extends StatelessWidget {
         Positioned(
           right: 0,
           child: Container(
-              padding: EdgeInsets.all(8),
+              padding: EdgeInsets.all(6),
               decoration: BoxDecoration(
                   color: colorPurple100,
                   borderRadius: BorderRadius.only(
@@ -682,7 +682,7 @@ class ProviderWidget extends StatelessWidget {
                     width: 14,
                   ),
                   SizedBox(
-                    width: 8,
+                    width: 6,
                   ),
                   Text(
                     averageRating ?? "0",
