@@ -27,7 +27,7 @@ class _SettingsScreenState extends State<SettingScreen> {
     buildNumber: 'Unknown',
   );
   String name = "---", email = "---", phone = "---", avatar;
-
+  var profileData;
   bool _isLoading = false;
 
   @override
@@ -54,6 +54,7 @@ class _SettingsScreenState extends State<SettingScreen> {
           setState(() {
             _isLoading = false;
             if (response['response'] != null) {
+              profileData = response['response'];
               name = response['response']['fullName'].toString() ?? "---";
               email = response['response']['email'].toString() ?? "---";
               String phoneNumber =
@@ -284,14 +285,11 @@ class _SettingsScreenState extends State<SettingScreen> {
                 ),
               ),
               customListButton(
-                "Update Medical History",
+                "Profile",
                 "images/profile_update_medical.png",
                 () {
-                  var map = {};
-                  map['isBottomButtonsShow'] = false;
-                  map['isFromAppointment'] = false;
-                  Navigator.of(context)
-                      .pushNamed(Routes.updateMedicalHistory, arguments: map);
+                  Navigator.of(context).pushNamed(Routes.profileScreen,
+                      arguments: profileData);
                 },
               ),
               Padding(
