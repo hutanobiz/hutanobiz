@@ -307,6 +307,7 @@ class _SignUpFormState extends State<Register> {
     formWidget.add(
       UploadImage(
         onImagePicked: _onImagePicked,
+        image: avatar,
       ),
     );
     // formWidget.add(Column(

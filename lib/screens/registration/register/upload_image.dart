@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/utils/constants/constants.dart';
 import 'package:hutano/widgets/show_common_upload_dialog.dart';
@@ -15,8 +16,10 @@ import '../../../utils/permission_utils.dart';
 
 class UploadImage extends StatefulWidget {
   final Function onImagePicked;
+  final String image;
 
-  const UploadImage({Key key, this.onImagePicked}) : super(key: key);
+  const UploadImage({Key key, this.onImagePicked, this.image})
+      : super(key: key);
   @override
   _UploadImageState createState() => _UploadImageState();
 }
@@ -107,11 +110,18 @@ class _UploadImageState extends State<UploadImage> {
           onTap: showPickerDialog,
           child: Container(
             child: imageFile == null
-                ? Container(
-                    width: spacing40,
-                    height: spacing40,
-                    child: Image.asset(FileConstants.icUser),
-                  )
+                ? widget.image == null
+                    ? Container(
+                        width: spacing40,
+                        height: spacing40,
+                        child: Image.asset(FileConstants.icUser),
+                      )
+                    : ClipOval(
+                        child: Image.network(
+                          ApiBaseHelper.imageUrl + widget.image,
+                          fit: BoxFit.cover,
+                        ),
+                      )
                 : ClipOval(
                     child: Image.file(
                       _file,
