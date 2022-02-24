@@ -1479,7 +1479,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
                         fontWeight: FontWeight.w400,
                       ),
                       children: <TextSpan>[
-                        TextSpan(text: 'Fee \$ '),
+                        TextSpan(text: 'Amount \$ '),
                         TextSpan(
                           text: '${fee.toStringAsFixed(2)} ',
                           style: TextStyle(
