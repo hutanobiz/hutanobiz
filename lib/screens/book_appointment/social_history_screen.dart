@@ -322,7 +322,7 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
                                             marijuanaGroupValue)
                                       ])
                                     : SizedBox(),
-                                titleWidget(5, 'Coccine', isCoccine),
+                                titleWidget(5, 'Coccaine', isCoccine),
                                 isCoccine
                                     ? Column(children: [
                                         smokerRadioListItem(5, "1", 'Rarely',
@@ -333,7 +333,7 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
                                             5, "3", 'Daily', coccineGroupValue)
                                       ])
                                     : SizedBox(),
-                                titleWidget(6, 'Metaphetamin', isMetaphetamin),
+                                titleWidget(6, 'Methamphetamine', isMetaphetamin),
                                 isMetaphetamin
                                     ? Column(children: [
                                         smokerRadioListItem(
@@ -558,11 +558,11 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
     }
     if (isCoccine) {
       recreationalDrugs.add(
-          RecreationalDrugs(type: 'Coccine', frequency: coccineGroupValue));
+          RecreationalDrugs(type: 'Coccaine', frequency: coccineGroupValue));
     }
     if (isMetaphetamin) {
       recreationalDrugs.add(
-          RecreationalDrugs(type: 'Metaphetamin', frequency: metaGroupValue));
+          RecreationalDrugs(type: 'Methamphetamine', frequency: metaGroupValue));
     }
     if (isHeroine) {
       recreationalDrugs.add(
