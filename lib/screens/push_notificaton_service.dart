@@ -250,7 +250,7 @@ class PushNotificationService {
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
       'xyz.appening.hutano',
       'Hutano Patient',
-      channelDescription:'your channel description',
+      channelDescription: 'your channel description',
       playSound: true,
       enableVibration: true,
       importance: Importance.max,
