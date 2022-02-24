@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/app_constants.dart';
 import 'package:hutano/utils/date_picker.dart';
@@ -111,17 +112,25 @@ Future<Null> openMaterialDatePicker(
     Function onDateChanged,
     bool filledDate = false}) async {
   final pickedDate = await showDatePicker(
-      context: context,
-      initialDate: initialDate ?? DateTime.now(),
-      firstDate: firstDate ?? DateTime(DateTime.now().year - 70),
-      lastDate: lastDate ?? DateTime(DateTime.now().year + 70),
-      builder: (context, child) {
-        return Theme(
-          data:
-              ThemeData(primaryColor: Colors.black, accentColor: Colors.green),
-          child: child,
-        );
-      });
+    context: context,
+    initialDate: initialDate ?? DateTime.now(),
+    firstDate: firstDate ?? DateTime(DateTime.now().year - 70),
+    lastDate: lastDate ?? DateTime(DateTime.now().year + 70),
+    builder: (BuildContext context, Widget child) {
+      return Theme(
+        data: ThemeData.dark().copyWith(
+          colorScheme: ColorScheme.light(
+            primary: AppColors.goldenTainoi,
+            onPrimary: Colors.white,
+            surface: AppColors.goldenTainoi,
+            onSurface: AppColors.windsor,
+          ),
+          dialogBackgroundColor: Colors.white,
+        ),
+        child: child,
+      );
+    },
+  );
   if (pickedDate != null) {
     if (onDateChanged != null) {
       onDateChanged(pickedDate);
