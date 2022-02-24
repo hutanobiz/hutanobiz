@@ -179,12 +179,22 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
         }
       }
     } else {
-      if (_profileMap["businessLocation"] != null) {
+      if (_profileMap["businessLocation"] != null &&
+          _profileMap["businessLocation"]['stateCode'] != null &&
+          _profileMap["businessLocation"]['city'] != null) {
         if (_profileMap["businessLocation"]["coordinates"].length > 0) {
           _desPosition = LatLng(
               double.parse(
                   _profileMap["businessLocation"]["coordinates"][1].toString()),
               double.parse(_profileMap["businessLocation"]["coordinates"][0]
+                  .toString()));
+        }
+      } else {
+        if (_profileMap["User"][0]['location']["coordinates"].length > 0) {
+          _desPosition = LatLng(
+              double.parse(_profileMap["User"][0]['location']["coordinates"][1]
+                  .toString()),
+              double.parse(_profileMap["User"][0]['location']["coordinates"][0]
                   .toString()));
         }
       }
@@ -413,7 +423,9 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
         );
       }
     } else {
-      if (_profileMap["businessLocation"] != null) {
+      if (_profileMap["businessLocation"] != null &&
+          _profileMap["businessLocation"]['stateCode'] != null &&
+          _profileMap["businessLocation"]['city'] != null) {
         dynamic business = _profileMap["businessLocation"];
 
         dynamic _state;
@@ -431,6 +443,27 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
           _state,
           business["zipCode"]?.toString(),
         );
+      } else {
+        if (_profileMap["User"][0]['city'] != null) {
+          // dynamic business = _profileMap["businessLocation"];
+
+          dynamic _state;
+
+          if (_profileMap["User"][0]["state"] is Map &&
+              _profileMap["User"][0]["state"].length > 0) {
+            _state = _profileMap["User"][0]["state"];
+          } else if (_profileMap['State'] != null &&
+              _profileMap["State"].length > 0) {
+            _state = _profileMap['State'][0];
+          }
+          address = Extensions.addressFormat(
+            _profileMap["User"][0]["address"]?.toString(),
+            _profileMap["User"][0]["street"]?.toString(),
+            _profileMap["User"][0]["city"]?.toString(),
+            _state,
+            _profileMap["User"][0]["zipCode"]?.toString(),
+          );
+        }
       }
     }
 
