@@ -419,28 +419,30 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                           isPayment == 0
                               ? Icon(Icons.delete, color: AppColors.windsor)
                                   .onClick(onTap: () {
-                                  Widgets.showAlertDialog(
-                                      context,
-                                      "Delete Card",
-                                      "Are you sure you want to delete the Card?",
-                                      () {
-                                    setState(() {
-                                      _isLoading = true;
-                                    });
-                                    SharedPref().getToken().then((token) {
-                                      _api
-                                          .deleteStripeCard(
-                                              token, _cardList[index]['id'])
-                                          .then((value) {
+                                  Widgets.showConfirmationDialog(
+                                      context: context,
+                                      title: "Delete Card",
+                                      description:
+                                          "Are you sure you want to delete the Card?",
+                                      onLeftPressed: () {
                                         setState(() {
-                                          _isLoading = false;
-                                          _cardFuture = _api
-                                              .getPatientCard(token)
-                                              .timeout(Duration(seconds: 10));
+                                          _isLoading = true;
+                                        });
+                                        SharedPref().getToken().then((token) {
+                                          _api
+                                              .deleteStripeCard(
+                                                  token, _cardList[index]['id'])
+                                              .then((value) {
+                                            setState(() {
+                                              _isLoading = false;
+                                              _cardFuture = _api
+                                                  .getPatientCard(token)
+                                                  .timeout(
+                                                      Duration(seconds: 10));
+                                            });
+                                          });
                                         });
                                       });
-                                    });
-                                  });
                                 })
                               : Radio(
                                   activeColor: AppColors.windsor,
