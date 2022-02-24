@@ -115,9 +115,9 @@ class _HutanoTextFieldState extends State<HutanoTextField> {
   @override
   void dispose() {
     super.dispose();
-    if (widget.focusNode != null) {
-      widget.focusNode.dispose();
-    }
+    // if (widget.focusNode != null) {
+    //   widget.focusNode.dispose();
+    // }
   }
 
   @override
