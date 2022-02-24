@@ -375,13 +375,25 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
 
   _addMedicalAllergy(Allergy allergy) async {
     if (widget.args['isEdit']) {
-      var _item = profileAllergiesList
-          .firstWhere((element) => element.name == allergy.name);
-      if (_item != null) {
-        setState(() {
-          myAllergiesList.add(_item);
-        });
-      }
+      // if ((profileAllergiesList.singleWhere((it) => it.name == allergy.name,
+      //         orElse: () => null)) !=
+      //     null) {
+      setState(() {
+        myAllergiesList.add(allergy);
+      });
+      // }
+      // else {
+
+      // addProblemData();
+
+      // }
+      // var _item = profileAllergiesList
+      //     .singleWhere((element) => element.name == allergy.name);
+      // if (_item != null) {
+      //   setState(() {
+      //     myAllergiesList.add(_item);
+      //   });
+      // }
     } else {
       allergy.allergyId = allergy.sId;
       setLoading(true);
