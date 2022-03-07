@@ -735,6 +735,7 @@ class _TrackTelemedicineAppointmentState
                                   'appointmentId': widget.appointmentId,
                                   'name': name,
                                   'avatar': avatar,
+                                  'type':2
                                 });
                           })
                       : SizedBox()

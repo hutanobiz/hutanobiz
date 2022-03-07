@@ -114,6 +114,7 @@ class AppointmentCompleteConfirmation extends StatelessWidget {
                               appointmentCompleteMap["appointmentId"],
                           'name': appointmentCompleteMap["name"],
                           'avatar': appointmentCompleteMap["avatar"],
+                          'type': int.parse(appointmentCompleteMap["type"])
                         },
                       );
                     },

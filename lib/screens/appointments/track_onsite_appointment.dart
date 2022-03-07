@@ -789,6 +789,7 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                               'appointmentId': widget.appointmentId,
                               'name': name,
                               'avatar': avatar,
+                              'type':3
                             });
                       })
                   : status == index

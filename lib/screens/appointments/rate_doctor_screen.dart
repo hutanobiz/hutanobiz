@@ -712,17 +712,69 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                             Navigator.of(context).popUntil((_) => count++ >= 2);
                             break;
                           case "2":
-                            Navigator.of(context).popUntil(
-                              ModalRoute.withName(
-                                  Routes.appointmentDetailScreen),
-                            );
+                            // Navigator.of(context).popUntil(
+                            //   ModalRoute.withName(
+                            //       Routes.appointmentDetailScreen),
+                            // );
+
+                            if (widget.rateFromAppointmentId['type'] == 2) {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                Routes.dashboardScreen,
+                                (Route<dynamic> route) => false,
+                                arguments: 0,
+                              );
+                            } else {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                Routes.completedAppointmentSummary,
+                                (Route<dynamic> route) {
+                                  if (route.settings.name == Routes.homeMain) {
+                                    return true;
+                                  } else {
+                                    return false;
+                                  }
+                                },
+                                // ModalRoute.withName(Routes.dashboardScreen),
+                                arguments: widget
+                                    .rateFromAppointmentId["appointmentId"],
+                              );
+                            }
+
+                            //   Navigator.of(context).pushNamedAndRemoveUntil(
+                            //   Routes.completedAppointmentSummary,
+                            //   (Route<dynamic> route) => false,
+                            //   arguments:
+                            //       widget.rateFromAppointmentId["appointmentId"],
+
+                            // );
+
                             break;
                           case "3":
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                              Routes.dashboardScreen,
-                              (Route<dynamic> route) => false,
-                              arguments: 0,
-                            );
+                            // Navigator.of(context).pushNamedAndRemoveUntil(
+                            //   Routes.dashboardScreen,
+                            //   (Route<dynamic> route) => false,
+                            //   arguments: 0,
+                            // );
+                            if (widget.rateFromAppointmentId['type'] == 2) {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                Routes.dashboardScreen,
+                                (Route<dynamic> route) => false,
+                                arguments: 0,
+                              );
+                            } else {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                Routes.completedAppointmentSummary,
+                                (Route<dynamic> route) {
+                                  if (route.settings.name == Routes.homeMain) {
+                                    return true;
+                                  } else {
+                                    return false;
+                                  }
+                                },
+                                // ModalRoute.withName(Routes.dashboardScreen),
+                                arguments: widget
+                                    .rateFromAppointmentId["appointmentId"],
+                              );
+                            }
                             break;
                         }
                       }

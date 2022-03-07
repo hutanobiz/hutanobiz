@@ -661,6 +661,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                           'appointmentId': widget.appointmentId,
                           'name': name,
                           'avatar': avatar,
+                          'type':profileMap['data']['type']
                         },
                       ).whenComplete(
                           () => appointmentDetailsFuture(_userLocation)),
