@@ -74,11 +74,16 @@ class _AllAppointmentsState extends State<AllAppointments>
     );
   }
 
-  Widget _tabsContent() => _currentIndex == 0
-      ? AppointmentsScreen()
-      : _currentIndex == 1
-          ? RequestAppointmentsScreen()
-          : ComingSoon(isBackRequired: false, isFromUpload: false);
+  Widget _tabsContent() =>
+      TabBarView(controller: _tabController, children: //_currentIndex == 0
+          // ?
+          [
+        AppointmentsScreen(),
+        // : _currentIndex == 1
+        // ?
+        RequestAppointmentsScreen()
+      ]);
+  // : ComingSoon(isBackRequired: false, isFromUpload: false);
 
   List<Widget> _tabsHeader() {
     return tabs
