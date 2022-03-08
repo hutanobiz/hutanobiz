@@ -9,11 +9,13 @@ import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/dashed_border.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
+import 'package:hutano/widgets/show_common_upload_dialog.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -562,29 +564,17 @@ class _UploadInsuranceImagesScreenState
   }
 
   void showPickerDialog(bool isFront) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: new Text("Picker"),
-          content: new Text("Select image picker type."),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text("Camera"),
-              onPressed: () {
-                getImage(isFront, 2);
-                Navigator.pop(context);
-              },
-            ),
-            new FlatButton(
-              child: new Text("Gallery"),
-              onPressed: () {
-                getImage(isFront, 3);
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
+    showCommonUploadDialog(
+      context,
+      Localization.of(context).picker,
+      Localization.of(context).uploadPhoto,
+      onTop: () {
+        getImage(isFront, 2);
+        Navigator.pop(context);
+      },
+      onBottom: () {
+        getImage(isFront, 3);
+        Navigator.pop(context);
       },
     );
   }
