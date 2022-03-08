@@ -57,7 +57,11 @@ class ApiBaseHelper {
   static const String base_u = "dev.hutano.com";
   static const String socket_url = "https://dev.hutano.com";
 
-  // static const String base_u = "staging.hutano.com/";
+  // static const String base_url = "https://hutano.appening.xyz/";
+  // static const String base_u = "hutano.appening.xyz";
+  // static const String socket_url = "https://hutano.appening.xyz";
+
+  // static const String base_u = "staging.hutano.com";
   // static const String base_url = "https://staging.hutano.com/";
   // static const String socket_url = "https://staging.hutano.com";
   // static const String base_u = "production.hutano.com/";
@@ -514,6 +518,37 @@ class ApiBaseHelper {
     )
         .then((res) {
       return res["response"];
+    });
+  }
+
+  Future<dynamic> getGraphData(String token, String key, String date) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    // return
+    // _netUtil
+    //     .post(
+    //   Uri.encodeFull(
+    //     base_url + "api/vital/graff?key=$key&date=$date",
+    //   ),
+    //   headers: headers,
+    // );
+    //     // .then((res) {
+    //   // return res["response"];
+    Future.delayed(const Duration(milliseconds: 500), () {
+      return [];
+    });
+  }
+
+  Future<dynamic> postGraphData(String token, Map graphData) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+
+    return _netUtil
+        .post(base_url + "api/vital", body: graphData, headers: headers)
+        .then((res) {
+      return res;
     });
   }
 

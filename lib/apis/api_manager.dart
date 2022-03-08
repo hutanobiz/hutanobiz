@@ -1195,6 +1195,46 @@ class ApiManager {
     }
   }
 
+  Future<dynamic> getAccountByPhoneNumber(String phoneNumber) async {
+    try {
+      final response = await _apiService
+          .get('api/account-by-phone', params: {'phoneNumber': phoneNumber});
+      return response.data['response'];
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+  Future<dynamic> sendLinkAccountCode(Map<String, dynamic> map) async {
+    try {
+      final response = await _apiService
+          .post('api/send-link-account-verification-code', data: map);
+      return response.data['response'];
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+  Future<dynamic> veriyfyLinkAccountCode(Map<String, dynamic> map) async {
+    try {
+      final response = await _apiService
+          .post('api/verify-link-account-verification-code', data: map);
+      return response;
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+   Future<dynamic> getLinkAccount() async {
+    try {
+      final response = await _apiService
+          .get('api/link-accounts');
+      return response.data['response'];
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
   // Future<ResRewardPoints> getHutanoCash() async {
   //   try {
   //     final response = await _apiService.get(

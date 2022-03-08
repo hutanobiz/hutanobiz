@@ -8,7 +8,17 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/registration/account_recover_dialog.dart';
+import 'package:hutano/screens/registration/register/date_of_birth.dart';
+import 'package:hutano/screens/registration/register/gender_selector.dart';
 import 'package:hutano/screens/registration/register/model/referral_code.dart';
+import 'package:hutano/screens/registration/register/model/req_register.dart';
+import 'package:hutano/screens/registration/register/model/req_verify_address.dart';
+import 'package:hutano/screens/registration/register/model/res_google_address_suggetion.dart';
+import 'package:hutano/screens/registration/register/model/res_google_place_detail.dart';
+import 'package:hutano/screens/registration/register/model/res_insurance_list.dart';
+import 'package:hutano/screens/registration/register/model/res_states_list.dart';
+import 'package:hutano/screens/registration/register/state_list.dart';
+import 'package:hutano/screens/registration/register/upload_image.dart';
 import 'package:hutano/utils/address_util.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/utils/validations.dart';
@@ -33,25 +43,13 @@ import '../../../utils/size_config.dart';
 import '../../../widgets/app_logo.dart';
 import '../../../widgets/hutano_button.dart';
 import '../../../widgets/hutano_textfield.dart';
-import 'date_of_birth.dart';
-import 'gender_selector.dart';
-import 'model/req_register.dart';
-import 'model/req_verify_address.dart';
-import 'model/res_google_address_suggetion.dart';
-import 'model/res_google_place_detail.dart';
-import 'model/res_insurance_list.dart';
-import 'model/res_states_list.dart';
-import 'state_list.dart';
-import 'upload_image.dart';
 
-class RegisterScreen extends StatefulWidget {
-  final String number;
-  final String countryCode;
+class AddUser extends StatefulWidget {
 
-  RegisterScreen(this.number, this.countryCode);
+  AddUser();
 
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  _AddUserState createState() => _AddUserState();
 }
 
 class Genders {
@@ -60,7 +58,7 @@ class Genders {
   Genders(this.val, this.title);
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _AddUserState extends State<AddUser> {
   final FocusNode _firstNameFocus = FocusNode();
   final FocusNode _lastNameFocus = FocusNode();
   final FocusNode _emailFocus = FocusNode();
@@ -142,9 +140,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     _registerModel.type = 1;
     _registerModel.step = 3;
-    _registerModel.mobileCountryCode = widget.countryCode;
+    // _registerModel.mobileCountryCode = widget.countryCode;
     _registerModel.isAgreeTermsAndCondition = 1;
-    _registerModel.phoneNumber = widget.number;
+    // _registerModel.phoneNumber = widget.number;
 
     if (Referral().referralCode.isNotEmpty) {
       _registerModel.referedBy = Referral().referralCode;
@@ -388,34 +386,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
       var res = await ApiManager().registerUser(_registerModel, _imageFile);
 
       //TODO : Verify code
-      // SharedPref().setValue(PreferenceKey.id, res.response.sId);
-      // SharedPref().setValue(PreferenceKey.email, res.response.email);
+      SharedPref().setValue(PreferenceKey.id, res.response.sId);
+      SharedPref().setValue(PreferenceKey.email, res.response.email);
       // SharedPref().setValue(PreferenceKey.gender, res.response.gender);
-      // setInt(PreferenceKey.gender, res.response.gender);
-      // setString(PreferenceKey.tokens, res.response.token);
-      // setString('patientSocialHistory',
-      //     jsonEncode(res.response.patientSocialHistory));
-      // setString('primaryUser', jsonEncode(res.response));
-      // SharedPref()
-      //     .setValue(PreferenceKey.phone, res.response.phoneNumber.toString());
-
-      setBool(PreferenceKey.perFormedSteps, false);
-      setBool(PreferenceKey.isEmailVerified, false);
-      setString(PreferenceKey.fullName, res.response.fullName);
-      setString(PreferenceKey.id, res.response.sId);
-      setString(PreferenceKey.tokens, res.response.token);
-      setString(PreferenceKey.phone, res.response.phoneNumber.toString());
       setInt(PreferenceKey.gender, res.response.gender);
+      setString(PreferenceKey.tokens, res.response.token);
       setString('patientSocialHistory',
           jsonEncode(res.response.patientSocialHistory));
-      // setString('primaryUser', jsonEncode(res.response));
-      // setString('selectedAccount', jsonEncode(res.response));
-      setBool(PreferenceKey.intro, true);
+      SharedPref()
+          .setValue(PreferenceKey.phone, res.response.phoneNumber.toString());
 
       //TODO : Verify code
       SharedPref().saveToken(res.response.token);
-      // SharedPref().setValue("fullName", _registerModel.fullName);
-      // SharedPref().setValue("complete", "0");
+      SharedPref().setValue("fullName", _registerModel.fullName);
+      SharedPref().setValue("complete", "0");
 
       //TODO:
       //Note : Old register coded added
@@ -806,9 +790,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
             isNumberField: true,
             width: SizeConfig.screenWidth / 2.4,
             focusNode: _mobileFocus,
-            controller: _phoneNoController
-              ..text =
-                  '${widget.countryCode} ${widget.number.getUsFormatNumber()}',
+            // controller: _phoneNoController
+            //   ..text =
+            //       '${widget.countryCode} ${widget.number.getUsFormatNumber()}',
             isFieldEnable: false,
             focusedBorderColor: colorBlack20,
             labelText: Localization.of(context).phoneNo,

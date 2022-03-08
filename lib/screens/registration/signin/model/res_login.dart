@@ -326,9 +326,9 @@ class Response {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this._location != null) {
-      data['location'] = this._location.toJson();
-    }
+    // if (this._location != null) {
+    // data['location'] = this._location.toJson();
+    // }
     if (this.patientSocialHistory != null) {
       data['patientSocialHistory'] = this.patientSocialHistory.toJson();
     }
@@ -356,17 +356,17 @@ class Response {
     data['isEmailVerified'] = this._isEmailVerified;
     data['status'] = this._status;
     data['type'] = this._type;
-    data['resetPasswordVerificationCode'] = this._resetPasswordVerificationCode;
-    data['resetPasswordVerificationCodeSentAt'] =
-        this._resetPasswordVerificationCodeSentAt;
-    data['stripeCustomerId'] = this._stripeCustomerId;
-    data['stripeConnectAccount'] = this._stripeConnectAccount;
-    data['pin'] = this._pin;
-    data['referalCode'] = this._referalCode;
-    data['referalPoints'] = this._referalPoints;
-    data['resetPinVerificationCode'] = this._resetPinVerificationCode;
-    data['resetPinVerificationCodeSentAt'] =
-        this._resetPinVerificationCodeSentAt;
+    // data['resetPasswordVerificationCode'] = this._resetPasswordVerificationCode;
+    // data['resetPasswordVerificationCodeSentAt'] =
+    //     this._resetPasswordVerificationCodeSentAt;
+    // data['stripeCustomerId'] = this._stripeCustomerId;
+    // data['stripeConnectAccount'] = this._stripeConnectAccount;
+    // data['pin'] = this._pin;
+    // data['referalCode'] = this._referalCode;
+    // data['referalPoints'] = this._referalPoints;
+    // data['resetPinVerificationCode'] = this._resetPinVerificationCode;
+    // data['resetPinVerificationCodeSentAt'] =
+    //     this._resetPinVerificationCodeSentAt;
     data['_id'] = this._sId;
     if (this._insurance != null) {
       // data['insurance'] = this._insurance.map((v) => v.toJson()).toList();
@@ -377,10 +377,10 @@ class Response {
     data['createdAt'] = this._createdAt;
     data['updatedAt'] = this._updatedAt;
     data['__v'] = this._iV;
-    if (this._familyNetwork != null) {
-      data['familyNetwork'] =
-          this._familyNetwork.map((v) => v.toJson()).toList();
-    }
+    // if (this._familyNetwork != null) {
+    //   data['familyNetwork'] =
+    //       this._familyNetwork.map((v) => v.toJson()).toList();
+    // }
     data['token'] = this._token;
     return data;
   }

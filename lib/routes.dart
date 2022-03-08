@@ -64,13 +64,19 @@ import 'package:hutano/screens/dashboard/choose_location_screen.dart';
 import 'package:hutano/screens/dashboard/choose_specialities.dart';
 import 'package:hutano/screens/dashboard/dashboard_search_screen.dart';
 import 'package:hutano/screens/dashboard/profile/activity_notification.dart';
+import 'package:hutano/screens/dashboard/profile/blood_pressure_chart.dart';
+import 'package:hutano/screens/dashboard/profile/blood_sugar_chart.dart';
 import 'package:hutano/screens/dashboard/profile/calender_remainder_screen.dart';
 import 'package:hutano/screens/dashboard/profile/consultation_history.dart';
 import 'package:hutano/screens/dashboard/profile/health_monitoring_screen.dart';
+import 'package:hutano/screens/dashboard/profile/heart_rate_chart.dart';
 import 'package:hutano/screens/dashboard/profile/medical_document.dart';
 import 'package:hutano/screens/dashboard/profile/my_providers.dart';
+import 'package:hutano/screens/dashboard/profile/oxygen_saturation_chart.dart';
 import 'package:hutano/screens/dashboard/profile/payment_history.dart';
 import 'package:hutano/screens/dashboard/profile/profile_screen.dart';
+import 'package:hutano/screens/dashboard/profile/temperature_chart.dart';
+import 'package:hutano/screens/dashboard/profile/weight_chart.dart';
 import 'package:hutano/screens/dashboard/provider_filters.dart';
 import 'package:hutano/screens/dashboard/provider_list_screen.dart';
 import 'package:hutano/screens/dashboard/provider_profile_image.dart';
@@ -136,6 +142,11 @@ import 'package:hutano/screens/registration/signin/web_view.dart';
 import 'package:hutano/screens/registration/welcome_screen.dart';
 import 'package:hutano/screens/setup_pin/set_pin.dart';
 import 'package:hutano/screens/setup_pin/set_pin_complete.dart';
+import 'package:hutano/screens/users/add_user.dart';
+import 'package:hutano/screens/users/add_user_type.dart';
+import 'package:hutano/screens/users/link_account.dart';
+import 'package:hutano/screens/users/link_phone_number.dart';
+import 'package:hutano/screens/users/link_verify.dart';
 import 'package:hutano/utils/constants/key_constant.dart';
 // import 'package:hutano/utils/argument_const.dart';
 
@@ -299,6 +310,17 @@ class Routes {
   static const String consultationHistoryScreen = '/consultationHistoryScreen';
   static const String healthMonitoringScreen = '/healthMonitoringScreen';
   static const String calendarReminderScreen = '/calendarReminderScreen';
+  static const String bloodPressureChart = '/bloodPressureChart';
+  static const String bloodSugarChart = '/bloodSugarChart';
+  static const String oxygenSaturationChart = '/oxygenSaturationChart';
+  static const String heartRateChart = '/heartRateChart';
+  static const String temperatureChart = '/temperatureChart';
+  static const String weightChart = '/weightChart';
+  static const String addNewUserType = '/addNewUserType';
+  static const String linkNumber = '/linkNumber';
+  static const String linkVerification = '/linkVerification';
+  static const String linkAccount = '/linkAccount';
+  static const String addUser = '/addUser';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final dynamic args = settings.arguments;
@@ -683,10 +705,7 @@ class Routes {
           return _buildRoute(settings, ProviderSearch());
         }
         final searchText = args[ArgumentConstant.searchText];
-        return _buildRoute(
-            settings,
-            ProviderSearch(
-            ));
+        return _buildRoute(settings, ProviderSearch());
         break;
       case myProviderNetwork:
         return _buildRoute(
@@ -1050,6 +1069,73 @@ class Routes {
         return _buildRoute(
           settings,
           CalendarReminderScreen(),
+        );
+        break;
+      case bloodPressureChart:
+        return _buildRoute(
+          settings,
+          BloodPressureChart(),
+        );
+        break;
+      case bloodSugarChart:
+        return _buildRoute(
+          settings,
+          BloodSugarChart(),
+        );
+        break;
+
+      case oxygenSaturationChart:
+        return _buildRoute(
+          settings,
+          OxygenSaturationChart(),
+        );
+        break;
+      case heartRateChart:
+        return _buildRoute(
+          settings,
+          HeartRateChart(),
+        );
+        break;
+      case weightChart:
+        return _buildRoute(
+          settings,
+          WeightChart(),
+        );
+        break;
+      case temperatureChart:
+        return _buildRoute(
+          settings,
+          TemperatureChart(),
+        );
+        break;
+      case addNewUserType:
+        return _buildRoute(
+          settings,
+          AddNewUserType(),
+        );
+        break;
+      case linkNumber:
+        return _buildRoute(
+          settings,
+          LinkNumber(),
+        );
+        break;
+      case linkVerification:
+        return _buildRoute(
+          settings,
+          LinkVerification(userData:args),
+        );
+        break;
+      case linkAccount:
+        return _buildRoute(
+          settings,
+          LinkAccount(userData:args),
+        );
+        break;
+      case addUser:
+        return _buildRoute(
+          settings,
+          AddUser(),
         );
         break;
 

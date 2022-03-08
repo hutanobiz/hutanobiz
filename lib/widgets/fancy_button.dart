@@ -13,6 +13,7 @@ class FancyButton extends StatelessWidget {
     this.buttonColor,
     @required this.onPressed,
     this.icon,
+    this.textColor,
     this.elevation = 0.0,
     this.buttonIcon,
   });
@@ -22,6 +23,7 @@ class FancyButton extends StatelessWidget {
   final IconData icon;
   final double buttonHeight, buttonWidth;
   final Color buttonColor;
+  final textColor;
   final double elevation;
 
   @override
@@ -64,7 +66,9 @@ class FancyButton extends StatelessWidget {
                 maxLines: 1,
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.clip,
-                style: TextStyle(color: Colors.white, fontSize: 16.0),
+                style: TextStyle(
+                    color: textColor == null ? Colors.white :textColor ,
+                    fontSize: 16.0),
               ),
             ),
           ],

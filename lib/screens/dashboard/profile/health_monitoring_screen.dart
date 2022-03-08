@@ -17,6 +17,7 @@ class Prefrence {
   String sId;
   int iV;
   bool isChecked;
+  String route;
 
   Prefrence(
       {this.id,
@@ -27,7 +28,8 @@ class Prefrence {
       this.status,
       this.sId,
       this.iV,
-      this.isChecked});
+      this.isChecked,
+      this.route});
 
   Prefrence.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -70,23 +72,33 @@ class _HealthMonitoringScreenState extends State<HealthMonitoringScreen> {
     Prefrence(
         name: 'Blood pressure',
         description: 'Monitor blood pressure',
-        image: 'images/blood_pressure.png'),
+        image: 'images/blood_pressure.png',
+        route: Routes.bloodPressureChart),
     Prefrence(
         name: 'Blood sugar',
         description: 'Control your blood sugar',
-        image: 'images/special.png'),
+        image: 'images/special.png',
+        route: Routes.bloodSugarChart),
     Prefrence(
         name: 'Weight',
         description: 'Manage your weight',
-        image: 'images/vital.png'),
+        image: 'images/vital.png',
+        route: Routes.weightChart),
     Prefrence(
         name: 'Heart Rate',
         description: 'Manage your heart rate',
-        image: 'images/heart_lung.png'),
+        image: 'images/heart_lung.png',
+        route: Routes.heartRateChart),
     Prefrence(
         name: 'Oxygen Saturation',
         description: 'Manage',
-        image: 'images/oxygen_saturation.png')
+        image: 'images/oxygen_saturation.png',
+        route: Routes.oxygenSaturationChart),
+    Prefrence(
+        name: 'Temperature',
+        description: 'Manage',
+        image: 'images/vital.png',
+        route: Routes.temperatureChart)
   ];
   bool isLoading = false;
 
@@ -124,89 +136,50 @@ class _HealthMonitoringScreenState extends State<HealthMonitoringScreen> {
               itemCount: healthMonitoring.length,
               shrinkWrap: true,
               itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.only(bottom: 15, right: 20),
-                  // padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey.shade200,
-                            offset: Offset(3, 3),
-                            spreadRadius: 3,
-                            blurRadius: 5)
-                      ]),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.asset(healthMonitoring[index].image,
-                              height: 50, width: 50)),
-                      SizedBox(
-                        height: 14,
-                      ),
-                      Text(
-                        healthMonitoring[index].name,
-                        style: AppTextStyle.semiBoldStyle(fontSize: 14),
-                      ),
-                      Text(
-                        healthMonitoring[index].description ?? '',
-                        style: AppTextStyle.regularStyle(fontSize: 12),
-                      )
-                    ],
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, healthMonitoring[index].route);
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.only(bottom: 15, right: 20),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.grey.shade200,
+                              offset: Offset(3, 3),
+                              spreadRadius: 3,
+                              blurRadius: 5)
+                        ]),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.asset(healthMonitoring[index].image,
+                                height: 50, width: 50)),
+                        SizedBox(
+                          height: 14,
+                        ),
+                        Text(
+                          healthMonitoring[index].name,
+                          style: AppTextStyle.semiBoldStyle(fontSize: 14),
+                        ),
+                        Text(
+                          healthMonitoring[index].description ?? '',
+                          style: AppTextStyle.regularStyle(fontSize: 12),
+                        )
+                      ],
+                    ),
                   ),
                 );
               },
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget quickLinks(String image, String text) {
-    return Container(
-      margin: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-              color: Color(0xff8B8B8B).withOpacity(0.14),
-              offset: Offset(0, 2),
-              blurRadius: 20,
-              spreadRadius: 1)
-        ],
-        borderRadius: BorderRadius.all(Radius.circular(14.0)),
-        border: Border.all(color: Color(0xFF372786).withOpacity(0.12)),
-      ),
-      padding: EdgeInsets.all(10),
-      child: Row(
-        children: [
-          //   Image.asset(
-          //   'images/forward_arrow_grey.png',
-          //   height: 12,
-          //   width: 12,
-          //   color: Color(0xFF999AAE),
-          // ),
-          SizedBox(width: 8),
-          Expanded(
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                text,
-                style: TextStyle(
-                  color: AppColors.windsor.withOpacity(0.85),
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

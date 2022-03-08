@@ -273,15 +273,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           SizedBox(width: 8),
           Expanded(
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                text,
-                style: TextStyle(
-                  color: AppColors.windsor.withOpacity(0.85),
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                ),
+            child: Text(
+              text,
+              style: TextStyle(
+                color: AppColors.windsor.withOpacity(0.85),
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
               ),
             ),
           ),

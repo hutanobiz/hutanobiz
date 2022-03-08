@@ -1,15 +1,24 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:hutano/apis/api_helper.dart';
+import 'package:hutano/apis/api_manager.dart';
+import 'package:hutano/colors.dart';
+import 'package:hutano/routes.dart';
 import 'package:hutano/screens/all_appointments/all_appointments.dart';
 import 'package:hutano/screens/chat/all_chats.dart';
 import 'package:hutano/screens/dashboard/dashboardScreen.dart';
 import 'package:hutano/screens/dashboard/setting.dart';
 import 'package:hutano/screens/providercicle/my_provider_groups.dart';
 import 'package:hutano/screens/providercicle/my_provider_network/my_provider_network.dart';
+import 'package:hutano/text_style.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/widgets/bottom_bar/fancy_bottom_navigation.dart';
 import 'package:hutano/widgets/coming_soon.dart';
+import 'package:hutano/widgets/fancy_button.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key, this.currentIndex = 0}) : super(key: key);
@@ -21,6 +30,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
+  List<dynamic> linkedAccounts = [];
+  dynamic selectedAccount;
 
   // final List<Widget> _children = [
   //   DashboardScreen(),
@@ -60,8 +71,16 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     _currentIndex = widget.currentIndex;
-
+    getLinkedAccount();
     super.initState();
+  }
+
+  getLinkedAccount() async {
+    linkedAccounts = await ApiManager().getLinkAccount();
+    linkedAccounts.insert(0, json.decode(getString('primaryUser')));
+    linkedAccounts.add('Add');
+    selectedAccount = json.decode(getString('selectedAccount'));
+    setState(() {});
   }
 
   GlobalKey bottomNavigationKey = GlobalKey();
@@ -179,15 +198,219 @@ class _HomeScreenState extends State<HomeScreen> {
               // iconData: Icons.home,
               title: "Chat"),
           TabData(
-              icon: Padding(
-                padding: EdgeInsets.all(_currentIndex != 4 ? 0 : 8.0),
-                child: Image.asset(
-                  _currentIndex != 4
-                      ? FileConstants.icUserGrey
-                      : FileConstants.icUserWhite,
-                  height: imageSize,
-                  width: imageSize,
-                ),
+              icon: GestureDetector(
+                onLongPress: () {
+                  return showModalBottomSheet(
+                      context: context,
+                      backgroundColor: AppColors.snow,
+                      isScrollControlled: false,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      builder: (ctx) => Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Container(
+                                height: 6,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                    color: colorGrey,
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              ListView.separated(
+                                separatorBuilder:
+                                    (BuildContext context, int index) =>
+                                        SizedBox(height: 17),
+                                padding: EdgeInsets.only(top: 20),
+                                shrinkWrap: true,
+                                physics: ScrollPhysics(),
+                                itemCount: linkedAccounts.length,
+                                itemBuilder: (context, index) {
+                                  return index == linkedAccounts.length - 1
+                                      ? GestureDetector(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Icon(Icons.add_circle,
+                                                        color:
+                                                            AppColors.windsor,
+                                                        size: 60),
+                                                    SizedBox(width: 16),
+                                                    Text('Add User',
+                                                        style: AppTextStyle
+                                                            .mediumStyle(
+                                                                fontSize: 16,
+                                                                color: AppColors
+                                                                    .windsor)),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            // Navigator.pop(context);
+                                            showModalBottomSheet(
+                                                context: context,
+                                                backgroundColor: AppColors.snow,
+                                                isScrollControlled: false,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20.0),
+                                                ),
+                                                builder: (ctx) => Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        SizedBox(
+                                                          height: 20,
+                                                        ),
+                                                        Container(
+                                                          height: 6,
+                                                          width: 50,
+                                                          decoration: BoxDecoration(
+                                                              color: colorGrey,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10)),
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(20.0),
+                                                          child: FancyButton(
+                                                              title:
+                                                                  'Add Account',
+                                                              onPressed: () {
+                                                                return Navigator
+                                                                    .pushNamed(
+                                                                        context,
+                                                                        Routes
+                                                                            .addNewUserType);
+                                                              }),
+                                                        ),
+                                                        Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(20.0),
+                                                            child: FancyButton(
+                                                              title:
+                                                                  'Link Account',
+                                                              buttonColor:
+                                                                  Colors.white,
+                                                              textColor:
+                                                                  AppColors
+                                                                      .windsor,
+                                                              onPressed: () {
+                                                                Navigator.pushNamed(
+                                                                    context,
+                                                                    Routes
+                                                                        .linkNumber);
+                                                              },
+                                                            ))
+                                                      ],
+                                                    ));
+                                          },
+                                        )
+                                      : GestureDetector(
+                                          child: Row(
+                                          children: [
+                                            SizedBox(width: 16),
+                                            ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                              child: Image.network(
+                                                  ApiBaseHelper.imageUrl +
+                                                      (index == 0
+                                                          ? linkedAccounts[
+                                                              index]['avatar']
+                                                          : linkedAccounts[
+                                                                      index][
+                                                                  'linkToAccount']
+                                                              ['avatar']),
+                                                  height: 60,
+                                                  width: 60,
+                                                  fit: BoxFit.cover),
+                                            ),
+                                            SizedBox(width: 16),
+                                            Expanded(
+                                              child: Text(
+                                                  (index == 0
+                                                      ? linkedAccounts[index]
+                                                          ['fullName']
+                                                      : linkedAccounts[index]
+                                                              ['linkToAccount']
+                                                          ['fullName']),
+                                                  style:
+                                                      AppTextStyle.mediumStyle(
+                                                          fontSize: 16,
+                                                          color: AppColors
+                                                              .windsor)),
+                                            ),
+                                            (index == 0
+                                                        ? linkedAccounts[index]
+                                                            ['_id']
+                                                        : linkedAccounts[index][
+                                                                'linkToAccount']
+                                                            ['_id']) ==
+                                                    selectedAccount['_id']
+                                                ? Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            right: 16.0),
+                                                    child: Icon(
+                                                      Icons.check_circle,
+                                                      color: AppColors.windsor,
+                                                      size: 24,
+                                                    ),
+                                                  )
+                                                : SizedBox(),
+                                          ],
+                                        ));
+                                },
+                              ),
+                            ],
+                          ));
+                  // print('aaa');
+                },
+                child: Padding(
+                    padding: EdgeInsets.all(_currentIndex != 4 ? 0 : 2.0),
+                    // child: Image.asset(
+                    //   _currentIndex != 4
+                    //       ? FileConstants.icUserGrey
+                    //       : FileConstants.icUserWhite,
+                    //   height: imageSize,
+                    //   width: imageSize,
+                    // ),
+                    child: selectedAccount == null
+                        ? Image.asset(
+                            _currentIndex != 4
+                                ? FileConstants.icUserGrey
+                                : FileConstants.icUserWhite,
+                            height: imageSize,
+                            width: imageSize,
+                          )
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(
+                                _currentIndex != 4 ? 15 : 20),
+                            child: Image.network(
+                              ApiBaseHelper.imageUrl +
+                                  selectedAccount['avatar'],
+                              height: 30,
+                              width: 30,
+                              fit: BoxFit.cover,
+                            ),
+                          )),
               ),
               onclick: () {
                 final FancyBottomNavigationState fState =

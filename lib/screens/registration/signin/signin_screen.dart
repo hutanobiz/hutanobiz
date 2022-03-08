@@ -323,17 +323,19 @@ class _SignInScreenState extends State<SignInScreen> {
           setInt(PreferenceKey.gender, value.response.gender);
           setString('patientSocialHistory',
               jsonEncode(value.response.patientSocialHistory));
+          setString('primaryUser', jsonEncode(value.response));
+          setString('selectedAccount', jsonEncode(value.response));
           setBool(PreferenceKey.intro, true);
-          //TODO
-          //Note : Duplication of pref code
+          // //TODO
+          // //Note : Duplication of pref code
           SharedPref().saveToken(value.response.token);
-          SharedPref().setValue("fullName", value.response.fullName);
-          // SharedPref().setValue("isEmailVerified", value.response.isEmailVerified);
+          // SharedPref().setValue("fullName", value.response.fullName);
+          // // SharedPref().setValue("isEmailVerified", value.response.isEmailVerified);
 
-          //TODO
-          //Note : Duplication of pref code
+          // //TODO
+          // //Note : Duplication of pref code
 
-          //TODO : change route to Dashboard
+          // //TODO : change route to Dashboard
           if (value.response.pin == null && value.response.isEmailVerified) {
             Navigator.of(context).pushNamed(Routes.setupPin, arguments: {
               ArgumentConstant.setPinScreen: SetupScreenFrom.login
