@@ -501,7 +501,7 @@ class LungsCompleteWidget extends StatelessWidget {
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 5),
                   child: Text(
-                    "\u2022 ${radioValues[int.parse(lungSounds[index].type)]} ${lungSounds[index].sound}",
+                    "\u2022 ${(lungSounds[index].type.contains("1") || lungSounds[index].type.contains("2") || lungSounds[index].type.contains("3") ? radioValues[int.parse(lungSounds[index].type)] : lungSounds[index].type)} ${lungSounds[index].sound}",
                     style: AppTextStyle.mediumStyle(fontSize: 14),
                   ),
                 );
@@ -645,7 +645,7 @@ class NeurologicalCompleteListWidget extends StatelessWidget {
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 5),
                 child: Text(
-                  "\u2022 ${radioValues[int.parse(list[index].type)]} ${list[index].deficits}",
+                  "\u2022 ${(list[index].type.contains("1") || list[index].type.contains("2") || list[index].type.contains("3") ? radioValues[int.parse(list[index].type)] : list[index].type)} ${list[index].deficits}",
                   style: AppTextStyle.mediumStyle(fontSize: 14),
                 ),
               );
@@ -752,7 +752,7 @@ class SpecialTestCompleteListWidget extends StatelessWidget {
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 5),
                 child: Text(
-                  "\u2022 ${radioValues[int.parse(list[index].type)]} ${list[index].name}",
+                  "\u2022 ${(list[index].type.contains("1") || list[index].type.contains("2") || list[index].type.contains("3") ? radioValues[int.parse(list[index].type)] : list[index].type)} ${list[index].name}",
                   style: AppTextStyle.mediumStyle(fontSize: 14),
                 ),
               );
@@ -865,7 +865,7 @@ class MuscleCompleteListWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "\u2022 ${radioValues[int.parse(list[index].type)]} ${list[index].name}",
+                    "\u2022 ${(list[index].type.contains("1") || list[index].type.contains("2") || list[index].type.contains("3") ? radioValues[int.parse(list[index].type)] : list[index].type)} ${list[index].name}",
                     style: AppTextStyle.mediumStyle(fontSize: 14),
                   ),
                   Text(
@@ -908,7 +908,7 @@ class JointCompleteListWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "\u2022 ${radioValues[int.parse(list[index].type)]} ${list[index].name}",
+                    "\u2022 ${(list[index].type.contains("1") || list[index].type.contains("2") || list[index].type.contains("3") ? radioValues[int.parse(list[index].type)] : list[index].type)} ${list[index].name}",
                     style: AppTextStyle.mediumStyle(fontSize: 14),
                   ),
                   Text(
