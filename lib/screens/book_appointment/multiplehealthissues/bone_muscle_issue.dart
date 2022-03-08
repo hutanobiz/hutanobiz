@@ -2114,7 +2114,14 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
           _wholeBodyController.animateTo(110.0,
               duration: Duration(milliseconds: 500), curve: Curves.ease);
         } else {
-          if (_isTreated && _selectedValue == '0') {
+          if ((_isProHourVisible ||
+                  _isProDayVisible ||
+                  _isProWeekVisible ||
+                  _isProMonthVisible ||
+                  _isProYearVisible) &&
+              _selectedProValue == "0") {
+            Widgets.showToast('Please select problem duration');
+          } else if (_isTreated && _selectedValue == '0') {
             Widgets.showToast('Please select how long ago');
           } else {
             addProblemData();
