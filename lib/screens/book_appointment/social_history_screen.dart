@@ -86,19 +86,22 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
           // Marijuana,Coccine,Metaphetamin,Heroine
           if (map['type'].toString().toLowerCase() == 'marijuana') {
             isMarijuana = true;
-            marijuanaGroupValue = map['frequency'];
+            marijuanaGroupValue =
+                map['frequency'] == "0" ? "3" : map['frequency'];
           }
           if (map['type'].toString().toLowerCase() == 'coccine') {
             isCoccine = true;
-            coccineGroupValue = map['frequency'];
+            coccineGroupValue =
+                map['frequency'] == "0" ? "3" : map['frequency'];
           }
           if (map['type'].toString().toLowerCase() == 'metaphetamin') {
             isMetaphetamin = true;
-            metaGroupValue = map['frequency'];
+            metaGroupValue = map['frequency'] == "0" ? "3" : map['frequency'];
           }
           if (map['type'].toString().toLowerCase() == 'heroine') {
             isHeroine = true;
-            heroineGroupValue = map['frequency'];
+            heroineGroupValue =
+                map['frequency'] == "0" ? "3" : map['frequency'];
           }
         }
       }
@@ -333,7 +336,8 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
                                             5, "3", 'Daily', coccineGroupValue)
                                       ])
                                     : SizedBox(),
-                                titleWidget(6, 'Methamphetamine', isMetaphetamin),
+                                titleWidget(
+                                    6, 'Methamphetamine', isMetaphetamin),
                                 isMetaphetamin
                                     ? Column(children: [
                                         smokerRadioListItem(
@@ -561,8 +565,8 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
           RecreationalDrugs(type: 'Coccaine', frequency: coccineGroupValue));
     }
     if (isMetaphetamin) {
-      recreationalDrugs.add(
-          RecreationalDrugs(type: 'Methamphetamine', frequency: metaGroupValue));
+      recreationalDrugs.add(RecreationalDrugs(
+          type: 'Methamphetamine', frequency: metaGroupValue));
     }
     if (isHeroine) {
       recreationalDrugs.add(

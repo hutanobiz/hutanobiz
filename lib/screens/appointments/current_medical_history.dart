@@ -185,9 +185,19 @@ class _CurrentAppointmentMedicalHistoryState
                       physics: NeverScrollableScrollPhysics(),
                       itemCount: socialHistory['recreationalDrugs'].length,
                       itemBuilder: (context, index) {
-                          return socialHistory['recreationalDrugs'][index]['frequency'] == "0"||socialHistory['recreationalDrugs'][index]['type'] == ""?SizedBox(): Text(
-                          'Patient uses ${socialHistory['recreationalDrugs'][index]['type']} ${socialHistoryUsages[int.parse(socialHistory['recreationalDrugs'][index]['frequency']) - 1]}.',
-                        );
+                        if (socialHistory['recreationalDrugs'][index]
+                                ['frequency'] ==
+                            "0") {
+                          socialHistory['recreationalDrugs'][index]
+                              ['frequency'] = "3";
+                        }
+                        return socialHistory['recreationalDrugs'][index]
+                                    ['type'] ==
+                                ""
+                            ? SizedBox()
+                            : Text(
+                                'Patient uses ${socialHistory['recreationalDrugs'][index]['type']} ${socialHistoryUsages[int.parse(socialHistory['recreationalDrugs'][index]['frequency']) - 1]}.',
+                              );
                       },
                     )
                   : Text('Patient does not use recreational drugs.')
