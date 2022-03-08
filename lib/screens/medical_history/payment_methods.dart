@@ -349,8 +349,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
         child: Column(
           children: [
             Form(
-              autovalidate: true,
-              key: _keyName,
+              autovalidateMode: AutovalidateMode.always, key: _keyName,
               child: HutanoTextField(
                 textInputType: TextInputType.text,
                 textInputAction: TextInputAction.next,
@@ -364,8 +363,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
             ),
             SizedBox(height: 20),
             Form(
-              autovalidate: true,
-              key: _keyNumber,
+              autovalidateMode: AutovalidateMode.always, key: _keyNumber,
               child: HutanoTextField(
                 focusNode: FocusNode(),
                 labelText: "Card Number",
@@ -376,7 +374,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
                 suffixIcon: FileConstants.icVisaCard,
                 textInputFormatter: [
                   maskFormatter,
-                  BlacklistingTextInputFormatter(RegExp('[\\.]')),
+                  FilteringTextInputFormatter.deny(RegExp('[\\.]')),
                   LengthLimitingTextInputFormatter(19),
                 ],
                 validationMethod: (number) {
@@ -388,14 +386,13 @@ class _PaymentMethodsState extends State<PaymentMethods> {
             ),
             SizedBox(height: 20),
             Form(
-              autovalidate: true,
-              key: _keyExpiary,
+              autovalidateMode: AutovalidateMode.always, key: _keyExpiary,
               child: HutanoTextField(
                 controller: _expiryController,
                 textInputAction: TextInputAction.next,
                 hintText: "mm/yy",
                 textInputFormatter: [
-                  WhitelistingTextInputFormatter.digitsOnly,
+                  FilteringTextInputFormatter.digitsOnly,
                   LengthLimitingTextInputFormatter(4),
                   CardMonthInputFormatter()
                 ],
@@ -409,8 +406,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
             ),
             SizedBox(height: 20),
             Form(
-              autovalidate: true,
-              key: _keyCVV,
+              autovalidateMode: AutovalidateMode.always, key: _keyCVV,
               child: HutanoTextField(
                 focusNode: FocusNode(),
                 controller: _cvvController,
@@ -418,7 +414,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
                 textInputType: TextInputType.number,
                 textInputAction: TextInputAction.next,
                 textInputFormatter: [
-                  WhitelistingTextInputFormatter.digitsOnly,
+                  FilteringTextInputFormatter.digitsOnly,
                   LengthLimitingTextInputFormatter(4),
                 ],
                 validationMethod: (number) {

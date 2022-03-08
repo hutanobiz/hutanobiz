@@ -28,7 +28,7 @@ class HutanoPinInput extends StatelessWidget {
       width: width,
       child: PinCodeTextField(
         controller: controller,
-        inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         backgroundColor: Colors.transparent,
         cursorColor: Colors.black87,
         length: pinCount,

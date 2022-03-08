@@ -101,8 +101,7 @@ class _SearchScreenState extends State<SearchScreen> {
             height: spacing25,
           ),
           Form(
-            autovalidate: true,
-            key: _key,
+            autovalidateMode: AutovalidateMode.always, key: _key,
             child: _buildSearchField(),
           ),
           SizedBox(
@@ -185,7 +184,7 @@ class _SearchScreenState extends State<SearchScreen> {
       }),
       validator: (number) => number.toString().isValidNumber(context),
       textInputAction: TextInputAction.done,
-      inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       decoration: InputDecoration(
         counterText: "",
         isDense: true,

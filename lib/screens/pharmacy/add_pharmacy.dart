@@ -64,7 +64,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
   String pharmacyError;
 
   final GlobalKey<FormState> _pharmacyKey = GlobalKey();
-  bool _autoValidate = false;
+  AutovalidateMode _autoValidate = AutovalidateMode.disabled;
   final labelStyle = TextStyle(fontSize: fontSize14, color: colorGrey60);
   List<Address> _placeList = [];
   List<States> _stateList = [];
@@ -226,7 +226,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
                 padding: EdgeInsets.symmetric(horizontal: spacing20),
                 child: Form(
                     key: _pharmacyKey,
-                    autovalidate: _autoValidate,
+                    autovalidateMode: _autoValidate,
                     child: Column(
                       // shrinkWrap: true,
                       // physics: NeverScrollableScrollPhysics(),

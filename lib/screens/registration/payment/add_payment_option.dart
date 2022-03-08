@@ -365,7 +365,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
         controller: _cardNumberController,
         textInputFormatter: [
           maskFormatter,
-          BlacklistingTextInputFormatter(RegExp('[\\.]')),
+          FilteringTextInputFormatter.deny(RegExp('[\\.]')),
           LengthLimitingTextInputFormatter(19),
         ],
         labelText: Localization.of(context).cardNumber,
@@ -404,7 +404,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
         floatingBehaviour: FloatingLabelBehavior.always,
         focusedBorderColor: colorGrey20,
         textInputFormatter: [
-          WhitelistingTextInputFormatter.digitsOnly,
+          FilteringTextInputFormatter.digitsOnly,
           LengthLimitingTextInputFormatter(4),
         ],
         validationMethod: (number) {
@@ -487,7 +487,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
             hintText: "mm/yy",
             textInputType: TextInputType.number,
             textInputFormatter: [
-              WhitelistingTextInputFormatter.digitsOnly,
+              FilteringTextInputFormatter.digitsOnly,
               LengthLimitingTextInputFormatter(4),
               CardMonthInputFormatter()
             ],

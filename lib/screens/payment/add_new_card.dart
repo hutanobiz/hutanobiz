@@ -114,14 +114,13 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   TextFormField(
-                                      controller: _cardController,
+                                      autovalidateMode: AutovalidateMode.always, controller: _cardController,
                                       key: _cardNumberKey,
-                                      autovalidate: true,
                                       keyboardType: TextInputType.number,
                                       validator: Validations.validateCardNumber,
                                       inputFormatters: [
                                         maskFormatter,
-                                        BlacklistingTextInputFormatter(
+                                        FilteringTextInputFormatter.deny(
                                             RegExp('[\\.]')),
                                         LengthLimitingTextInputFormatter(19),
                                       ],
@@ -144,8 +143,8 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                   SizedBox(height: 20.0),
                                   TextFormField(
                                       key: _cardNameKey,
-                                      autovalidate:
-                                          _nameController.text.isNotEmpty,
+                                      autovalidateMode:
+                                         AutovalidateMode.onUserInteraction,
                                       validator: Validations.validateEmpty,
                                       controller: _nameController,
                                       decoration: InputDecoration(
@@ -171,12 +170,11 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                     children: <Widget>[
                                       Expanded(
                                         child: TextFormField(
-                                            controller: _expiryController,
+                                            autovalidateMode: AutovalidateMode.always, controller: _expiryController,
                                             key: _expiryDateKey,
-                                            autovalidate: true,
                                             keyboardType: TextInputType.number,
                                             inputFormatters: [
-                                              WhitelistingTextInputFormatter
+                                              FilteringTextInputFormatter
                                                   .digitsOnly,
                                               LengthLimitingTextInputFormatter(
                                                   4),
@@ -209,14 +207,13 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                       ),
                                       Expanded(
                                         child: TextFormField(
-                                            controller: _cvvController,
+                                            autovalidateMode: AutovalidateMode.always, controller: _cvvController,
                                             key: _cvvKey,
                                             obscureText: true,
-                                            autovalidate: true,
                                             keyboardType: TextInputType.number,
                                             validator: Validations.validateCVV,
                                             inputFormatters: [
-                                              WhitelistingTextInputFormatter
+                                              FilteringTextInputFormatter
                                                   .digitsOnly,
                                               LengthLimitingTextInputFormatter(
                                                   4),
