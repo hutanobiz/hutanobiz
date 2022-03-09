@@ -11,6 +11,7 @@ import 'package:hutano/utils/common_methods.dart';
 import 'package:hutano/utils/preference_key.dart';
 import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/widgets/custom_loader.dart';
+import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:intl/intl.dart';
 
@@ -22,7 +23,7 @@ class OxygenSaturationChart extends StatefulWidget {
 }
 
 class _OxygenSaturationChartState extends State<OxygenSaturationChart> {
- ApiBaseHelper api = new ApiBaseHelper();
+  ApiBaseHelper api = new ApiBaseHelper();
   FocusNode _dateFocusNode = FocusNode();
   FocusNode _timeFocusNode = FocusNode();
   TextEditingController _dateController = TextEditingController();
@@ -38,16 +39,25 @@ class _OxygenSaturationChartState extends State<OxygenSaturationChart> {
   ];
   Future<dynamic> chartFuture;
   List<dynamic> responseData;
+  double touchedValue;
+  bool isFirst = true;
 
   @override
   void initState() {
     super.initState();
+    touchedValue = 1;
+    _dateController.text = DateFormat("MM/dd/yyyy").format(DateTime.now());
+    _selectedDate = DateTime.now().toString();
+    _timeController.text = DateFormat("hh:mm a").format(DateTime.now());
+    _weightController.addListener(() {
+      setState(() {});
+    });
     getChartData();
   }
 
   void getChartData() {
     chartFuture = api.getGraphData("Bearer ${getString(PreferenceKey.tokens)}",
-        'heartRate', DateTime.now().toString());
+        'oxygenSaturation', DateTime.now().toString());
   }
 
   @override
@@ -79,90 +89,6 @@ class _OxygenSaturationChartState extends State<OxygenSaturationChart> {
                     style: AppTextStyle.semiBoldStyle(fontSize: 20),
                   ),
                 ),
-                Image.asset(
-                  'images/trackReschedule.png',
-                  height: 18,
-                ),
-                SizedBox(width: 12),
-                GestureDetector(
-                  child: Container(
-                      width: 100,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          color: Colors.white),
-                      child: TextFormField(
-                        controller: _dateController,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Color(0xb5000000),
-                          fontSize: fontSize14,
-                          fontWeight: fontWeightSemiBold,
-                        ),
-                        focusNode: _dateFocusNode,
-                        enabled: false,
-                        decoration: InputDecoration(
-                          counterText: '',
-                          hintText: 'Date',
-                          hintStyle: TextStyle(
-                              fontSize: fontSize13,
-                              fontWeight: fontWeightMedium),
-                          contentPadding: EdgeInsets.all(spacing8),
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.grey[100]),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.grey[100]),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.grey[100]),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: AppColors.windsor),
-                          ),
-                        ),
-                      )),
-                  onTap: () {
-                    if (Platform.isAndroid) {
-                      openMaterialDatePicker(
-                          context, _dateController, _dateFocusNode,
-                          isOnlyDate: true,
-                          initialDate: DateTime.now(),
-                          lastDate: DateTime.now(), onDateChanged: (value) {
-                        if (value != null) {
-                          var date = DateFormat("MM/dd/yyyy").format(value);
-                          _dateController.text = date;
-                          setState(() {
-                            _selectedDate =
-                                DateFormat("MM/dd/yyyy").format(value);
-                          });
-                        }
-                      });
-                    } else {
-                      openCupertinoDatePicker(
-                          context, _dateController, _dateFocusNode,
-                          firstDate: DateTime.now(),
-                          initialDate: DateTime.now(), onDateChanged: (value) {
-                        if (value != null) {
-                          var date = DateFormat("MM/dd/yyyy").format(value);
-                          _dateController.text = date;
-                          setState(() {
-                            _selectedDate =
-                                DateFormat("MM/dd/yyyy").format(value);
-                          });
-                        }
-                      });
-                    }
-                  },
-                ),
               ],
             ),
             SizedBox(height: 8),
@@ -178,6 +104,99 @@ class _OxygenSaturationChartState extends State<OxygenSaturationChart> {
                   GestureDetector(
                     child: Row(
                       children: [
+                        Image.asset(
+                          'images/trackReschedule.png',
+                          height: 18,
+                        ),
+                        SizedBox(width: 12),
+                        GestureDetector(
+                          child: Container(
+                              width: 100,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20)),
+                                  color: Colors.white),
+                              child: TextFormField(
+                                controller: _dateController,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Color(0xb5000000),
+                                  fontSize: fontSize14,
+                                  fontWeight: fontWeightSemiBold,
+                                ),
+                                focusNode: _dateFocusNode,
+                                enabled: false,
+                                decoration: InputDecoration(
+                                  counterText: '',
+                                  hintText: 'Date',
+                                  hintStyle: TextStyle(
+                                      fontSize: fontSize13,
+                                      fontWeight: fontWeightMedium),
+                                  contentPadding: EdgeInsets.all(spacing8),
+                                  border: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10.0)),
+                                    borderSide:
+                                        BorderSide(color: Colors.grey[100]),
+                                  ),
+                                  disabledBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10.0)),
+                                    borderSide:
+                                        BorderSide(color: Colors.grey[100]),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10.0)),
+                                    borderSide:
+                                        BorderSide(color: Colors.grey[100]),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10.0)),
+                                    borderSide:
+                                        BorderSide(color: AppColors.windsor),
+                                  ),
+                                ),
+                              )),
+                          onTap: () {
+                            if (Platform.isAndroid) {
+                              openMaterialDatePicker(
+                                  context, _dateController, _dateFocusNode,
+                                  isOnlyDate: true,
+                                  initialDate: DateTime.now(),
+                                  lastDate: DateTime.now(),
+                                  onDateChanged: (value) {
+                                if (value != null) {
+                                  var date =
+                                      DateFormat("MM/dd/yyyy").format(value);
+                                  _dateController.text = date;
+                                  setState(() {
+                                    _selectedDate = value.toString();
+                                  });
+                                }
+                              });
+                            } else {
+                              openCupertinoDatePicker(
+                                  context, _dateController, _dateFocusNode,
+                                  firstDate: DateTime.now(),
+                                  isOnlyDate: true,
+                                  initialDate: DateTime.now(),
+                                  onDateChanged: (value) {
+                                if (value != null) {
+                                  var date =
+                                      DateFormat("MM/dd/yyyy").format(value);
+                                  _dateController.text = date;
+                                  setState(() {
+                                    _selectedDate = value.toString();
+                                  });
+                                }
+                              });
+                            }
+                          },
+                        ),
+                        Spacer(),
                         Image.asset(
                           'images/watch.png',
                           height: 18,
@@ -326,6 +345,28 @@ class _OxygenSaturationChartState extends State<OxygenSaturationChart> {
                       ),
                     ],
                   ),
+                  SizedBox(height: 20),
+                  FancyButton(
+                      title: 'Save',
+                      onPressed: _weightController.text == ''
+                          ? null
+                          : () {
+                              FocusScope.of(context).unfocus();
+                              api.postGraphData(
+                                  "Bearer ${getString(PreferenceKey.tokens)}", {
+                                "date": _dateController.text,
+                                "time": _timeController.text,
+                                "oxygenSaturation": _weightController.text
+                              }).then((value) {
+                                responseData.insert(0, {
+                                  "date": _selectedDate,
+                                  "time": _timeController.text,
+                                  "oxygenSaturation": _weightController.text
+                                });
+
+                                setState(() {});
+                              });
+                            })
                 ],
               ),
             ),
@@ -334,7 +375,7 @@ class _OxygenSaturationChartState extends State<OxygenSaturationChart> {
               future: chartFuture,
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
-                  case ConnectionState.done:
+                  case ConnectionState.none:
                     return Center(
                       child: Text("No Requests."),
                     );
@@ -346,51 +387,41 @@ class _OxygenSaturationChartState extends State<OxygenSaturationChart> {
                     break;
                   case ConnectionState.active:
                     break;
-                  case ConnectionState.none:
-                    // if (snapshot.hasData) {
-                    // responseData = snapshot.data;
-                    responseData = [
-                      {
-                        "user": "621c95675d38b50ee1fb2431",
-                        "doctor": "621c6ec45d38b50ee1fb2392",
-                        "appointment": "621f09bd7fb1590f0b20d58b",
-                        "bloodPressureDbp": "200",
-                        "bloodPressureSbp": "100",
-                        "bloodGlucose": 80,
-                        "heartRate": "60",
-                        "temperature": "90",
-                        "height": "5.9",
-                        "weight": "123",
-                        "bmi": "18.2",
-                        "date": "2022-03-02T00:00:00.000Z",
-                        "time": "11:36 AM",
-                        "addedBy": 1,
-                        "_id": "621f09bf7fb1590f0b20d592",
-                        "createdAt": "2022-03-02T06:07:59.377Z",
-                        "updatedAt": "2022-03-02T06:07:59.377Z",
-                        "__v": 0
-                      },
-                      {
-                        "user": "621c95675d38b50ee1fb2431",
-                        "doctor": "621c6ec45d38b50ee1fb2392",
-                        "appointment": "621f0b797fb1590f0b20d593",
-                        "bloodPressureDbp": "234",
-                        "bloodPressureSbp": "123",
-                        "bloodGlucose": 36,
-                        "heartRate": "123",
-                        "temperature": "253",
-                        "height": "5.6",
-                        "weight": "152",
-                        "bmi": "24.5",
-                        "date": "2022-03-02T00:00:00.000Z",
-                        "time": "11:44 AM",
-                        "addedBy": 1,
-                        "_id": "621f0b7a7fb1590f0b20d599",
-                        "createdAt": "2022-03-02T06:15:22.929Z",
-                        "updatedAt": "2022-03-02T06:15:22.929Z",
-                        "__v": 0
+                  case ConnectionState.done:
+                    if (snapshot.hasData) {
+                      if (isFirst) {
+                        responseData = snapshot.data;
+                        isFirst = false;
                       }
-                    ];
+
+                      responseData.sort((a, b) {
+                        var aa = DateTime.utc(
+                          DateTime.parse(a['date']).year,
+                          DateTime.parse(a['date']).month,
+                          DateTime.parse(a['date']).day,
+                          int.parse(DateFormat("HH:mm")
+                              .format(DateFormat.jm().parse(a['time']))
+                              .split(':')[0]),
+                          int.parse(DateFormat("HH:mm")
+                              .format(DateFormat.jm().parse(a['time']))
+                              .split(':')[1]),
+                        ).toLocal();
+
+                        var bb = DateTime.utc(
+                          DateTime.parse(b['date']).year,
+                          DateTime.parse(b['date']).month,
+                          DateTime.parse(b['date']).day,
+                          int.parse(DateFormat("HH:mm")
+                              .format(DateFormat.jm().parse(b['time']))
+                              .split(':')[0]),
+                          int.parse(DateFormat("HH:mm")
+                              .format(DateFormat.jm().parse(b['time']))
+                              .split(':')[1]),
+                        ).toLocal();
+
+                        return bb.compareTo(aa);
+                      });
+                    }
                     return Container(
                       padding: EdgeInsets.all(16),
                       decoration: BoxDecoration(
@@ -407,11 +438,21 @@ class _OxygenSaturationChartState extends State<OxygenSaturationChart> {
                             ),
                           ),
                           Center(
-                              child: Text('Date',
+                              child: Text(
+                                  touchedValue == 1
+                                      ? '---'
+                                      : dateFormatter(
+                                          'EEEE, MMM dd, yyyy hh:mm a',
+                                          responseData[-touchedValue.toInt()]),
                                   style: AppTextStyle.semiBoldStyle(
                                       fontSize: 12))),
                           Center(
-                              child: Text('130',
+                              child: Text(
+                                  touchedValue == 1
+                                      ? '---'
+                                      : responseData[-touchedValue.toInt()]
+                                              ['oxygenSaturation']
+                                          .toString(),
                                   style: AppTextStyle.semiBoldStyle(
                                       fontSize: 30))),
                           Divider(),
@@ -492,26 +533,78 @@ class _OxygenSaturationChartState extends State<OxygenSaturationChart> {
         titlesData: titlesData2,
         borderData: borderData,
         lineBarsData: lineBarsData2,
-        minX: 0,
-        maxX: 6,
+        extraLinesData: ExtraLinesData(verticalLines: [
+          VerticalLine(
+              x: touchedValue,
+              strokeWidth: 30,
+              color: Colors.white.withOpacity(.5))
+        ]),
+        minX: -6,
+        maxX: 0,
         maxY: 400,
         minY: 0,
       );
 
   LineTouchData get lineTouchData2 {
     return LineTouchData(
+      getTouchLineEnd: (data, index) => double.infinity,
+      touchSpotThreshold: double.infinity,
       handleBuiltInTouches: true,
+      touchCallback: (FlTouchEvent event, LineTouchResponse lineTouch) {
+        if (!event.isInterestedForInteractions ||
+            lineTouch == null ||
+            lineTouch.lineBarSpots == null) {
+          // setState(() {
+          //   touchedValue = -1;
+          // });
+          return;
+        }
+        final value = lineTouch.lineBarSpots[0].x;
+
+        if (value == 1 || value == -7) {
+          // setState(() {
+          //   touchedValue = -1;
+          // });
+          return;
+        }
+
+        setState(() {
+          touchedValue = value;
+        });
+      },
+
+      getTouchedSpotIndicator:
+          (LineChartBarData barData, List<int> spotIndexes) {
+        return spotIndexes.map((spotIndex) {
+          return TouchedSpotIndicatorData(
+            FlLine(color: Colors.white, strokeWidth: 30),
+            FlDotData(
+                getDotPainter: (spot, percent, barData, index) =>
+                    FlDotCirclePainter(
+                        radius: 12,
+                        color: spot.y > 120
+                            ? AppColors.goldenTainoi
+                            : spot.y < 80
+                                ? Colors.grey
+                                : Colors.white,
+                        strokeColor: AppColors.goldenTainoi)),
+          );
+        }).toList();
+      },
       touchTooltipData: LineTouchTooltipData(
-        tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
+        tooltipBgColor: Colors.blueAccent,
       ),
+      // touchTooltipData: LineTouchTooltipData(
+      //   tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
+      // ),
     );
   }
 
   FlTitlesData get titlesData2 => FlTitlesData(
         bottomTitles: bottomTitles,
         topTitles: SideTitles(showTitles: false),
-        rightTitles: SideTitles(showTitles: false),
-        leftTitles: leftTitles(
+        leftTitles: SideTitles(showTitles: false),
+        rightTitles: leftTitles(
           getTitles: (value) {
             switch (value.toInt()) {
               case 0:
@@ -551,8 +644,8 @@ class _OxygenSaturationChartState extends State<OxygenSaturationChart> {
         interval: 1,
         reservedSize: 40,
         getTextStyles: (context, value) => const TextStyle(
-          color: Color(0xff75729e),
-          fontWeight: FontWeight.bold,
+          color: Colors.black,
+          fontWeight: FontWeight.normal,
           fontSize: 14,
         ),
       );
@@ -563,32 +656,59 @@ class _OxygenSaturationChartState extends State<OxygenSaturationChart> {
       // reservedSize: 22,
       margin: 10,
       interval: 1,
-      getTextStyles: (context, value) =>
-          const TextStyle(color: Colors.black, fontSize: 12.0),
+      getTextStyles: (context, value) {
+        final isTouched = value == touchedValue;
+        return isTouched
+            ? TextStyle(color: Colors.black, fontSize: 14.0)
+            : TextStyle(color: Colors.black, fontSize: 12.0);
+      },
       getTitles: (value) {
-        switch (value.toInt()) {
-          case 0:
-            return responseData[0]['date'].toString().substring(5, 10);
-          case 1:
-            return responseData[1]['date'].toString().substring(5, 10);
-          case 2:
-            return responseData[2]['date'].toString().substring(5, 10);
-          case 3:
-            return responseData[3]['date'].toString().substring(5, 10);
-          case 4:
-            return responseData[4]['date'].toString().substring(5, 10);
-          case 5:
-            return responseData[5]['date'].toString().substring(5, 10);
-          // case 6:
-          //   return responseData[6]['date'].toString().substring(5, 10);
-          // case 7:
-          //   return responseData[7]['date'].toString().substring(4, 10);
-          // case 8:
-          //   return responseData[8]['date'].toString().substring(4, 10);
-        }
-        return '';
+        return responseData.length > (-value.toInt())
+            ? dateFormatter('M/d', responseData[-value.toInt()])
+            : '';
+        // switch (value.toInt()) {
+        //   case 0:
+        //     return dateFormatter(responseData[0]);
+        //   case 1:
+        //     return dateFormatter(responseData[1]);
+        //   case 2:
+        //     return dateFormatter(responseData[2]);
+        //   case 3:
+        //     return dateFormatter(responseData[3]);
+        //   case 4:
+        //     return dateFormatter(responseData[4]);
+        //   case 5:
+        //     return dateFormatter(responseData[5]);
+        //   case 6:
+        //     return dateFormatter(responseData[6]);
+        //   // case 6:
+        //   //   return responseData[6]['date'].toString().substring(5, 10);
+        //   // case 7:
+        //   //   return responseData[7]['date'].toString().substring(4, 10);
+        //   // case 8:
+        //   //   return responseData[8]['date'].toString().substring(4, 10);
+        // }
+        // return '';
       },
     );
+  }
+
+  String dateFormatter(format, data) {
+    return data == null
+        ? ''
+        : DateFormat(format)
+            .format(DateTime.utc(
+                    DateTime.parse(data['date']).year,
+                    DateTime.parse(data['date']).month,
+                    DateTime.parse(data['date']).day,
+                    int.parse(DateFormat("HH:mm")
+                        .format(DateFormat.jm().parse(data['time']))
+                        .split(':')[0]),
+                    int.parse(DateFormat("HH:mm")
+                        .format(DateFormat.jm().parse(data['time']))
+                        .split(':')[1]))
+                .toLocal())
+            .toString();
   }
 
   FlGridData get gridData =>
@@ -605,31 +725,14 @@ class _OxygenSaturationChartState extends State<OxygenSaturationChart> {
         ),
       );
 
-  LineChartBarData get lineChartBarData2_1 => LineChartBarData(
-        isCurved: true,
-        curveSmoothness: 0,
-        colors: const [Color(0x444af699)],
-        barWidth: 4,
-        isStrokeCapRound: true,
-        dotData: FlDotData(show: false),
-        belowBarData: BarAreaData(show: false),
-        spots: const [
-          FlSpot(1, 1),
-          FlSpot(3, 1),
-          FlSpot(5, 1),
-          FlSpot(7, 1),
-          FlSpot(10, 1),
-          FlSpot(12, 1),
-          FlSpot(13, 1),
-        ],
-      );
-
   LineChartBarData get lineChartBarData2_3 {
     List<FlSpot> spots = [];
 
-    for (int i = 0; i < responseData.length; i++) {
-      spots.add(FlSpot(
-          i.toDouble(), double.parse(responseData[i]['heartRate'].toString())));
+    for (int i = 0;
+        i < (responseData.length > 7 ? 7 : responseData.length);
+        i++) {
+      spots.add(FlSpot(-i.toDouble(),
+          double.parse(responseData[i]['oxygenSaturation'].toString())));
     }
     return LineChartBarData(
         isCurved: true,

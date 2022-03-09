@@ -85,10 +85,9 @@ class Widgets {
       context: context,
       builder: (context) {
         return Dialog(
-            shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(20.0)), //this right here
-            // child: Center(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0)), //this right here
+          // child: Center(
           child: Container(
               padding: EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
@@ -107,7 +106,7 @@ class Widgets {
                       ? Text(
                           'Opps!',
                           style: TextStyle(
-                            fontFamily: 'Poppins',
+                              fontFamily: 'Poppins',
                               color: Colors.black,
                               fontSize: 20,
                               fontWeight: FontWeight.w700),
@@ -116,7 +115,7 @@ class Widgets {
                           ? Text(
                               'Congratulations!',
                               style: TextStyle(
-                                fontFamily: 'Poppins',
+                                  fontFamily: 'Poppins',
                                   color: Colors.black,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w700),
@@ -124,7 +123,7 @@ class Widgets {
                           : Text(
                               title ?? 'Message',
                               style: TextStyle(
-                                fontFamily: 'Poppins',
+                                  fontFamily: 'Poppins',
                                   color: Colors.black,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w700),
@@ -156,7 +155,79 @@ class Widgets {
                     height: 40,
                     child: Text(
                       buttonText ?? 'Close',
-                      style: TextStyle(fontFamily: 'Poppins',color: Colors.white),
+                      style:
+                          TextStyle(fontFamily: 'Poppins', color: Colors.white),
+                    ),
+                    onPressed: onPressed ??
+                        () {
+                          Navigator.pop(context);
+                        },
+                    color: AppColors.windsor,
+                  ),
+                  SizedBox(
+                    height: 16,
+                  )
+                ],
+              )),
+        );
+      },
+    );
+  }
+
+  static void showAccountAddedDialog({
+    @required BuildContext context,
+    Function onPressed,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0)), //this right here
+          // child: Center(
+          child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(14),
+                  )),
+              height: 200,
+              width: MediaQuery.of(context).size.width / 1.3,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Image.asset('images/user_added.png'),
+                  SizedBox(
+                    height: 12,
+                  ),
+                  Expanded(
+                      child: Text(
+                    'Account Added',
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                  )),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  FlatButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                      Radius.circular(14),
+                    )),
+                    height: 40,
+                    child: Text(
+                      'Done',
+                      style:
+                          TextStyle(fontFamily: 'Poppins', color: Colors.white),
                     ),
                     onPressed: onPressed ??
                         () {

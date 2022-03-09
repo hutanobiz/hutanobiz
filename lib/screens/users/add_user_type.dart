@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/text_style.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 
 class AddNewUserType extends StatefulWidget {
@@ -51,29 +52,34 @@ class _AddNewUserTypeState extends State<AddNewUserType> {
                   fontWeight: fontWeightSemiBold,
                   fontSize: fontSize18)),
         ),
-        cardView(
-          'Minor',
-          'Text',
-        ),
+        cardView('Minor', 'Text', '1'),
         SizedBox(height: 20.0),
-        cardView(
-          'Adult',
-          'Text',
-        ),
+        cardView('Adult', 'Text', '2'),
       ],
     );
   }
 
-  Widget cardView(
-    String cardText,
-    String subText,
-  ) {
-    return ListTile(
-      onTap: () {
-        Navigator.pushNamed(context, Routes.addUser);
-      },
-      title: Text(cardText),
-      subtitle: Text('subText'),
-    );
+  Widget cardView(String cardText, String subText, String whom) {
+    return Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14.0),
+          border: Border.all(
+            color: Colors.grey[300],
+          ),
+        ),
+        child: ListTile(
+          onTap: () {
+            Navigator.pushNamed(context, Routes.addUser, arguments: whom);
+          },
+          title: Text(
+            cardText,
+            style: AppTextStyle.boldStyle(fontSize: 16),
+          ),
+          subtitle: Text(
+            'subText',
+            style: AppTextStyle.regularStyle(fontSize: 13),
+          ),
+        ));
   }
 }

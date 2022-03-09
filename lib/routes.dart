@@ -1123,19 +1123,19 @@ class Routes {
       case linkVerification:
         return _buildRoute(
           settings,
-          LinkVerification(userData:args),
+          LinkVerification(userData: args),
         );
         break;
       case linkAccount:
         return _buildRoute(
           settings,
-          LinkAccount(userData:args),
+          LinkAccount(userData: args),
         );
         break;
       case addUser:
         return _buildRoute(
           settings,
-          AddUser(),
+          AddUser(whom: args),
         );
         break;
 

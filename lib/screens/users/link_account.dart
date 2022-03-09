@@ -112,12 +112,12 @@ class _LinkAccountState extends State<LinkAccount> {
                   ),
                   Container(
                       margin: EdgeInsets.all(20),
-                      padding: EdgeInsets.all(20),
+                      padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(8.0),
+                        borderRadius: BorderRadius.circular(14.0),
                         border: Border.all(
-                          color: Colors.grey[300],
+                          color: Colors.grey[100],
                         ),
                       ),
                       child: Row(
@@ -147,19 +147,22 @@ class _LinkAccountState extends State<LinkAccount> {
                   GestureDetector(
                     child: Container(
                         margin: EdgeInsets.all(20),
-                        padding: EdgeInsets.all(16),
+                        padding: EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(8.0),
+                          borderRadius: BorderRadius.circular(14.0),
                           border: Border.all(
-                            color: Colors.grey[300],
+                            color: Colors.grey[100],
                           ),
                         ),
                         child: Row(
                           children: [
-                            Text(_selectedRelation == null
-                                ? 'Select Relation'
-                                : _selectedRelation.relation),
+                            Expanded(
+                              child: Text(_selectedRelation == null
+                                  ? 'Select Relation'
+                                  : _selectedRelation.relation),
+                            ),
+                            Icon(Icons.keyboard_arrow_down_outlined)
                           ],
                         )),
                     onTap: () {
@@ -167,8 +170,7 @@ class _LinkAccountState extends State<LinkAccount> {
                           list: Column(
                             children: [
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 20),
+                                padding: EdgeInsets.symmetric(vertical: 20),
                                 child: Text("Select Relation",
                                     style: TextStyle(fontSize: 24)),
                               ),

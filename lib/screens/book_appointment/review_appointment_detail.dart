@@ -34,7 +34,6 @@ import 'package:intl/intl.dart';
 import 'package:location/location.dart' as Loc;
 import 'package:provider/provider.dart';
 import 'package:hutano/utils/caps_extension.dart';
-import 'package:stripe_payment/stripe_payment.dart';
 
 import '../../colors.dart';
 import '../../routes.dart';
@@ -96,12 +95,6 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
   @override
   void initState() {
     super.initState();
-
-    StripePayment.setOptions(
-      StripeOptions(
-        publishableKey: kstripePublishKey,
-      ),
-    );
     setSourceAndDestinationIcons();
   }
 
@@ -577,7 +570,12 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                                         child: Text(
                                           _profileMap.containsKey("User")
                                               ? _profileMap['ProfessionalTitle']
-                                                  [0]['title']
+                                                          .length >
+                                                      0
+                                                  ? _profileMap[
+                                                          'ProfessionalTitle']
+                                                      [0]['title']
+                                                  : ''
                                               : _profileMap['professionalTitle']
                                                   ['title'],
                                           style: TextStyle(

@@ -89,7 +89,7 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
             marijuanaGroupValue =
                 map['frequency'] == "0" ? "3" : map['frequency'];
           }
-          if (map['type'].toString().toLowerCase() == 'coccine') {
+          if (map['type'].toString().toLowerCase() == 'coccaine') {
             isCoccine = true;
             coccineGroupValue =
                 map['frequency'] == "0" ? "3" : map['frequency'];

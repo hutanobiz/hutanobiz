@@ -37,7 +37,7 @@ class HutanoPhoneInput extends StatelessWidget {
       children: <Widget>[
         Container(
           width: 60,
-          height: 48,
+          height: 50,
           decoration: BoxDecoration(
               border: Border.all(
                 width: 0.5,
@@ -100,6 +100,7 @@ class HutanoPhoneInput extends StatelessWidget {
           ],
           width: MediaQuery.of(context).size.width - 120,
           labelText: "Phone Number",
+          isDense: true,
           controller: controller,
           focusNode: focusNode,
           textInputType: TextInputType.phone,

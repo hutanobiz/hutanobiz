@@ -727,7 +727,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                 disabledBorder: InputBorder.none,
               )),
           suggestionsCallback: (pattern) async {
-            return pattern.length > 0 ? await _getFilteredInsuranceList() : [];
+            return  await _getFilteredInsuranceList();
           },
           keepSuggestionsOnLoading: false,
           loadingBuilder: (context) => CustomLoader(),

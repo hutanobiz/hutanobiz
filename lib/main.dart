@@ -6,6 +6,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:hutano/apis/api_constants.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/screens/chat/chat_provider.dart';
@@ -56,6 +58,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   initializeDateFormatting();
+  Stripe.publishableKey = kstripePublishKey;
   await init();
   Widget _defaultHome = SignInScreen();
   await Firebase.initializeApp();

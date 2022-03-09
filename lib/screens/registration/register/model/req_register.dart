@@ -22,6 +22,8 @@ class ReqRegister {
   bool haveHealthInsurance;
   String latitude;
   String longitude;
+  int whom;
+  String relation;
   ReqRegister(
       {this.password,
       this.firstName,
@@ -45,7 +47,9 @@ class ReqRegister {
       this.genderType,
       this.fullName,
       this.latitude,
-      this.longitude});
+      this.longitude,
+      this.whom,
+      this.relation});
 
   Map<String, dynamic> toMap() {
     return {
@@ -72,6 +76,8 @@ class ReqRegister {
       'genderType': genderType,
       'latitude': latitude,
       'longitude': longitude,
+      'whom': whom,
+      'relation': relation
     };
   }
 
@@ -79,29 +85,30 @@ class ReqRegister {
     if (map == null) return null;
 
     return ReqRegister(
-      password: map['password'],
-      firstName: map['firstName'],
-      lastName: map['lastName'],
-      address: map['address'],
-      email: map['email'],
-      zipCode: map['zipCode'],
-      state: map['state'],
-      haveHealthInsurance: map['haveHealthInsurance'],
-      deviceToken: map['deviceToken'],
-      dob: map['dob'],
-      city: map['city'],
-      insuranceId: map['insuranceId'],
-      mobileCountryCode: map['mobileCountryCode'],
-      isAgreeTermsAndCondition: map['isAgreeTermsAndCondition'],
-      phoneNumber: map['phoneNumber'],
-      referedBy: map['referedBy'],
-      type: map['type'],
-      step: map['step'],
-      gender: map['gender'],
-      genderType: map['genderType'],
-      fullName: map['fullName'],
-      latitude: map['latitude'],
-      longitude: map['longitude'],
-    );
+        password: map['password'],
+        firstName: map['firstName'],
+        lastName: map['lastName'],
+        address: map['address'],
+        email: map['email'],
+        zipCode: map['zipCode'],
+        state: map['state'],
+        haveHealthInsurance: map['haveHealthInsurance'],
+        deviceToken: map['deviceToken'],
+        dob: map['dob'],
+        city: map['city'],
+        insuranceId: map['insuranceId'],
+        mobileCountryCode: map['mobileCountryCode'],
+        isAgreeTermsAndCondition: map['isAgreeTermsAndCondition'],
+        phoneNumber: map['phoneNumber'],
+        referedBy: map['referedBy'],
+        type: map['type'],
+        step: map['step'],
+        gender: map['gender'],
+        genderType: map['genderType'],
+        fullName: map['fullName'],
+        latitude: map['latitude'],
+        longitude: map['longitude'],
+        whom: map['whom'],
+        relation: map['relation']);
   }
 }
