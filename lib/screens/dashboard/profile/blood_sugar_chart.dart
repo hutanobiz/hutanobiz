@@ -352,19 +352,20 @@ class _BloodSugarChartState extends State<BloodSugarChart> {
                           ? null
                           : () {
                               FocusScope.of(context).unfocus();
-                              // api.postGraphData(
-                              //     "Bearer ${getString(PreferenceKey.tokens)}", {
-                              //   "date": _dateController.text,
-                              //   "time": _timeController.text,
-                              //   "bloodGlucose": _weightController.text
-                              // }).then((value) {
-                              responseData.insert(0, {
-                                "date": _selectedDate,
+                              api.postGraphData(
+                                  "Bearer ${getString(PreferenceKey.tokens)}", {
+                                "date": _dateController.text,
                                 "time": _timeController.text,
                                 "bloodGlucose": _weightController.text
+                              }).then((value) {
+                                responseData.insert(0, {
+                                  "date": _selectedDate,
+                                  "time": _timeController.text,
+                                  "bloodGlucose": _weightController.text
+                                });
+
+                                setState(() {});
                               });
-                              setState(() {});
-                              // });
                             })
                 ],
               ),
@@ -374,7 +375,7 @@ class _BloodSugarChartState extends State<BloodSugarChart> {
               future: chartFuture,
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
-                  case ConnectionState.done:
+                  case ConnectionState.none:
                     return Center(
                       child: Text("No Requests."),
                     );
@@ -386,267 +387,136 @@ class _BloodSugarChartState extends State<BloodSugarChart> {
                     break;
                   case ConnectionState.active:
                     break;
-                  case ConnectionState.none:
-                    // if (snapshot.hasData) {
-                    // responseData = snapshot.data;
-                    if (isFirst) {
-                      responseData = [
-                        {
-                          "user": "621c95675d38b50ee1fb2431",
-                          "doctor": "621c6ec45d38b50ee1fb2392",
-                          "appointment": "621f0b797fb1590f0b20d593",
-                          "bloodPressureDbp": "234",
-                          "bloodPressureSbp": "123",
-                          "bloodGlucose": 36,
-                          "heartRate": "123",
-                          "temperature": "253",
-                          "height": "5.6",
-                          "weight": "152",
-                          "bmi": "24.5",
-                          "date": "2022-03-02T00:00:00.000Z",
-                          "time": "11:44 AM",
-                          "addedBy": 1,
-                          "_id": "621f0b7a7fb1590f0b20d599",
-                          "createdAt": "2022-03-02T06:15:22.929Z",
-                          "updatedAt": "2022-03-02T06:15:22.929Z",
-                          "__v": 0
-                        },
-                        {
-                          "user": "621c95675d38b50ee1fb2431",
-                          "doctor": "621c6ec45d38b50ee1fb2392",
-                          "appointment": "621f09bd7fb1590f0b20d58b",
-                          "bloodPressureDbp": "200",
-                          "bloodPressureSbp": "100",
-                          "bloodGlucose": 80,
-                          "heartRate": "60",
-                          "temperature": "90",
-                          "height": "5.9",
-                          "weight": "123",
-                          "bmi": "18.2",
-                          "date": "2022-03-02T00:00:00.000Z",
-                          "time": "11:36 AM",
-                          "addedBy": 1,
-                          "_id": "621f09bf7fb1590f0b20d592",
-                          "createdAt": "2022-03-02T06:07:59.377Z",
-                          "updatedAt": "2022-03-02T06:07:59.377Z",
-                          "__v": 0
-                        },
-                        {
-                          "user": "621c95675d38b50ee1fb2431",
-                          "doctor": "621c6ec45d38b50ee1fb2392",
-                          "appointment": "621f09bd7fb1590f0b20d58b",
-                          "bloodPressureDbp": "200",
-                          "bloodPressureSbp": "100",
-                          "bloodGlucose": 80,
-                          "heartRate": "60",
-                          "temperature": "90",
-                          "height": "5.9",
-                          "weight": "123",
-                          "bmi": "18.2",
-                          "date": "2022-03-02T00:00:00.000Z",
-                          "time": "11:36 AM",
-                          "addedBy": 1,
-                          "_id": "621f09bf7fb1590f0b20d592",
-                          "createdAt": "2022-03-02T06:07:59.377Z",
-                          "updatedAt": "2022-03-02T06:07:59.377Z",
-                          "__v": 0
-                        },
-                        {
-                          "user": "621c95675d38b50ee1fb2431",
-                          "doctor": "621c6ec45d38b50ee1fb2392",
-                          "appointment": "621f0b797fb1590f0b20d593",
-                          "bloodPressureDbp": "234",
-                          "bloodPressureSbp": "123",
-                          "bloodGlucose": 36,
-                          "heartRate": "123",
-                          "temperature": "253",
-                          "height": "5.6",
-                          "weight": "152",
-                          "bmi": "24.5",
-                          "date": "2022-03-02T00:00:00.000Z",
-                          "time": "11:44 AM",
-                          "addedBy": 1,
-                          "_id": "621f0b7a7fb1590f0b20d599",
-                          "createdAt": "2022-03-02T06:15:22.929Z",
-                          "updatedAt": "2022-03-02T06:15:22.929Z",
-                          "__v": 0
-                        },
-                        {
-                          "user": "621c95675d38b50ee1fb2431",
-                          "doctor": "621c6ec45d38b50ee1fb2392",
-                          "appointment": "621f09bd7fb1590f0b20d58b",
-                          "bloodPressureDbp": "200",
-                          "bloodPressureSbp": "100",
-                          "bloodGlucose": 80,
-                          "heartRate": "60",
-                          "temperature": "90",
-                          "height": "5.9",
-                          "weight": "123",
-                          "bmi": "18.2",
-                          "date": "2022-03-02T00:00:00.000Z",
-                          "time": "11:36 AM",
-                          "addedBy": 1,
-                          "_id": "621f09bf7fb1590f0b20d592",
-                          "createdAt": "2022-03-02T06:07:59.377Z",
-                          "updatedAt": "2022-03-02T06:07:59.377Z",
-                          "__v": 0
-                        },
-                        {
-                          "user": "621c95675d38b50ee1fb2431",
-                          "doctor": "621c6ec45d38b50ee1fb2392",
-                          "appointment": "621f0b797fb1590f0b20d593",
-                          "bloodPressureDbp": "234",
-                          "bloodPressureSbp": "123",
-                          "bloodGlucose": 36,
-                          "heartRate": "123",
-                          "temperature": "253",
-                          "height": "5.6",
-                          "weight": "152",
-                          "bmi": "24.5",
-                          "date": "2022-03-02T00:00:00.000Z",
-                          "time": "11:44 AM",
-                          "addedBy": 1,
-                          "_id": "621f0b7a7fb1590f0b20d599",
-                          "createdAt": "2022-03-02T06:15:22.929Z",
-                          "updatedAt": "2022-03-02T06:15:22.929Z",
-                          "__v": 0
-                        },
-                        {
-                          "user": "621c95675d38b50ee1fb2431",
-                          "doctor": "621c6ec45d38b50ee1fb2392",
-                          "appointment": "621f09bd7fb1590f0b20d58b",
-                          "bloodPressureDbp": "200",
-                          "bloodPressureSbp": "100",
-                          "bloodGlucose": 80,
-                          "heartRate": "60",
-                          "temperature": "90",
-                          "height": "5.9",
-                          "weight": "123",
-                          "bmi": "18.2",
-                          "date": "2022-03-02T00:00:00.000Z",
-                          "time": "11:36 AM",
-                          "addedBy": 1,
-                          "_id": "621f09bf7fb1590f0b20d592",
-                          "createdAt": "2022-03-02T06:07:59.377Z",
-                          "updatedAt": "2022-03-02T06:07:59.377Z",
-                          "__v": 0
-                        },
-                        {
-                          "user": "621c95675d38b50ee1fb2431",
-                          "doctor": "621c6ec45d38b50ee1fb2392",
-                          "appointment": "621f0b797fb1590f0b20d593",
-                          "bloodPressureDbp": "234",
-                          "bloodPressureSbp": "123",
-                          "bloodGlucose": 36,
-                          "heartRate": "123",
-                          "temperature": "253",
-                          "height": "5.6",
-                          "weight": "152",
-                          "bmi": "24.5",
-                          "date": "2022-03-02T00:00:00.000Z",
-                          "time": "11:44 AM",
-                          "addedBy": 1,
-                          "_id": "621f0b7a7fb1590f0b20d599",
-                          "createdAt": "2022-03-02T06:15:22.929Z",
-                          "updatedAt": "2022-03-02T06:15:22.929Z",
-                          "__v": 0
-                        }
-                      ];
-                      isFirst = false;
-                    }
-                    return Container(
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(18),
-                          ),
-                          color: Colors.grey[100]),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 200,
-                            child: LineChart(
-                              sampleData2,
+                  case ConnectionState.done:
+                    if (snapshot.hasData) {
+                      if (isFirst) {
+                        responseData = snapshot.data;
+                        isFirst = false;
+                      }
+
+                      responseData.sort((a, b) {
+                        var aa = DateTime.utc(
+                          DateTime.parse(a['date']).year,
+                          DateTime.parse(a['date']).month,
+                          DateTime.parse(a['date']).day,
+                          int.parse(DateFormat("HH:mm")
+                              .format(DateFormat.jm().parse(a['time']))
+                              .split(':')[0]),
+                          int.parse(DateFormat("HH:mm")
+                              .format(DateFormat.jm().parse(a['time']))
+                              .split(':')[1]),
+                        ).toLocal();
+
+                        var bb = DateTime.utc(
+                          DateTime.parse(b['date']).year,
+                          DateTime.parse(b['date']).month,
+                          DateTime.parse(b['date']).day,
+                          int.parse(DateFormat("HH:mm")
+                              .format(DateFormat.jm().parse(b['time']))
+                              .split(':')[0]),
+                          int.parse(DateFormat("HH:mm")
+                              .format(DateFormat.jm().parse(b['time']))
+                              .split(':')[1]),
+                        ).toLocal();
+
+                        return bb.compareTo(aa);
+                      });
+
+                      return Container(
+                        padding: EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(18),
                             ),
-                          ),
-                          Center(
-                              child: Text(
-                                  touchedValue == 1
-                                      ? '---'
-                                      : dateFormatter('EEEE, MMM dd, yyyy',
-                                          responseData[-touchedValue.toInt()]),
-                                  style: AppTextStyle.semiBoldStyle(
-                                      fontSize: 12))),
-                          Center(
-                              child: Text(
-                                  touchedValue == 1
-                                      ? '---'
-                                      : responseData[-touchedValue.toInt()]
-                                              ['bloodGlucose']
-                                          .toString(),
-                                  style: AppTextStyle.semiBoldStyle(
-                                      fontSize: 30))),
-                          Divider(),
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('Low'),
-                              SizedBox(
-                                width: 2,
+                            color: Colors.grey[100]),
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 200,
+                              child: LineChart(
+                                sampleData2,
                               ),
-                              Container(
-                                height: 10,
-                                width: 10,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Colors.grey,
-                                    border: Border.all(
-                                        width: 1,
-                                        color: AppColors.goldenTainoi)),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text('Normal'),
-                              SizedBox(
-                                width: 2,
-                              ),
-                              Container(
-                                height: 10,
-                                width: 10,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Colors.white,
-                                    border: Border.all(
-                                        width: 1,
-                                        color: AppColors.goldenTainoi)),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text('High'),
-                              SizedBox(
-                                width: 2,
-                              ),
-                              Container(
-                                height: 10,
-                                width: 10,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: AppColors.goldenTainoi,
-                                    border: Border.all(
-                                        width: 1,
-                                        color: AppColors.goldenTainoi)),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    );
-                  // } else if (snapshot.hasError) {
-                  //   return Text('No Requests.');
-                  // }
+                            ),
+                            Center(
+                                child: Text(
+                                    touchedValue == 1
+                                        ? '---'
+                                        : dateFormatter(
+                                            'EEEE, MMM dd, yyyy hh:mm a',
+                                            responseData[
+                                                -touchedValue.toInt()]),
+                                    style: AppTextStyle.semiBoldStyle(
+                                        fontSize: 12))),
+                            Center(
+                                child: Text(
+                                    touchedValue == 1
+                                        ? '---'
+                                        : responseData[-touchedValue.toInt()]
+                                                ['bloodGlucose']
+                                            .toString(),
+                                    style: AppTextStyle.semiBoldStyle(
+                                        fontSize: 30))),
+                            Divider(),
+                            Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('Low'),
+                                SizedBox(
+                                  width: 2,
+                                ),
+                                Container(
+                                  height: 10,
+                                  width: 10,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: Colors.grey,
+                                      border: Border.all(
+                                          width: 1,
+                                          color: AppColors.goldenTainoi)),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text('Normal'),
+                                SizedBox(
+                                  width: 2,
+                                ),
+                                Container(
+                                  height: 10,
+                                  width: 10,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: Colors.white,
+                                      border: Border.all(
+                                          width: 1,
+                                          color: AppColors.goldenTainoi)),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text('High'),
+                                SizedBox(
+                                  width: 2,
+                                ),
+                                Container(
+                                  height: 10,
+                                  width: 10,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: AppColors.goldenTainoi,
+                                      border: Border.all(
+                                          width: 1,
+                                          color: AppColors.goldenTainoi)),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('No Requests.');
+                    }
                 }
                 return null;
               },
@@ -797,29 +667,6 @@ class _BloodSugarChartState extends State<BloodSugarChart> {
         return responseData.length > (-value.toInt())
             ? dateFormatter('M/d', responseData[-value.toInt()])
             : '';
-        // switch (value.toInt()) {
-        //   case 0:
-        //     return dateFormatter(responseData[0]);
-        //   case 1:
-        //     return dateFormatter(responseData[1]);
-        //   case 2:
-        //     return dateFormatter(responseData[2]);
-        //   case 3:
-        //     return dateFormatter(responseData[3]);
-        //   case 4:
-        //     return dateFormatter(responseData[4]);
-        //   case 5:
-        //     return dateFormatter(responseData[5]);
-        //   case 6:
-        //     return dateFormatter(responseData[6]);
-        //   // case 6:
-        //   //   return responseData[6]['date'].toString().substring(5, 10);
-        //   // case 7:
-        //   //   return responseData[7]['date'].toString().substring(4, 10);
-        //   // case 8:
-        //   //   return responseData[8]['date'].toString().substring(4, 10);
-        // }
-        // return '';
       },
     );
   }
@@ -832,8 +679,12 @@ class _BloodSugarChartState extends State<BloodSugarChart> {
                     DateTime.parse(data['date']).year,
                     DateTime.parse(data['date']).month,
                     DateTime.parse(data['date']).day,
-                    int.parse(data['time'].split(':')[0]))
-                // int.parse(responseData[0]['time'].split(':')[1]))
+                    int.parse(DateFormat("HH:mm")
+                        .format(DateFormat.jm().parse(data['time']))
+                        .split(':')[0]),
+                    int.parse(DateFormat("HH:mm")
+                        .format(DateFormat.jm().parse(data['time']))
+                        .split(':')[1]))
                 .toLocal())
             .toString();
   }
@@ -855,7 +706,9 @@ class _BloodSugarChartState extends State<BloodSugarChart> {
   LineChartBarData get lineChartBarData2_3 {
     List<FlSpot> spots = [];
 
-    for (int i = 0; i < responseData.length; i++) {
+    for (int i = 0;
+        i < (responseData.length > 7 ? 7 : responseData.length);
+        i++) {
       spots.add(FlSpot(-i.toDouble(),
           double.parse(responseData[i]['bloodGlucose'].toString())));
     }
