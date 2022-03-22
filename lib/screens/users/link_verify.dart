@@ -48,15 +48,9 @@ class _LinkVerificationState extends State<LinkVerification> {
     try {
       await ApiManager().veriyfyLinkAccountCode(request);
       ProgressDialogUtils.dismissProgressDialog();
-      Widgets.showAppDialog(
-          context: context,
-          description: 'Account Added',
-          onPressed: () {
-            Navigator.of(context).pushNamedAndRemoveUntil(
-              Routes.homeMain,
-              (Route<dynamic> route) => false,
-            );
-          });
+      Widgets.showAccountAddedDialog(
+        context: context,
+      );
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);
@@ -177,6 +171,14 @@ class _LinkVerificationState extends State<LinkVerification> {
   }
 
   Widget _buildHeader(BuildContext context) {
+    String phoneNumber = widget.userData['phoneNumber'].toString();
+    phoneNumber = "(" +
+        phoneNumber.substring(0, 3) +
+        ") " +
+        phoneNumber.substring(3, 6) +
+        "-" +
+        phoneNumber.substring(6, phoneNumber.length);
+    String phone = phoneNumber;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -188,7 +190,7 @@ class _LinkVerificationState extends State<LinkVerification> {
           height: spacing7,
         ),
         Text(
-          widget.userData['phoneNumber'].toString(),
+          phone,
           style: TextStyle(fontSize: fontSize13),
         )
       ],

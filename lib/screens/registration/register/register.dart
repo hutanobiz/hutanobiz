@@ -408,8 +408,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       setInt(PreferenceKey.gender, res.response.gender);
       setString('patientSocialHistory',
           jsonEncode(res.response.patientSocialHistory));
-      setString('primaryUser', jsonEncode(res.response));
-      setString('selectedAccount', jsonEncode(res.response));
+      setString('primaryUser', res.response.toJson().toString());
+      setString('selectedAccount', res.response.toJson().toString());
       setBool(PreferenceKey.intro, true);
 
       //TODO : Verify code
@@ -560,8 +560,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     _getEmailTextField(),
                     DateOfBirth(
-                        onDateSelected: _onDateSelected,
-                        controller: _dobController),
+                      onDateSelected: _onDateSelected,
+                      controller: _dobController,
+                      beforeYear: 18,
+                    ),
                     SizedBox(
                       height: spacing20,
                     ),

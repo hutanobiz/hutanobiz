@@ -376,9 +376,9 @@ class Response {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this._location != String) {
-      data['location'] = this._location.toJson();
-    }
+    // if (this._location != String) {
+    //   data['location'] = this._location.toJson();
+    // }
     if (this.patientSocialHistory != null) {
       data['patientSocialHistory'] = this.patientSocialHistory.toJson();
     }

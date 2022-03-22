@@ -1,29 +1,28 @@
-import 'dart:convert';
 import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/familynetwork/add_family_member/model/res_relation_list.dart';
 import 'package:hutano/screens/registration/account_recover_dialog.dart';
 import 'package:hutano/screens/registration/register/date_of_birth.dart';
 import 'package:hutano/screens/registration/register/gender_selector.dart';
 import 'package:hutano/screens/registration/register/model/referral_code.dart';
 import 'package:hutano/screens/registration/register/model/req_register.dart';
-import 'package:hutano/screens/registration/register/model/req_verify_address.dart';
 import 'package:hutano/screens/registration/register/model/res_google_address_suggetion.dart';
 import 'package:hutano/screens/registration/register/model/res_google_place_detail.dart';
-import 'package:hutano/screens/registration/register/model/res_insurance_list.dart';
 import 'package:hutano/screens/registration/register/model/res_states_list.dart';
+import 'package:hutano/screens/registration/register/register.dart';
 import 'package:hutano/screens/registration/register/state_list.dart';
 import 'package:hutano/screens/registration/register/upload_image.dart';
 import 'package:hutano/utils/address_util.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/utils/validations.dart';
+import 'package:hutano/widgets/controller.dart';
 import 'package:hutano/widgets/custom_back_button.dart';
 import 'package:hutano/widgets/custom_loader.dart';
+import 'package:hutano/widgets/list_picker.dart';
 import 'package:hutano/widgets/text_with_image.dart';
 
 import '../../../apis/api_manager.dart';
@@ -36,8 +35,6 @@ import '../../../utils/dialog_utils.dart';
 import '../../../utils/enum_utils.dart';
 import '../../../utils/extensions.dart';
 import '../../../utils/localization/localization.dart';
-import '../../../utils/preference_key.dart';
-import '../../../utils/preference_utils.dart';
 import '../../../utils/progress_dialog.dart';
 import '../../../utils/size_config.dart';
 import '../../../widgets/app_logo.dart';
@@ -45,17 +42,11 @@ import '../../../widgets/hutano_button.dart';
 import '../../../widgets/hutano_textfield.dart';
 
 class AddUser extends StatefulWidget {
-
-  AddUser();
+  AddUser({this.whom});
+  String whom;
 
   @override
   _AddUserState createState() => _AddUserState();
-}
-
-class Genders {
-  int val;
-  String title;
-  Genders(this.val, this.title);
 }
 
 class _AddUserState extends State<AddUser> {
@@ -96,9 +87,9 @@ class _AddUserState extends State<AddUser> {
   File _imageFile;
   GenderType _gender;
   List<States> _stateList = [];
-  List<Insurance> _insuranceList = [];
+  // List<Insurance> _insuranceList = [];
   States _selectedState;
-  Insurance _selectedInsurance;
+  // Insurance _selectedInsurance;
   final _registerModel = ReqRegister();
   bool _enableButton = false;
   bool _dialogOpen = false;
@@ -118,12 +109,15 @@ class _AddUserState extends State<AddUser> {
     Genders(5, 'Queer'),
     Genders(6, 'Other'),
   ];
+  List<Relations> _relationList = [];
+  Relations _selectedRelation;
 
   Genders genderType;
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _getInsuranceList());
+    _getRelation();
+    _registerModel.whom = int.parse(widget.whom);
     WidgetsBinding.instance.addPostFrameCallback((_) => _getStatesList());
 
     SharedPref().getValue("deviceToken").then((value) {
@@ -143,10 +137,19 @@ class _AddUserState extends State<AddUser> {
     // _registerModel.mobileCountryCode = widget.countryCode;
     _registerModel.isAgreeTermsAndCondition = 1;
     // _registerModel.phoneNumber = widget.number;
+  }
 
-    if (Referral().referralCode.isNotEmpty) {
-      _registerModel.referedBy = Referral().referralCode;
-      _refCodeController.text = Referral().referralCode;
+  _getRelation() async {
+    try {
+      var res = await ApiManager().getRelations();
+      setState(() {
+        _relationList = res.response;
+      });
+    } on ErrorModel catch (e) {
+      ProgressDialogUtils.dismissProgressDialog();
+      DialogUtils.showAlertDialog(context, e.response);
+    } catch (e) {
+      ProgressDialogUtils.dismissProgressDialog();
     }
   }
 
@@ -174,25 +177,6 @@ class _AddUserState extends State<AddUser> {
     _registerModel.state = _stateList[index].sId;
     _selectedState = _stateList[index];
     showError(RegisterError.city.index);
-  }
-
-  _onInsuranceSelected(int index) {
-    FocusManager.instance.primaryFocus.unfocus();
-    _insuranceController.text = _insuranceList[index].title;
-    _registerModel.insuranceId = _insuranceList[index].sId;
-    _selectedInsurance = _insuranceList[index];
-    showError(RegisterError.zipCode.index);
-  }
-
-  _getInsuranceList() async {
-    try {
-      var res = await ApiManager().insuraceList();
-      setState(() {
-        _insuranceList = res.response;
-      });
-    } catch (e) {
-      print(e);
-    }
   }
 
   _getStatesList() async {
@@ -278,31 +262,7 @@ class _AddUserState extends State<AddUser> {
       return;
     }
 
-    if (_registerModel.haveHealthInsurance == null) {
-      DialogUtils.showAlertDialog(
-          context, Localization.of(context).errorHealthInsurance);
-      return;
-    }
     _register();
-  }
-
-  _verifyAddress() async {
-    ProgressDialogUtils.showProgressDialog(context);
-    final request = ReqVerifyAddress(
-        city: _registerModel.city,
-        street1: _registerModel.address,
-        state: _selectedState.title,
-        zip: _registerModel.zipCode);
-    try {
-      await ApiManager().verifyAddress(request);
-      ProgressDialogUtils.dismissProgressDialog();
-    } on ErrorModel catch (e) {
-      ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
-    } catch (e) {
-      ProgressDialogUtils.dismissProgressDialog();
-      print(e);
-    }
   }
 
   _getPlaceSuggetion(String query) async {
@@ -380,39 +340,40 @@ class _AddUserState extends State<AddUser> {
   _register() async {
     ProgressDialogUtils.showProgressDialog(context);
     try {
+      _registerModel.phoneNumber =
+          _phoneNoController.text.trim().toString().rawNumber();
       _registerModel.fullName =
           "${_registerModel.firstName} ${_registerModel.lastName}";
       _registerModel.deviceToken = deviceToken;
-      var res = await ApiManager().registerUser(_registerModel, _imageFile);
+      var res = await ApiManager().addAccount(_registerModel, _imageFile);
 
-      //TODO : Verify code
-      SharedPref().setValue(PreferenceKey.id, res.response.sId);
-      SharedPref().setValue(PreferenceKey.email, res.response.email);
-      // SharedPref().setValue(PreferenceKey.gender, res.response.gender);
-      setInt(PreferenceKey.gender, res.response.gender);
-      setString(PreferenceKey.tokens, res.response.token);
-      setString('patientSocialHistory',
-          jsonEncode(res.response.patientSocialHistory));
-      SharedPref()
-          .setValue(PreferenceKey.phone, res.response.phoneNumber.toString());
+      if (widget.whom == '1') {
+        ProgressDialogUtils.dismissProgressDialog();
+        Widgets.showAccountAddedDialog(
+          context: context,
+        );
+      } else {
+        var request = {
+          'phoneNumber': _phoneNoController.text.trim().toString().rawNumber(),
+          'relation': _selectedRelation.relation
+        };
+        try {
+          var res = await ApiManager().sendLinkAccountCode(request);
+          ProgressDialogUtils.dismissProgressDialog();
+          if (res is String) {
+            Widgets.showAppDialog(context: context, description: res);
+          } else {
+            Navigator.of(context)
+                .pushNamed(Routes.linkVerification, arguments: request);
+          }
+        } on ErrorModel catch (e) {
+          ProgressDialogUtils.dismissProgressDialog();
+          DialogUtils.showAlertDialog(context, e.response);
+        } catch (e) {
+          ProgressDialogUtils.dismissProgressDialog();
+        }
+      }
 
-      //TODO : Verify code
-      SharedPref().saveToken(res.response.token);
-      SharedPref().setValue("fullName", _registerModel.fullName);
-      SharedPref().setValue("complete", "0");
-
-      //TODO:
-      //Note : Old register coded added
-      // Map _insuranceMap = {};
-      // _insuranceMap['isPayment'] = false;
-      // _insuranceMap['isFromRegister'] = true;
-
-      // Navigator.of(context).pushNamedAndRemoveUntil(
-      //   Routes.insuranceListScreen,
-      //   (Route<dynamic> route) => false,
-      //   arguments: _insuranceMap,
-      // );
-      ProgressDialogUtils.dismissProgressDialog();
       Navigator.of(context).pushNamed(
         _registerModel.haveHealthInsurance
             ? Routes.addInsurance
@@ -433,20 +394,19 @@ class _AddUserState extends State<AddUser> {
   }
 
   void validateFields() {
-    if (_registerModel.address != null &&
+    if (_phoneNoController.text.length < 14 && widget.whom == '2') {
+      _enableButton = true;
+    } else if (_registerModel.address != null &&
         _registerModel.address.isNotEmpty &&
         _registerModel.city != null &&
         _registerModel.city.isNotEmpty &&
-        _registerModel.email != null &&
-        _registerModel.email.isNotEmpty &&
         _registerModel.firstName != null &&
         _registerModel.firstName.isNotEmpty &&
         _registerModel.lastName != null &&
         _registerModel.lastName.isNotEmpty &&
-        _registerModel.password != null &&
-        _registerModel.password.isNotEmpty &&
         _registerModel.zipCode != null &&
-        _registerModel.zipCode.isNotEmpty) {
+        _registerModel.zipCode.isNotEmpty &&
+        _selectedRelation != null) {
       _enableButton = true;
     } else {
       _enableButton = false;
@@ -545,14 +505,15 @@ class _AddUserState extends State<AddUser> {
                     _getEmailTextField(),
                     DateOfBirth(
                         onDateSelected: _onDateSelected,
-                        controller: _dobController),
+                        controller: _dobController,
+                        beforeYear: widget.whom == '1' ? 0 : 18),
                     SizedBox(
                       height: spacing20,
                     ),
-                    _buildPasswordField(),
-                    SizedBox(
-                      height: spacing20,
-                    ),
+                    // _buildPasswordField(),
+                    // SizedBox(
+                    //   height: spacing20,
+                    // ),
                     _buildAddressField(),
                     SizedBox(
                       height: spacing20,
@@ -576,6 +537,7 @@ class _AddUserState extends State<AddUser> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         _buildZipCode(),
+                        SizedBox(width: 20),
                         _buildPhoneInputField(),
                       ],
                     ),
@@ -623,18 +585,74 @@ class _AddUserState extends State<AddUser> {
                     SizedBox(
                       height: spacing20,
                     ),
-                    _buildHealthInsurance(),
-                    SizedBox(
-                      height: spacing20,
+                    GestureDetector(
+                      child: Container(
+                          padding: EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8.0),
+                            border: Border.all(
+                              color: Colors.grey[300],
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Text(_selectedRelation == null
+                                  ? 'Select Relation'
+                                  : _selectedRelation.relation),
+                            ],
+                          )),
+                      onTap: () {
+                        showDropDownSheet(
+                            list: Column(
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 20),
+                                  child: Text("Select Relation",
+                                      style: TextStyle(fontSize: 24)),
+                                ),
+                                ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: _relationList.length,
+                                  itemBuilder: (context, pos) {
+                                    return InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            _selectedRelation =
+                                                _relationList[pos];
+                                          });
+                                          Navigator.pop(context);
+                                        },
+                                        child: ListTile(
+                                          title: Center(
+                                            child: Text(
+                                                _relationList[pos].relation),
+                                          ),
+                                        ));
+                                  },
+                                ),
+                              ],
+                            ),
+                            context: context);
+                      },
                     ),
-                    // InsuranceList(
-                    //     controller: _insuranceController,
-                    //     insuranceList: _insuranceList,
-                    //     onInsuranceSelected: _onInsuranceSelected),
-                    SizedBox(
-                      height: spacing20,
-                    ),
-                    _buildRefCodeField(),
+                    // SizedBox(
+                    //   height: spacing20,
+                    // ),
+
+                    // _buildHealthInsurance(),
+                    // SizedBox(
+                    //   height: spacing20,
+                    // ),
+                    // // InsuranceList(
+                    // //     controller: _insuranceController,
+                    // //     insuranceList: _insuranceList,
+                    // //     onInsuranceSelected: _onInsuranceSelected),
+                    // SizedBox(
+                    //   height: spacing20,
+                    // ),
+                    // _buildRefCodeField(),
                     SizedBox(
                       height: spacing40,
                     ),
@@ -784,21 +802,30 @@ class _AddUserState extends State<AddUser> {
   }
 
   Widget _buildPhoneInputField() {
-    return Container(
+    return Expanded(
+      child: Container(
         child: HutanoTextField(
-            textInputFormatter: <TextInputFormatter>[_mobileFormatter],
-            isNumberField: true,
-            width: SizeConfig.screenWidth / 2.4,
+            textInputFormatter: <TextInputFormatter>[
+              LengthLimitingTextInputFormatter(14),
+              FilteringTextInputFormatter.digitsOnly,
+              _mobileFormatter,
+            ],
+            labelText: "Phone Number",
+            controller: _phoneNoController,
+            textInputType: TextInputType.phone,
+            prefixheight: 20,
+            prefixwidth: 20,
             focusNode: _mobileFocus,
-            // controller: _phoneNoController
-            //   ..text =
-            //       '${widget.countryCode} ${widget.number.getUsFormatNumber()}',
-            isFieldEnable: false,
-            focusedBorderColor: colorBlack20,
-            labelText: Localization.of(context).phoneNo,
-            textInputType: TextInputType.number,
-            onFieldSubmitted: (s) {},
-            textInputAction: TextInputAction.next));
+            textInputAction: TextInputAction.done,
+            isNumberField: true,
+            autovalidate: widget.whom == '1'
+                ? AutovalidateMode.disabled
+                : AutovalidateMode.onUserInteraction,
+            // prefixIcon: FileConstants.icCall,
+            validationMethod: (number) =>
+                number.toString().isValidUSNumber(context)),
+      ),
+    );
   }
 
   Widget _buildAddressField() {

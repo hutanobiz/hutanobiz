@@ -828,6 +828,27 @@ class ApiManager {
     }
   }
 
+  Future<dynamic> addAccount(ReqRegister request, File profile) async {
+    try {
+      var formData = FormData.fromMap(request.toMap());
+      if (profile != null) {
+        final fileName = profile.path.split('/').last;
+        var file = await MultipartFile.fromFile(profile.path,
+            filename: fileName, contentType: MediaType("image", fileName));
+        formData.files.add(MapEntry('avatar', file));
+      }
+
+      final response = await ApiService().multipartPost(
+        'api/add-account',
+        data: formData,
+        options: Options(contentType: 'application/x-www-form-urlencoded'),
+      );
+      return response.data['response'];
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
   Future<ResAddMember> setMemberPermission(ReqAddPermission model) async {
     try {
       final response =
@@ -1220,16 +1241,6 @@ class ApiManager {
       final response = await _apiService
           .post('api/verify-link-account-verification-code', data: map);
       return response;
-    } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
-    }
-  }
-
-   Future<dynamic> getLinkAccount() async {
-    try {
-      final response = await _apiService
-          .get('api/link-accounts');
-      return response.data['response'];
     } on DioError catch (error) {
       throw ErrorModel.fromJson(error.response.data);
     }

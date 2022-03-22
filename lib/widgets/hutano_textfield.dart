@@ -49,6 +49,7 @@ class HutanoTextField extends StatefulWidget {
   final EdgeInsetsGeometry contentPadding;
   final Function onSaved;
   final String errorText;
+   bool isDense = false;
 
   HutanoTextField(
       {this.suffixIconColor,
@@ -95,7 +96,8 @@ class HutanoTextField extends StatefulWidget {
       this.contentPadding,
       this.passwordTap,
       this.onSaved,
-      this.errorText});
+      this.errorText,
+      this.isDense});
 
   @override
   _HutanoTextFieldState createState() => _HutanoTextFieldState();
@@ -156,7 +158,7 @@ class _HutanoTextFieldState extends State<HutanoTextField> {
               hintText: widget.hintText,
               floatingLabelBehavior: widget.floatingBehaviour,
               hintStyle: TextStyle(color: colorGrey60, fontSize: 14),
-
+              isDense: widget.isDense,
               focusedBorder: OutlineInputBorder(
                   borderRadius: const BorderRadius.all(Radius.circular(12)),
                   borderSide:

@@ -53,13 +53,13 @@ import 'package:hutano/widgets/widgets.dart';
 class ApiBaseHelper {
   NetworkUtil _netUtil = new NetworkUtil();
   static const String imageUrl = "https://hutano-assets.s3.amazonaws.com/";
-  static const String base_url = "https://dev.hutano.com/";
-  static const String base_u = "dev.hutano.com";
-  static const String socket_url = "https://dev.hutano.com";
+  // static const String base_url = "https://dev.hutano.com/";
+  // static const String base_u = "dev.hutano.com";
+  // static const String socket_url = "https://dev.hutano.com";
 
-  // static const String base_url = "https://hutano.appening.xyz/";
-  // static const String base_u = "hutano.appening.xyz";
-  // static const String socket_url = "https://hutano.appening.xyz";
+  static const String base_url = "https://hutano.appening.xyz/";
+  static const String base_u = "hutano.appening.xyz";
+  static const String socket_url = "https://hutano.appening.xyz";
 
   // static const String base_u = "staging.hutano.com";
   // static const String base_url = "https://staging.hutano.com/";
@@ -525,18 +525,15 @@ class ApiBaseHelper {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token,
     };
-    // return
-    // _netUtil
-    //     .post(
-    //   Uri.encodeFull(
-    //     base_url + "api/vital/graff?key=$key&date=$date",
-    //   ),
-    //   headers: headers,
-    // );
-    //     // .then((res) {
-    //   // return res["response"];
-    Future.delayed(const Duration(milliseconds: 500), () {
-      return [];
+    return _netUtil
+        .get(
+      Uri.encodeFull(
+        base_url + "api/vital/graff?key=$key&date=$date",
+      ),
+      headers: headers,
+    )
+        .then((res) {
+      return res["response"];
     });
   }
 
@@ -1428,6 +1425,31 @@ class ApiBaseHelper {
         .then((res) {
       return ResRelationList.fromJson(res);
     });
+  }
+
+  Future<dynamic> getLinkAccount(String token) async {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    try {
+      final response = await _netUtil.get(
+          Uri.encodeFull(base_url + 'api/link-accounts'),
+          headers: headers);
+      return response['response'];
+    } catch (error) {}
+  }
+
+  Future<dynamic> switchAccount(String token, Map map) async {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token,
+    };
+    try {
+      final response = await _netUtil.post(
+          Uri.encodeFull(base_url + 'api/switch-account'),
+          body: map,
+          headers: headers);
+      return response['response'];
+    } catch (error) {}
   }
 
   Future<ResAddMember> addMember(
