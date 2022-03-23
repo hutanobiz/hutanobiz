@@ -577,7 +577,12 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                                         child: Text(
                                           _profileMap.containsKey("User")
                                               ? _profileMap['ProfessionalTitle']
-                                                  [0]['title']
+                                                  .length >
+                                                      0
+                                                  ? _profileMap[
+                                                          'ProfessionalTitle']
+                                                      [0]['title']
+                                                  : ''
                                               : _profileMap['professionalTitle']
                                                   ['title'],
                                           style: TextStyle(
