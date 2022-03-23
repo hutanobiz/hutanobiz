@@ -151,7 +151,7 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
                 disabledBorder: InputBorder.none,
               )),
           suggestionsCallback: (pattern) async {
-            return pattern.length > 0 ? await _getAllergiesList(pattern) : [];
+            return await _getAllergiesList(pattern);
           },
           keepSuggestionsOnLoading: false,
           loadingBuilder: (context) => CustomLoader(),
