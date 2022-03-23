@@ -38,7 +38,7 @@ class _MonthYearItemState extends State<MonthYearItem> {
   final FocusNode _monthFocus = FocusNode();
   final FocusNode _yearFocus = FocusNode();
   final _formKey = GlobalKey<FormState>();
-  bool _autoValidate = false;
+  AutovalidateMode _autoValidate = AutovalidateMode.disabled;
 
   @override
   void initState() {
@@ -64,7 +64,7 @@ class _MonthYearItemState extends State<MonthYearItem> {
     getScreenSize(context);
     return Form(
       key: _formKey,
-      autovalidate: _autoValidate,
+      autovalidateMode: _autoValidate,
       child: Container(
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(24)),
@@ -263,7 +263,7 @@ class _MonthYearItemState extends State<MonthYearItem> {
                   widget.isForUpdate);
             } else {
               setState(() {
-                _autoValidate = true;
+                _autoValidate = AutovalidateMode.always;
               });
             }
           },

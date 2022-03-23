@@ -66,7 +66,7 @@ class _MemberMessageState extends State<MemberMessage> {
   Widget build(BuildContext context) {
     return Form(
       key: _key,
-      autovalidate: true,
+      autovalidateMode:AutovalidateMode.always,
       child: CustomScaffold(
         padding:
             EdgeInsets.only(top: spacing30, left: 15, right: 15, bottom: 0),

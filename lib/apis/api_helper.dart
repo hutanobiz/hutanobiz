@@ -57,7 +57,7 @@ class ApiBaseHelper {
   static const String base_u = "dev.hutano.com";
   static const String socket_url = "https://dev.hutano.com";
 
-  // static const String base_u = "staging.hutano.com/";
+  // static const String base_u = "staging.hutano.com";
   // static const String base_url = "https://staging.hutano.com/";
   // static const String socket_url = "https://staging.hutano.com";
   // static const String base_u = "production.hutano.com/";

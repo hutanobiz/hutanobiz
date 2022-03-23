@@ -226,7 +226,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
                 padding: EdgeInsets.symmetric(horizontal: spacing20),
                 child: Form(
                     key: _pharmacyKey,
-                    autovalidate: _autoValidate,
+                    autovalidateMode:AutovalidateMode.onUserInteraction,
                     child: Column(
                       // shrinkWrap: true,
                       // physics: NeverScrollableScrollPhysics(),

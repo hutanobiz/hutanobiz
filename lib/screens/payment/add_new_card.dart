@@ -116,12 +116,12 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                   TextFormField(
                                       controller: _cardController,
                                       key: _cardNumberKey,
-                                      autovalidate: true,
+                                      autovalidateMode:AutovalidateMode.onUserInteraction,
                                       keyboardType: TextInputType.number,
                                       validator: Validations.validateCardNumber,
                                       inputFormatters: [
                                         maskFormatter,
-                                        BlacklistingTextInputFormatter(
+                                        FilteringTextInputFormatter.deny(
                                             RegExp('[\\.]')),
                                         LengthLimitingTextInputFormatter(19),
                                       ],
@@ -144,8 +144,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                   SizedBox(height: 20.0),
                                   TextFormField(
                                       key: _cardNameKey,
-                                      autovalidate:
-                                          _nameController.text.isNotEmpty,
+                                     autovalidateMode:AutovalidateMode.onUserInteraction,
                                       validator: Validations.validateEmpty,
                                       controller: _nameController,
                                       decoration: InputDecoration(
@@ -173,10 +172,10 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                         child: TextFormField(
                                             controller: _expiryController,
                                             key: _expiryDateKey,
-                                            autovalidate: true,
+                                           autovalidateMode:AutovalidateMode.onUserInteraction,
                                             keyboardType: TextInputType.number,
                                             inputFormatters: [
-                                              WhitelistingTextInputFormatter
+                                              FilteringTextInputFormatter
                                                   .digitsOnly,
                                               LengthLimitingTextInputFormatter(
                                                   4),
@@ -212,11 +211,11 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                             controller: _cvvController,
                                             key: _cvvKey,
                                             obscureText: true,
-                                            autovalidate: true,
+                                          autovalidateMode:AutovalidateMode.onUserInteraction,
                                             keyboardType: TextInputType.number,
                                             validator: Validations.validateCVV,
                                             inputFormatters: [
-                                              WhitelistingTextInputFormatter
+                                              FilteringTextInputFormatter
                                                   .digitsOnly,
                                               LengthLimitingTextInputFormatter(
                                                   4),

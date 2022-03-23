@@ -95,7 +95,7 @@ class HutanoPhoneInput extends StatelessWidget {
         HutanoTextField(
           textInputFormatter: <TextInputFormatter>[
             LengthLimitingTextInputFormatter(14),
-            WhitelistingTextInputFormatter.digitsOnly,
+            FilteringTextInputFormatter.digitsOnly,
             _mobileFormatter,
           ],
           width: MediaQuery.of(context).size.width - 120,

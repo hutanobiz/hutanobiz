@@ -77,7 +77,7 @@ class _ResetPasswordState extends State<ResetPassword> {
             padding: const EdgeInsets.symmetric(horizontal: spacing15),
             child: Form(
               key: _key,
-              autovalidate: true,
+              autovalidateMode:AutovalidateMode.onUserInteraction,
               child: SingleChildScrollView(
                 child: Column(
                   children: [

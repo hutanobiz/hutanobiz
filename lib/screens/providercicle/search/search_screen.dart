@@ -101,7 +101,7 @@ class _SearchScreenState extends State<SearchScreen> {
             height: spacing25,
           ),
           Form(
-            autovalidate: true,
+            autovalidateMode:AutovalidateMode.onUserInteraction,
             key: _key,
             child: _buildSearchField(),
           ),
@@ -185,7 +185,7 @@ class _SearchScreenState extends State<SearchScreen> {
       }),
       validator: (number) => number.toString().isValidNumber(context),
       textInputAction: TextInputAction.done,
-      inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       decoration: InputDecoration(
         counterText: "",
         isDense: true,

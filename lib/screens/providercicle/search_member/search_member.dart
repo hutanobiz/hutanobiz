@@ -169,7 +169,7 @@ class _SearchScreenState extends State<SearchMember> {
         _onSearch(s);
       }),
       textInputAction: TextInputAction.done,
-      inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       decoration: InputDecoration(
         isDense: true,
         fillColor: colorWhiteSmoke44,
