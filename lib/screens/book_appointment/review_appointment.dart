@@ -22,7 +22,6 @@ import 'package:hutano/widgets/provider_list_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:stripe_payment/stripe_payment.dart';
 
 class ReviewAppointmentScreen extends StatefulWidget {
   @override
@@ -96,11 +95,6 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   @override
   void initState() {
     super.initState();
-    StripePayment.setOptions(
-      StripeOptions(
-        publishableKey: kstripePublishKey,
-      ),
-    );
     setSourceAndDestinationIcons();
   }
 

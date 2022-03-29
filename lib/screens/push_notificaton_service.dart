@@ -88,15 +88,17 @@ class PushNotificationService {
             if (message.data['isUserJoin'] == "true") {
               if (!isCurrent(Routes.trackTelemedicineAppointment,
                   message.data['appointmentId'])) {
-                Navigator.of(navigatorContext).pushNamed(
-                  Routes.trackTelemedicineAppointment,
-                  arguments: message.data['appointmentId'],
-                );
+                // Navigator.of(navigatorContext).pushNamed(
+                //   Routes.trackTelemedicineAppointment,
+                //   arguments: message.data['appointmentId'],
+                // );
+                showNotification(message);
               } else {
                 Navigator.of(navigatorContext).pushReplacementNamed(
                   Routes.trackTelemedicineAppointment,
                   arguments: message.data['appointmentId'],
                 );
+                showNotification(message);
               }
             } else {
               if (!isCurrent(Routes.trackTelemedicineAppointment,
@@ -142,6 +144,7 @@ class PushNotificationService {
                     );
                   });
                 });
+                showNotification(message);
               }
             }
             break;
@@ -149,28 +152,32 @@ class PushNotificationService {
             if (message.data['appointmentType'] == '1') {
               if (!isCurrent(Routes.trackOfficeAppointment,
                   message.data['appointmentId'])) {
-                Navigator.of(navigatorContext).pushNamed(
-                  Routes.trackOfficeAppointment,
-                  arguments: message.data['appointmentId'],
-                );
+                // Navigator.of(navigatorContext).pushNamed(
+                //   Routes.trackOfficeAppointment,
+                //   arguments: message.data['appointmentId'],
+                // );
+                showNotification(message);
               } else {
                 Navigator.of(navigatorContext).pushReplacementNamed(
                   Routes.trackOfficeAppointment,
                   arguments: message.data['appointmentId'],
                 );
+                showNotification(message);
               }
             } else if (message.data['appointmentType'] == '3') {
               if (!isCurrent(Routes.trackOnsiteAppointment,
                   message.data['appointmentId'])) {
-                Navigator.of(navigatorContext).pushNamed(
-                  Routes.trackOnsiteAppointment,
-                  arguments: message.data['appointmentId'],
-                );
+                // Navigator.of(navigatorContext).pushNamed(
+                //   Routes.trackOnsiteAppointment,
+                //   arguments: message.data['appointmentId'],
+                // );
+                showNotification(message);
               } else {
                 Navigator.of(navigatorContext).pushReplacementNamed(
                   Routes.trackOnsiteAppointment,
                   arguments: message.data['appointmentId'],
                 );
+                showNotification(message);
               }
             } else {
               showNotification(message);
@@ -182,28 +189,32 @@ class PushNotificationService {
               if (message.data['appointmentType'] == '1') {
                 if (!isCurrent(Routes.trackOfficeAppointment,
                     message.data['appointmentId'])) {
-                  Navigator.of(navigatorContext).pushNamed(
-                    Routes.trackOfficeAppointment,
-                    arguments: message.data['appointmentId'],
-                  );
+                  // Navigator.of(navigatorContext).pushNamed(
+                  //   Routes.trackOfficeAppointment,
+                  //   arguments: message.data['appointmentId'],
+                  // );
+                  showNotification(message);
                 } else {
                   Navigator.of(navigatorContext).pushReplacementNamed(
                     Routes.trackOfficeAppointment,
                     arguments: message.data['appointmentId'],
                   );
+                  showNotification(message);
                 }
               } else if (message.data['appointmentType'] == '3') {
                 if (!isCurrent(Routes.trackOnsiteAppointment,
                     message.data['appointmentId'])) {
-                  Navigator.of(navigatorContext).pushNamed(
-                    Routes.trackOnsiteAppointment,
-                    arguments: message.data['appointmentId'],
-                  );
+                  // Navigator.of(navigatorContext).pushNamed(
+                  //   Routes.trackOnsiteAppointment,
+                  //   arguments: message.data['appointmentId'],
+                  // );
+                  showNotification(message);
                 } else {
                   Navigator.of(navigatorContext).pushReplacementNamed(
                     Routes.trackOnsiteAppointment,
                     arguments: message.data['appointmentId'],
                   );
+                  showNotification(message);
                 }
               } else {
                 showNotification(message);

@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/registration/payment/provider/credit_card_provider.dart';
@@ -13,7 +14,6 @@ import 'package:hutano/screens/registration/payment/provider/credit_card_provide
 import 'package:hutano/widgets/app_header.dart';
 import 'package:hutano/widgets/custom_back_button.dart';
 import 'package:hutano/widgets/skip_later.dart';
-import 'package:stripe_payment/stripe_payment.dart';
 
 import '../../../apis/api_constants.dart';
 import '../../../apis/api_manager.dart';
@@ -65,11 +65,6 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
   @override
   void initState() {
     super.initState();
-    StripePayment.setOptions(
-      StripeOptions(
-        publishableKey: kstripePublishKey,
-      ),
-    );
     _cardNumberController.addListener(_getCardTypeFrmNumber);
     addList.add(MyCreditCard());
     // _getCard();
@@ -572,36 +567,41 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
           card_number: getCleanedNumber(_cardNumberController.text),
           card_name: _nameController.text);
 
-      ApiManager().getSetupIntent().then((value) {
+      ApiManager().getSetupIntent().then((value) async {
         String clientSecret = value['response']['client_secret'];
 
-        final Map<String, dynamic> data = new Map<String, dynamic>();
-        data['card[number]'] = getCleanedNumber(_cardNumberController.text);
-        data['card[exp_month]'] =
-            int.parse(_expiryController.text.substring(0, 2));
-        data['card[exp_year]'] = int.parse(_expiryController.text.substring(3));
-        data['card[cvc]'] = _cvvController.text;
-        data['billing_details[name]'] = _nameController.text;
-        data["type"] = "card";
-        _apiService.createPaymentMethod(data).then((value) {
-          var _paymentIntent = PaymentIntent(
-              paymentMethodId: value['id'],
-              clientSecret: clientSecret,
-              isSavingPaymentMethod: true);
-          StripePayment.confirmSetupIntent(_paymentIntent).then((value) {
-            ProgressDialogUtils.dismissProgressDialog();
-            Navigator.of(context).pushReplacementNamed(Routes.addCardComplete);
-          }).catchError((dynamic e) {
-            ProgressDialogUtils.dismissProgressDialog();
-            DialogUtils.showAlertDialog(context, e.message);
-          });
+        // final Map<String, dynamic> data = new Map<String, dynamic>();
+        // data['card[number]'] = getCleanedNumber(_cardNumberController.text);
+        // data['card[exp_month]'] =
+        //     int.parse(_expiryController.text.substring(0, 2));
+        // data['card[exp_year]'] = int.parse(_expiryController.text.substring(3));
+        // data['card[cvc]'] = _cvvController.text;
+        // data['billing_details[name]'] = _nameController.text;
+        // data["type"] = "card";
+
+        CardDetails creditCard = CardDetails(
+            number: getCleanedNumber(_cardNumberController.text),
+            expirationMonth: int.parse(_expiryController.text.substring(0, 2)),
+            expirationYear: int.parse(_expiryController.text.substring(3)),
+            cvc: _cvvController.text);
+
+        await Stripe.instance.dangerouslyUpdateCardDetails(creditCard);
+        // _apiService.createPaymentMethod(data).then((value) {
+        // var _paymentIntent = PaymentIntent(
+        //     paymentMethodId: value['id'],
+        //     clientSecret: clientSecret,
+        //     isSavingPaymentMethod: true);
+        Stripe.instance
+            .confirmSetupIntent(
+                clientSecret,
+                PaymentMethodParams.card(
+                    billingDetails: BillingDetails(name: _nameController.text)))
+            .then((value) {
+          ProgressDialogUtils.dismissProgressDialog();
+          Navigator.of(context).pushReplacementNamed(Routes.addCardComplete);
         }).catchError((dynamic e) {
-          if (e is ErrorModelStripe) {
-            if (e.error != null) {
-              ProgressDialogUtils.dismissProgressDialog();
-              DialogUtils.showAlertDialog(context, e.error.message);
-            }
-          }
+          ProgressDialogUtils.dismissProgressDialog();
+          DialogUtils.showAlertDialog(context, e.message);
         });
       }).catchError((dynamic e) {
         if (e is ErrorModelStripe) {
@@ -611,6 +611,14 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
           }
         }
       });
+      // }).catchError((dynamic e) {
+      //   if (e is ErrorModelStripe) {
+      //     if (e.error != null) {
+      //       ProgressDialogUtils.dismissProgressDialog();
+      //       DialogUtils.showAlertDialog(context, e.error.message);
+      //     }
+      //   }
+      // });
 
       // _apiService.sendCardDetails(card).then((value) {
       //   if (value.id != null) {

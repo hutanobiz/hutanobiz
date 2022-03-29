@@ -21,8 +21,8 @@ void setEnvironment(Environment env) {
 }
 
 dynamic get apiBaseUrl {
-  return "https://dev.hutano.com/";
-  // return "https://staging.hutano.com/";
+  // return "https://dev.hutano.com/";
+  return "https://staging.hutano.com/";
 
   // return "https://production.hutano.com/";
   // return "https://www.hutano.com/";

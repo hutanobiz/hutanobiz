@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
-import 'package:geocoder/geocoder.dart';
+import 'package:geocoding/geocoding.dart' as Geo;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart' hide Location;
 import 'package:hutano/colors.dart';
@@ -13,7 +13,6 @@ import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:location/location.dart';
-
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: Strings.kGoogleApiKey);
@@ -233,10 +232,9 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
 
   getLocationAddress(latitude, longitude) async {
     try {
-      final coordinates = new Coordinates(latitude, longitude);
-      var addresses =
-          await Geocoder.local.findAddressesFromCoordinates(coordinates);
-      var first = addresses.first.addressLine;
+      // final coordinates = new Coordinates(latitude, longitude);
+      var addresses = await Geo.placemarkFromCoordinates(latitude, longitude);
+      var first = addresses.first.locality + ' ' + addresses.first.country;
       _addressController.text = first;
       return first;
     } on PlatformException catch (e) {

@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geocoder/geocoder.dart';
+import 'package:geocoding/geocoding.dart' as Geo;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/apis/api_constants.dart';
 import 'package:hutano/apis/api_helper.dart';
@@ -12,6 +12,7 @@ import 'package:hutano/apis/api_manager.dart';
 import 'package:hutano/apis/error_model.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/strings.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/constants.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
@@ -1506,18 +1507,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   getLocationAddress(latitude, longitude) async {
     try {
-      final coordinates = new Coordinates(latitude, longitude);
-      var addresses =
-          await Geocoder.local.findAddressesFromCoordinates(coordinates);
-      conatiner.setUserLocation("latLng", LatLng(latitude, longitude));
-
-      var first = "addresses.first.addressLine?.toString()";
-
+      // final coordinates = new Coordinates(latitude, longitude);
+      var addresses = await Geo.placemarkFromCoordinates(latitude, longitude);
+      var first = addresses.first.locality + ' ' + addresses.first.country;
       if (addresses[0].locality != null) {
         first = addresses[0].locality;
       } else {
         first = addresses[0].subLocality;
       }
+      conatiner.setUserLocation("latLng", LatLng(latitude, longitude));
+
+      // var first = "addresses.first.addressLine?.toString()";
+
+      // if (addresses[0].locality != null) {
+      //   first = addresses[0].locality;
+      // } else {
+      //   first = addresses[0].subLocality;
+      // }
 
       if (mounted) {
         setState(() {

@@ -53,13 +53,13 @@ import 'package:hutano/widgets/widgets.dart';
 class ApiBaseHelper {
   NetworkUtil _netUtil = new NetworkUtil();
   static const String imageUrl = "https://hutano-assets.s3.amazonaws.com/";
-  static const String base_url = "https://dev.hutano.com/";
-  static const String base_u = "dev.hutano.com";
-  static const String socket_url = "https://dev.hutano.com";
+  // static const String base_url = "https://dev.hutano.com/";
+  // static const String base_u = "dev.hutano.com";
+  // static const String socket_url = "https://dev.hutano.com";
 
-  // static const String base_u = "staging.hutano.com";
-  // static const String base_url = "https://staging.hutano.com/";
-  // static const String socket_url = "https://staging.hutano.com";
+  static const String base_u = "staging.hutano.com";
+  static const String base_url = "https://staging.hutano.com/";
+  static const String socket_url = "https://staging.hutano.com";
   // static const String base_u = "production.hutano.com/";
   // static const String base_url = "https://production.hutano.com/";
   // static const String socket_url = "https://production.hutano.com";

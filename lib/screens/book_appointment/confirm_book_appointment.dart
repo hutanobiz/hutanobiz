@@ -31,7 +31,6 @@ import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
-import 'package:stripe_payment/stripe_payment.dart';
 
 import 'morecondition/providers/health_condition_provider.dart';
 
@@ -109,12 +108,6 @@ class _ConfirmBookAppointmentScreenState
   @override
   void initState() {
     super.initState();
-
-    StripePayment.setOptions(
-      StripeOptions(
-        publishableKey: kstripePublishKey,
-      ),
-    );
     setSourceAndDestinationIcons();
   }
 
@@ -246,6 +239,7 @@ class _ConfirmBookAppointmentScreenState
 
     switch (_permission) {
       case PermissionStatus.granted:
+      case PermissionStatus.grantedLimited:
         bool serviceStatus = await _location.serviceEnabled();
         print("Service status: $serviceStatus");
 

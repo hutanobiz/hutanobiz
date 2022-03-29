@@ -4,7 +4,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geocoder/geocoder.dart';
+import 'package:geocoding/geocoding.dart' as Geo;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
@@ -2020,12 +2020,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   getLocationAddress(latitude, longitude) async {
     try {
-      final coordinates = new Coordinates(latitude, longitude);
-      var addresses =
-          await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      // final coordinates = new Coordinates(latitude, longitude);
+     var addresses = await await Geo.placemarkFromCoordinates(latitude, longitude);
+      var first = addresses.first.locality + ' ' + addresses.first.country;
       conatiner.setUserLocation("latLng", LatLng(latitude, longitude));
 
-      var first = addresses.first.addressLine?.toString();
+      // var first = addresses.first.addressLine?.toString();
 
       if (mounted) {
         setState(() {

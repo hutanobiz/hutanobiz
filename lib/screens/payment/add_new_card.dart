@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:hutano/apis/api_constants.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
@@ -10,7 +11,6 @@ import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/mask_input_formatter.dart';
 import 'package:hutano/widgets/widgets.dart';
-import 'package:stripe_payment/stripe_payment.dart';
 
 class AddNewCardScreen extends StatefulWidget {
   AddNewCardScreen({Key key}) : super(key: key);
@@ -56,12 +56,6 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
     _cvvController.addListener(() {
       setState(() {});
     });
-
-    StripePayment.setOptions(
-      StripeOptions(
-        publishableKey: kstripePublishKey,
-      ),
-    );
   }
 
   @override
@@ -116,7 +110,8 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                   TextFormField(
                                       controller: _cardController,
                                       key: _cardNumberKey,
-                                      autovalidateMode:AutovalidateMode.onUserInteraction,
+                                      autovalidateMode:
+                                          AutovalidateMode.onUserInteraction,
                                       keyboardType: TextInputType.number,
                                       validator: Validations.validateCardNumber,
                                       inputFormatters: [
@@ -144,7 +139,8 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                   SizedBox(height: 20.0),
                                   TextFormField(
                                       key: _cardNameKey,
-                                     autovalidateMode:AutovalidateMode.onUserInteraction,
+                                      autovalidateMode:
+                                          AutovalidateMode.onUserInteraction,
                                       validator: Validations.validateEmpty,
                                       controller: _nameController,
                                       decoration: InputDecoration(
@@ -172,7 +168,8 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                         child: TextFormField(
                                             controller: _expiryController,
                                             key: _expiryDateKey,
-                                           autovalidateMode:AutovalidateMode.onUserInteraction,
+                                            autovalidateMode: AutovalidateMode
+                                                .onUserInteraction,
                                             keyboardType: TextInputType.number,
                                             inputFormatters: [
                                               FilteringTextInputFormatter
@@ -211,7 +208,8 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                             controller: _cvvController,
                                             key: _cvvKey,
                                             obscureText: true,
-                                          autovalidateMode:AutovalidateMode.onUserInteraction,
+                                            autovalidateMode: AutovalidateMode
+                                                .onUserInteraction,
                                             keyboardType: TextInputType.number,
                                             validator: Validations.validateCVV,
                                             inputFormatters: [
@@ -251,7 +249,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: FancyButton(
                   buttonHeight: 50,
-                  onPressed: () {
+                  onPressed: () async {
                     FocusScope.of(context).requestFocus(FocusNode());
 
                     if (disableButton()) {
@@ -260,26 +258,40 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                       });
 
                       FocusScope.of(context).unfocus();
-                      CreditCard creditCard = CreditCard();
-                      creditCard.name = _nameController.text;
-                      creditCard.number =
-                          Validations.getCleanedNumber(_cardController.text);
-                      creditCard.cvc = _cvvController.text;
-                      creditCard.expMonth =
-                          int.parse(_expiryController.text.substring(0, 2));
-                      creditCard.expYear =
-                          int.parse(_expiryController.text.substring(3));
-
+                      // CreditCard creditCard = CreditCard();
+                      // creditCard.name = _nameController.text;
+                      // creditCard.number =
+                      //     Validations.getCleanedNumber(_cardController.text);
+                      // creditCard.cvc = _cvvController.text;
+                      // creditCard.expMonth =
+                      //     int.parse(_expiryController.text.substring(0, 2));
+                      // creditCard.expYear =
+                      //     int.parse(_expiryController.text.substring(3));
+                      CardDetails creditCard = CardDetails(
+                          number: Validations.getCleanedNumber(
+                              _cardController.text),
+                          expirationMonth:
+                              int.parse(_expiryController.text.substring(0, 2)),
+                          expirationYear:
+                              int.parse(_expiryController.text.substring(3)),
+                          cvc: _cvvController.text);
+                      await Stripe.instance
+                          .dangerouslyUpdateCardDetails(creditCard);
                       SharedPref().getToken().then((token) {
                         api.getSetupIntent(context, token).then((value) {
                           String clientSecret = value['client_secret'];
 
-                          var pmr = PaymentMethodRequest(card: creditCard);
-                          var _paymentIntent = PaymentIntent(
-                            paymentMethod: pmr,
-                            clientSecret: clientSecret,
-                          );
-                          StripePayment.confirmSetupIntent(_paymentIntent)
+                          // var pmr = PaymentMethodRequest(card: creditCard);
+                          // var _paymentIntent = PaymentIntent(
+                          //   paymentMethod: pmr,
+                          //   clientSecret: clientSecret,
+                          // );
+                          Stripe.instance
+                              .confirmSetupIntent(
+                                  clientSecret,
+                                  PaymentMethodParams.card(
+                                      billingDetails: BillingDetails(
+                                          name: _nameController.text)))
                               .then((value) {
                             setState(() {
                               _isLoading = false;
