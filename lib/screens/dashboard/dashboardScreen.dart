@@ -1228,7 +1228,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(14),
                             child: Image(
-                              image: professionalTitle['image'] == null
+                              image: professionalTitle['image'] == null ||
+                                      professionalTitle['image'] == 'undefined'
                                   ? AssetImage('images/dummy_title_image.png')
                                   : NetworkImage(
                                       ApiBaseHelper.imageUrl +

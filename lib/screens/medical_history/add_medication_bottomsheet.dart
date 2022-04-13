@@ -4,6 +4,7 @@ import 'package:hutano/apis/api_manager.dart';
 import 'package:hutano/apis/error_model.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/dimens.dart';
+import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/screens/medical_history/model/req_medication_detail.dart';
 import 'package:hutano/screens/medical_history/model/res_get_medication_detail.dart';
 import 'package:hutano/text_style.dart';
@@ -15,6 +16,7 @@ import 'package:hutano/utils/progress_dialog.dart';
 import 'package:hutano/widgets/circular_loader.dart';
 import 'package:hutano/widgets/controller.dart';
 import 'package:hutano/widgets/fancy_button.dart';
+import 'package:provider/provider.dart';
 
 class AddMedicationBottomSheet extends StatefulWidget {
   AddMedicationBottomSheet(
@@ -380,6 +382,8 @@ class _AddMedicationBottomState extends State<AddMedicationBottomSheet> {
       BuildContext context, ReqMedicationDetail reqModel) async {
     ProgressDialogUtils.showProgressDialog(context);
     await ApiManager().addMedicationDetail(reqModel).then(((result) {
+      Provider.of<HealthConditionProvider>(context, listen: false)
+          .setMedicineDetails(medicine: reqModel);
       ProgressDialogUtils.dismissProgressDialog();
       Navigator.pop(context, true);
     })).catchError((dynamic e) {

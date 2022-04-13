@@ -266,7 +266,7 @@ class IntegumentryCompletedWidget extends StatelessWidget {
   }
 
   getGoalText(Goal goal) {
-    if (goal != null && goal.achieve != null) {
+    if (goal != null && goal.achieve != null && goal.achieve != '') {
       var improvements = '';
       if (goal.improvements != null) {
         goal.improvements.forEach((element) {

@@ -103,7 +103,7 @@ class GaitCompletedWidget extends StatelessWidget {
                               ? getGoalText(gait.summary[index].assistance.goal)
                               : SizedBox(),
                           gait.summary[index].assistiveDevice != null
-                              ? titleWidget('Assistance Device',
+                              ? titleWidget('Assistive Device',
                                   '${gait.summary[index].assistiveDevice.current}')
                               : SizedBox(),
                           gait.summary[index].assistiveDevice != null
@@ -159,7 +159,7 @@ class GaitCompletedWidget extends StatelessWidget {
   }
 
   getGoalText(Goal goal) {
-    if (goal != null && goal.achieve != null) {
+    if (goal != null && goal.achieve != null && goal.achieve != '') {
       var improvements = '';
       if (goal.improvements != null) {
         goal.improvements.forEach((element) {

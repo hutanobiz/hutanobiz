@@ -414,7 +414,13 @@ class _CompletedAppointmentSummaryState
                           .anthropometricMeasurements
                           .weight
                           .current !=
-                      null
+                      null &&
+                  AppointmentData.fromJson(appointmentData)
+                          .doctorFeedback[0]
+                          .anthropometricMeasurements
+                          .weight
+                          .current !=
+                      ''
               ? AnthopometricCompletedSummaryWidget(
                   anthropometricMeasurements:
                       AppointmentData.fromJson(appointmentData)
@@ -533,7 +539,13 @@ class _CompletedAppointmentSummaryState
                                   .labDetails
                                   .preferredLabs
                                   .name !=
-                              null
+                              null &&
+                          AppointmentData.fromJson(appointmentData)
+                                  .doctorFeedback[0]
+                                  .labDetails
+                                  .preferredLabs
+                                  .name !=
+                              ''
                       ? prefferedLabWidget(
                           AppointmentData.fromJson(appointmentData)
                               .doctorFeedback[0]
@@ -548,7 +560,12 @@ class _CompletedAppointmentSummaryState
                                   .doctorFeedback[0]
                                   .labDetails
                                   .labTestInstructions !=
-                              null
+                              null &&
+                          AppointmentData.fromJson(appointmentData)
+                                  .doctorFeedback[0]
+                                  .labDetails
+                                  .labTestInstructions !=
+                              ''
                       ? InstructionWidget(
                           title: 'Labs Instructions',
                           text: AppointmentData.fromJson(appointmentData)
@@ -585,7 +602,13 @@ class _CompletedAppointmentSummaryState
                                   .imagingDetails
                                   .preferredImagingCenters
                                   .name !=
-                              null
+                              null &&
+                          AppointmentData.fromJson(appointmentData)
+                                  .doctorFeedback[0]
+                                  .imagingDetails
+                                  .preferredImagingCenters
+                                  .name !=
+                              ''
                       ? preferredImagingWidget(
                           AppointmentData.fromJson(appointmentData)
                               .doctorFeedback[0]
@@ -600,7 +623,12 @@ class _CompletedAppointmentSummaryState
                                   .doctorFeedback[0]
                                   .imagingDetails
                                   .imagingInstructions !=
-                              null
+                              null &&
+                          AppointmentData.fromJson(appointmentData)
+                                  .doctorFeedback[0]
+                                  .imagingDetails
+                                  .imagingInstructions !=
+                              ''
                       ? InstructionWidget(
                           title: 'Imaging Instructions',
                           text: AppointmentData.fromJson(appointmentData)
@@ -700,7 +728,7 @@ class _CompletedAppointmentSummaryState
       children: [
         SizedBox(height: 20),
         Text(
-          'Preffred Pharmacy',
+          'Preferred Pharmacy',
           style: AppTextStyle.semiBoldStyle(fontSize: 16),
         ),
         SizedBox(height: 4),
@@ -900,7 +928,7 @@ class _CompletedAppointmentSummaryState
       children: [
         SizedBox(height: 20),
         Text(
-          'Preffred Lab',
+          'Preferred Lab',
           style: AppTextStyle.semiBoldStyle(fontSize: 16),
         ),
         SizedBox(height: 4),
@@ -930,7 +958,7 @@ class _CompletedAppointmentSummaryState
       children: [
         SizedBox(height: 20),
         Text(
-          'Preffred Imaging',
+          'Preferred Imaging',
           style: AppTextStyle.semiBoldStyle(fontSize: 16),
         ),
         SizedBox(height: 4),
@@ -1162,7 +1190,7 @@ class _CompletedAppointmentSummaryState
                                           fontSize: 14),
                                     ),
                               Text(
-                                '${appointmentMedication[index].providerReason}',
+                                'Because ${appointmentMedication[index].providerReason}',
                                 style: AppTextStyle.regularStyle(fontSize: 14),
                               )
                             ],
@@ -1201,11 +1229,11 @@ class _CompletedAppointmentSummaryState
           itemBuilder: (context, index) {
             return followUp[index]['isReferred']
                 ? Text(
-                    '\u2022 ${followUpType[followUp[index]['type']]} with ${followUp[index]['doctorName']} at: ${DateFormat("yyyy-MM-dd, h:mm a").format(DateFormat("yyyy-MM-ddThh:mm:ss.000Z").parse(followUp[index]['date'], true).toLocal())}',
+                    '\u2022 ${followUpType[followUp[index]['type']]} with ${followUp[index]['doctorName']} at: ${DateFormat("MM/dd/yyyy, h:mm a").format(DateFormat("yyyy-MM-ddThh:mm:ss.000Z").parse(followUp[index]['date'], true).toLocal())}',
                     style: AppTextStyle.mediumStyle(fontSize: 14),
                   )
                 : Text(
-                    '\u2022 ${followUpType[followUp[index]['type']]} with ${followUp[index]['doctorName']} at: ${DateFormat("yyyy-MM-dd, h:mm a").format(DateFormat("yyyy-MM-ddThh:mm:ss.000Z").parse(followUp[index]['date'], true).toLocal())}',
+                    '\u2022 ${followUpType[followUp[index]['type']]} with ${followUp[index]['doctorName']} at: ${DateFormat("MM/dd/yyyy, h:mm a").format(DateFormat("yyyy-MM-ddThh:mm:ss.000Z").parse(followUp[index]['date'], true).toLocal())}',
                     style: AppTextStyle.mediumStyle(fontSize: 14),
                   );
           },

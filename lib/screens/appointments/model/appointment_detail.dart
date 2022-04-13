@@ -1848,7 +1848,7 @@ class IntegumentarySummary {
     pain = json['pain'];
     notes = json['notes'];
     image = json['image'];
-    periwound = json['periwound'].cast<String>();
+    periwound = json['periwound']?.cast<String>();
     sId = json['_id'];
     length =
         json['length'] != null ? new Weight.fromJson(json['length']) : null;

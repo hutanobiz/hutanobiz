@@ -9,7 +9,8 @@ import 'package:hutano/screens/book_appointment/diagnosis/model/res_diagnostic_t
 import 'package:hutano/screens/book_appointment/model/allergy.dart';
 import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/screens/book_appointment/vitals/model/social_history.dart';
-import 'package:hutano/screens/medical_history/model/res_get_medication_detail.dart';
+import 'package:hutano/screens/medical_history/model/req_medication_detail.dart';
+import 'package:hutano/screens/pharmacy/model/res_preferred_pharmacy_list.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/text_style.dart';
 import 'package:hutano/utils/argument_const.dart';
@@ -19,7 +20,6 @@ import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/problem_widget.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -117,12 +117,19 @@ class _BookingsummaryState extends State<Bookingsummary> {
                   .vitalsData)
           : SizedBox(),
       Provider.of<HealthConditionProvider>(context, listen: false)
-                  .medicationModelData
+                  .medicines
                   .length >
               0
           ? prescriptionWidget(
               Provider.of<HealthConditionProvider>(context, listen: false)
-                  .medicationModelData)
+                  .medicines)
+          : SizedBox(),
+      Provider.of<HealthConditionProvider>(context, listen: false)
+                  .prefPharmacy !=
+              null
+          ? pharmacyWidget(
+              Provider.of<HealthConditionProvider>(context, listen: false)
+                  .prefPharmacy)
           : SizedBox(),
       Provider.of<HealthConditionProvider>(context, listen: false)
                   .medicalImagesData
@@ -178,9 +185,9 @@ class _BookingsummaryState extends State<Bookingsummary> {
                       socialHistory.smoking.frequency != null &&
                       socialHistory.smoking.frequency != "0"
                   ? 'Patient smokes ${socialHistorySmokingUsages[int.parse(socialHistory.smoking.frequency) - 1]}.'
-                  : 'Patient do not smokes.'),
+                  : 'Patient does not smokes.'),
               socialHistory.drinker == null
-                  ? Text('Patient do not drink.')
+                  ? Text('Patient does not drink.')
                   : socialHistory.drinker.frequency == "1"
                       ? Text('Patient drink Rarely.')
                       : socialHistory.drinker.frequency == "2"
@@ -718,7 +725,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
     );
   }
 
-  Column prescriptionWidget(List<Medications> medications) {
+  Column prescriptionWidget(List<ReqMedicationDetail> medications) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -758,6 +765,47 @@ class _BookingsummaryState extends State<Bookingsummary> {
         ),
       ],
     );
+  }
+
+  Column pharmacyWidget(Pharmacy pharmacy) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      SizedBox(height: 20),
+      Text(
+        "Preferred Pharmacy",
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+      ),
+      SizedBox(height: 20),
+      Container(
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          border: Border.all(color: Colors.grey[200]),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${pharmacy.name}',
+              style: AppTextStyle.mediumStyle(fontSize: 14),
+            ),
+            Text('Address: ' +
+                pharmacy.address.address +
+                ', ' +
+                pharmacy.address.city +
+                ', ' +
+                pharmacy.address.state +
+                ', ' +
+                pharmacy.address.zipCode +
+                ', '),
+            Text(
+              'Phone no.: ' + pharmacy.address.phone,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      )
+    ]);
   }
 
   // void setLoading(bool value) {

@@ -8,7 +8,9 @@ import 'package:hutano/screens/book_appointment/model/allergy.dart';
 import 'package:hutano/screens/book_appointment/model/res_onsite_address_model.dart';
 import 'package:hutano/screens/book_appointment/morecondition/model/selection_health_issue_model.dart';
 import 'package:hutano/screens/book_appointment/vitals/model/social_history.dart';
+import 'package:hutano/screens/medical_history/model/req_medication_detail.dart';
 import 'package:hutano/screens/medical_history/model/res_get_medication_detail.dart';
+import 'package:hutano/screens/pharmacy/model/res_preferred_pharmacy_list.dart';
 
 class HealthConditionProvider extends ChangeNotifier {
   List<int> healthConditions = [];
@@ -30,9 +32,18 @@ class HealthConditionProvider extends ChangeNotifier {
   List<Medications> medicationModelData = [];
   SocialHistory socialHistory;
   List<Allergy> allergies = [];
+  List<ReqMedicationDetail> medicines = [];
+  Pharmacy prefPharmacy;
 
   void updateHealthConditions(List<int> list) {
     healthConditions = list;
+    notifyListeners();
+  }
+
+  void setMedicineDetails({
+    ReqMedicationDetail medicine,
+  }) {
+    medicines.add(medicine);
     notifyListeners();
   }
 
@@ -41,8 +52,9 @@ class HealthConditionProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updatePharmacy(PreferredPharmacy preferredPharmacy) {
+  void updatePharmacy(PreferredPharmacy preferredPharmacy, Pharmacy pharmacy) {
     preferredPharmacyData = preferredPharmacy;
+    prefPharmacy = pharmacy;
     notifyListeners();
   }
 
@@ -156,6 +168,8 @@ class HealthConditionProvider extends ChangeNotifier {
     currentIndexOfIssue = 0;
     allHealthIssuesData = [];
     providerAddress = "";
+    medicines = [];
+    prefPharmacy = null;
     // socialHistory = null;
     // allergies = [];
   }

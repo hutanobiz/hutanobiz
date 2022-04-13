@@ -4,6 +4,7 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:hutano/apis/api_constants.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/utils/dialog_utils.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/utils/validations.dart';
@@ -301,9 +302,9 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                             setState(() {
                               _isLoading = false;
                             });
-                            Widgets.showErrorialog(
-                              context: context,
-                              description: error.toString(),
+                            DialogUtils.showAlertDialog(
+                              context,
+                              error.error.message.toString(),
                             );
                             error.toString().debugLog();
                           });
