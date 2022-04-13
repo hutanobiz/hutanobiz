@@ -101,7 +101,8 @@ class _SearchScreenState extends State<SearchScreen> {
             height: spacing25,
           ),
           Form(
-            autovalidateMode: AutovalidateMode.always, key: _key,
+            autovalidateMode:AutovalidateMode.onUserInteraction,
+            key: _key,
             child: _buildSearchField(),
           ),
           SizedBox(

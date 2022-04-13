@@ -29,9 +29,14 @@ class _SamplePlayerState extends State<SamplePlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: FlickVideoPlayer(
-        flickManager: flickManager
+    return SafeArea(
+      child: Stack(
+        children: [
+          Container(
+            child: FlickVideoPlayer(flickManager: flickManager),
+          ),
+          BackButton(onPressed: () => Navigator.pop(context),)
+        ],
       ),
     );
   }

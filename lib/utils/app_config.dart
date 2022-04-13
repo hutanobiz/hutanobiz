@@ -22,10 +22,9 @@ void setEnvironment(Environment env) {
 
 dynamic get apiBaseUrl {
   // return "https://dev.hutano.com/";
-  return 'https://hutano.appening.xyz/';
   // return "https://staging.hutano.com/";
   // return "https://production.hutano.com/";
-  // return "https://www.hutano.com/";
+  return "https://www.hutano.com/";
 }
 
 dynamic get imageUrl {

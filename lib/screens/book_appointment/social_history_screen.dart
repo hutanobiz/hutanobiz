@@ -89,7 +89,7 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
             marijuanaGroupValue =
                 map['frequency'] == "0" ? "3" : map['frequency'];
           }
-          if (map['type'].toString().toLowerCase() == 'coccaine') {
+          if (map['type'].toString().toLowerCase() == 'cocaine') {
             isCoccine = true;
             coccineGroupValue =
                 map['frequency'] == "0" ? "3" : map['frequency'];
@@ -325,7 +325,7 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
                                             marijuanaGroupValue)
                                       ])
                                     : SizedBox(),
-                                titleWidget(5, 'Coccaine', isCoccine),
+                                titleWidget(5, 'Cocaine', isCoccine),
                                 isCoccine
                                     ? Column(children: [
                                         smokerRadioListItem(5, "1", 'Rarely',
@@ -562,7 +562,7 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
     }
     if (isCoccine) {
       recreationalDrugs.add(
-          RecreationalDrugs(type: 'Coccaine', frequency: coccineGroupValue));
+          RecreationalDrugs(type: 'Cocaine', frequency: coccineGroupValue));
     }
     if (isMetaphetamin) {
       recreationalDrugs.add(RecreationalDrugs(

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:hutano/apis/api_constants.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/utils/dialog_utils.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/utils/validations.dart';
@@ -10,7 +12,6 @@ import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/mask_input_formatter.dart';
 import 'package:hutano/widgets/widgets.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
 
 class AddNewCardScreen extends StatefulWidget {
   AddNewCardScreen({Key key}) : super(key: key);
@@ -108,9 +109,10 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   TextFormField(
-                                      autovalidateMode: AutovalidateMode.always,
                                       controller: _cardController,
                                       key: _cardNumberKey,
+                                      autovalidateMode:
+                                          AutovalidateMode.onUserInteraction,
                                       keyboardType: TextInputType.number,
                                       validator: Validations.validateCardNumber,
                                       inputFormatters: [
@@ -165,10 +167,10 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                     children: <Widget>[
                                       Expanded(
                                         child: TextFormField(
-                                            autovalidateMode:
-                                                AutovalidateMode.always,
                                             controller: _expiryController,
                                             key: _expiryDateKey,
+                                            autovalidateMode: AutovalidateMode
+                                                .onUserInteraction,
                                             keyboardType: TextInputType.number,
                                             inputFormatters: [
                                               FilteringTextInputFormatter
@@ -204,11 +206,11 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                       ),
                                       Expanded(
                                         child: TextFormField(
-                                            autovalidateMode:
-                                                AutovalidateMode.always,
                                             controller: _cvvController,
                                             key: _cvvKey,
                                             obscureText: true,
+                                            autovalidateMode: AutovalidateMode
+                                                .onUserInteraction,
                                             keyboardType: TextInputType.number,
                                             validator: Validations.validateCVV,
                                             inputFormatters: [
@@ -276,7 +278,6 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                           cvc: _cvvController.text);
                       await Stripe.instance
                           .dangerouslyUpdateCardDetails(creditCard);
-
                       SharedPref().getToken().then((token) {
                         api.getSetupIntent(context, token).then((value) {
                           String clientSecret = value['client_secret'];
@@ -301,9 +302,9 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                             setState(() {
                               _isLoading = false;
                             });
-                            Widgets.showErrorialog(
-                              context: context,
-                              description: error.toString(),
+                            DialogUtils.showAlertDialog(
+                              context,
+                              error.error.message.toString(),
                             );
                             error.toString().debugLog();
                           });

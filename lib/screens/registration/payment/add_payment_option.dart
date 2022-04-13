@@ -601,7 +601,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
           Navigator.of(context).pushReplacementNamed(Routes.addCardComplete);
         }).catchError((dynamic e) {
           ProgressDialogUtils.dismissProgressDialog();
-          DialogUtils.showAlertDialog(context, e.message);
+          DialogUtils.showAlertDialog(context, e.error.message);
         });
       }).catchError((dynamic e) {
         if (e is ErrorModelStripe) {

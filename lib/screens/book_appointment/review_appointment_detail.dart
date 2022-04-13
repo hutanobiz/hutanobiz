@@ -95,6 +95,8 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
   @override
   void initState() {
     super.initState();
+
+   
     setSourceAndDestinationIcons();
   }
 
@@ -570,7 +572,7 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                                         child: Text(
                                           _profileMap.containsKey("User")
                                               ? _profileMap['ProfessionalTitle']
-                                                          .length >
+                                                  .length >
                                                       0
                                                   ? _profileMap[
                                                           'ProfessionalTitle']

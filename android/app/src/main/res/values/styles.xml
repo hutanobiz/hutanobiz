@@ -8,5 +8,4 @@
    <style name="NormalTheme" parent="Theme.MaterialComponents">
         <item name="android:windowBackground">?android:colorBackground</item>
     </style>
-
 </resources>

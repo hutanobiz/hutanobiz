@@ -24,7 +24,7 @@ class GoogleService {
     final mDio = Dio(baseOption);
 
     final mInterceptorsWrapper = InterceptorsWrapper(
-      onRequest: (options,handler) async {
+      onRequest: (options, handler) async {
         debugPrint("$tag queryParameters ${options.queryParameters.toString()}",
             wrapWidth: 1024);
         debugPrint("$tag headers ${options.headers.toString()}",
@@ -34,12 +34,12 @@ class GoogleService {
         debugPrint("$tag ${options.data.toString()}", wrapWidth: 1024);
         return handler.next(options);
       },
-      onResponse: (response,handler) async {
+      onResponse: (response, handler) async {
         debugPrint("Code  ${response.statusCode.toString()}", wrapWidth: 1024);
         debugPrint("Response ${response.toString()}", wrapWidth: 1024);
         return handler.next(response);
       },
-      onError: (e,handler) async {
+      onError: (e, handler) async {
         debugPrint("$tag ${e.error.toString()}", wrapWidth: 1024);
         debugPrint("$tag ${e.response.toString()}", wrapWidth: 1024);
         return handler.next(e);

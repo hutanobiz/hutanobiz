@@ -27,6 +27,7 @@ class HutanoPinInput extends StatelessWidget {
     return Container(
       width: width,
       child: PinCodeTextField(
+        appContext: context,
         controller: controller,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         backgroundColor: Colors.transparent,
@@ -47,7 +48,6 @@ class HutanoPinInput extends StatelessWidget {
         animationDuration: Duration(milliseconds: 300),
         onCompleted: onCompleted,
         onChanged: onChanged,
-        appContext: null,
       ),
     );
   }

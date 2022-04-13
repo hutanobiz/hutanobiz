@@ -2021,10 +2021,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   getLocationAddress(latitude, longitude) async {
     try {
       // final coordinates = new Coordinates(latitude, longitude);
-      var addresses =
-          await  Geo.placemarkFromCoordinates(latitude, longitude);
+     var addresses =  await Geo.placemarkFromCoordinates(latitude, longitude);
       var first = addresses.first.locality + ' ' + addresses.first.country;
       conatiner.setUserLocation("latLng", LatLng(latitude, longitude));
+
       // var first = addresses.first.addressLine?.toString();
 
       if (mounted) {

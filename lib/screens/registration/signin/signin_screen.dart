@@ -148,7 +148,7 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget _buildPhoneInput(BuildContext context) {
     return Form(
       key: _keyPhone,
-      autovalidateMode: AutovalidateMode.always,
+     autovalidateMode:AutovalidateMode.onUserInteraction,
       child: Container(
         child: HutanoPhoneInput(
             controller: _phoneController,
@@ -242,7 +242,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   _buildPasswordField(BuildContext context) => Form(
         key: _keyPassword,
-        autovalidateMode: AutovalidateMode.disabled,
+       autovalidateMode:AutovalidateMode.disabled,
         child: HutanoTextField(
             labelText: Localization.of(context).password,
             isPasswordField: true,

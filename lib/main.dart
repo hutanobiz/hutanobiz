@@ -57,6 +57,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Stripe.publishableKey = kstripePublishKey;
   initializeDateFormatting();
   Stripe.publishableKey = kstripePublishKey;
   await init();

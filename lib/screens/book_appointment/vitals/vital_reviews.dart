@@ -196,7 +196,8 @@ class _VitalReviewsState extends State<VitalReviews> {
           },
           // child: SingleChildScrollView(
           child: Form(
-            autovalidateMode: AutovalidateMode.always, key: _vitalFormKey,
+            key: _vitalFormKey,
+            autovalidateMode: AutovalidateMode.always,
             child: ListView(
               children: [
                 _takeAnyMedicines(context),

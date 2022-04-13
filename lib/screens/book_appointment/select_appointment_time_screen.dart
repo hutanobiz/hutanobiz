@@ -470,8 +470,9 @@ class _SelectAppointmentTimeScreenState
                       } else {
                         _eveningList.add(schedule);
                       }
-                    } else if (DateTime.now().hour == prefixValue) {
-                      if (DateTime.now().minute < minuteValue) {
+                    } else if (DateTime.now().add(Duration(minutes: 30)).hour == prefixValue) {
+                      if (DateTime.now().add(Duration(minutes: 30)).minute <
+                          minuteValue) {
                         if (prefixValue < 12) {
                           _morningList.add(schedule);
                         } else if (12 <= prefixValue && prefixValue < 18) {
@@ -593,6 +594,7 @@ class _SelectAppointmentTimeScreenState
       _dayDateMap,
     )
         .then((value) {
+      _scheduleList = value;
       for (Schedule schedule in value) {
         var fromTime = new DateTime.utc(
             int.parse(_dayDateMap["date"].split('/')[2]),
@@ -613,8 +615,9 @@ class _SelectAppointmentTimeScreenState
             } else {
               _eveningList.add(schedule);
             }
-          } else if (DateTime.now().hour == prefixValue) {
-            if (DateTime.now().minute < minuteValue) {
+          } else if (DateTime.now().add(Duration(minutes: 30)).hour == prefixValue) {
+            if (DateTime.now().add(Duration(minutes: 30)).minute <
+                minuteValue) {
               if (prefixValue < 12) {
                 _morningList.add(schedule);
               } else if (12 <= prefixValue && prefixValue < 18) {
@@ -866,11 +869,9 @@ class _SelectAppointmentTimeScreenState
           : () {
               _scheduleList.forEach((f) => f.isSelected = false);
 
-              setState(() {
-                currentSchedule.isSelected = true;
-              });
-
+              currentSchedule.isSelected = true;
               _selectedTiming = currentSchedule.startTime.toString();
+              setState(() {});
             },
       child: Container(
         alignment: Alignment.center,

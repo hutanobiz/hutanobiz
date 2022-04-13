@@ -54,7 +54,9 @@ class AnthopometricCompletedSummaryWidget extends StatelessWidget {
                 children: [
                   anthropometricMeasurements.height != null &&
                           anthropometricMeasurements.height.feet != null &&
-                          anthropometricMeasurements.height.inches != null
+                          anthropometricMeasurements.height.inches != null &&
+                          anthropometricMeasurements.height.feet != '' &&
+                          anthropometricMeasurements.height.inches != ''
                       ? Text(
                           'Height: ${anthropometricMeasurements.height.feet}.${anthropometricMeasurements.height.inches} feet',
                           style: AppTextStyle.mediumStyle(fontSize: 14),
@@ -71,7 +73,9 @@ class AnthopometricCompletedSummaryWidget extends StatelessWidget {
                         )
                       : SizedBox(),
                   anthropometricMeasurements.weight.goal != null
-                      ? GoalWidget(goal: anthropometricMeasurements.weight.goal)
+                      ? GoalWidget(
+                          goal: anthropometricMeasurements.weight.goal,
+                          unit: 'lbs')
                       : SizedBox(),
                   anthropometricMeasurements.bmi != null
                       ? Padding(
@@ -93,7 +97,9 @@ class AnthopometricCompletedSummaryWidget extends StatelessWidget {
                         )
                       : SizedBox(),
                   anthropometricMeasurements.hip.goal != null
-                      ? GoalWidget(goal: anthropometricMeasurements.hip.goal)
+                      ? GoalWidget(
+                          goal: anthropometricMeasurements.hip.goal,
+                          unit: 'inches')
                       : SizedBox(),
                   anthropometricMeasurements.waist != null &&
                           anthropometricMeasurements.waist.current != null
@@ -106,7 +112,9 @@ class AnthopometricCompletedSummaryWidget extends StatelessWidget {
                         )
                       : SizedBox(),
                   anthropometricMeasurements.waist.goal != null
-                      ? GoalWidget(goal: anthropometricMeasurements.waist.goal)
+                      ? GoalWidget(
+                          goal: anthropometricMeasurements.waist.goal,
+                          unit: 'inches')
                       : SizedBox(),
                   anthropometricMeasurements.calf != null &&
                           anthropometricMeasurements.calf.current != null
@@ -119,7 +127,9 @@ class AnthopometricCompletedSummaryWidget extends StatelessWidget {
                         )
                       : SizedBox(),
                   anthropometricMeasurements.calf.goal != null
-                      ? GoalWidget(goal: anthropometricMeasurements.calf.goal)
+                      ? GoalWidget(
+                          goal: anthropometricMeasurements.calf.goal,
+                          unit: 'inches')
                       : SizedBox(),
                   anthropometricMeasurements.arm != null &&
                           anthropometricMeasurements.arm.current != null
@@ -132,7 +142,9 @@ class AnthopometricCompletedSummaryWidget extends StatelessWidget {
                         )
                       : SizedBox(),
                   anthropometricMeasurements.arm.goal != null
-                      ? GoalWidget(goal: anthropometricMeasurements.arm.goal)
+                      ? GoalWidget(
+                          goal: anthropometricMeasurements.arm.goal,
+                          unit: 'inches')
                       : SizedBox(),
                 ],
               )),
@@ -146,9 +158,11 @@ class GoalWidget extends StatelessWidget {
   GoalWidget({
     Key key,
     @required this.goal,
+    @required this.unit,
   }) : super(key: key);
 
   final Goal goal;
+  final String unit;
   Map<String, String> timeSpanConfig = {
     "1": "Hours",
     "2": "Days",
@@ -160,7 +174,7 @@ class GoalWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       goal.achieve != null
-          ? Text('Goal: ${goal.achieve} ${goal.unit}',
+          ? Text('Goal: ${goal.achieve} $unit',
               style: AppTextStyle.mediumStyle(fontSize: 14))
           : SizedBox(),
       goal.timeFrame != null

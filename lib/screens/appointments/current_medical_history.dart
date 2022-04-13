@@ -138,10 +138,10 @@ class _CurrentAppointmentMedicalHistoryState
                       socialHistory['smoking']['frequency'] != 0 &&
                       socialHistory['smoking']['frequency'] != '0'
                   ? 'Patient smokes ${socialHistorySmokingUsages[int.parse(socialHistory['smoking']['frequency']) - 1]}.'
-                  : 'Patient do not smokes.'),
+                  : 'Patient does not smokes.'),
               socialHistory['Drinker'] == null ||
                       socialHistory['Drinker']['frequency'] == null
-                  ? Text('Patient do not drink.')
+                  ? Text('Patient does not drink.')
                   : int.parse(socialHistory['Drinker']['frequency']) == 1
                       ? Text('Patient drink Rarely.')
                       : int.parse(socialHistory['Drinker']['frequency']) == 2

@@ -726,13 +726,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                             } else {
                               Navigator.of(context).pushNamedAndRemoveUntil(
                                 Routes.completedAppointmentSummary,
-                                (Route<dynamic> route) {
-                                  if (route.settings.name == Routes.homeMain) {
-                                    return true;
-                                  } else {
-                                    return false;
-                                  }
-                                },
+                                (_) => count++ >= 3,
                                 // ModalRoute.withName(Routes.dashboardScreen),
                                 arguments: widget
                                     .rateFromAppointmentId["appointmentId"],
@@ -763,13 +757,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                             } else {
                               Navigator.of(context).pushNamedAndRemoveUntil(
                                 Routes.completedAppointmentSummary,
-                                (Route<dynamic> route) {
-                                  if (route.settings.name == Routes.homeMain) {
-                                    return true;
-                                  } else {
-                                    return false;
-                                  }
-                                },
+                                (_) => count++ >= 4,
                                 // ModalRoute.withName(Routes.dashboardScreen),
                                 arguments: widget
                                     .rateFromAppointmentId["appointmentId"],

@@ -30,6 +30,7 @@ import 'package:hutano/utils/size_config.dart';
 import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/hutano_textfield.dart';
+import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:provider/provider.dart';
@@ -79,10 +80,24 @@ class _AddPharmacyState extends State<AddPharmacy> {
   Pharmacy defaultPharmacy;
   List<AddressComponents> _placeDetail = [];
   Geometry geometry;
+  InheritedContainerState _container;
+  LatLng _userLocation;
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _container = InheritedContainer.of(context);
+
+    if (_container.userLocationMap != null &&
+        _container.userLocationMap.isNotEmpty) {
+      _userLocation = _container.userLocationMap['latLng'];
+    }
   }
 
   @override
@@ -201,7 +216,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
                   PreferredPharmacy preferredPharmacy =
                       PreferredPharmacy(pharmacyId: defaultPharmacy.sId);
                   Provider.of<HealthConditionProvider>(context, listen: false)
-                      .updatePharmacy(preferredPharmacy);
+                      .updatePharmacy(preferredPharmacy, defaultPharmacy);
                   Navigator.of(context).pushNamed(Routes.routeVitalReviews,
                       arguments: {'isEdit': false});
                 }
@@ -213,7 +228,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
         isSkipLater: !widget.args['isEdit'],
         onSkipForTap: () {
           Provider.of<HealthConditionProvider>(context, listen: false)
-              .updatePharmacy(PreferredPharmacy(pharmacyId: ""));
+              .updatePharmacy(PreferredPharmacy(pharmacyId: ""), null);
           Navigator.of(context).pushNamed(Routes.routeVitalReviews,
               arguments: {'isEdit': false});
         },
@@ -226,7 +241,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
                 padding: EdgeInsets.symmetric(horizontal: spacing20),
                 child: Form(
                     key: _pharmacyKey,
-                    autovalidateMode: _autoValidate,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     child: Column(
                       // shrinkWrap: true,
                       // physics: NeverScrollableScrollPhysics(),
@@ -889,11 +904,15 @@ class _AddPharmacyState extends State<AddPharmacy> {
   }
 
   _getPharmacySuggetion(String query) async {
-    final params = <String, String>{
+    var params = <String, String>{
       'query': query,
       'type': 'pharmacy',
-      'region': 'us'
+      'region': 'us',
     };
+    if (_userLocation != null) {
+      params['location'] =
+          '${_userLocation.latitude},${_userLocation.longitude}';
+    }
     try {
       var res = await ApiManager().getPlaceSuggetions(params);
       return res.results.length >= 5 ? res.results.sublist(0, 5) : res.results;

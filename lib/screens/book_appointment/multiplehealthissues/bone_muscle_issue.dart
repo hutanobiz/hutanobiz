@@ -727,7 +727,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                 disabledBorder: InputBorder.none,
               )),
           suggestionsCallback: (pattern) async {
-            return  await _getFilteredInsuranceList();
+            return await _getFilteredInsuranceList();
           },
           keepSuggestionsOnLoading: false,
           loadingBuilder: (context) => CustomLoader(),
@@ -925,7 +925,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
         child: InkWell(
           onTap: () {
             if (_listOfSelectedDisease.length == 0) {
-              Widgets.showToast('Please select body part');
+              Widgets.showToast('You are missing the body part. Please select the body part that hurts.');
               _wholeBodyController.animateTo(50.0,
                   duration: Duration(milliseconds: 500), curve: Curves.ease);
             } else {
@@ -2102,7 +2102,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
   void _onForwardTap(BuildContext context) {
     if (hasBodyParts == 1) {
       if (_listOfSelectedDisease.length == 0) {
-        Widgets.showToast('Please select body part');
+        Widgets.showToast('You are missing the body part. Please select the body part that hurts.');
         _wholeBodyController.animateTo(50.0,
             duration: Duration(milliseconds: 500), curve: Curves.ease);
       } else {

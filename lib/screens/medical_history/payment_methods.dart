@@ -349,7 +349,8 @@ class _PaymentMethodsState extends State<PaymentMethods> {
         child: Column(
           children: [
             Form(
-              autovalidateMode: AutovalidateMode.always, key: _keyName,
+              autovalidateMode:AutovalidateMode.onUserInteraction,
+              key: _keyName,
               child: HutanoTextField(
                 textInputType: TextInputType.text,
                 textInputAction: TextInputAction.next,
@@ -363,7 +364,8 @@ class _PaymentMethodsState extends State<PaymentMethods> {
             ),
             SizedBox(height: 20),
             Form(
-              autovalidateMode: AutovalidateMode.always, key: _keyNumber,
+             autovalidateMode:AutovalidateMode.onUserInteraction,
+              key: _keyNumber,
               child: HutanoTextField(
                 focusNode: FocusNode(),
                 labelText: "Card Number",
@@ -386,7 +388,8 @@ class _PaymentMethodsState extends State<PaymentMethods> {
             ),
             SizedBox(height: 20),
             Form(
-              autovalidateMode: AutovalidateMode.always, key: _keyExpiary,
+             autovalidateMode:AutovalidateMode.onUserInteraction,
+              key: _keyExpiary,
               child: HutanoTextField(
                 controller: _expiryController,
                 textInputAction: TextInputAction.next,
@@ -406,7 +409,8 @@ class _PaymentMethodsState extends State<PaymentMethods> {
             ),
             SizedBox(height: 20),
             Form(
-              autovalidateMode: AutovalidateMode.always, key: _keyCVV,
+             autovalidateMode:AutovalidateMode.onUserInteraction,
+              key: _keyCVV,
               child: HutanoTextField(
                 focusNode: FocusNode(),
                 controller: _cvvController,
