@@ -50,6 +50,7 @@ import 'package:hutano/screens/book_appointment/onsite_edit_address.dart';
 import 'package:hutano/screens/book_appointment/review_appointment.dart';
 import 'package:hutano/screens/book_appointment/review_appointment_detail.dart';
 import 'package:hutano/screens/book_appointment/select_appointment_time_screen.dart';
+import 'package:hutano/screens/book_appointment/select_follow_up_to_book.dart';
 import 'package:hutano/screens/book_appointment/select_parking_screen.dart';
 import 'package:hutano/screens/book_appointment/select_services.dart';
 import 'package:hutano/screens/book_appointment/social_history_screen.dart';
@@ -299,6 +300,7 @@ class Routes {
   static const String consultationHistoryScreen = '/consultationHistoryScreen';
   static const String healthMonitoringScreen = '/healthMonitoringScreen';
   static const String calendarReminderScreen = '/calendarReminderScreen';
+  static const String slectFollowUpToBook = '/slectFollowUpToBook';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final dynamic args = settings.arguments;
@@ -683,10 +685,7 @@ class Routes {
           return _buildRoute(settings, ProviderSearch());
         }
         final searchText = args[ArgumentConstant.searchText];
-        return _buildRoute(
-            settings,
-            ProviderSearch(
-            ));
+        return _buildRoute(settings, ProviderSearch());
         break;
       case myProviderNetwork:
         return _buildRoute(
@@ -869,6 +868,8 @@ class Routes {
         return MaterialPageRoute(builder: (_) => MoreCondition());
       case routeWelcomeNewFollowup:
         return MaterialPageRoute(builder: (_) => WelcomeNewFollowUp());
+      case slectFollowUpToBook:
+        return MaterialPageRoute(builder: (_) => SelectFollowUpToBook());
       case routeBoneAndMuscle:
         String problemId = args[ArgumentConstant.problemIdKey];
         String problemName = args[ArgumentConstant.problemNameKey];

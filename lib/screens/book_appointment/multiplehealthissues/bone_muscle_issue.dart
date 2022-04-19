@@ -925,7 +925,8 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
         child: InkWell(
           onTap: () {
             if (_listOfSelectedDisease.length == 0) {
-              Widgets.showToast('You are missing the body part. Please select the body part that hurts.');
+              Widgets.showToast(
+                  'You are missing the body part. Please select the body part that hurts.');
               _wholeBodyController.animateTo(50.0,
                   duration: Duration(milliseconds: 500), curve: Curves.ease);
             } else {
@@ -2007,48 +2008,55 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
         });
 
         if (widget.problem != null) {
-          _discomfortIntensity =
-              double.parse("${widget.problem['problemRating']}" ?? '0');
-          radioVal = widget.problem['dailyActivity'] != null
-              ? int.parse(widget.problem['dailyActivity'])
-              : null;
-          if (widget.problem['isProblemImproving'] != null) {
-            _listOfDescribeSymptoms[widget.problem['isProblemImproving']]
-                .isSelected = true;
-          }
-          notesController.text = widget.problem['description'] ?? '';
-          _isTreated =
-              (widget.problem['isTreatmentReceived'] ?? 0) == 1 ? true : false;
+          try {
+            _discomfortIntensity =
+                double.parse("${widget.problem['problemRating']}" ?? '0');
+            radioVal = widget.problem['dailyActivity'] != null &&
+                    widget.problem['dailyActivity'] != ''
+                ? int.parse(widget.problem['dailyActivity'])
+                : null;
+            if (widget.problem['isProblemImproving'] != null) {
+              _listOfDescribeSymptoms[widget.problem['isProblemImproving']]
+                  .isSelected = true;
+            }
+            notesController.text = widget.problem['description'] ?? '';
+            _isTreated = (widget.problem['isTreatmentReceived'] ?? 0) == 1
+                ? true
+                : false;
 
-          if (widget.problem['problemFacingTimeSpan'] != null) {
-            _selectedProType = widget.problem['problemFacingTimeSpan']['type'];
-            _selectedProValue =
-                widget.problem['problemFacingTimeSpan']['period'] ?? '0';
-            updateVisibility(timeSpanConfig[_selectedProType], true, false);
-            updateSelectedValue(
-                timeSpanConfig[_selectedProType], _selectedProValue, true);
-            setSelectedValue(timeSpanConfig[_selectedProType],
-                int.parse(_selectedProValue), true);
-          }
+            if (widget.problem['problemFacingTimeSpan'] != null) {
+              _selectedProType =
+                  widget.problem['problemFacingTimeSpan']['type'];
+              _selectedProValue =
+                  widget.problem['problemFacingTimeSpan']['period'] ?? '0';
+              updateVisibility(timeSpanConfig[_selectedProType], true, false);
+              updateSelectedValue(
+                  timeSpanConfig[_selectedProType], _selectedProValue, true);
+              setSelectedValue(timeSpanConfig[_selectedProType],
+                  int.parse(_selectedProValue), true);
+            }
 
-          if (widget.problem['treatmentReceived'] != null) {
-            _selectedType = widget.problem['treatmentReceived']['type'];
-            _selectedValue =
-                widget.problem['treatmentReceived']['period'] ?? '0';
-            updateVisibility(timeSpanConfig[_selectedType], false, false);
-            updateSelectedValue(
-                timeSpanConfig[_selectedType], _selectedValue, false);
-            setSelectedValue(timeSpanConfig[_selectedType],
-                int.parse(_selectedValue), false);
-            _typeLocationController.text =
-                widget.problem['treatmentReceived']['typeOfCare'];
-          }
+            if (widget.problem['treatmentReceived'] != null) {
+              _selectedType = widget.problem['treatmentReceived']['type'];
+              _selectedValue =
+                  widget.problem['treatmentReceived']['period'] ?? '0';
+              updateVisibility(timeSpanConfig[_selectedType], false, false);
+              updateSelectedValue(
+                  timeSpanConfig[_selectedType], _selectedValue, false);
+              setSelectedValue(timeSpanConfig[_selectedType],
+                  int.parse(_selectedValue), false);
+              _typeLocationController.text =
+                  widget.problem['treatmentReceived']['typeOfCare'];
+            }
 
 // "_id"
 // value:"6177b0a475b8471224fd6371"
 // "problemId"
 // value:"60c639040777230d83773dd2"
 
+          } catch (e) {
+            setState(() {});
+          }
         }
         ProgressDialogUtils.dismissProgressDialog();
         // _getAllHealthConditions(context);
@@ -2102,7 +2110,8 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
   void _onForwardTap(BuildContext context) {
     if (hasBodyParts == 1) {
       if (_listOfSelectedDisease.length == 0) {
-        Widgets.showToast('You are missing the body part. Please select the body part that hurts.');
+        Widgets.showToast(
+            'You are missing the body part. Please select the body part that hurts.');
         _wholeBodyController.animateTo(50.0,
             duration: Duration(milliseconds: 500), curve: Curves.ease);
       } else {
@@ -2252,8 +2261,16 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                   .length);
         });
       } else {
-        Navigator.of(context).pushNamed(Routes.bookingUploadImages,
-            arguments: {'isEdit': false});
+        Navigator.of(context).pushNamed(Routes.bookingUploadImages, arguments: {
+          'isEdit': false,
+          'medicalImages':
+              Provider.of<HealthConditionProvider>(context, listen: false)
+                          .previousAppointment !=
+                      null
+                  ? Provider.of<HealthConditionProvider>(context, listen: false)
+                      .previousAppointment['medicalImages']
+                  : null,
+        });
       }
     } else {
       Provider.of<HealthConditionProvider>(context, listen: false)

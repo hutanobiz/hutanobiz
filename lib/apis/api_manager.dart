@@ -167,6 +167,16 @@ class ApiManager {
     }
   }
 
+  Future<List<dynamic>> getPatientDoctorAppointmentList() async {
+    try {
+      final response =
+          await _apiService.get('api/patient/doctor-appointment-list');
+      return response.data['response'];
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
   Future<MessagesData> getChatDetail(appointmentId) async {
     try {
       final response = await _apiService

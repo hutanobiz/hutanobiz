@@ -119,30 +119,28 @@ class _BookingUploadMedicalDocumentState
                 value['medicalDocuments'].last['isArchive'] = false;
                 docsList.add(value['medicalDocuments'].last);
               } else {
-                if (widget.args['isEdit']) {
-                  if (widget.args['medicalDocuments'] != null &&
-                      widget.args['medicalDocuments'].length > 0) {
-                    for (dynamic img in widget.args['medicalDocuments']) {
-                      img['isArchive'] = false;
-                      docsList.add(img);
-                      _selectedDocsList.add(img);
-                    }
-                    for (dynamic images in value['medicalDocuments']) {
-                      if ((docsList.singleWhere(
-                              (img) => img['_id'] == images['_id'],
-                              orElse: () => null)) !=
-                          null) {
-                        docsList.removeWhere(
-                            (element) => element['_id'] == images['_id']);
-                        _selectedDocsList.removeWhere(
-                            (element) => element['_id'] == images['_id']);
-                        images['isArchive'] = false;
-                        _selectedDocsList.add(images);
-                        docsList.add(images);
-                        print('Already exists!');
-                      } else {
-                        docsList.add(images);
-                      }
+                if (widget.args['medicalDocuments'] != null &&
+                    widget.args['medicalDocuments'].length > 0) {
+                  for (dynamic img in widget.args['medicalDocuments']) {
+                    img['isArchive'] = false;
+                    docsList.add(img);
+                    _selectedDocsList.add(img);
+                  }
+                  for (dynamic images in value['medicalDocuments']) {
+                    if ((docsList.singleWhere(
+                            (img) => img['_id'] == images['_id'],
+                            orElse: () => null)) !=
+                        null) {
+                      docsList.removeWhere(
+                          (element) => element['_id'] == images['_id']);
+                      _selectedDocsList.removeWhere(
+                          (element) => element['_id'] == images['_id']);
+                      images['isArchive'] = false;
+                      _selectedDocsList.add(images);
+                      docsList.add(images);
+                      print('Already exists!');
+                    } else {
+                      docsList.add(images);
                     }
                   }
                 } else {
@@ -265,8 +263,18 @@ class _BookingUploadMedicalDocumentState
               Provider.of<HealthConditionProvider>(context, listen: false)
                   .updateDocuments(_selectedMedicalDocs);
             }
-            Navigator.of(context).pushNamed(Routes.routeUploadDiagnosticNew,
-                arguments: {'isEdit': false});
+            Navigator.of(context)
+                .pushNamed(Routes.routeUploadDiagnosticNew, arguments: {
+              'isEdit': false,
+              'medicalDiagnostics': Provider.of<HealthConditionProvider>(
+                              context,
+                              listen: false)
+                          .previousAppointment !=
+                      null
+                  ? Provider.of<HealthConditionProvider>(context, listen: false)
+                      .previousAppointment['medicalDiagnostics']
+                  : null
+            });
           }
         },
         padding: EdgeInsets.fromLTRB(0, 0, 0, 70),

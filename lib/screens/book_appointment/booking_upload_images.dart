@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hutano/apis/api_manager.dart';
 import 'package:hutano/dimens.dart';
-import 'package:hutano/screens/appointments/upload_images.dart';
-import 'package:hutano/screens/appointments/view_all_documents_images.dart';
 import 'package:hutano/screens/appointments/model/res_uploaded_document_images_model.dart';
 import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/utils/color_utils.dart';
@@ -12,14 +10,12 @@ import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/show_common_upload_dialog.dart';
 import 'package:provider/provider.dart';
-import 'package:provider/provider.dart';
 
 import '../../colors.dart';
 
 import 'dart:async';
 import 'dart:io';
 import 'package:async/async.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:http/http.dart';
 import 'package:hutano/apis/api_helper.dart';
@@ -91,30 +87,28 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
             setState(() {
               if (value['medicalImages'] != null &&
                   value['medicalImages'].isNotEmpty) {
-                if (widget.args['isEdit']) {
-                  if (widget.args['medicalImages'] != null &&
-                      widget.args['medicalImages'].length > 0) {
-                    for (dynamic img in widget.args['medicalImages']) {
-                      img['isArchive'] = false;
-                      imagesList.add(img);
-                      _selectedImagesList.add(img);
-                    }
-                    for (dynamic images in value['medicalImages']) {
-                      if ((imagesList.singleWhere(
-                              (img) => img['_id'] == images['_id'],
-                              orElse: () => null)) !=
-                          null) {
-                        imagesList.removeWhere(
-                            (element) => element['_id'] == images['_id']);
-                        _selectedImagesList.removeWhere(
-                            (element) => element['_id'] == images['_id']);
-                        images['isArchive'] = false;
-                        _selectedImagesList.add(images);
-                        imagesList.add(images);
-                        print('Already exists!');
-                      } else {
-                        imagesList.add(images);
-                      }
+                if (widget.args['medicalImages'] != null &&
+                    widget.args['medicalImages'].length > 0) {
+                  for (dynamic img in widget.args['medicalImages']) {
+                    img['isArchive'] = false;
+                    imagesList.add(img);
+                    _selectedImagesList.add(img);
+                  }
+                  for (dynamic images in value['medicalImages']) {
+                    if ((imagesList.singleWhere(
+                            (img) => img['_id'] == images['_id'],
+                            orElse: () => null)) !=
+                        null) {
+                      imagesList.removeWhere(
+                          (element) => element['_id'] == images['_id']);
+                      _selectedImagesList.removeWhere(
+                          (element) => element['_id'] == images['_id']);
+                      images['isArchive'] = false;
+                      _selectedImagesList.add(images);
+                      imagesList.add(images);
+                      print('Already exists!');
+                    } else {
+                      imagesList.add(images);
                     }
                   }
                 } else {
@@ -232,8 +226,17 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
               Provider.of<HealthConditionProvider>(context, listen: false)
                   .updateImages(_selectedMedicalImages);
             }
-            Navigator.of(context).pushNamed(Routes.bookingUploadMedicalDocument,
-                arguments: {'isEdit': false});
+            Navigator.of(context)
+                .pushNamed(Routes.bookingUploadMedicalDocument, arguments: {
+              'isEdit': false,
+              'medicalDocuments': Provider.of<HealthConditionProvider>(context,
+                              listen: false)
+                          .previousAppointment !=
+                      null
+                  ? Provider.of<HealthConditionProvider>(context, listen: false)
+                      .previousAppointment['medicalDocuments']
+                  : null
+            });
           }
         },
         padding: EdgeInsets.fromLTRB(0, 0, 0, 70),
