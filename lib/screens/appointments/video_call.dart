@@ -13,6 +13,7 @@ import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:wakelock/wakelock.dart';
 
 const APP_ID = 'c7630b5181e74c63b20d6584988781b4';
 
@@ -48,6 +49,7 @@ class _CallPageState extends State<CallPage> {
     // destroy sdk
     _engine.leaveChannel();
     _engine.destroy();
+    disableWakeLock();
     super.dispose();
   }
 
@@ -66,6 +68,7 @@ class _CallPageState extends State<CallPage> {
         appointmentResponse = value;
       });
     });
+
     mutedVideo = !widget.channelName['video'];
     // String plainCredentials =
     //     "a6ec51f4c7484224a81195e695a3ca17:5c927e729da145d98121b6abbbfe8317";
@@ -74,7 +77,12 @@ class _CallPageState extends State<CallPage> {
     initialize();
   }
 
+  disableWakeLock() async {
+    await Wakelock.disable();
+  }
+
   Future<void> initialize() async {
+    Wakelock.enable();
     if (APP_ID.isEmpty) {
       setState(() {
         _infoStrings.add(
