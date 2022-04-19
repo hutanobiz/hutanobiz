@@ -408,8 +408,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       setInt(PreferenceKey.gender, res.response.gender);
       setString('patientSocialHistory',
           jsonEncode(res.response.patientSocialHistory));
-      setString('primaryUser', res.response.toJson().toString());
-      setString('selectedAccount', res.response.toJson().toString());
+      setString('primaryUser', jsonEncode(res.response));
+      setString('selectedAccount', jsonEncode(res.response));
       setBool(PreferenceKey.intro, true);
 
       //TODO : Verify code
