@@ -350,8 +350,13 @@ class _AddUserState extends State<AddUser> {
       if (widget.whom == '1') {
         ProgressDialogUtils.dismissProgressDialog();
         Widgets.showAccountAddedDialog(
-          context: context,
-        );
+            context: context,
+            onPressed: () {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                Routes.homeMain,
+                (Route<dynamic> route) => false,
+              );
+            });
       } else {
         var request = {
           'phoneNumber': _phoneNoController.text.trim().toString().rawNumber(),
@@ -811,6 +816,7 @@ class _AddUserState extends State<AddUser> {
               _mobileFormatter,
             ],
             labelText: "Phone Number",
+            labelTextStyle: TextStyle(fontSize: 14, color: Colors.grey[500]),
             controller: _phoneNoController,
             textInputType: TextInputType.phone,
             prefixheight: 20,

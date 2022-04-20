@@ -49,8 +49,13 @@ class _LinkVerificationState extends State<LinkVerification> {
       await ApiManager().veriyfyLinkAccountCode(request);
       ProgressDialogUtils.dismissProgressDialog();
       Widgets.showAccountAddedDialog(
-        context: context,
-      );
+          context: context,
+          onPressed: () {
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              Routes.homeMain,
+              (Route<dynamic> route) => false,
+            );
+          });
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);
