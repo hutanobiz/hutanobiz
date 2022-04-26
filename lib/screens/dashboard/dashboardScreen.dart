@@ -164,6 +164,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
         color: AppColors.snow,
         addHeader: true,
+        showUserPicture: true,
         isBackRequired: false,
         title: '',
         notificationCount: unreadCount,

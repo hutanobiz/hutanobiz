@@ -21,6 +21,7 @@ import 'package:hutano/screens/registration/payment/provider/credit_card_provide
 import 'package:hutano/screens/registration/signin/signin_screen.dart';
 import 'package:hutano/screens/registration/welcome_screen.dart';
 import 'package:hutano/screens/setup_pin/set_pin.dart';
+import 'package:hutano/screens/users/linked_account_provider.dart';
 import 'package:hutano/theme.dart';
 import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/utils/preference_key.dart';
@@ -130,6 +131,7 @@ void main() async {
         ListenableProvider(create: (_) => FamilyProvider()),
         ListenableProvider(create: (_) => HealthConditionProvider()),
         ListenableProvider(create: (_) => ChatProvider()),
+        ChangeNotifierProvider(create: (_) => LinkedAccountProvider()),
       ],
       child: InheritedContainer(
         child: MaterialApp(

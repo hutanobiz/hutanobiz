@@ -13,6 +13,7 @@ import 'package:hutano/screens/dashboard/dashboardScreen.dart';
 import 'package:hutano/screens/dashboard/setting.dart';
 import 'package:hutano/screens/providercicle/my_provider_groups.dart';
 import 'package:hutano/screens/providercicle/my_provider_network/my_provider_network.dart';
+import 'package:hutano/screens/users/linked_account_provider.dart';
 import 'package:hutano/text_style.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
@@ -25,6 +26,7 @@ import 'package:hutano/widgets/bottom_bar/fancy_bottom_navigation.dart';
 import 'package:hutano/widgets/coming_soon.dart';
 import 'package:hutano/widgets/controller.dart';
 import 'package:hutano/widgets/fancy_button.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key, this.currentIndex = 0}) : super(key: key);
@@ -88,6 +90,8 @@ class _HomeScreenState extends State<HomeScreen> {
     linkedAccounts.insert(0, json.decode(getString('primaryUser')));
     linkedAccounts.add('Add');
     selectedAccount = json.decode(getString('selectedAccount'));
+    Provider.of<LinkedAccountProvider>(context, listen: false)
+        .add(linkedAccounts);
     setState(() {});
   }
 

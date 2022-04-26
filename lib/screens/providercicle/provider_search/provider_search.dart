@@ -108,7 +108,7 @@ class _ProviderSearchState extends State<ProviderSearch> {
       body: LoadingBackgroundNew(
         isAddBack: widget.isOnBoarding,
         addHeader: !widget.isOnBoarding,
-        isBackRequired: !widget.isOnBoarding,
+        isBackRequired: widget.isOnBoarding,
         title: "",
         isLoading: isLoading,
         isAddAppBar: !widget.isOnBoarding,
