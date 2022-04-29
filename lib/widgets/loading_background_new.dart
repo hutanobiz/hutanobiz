@@ -310,7 +310,7 @@ class LoadingBackgroundNew extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 80, 0, 0),
+              padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
               child: new Container(
                 color: Colors.black.withOpacity(.5),
                 // height: 100,
@@ -338,13 +338,31 @@ class LoadingBackgroundNew extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 SizedBox(width: 20),
-                                Icon(Icons.add_circle,
-                                    color: AppColors.goldenTainoi, size: 40),
-                                SizedBox(width: 16),
-                                Text('Add',
-                                    style: AppTextStyle.mediumStyle(
-                                        fontSize: 16,
-                                        color: AppColors.windsor)),
+                                Container(
+                                    height: 40,
+                                    width: 40,
+                                    // padding: EdgeInsets.symmetric(horizontal: 8),
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(20)),
+                                      color: Colors.green,
+                                      // border: Border.all(color: Colors.grey)
+                                    ),
+                                    child: Icon(Icons.add,
+                                        color: Colors.white, size: 40)),
+                                SizedBox(width: 8),
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 8),
+                                  decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(4)),
+                                      color: Colors.white,
+                                      border: Border.all(color: Colors.grey)),
+                                  child: Text('Add/Link New',
+                                      style: AppTextStyle.mediumStyle(
+                                          fontSize: 16,
+                                          color: AppColors.windsor)),
+                                )
                               ],
                             ),
                             onTap: () {
@@ -426,8 +444,14 @@ class LoadingBackgroundNew extends StatelessWidget {
                                         fit: BoxFit.cover),
                                   ),
                                 ),
-                                SizedBox(width: 16),
-                                Expanded(
+                                SizedBox(width: 8),
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 8),
+                                  decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(4)),
+                                      color: Colors.white,
+                                      border: Border.all(color: Colors.grey)),
                                   child: Text(
                                       (index == 0
                                           ? Provider.of<LinkedAccountProvider>(
@@ -443,42 +467,42 @@ class LoadingBackgroundNew extends StatelessWidget {
                                           fontSize: 16,
                                           color: AppColors.windsor)),
                                 ),
-                                (index == 0
-                                            ? Provider.of<LinkedAccountProvider>(context, listen: false)
-                                                .linkedAccounts[index]['_id']
-                                            : Provider.of<LinkedAccountProvider>(context, listen: false)
-                                                    .linkedAccounts[index]
-                                                ['linkToAccount']['_id']) ==
-                                        json.decode(
-                                            getString('selectedAccount'))['_id']
-                                    ? Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 16.0),
-                                        child: Icon(
-                                          Icons.check_circle,
-                                          color: AppColors.windsor,
-                                          size: 24,
-                                        ),
-                                      )
-                                    : (index != 0 &&
-                                            Provider.of<LinkedAccountProvider>(context, listen: false)
-                                                        .linkedAccounts[index]
-                                                    ['whom'] ==
-                                                2 &&
-                                            (Provider.of<LinkedAccountProvider>(context, listen: false).linkedAccounts[index]
-                                                        ['isOtpVerified'] ==
-                                                    null ||
-                                                Provider.of<LinkedAccountProvider>(context, listen: false).linkedAccounts[index]['isOtpVerified'] != 1))
-                                        ? Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 16.0),
-                                            child: Icon(
-                                              Icons.error_outline_rounded,
-                                              color: AppColors.goldenTainoi,
-                                              size: 24,
-                                            ),
-                                          )
-                                        : SizedBox(),
+                                // (index == 0
+                                //             ? Provider.of<LinkedAccountProvider>(context, listen: false)
+                                //                 .linkedAccounts[index]['_id']
+                                //             : Provider.of<LinkedAccountProvider>(context, listen: false)
+                                //                     .linkedAccounts[index]
+                                //                 ['linkToAccount']['_id']) ==
+                                //         json.decode(
+                                //             getString('selectedAccount'))['_id']
+                                //     ? Padding(
+                                //         padding:
+                                //             const EdgeInsets.only(right: 16.0),
+                                //         child: Icon(
+                                //           Icons.check_circle,
+                                //           color: AppColors.windsor,
+                                //           size: 24,
+                                //         ),
+                                //       )
+                                //     : (index != 0 &&
+                                //             Provider.of<LinkedAccountProvider>(context, listen: false)
+                                //                         .linkedAccounts[index]
+                                //                     ['whom'] ==
+                                //                 2 &&
+                                //             (Provider.of<LinkedAccountProvider>(context, listen: false).linkedAccounts[index]
+                                //                         ['isOtpVerified'] ==
+                                //                     null ||
+                                //                 Provider.of<LinkedAccountProvider>(context, listen: false).linkedAccounts[index]['isOtpVerified'] != 1))
+                                //         ? Padding(
+                                //             padding: const EdgeInsets.only(
+                                //                 right: 16.0),
+                                //             child: Icon(
+                                //               Icons.error_outline_rounded,
+                                //               color: AppColors.goldenTainoi,
+                                //               size: 24,
+                                //             ),
+                                //           )
+                                //         : SizedBox(),
                               ],
                             ),
                             onTap: () async {

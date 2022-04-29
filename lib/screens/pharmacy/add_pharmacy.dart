@@ -11,7 +11,6 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/screens/appointments/model/req_booking_appointment_model.dart';
 import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/screens/pharmacy/model/preferred_pharmacy.dart';
-import 'package:hutano/screens/pharmacy/model/res_google_place_detail_pharmacy.dart';
 import 'package:hutano/screens/registration/register/model/res_google_address_suggetion.dart';
 import 'package:hutano/screens/registration/register/model/res_google_place_detail.dart';
 import 'package:hutano/screens/registration/register/model/res_states_list.dart';
@@ -25,16 +24,12 @@ import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/utils/progress_dialog.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/utils/size_config.dart';
-// import 'package:hutano/widgets/controller.dart';
-
 import 'package:hutano/widgets/custom_loader.dart';
-import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/hutano_textfield.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:provider/provider.dart';
-import 'model/places.dart';
 import 'model/res_preferred_pharmacy_list.dart';
 
 class AddPharmacy extends StatefulWidget {
@@ -217,8 +212,18 @@ class _AddPharmacyState extends State<AddPharmacy> {
                       PreferredPharmacy(pharmacyId: defaultPharmacy.sId);
                   Provider.of<HealthConditionProvider>(context, listen: false)
                       .updatePharmacy(preferredPharmacy, defaultPharmacy);
-                  Navigator.of(context).pushNamed(Routes.routeVitalReviews,
-                      arguments: {'isEdit': false});
+                  Navigator.of(context)
+                      .pushNamed(Routes.routeVitalReviews, arguments: {
+                    'isEdit': false,
+                    'vitals': Provider.of<HealthConditionProvider>(context,
+                                    listen: false)
+                                .previousAppointment !=
+                            null
+                        ? Provider.of<HealthConditionProvider>(context,
+                                listen: false)
+                            .previousAppointment['vitals']
+                        : null
+                  });
                 }
               }
             : () {
@@ -229,8 +234,16 @@ class _AddPharmacyState extends State<AddPharmacy> {
         onSkipForTap: () {
           Provider.of<HealthConditionProvider>(context, listen: false)
               .updatePharmacy(PreferredPharmacy(pharmacyId: ""), null);
-          Navigator.of(context).pushNamed(Routes.routeVitalReviews,
-              arguments: {'isEdit': false});
+          Navigator.of(context).pushNamed(Routes.routeVitalReviews, arguments: {
+            'isEdit': false,
+            'vitals': Provider.of<HealthConditionProvider>(context,
+                            listen: false)
+                        .previousAppointment !=
+                    null
+                ? Provider.of<HealthConditionProvider>(context, listen: false)
+                    .previousAppointment['vitals']
+                : null
+          });
         },
         child: SingleChildScrollView(
           child: Column(

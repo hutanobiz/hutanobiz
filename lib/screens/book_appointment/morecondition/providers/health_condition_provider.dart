@@ -34,9 +34,15 @@ class HealthConditionProvider extends ChangeNotifier {
   List<Allergy> allergies = [];
   List<ReqMedicationDetail> medicines = [];
   Pharmacy prefPharmacy;
+  dynamic previousAppointment;
 
   void updateHealthConditions(List<int> list) {
     healthConditions = list;
+    notifyListeners();
+  }
+
+  updatePreviousAppointment(appointment) {
+    previousAppointment = appointment;
     notifyListeners();
   }
 
@@ -170,6 +176,7 @@ class HealthConditionProvider extends ChangeNotifier {
     providerAddress = "";
     medicines = [];
     prefPharmacy = null;
+    previousAppointment = null;
     // socialHistory = null;
     // allergies = [];
   }

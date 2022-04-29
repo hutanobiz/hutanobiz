@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,7 +30,7 @@ import '../../../widgets/hutano_header_info.dart';
 import '../../../widgets/hutano_pin_input.dart';
 
 class LoginPin extends StatefulWidget {
-  final String number = getString(PreferenceKey.phone);
+  String number = getString(PreferenceKey.phone);
 
   LoginPin();
 
@@ -44,6 +46,7 @@ class _LoginPinState extends State<LoginPin> {
   final _canCheckBiometrics = ValueNotifier<bool>(false);
   final _availableBiometrics = ValueNotifier<List<BiometricType>>(null);
   String deviceToken;
+  dynamic primaryUser;
   @override
   void initState() {
     super.initState();
@@ -52,6 +55,22 @@ class _LoginPinState extends State<LoginPin> {
     SharedPref().getValue("deviceToken").then((value) {
       deviceToken = value;
     });
+
+    primaryUser = json.decode(getString('primaryUser'));
+
+    setBool(PreferenceKey.perFormedSteps, true);
+    setBool(PreferenceKey.isEmailVerified, primaryUser['isEmailVerified']);
+    setString(PreferenceKey.fullName, primaryUser['fullName']);
+    setString(PreferenceKey.id, primaryUser['_id']);
+    setString(PreferenceKey.tokens, primaryUser['token']);
+    setString(PreferenceKey.phone, primaryUser['phoneNumber'].toString());
+    widget.number = primaryUser['phoneNumber'].toString();
+    setInt(PreferenceKey.gender, primaryUser['gender']);
+    setString('patientSocialHistory',
+        jsonEncode(primaryUser['patientSocialHistory']));
+    setString('selectedAccount', jsonEncode(primaryUser));
+    setBool(PreferenceKey.intro, true);
+    SharedPref().saveToken(primaryUser['token']);
   }
 
   void _onForgotPinClick() =>

@@ -162,30 +162,28 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
                 docsList.add(value['medicalDiagnostics'].last);
                 _selectedDocsList.add(docsList.last);
               } else {
-                if (widget.args['isEdit']) {
-                  if (widget.args['medicalDiagnostics'] != null &&
-                      widget.args['medicalDiagnostics'].length > 0) {
-                    for (dynamic img in widget.args['medicalDiagnostics']) {
-                      // img['isArchive'] = false;
-                      docsList.add(img);
-                      _selectedDocsList.add(img);
-                    }
-                    for (dynamic images in value['medicalDiagnostics']) {
-                      if ((docsList.singleWhere(
-                              (img) => img['_id'] == images['_id'],
-                              orElse: () => null)) !=
-                          null) {
-                        docsList.removeWhere(
-                            (element) => element['_id'] == images['_id']);
-                        _selectedDocsList.removeWhere(
-                            (element) => element['_id'] == images['_id']);
-                        // images['isArchive'] = false;
-                        _selectedDocsList.add(images);
-                        docsList.add(images);
-                        print('Already exists!');
-                      } else {
-                        docsList.add(images);
-                      }
+                if (widget.args['medicalDiagnostics'] != null &&
+                    widget.args['medicalDiagnostics'].length > 0) {
+                  for (dynamic img in widget.args['medicalDiagnostics']) {
+                    // img['isArchive'] = false;
+                    docsList.add(img);
+                    _selectedDocsList.add(img);
+                  }
+                  for (dynamic images in value['medicalDiagnostics']) {
+                    if ((docsList.singleWhere(
+                            (img) => img['_id'] == images['_id'],
+                            orElse: () => null)) !=
+                        null) {
+                      docsList.removeWhere(
+                          (element) => element['_id'] == images['_id']);
+                      _selectedDocsList.removeWhere(
+                          (element) => element['_id'] == images['_id']);
+                      // images['isArchive'] = false;
+                      _selectedDocsList.add(images);
+                      docsList.add(images);
+                      print('Already exists!');
+                    } else {
+                      docsList.add(images);
                     }
                   }
                 } else {

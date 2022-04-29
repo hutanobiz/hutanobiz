@@ -57,6 +57,7 @@ class _SettingsScreenState extends State<SettingScreen> {
               profileData = response['response'];
               name = response['response']['fullName'].toString() ?? "---";
               email = response['response']['email'].toString() ?? "---";
+              avatar = response['response']['avatar'].toString();
               String phoneNumber =
                   response['response']['phoneNumber']?.toString();
               phoneNumber = "(" +
@@ -66,7 +67,6 @@ class _SettingsScreenState extends State<SettingScreen> {
                   "-" +
                   phoneNumber.substring(6, phoneNumber.length);
               phone = phoneNumber;
-              avatar = response['response']['avatar'].toString();
             }
           });
         }
@@ -288,8 +288,8 @@ class _SettingsScreenState extends State<SettingScreen> {
                 "Profile",
                 "images/profile_update_medical.png",
                 () {
-                  Navigator.of(context).pushNamed(Routes.profileScreen,
-                      arguments: profileData);
+                  Navigator.of(context)
+                      .pushNamed(Routes.profileScreen, arguments: profileData);
                 },
               ),
               Padding(

@@ -60,7 +60,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Stripe.publishableKey = kstripePublishKey;
   initializeDateFormatting();
-  Stripe.publishableKey = kstripePublishKey;
   await init();
   Widget _defaultHome = SignInScreen();
   await Firebase.initializeApp();

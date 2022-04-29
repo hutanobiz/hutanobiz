@@ -27,13 +27,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     name = widget.profileData['fullName'].toString() ?? "---";
     email = widget.profileData['email'].toString() ?? "---";
     String phoneNumber = widget.profileData['phoneNumber']?.toString();
-    phoneNumber = "(" +
-        phoneNumber.substring(0, 3) +
-        ") " +
-        phoneNumber.substring(3, 6) +
-        "-" +
-        phoneNumber.substring(6, phoneNumber.length);
-    phone = phoneNumber;
+    if (phoneNumber != null) {
+      phoneNumber = "(" +
+          phoneNumber.substring(0, 3) +
+          ") " +
+          phoneNumber.substring(3, 6) +
+          "-" +
+          phoneNumber.substring(6, phoneNumber.length);
+      phone = phoneNumber;
+    }
     avatar = widget.profileData['avatar'].toString();
   }
 

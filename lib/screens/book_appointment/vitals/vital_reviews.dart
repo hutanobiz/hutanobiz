@@ -11,7 +11,6 @@ import 'package:hutano/screens/appointments/model/req_booking_appointment_model.
 import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/screens/book_appointment/vitals/model/req_add_vital_model.dart';
 import 'package:hutano/utils/app_constants.dart';
-import 'package:hutano/utils/argument_const.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/common_methods.dart';
 import 'package:hutano/utils/date_picker.dart';
@@ -21,7 +20,6 @@ import 'package:hutano/utils/progress_dialog.dart';
 import 'package:hutano/widgets/controller.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
-import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -90,7 +88,7 @@ class _VitalReviewsState extends State<VitalReviews> {
       calculateBmi();
     });
 
-    if (widget.args['isEdit'] && widget.args['vitals'] != null) {
+    if (widget.args['vitals'] != null) {
       String height = widget.args['vitals']['height'] ?? '';
       String time = widget.args['vitals']['time'] ?? '';
       _dateController.text = widget.args['vitals']['date'] != null

@@ -82,37 +82,39 @@ class _MyContactsState extends State<MyContacts> {
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Text("Select Relation", style: TextStyle(fontSize: 24)),
             ),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: widget.relationList.length,
-              itemBuilder: (context, pos) {
-                return InkWell(
-                    onTap: () {
-                      searchController.clear();
-                      FocusScope.of(context).requestFocus(FocusNode());
-                      widget.onRelationSelected(widget.relationList[pos]);
-                      var reqModel = FamilyMembers(
-                          name: name,
-                          phone: phone,
-                          relationId:
-                              widget.relationList[pos].relationId.toString(),
-                          relation: widget.relationList[pos].relation);
-                      _finalMemberList.add(reqModel);
-                      Navigator.pop(context);
-                      Provider.of<FamilyProvider>(context, listen: false)
-                          .updateReqProviderMember(_finalMemberList);
-                      debugPrint("SEARCHING $isSearch");
-                      Provider.of<FamilyProvider>(context, listen: false)
-                          .removeProviderContacts(index);
-                      Provider.of<FamilyProvider>(context, listen: false)
-                          .removeFilteredProviderContacts(index);
-                    },
-                    child: ListTile(
-                      title: Center(
-                        child: Text(widget.relationList[pos].relation),
-                      ),
-                    ));
-              },
+            Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: widget.relationList.length,
+                itemBuilder: (context, pos) {
+                  return InkWell(
+                      onTap: () {
+                        searchController.clear();
+                        FocusScope.of(context).requestFocus(FocusNode());
+                        widget.onRelationSelected(widget.relationList[pos]);
+                        var reqModel = FamilyMembers(
+                            name: name,
+                            phone: phone,
+                            relationId:
+                                widget.relationList[pos].relationId.toString(),
+                            relation: widget.relationList[pos].relation);
+                        _finalMemberList.add(reqModel);
+                        Navigator.pop(context);
+                        Provider.of<FamilyProvider>(context, listen: false)
+                            .updateReqProviderMember(_finalMemberList);
+                        debugPrint("SEARCHING $isSearch");
+                        Provider.of<FamilyProvider>(context, listen: false)
+                            .removeProviderContacts(index);
+                        Provider.of<FamilyProvider>(context, listen: false)
+                            .removeFilteredProviderContacts(index);
+                      },
+                      child: ListTile(
+                        title: Center(
+                          child: Text(widget.relationList[pos].relation),
+                        ),
+                      ));
+                },
+              ),
             ),
           ],
         ),

@@ -3,6 +3,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/routes.dart';
 import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
+import 'package:hutano/text_style.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/common_methods.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
@@ -37,12 +38,12 @@ class _WelcomeNewFollowUpState extends State<WelcomeNewFollowUp> {
                     Localization.of(context).newEpisodeHeader,
                     FileConstants.icProviderOffice,
                     1),
-                // _commonListTileWidget(
-                //     context,
-                //     Localization.of(context).followUpAppointmentHeader,
-                //     Localization.of(context).followUpHeader,
-                //     FileConstants.icNotificationAppointments,
-                //     2),
+                _commonListTileWidget(
+                    context,
+                    Localization.of(context).followUpAppointmentHeader,
+                    Localization.of(context).followUpHeader,
+                    FileConstants.icNotificationAppointments,
+                    2),
               ],
             )));
   }
@@ -52,10 +53,9 @@ class _WelcomeNewFollowUpState extends State<WelcomeNewFollowUp> {
             EdgeInsets.symmetric(vertical: spacing20, horizontal: spacing20),
         child: Text(
           "${Localization.of(context).welcomeBackHeader} ${getString(PreferenceKey.fullName, "")}!",
-          style: TextStyle(
+          style: AppTextStyle.boldStyle(
               color: Color(0xff0e1c2a),
-              fontSize: fontSize24,
-              fontWeight: fontWeightBold),
+              fontSize: 20,),
         ),
       );
 
@@ -65,6 +65,8 @@ class _WelcomeNewFollowUpState extends State<WelcomeNewFollowUp> {
         onTap: () {
           if (number == 1) {
             Navigator.of(context).pushNamed(Routes.routeMoreCondition);
+          } else {
+            Navigator.of(context).pushNamed(Routes.slectFollowUpToBook);
           }
         },
         child: Padding(

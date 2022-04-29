@@ -174,25 +174,27 @@ class _LinkAccountState extends State<LinkAccount> {
                                 child: Text("Select Relation",
                                     style: TextStyle(fontSize: 24)),
                               ),
-                              ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: _relationList.length,
-                                itemBuilder: (context, pos) {
-                                  return InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          _selectedRelation =
-                                              _relationList[pos];
-                                        });
-                                        Navigator.pop(context);
-                                      },
-                                      child: ListTile(
-                                        title: Center(
-                                          child:
-                                              Text(_relationList[pos].relation),
-                                        ),
-                                      ));
-                                },
+                              Expanded(
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: _relationList.length,
+                                  itemBuilder: (context, pos) {
+                                    return InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            _selectedRelation =
+                                                _relationList[pos];
+                                          });
+                                          Navigator.pop(context);
+                                        },
+                                        child: ListTile(
+                                          title: Center(
+                                            child: Text(
+                                                _relationList[pos].relation),
+                                          ),
+                                        ));
+                                  },
+                                ),
                               ),
                             ],
                           ),

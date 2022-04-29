@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -92,6 +93,7 @@ import 'package:hutano/screens/registration/register_phone/model/res_register_nu
 import 'package:hutano/screens/registration/signin/model/req_login.dart';
 import 'package:hutano/screens/registration/signin/model/res_login.dart';
 import 'package:hutano/screens/setup_pin/model/req_setup_pin.dart';
+import 'package:hutano/utils/preference_utils.dart';
 import 'api_constants.dart';
 import 'api_service.dart';
 import 'common_res.dart';
@@ -162,6 +164,16 @@ class ApiManager {
       final response = await _apiService.get('api/patient/recent-chats');
       var aa = RecentChatData.fromJson(response.data);
       return aa;
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response.data);
+    }
+  }
+
+  Future<List<dynamic>> getPatientDoctorAppointmentList() async {
+    try {
+      final response =
+          await _apiService.get('api/patient/doctor-appointment-list');
+      return response.data['response'];
     } on DioError catch (error) {
       throw ErrorModel.fromJson(error.response.data);
     }
@@ -841,7 +853,11 @@ class ApiManager {
       final response = await ApiService().multipartPost(
         'api/add-account',
         data: formData,
-        options: Options(contentType: 'application/x-www-form-urlencoded'),
+        options:
+            Options(contentType: 'application/x-www-form-urlencoded', headers: {
+          HttpHeaders.authorizationHeader:
+              'Bearer ${json.decode(getString('primaryUser'))['token']}'
+        }),
       );
       return response.data['response'];
     } on DioError catch (error) {
@@ -1238,8 +1254,13 @@ class ApiManager {
 
   Future<dynamic> veriyfyLinkAccountCode(Map<String, dynamic> map) async {
     try {
-      final response = await _apiService
-          .post('api/verify-link-account-verification-code', data: map);
+      final response =
+          await _apiService.post('api/verify-link-account-verification-code',
+              options: Options(contentType: 'application/json', headers: {
+                HttpHeaders.authorizationHeader:
+                    'Bearer ${json.decode(getString('primaryUser'))['token']}'
+              }),
+              data: map);
       return response;
     } on DioError catch (error) {
       throw ErrorModel.fromJson(error.response.data);

@@ -401,20 +401,20 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
             }
             Provider.of<HealthConditionProvider>(context, listen: false)
                 .updateMedicalHistory(_listOfHistory);
-            // Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
-            Navigator.of(context).pushNamed(Routes.routeMoreCondition);
+            Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
+            // Navigator.of(context).pushNamed(Routes.routeMoreCondition);
           }
         } else {
           Provider.of<HealthConditionProvider>(context, listen: false)
               .updateMedicalHistory([]);
-          // Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
-          Navigator.of(context).pushNamed(Routes.routeMoreCondition);
+          Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
+          // Navigator.of(context).pushNamed(Routes.routeMoreCondition);
         }
       } else {
         Provider.of<HealthConditionProvider>(context, listen: false)
             .updateMedicalHistory([]);
-        // Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
-        Navigator.of(context).pushNamed(Routes.routeMoreCondition);
+        Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
+        // Navigator.of(context).pushNamed(Routes.routeMoreCondition);
       }
     }
   }

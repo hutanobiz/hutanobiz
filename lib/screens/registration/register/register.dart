@@ -403,6 +403,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       setBool(PreferenceKey.isEmailVerified, false);
       setString(PreferenceKey.fullName, res.response.fullName);
       setString(PreferenceKey.id, res.response.sId);
+      SharedPref().setValue(PreferenceKey.email, res.response.email);
       setString(PreferenceKey.tokens, res.response.token);
       setString(PreferenceKey.phone, res.response.phoneNumber.toString());
       setInt(PreferenceKey.gender, res.response.gender);
