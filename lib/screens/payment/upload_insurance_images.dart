@@ -34,7 +34,7 @@ class UploadInsuranceImagesScreen extends StatefulWidget {
 
 class _UploadInsuranceImagesScreenState
     extends State<UploadInsuranceImagesScreen> {
-  File croppedFile;
+  CroppedFile croppedFile;
   JsonDecoder _decoder = new JsonDecoder();
 
   InheritedContainerState _container;
@@ -359,13 +359,13 @@ class _UploadInsuranceImagesScreenState
   Future getImage(bool isFront, int source) async {
     ImagePicker _picker = ImagePicker();
 
-    PickedFile image = await _picker.getImage(
+     XFile image = await _picker.pickImage(
         imageQuality: 25,
         source: (source == 2) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
       File imageFile = File(image.path);
 
-      croppedFile = await ImageCropper.cropImage(
+      croppedFile = await ImageCropper().cropImage(
         compressQuality: imageFile.lengthSync() > 100000 ? 25 : 100,
         sourcePath: image.path,
         aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
@@ -376,15 +376,16 @@ class _UploadInsuranceImagesScreenState
           CropAspectRatioPreset.ratio4x3,
           CropAspectRatioPreset.ratio16x9
         ],
-        androidUiSettings: AndroidUiSettings(
+        uiSettings:[ AndroidUiSettings(
             toolbarColor: Colors.transparent,
             toolbarWidgetColor: Colors.transparent,
             initAspectRatio: CropAspectRatioPreset.original,
             lockAspectRatio: false),
-        iosUiSettings: IOSUiSettings(
+        IOSUiSettings(
           minimumAspectRatio: 1.0,
           aspectRatioLockDimensionSwapEnabled: true,
         ),
+        ]
       );
       if (croppedFile != null) {
         setState(

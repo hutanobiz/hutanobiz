@@ -35,6 +35,6 @@ Future<File> getImageByGallery(BuildContext context) async {
 
 Future<File> getImage(BuildContext context, ImageSource source) async {
   final _picker = ImagePicker();
-  var pickedfile = await _picker.getImage(source: source, imageQuality: 10);
+  var pickedfile = await _picker.pickImage(source: source, imageQuality: 10);
   return pickedfile != null ? File(pickedfile.path) : null;
 }

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:hutano/apis/api_helper.dart';
+import 'package:hutano/colors.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/utils/constants/constants.dart';
 import 'package:hutano/widgets/show_common_upload_dialog.dart';
@@ -25,7 +26,7 @@ class UploadImage extends StatefulWidget {
 }
 
 class _UploadImageState extends State<UploadImage> {
-  PickedFile imageFile;
+  XFile imageFile;
   File _file;
   final _picker = ImagePicker();
 
@@ -58,12 +59,12 @@ class _UploadImageState extends State<UploadImage> {
   }
 
   Future<Null> _pickImage(source) async {
-    imageFile = await _picker.getImage(source: source);
+    imageFile = await _picker.pickImage(source: source);
     if (imageFile != null) _cropImage();
   }
 
   Future<Null> _cropImage() async {
-    var croppedFile = await ImageCropper.cropImage(
+    var croppedFile = await ImageCropper().cropImage(
         sourcePath: imageFile.path,
         aspectRatioPresets: Platform.isAndroid
             ? [
@@ -83,17 +84,19 @@ class _UploadImageState extends State<UploadImage> {
                 CropAspectRatioPreset.ratio7x5,
                 CropAspectRatioPreset.ratio16x9
               ],
-        androidUiSettings: AndroidUiSettings(
-            toolbarTitle: 'Cropper',
-            toolbarColor: Colors.deepOrange,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false),
-        iosUiSettings: IOSUiSettings(
-          title: 'Cropper',
-        ));
+        uiSettings: [
+          AndroidUiSettings(
+              toolbarTitle: 'Cropper',
+              toolbarColor: AppColors.goldenTainoi,
+              toolbarWidgetColor: Colors.white,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false),
+          IOSUiSettings(
+            title: 'Cropper',
+          )
+        ]);
     if (croppedFile != null) {
-      imageFile = PickedFile(croppedFile.path);
+      imageFile = XFile(croppedFile.path);
       var path = File(imageFile.path);
       widget.onImagePicked(path);
       setState(() {

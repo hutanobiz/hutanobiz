@@ -20,7 +20,7 @@ import 'package:hutano/utils/progress_dialog.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/utils/size_config.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:local_auth/error_codes.dart' as auth_error;
+// import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:local_auth/local_auth.dart';
 
 import '../../../utils/extensions.dart';
@@ -44,13 +44,13 @@ class _LoginPinState extends State<LoginPin> {
   final TapGestureRecognizer _tapRecognizer = TapGestureRecognizer();
   final LocalAuthentication auth = LocalAuthentication();
   final _canCheckBiometrics = ValueNotifier<bool>(false);
-  final _availableBiometrics = ValueNotifier<List<BiometricType>>(null);
+  // final _availableBiometrics = ValueNotifier<List<BiometricType>>(null);
   String deviceToken;
   dynamic primaryUser;
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => {_checkBiometrics()});
+    _checkBiometrics();
     initializeDateFormatting('en');
     SharedPref().getValue("deviceToken").then((value) {
       deviceToken = value;
@@ -79,19 +79,23 @@ class _LoginPinState extends State<LoginPin> {
       });
 
   Future<void> _checkBiometrics() async {
-    var check = false;
-    List<BiometricType> availableBiometrics;
+    bool canCheckBiometrics;
+    // List<BiometricType> availableBiometrics;
+
     try {
-      check = await auth.canCheckBiometrics;
-      availableBiometrics = await auth.getAvailableBiometrics();
+      canCheckBiometrics = await auth.canCheckBiometrics;
+      // availableBiometrics = await auth.getAvailableBiometrics();
     } on PlatformException catch (e) {
+      canCheckBiometrics = false;
       print(e);
     }
-    if (!mounted) return;
+    if (!mounted) {
+      return;
+    }
+
     setState(() {
-      _canCheckBiometrics.value = check;
-      _availableBiometrics.value = availableBiometrics;
-      print("Length" + availableBiometrics.length.toString());
+      _canCheckBiometrics.value = canCheckBiometrics;
+      // _availableBiometrics.value = availableBiometrics;
     });
   }
 
@@ -172,9 +176,12 @@ class _LoginPinState extends State<LoginPin> {
 
   Future<void> _authenticate() async {
     try {
-      var authenticated = await auth.authenticateWithBiometrics(
+      var authenticated = await auth.authenticate(
           localizedReason: Localization.of(context).labelAuthWithFingerPrint,
-          useErrorDialogs: true);
+          options: const AuthenticationOptions(
+            useErrorDialogs: true,
+          ));
+
       if (authenticated) {
         // Navigator.of(context).pushNamedAndRemoveUntil(
         //   Routes.dashboardScreen,
@@ -187,15 +194,14 @@ class _LoginPinState extends State<LoginPin> {
         );
       }
     } on PlatformException catch (e) {
-      if (e.code == auth_error.notEnrolled) {
-        print(e.code);
-      }
+      // if (e.code == auth_error.notEnrolled) {
+      print(e.code);
+      // }
     }
   }
 
   _buildFingerPrint(BuildContext context) {
-    return _canCheckBiometrics.value == true &&
-            _availableBiometrics.value.contains(BiometricType.fingerprint)
+    return _canCheckBiometrics.value == true
         ? Container(
             child: FlatButton(
               child: Image.asset(

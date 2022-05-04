@@ -1029,34 +1029,35 @@ class _SignUpFormState extends State<Register> {
   Future getImage(int source) async {
     ImagePicker _picker = ImagePicker();
 
-    PickedFile image = await _picker.getImage(
+   XFile image = await _picker.pickImage(
         source: (source == 1) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
       File imageFile = File(image.path);
 
-      File croppedFile = await ImageCropper.cropImage(
-        cropStyle: CropStyle.circle,
-        sourcePath: image.path,
-        compressQuality: imageFile.lengthSync() > 100000 ? 25 : 100,
-        aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
-        aspectRatioPresets: [
-          CropAspectRatioPreset.square,
-        ],
-        androidUiSettings: AndroidUiSettings(
-          toolbarColor: Colors.transparent,
-          toolbarWidgetColor: Colors.transparent,
-          initAspectRatio: CropAspectRatioPreset.square,
-          lockAspectRatio: false,
-        ),
-        iosUiSettings: IOSUiSettings(
-          aspectRatioLockEnabled: false,
-          minimumAspectRatio: 1.0,
-        ),
-      );
+      var croppedFile = await ImageCropper().cropImage(
+          sourcePath: image.path,
+          cropStyle: CropStyle.circle,
+          compressQuality: imageFile.lengthSync() > 100000 ? 25 : 100,
+          aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+          aspectRatioPresets: [
+            CropAspectRatioPreset.square,
+          ],
+          uiSettings: [
+            AndroidUiSettings(
+              toolbarColor: Colors.transparent,
+              toolbarWidgetColor: Colors.transparent,
+              initAspectRatio: CropAspectRatioPreset.square,
+              lockAspectRatio: false,
+            ),
+            IOSUiSettings(
+              aspectRatioLockEnabled: false,
+              minimumAspectRatio: 1.0,
+            ),
+          ]);
       if (croppedFile != null) {
         setState(
           () {
-            profileImage = croppedFile;
+            profileImage = File(croppedFile.path);
             avatar = null;
           },
         );

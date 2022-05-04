@@ -323,13 +323,13 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
   Future getImage(int source) async {
     ImagePicker _picker = ImagePicker();
 
-    PickedFile image = await _picker.getImage(
+     XFile image = await _picker.pickImage(
         imageQuality: 25,
         source: (source == 1) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
       File imageFile = File(image.path);
 
-      File croppedFile = await ImageCropper.cropImage(
+      var croppedFile = await ImageCropper().cropImage(
         compressQuality: imageFile.lengthSync() > 100000 ? 25 : 100,
         sourcePath: image.path,
         aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
@@ -340,19 +340,19 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
           CropAspectRatioPreset.ratio4x3,
           CropAspectRatioPreset.ratio16x9
         ],
-        androidUiSettings: AndroidUiSettings(
+        uiSettings:[ AndroidUiSettings(
             toolbarColor: Colors.transparent,
             toolbarWidgetColor: Colors.transparent,
             initAspectRatio: CropAspectRatioPreset.original,
             lockAspectRatio: false),
-        iosUiSettings: IOSUiSettings(
+        IOSUiSettings(
           minimumAspectRatio: 1.0,
           aspectRatioLockDimensionSwapEnabled: true,
-        ),
+        ),]
       );
 
       if (croppedFile != null) {
-        uploadDocsBottomSheet(croppedFile);
+        uploadDocsBottomSheet(File(croppedFile.path));
       }
     }
   }

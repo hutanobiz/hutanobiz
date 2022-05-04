@@ -17,7 +17,7 @@ class UploadInsuranceScreen extends StatefulWidget {
 }
 
 class _UploadInsuranceScreenState extends State<UploadInsuranceScreen> {
-  File croppedFile;
+  CroppedFile croppedFile;
   String frontImagePath, backImagePath;
   File _frontImageFile, _backImageFile;
   @override
@@ -198,36 +198,37 @@ class _UploadInsuranceScreenState extends State<UploadInsuranceScreen> {
   Future getImage(bool isFront, int source) async {
     ImagePicker _picker = ImagePicker();
 
-    PickedFile image = await _picker.getImage(
+    XFile image = await _picker.pickImage(
         imageQuality: 25,
         source: (source == 2) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
       File imageFile = File(image.path);
 
-      croppedFile = await ImageCropper.cropImage(
-        compressQuality: imageFile.lengthSync() > 100000 ? 25 : 100,
-        sourcePath: image.path,
-        aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
-        aspectRatioPresets: [
-          CropAspectRatioPreset.square,
-          CropAspectRatioPreset.ratio3x2,
-          CropAspectRatioPreset.original,
-          CropAspectRatioPreset.ratio4x3,
-          CropAspectRatioPreset.ratio16x9
-        ],
-        androidUiSettings: AndroidUiSettings(
-            toolbarColor: Colors.transparent,
-            toolbarWidgetColor: Colors.transparent,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false),
-        iosUiSettings: IOSUiSettings(
-          minimumAspectRatio: 1.0,
-          aspectRatioLockDimensionSwapEnabled: true,
-        ),
-      );
+      croppedFile = await ImageCropper().cropImage(
+          compressQuality: imageFile.lengthSync() > 100000 ? 25 : 100,
+          sourcePath: image.path,
+          aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+          aspectRatioPresets: [
+            CropAspectRatioPreset.square,
+            CropAspectRatioPreset.ratio3x2,
+            CropAspectRatioPreset.original,
+            CropAspectRatioPreset.ratio4x3,
+            CropAspectRatioPreset.ratio16x9
+          ],
+          uiSettings: [
+            AndroidUiSettings(
+                toolbarColor: Colors.transparent,
+                toolbarWidgetColor: Colors.transparent,
+                initAspectRatio: CropAspectRatioPreset.original,
+                lockAspectRatio: false),
+            IOSUiSettings(
+              minimumAspectRatio: 1.0,
+              aspectRatioLockDimensionSwapEnabled: true,
+            ),
+          ]);
       if (croppedFile != null) {
-        var frontPath = isFront ? croppedFile : _frontImageFile;
-        var backPath = !isFront ? croppedFile : _backImageFile;
+        var frontPath = isFront ? File(croppedFile.path) : _frontImageFile;
+        var backPath = !isFront ? File(croppedFile.path) : _backImageFile;
         widget.onUpload(frontPath, backPath);
         if (isFront) {
           _frontImageFile = frontPath;

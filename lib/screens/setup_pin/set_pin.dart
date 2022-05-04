@@ -20,7 +20,6 @@ import 'package:hutano/widgets/custom_back_button.dart';
 import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/hutano_pin_input.dart';
 import 'package:hutano/widgets/skip_later.dart';
-import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:local_auth/local_auth.dart';
 import 'package:hutano/utils/extensions.dart';
 
@@ -56,17 +55,20 @@ class _SetupPinState extends State<SetupPin> {
 
   Future<void> _authenticate() async {
     try {
-      var authenticated = await auth.authenticateWithBiometrics(
-          localizedReason: Localization.of(context).labelAuthWithFingerPrint,
-          useErrorDialogs: true);
+      var authenticated = await auth.authenticate(
+        localizedReason: Localization.of(context).labelAuthWithFingerPrint,
+        options: const AuthenticationOptions(
+          useErrorDialogs: true,
+        ),
+      );
       if (authenticated) {
         setBool(PreferenceKey.setPin, true);
         Navigator.of(context).pushReplacementNamed(Routes.addPaymentOption);
       }
     } on PlatformException catch (e) {
-      if (e.code == auth_error.notEnrolled) {
-        print(e.code);
-      }
+      // if (e.code == auth_error.notEnrolled) {
+      print(e.code);
+      // }
     }
   }
 
@@ -260,12 +262,12 @@ class _SetupPinState extends State<SetupPin> {
           key: _scaffoldKey,
           body: SingleChildScrollView(
             child: Column(
-               children: <Widget>[
-                    Row(
-                      children: [
-                        CustomBackButton(),
-                      ],
-                    ),
+              children: <Widget>[
+                Row(
+                  children: [
+                    CustomBackButton(),
+                  ],
+                ),
                 AppHeader(
                   title: Localization.of(context).fasterLogin,
                   subTitle: Localization.of(context).createPin,
