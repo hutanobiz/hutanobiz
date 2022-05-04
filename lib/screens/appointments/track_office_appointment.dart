@@ -425,8 +425,8 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                                     'medicalImages': appointmentResponse['data']
                                         ['medicalImages'],
                                     'appointmentId': widget.appointmentId,
-                                    'appointmentProblems':appointmentResponse['appointmentProblems'][0]
-                                    
+                                    'appointmentProblems': appointmentResponse[
+                                        'appointmentProblems'][0]
                                   }).then((value) {
                                 setState(() {
                                   _profileFuture = api.getAppointmentDetails(
@@ -448,7 +448,8 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                                         appointmentResponse['data']
                                             ['medicalDocuments'],
                                     'appointmentId': widget.appointmentId,
-                                    'appointmentProblems':appointmentResponse['appointmentProblems'][0]
+                                    'appointmentProblems': appointmentResponse[
+                                        'appointmentProblems'][0]
                                   }).then((value) {
                                 setState(() {
                                   _profileFuture = api.getAppointmentDetails(
@@ -470,7 +471,8 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                                         appointmentResponse['data']
                                             ['medicalDiagnostics'],
                                     'appointmentId': widget.appointmentId,
-                                    'appointmentProblems':appointmentResponse['appointmentProblems'][0]
+                                    'appointmentProblems': appointmentResponse[
+                                        'appointmentProblems'][0]
                                   }).then((value) {
                                 setState(() {
                                   _profileFuture = api.getAppointmentDetails(
@@ -788,7 +790,7 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                               'appointmentId': widget.appointmentId,
                               'name': name,
                               'avatar': avatar,
-                              'type':1
+                              'type': 1
                             });
                       })
                   : status == index
