@@ -62,7 +62,7 @@ class _LoginPinState extends State<LoginPin> {
     setBool(PreferenceKey.isEmailVerified, primaryUser['isEmailVerified']);
     setString(PreferenceKey.fullName, primaryUser['fullName']);
     setString(PreferenceKey.id, primaryUser['_id']);
-    setString(PreferenceKey.tokens, primaryUser['token']);
+    setString(PreferenceKey.tokens, getString('primaryUserToken'));
     setString(PreferenceKey.phone, primaryUser['phoneNumber'].toString());
     widget.number = primaryUser['phoneNumber'].toString();
     setInt(PreferenceKey.gender, primaryUser['gender']);
@@ -70,7 +70,7 @@ class _LoginPinState extends State<LoginPin> {
         jsonEncode(primaryUser['patientSocialHistory']));
     setString('selectedAccount', jsonEncode(primaryUser));
     setBool(PreferenceKey.intro, true);
-    SharedPref().saveToken(primaryUser['token']);
+    SharedPref().saveToken(getString('primaryUserToken'));
   }
 
   void _onForgotPinClick() =>

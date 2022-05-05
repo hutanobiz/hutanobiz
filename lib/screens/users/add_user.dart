@@ -131,6 +131,9 @@ class _AddUserState extends State<AddUser> {
         setState(() {});
       });
     }
+    _phoneNoController.addListener(() {
+      setState(() {});
+    });
 
     _registerModel.type = 1;
     _registerModel.step = 3;
@@ -140,8 +143,10 @@ class _AddUserState extends State<AddUser> {
   }
 
   _getRelation() async {
+     ProgressDialogUtils.showProgressDialog(context);
     try {
       var res = await ApiManager().getRelations();
+        ProgressDialogUtils.dismissProgressDialog();
       setState(() {
         _relationList = res.response;
       });
@@ -399,9 +404,7 @@ class _AddUserState extends State<AddUser> {
   }
 
   void validateFields() {
-    if (_phoneNoController.text.length < 14 && widget.whom == '2') {
-      _enableButton = true;
-    } else if (_registerModel.address != null &&
+    if (_registerModel.address != null &&
         _registerModel.address.isNotEmpty &&
         _registerModel.city != null &&
         _registerModel.city.isNotEmpty &&
@@ -412,7 +415,14 @@ class _AddUserState extends State<AddUser> {
         _registerModel.zipCode != null &&
         _registerModel.zipCode.isNotEmpty &&
         _selectedRelation != null) {
-      _enableButton = true;
+      if (widget.whom == '2') {
+        if (_phoneNoController.text.length == 14) {
+          _enableButton = true;
+        } else {
+          _enableButton = false;
+        }
+      } else
+        _enableButton = true;
     } else {
       _enableButton = false;
     }

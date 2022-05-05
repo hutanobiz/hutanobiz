@@ -86,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   getLinkedAccount() async {
     linkedAccounts = await api.getLinkAccount(
-        'Bearer ${json.decode(getString('primaryUser'))['token']}');
+        'Bearer ${getString('primaryUserToken')}');
     linkedAccounts.insert(0, json.decode(getString('primaryUser')));
     linkedAccounts.add('Add');
     selectedAccount = json.decode(getString('selectedAccount'));
@@ -298,7 +298,7 @@ class _HomeScreenState extends State<HomeScreen> {
   updateUser(dynamic value) async {
     ProgressDialogUtils.showProgressDialog(context);
     var a = await api.switchAccount(
-        'Bearer ${json.decode(getString('primaryUser'))['token']}',
+        'Bearer ${getString('primaryUserToken')}',
         {'_id': value['_id']});
 
     setBool(PreferenceKey.perFormedSteps, true);

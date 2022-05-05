@@ -585,8 +585,7 @@ class LoadingBackgroundNew extends StatelessWidget {
   updateUser(context, dynamic value) async {
     ProgressDialogUtils.showProgressDialog(context);
     var a = await ApiBaseHelper().switchAccount(
-        'Bearer ${json.decode(getString('primaryUser'))['token']}',
-        {'_id': value['_id']});
+        'Bearer ${getString('primaryUserToken')}', {'_id': value['_id']});
 
     setBool(PreferenceKey.perFormedSteps, true);
     setBool(PreferenceKey.isEmailVerified, a['isEmailVerified']);

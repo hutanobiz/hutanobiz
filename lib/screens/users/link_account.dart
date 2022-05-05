@@ -48,8 +48,10 @@ class _LinkAccountState extends State<LinkAccount> {
   }
 
   _getRelation() async {
+      ProgressDialogUtils.showProgressDialog(context);
     try {
       var res = await ApiManager().getRelations();
+        ProgressDialogUtils.dismissProgressDialog();
       setState(() {
         _relationList = res.response;
       });

@@ -6,6 +6,7 @@ import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/screens/registration/register/upload_image.dart';
 import 'package:hutano/strings.dart';
 import 'package:hutano/text_style.dart';
+import 'package:hutano/utils/preference_utils.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:async/async.dart';
@@ -967,7 +968,15 @@ class _SignUpFormState extends State<Register> {
 
         if (isUpdateProfile) {
           Widgets.showToast("Profile updated successfully");
-          Navigator.of(context).pop();
+          setString('selectedAccount', jsonEncode(responseJson["response"]));
+          if (responseJson["response"]['_id'] ==
+              json.decode(getString('primaryUser'))['_id']) {
+            setString('primaryUser', jsonEncode(responseJson["response"]));
+          }
+
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              Routes.dashboardScreen, (Route<dynamic> route) => false,
+              arguments: 4);
         } else {
           SharedPref()
               .saveToken(responseJson["response"]["tokens"][0]["token"]);
@@ -1029,7 +1038,7 @@ class _SignUpFormState extends State<Register> {
   Future getImage(int source) async {
     ImagePicker _picker = ImagePicker();
 
-   XFile image = await _picker.pickImage(
+    XFile image = await _picker.pickImage(
         source: (source == 1) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
       File imageFile = File(image.path);

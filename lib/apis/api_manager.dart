@@ -856,7 +856,7 @@ class ApiManager {
         options:
             Options(contentType: 'application/x-www-form-urlencoded', headers: {
           HttpHeaders.authorizationHeader:
-              'Bearer ${json.decode(getString('primaryUser'))['token']}'
+              'Bearer ${getString('primaryUserToken')}'
         }),
       );
       return response.data['response'];
@@ -1258,7 +1258,7 @@ class ApiManager {
           await _apiService.post('api/verify-link-account-verification-code',
               options: Options(contentType: 'application/json', headers: {
                 HttpHeaders.authorizationHeader:
-                    'Bearer ${json.decode(getString('primaryUser'))['token']}'
+                    'Bearer ${getString('primaryUserToken')}'
               }),
               data: map);
       return response;
