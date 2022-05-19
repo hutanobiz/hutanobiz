@@ -41,7 +41,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
   List<String> socialHistoryUsages = ['Rarely', 'Socially', 'Daily'];
   List<String> socialHistorySmokingUsages = [
     '1-10 cigarettes per day',
-    'Pack a day',
+    'a Pack a day',
     'More than one pack a day'
   ];
 
@@ -189,9 +189,9 @@ class _BookingsummaryState extends State<Bookingsummary> {
               socialHistory.drinker == null
                   ? Text('Patient does not drink.')
                   : socialHistory.drinker.frequency == "1"
-                      ? Text('Patient drink Rarely.')
+                      ? Text('Patient drinks Rarely.')
                       : socialHistory.drinker.frequency == "2"
-                          ? Text('Patient drink Socially.')
+                          ? Text('Patient drinks Socially.')
                           : ListView(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),

@@ -156,7 +156,7 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
                                     '1-10 cigarettes per day',
                                     smokerGroupValue),
                                 smokerRadioListItem(
-                                    1, "2", 'Pack a day', smokerGroupValue),
+                                    1, "2", 'a Pack a day', smokerGroupValue),
                                 smokerRadioListItem(
                                     1,
                                     "3",

@@ -28,7 +28,7 @@ class _CurrentAppointmentMedicalHistoryState
   List<String> socialHistoryUsages = ['Rarely', 'Socially', 'Daily'];
   List<String> socialHistorySmokingUsages = [
     '1-10 cigarettes per day',
-    'Pack a day',
+    'a Pack a day',
     'More than one pack a day'
   ];
   @override
@@ -143,9 +143,9 @@ class _CurrentAppointmentMedicalHistoryState
                       socialHistory['Drinker']['frequency'] == null
                   ? Text('Patient does not drink.')
                   : int.parse(socialHistory['Drinker']['frequency']) == 1
-                      ? Text('Patient drink Rarely.')
+                      ? Text('Patient drinks Rarely.')
                       : int.parse(socialHistory['Drinker']['frequency']) == 2
-                          ? Text('Patient drink Socially.')
+                          ? Text('Patient drinks Socially.')
                           : ListView(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
