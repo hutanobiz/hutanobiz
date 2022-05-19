@@ -270,7 +270,7 @@ class _TrackTelemedicineAppointmentState
           isRated: userRating == null ? false : true,
         ),
         SizedBox(height: 20),
-        response['status'] == 2 || response['status'] == 6
+        response['status'] == 2 || response['status'] == 6 || status >= 3
             ? SizedBox()
             : Container(
                 padding: EdgeInsets.all(12),
@@ -735,7 +735,7 @@ class _TrackTelemedicineAppointmentState
                                   'appointmentId': widget.appointmentId,
                                   'name': name,
                                   'avatar': avatar,
-                                  'type':2
+                                  'type': 2
                                 });
                           })
                       : SizedBox()

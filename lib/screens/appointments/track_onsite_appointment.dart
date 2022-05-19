@@ -321,7 +321,9 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
           true,
         ),
         SizedBox(height: 20),
-        response['status'] == 2 || response['status'] == 6
+        response['status'] == 2 ||
+                response['status'] == 6 ||
+                response[_trackStatusKey]["status"] >= 4
             ? SizedBox()
             : Container(
                 padding: EdgeInsets.all(12),
@@ -427,8 +429,8 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                                     'medicalImages': appointmentResponse['data']
                                         ['medicalImages'],
                                     'appointmentId': widget.appointmentId,
-                                    'appointmentProblems':appointmentResponse['appointmentProblems'][0]
-                                    
+                                    'appointmentProblems': appointmentResponse[
+                                        'appointmentProblems'][0]
                                   }).then((value) {
                                 setState(() {
                                   _profileFuture = api.getAppointmentDetails(
@@ -450,7 +452,8 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                                         appointmentResponse['data']
                                             ['medicalDocuments'],
                                     'appointmentId': widget.appointmentId,
-                                    'appointmentProblems':appointmentResponse['appointmentProblems'][0]
+                                    'appointmentProblems': appointmentResponse[
+                                        'appointmentProblems'][0]
                                   }).then((value) {
                                 setState(() {
                                   _profileFuture = api.getAppointmentDetails(
@@ -472,7 +475,8 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                                         appointmentResponse['data']
                                             ['medicalDiagnostics'],
                                     'appointmentId': widget.appointmentId,
-                                    'appointmentProblems':appointmentResponse['appointmentProblems'][0]
+                                    'appointmentProblems': appointmentResponse[
+                                        'appointmentProblems'][0]
                                   }).then((value) {
                                 setState(() {
                                   _profileFuture = api.getAppointmentDetails(
@@ -789,7 +793,7 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                               'appointmentId': widget.appointmentId,
                               'name': name,
                               'avatar': avatar,
-                              'type':3
+                              'type': 3
                             });
                       })
                   : status == index

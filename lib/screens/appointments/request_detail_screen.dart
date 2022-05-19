@@ -33,7 +33,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
   Map profileMap = {};
 
   Map _medicalHistoryMap = {};
-
+  bool isLoading = false;
   final Set<Marker> _markers = {};
   ApiBaseHelper api = ApiBaseHelper();
   BitmapDescriptor sourceIcon;
@@ -87,11 +87,16 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
           padding: const EdgeInsets.only(top: 0),
           isAddBack: false,
           addHeader: true,
+          isLoading: isLoading,
           isBackRequired: true,
           child: FutureBuilder(
             future: _profileFuture,
             builder: (context, snapshot) {
-              if (snapshot.hasData) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                Center(
+                  child: CustomLoader(),
+                );
+              } else if (snapshot.hasData) {
                 profileMap = snapshot.data;
                 _appointmentStatus = profileMap['data']["status"].toString();
                 return Column(
@@ -101,44 +106,209 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                           padding: const EdgeInsets.fromLTRB(0, 20, 0, 75),
                           child: profileWidget(profileMap)),
                     ),
-                    (profileMap["data"]["paymentMethod"] == 1 &&
-                            profileMap["data"]["paymentStatus"] == 2)
-                        ? Align(
-                            alignment: FractionalOffset.bottomRight,
-                            child: Container(
-                              height: 55.0,
-                              // width: MediaQuery.of(context).size.width - 20,
-                              margin: const EdgeInsets.only(top: 10),
-                              padding:
-                                  const EdgeInsets.only(left: 20, right: 20.0),
-                              child: FancyButton(
-                                  title: "Change Payment Method",
-                                  onPressed: () {
-                                    _container.setProjectsResponse(
-                                        'serviceType',
-                                        profileMap['data']['type'].toString());
+                    (profileMap['data']['isFollowUp'] &&
+                            profileMap["data"]["paymentMethod"] == null)
+                        ? Container(
+                            height: 55.0,
+                            width: MediaQuery.of(context).size.width,
+                            margin: const EdgeInsets.all(20.0),
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: FlatButton(
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.padded,
+                                    color: Colors.transparent,
+                                    splashColor: AppColors.goldenTainoi,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(14.0)),
+                                        side: BorderSide(
+                                            color: AppColors.goldenTainoi)),
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      height: 55,
+                                      child: Text(
+                                        "Reschedule",
+                                        style: TextStyle(
+                                            color: AppColors.goldenTainoi),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      var locMap = {};
+                                      locMap['lattitude'] = 0;
+                                      locMap['longitude'] = 0;
+                                      setState(() {
+                                        isLoading = true;
+                                      });
+                                      api
+                                          .getProviderProfile(
+                                              profileMap['data']['doctor']
+                                                  ['_id'],
+                                              locMap)
+                                          .then((value) {
+                                        _container.setProviderData(
+                                            "providerData", value);
 
-                                    if (profileMap['subServices'].length > 0) {
-                                      _container.setServicesData("status", "1");
-                                      _container.setServicesData("services",
-                                          profileMap['subServices']);
-                                    } else {
-                                      _container.setServicesData("status", "0");
-                                      _container.setServicesData(
-                                          "consultaceFee", '10');
-                                    }
-                                    Navigator.pushNamed(
-                                        context, Routes.paymentMethodScreen,
-                                        arguments: {
-                                          'paymentType': 2,
-                                          'appointmentId': profileMap["data"]
-                                              ["_id"]
-                                        }).whenComplete(() =>
-                                        appointmentDetailsFuture(LatLng(0, 0)));
-                                  }),
+                                        _container.setProjectsResponse(
+                                            'serviceType',
+                                            profileMap['data']['type']
+                                                .toString());
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                        // if (profileMap['subServices'].length >
+                                        //     0) {
+                                        //   _container.setServicesData(
+                                        //       "status", "1");
+                                        //   _container.setServicesData("services",
+                                        //       profileMap['subServices']);
+
+                                        //   Navigator.of(context).pushNamed(
+                                        //       Routes
+                                        //           .selectAppointmentTimeScreen,
+                                        //       arguments:
+                                        //           SelectDateTimeArguments(
+                                        //               fromScreen: 3,
+                                        //               appointmentId: widget
+                                        //                   .appointmentId));
+                                        // } else {
+                                        _container.setServicesData(
+                                            "status", "2");
+                                        _container.setServicesData(
+                                            "consultaceFee", '10');
+                                        Navigator.of(context)
+                                            .pushNamed(
+                                                Routes
+                                                    .selectAppointmentTimeScreen,
+                                                arguments:
+                                                    SelectDateTimeArguments(
+                                                        fromScreen: 3,
+                                                        appointmentId: widget
+                                                            .appointmentId))
+                                            .whenComplete(() =>
+                                                appointmentDetailsFuture(
+                                                    LatLng(0, 0)));
+                                        // }
+                                      });
+                                    },
+                                  ),
+                                ),
+                                SizedBox(width: 16),
+                                Expanded(
+                                  child: FlatButton(
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.padded,
+                                    color: AppColors.goldenTainoi,
+                                    splashColor:
+                                        AppColors.goldenTainoi.withOpacity(.5),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(14.0)),
+                                        side: BorderSide(
+                                            color: AppColors.goldenTainoi)),
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      height: 55,
+                                      child: Text(
+                                        "Accept",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      var locMap = {};
+                                      locMap['lattitude'] = 0;
+                                      locMap['longitude'] = 0;
+                                      setState(() {
+                                        isLoading = true;
+                                      });
+                                      api
+                                          .getProviderProfile(
+                                              profileMap['data']['doctor']
+                                                  ['_id'],
+                                              locMap)
+                                          .then((value) {
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                        _container.setProviderData(
+                                            "providerData", value);
+                                        _container.setProjectsResponse(
+                                            'serviceType',
+                                            profileMap['data']['type']
+                                                .toString());
+
+                                        // if (profileMap['subServices'].length >
+                                        //     0) {
+                                        //   _container.setServicesData(
+                                        //       "status", "1");
+                                        //   _container.setServicesData("services",
+                                        //       profileMap['subServices']);
+                                        // } else {
+                                        _container.setServicesData(
+                                            "status", "2");
+                                        _container.setServicesData(
+                                            "consultaceFee", '10');
+                                        // }
+                                        Navigator.pushNamed(
+                                            context, Routes.paymentMethodScreen,
+                                            arguments: {
+                                              'paymentType': 2,
+                                              'appointmentId':
+                                                  profileMap["data"]["_id"]
+                                            }).whenComplete(() =>
+                                            appointmentDetailsFuture(
+                                                LatLng(0, 0)));
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                           )
-                        : SizedBox()
+                        : (profileMap["data"]["paymentMethod"] == 1 &&
+                                profileMap["data"]["paymentStatus"] == 2)
+                            ? Align(
+                                alignment: FractionalOffset.bottomRight,
+                                child: Container(
+                                  height: 55.0,
+                                  // width: MediaQuery.of(context).size.width - 20,
+                                  margin: const EdgeInsets.only(top: 10),
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20.0),
+                                  child: FancyButton(
+                                      title: "Change Payment Method",
+                                      onPressed: () {
+                                        _container.setProjectsResponse(
+                                            'serviceType',
+                                            profileMap['data']['type']
+                                                .toString());
+
+                                        if (profileMap['subServices'].length >
+                                            0) {
+                                          _container.setServicesData(
+                                              "status", "1");
+                                          _container.setServicesData("services",
+                                              profileMap['subServices']);
+                                        } else {
+                                          _container.setServicesData(
+                                              "status", "0");
+                                          _container.setServicesData(
+                                              "consultaceFee", '10');
+                                        }
+                                        Navigator.pushNamed(
+                                            context, Routes.paymentMethodScreen,
+                                            arguments: {
+                                              'paymentType': 2,
+                                              'appointmentId':
+                                                  profileMap["data"]["_id"]
+                                            }).whenComplete(() =>
+                                            appointmentDetailsFuture(
+                                                LatLng(0, 0)));
+                                      }),
+                                ),
+                              )
+                            : SizedBox()
                   ],
                 );
               } else if (snapshot.hasError) {
@@ -340,7 +510,10 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                               ),
                             ),
                           ),
-                          _appointmentStatus?.appointmentStatus(),
+                          (_providerData['isFollowUp'] &&
+                                  _providerData["paymentMethod"] == null)
+                              ? SizedBox()
+                              : _appointmentStatus?.appointmentStatus(),
                         ],
                       ),
                       SizedBox(
@@ -443,12 +616,14 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
         feeWidget(
             fee, officeVisitFee, parkingFee, _providerData["type"].toString()),
         divider(),
-        paymentWidget(
-          paymentType,
-          insuranceImages: insuranceImages,
-          cardDetails: _data['data']["cardDetails"],
-          insuranceName: insuranceName,
-        ),
+        paymentType == null
+            ? SizedBox()
+            : paymentWidget(
+                paymentType,
+                insuranceImages: insuranceImages,
+                cardDetails: _data['data']["cardDetails"],
+                insuranceName: insuranceName,
+              ),
       ],
     );
   }
@@ -891,42 +1066,44 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
             ),
           ),
           SizedBox(height: 18.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              paymentType == 1
-                  ? Image.asset(
-                      cardDetails['card']['brand'] == 'visa'
-                          ? "images/ic_visa.png"
-                          : "images/profile_payment_setting.png",
-                      height: 42,
-                      width: 42)
-                  : Image.asset(
-                      paymentType == 2
-                          ? "images/payment_insurance.png"
-                          : "images/payment_cash.png",
-                      height: 42,
-                      width: 42),
-              SizedBox(width: 14.0),
-              Expanded(
-                child: Text(
-                  paymentType == 1
-                      ? '************${cardDetails['card']['last4']}'
-                      : paymentType == 2
-                          ? insuranceName
-                          : "Cash",
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                    fontSize: 14.0,
-                  ),
+          paymentType == 1 && cardDetails == null
+              ? SizedBox()
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    paymentType == 1
+                        ? Image.asset(
+                            cardDetails['card']['brand'] == 'visa'
+                                ? "images/ic_visa.png"
+                                : "images/profile_payment_setting.png",
+                            height: 42,
+                            width: 42)
+                        : Image.asset(
+                            paymentType == 2
+                                ? "images/payment_insurance.png"
+                                : "images/payment_cash.png",
+                            height: 42,
+                            width: 42),
+                    SizedBox(width: 14.0),
+                    Expanded(
+                      child: Text(
+                        paymentType == 1
+                            ? '************${cardDetails['card']['last4']}'
+                            : paymentType == 2
+                                ? insuranceName
+                                : "Cash",
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
         ],
       ),
     );

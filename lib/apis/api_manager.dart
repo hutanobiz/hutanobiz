@@ -853,11 +853,12 @@ class ApiManager {
       final response = await ApiService().multipartPost(
         'api/add-account',
         data: formData,
-        options:
-            Options(contentType: 'application/x-www-form-urlencoded', headers: {
-          HttpHeaders.authorizationHeader:
-              'Bearer ${getString('primaryUserToken')}'
-        }),
+        options: Options(
+            contentType: 'application/x-www-form-urlencoded',
+            headers: {
+              HttpHeaders.authorizationHeader:
+                  'Bearer ${getString('primaryUserToken')}'
+            }),
       );
       return response.data['response'];
     } on DioError catch (error) {
@@ -1254,13 +1255,13 @@ class ApiManager {
 
   Future<dynamic> veriyfyLinkAccountCode(Map<String, dynamic> map) async {
     try {
-      final response =
-          await _apiService.post('api/verify-link-account-verification-code',
-              options: Options(contentType: 'application/json', headers: {
-                HttpHeaders.authorizationHeader:
-                    'Bearer ${getString('primaryUserToken')}'
-              }),
-              data: map);
+      final response = await _apiService.post(
+          'api/verify-link-account-verification-code',
+          options: Options(contentType: 'application/json', headers: {
+            HttpHeaders.authorizationHeader:
+                'Bearer ${getString('primaryUserToken')}'
+          }),
+          data: map);
       return response;
     } on DioError catch (error) {
       throw ErrorModel.fromJson(error.response.data);

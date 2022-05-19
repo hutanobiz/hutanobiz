@@ -23,7 +23,7 @@ import 'package:intl/intl.dart';
 
 class SelectAppointmentTimeScreen extends StatefulWidget {
   final SelectDateTimeArguments
-      arguments; // fromScreen: 0-services,1-edit datetime,2-reschedule
+      arguments; // fromScreen: 0-services,1-edit datetime,2-reschedule,3-followup Reschedule
 
   const SelectAppointmentTimeScreen({Key key, this.arguments})
       : super(key: key);
@@ -190,7 +190,8 @@ class _SelectAppointmentTimeScreenState
         addBottomArrows: true,
         onForwardTap: () {
           if (_selectedDate != null && _selectedTiming != null) {
-            if (widget.arguments.fromScreen == 2) {
+            if (widget.arguments.fromScreen == 2 ||
+                widget.arguments.fromScreen == 3) {
               setState(() {
                 isLoading = true;
               });
@@ -205,17 +206,25 @@ class _SelectAppointmentTimeScreenState
                   setState(() {
                     isLoading = false;
                   });
-                  Widgets.showAppDialog(
-                      context: context,
-                      description: 'Appointment Rescheduled',
-                      isCongrats: true,
-                      buttonText: 'Go To Appointment',
-                      onPressed: () {
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                            Routes.dashboardScreen,
-                            (Route<dynamic> route) => false,
-                            arguments: 1);
-                      });
+                  if (widget.arguments.fromScreen == 2) {
+                    Widgets.showAppDialog(
+                        context: context,
+                        description: 'Appointment Rescheduled',
+                        isCongrats: true,
+                        buttonText: 'Go To Appointment',
+                        onPressed: () {
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              Routes.dashboardScreen,
+                              (Route<dynamic> route) => false,
+                              arguments: 1);
+                        });
+                  } else {
+                    Navigator.pushNamed(context, Routes.paymentMethodScreen,
+                        arguments: {
+                          'paymentType': 3,
+                          'appointmentId': widget.arguments.appointmentId
+                        });
+                  }
                 }).futureError((onError) {
                   setState(() {
                     isLoading = false;
@@ -470,7 +479,8 @@ class _SelectAppointmentTimeScreenState
                       } else {
                         _eveningList.add(schedule);
                       }
-                    } else if (DateTime.now().add(Duration(minutes: 30)).hour == prefixValue) {
+                    } else if (DateTime.now().add(Duration(minutes: 30)).hour ==
+                        prefixValue) {
                       if (DateTime.now().add(Duration(minutes: 30)).minute <
                           minuteValue) {
                         if (prefixValue < 12) {
@@ -615,7 +625,8 @@ class _SelectAppointmentTimeScreenState
             } else {
               _eveningList.add(schedule);
             }
-          } else if (DateTime.now().add(Duration(minutes: 30)).hour == prefixValue) {
+          } else if (DateTime.now().add(Duration(minutes: 30)).hour ==
+              prefixValue) {
             if (DateTime.now().add(Duration(minutes: 30)).minute <
                 minuteValue) {
               if (prefixValue < 12) {

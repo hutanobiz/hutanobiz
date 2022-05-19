@@ -661,7 +661,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                           'appointmentId': widget.appointmentId,
                           'name': name,
                           'avatar': avatar,
-                          'type':profileMap['data']['type']
+                          'type': profileMap['data']['type']
                         },
                       ).whenComplete(
                           () => appointmentDetailsFuture(_userLocation)),
@@ -1268,42 +1268,44 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             ),
           ),
           SizedBox(height: 18.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              paymentType == 1
-                  ? Image.asset(
-                      cardDetails['card']['brand'] == 'visa'
-                          ? "images/ic_visa.png"
-                          : "images/profile_payment_setting.png",
-                      height: 42,
-                      width: 42)
-                  : Image.asset(
-                      paymentType == 2
-                          ? "images/payment_insurance.png"
-                          : "images/payment_cash.png",
-                      height: 42,
-                      width: 42),
-              SizedBox(width: 14.0),
-              Expanded(
-                child: Text(
-                  paymentType == 1
-                      ? '************${cardDetails['card']['last4']}'
-                      : paymentType == 2
-                          ? insuranceName
-                          : "Cash",
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                    fontSize: 14.0,
-                  ),
+          paymentType == 1 && cardDetails == null
+              ? SizedBox()
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    paymentType == 1
+                        ? Image.asset(
+                            cardDetails['card']['brand'] == 'visa'
+                                ? "images/ic_visa.png"
+                                : "images/profile_payment_setting.png",
+                            height: 42,
+                            width: 42)
+                        : Image.asset(
+                            paymentType == 2
+                                ? "images/payment_insurance.png"
+                                : "images/payment_cash.png",
+                            height: 42,
+                            width: 42),
+                    SizedBox(width: 14.0),
+                    Expanded(
+                      child: Text(
+                        paymentType == 1
+                            ? '************${cardDetails['card']['last4']}'
+                            : paymentType == 2
+                                ? insuranceName
+                                : "Cash",
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
         ],
       ),
     );

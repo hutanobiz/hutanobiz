@@ -28,7 +28,7 @@ class EmrCompleteDiagnosisListWidget extends StatelessWidget {
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 5),
                   child: Text(
-                    "\u2022 " + diagnosisList[index],
+                    "\u2022 " + (diagnosisList[index] ?? ''),
                     style: AppTextStyle.mediumStyle(fontSize: 14),
                   ),
                 );
@@ -64,7 +64,7 @@ class EmrCompleteTreatmentListWidget extends StatelessWidget {
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 5),
                 child: Text(
-                  "\u2022 " + treatmentList[index],
+                  "\u2022 " + (treatmentList[index] ?? ''),
                   style: AppTextStyle.mediumStyle(fontSize: 14),
                 ),
               );
@@ -101,7 +101,7 @@ class EmrCompleteConcernListWidget extends StatelessWidget {
             return Padding(
               padding: EdgeInsets.symmetric(vertical: 5),
               child: Text(
-                "\u2022 " + clinicalList[index],
+                "\u2022 " + (clinicalList[index] ?? ''),
                 style: AppTextStyle.mediumStyle(fontSize: 14),
               ),
             );

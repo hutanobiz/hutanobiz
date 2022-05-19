@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -232,6 +233,9 @@ class PushNotificationService {
               showNotification(message);
             }
             break;
+          case 'follow_up_request':
+            showNotification(message, id: 1);
+            break;
           default:
             showNotification(message);
         }
@@ -257,7 +261,7 @@ class PushNotificationService {
     });
   }
 
-  void showNotification(RemoteMessage message) async {
+  void showNotification(RemoteMessage message, {int id}) async {
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
       'xyz.appening.hutano',
       'Hutano Patient',
@@ -272,8 +276,11 @@ class PushNotificationService {
         android: androidPlatformChannelSpecifics,
         iOS: iOSPlatformChannelSpecifics);
 
-    await flutterLocalNotificationsPlugin.show(0, message.notification.title,
-        message.notification.body, platformChannelSpecifics,
+    await flutterLocalNotificationsPlugin.show(
+        id ?? 0,
+        message.notification.title,
+        message.notification.body,
+        platformChannelSpecifics,
         payload: json.encode(message.data));
   }
 
@@ -388,6 +395,13 @@ class PushNotificationService {
           });
         } else {}
 
+        break;
+
+      case 'follow_up_request':
+        Navigator.of(navigatorContext).pushNamed(
+          Routes.requestDetailScreen,
+          arguments: message.data['appointmentId'],
+        );
         break;
 
       default:

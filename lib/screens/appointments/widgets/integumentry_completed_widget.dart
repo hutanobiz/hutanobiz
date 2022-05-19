@@ -82,8 +82,7 @@ class IntegumentryCompletedWidget extends StatelessWidget {
                               children: [
                                 Text(
                                   "\u2022 " +
-                                      radioValues[int.parse(
-                                          integumentry.summary[index].type)] +
+                                      integumentry.summary[index].type +
                                       ' ' +
                                       integumentry.summary[index].location,
                                   style:

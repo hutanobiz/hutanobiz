@@ -416,7 +416,9 @@ class HeartLungsCompleteWidget extends StatelessWidget {
                           return Padding(
                             padding: EdgeInsets.symmetric(vertical: 5),
                             child: Text(
-                              "\u2022 " + heartAndLungs.heart.sound[index],
+                              "\u2022 " +
+                                  (heartAndLungs.heart.sound[index] 
+                                      ?? ''),
                               style: AppTextStyle.mediumStyle(fontSize: 14),
                             ),
                           );

@@ -9,22 +9,30 @@ import 'package:intl/intl.dart';
 import 'package:hutano/utils/extensions.dart';
 
 class RequestListWidget extends StatelessWidget {
-  const RequestListWidget({
-    Key key,
-    @required this.context,
-    @required this.response,
-    @required this.avatar,
-    @required this.name,
-    @required this.averageRating,
-    @required this.professionalTitle,
-  }) : super(key: key);
+  const RequestListWidget(
+      {Key key,
+      @required this.context,
+      @required this.response,
+      @required this.avatar,
+      @required this.name,
+      @required this.averageRating,
+      @required this.professionalTitle,
+      this.onAcceptTap,
+      this.onRescheduleTap,
+      @required this.onRequestTap,
+      this.listType = 0})
+      : super(key: key);
 
   final BuildContext context;
   final Map response;
   final String avatar;
   final String name;
   final String averageRating;
+  final Function onAcceptTap;
+  final Function onRescheduleTap;
+  final Function onRequestTap;
   final String professionalTitle;
+  final int listType;
 
   @override
   Widget build(BuildContext context) {
@@ -43,15 +51,9 @@ class RequestListWidget extends StatelessWidget {
             child: InkWell(
               borderRadius: BorderRadius.circular(14.0),
               splashColor: Colors.grey[200],
-              onTap: () {
-                Navigator.of(context).pushNamed(
-                  Routes.requestDetailScreen,
-                  arguments: response['_id'],
-                );
-              },
+              onTap: onRequestTap,
               child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
+                children: [
                   Container(
                     padding: EdgeInsets.only(left: 10, right: 10),
                     child: Row(
@@ -147,9 +149,11 @@ class RequestListWidget extends StatelessWidget {
                                 Row(children: [
                                   AppointmentTypeChipWidget(
                                       appointmentType: response["type"]),
-                                  Spacer(),
-                                  AppointmentStatusWidget(
-                                      status: response["status"])
+                                  listType == 3 ? SizedBox() : Spacer(),
+                                  listType == 3
+                                      ? SizedBox()
+                                      : AppointmentStatusWidget(
+                                          status: response["status"])
                                 ]),
                                 SizedBox(
                                   height: 12.0,
@@ -161,6 +165,46 @@ class RequestListWidget extends StatelessWidget {
                       ],
                     ),
                   ),
+                  listType == 3
+                      ? Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: FlatButton(
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
+                                color: Colors.transparent,
+                                splashColor: Colors.grey[300],
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(14.0)),
+                                    side: BorderSide(color: Colors.grey[300])),
+                                child: Text(
+                                  "Reschedule",
+                                  style: TextStyle(color: AppColors.windsor),
+                                ),
+                                onPressed: onRescheduleTap,
+                              ),
+                            ),
+                            Expanded(
+                              child: FlatButton(
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
+                                color: AppColors.windsor,
+                                splashColor: Colors.blue[300],
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                        bottomRight: Radius.circular(14.0)),
+                                    side: BorderSide(color: AppColors.windsor)),
+                                child: Text(
+                                  "Accept",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                onPressed: onAcceptTap,
+                              ),
+                            ),
+                          ],
+                        )
+                      : SizedBox(),
                 ],
               ),
             ),

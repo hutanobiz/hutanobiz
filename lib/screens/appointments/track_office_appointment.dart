@@ -319,7 +319,9 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
           true,
         ),
         SizedBox(height: 20),
-        response['status'] == 2 || response['status'] == 6
+        response['status'] == 2 ||
+                response['status'] == 6 ||
+                response[_trackStatusKey]["status"] >= 4
             ? SizedBox()
             : Container(
                 padding: EdgeInsets.all(12),

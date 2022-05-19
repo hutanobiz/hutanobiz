@@ -163,10 +163,17 @@ class _ActivityNotificationsState extends State<ActivityNotifications> {
 
     return InkWell(
         onTap: () {
-          Navigator.of(context).pushNamed(
-            Routes.appointmentDetailScreen,
-            arguments: response["appointmentId"],
-          );
+          if (response["messageType"] == 7) {
+            Navigator.of(context).pushNamed(
+              Routes.requestDetailScreen,
+              arguments: response['appointmentId'],
+            );
+          } else {
+            Navigator.of(context).pushNamed(
+              Routes.appointmentDetailScreen,
+              arguments: response["appointmentId"],
+            );
+          }
         },
         child: Container(
           margin: const EdgeInsets.only(bottom: 22.0),

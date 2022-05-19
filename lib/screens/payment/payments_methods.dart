@@ -20,7 +20,8 @@ import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 
 class PaymentMethodScreen extends StatefulWidget {
-  final dynamic args; //0 , 1- normal payment, 2-change payment
+  final dynamic
+      args; //0 , 1- normal payment, 2-change payment, 3-reschedule pay
 
   PaymentMethodScreen({Key key, this.args}) : super(key: key);
 
@@ -88,7 +89,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
       isPayment = widget.args['paymentType'];
     }
 
-    if (isPayment == 1) {
+    if (isPayment != 0) {
       Map _providerData = _container.getProviderData();
       Map _servicesMap = _container.selectServiceMap;
 
@@ -107,6 +108,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
           totalFee = _servicesList.fold(
               0, (sum, item) => sum + double.parse(item.amount.toString()));
         }
+      } else if (_servicesMap["status"].toString() == "2") {
       } else {
         List _consultaceList = _servicesMap["consultaceFee"];
 
@@ -172,7 +174,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                           Map _paymentMap = new Map();
 
                           if (_radioValue != null) {
-                            if (isPayment == 2) {
+                            if (isPayment == 2 || isPayment == 3) {
                               Map<String, dynamic> map = {};
                               map['appointmentId'] =
                                   widget.args['appointmentId'];
@@ -189,7 +191,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                   .pushNamed(Routes.appointmentConfirmation);
                             }
                           } else if (_cardListRadioValue != null) {
-                            if (isPayment == 2) {
+                            if (isPayment == 2 || isPayment == 3) {
                               Map<String, dynamic> map = {};
                               map['appointmentId'] =
                                   widget.args['appointmentId'];
@@ -206,7 +208,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                   .pushNamed(Routes.appointmentConfirmation);
                             }
                           } else if (_listRadioValue != null) {
-                            if (isPayment == 2) {
+                            if (isPayment == 2 || isPayment == 3) {
                               Map<String, dynamic> map = {};
                               map['appointmentId'] =
                                   widget.args['appointmentId'];
@@ -247,6 +249,10 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
       setState(() {
         _isLoading = false;
       });
+      if (isPayment == 3) {
+        Navigator.pop(context);
+      }
+      Navigator.pop(context);
     })).catchError((dynamic e) {
       setState(() {
         _isLoading = false;

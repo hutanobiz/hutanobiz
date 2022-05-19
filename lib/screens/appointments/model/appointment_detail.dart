@@ -1563,7 +1563,7 @@ class Exercises {
     times = json['times'];
     instructions = json['instructions'];
     video = json['video'];
-    images = json['images'].cast<String>();
+    images = json['images']?.cast<String>();
     sId = json['_id'];
   }
 
