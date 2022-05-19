@@ -64,6 +64,7 @@ dependencies:
   table_calendar: ^3.0.3
   fl_chart: ^0.45.0
   wakelock: ^0.5.6
+  device_info_plus: ^3.2.3
   flutter: 
     sdk: flutter
 

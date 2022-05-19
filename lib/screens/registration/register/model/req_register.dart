@@ -24,6 +24,9 @@ class ReqRegister {
   String longitude;
   int whom;
   String relation;
+  String deviceId;
+  String fcmId;
+
   ReqRegister(
       {this.password,
       this.firstName,
@@ -49,7 +52,9 @@ class ReqRegister {
       this.latitude,
       this.longitude,
       this.whom,
-      this.relation});
+      this.relation,
+      this.deviceId,
+      this.fcmId});
 
   Map<String, dynamic> toMap() {
     return {
@@ -77,7 +82,9 @@ class ReqRegister {
       'latitude': latitude,
       'longitude': longitude,
       'whom': whom,
-      'relation': relation
+      'relation': relation,
+      'deviceId': deviceId,
+      'fcmId': fcmId
     };
   }
 
@@ -109,6 +116,8 @@ class ReqRegister {
         latitude: map['latitude'],
         longitude: map['longitude'],
         whom: map['whom'],
-        relation: map['relation']);
+        relation: map['relation'],
+        deviceId: map['deviceId'],
+        fcmId: map['fcmId']);
   }
 }

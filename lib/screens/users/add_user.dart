@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -98,6 +99,8 @@ class _AddUserState extends State<AddUser> {
   Geometry geometry;
   bool isSecureField = true;
   String deviceToken;
+  var fcmId = '';
+  var deviceId = '';
 
   final labelStyle = TextStyle(fontSize: fontSize14, color: colorGrey60);
   List<Genders> genders = [
@@ -140,13 +143,25 @@ class _AddUserState extends State<AddUser> {
     // _registerModel.mobileCountryCode = widget.countryCode;
     _registerModel.isAgreeTermsAndCondition = 1;
     // _registerModel.phoneNumber = widget.number;
+    getDeviceDetails();
+  }
+
+  getDeviceDetails() async {
+    fcmId = await SharedPref().getValue('deviceToken');
+
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      deviceId = androidInfo.androidId;
+    } else {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      deviceId = iosInfo.identifierForVendor;
+    }
   }
 
   _getRelation() async {
-     ProgressDialogUtils.showProgressDialog(context);
     try {
       var res = await ApiManager().getRelations();
-        ProgressDialogUtils.dismissProgressDialog();
       setState(() {
         _relationList = res.response;
       });
@@ -350,6 +365,8 @@ class _AddUserState extends State<AddUser> {
       _registerModel.fullName =
           "${_registerModel.firstName} ${_registerModel.lastName}";
       _registerModel.deviceToken = deviceToken;
+      _registerModel.deviceId = deviceId;
+      _registerModel.fcmId = fcmId;
       var res = await ApiManager().addAccount(_registerModel, _imageFile);
 
       if (widget.whom == '1') {

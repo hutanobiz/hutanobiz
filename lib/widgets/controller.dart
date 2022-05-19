@@ -199,7 +199,7 @@ class Widgets {
                   SizedBox(
                     height: 20,
                   ),
-                  Image.asset('images/user_added.png'),
+                  Image.asset('assets/images/ic_success.png'),
                   SizedBox(
                     height: 12,
                   ),

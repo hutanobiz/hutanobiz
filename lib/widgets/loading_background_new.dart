@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/apis/api_manager.dart';
@@ -584,8 +586,20 @@ class LoadingBackgroundNew extends StatelessWidget {
 
   updateUser(context, dynamic value) async {
     ProgressDialogUtils.showProgressDialog(context);
+    var fcmId = await SharedPref().getValue('deviceToken');
+    var deviceId = '';
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      deviceId = androidInfo.androidId;
+    } else {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      deviceId = iosInfo.identifierForVendor;
+    }
+
     var a = await ApiBaseHelper().switchAccount(
-        'Bearer ${getString('primaryUserToken')}', {'_id': value['_id']});
+        'Bearer ${getString('primaryUserToken')}',
+        {'_id': value['_id'], 'deviceId': deviceId, 'fcmId': fcmId});
 
     setBool(PreferenceKey.perFormedSteps, true);
     setBool(PreferenceKey.isEmailVerified, a['isEmailVerified']);
