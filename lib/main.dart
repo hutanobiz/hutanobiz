@@ -12,7 +12,8 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/screens/chat/chat_provider.dart';
 import 'package:hutano/screens/familynetwork/add_family_member/family_provider.dart';
-
+import 'dart:io' as IO;
+import 'dart:ui' as UI;
 import 'package:hutano/screens/home_main.dart';
 import 'package:hutano/screens/medical_history/provider/appoinment_provider.dart';
 import 'package:hutano/screens/registration/login_pin/login_pin.dart';
@@ -118,10 +119,38 @@ void main() async {
     statusBarIconBrightness: Brightness.dark,
   ));
 
-  SystemChrome.setPreferredOrientations([
+  final double devicePixelRatio = UI.window.devicePixelRatio;
+  final UI.Size size = UI.window.physicalSize;
+  final double width = size.width;
+  final double height = size.height;
+  List<DeviceOrientation> orientationList = [
     DeviceOrientation.portraitDown,
-    DeviceOrientation.portraitUp,
-  ]).whenComplete(() {
+    DeviceOrientation.portraitUp
+  ];
+
+  if (IO.Platform.isAndroid) {
+    if (devicePixelRatio < 2 && (width >= 1000 || height >= 1000)) {
+      orientationList = [
+        DeviceOrientation.portraitDown,
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.landscapeRight,
+        DeviceOrientation.landscapeLeft
+      ];
+    } else if (devicePixelRatio == 2 && (width >= 1920 || height >= 1920)) {
+      orientationList = [
+        DeviceOrientation.portraitDown,
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.landscapeRight,
+        DeviceOrientation.landscapeLeft
+      ];
+    } else {
+      orientationList = [
+        DeviceOrientation.portraitDown,
+        DeviceOrientation.portraitUp
+      ];
+    }
+  }
+  SystemChrome.setPreferredOrientations(orientationList).whenComplete(() {
     runApp(MultiProvider(
       providers: [
         // ListenableProvider(create: (_) => FamilyProvider())
