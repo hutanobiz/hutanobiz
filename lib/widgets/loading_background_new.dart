@@ -393,7 +393,7 @@ class LoadingBackgroundNew extends StatelessWidget {
                                           Padding(
                                             padding: EdgeInsets.all(20.0),
                                             child: FancyButton(
-                                                title: 'Add Account',
+                                                title: 'New Account',
                                                 onPressed: () {
                                                   return Navigator.pushNamed(
                                                       context,

@@ -738,13 +738,13 @@ class _CompletedAppointmentSummaryState
         ),
         Text(
           preferredPhramacy.address != null
-              ? preferredPhramacy.address.address +
+              ? ((preferredPhramacy.address.address ?? '') +
                   ', ' +
-                  preferredPhramacy.address.city +
+                  (preferredPhramacy.address.city ?? '') +
                   ', ' +
-                  preferredPhramacy.address.state +
+                  (preferredPhramacy.address.state ?? '') +
                   ', ' +
-                  preferredPhramacy.address.zipCode
+                  (preferredPhramacy.address.zipCode ?? ''))
               : '---',
           style: AppTextStyle.regularStyle(fontSize: 14),
         )
@@ -938,13 +938,13 @@ class _CompletedAppointmentSummaryState
         ),
         Text(
           preferredLabs.address != null
-              ? preferredLabs.address.address +
+              ? ((preferredLabs.address.address ?? '') +
                   ', ' +
-                  preferredLabs.address.city +
+                  (preferredLabs.address.city ?? '') +
                   ', ' +
-                  preferredLabs.address.state +
+                  (preferredLabs.address.state ?? '') +
                   ', ' +
-                  preferredLabs.address.zipCode
+                  (preferredLabs.address.zipCode ?? ''))
               : '---',
           style: AppTextStyle.regularStyle(fontSize: 14),
         )
@@ -968,13 +968,14 @@ class _CompletedAppointmentSummaryState
         ),
         Text(
           preferredImaging.address != null
-              ? preferredImaging.address.address +
-                  ', ' +
-                  preferredImaging.address.city +
-                  ', ' +
-                  preferredImaging.address.state +
-                  ', ' +
-                  preferredImaging.address.zipCode
+              ? ((preferredImaging.address.address ??
+                  '' +
+                      ', ' +
+                      (preferredImaging.address.city ?? '') +
+                      ', ' +
+                      (preferredImaging.address.state ?? '') +
+                      ', ' +
+                      (preferredImaging.address.zipCode ?? '')))
               : '---',
           style: AppTextStyle.regularStyle(fontSize: 14),
         )
@@ -1038,8 +1039,10 @@ class _CompletedAppointmentSummaryState
             itemCount: exercise.length,
             itemBuilder: (context, index) {
               List<dynamic> imageVideo = [];
-              for (dynamic img in exercise[index].images) {
-                imageVideo.add({'type': '1', 'url': img});
+              if (exercise[index].images != null) {
+                for (dynamic img in exercise[index].images) {
+                  imageVideo.add({'type': '1', 'url': img});
+                }
               }
               if (exercise[index].video != null) {
                 imageVideo.add({'type': '2', 'url': exercise[index].video});

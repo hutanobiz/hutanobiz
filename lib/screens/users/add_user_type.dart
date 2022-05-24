@@ -46,15 +46,15 @@ class _AddNewUserTypeState extends State<AddNewUserType> {
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(bottom: 25),
-          child: Text('For whom',
+          child: Text('New Account for:',
               style: const TextStyle(
                   color: Colors.black,
                   fontWeight: fontWeightSemiBold,
                   fontSize: fontSize18)),
         ),
-        cardView('Minor', 'Text', '1'),
+        cardView('Child', 'under 18 years', '1'),
         SizedBox(height: 20.0),
-        cardView('Adult', 'Text', '2'),
+        cardView('Individual', 'over 18', '2'),
       ],
     );
   }
@@ -77,7 +77,7 @@ class _AddNewUserTypeState extends State<AddNewUserType> {
             style: AppTextStyle.boldStyle(fontSize: 16),
           ),
           subtitle: Text(
-            'subText',
+            subText,
             style: AppTextStyle.regularStyle(fontSize: 13),
           ),
         ));

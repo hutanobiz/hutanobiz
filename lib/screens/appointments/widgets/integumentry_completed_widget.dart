@@ -82,9 +82,10 @@ class IntegumentryCompletedWidget extends StatelessWidget {
                               children: [
                                 Text(
                                   "\u2022 " +
-                                      integumentry.summary[index].type +
+                                      (integumentry.summary[index].type ?? '') +
                                       ' ' +
-                                      integumentry.summary[index].location,
+                                      (integumentry.summary[index].location ??
+                                          ''),
                                   style:
                                       AppTextStyle.semiBoldStyle(fontSize: 16),
                                 ),
@@ -243,7 +244,7 @@ class IntegumentryCompletedWidget extends StatelessWidget {
   periWoundWidget(List<String> periWound) {
     var periString = '';
     periWound.forEach((element) {
-      periString += element + ', ';
+      periString += (element ?? '') + ', ';
     });
 
     if (periString.length > 2) {
