@@ -54,8 +54,6 @@ class SummaryPatientWidget extends StatelessWidget {
   }
 }
 
-
-
 class SummaryProviderWidget extends StatelessWidget {
   const SummaryProviderWidget({
     Key key,
@@ -108,6 +106,110 @@ class SummaryProviderWidget extends StatelessWidget {
             ),
           ],
         ));
+  }
+}
+
+class SummaryHeaderWidget extends StatelessWidget {
+  const SummaryHeaderWidget({
+    Key key,
+    @required this.context,
+    @required this.encounterDate,
+    @required this.provider,
+    @required this.patient,
+    @required this.mrn,
+    @required this.appointmentType,
+  }) : super(key: key);
+
+  final BuildContext context;
+  final String encounterDate;
+  final String provider;
+  final String patient;
+  final String mrn;
+  final String appointmentType;
+
+  @override
+  Widget build(BuildContext context) {
+    return
+        // Container(
+        //     width: MediaQuery.of(context).size.width,
+        //     padding: EdgeInsets.all(10),
+        //     decoration: BoxDecoration(
+        //       color: Colors.grey[50],
+        //       borderRadius: BorderRadius.all(Radius.circular(10)),
+        //       border: Border.all(color: Colors.grey[200]),
+        //     ),
+        // child:
+        Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        RichTextWidget(
+          keyText: 'Encounter Date',
+          value: encounterDate,
+        ),
+        RichTextWidget(
+          keyText: 'Provider',
+          value: provider,
+        ),
+        RichTextWidget(
+          keyText: 'Patient',
+          value: patient,
+        ),
+        RichTextWidget(
+          keyText: 'MRN',
+          value: mrn,
+        ),
+        RichTextWidget(
+          keyText: 'Service Location',
+          value: appointmentType,
+        )
+
+        // Text(
+        //   'Provider: $provider',
+        //   style: AppTextStyle.regularStyle(fontSize: 15),
+        // ),
+        // Text(
+        //   'Patient: $patient',
+        //   style: AppTextStyle.regularStyle(fontSize: 15),
+        // ),
+        // Text(
+        //   'MRN: $mrn',
+        //   style: AppTextStyle.regularStyle(fontSize: 15),
+        // ),
+        // Text(
+        //   'Service Location: $appointmentType',
+        //   style: AppTextStyle.regularStyle(fontSize: 15),
+        // ),
+      ],
+    );
+  }
+}
+
+class RichTextWidget extends StatelessWidget {
+  const RichTextWidget({
+    Key key,
+    @required this.keyText,
+    @required this.value,
+    text,
+  }) : super(key: key);
+
+  final String keyText;
+  final String value;
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+        text: TextSpan(
+            style: TextStyle(
+              fontSize: 13.0,
+              color: Colors.black,
+              fontWeight: FontWeight.w400,
+            ),
+            children: <TextSpan>[
+          TextSpan(
+            text: '$keyText: ',
+            style: AppTextStyle.mediumStyle(fontSize: 14),
+          ),
+          TextSpan(text: value, style: AppTextStyle.regularStyle(fontSize: 14)),
+        ]));
   }
 }
 

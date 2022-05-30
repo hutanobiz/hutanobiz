@@ -13,6 +13,7 @@ import 'package:hutano/screens/appointments/widgets/summary_provider_widget.dart
 import 'package:hutano/screens/appointments/widgets/vital_complete_widget.dart';
 import 'package:hutano/screens/medical_history/model/res_get_medication_detail.dart';
 import 'package:hutano/text_style.dart';
+import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/utils/preference_key.dart';
 import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
@@ -101,6 +102,27 @@ class _CompletedAppointmentSummaryState
     String age = "---";
     String sex = '';
     String mrn = '';
+    String license = '';
+    String encounterDate = '';
+    String professionalTitle = '';
+    if (appointmentData['doctorData'] != null &&
+        appointmentData['doctorData'].isNotEmpty) {
+      if (appointmentData['doctorData'][0]['licenseDetails'] != null &&
+          appointmentData['doctorData'][0]['licenseDetails'].isNotEmpty) {
+        license =
+            ' (License ${appointmentData['doctorData'][0]['licenseDetails'][0]['licenseNumber']})';
+      }
+      if (appointmentData['doctorData'][0]['professionalTitle'] != null) {
+        professionalTitle = Extensions.getSortProfessionTitle(
+            appointmentData['doctorData'][0]['professionalTitle']["title"] ??
+                "---");
+      }
+    }
+    if (appointmentData['data']['createdAt'] != null) {
+      encounterDate = DateFormat('MMM dd, yyyy').format(
+          DateTime.parse(appointmentData['data']['completedAt']).toLocal());
+    }
+
     if (appointmentData['data']["user"]['dob'] != null) {
       int day, month, year;
       if (appointmentData['data']["user"]['dob'].toString().contains('-')) {
@@ -119,36 +141,59 @@ class _CompletedAppointmentSummaryState
       sex = (appointmentData['data']['user']['gender'] ?? 1) == 2
           ? " Male, "
           : " Female, ";
-      mrn = "MRN:" + appointmentData['data']['mrn'];
+      mrn = appointmentData['data']['mrn'];
     }
     return ListView(padding: EdgeInsets.all(20), children: [
       ListView(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         children: [
-          SummaryProviderWidget(
-              context: context,
-              name: appointmentData['data']['doctor']['title'] +
-                  ' ' +
-                  appointmentData['data']['doctor']['fullName'],
-              exp: (appointmentData['doctorData'][0]["practicingSince"] != null
-                      ? (DateTime.now()
-                                  .difference(DateTime.parse(
-                                      appointmentData['doctorData'][0]
-                                          ["practicingSince"]))
-                                  .inDays /
-                              366)
-                          .toStringAsFixed(1)
-                      : "---") +
-                  " Years of Experience",
-              img: appointmentData['data']['doctor']['avatar']),
+          Text(
+                  "Encounter Summary",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                ),
+                SizedBox(height:16),
+          SummaryHeaderWidget(
+            context: context,
+            appointmentType: appointmentData['data']['type'] == 1
+                ? 'Office'
+                : appointmentData['data']['type'] == 2
+                    ? 'Telemedicine'
+                    : 'Onsite',
+            provider: appointmentData['data']['doctor']['title'] +
+                ' ' +
+                appointmentData['data']['doctor']['fullName'] +
+                ', ' +
+                professionalTitle +
+                license,
+            patient: appointmentData['data']['user']['fullName'],
+            mrn: mrn,
+            encounterDate: encounterDate,
+          ),
           SizedBox(height: 20),
-          SummaryPatientWidget(
-              context: context,
-              name: appointmentData['data']['user']['fullName'],
-              exp: age + sex + mrn,
-              img: appointmentData['data']['user']['avatar']),
-          SizedBox(height: 20),
+          // SummaryProviderWidget(
+          //     context: context,
+          //     name: appointmentData['data']['doctor']['title'] +
+          //         ' ' +
+          //         appointmentData['data']['doctor']['fullName'],
+          //     exp: (appointmentData['doctorData'][0]["practicingSince"] != null
+          //             ? (DateTime.now()
+          //                         .difference(DateTime.parse(
+          //                             appointmentData['doctorData'][0]
+          //                                 ["practicingSince"]))
+          //                         .inDays /
+          //                     366)
+          //                 .toStringAsFixed(1)
+          //             : "---") +
+          //         " Years of Experience",
+          //     img: appointmentData['data']['doctor']['avatar']),
+          // SizedBox(height: 20),
+          // SummaryPatientWidget(
+          //     context: context,
+          //     name: appointmentData['data']['user']['fullName'],
+          //     exp: age + sex + mrn,
+          //     img: appointmentData['data']['user']['avatar']),
+          // SizedBox(height: 20),
           Container(
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(

@@ -129,14 +129,14 @@ void main() async {
   ];
 
   if (IO.Platform.isAndroid) {
-    if (devicePixelRatio < 2 && (width >= 1000 || height >= 1000)) {
+    if (devicePixelRatio <= 2.5 && (width >= 1000 || height >= 1000)) {
       orientationList = [
         DeviceOrientation.portraitDown,
         DeviceOrientation.portraitUp,
         DeviceOrientation.landscapeRight,
         DeviceOrientation.landscapeLeft
       ];
-    } else if (devicePixelRatio == 2 && (width >= 1920 || height >= 1920)) {
+    } else if (devicePixelRatio == 2.5 && (width >= 1920 || height >= 1920)) {
       orientationList = [
         DeviceOrientation.portraitDown,
         DeviceOrientation.portraitUp,

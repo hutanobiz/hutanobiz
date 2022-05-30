@@ -170,7 +170,7 @@ class GaitCompletedWidget extends StatelessWidget {
         improvements = improvements.substring(0, improvements.length - 2);
       }
       return Text(
-          "Goal:${goal.achieve} within ${goal.timeFrame} ${timeSpanConfig[goal.timeUnit]}\nimprovements: $improvements");
+          "Goal:${goal.achieve} within ${goal.timeFrame} ${timeSpanConfig[goal.timeUnit]}\nTreatment options: $improvements");
     } else {
       return SizedBox();
     }

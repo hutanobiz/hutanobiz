@@ -89,4 +89,5 @@ const String getDiagnosticTestFromApiEndPoint =
 const String newBookingAppointmentFlowEndPoint =
     "api/patient/appointment-booking-v1";
 const String onSiteAddressEndPoint = "api/patient/address";
-const String updatePaymentMethodEndPoint = 'api/patient/appointment/payment-method/update';
+const String updatePaymentMethodEndPoint =
+    'api/patient/appointment/payment-method/update';
