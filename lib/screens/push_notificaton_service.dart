@@ -6,12 +6,16 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/appointments/video_call.dart';
+import 'package:hutano/screens/appointments/virtualappointment/overlay_handler.dart';
+import 'package:hutano/screens/appointments/virtualappointment/overlay_service.dart';
 import 'package:hutano/screens/chat/models/seach_doctor_data.dart';
 import 'package:hutano/utils/preference_key.dart';
 import 'package:hutano/utils/preference_utils.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:permission_handler/permission_handler.dart' as Permission;
+import 'package:provider/provider.dart';
 
 class PushNotificationService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -72,8 +76,13 @@ class PushNotificationService {
                     map['video'] = video;
                     map['record'] = record;
                     Navigator.pop(navigatorContext);
-                    Navigator.of(navigatorContext)
-                        .pushReplacementNamed(Routes.callPage, arguments: map);
+                      OverlayService().addVideosOverlay(
+                        Provider.of<OverlayHandlerProvider>(navigatorContext,
+                                listen: false)
+                            .videCallContext,
+                        CallPage(channelName: map));
+                    // Navigator.of(navigatorContext)
+                    //     .pushReplacementNamed(Routes.callPage, arguments: map);
                   } else {
                     Widgets.showErrorialog(
                         context: navigatorContext,

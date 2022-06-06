@@ -5,6 +5,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/appointments/video_call.dart';
+import 'package:hutano/screens/appointments/virtualappointment/overlay_handler.dart';
+import 'package:hutano/screens/appointments/virtualappointment/overlay_service.dart';
 import 'package:hutano/screens/book_appointment/morecondition/model/selection_health_issue_model.dart';
 import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/text_style.dart';
@@ -80,43 +83,55 @@ class _TrackTelemedicineAppointmentState
         );
       });
     });
+    Provider.of<OverlayHandlerProvider>(context, listen: false)
+        .updateVideoCallContext(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: AppColors.goldenTainoi,
-      body: LoadingBackgroundNew(
-        title: "Track Appointment",
-        color: AppColors.snow,
-        isAddBack: false,
-        addHeader: true,
-        padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          child: FutureBuilder(
-            future: _profileFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: new CustomLoader(),
-                );
-              } else if (snapshot.hasError) {
-                return new Text('Error: ${snapshot.error}');
-              } else if (snapshot.hasData) {
-                appointmentResponse = snapshot.data;
-                return widgetList(snapshot.data);
-              } else {
-                return Center(
-                  child: new CustomLoader(),
-                );
-              }
-            },
+    return WillPopScope(
+        onWillPop: () async {
+          if (Provider.of<OverlayHandlerProvider>(context, listen: false)
+              .overlayActive) {
+            Provider.of<OverlayHandlerProvider>(context, listen: false)
+                .enablePip(.60);
+            return false;
+          }
+          return true;
+        },
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: AppColors.goldenTainoi,
+          body: LoadingBackgroundNew(
+            title: "Track Appointment",
+            color: AppColors.snow,
+            isAddBack: false,
+            addHeader: true,
+            padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              child: FutureBuilder(
+                future: _profileFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: new CustomLoader(),
+                    );
+                  } else if (snapshot.hasError) {
+                    return new Text('Error: ${snapshot.error}');
+                  } else if (snapshot.hasData) {
+                    appointmentResponse = snapshot.data;
+                    return widgetList(snapshot.data);
+                  } else {
+                    return Center(
+                      child: new CustomLoader(),
+                    );
+                  }
+                },
+              ),
+            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   Widget widgetList(Map appointment) {
@@ -647,286 +662,108 @@ class _TrackTelemedicineAppointmentState
   Widget timingSubWidget(
       String title, int index, int status, bool isUserJoin, bool isDoctorJoin,
       {bool isRated}) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
-          children: [
-            Image.asset(
-              index == 3
-                  ? userRating != null
-                      ? 'images/trackCheckedCurrent.png'
-                      : 'images/trackUnchecked.png'
-                  : index == 2
-                      ? status == 4 || status == 3
-                          ? userRating != null
-                              ? 'images/trackChecked.png'
-                              : 'images/trackCheckedCurrent.png'
-                          : 'images/trackUnchecked.png'
-                      : index == 1
-                          ? isDoctorJoin
-                              ? status == 4 || status == 3
-                                  ? 'images/trackChecked.png'
-                                  : 'images/trackCheckedCurrent.png'
-                              : 'images/trackUnchecked.png'
-                          : index < 0
-                              ? 'images/trackChecked.png'
-                              : isDoctorJoin
-                                  ? 'images/trackChecked.png'
-                                  : 'images/trackCheckedCurrent.png',
-              height: 24,
-            ),
-            index == 3
-                ? SizedBox()
-                : index == 2
-                    ? userRating != null
-                        ? Container(
-                            height: 45,
-                            width: 1,
-                            color: Colors.green,
-                          )
-                        : dottedLine()
-                    : index == 1
-                        ? status == 4 || status == 3
-                            ? Container(
-                                height: 45,
-                                width: 1,
-                                color: Colors.green,
-                              )
-                            : dottedLine()
-                        : index < 0
-                            ? Container(
-                                height: 45,
-                                width: 1,
-                                color: Colors.green,
-                              )
-                            : isDoctorJoin
-                                ? Container(
-                                    height: 45,
-                                    width: 1,
-                                    color: Colors.green,
-                                  )
-                                : dottedLine()
-          ],
-        ),
-        SizedBox(width: 8),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return Consumer<OverlayHandlerProvider>(
+        builder: (context, overlayProvider, _) {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
             children: [
-              SizedBox(height: 4),
-              Text(
-                title,
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87),
+              Image.asset(
+                index == 3
+                    ? userRating != null
+                        ? 'images/trackCheckedCurrent.png'
+                        : 'images/trackUnchecked.png'
+                    : index == 2
+                        ? status == 4 || status == 3
+                            ? userRating != null
+                                ? 'images/trackChecked.png'
+                                : 'images/trackCheckedCurrent.png'
+                            : 'images/trackUnchecked.png'
+                        : index == 1
+                            ? isDoctorJoin
+                                ? status == 4 || status == 3
+                                    ? 'images/trackChecked.png'
+                                    : 'images/trackCheckedCurrent.png'
+                                : 'images/trackUnchecked.png'
+                            : index < 0
+                                ? 'images/trackChecked.png'
+                                : isDoctorJoin
+                                    ? 'images/trackChecked.png'
+                                    : 'images/trackCheckedCurrent.png',
+                height: 24,
               ),
               index == 3
-                  ? userRating == null && status == 4
-                      ? TrackingButton(
-                          title: 'Give Feedback',
-                          image: 'images/trackGiveFeedBack.png',
-                          onTap: () {
-                            Navigator.pushNamed(
-                                context, Routes.rateDoctorScreen,
-                                arguments: {
-                                  'rateFrom': "2",
-                                  'appointmentId': widget.appointmentId,
-                                  'name': name,
-                                  'avatar': avatar,
-                                  'type': 2
-                                });
-                          })
-                      : SizedBox()
+                  ? SizedBox()
                   : index == 2
-                      ? SizedBox()
-                      : index < 0
-                          ? SizedBox()
-                          : index == 1
-                              ? status == 4 || status == 3
-                                  ? SizedBox()
-                                  : !isDoctorJoin
-                                      ? SizedBox()
-                                      : !isUserJoin
-                                          ? TrackingButton(
-                                              title: 'I am ready',
-                                              image: 'images/watch.png',
-                                              onTap: () {
-                                                var appointmentId = {};
-                                                appointmentId['appointmentId'] =
-                                                    widget.appointmentId;
-                                                api
-                                                    .patientAvailableForCall(
-                                                        token, appointmentId)
-                                                    .then((value) {
-                                                  _profileFuture =
-                                                      api.getAppointmentDetails(
-                                                          token,
-                                                          widget.appointmentId,
-                                                          _userLocation);
-                                                  setState(() {});
-                                                });
-                                              })
-                                          : TrackingButton(
-                                              title: 'Join Call',
-                                              image: 'images/ic_video_app.png',
-                                              onTap: () async {
-                                                Widgets.showCallDialog(
-                                                    context: context,
-                                                    isRejoin: false,
-                                                    onEnterCall: (bool record,
-                                                        bool video) async {
-                                                      Navigator.pop(context);
-                                                      print('$record $video');
-                                                      Map<
-                                                              Permission.Permission,
-                                                              Permission
-                                                                  .PermissionStatus>
-                                                          statuses = await [
-                                                        Permission
-                                                            .Permission.camera,
-                                                        Permission.Permission
-                                                            .microphone
-                                                      ].request();
-                                                      if ((statuses[Permission
-                                                                  .Permission
-                                                                  .camera]
-                                                              .isGranted) &&
-                                                          (statuses[Permission
-                                                                  .Permission
-                                                                  .microphone]
-                                                              .isGranted)) {
-                                                        Map appointment = {};
-                                                        appointment["_id"] =
-                                                            widget
-                                                                .appointmentId;
-                                                        appointment['video'] =
-                                                            video;
-                                                        appointment['record'] =
-                                                            record;
-                                                        Navigator.of(context)
-                                                            .pushNamed(
-                                                          Routes.callPage,
-                                                          arguments:
-                                                              appointment,
-                                                        )
-                                                            .then((value) {
-                                                          _profileFuture = api
-                                                              .getAppointmentDetails(
-                                                                  token,
-                                                                  widget
-                                                                      .appointmentId,
-                                                                  _userLocation);
-                                                          setState(() {});
-                                                        });
-                                                      } else {
-                                                        Widgets.showErrorialog(
-                                                            context: context,
-                                                            description:
-                                                                'Camera & Microphone permission Requied');
-                                                      }
-                                                    });
-                                              })
-                              : Row(
-                                  children: [
-                                    isUserJoin || isDoctorJoin
-                                        ? SizedBox()
-                                        : appointmentTime
-                                                    .difference(currentTime)
-                                                    .inSeconds >
-                                                86400
-                                            ? TrackingButton(
-                                                title: 'Reschedule',
-                                                image:
-                                                    'images/trackReschedule.png',
-                                                onTap: () {
-                                                  var locMap = {};
-                                                  locMap['lattitude'] = 0;
-                                                  locMap['longitude'] = 0;
-                                                  setState(() {
-                                                    _isLoading = true;
-                                                  });
-                                                  api
-                                                      .getProviderProfile(
-                                                          appointmentResponse[
-                                                                  'data']
-                                                              ['doctor']['_id'],
-                                                          locMap)
-                                                      .then((value) {
-                                                    _container.setProviderData(
-                                                        "providerData", value);
-
-                                                    _container
-                                                        .setProjectsResponse(
-                                                            'serviceType',
-                                                            appointmentResponse[
-                                                                        'data']
-                                                                    ['type']
-                                                                .toString());
-                                                    setState(() {
-                                                      _isLoading = false;
-                                                    });
-                                                    if (appointmentResponse[
-                                                                'subServices']
-                                                            .length >
-                                                        0) {
-                                                      _container
-                                                          .setServicesData(
-                                                              "status", "1");
-                                                      _container.setServicesData(
-                                                          "services",
-                                                          appointmentResponse[
-                                                              'subServices']);
-
-                                                      Navigator.of(context).pushNamed(
-                                                          Routes
-                                                              .selectAppointmentTimeScreen,
-                                                          arguments:
-                                                              SelectDateTimeArguments(
-                                                                  fromScreen: 2,
-                                                                  appointmentId:
-                                                                      widget
-                                                                          .appointmentId));
-                                                    } else {
-                                                      _container
-                                                          .setServicesData(
-                                                              "status", "0");
-                                                      _container
-                                                          .setServicesData(
-                                                              "consultaceFee",
-                                                              '10');
-                                                      Navigator.of(context).pushNamed(
-                                                          Routes
-                                                              .selectAppointmentTimeScreen,
-                                                          arguments:
-                                                              SelectDateTimeArguments(
-                                                                  fromScreen: 2,
-                                                                  appointmentId:
-                                                                      widget
-                                                                          .appointmentId));
-                                                    }
-                                                  });
-
-                                                  var map = {};
-                                                  map['appointmentId'] =
-                                                      appointmentResponse[
-                                                          'data']['_id'];
-                                                })
-                                            : SizedBox(),
-                                    isUserJoin || isDoctorJoin
-                                        ? SizedBox()
-                                        : appointmentTime
-                                                    .difference(currentTime)
-                                                    .inSeconds >
-                                                86400
-                                            ? Container(
-                                                height: 20,
-                                                width: 1,
-                                                color: Colors.grey[300],
-                                              )
-                                            : SizedBox(),
-                                    isDoctorJoin
+                      ? userRating != null
+                          ? Container(
+                              height: 45,
+                              width: 1,
+                              color: Colors.green,
+                            )
+                          : dottedLine()
+                      : index == 1
+                          ? status == 4 || status == 3
+                              ? Container(
+                                  height: 45,
+                                  width: 1,
+                                  color: Colors.green,
+                                )
+                              : dottedLine()
+                          : index < 0
+                              ? Container(
+                                  height: 45,
+                                  width: 1,
+                                  color: Colors.green,
+                                )
+                              : isDoctorJoin
+                                  ? Container(
+                                      height: 45,
+                                      width: 1,
+                                      color: Colors.green,
+                                    )
+                                  : dottedLine()
+            ],
+          ),
+          SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 4),
+                Text(
+                  title,
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87),
+                ),
+                index == 3
+                    ? userRating == null && status == 4
+                        ? TrackingButton(
+                            title: 'Give Feedback',
+                            image: 'images/trackGiveFeedBack.png',
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, Routes.rateDoctorScreen,
+                                  arguments: {
+                                    'rateFrom': "2",
+                                    'appointmentId': widget.appointmentId,
+                                    'name': name,
+                                    'avatar': avatar,
+                                    'type': 2
+                                  });
+                            })
+                        : SizedBox()
+                    : index == 2
+                        ? SizedBox()
+                        : index < 0
+                            ? SizedBox()
+                            : index == 1
+                                ? status == 4 || status == 3
+                                    ? SizedBox()
+                                    : !isDoctorJoin
                                         ? SizedBox()
                                         : !isUserJoin
                                             ? TrackingButton(
@@ -950,36 +787,244 @@ class _TrackTelemedicineAppointmentState
                                                     setState(() {});
                                                   });
                                                 })
-                                            : SizedBox()
-                                  ],
-                                )
-            ],
+                                            : overlayProvider.overlayEntry !=
+                                                        null &&
+                                                    overlayProvider
+                                                        .overlayEntry.mounted
+                                                ? SizedBox()
+                                                : TrackingButton(
+                                                    title: 'Join Call',
+                                                    image:
+                                                        'images/ic_video_app.png',
+                                                    onTap: () async {
+                                                      Widgets.showCallDialog(
+                                                          context: context,
+                                                          isRejoin: false,
+                                                          onEnterCall: (bool
+                                                                  record,
+                                                              bool
+                                                                  video) async {
+                                                            Navigator.pop(
+                                                                context);
+                                                            print(
+                                                                '$record $video');
+                                                            Map<
+                                                                    Permission
+                                                                        .Permission,
+                                                                    Permission
+                                                                        .PermissionStatus>
+                                                                statuses =
+                                                                await [
+                                                              Permission
+                                                                  .Permission
+                                                                  .camera,
+                                                              Permission
+                                                                  .Permission
+                                                                  .microphone
+                                                            ].request();
+                                                            if ((statuses[Permission
+                                                                        .Permission
+                                                                        .camera]
+                                                                    .isGranted) &&
+                                                                (statuses[Permission
+                                                                        .Permission
+                                                                        .microphone]
+                                                                    .isGranted)) {
+                                                              Map appointment =
+                                                                  {};
+                                                              appointment[
+                                                                      "_id"] =
+                                                                  widget
+                                                                      .appointmentId;
+                                                              appointment[
+                                                                      'video'] =
+                                                                  video;
+                                                              appointment[
+                                                                      'record'] =
+                                                                  record;
+                                                              OverlayService().addVideosOverlay(
+                                                                  context,
+                                                                  CallPage(
+                                                                      channelName:
+                                                                          appointment));
+                                                              //     .then(
+                                                              //         (value) {
+                                                              //   _profileFuture =
+                                                              //       api.getAppointmentDetails(
+                                                              //           token,
+                                                              //           widget
+                                                              //               .appointmentId,
+                                                              //           _userLocation);
+                                                              //   setState(() {});
+                                                              // });
+                                                            } else {
+                                                              Widgets.showErrorialog(
+                                                                  context:
+                                                                      context,
+                                                                  description:
+                                                                      'Camera & Microphone permission Requied');
+                                                            }
+                                                          });
+                                                    })
+                                : Row(
+                                    children: [
+                                      isUserJoin || isDoctorJoin
+                                          ? SizedBox()
+                                          : appointmentTime
+                                                      .difference(currentTime)
+                                                      .inSeconds >
+                                                  86400
+                                              ? TrackingButton(
+                                                  title: 'Reschedule',
+                                                  image:
+                                                      'images/trackReschedule.png',
+                                                  onTap: () {
+                                                    var locMap = {};
+                                                    locMap['lattitude'] = 0;
+                                                    locMap['longitude'] = 0;
+                                                    setState(() {
+                                                      _isLoading = true;
+                                                    });
+                                                    api
+                                                        .getProviderProfile(
+                                                            appointmentResponse[
+                                                                        'data']
+                                                                    ['doctor']
+                                                                ['_id'],
+                                                            locMap)
+                                                        .then((value) {
+                                                      _container
+                                                          .setProviderData(
+                                                              "providerData",
+                                                              value);
+
+                                                      _container
+                                                          .setProjectsResponse(
+                                                              'serviceType',
+                                                              appointmentResponse[
+                                                                          'data']
+                                                                      ['type']
+                                                                  .toString());
+                                                      setState(() {
+                                                        _isLoading = false;
+                                                      });
+                                                      if (appointmentResponse[
+                                                                  'subServices']
+                                                              .length >
+                                                          0) {
+                                                        _container
+                                                            .setServicesData(
+                                                                "status", "1");
+                                                        _container.setServicesData(
+                                                            "services",
+                                                            appointmentResponse[
+                                                                'subServices']);
+
+                                                        Navigator.of(context).pushNamed(
+                                                            Routes
+                                                                .selectAppointmentTimeScreen,
+                                                            arguments:
+                                                                SelectDateTimeArguments(
+                                                                    fromScreen:
+                                                                        2,
+                                                                    appointmentId:
+                                                                        widget
+                                                                            .appointmentId));
+                                                      } else {
+                                                        _container
+                                                            .setServicesData(
+                                                                "status", "0");
+                                                        _container
+                                                            .setServicesData(
+                                                                "consultaceFee",
+                                                                '10');
+                                                        Navigator.of(context).pushNamed(
+                                                            Routes
+                                                                .selectAppointmentTimeScreen,
+                                                            arguments:
+                                                                SelectDateTimeArguments(
+                                                                    fromScreen:
+                                                                        2,
+                                                                    appointmentId:
+                                                                        widget
+                                                                            .appointmentId));
+                                                      }
+                                                    });
+
+                                                    var map = {};
+                                                    map['appointmentId'] =
+                                                        appointmentResponse[
+                                                            'data']['_id'];
+                                                  })
+                                              : SizedBox(),
+                                      isUserJoin || isDoctorJoin
+                                          ? SizedBox()
+                                          : appointmentTime
+                                                      .difference(currentTime)
+                                                      .inSeconds >
+                                                  86400
+                                              ? Container(
+                                                  height: 20,
+                                                  width: 1,
+                                                  color: Colors.grey[300],
+                                                )
+                                              : SizedBox(),
+                                      isDoctorJoin
+                                          ? SizedBox()
+                                          : !isUserJoin
+                                              ? TrackingButton(
+                                                  title: 'I am ready',
+                                                  image: 'images/watch.png',
+                                                  onTap: () {
+                                                    var appointmentId = {};
+                                                    appointmentId[
+                                                            'appointmentId'] =
+                                                        widget.appointmentId;
+                                                    api
+                                                        .patientAvailableForCall(
+                                                            token,
+                                                            appointmentId)
+                                                        .then((value) {
+                                                      _profileFuture = api
+                                                          .getAppointmentDetails(
+                                                              token,
+                                                              widget
+                                                                  .appointmentId,
+                                                              _userLocation);
+                                                      setState(() {});
+                                                    });
+                                                  })
+                                              : SizedBox()
+                                    ],
+                                  )
+              ],
+            ),
           ),
-        ),
-        // timing != ''
-        //     ? Container(
-        //         height: 20,
-        //         width: 1,
-        //         color: Colors.grey[600],
-        //       )
-        //     : SizedBox(),
-        // SizedBox(
-        //   width: 6,
-        // ),
-        // Column(
-        //   children: [
-        //     SizedBox(height: 4),
-        //     Text(
-        //       timing,
-        //       style: TextStyle(
-        //           fontSize: 14,
-        //           fontWeight: FontWeight.w400,
-        //           color: Colors.grey[600]),
-        //     ),
-        //   ],
-        // ),
-      ],
-    );
+          // timing != ''
+          //     ? Container(
+          //         height: 20,
+          //         width: 1,
+          //         color: Colors.grey[600],
+          //       )
+          //     : SizedBox(),
+          // SizedBox(
+          //   width: 6,
+          // ),
+          // Column(
+          //   children: [
+          //     SizedBox(height: 4),
+          //     Text(
+          //       timing,
+          //       style: TextStyle(
+          //           fontSize: 14,
+          //           fontWeight: FontWeight.w400,
+          //           color: Colors.grey[600]),
+          //     ),
+          //   ],
+          // ),
+        ],
+      );
+    });
   }
 
   Column dottedLine() {

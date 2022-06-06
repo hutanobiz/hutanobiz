@@ -9,11 +9,13 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:hutano/apis/api_constants.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/appointments/virtualappointment/overlay_handler.dart';
 import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/screens/chat/chat_provider.dart';
 import 'package:hutano/screens/familynetwork/add_family_member/family_provider.dart';
 import 'dart:io' as IO;
 import 'dart:ui' as UI;
+import 'package:foreground_service/foreground_service.dart' as FS;
 import 'package:hutano/screens/home_main.dart';
 import 'package:hutano/screens/medical_history/provider/appoinment_provider.dart';
 import 'package:hutano/screens/registration/login_pin/login_pin.dart';
@@ -31,6 +33,52 @@ import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 
+
+//use an async method so we can await
+void maybeStartFGS() async {
+  ///if the app was killed+relaunched, this function will be executed again
+  ///but if the foreground service stayed alive,
+  ///this does not need to be re-done
+  if (!(await FS.ForegroundService.foregroundServiceIsStarted())) {
+    // await ForegroundService.setServiceIntervalSeconds(5);
+
+    //necessity of editMode is dubious (see function comments)
+    // await ForegroundService.notification.startEditMode();
+
+    // await ForegroundService.notification
+    //     .setTitle("Hutano");
+    // await ForegroundService.notification
+    //     .setText("Call running");
+
+    // await ForegroundService.notification.finishEditMode();
+    await FS.ForegroundService.notification
+        .setPriority(FS.AndroidNotificationPriority.LOW);
+
+    await FS.ForegroundService.startForegroundService(
+        foregroundServiceFunction);
+    await FS.ForegroundService.getWakeLock();
+  }
+
+  ///this exists solely in the main app/isolate,
+  ///so needs to be redone after every app kill+relaunch
+  await FS.ForegroundService.setupIsolateCommunication((data) {
+    debugPrint("main received aaa: $data");
+  });
+}
+
+void foregroundServiceFunction() {
+  debugPrint("The current time is: ${DateTime.now()}");
+  FS.ForegroundService.notification.setTitle("Hutano");
+  FS.ForegroundService.notification.setText("Call running");
+
+  if (!FS.ForegroundService.isIsolateCommunicationSetup) {
+    FS.ForegroundService.setupIsolateCommunication((data) {
+      debugPrint("bg isolate received: $data");
+    });
+  }
+
+  FS.ForegroundService.sendToPort("message from bg isolate");
+}
 final navigatorKey = GlobalKey<NavigatorState>();
 final navigatorContext = navigatorKey.currentContext;
 
@@ -160,6 +208,8 @@ void main() async {
         ListenableProvider(create: (_) => HealthConditionProvider()),
         ListenableProvider(create: (_) => ChatProvider()),
         ChangeNotifierProvider(create: (_) => LinkedAccountProvider()),
+         ChangeNotifierProvider<OverlayHandlerProvider>(
+          create: (_) => OverlayHandlerProvider(),)
       ],
       child: InheritedContainer(
         child: MaterialApp(

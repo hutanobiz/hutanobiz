@@ -5,14 +5,18 @@ import 'package:encrypt/encrypt.dart' as Encrypt;
 import 'package:flutter/material.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
+import 'package:foreground_service/foreground_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
+import 'package:hutano/main.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/screens/appointments/virtualappointment/overlay_handler.dart';
 import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 
 const APP_ID = 'c7630b5181e74c63b20d6584988781b4';
@@ -49,6 +53,7 @@ class _CallPageState extends State<CallPage> {
     // destroy sdk
     _engine.leaveChannel();
     _engine.destroy();
+    ForegroundService.stopForegroundService();
     disableWakeLock();
     super.dispose();
   }
@@ -111,7 +116,9 @@ class _CallPageState extends State<CallPage> {
     _engine.enableLocalVideo(!mutedVideo);
     _engine
         .joinChannel(null, widget.channelName['_id'], null, userId)
-        .then((value) {});
+        .then((value) {
+      maybeStartFGS();
+    });
   }
 
   startCall() {
@@ -130,6 +137,7 @@ class _CallPageState extends State<CallPage> {
     await _engine.enableVideo();
     await _engine.setChannelProfile(ChannelProfile.LiveBroadcasting);
     await _engine.setClientRole(role);
+    await _engine.setParameters('{"che.audio.opensl":true}');
   }
 
   /// Add agora event handlers
@@ -174,16 +182,22 @@ class _CallPageState extends State<CallPage> {
       // updateSubscriptionList();
       setState(() {
         final info = 'userOffline: $uid';
-        showConfirmDialog(() {
-          _onCallEnd(context);
-        }, () {
-          Map<String, String> map = {};
-          map['appointmentId'] = widget.channelName['_id'].toString();
-          api.cancelCallEndNotification(token, map).then((value) {});
-          Navigator.pop(context);
-        });
-        _infoStrings.add(info);
-        _users.remove(uid);
+        if (_users.contains(uid)) {
+          Provider.of<OverlayHandlerProvider>(context, listen: false)
+              .hideOverlay();
+          showConfirmDialog(() {
+            _onCallEnd(context);
+          }, () {
+            Map<String, String> map = {};
+            map['appointmentId'] = widget.channelName['_id'].toString();
+            api.cancelCallEndNotification(token, map).then((value) {});
+            Provider.of<OverlayHandlerProvider>(context, listen: false)
+                .unHideOverlay();
+            // Navigator.pop(context);
+          });
+          _infoStrings.add(info);
+          _users.remove(uid);
+        }
       });
     }, firstRemoteVideoFrame: (uid, width, height, elapsed) {
       //  updateSubscriptionList();
@@ -214,7 +228,11 @@ class _CallPageState extends State<CallPage> {
           appointmentResponse["data"]['doctor']['avatar'];
       appointmentCompleteMap["dateTime"] =
           DateFormat('dd MMM yyyy, HH:mm').format(DateTime.now());
-
+      Provider.of<OverlayHandlerProvider>(context, listen: false)
+          .unHideOverlay();
+      Provider.of<OverlayHandlerProvider>(context, listen: false)
+          .removeOverlay(context);
+      ForegroundService.stopForegroundService();
       Navigator.of(context).pushReplacementNamed(
         Routes.appointmentCompleteConfirmation,
         arguments: appointmentCompleteMap,
@@ -247,101 +265,278 @@ class _CallPageState extends State<CallPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[200],
-      body: Stack(
-        children: [
-          Center(
-            child: Column(
-              children: [
-                Expanded(
-                  child: Stack(
-                    children: <Widget>[
-                      _viewRows(),
-                      // _panel(),
-
-                      Align(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            children: [
-                              remoteAudio
-                                  ? SizedBox()
-                                  : Expanded(
-                                      child: Icon(
-                                      Icons.mic_off,
-                                      color: Colors.red,
-                                      size: 48,
-                                    )),
-                              remoteVideo
-                                  ? SizedBox()
-                                  : Expanded(
-                                      child: Icon(Icons.videocam_off,
-                                          color: Colors.red, size: 48)),
-                            ],
-                          )),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 22.0),
-                          child: RawMaterialButton(
-                            onPressed: () {
-                              Widgets.showConfirmationDialog(
-                                  context: context,
-                                  title: 'End Call',
-                                  description: 'Are you sure to end Call?',
-                                  leftText: 'yes',
-                                  onLeftPressed: () {
-                                    // Navigator.pop(context);
-                                    var appointmentCompleteMap = {};
-                                    appointmentCompleteMap['type'] = '2';
-                                    appointmentCompleteMap['appointmentId'] =
-                                        widget.channelName['_id'];
-                                    appointmentCompleteMap['name'] =
-                                        appointmentResponse["data"]['doctor']
-                                                ['title'] +
-                                            ' ' +
-                                            appointmentResponse["data"]
-                                                ['doctor']['fullName'];
-
-                                    appointmentCompleteMap['avatar'] =
-                                        appointmentResponse["data"]['doctor']
-                                            ['avatar'];
-                                    appointmentCompleteMap["dateTime"] =
-                                        DateFormat('dd MMM yyyy, HH:mm')
-                                            .format(DateTime.now());
-                                    Navigator.of(context).pushReplacementNamed(
-                                      Routes.appointmentCompleteConfirmation,
-                                      arguments: appointmentCompleteMap,
-                                    );
-                                  },
-                                  rightText: 'No',
-                                  onRightPressed: () {
-                                    Navigator.pop(context);
-                                  });
+    return WillPopScope(onWillPop: () async {
+      if (Provider.of<OverlayHandlerProvider>(context, listen: false)
+          .overlayActive) {
+        Provider.of<OverlayHandlerProvider>(context, listen: false)
+            .enablePip(.60);
+        return false;
+      }
+      return true;
+    }, child: Consumer<OverlayHandlerProvider>(
+        builder: (context, overlayProvider, _) {
+      return overlayProvider.isHidden
+          ? SizedBox()
+          : Scaffold(
+              backgroundColor: overlayProvider.inPipMode
+                  ? Colors.transparent
+                  : Colors.grey[200],
+              body: overlayProvider.inPipMode
+                  ? Stack(
+                      clipBehavior: Clip.hardEdge,
+                      children: [
+                        Container(
+                            color: Colors.transparent,
+                            child: AspectRatio(
+                              aspectRatio: .60,
+                              child: _pipViewRows(),
+                            )),
+                        Positioned(
+                          top: 0,
+                          left: 0,
+                          bottom: 0,
+                          right: 0,
+                          child: InkWell(
+                            onTap: () {
+                              Provider.of<OverlayHandlerProvider>(context,
+                                      listen: false)
+                                  .disablePip();
                             },
-                            child: Icon(
-                              Icons.call_end,
-                              color: Colors.white,
-                              size: 35.0,
-                            ),
-                            shape: CircleBorder(),
-                            elevation: 2.0,
-                            fillColor: Colors.redAccent,
-                            padding: const EdgeInsets.all(15.0),
+                            child: Container(),
                           ),
                         ),
-                      ),
+                      ],
+                    )
+                  : Stack(
+                      children: [
+                        Center(
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: Stack(
+                                  children: <Widget>[
+                                    _viewRows(),
+                                    // _panel(),
+
+                                    Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Row(
+                                          children: [
+                                            remoteAudio
+                                                ? SizedBox()
+                                                : Expanded(
+                                                    child: Icon(
+                                                    Icons.mic_off,
+                                                    color: Colors.red,
+                                                    size: 48,
+                                                  )),
+                                            remoteVideo
+                                                ? SizedBox()
+                                                : Expanded(
+                                                    child: Icon(
+                                                        Icons.videocam_off,
+                                                        color: Colors.red,
+                                                        size: 48)),
+                                          ],
+                                        )),
+                                    Align(
+                                      alignment: Alignment.bottomCenter,
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 22.0),
+                                        child: RawMaterialButton(
+                                          onPressed: () {
+                                            Provider.of<OverlayHandlerProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .hideOverlay();
+                                            Widgets.showConfirmationDialog(
+                                                context: context,
+                                                title: 'End Call',
+                                                description:
+                                                    'Are you sure to end Call?',
+                                                leftText: 'yes',
+                                                onLeftPressed: () {
+                                                  Provider.of<OverlayHandlerProvider>(
+                                                          context,
+                                                          listen: false)
+                                                      .unHideOverlay();
+                                                  Provider.of<OverlayHandlerProvider>(
+                                                          context,
+                                                          listen: false)
+                                                      .removeOverlay(context);
+                                                  ForegroundService
+                                                      .stopForegroundService();
+                                                  // Navigator.pop(context);
+                                                  var appointmentCompleteMap =
+                                                      {};
+                                                  appointmentCompleteMap[
+                                                      'type'] = '2';
+                                                  appointmentCompleteMap[
+                                                          'appointmentId'] =
+                                                      widget.channelName['_id'];
+                                                  appointmentCompleteMap[
+                                                          'name'] =
+                                                      appointmentResponse[
+                                                                      "data"]
+                                                                  ['doctor']
+                                                              ['title'] +
+                                                          ' ' +
+                                                          appointmentResponse[
+                                                                      "data"]
+                                                                  ['doctor']
+                                                              ['fullName'];
+
+                                                  appointmentCompleteMap[
+                                                          'avatar'] =
+                                                      appointmentResponse[
+                                                              "data"]['doctor']
+                                                          ['avatar'];
+                                                  appointmentCompleteMap[
+                                                      "dateTime"] = DateFormat(
+                                                          'dd MMM yyyy, HH:mm')
+                                                      .format(DateTime.now());
+                                                  Navigator.of(context)
+                                                      .pushNamed(
+                                                    Routes
+                                                        .appointmentCompleteConfirmation,
+                                                    arguments:
+                                                        appointmentCompleteMap,
+                                                  );
+                                                },
+                                                rightText: 'No',
+                                                onRightPressed: () {
+                                                  Provider.of<OverlayHandlerProvider>(
+                                                          context,
+                                                          listen: false)
+                                                      .unHideOverlay();
+                                                });
+                                          },
+                                          child: Icon(
+                                            Icons.call_end,
+                                            color: Colors.white,
+                                            size: 35.0,
+                                          ),
+                                          shape: CircleBorder(),
+                                          elevation: 2.0,
+                                          fillColor: Colors.redAccent,
+                                          padding: const EdgeInsets.all(15.0),
+                                        ),
+                                      ),
+                                    ),
+                                    if (!overlayProvider.inPipMode)
+                                      Positioned(
+                                        top: 30.0,
+                                        left: 8.0,
+                                        child: IconButton(
+                                            icon:
+                                                Icon(Icons.keyboard_arrow_down),
+                                            iconSize: 30,
+                                            color: Colors.white,
+                                            onPressed: () {
+                                              Provider.of<OverlayHandlerProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .enablePip(
+                                                .60,
+                                              );
+                                            }),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                              _toolbar()
+                            ],
+                          ),
+                        ),
+                        isLoading ? CustomLoader() : SizedBox()
+                      ],
+                    ),
+            );
+    }));
+  }
+
+  Widget _pipViewRows() {
+    final views = _getRenderViews();
+    switch (views.length) {
+      case 1:
+        return mutedVideo
+            ? Stack(
+                children: [
+                  Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(20),
+                          ),
+                          color: Colors.black)),
+                  Center(
+                      child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.videocam_off, color: Colors.red, size: 48),
+                      Text('Please turn on your video',
+                          style: TextStyle(color: Colors.red))
                     ],
+                  )),
+                ],
+              )
+            : _pipVideoView(views[0]);
+      case 2:
+        // startCall();
+        return Container(
+            child: Stack(
+          children: <Widget>[
+            remoteVideo
+                ? _pipVideoView(views[1])
+                : Container(
+                    color: Colors.black,
                   ),
-                ),
-                _toolbar()
-              ],
-            ),
-          ),
-          isLoading ? CustomLoader() : SizedBox()
-        ],
-      ),
-    );
+            _pipMyVideoView(views[0]),
+          ],
+        ));
+      default:
+        return Container(
+            child: Stack(
+          children: <Widget>[
+            remoteVideo
+                ? _pipVideoView(views.last)
+                : Container(
+                    color: Colors.black,
+                  ),
+            _pipMyVideoView(views[0]),
+          ],
+        ));
+    }
+  }
+
+  Widget _pipVideoView(view) {
+    return ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(20)), child: view);
+  }
+
+  Widget _pipMyVideoView(view) {
+    return Positioned(
+        right: 10,
+        top: 20,
+        child: Container(
+          height: 60,
+          width: 40,
+          child: mutedVideo
+              ? Stack(
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                            color: Colors.black)),
+                    Center(
+                        child: Icon(Icons.videocam_off,
+                            color: Colors.red, size: 24)),
+                  ],
+                )
+              : ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
+                  child: view),
+        ));
   }
 
   Widget _viewRows() {
@@ -408,7 +603,10 @@ class _CallPageState extends State<CallPage> {
     // if (widget.role == ClientRole.Broadcaster) {
     list.add(RtcLocalView.SurfaceView());
     // }
-    _users.forEach((int uid) => list.add(RtcRemoteView.SurfaceView(uid: uid)));
+    _users.forEach((int uid) => list.add(RtcRemoteView.SurfaceView(
+          uid: uid,
+          channelId: widget.channelName['_id'],
+        )));
     return list;
   }
 
