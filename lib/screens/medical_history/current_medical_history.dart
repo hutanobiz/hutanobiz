@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:flutter_xlider/flutter_xlider.dart';
+// import 'package:flutter_xlider/flutter_xlider.dart';
 import 'package:hutano/apis/api_manager.dart';
 import 'package:hutano/apis/common_res.dart';
 import 'package:hutano/apis/error_model.dart';
@@ -298,59 +298,61 @@ class _CurrentMedicalHistoryState extends State<CurrentMedicalHistory> {
         ),
       );
 
-  Widget _rateDiscomfort(BuildContext context) => FlutterSlider(
-        values: [_painIntensity],
+  Widget _rateDiscomfort(BuildContext context) => Slider(
+        value: _painIntensity,
         max: 10,
         min: 0,
-        onDragging: (_, lowerValue, __) {
+        divisions: 10,
+        onChanged: (lowerValue) {
           setState(() {
             _painIntensity = lowerValue;
           });
         },
-        trackBar: FlutterSliderTrackBar(
-          activeTrackBarHeight: 18,
-          inactiveTrackBarHeight: 18,
-          activeTrackBar: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: AppColors.sunglow,
-              gradient: LinearGradient(
-                  colors: [Color(0xffFFE18D), Color(0xffFFC700)])),
-          inactiveTrackBar: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: colorGreyBackground,
-          ),
-        ),
-        handler: FlutterSliderHandler(
-          decoration: BoxDecoration(),
-          child: Container(
-            child: Container(
-              key: silderKey,
-              height: 18,
-              width: 18,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: accentColor),
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: accentColor.withOpacity(0.4),
-                    blurRadius: 5,
-                    offset: Offset(0, 2),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ),
-        tooltip: FlutterSliderTooltip(
-          custom: (value) {
-            return _buildButton(value);
-          },
-          boxStyle: FlutterSliderTooltipBox(),
-          direction: FlutterSliderTooltipDirection.top,
-          alwaysShowTooltip: true,
-        ),
-        rangeSlider: false,
+        activeColor: AppColors.goldenTainoi,
+        // trackBar: FlutterSliderTrackBar(
+        //   activeTrackBarHeight: 18,
+        //   inactiveTrackBarHeight: 18,
+        //   activeTrackBar: BoxDecoration(
+        //       borderRadius: BorderRadius.circular(20),
+        //       color: AppColors.sunglow,
+        //       gradient: LinearGradient(
+        //           colors: [Color(0xffFFE18D), Color(0xffFFC700)])),
+        //   inactiveTrackBar: BoxDecoration(
+        //     borderRadius: BorderRadius.circular(20),
+        //     color: colorGreyBackground,
+        //   ),
+        // ),
+        // handler: FlutterSliderHandler(
+        //   decoration: BoxDecoration(),
+        //   child: Container(
+        //     child: Container(
+        //       key: silderKey,
+        //       height: 18,
+        //       width: 18,
+        //       decoration: BoxDecoration(
+        //         color: Colors.white,
+        //         border: Border.all(color: accentColor),
+        //         borderRadius: BorderRadius.circular(10),
+        //         boxShadow: [
+        //           BoxShadow(
+        //             color: accentColor.withOpacity(0.4),
+        //             blurRadius: 5,
+        //             offset: Offset(0, 2),
+        //           )
+        //         ],
+        //       ),
+        //     ),
+        //   ),
+        // ),
+        // tooltip: FlutterSliderTooltip(
+        //   custom: (value) {
+        //     return _buildButton(value);
+        //   },
+        //   boxStyle: FlutterSliderTooltipBox(),
+        //   direction: FlutterSliderTooltipDirection.top,
+        //   alwaysShowTooltip: true,
+        // ),
+        // rangeSlider: false,
       );
 
   Widget _buildButton(double value) => InkWell(

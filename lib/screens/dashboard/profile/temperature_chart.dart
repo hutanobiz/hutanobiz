@@ -600,97 +600,86 @@ class _TemperatureChartState extends State<TemperatureChart> {
     );
   }
 
-  FlTitlesData get titlesData2 => FlTitlesData(
-        bottomTitles: bottomTitles,
-        topTitles: SideTitles(showTitles: false),
-        leftTitles: SideTitles(showTitles: false),
-        rightTitles: leftTitles(
-          getTitles: (value) {
-            switch (value.toInt()) {
-              case 0:
-                return '0';
-              case 50:
-                return '50';
-              case 100:
-                return '100';
-              case 150:
-                return '150';
-              case 200:
-                return '200';
-              case 250:
-                return '250';
-              case 300:
-                return '300';
-              case 350:
-                return '350';
-              case 400:
-                return '400';
-              case 450:
-                return '450';
-            }
-            return '';
-          },
-        ),
-      );
+ FlTitlesData get titlesData2 => FlTitlesData(
+      bottomTitles: bottomTitles,
+      topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+      leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+      rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: true,reservedSize: 40)));
+  //    leftTitles(
+  //     getTitles: (value) {
+  //       switch (value.toInt()) {
+  //         case 0:
+  //           return '0';
+  //         case 50:
+  //           return '50';
+  //         case 100:
+  //           return '100';
+  //         case 150:
+  //           return '150';
+  //         case 200:
+  //           return '200';
+  //         case 250:
+  //           return '250';
+  //         case 300:
+  //           return '300';
+  //         case 350:
+  //           return '350';
+  //         case 400:
+  //           return '400';
+  //         case 450:
+  //           return '450';
+  //       }
+  //       return '';
+  //     },
+  //   ),
+  // );
 
   List<LineChartBarData> get lineBarsData2 => [
         lineChartBarData2_3,
       ];
 
-  SideTitles leftTitles({@required GetTitleFunction getTitles}) => SideTitles(
-        getTitles: getTitles,
-        showTitles: true,
-        margin: 8,
-        interval: 1,
-        reservedSize: 40,
-        getTextStyles: (context, value) => const TextStyle(
-          color: Colors.black,
-          fontWeight: FontWeight.normal,
-          fontSize: 14,
-        ),
-      );
+  // SideTitles leftTitles({@required GetTitleFunction getTitles}) => SideTitles(
+  //       getTitles: getTitles,
+  //       showTitles: true,
+  //       margin: 8,
+  //       interval: 1,
+  //       reservedSize: 40,
+  //       getTextStyles: (context, value) => const TextStyle(
+  //         color: Colors.black,
+  //         fontWeight: FontWeight.normal,
+  //         fontSize: 14,
+  //       ),
+  //     );
 
-  SideTitles get bottomTitles {
-    return SideTitles(
+  AxisTitles get bottomTitles {
+    return AxisTitles(
+        sideTitles: SideTitles(
       showTitles: true,
       // reservedSize: 22,
-      margin: 10,
+      // margin: 10,
       interval: 1,
-      getTextStyles: (context, value) {
+      getTitlesWidget: (value, mt) {
         final isTouched = value == touchedValue;
-        return isTouched
-            ? TextStyle(color: Colors.black, fontSize: 14.0)
-            : TextStyle(color: Colors.black, fontSize: 12.0);
+        return Text(
+            responseData.length > (-value.toInt())
+                ? dateFormatter('M/d', responseData[-value.toInt()])
+                : '',
+            style: isTouched
+                ? TextStyle(color: Colors.black, fontSize: 14.0)
+                : TextStyle(color: Colors.black, fontSize: 12.0));
       },
-      getTitles: (value) {
-        return responseData.length > (-value.toInt())
-            ? dateFormatter('M/d', responseData[-value.toInt()])
-            : '';
-        // switch (value.toInt()) {
-        //   case 0:
-        //     return dateFormatter(responseData[0]);
-        //   case 1:
-        //     return dateFormatter(responseData[1]);
-        //   case 2:
-        //     return dateFormatter(responseData[2]);
-        //   case 3:
-        //     return dateFormatter(responseData[3]);
-        //   case 4:
-        //     return dateFormatter(responseData[4]);
-        //   case 5:
-        //     return dateFormatter(responseData[5]);
-        //   case 6:
-        //     return dateFormatter(responseData[6]);
-        //   // case 6:
-        //   //   return responseData[6]['date'].toString().substring(5, 10);
-        //   // case 7:
-        //   //   return responseData[7]['date'].toString().substring(4, 10);
-        //   // case 8:
-        //   //   return responseData[8]['date'].toString().substring(4, 10);
-        // }
-        // return '';
-      },
-    );
+      // getTextStyles: (context, value) {
+      //   final isTouched = value == touchedValue;
+      //   return isTouched
+      //       ? TextStyle(color: Colors.black, fontSize: 14.0)
+      //       : TextStyle(color: Colors.black, fontSize: 12.0);
+      // },
+      // getTitles: (value) {
+      //   return responseData.length > (-value.toInt())
+      //       ? dateFormatter('M/d', responseData[-value.toInt()])
+      //       : '';
+      // },
+    ));
   }
 
   String dateFormatter(format, data) {
@@ -737,7 +726,7 @@ class _TemperatureChartState extends State<TemperatureChart> {
     return LineChartBarData(
         isCurved: true,
         curveSmoothness: 0,
-        colors: const [AppColors.goldenTainoi],
+        color:  AppColors.goldenTainoi,
         barWidth: 2,
         isStrokeCapRound: true,
         dotData: FlDotData(

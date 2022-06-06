@@ -916,34 +916,34 @@ class Routes {
         return MaterialPageRoute(builder: (_) => ImmunizationScreen());
       case routeEffectAbility:
         return MaterialPageRoute(builder: (_) => EffectAbilityScreen());
-      case routeAbnormal:
-        bool abnormal = args[ArgumentConstant.isAbnormalKey];
-        bool maleHealth = args[ArgumentConstant.isMaleHealthKey];
-        bool femaleHealth = args[ArgumentConstant.isFemaleHealthKey];
-        bool woundSkin = args[ArgumentConstant.isWoundSkinKey];
-        bool dentalCare = args[ArgumentConstant.isDentalCareKey];
-        bool hearingSight = args[ArgumentConstant.isHearingSightKey];
-        return MaterialPageRoute(
-            builder: (_) => AbnormalSensation(
-                abnormal: abnormal,
-                maleHealth: maleHealth,
-                femaleHealth: femaleHealth,
-                woundSkin: woundSkin,
-                dentalCare: dentalCare,
-                hearingSight: hearingSight));
-      case routeBreathingIssue:
-        bool isAntiAging = args[ArgumentConstant.isAntiAgingKey];
-        bool stomach = args[ArgumentConstant.isStomachKey];
-        bool breathing = args[ArgumentConstant.isBreathingKey];
-        bool healthChest = args[ArgumentConstant.isHealthChestKey];
-        bool nutrition = args[ArgumentConstant.isNutritionKey];
-        return MaterialPageRoute(
-            builder: (_) => BreathingIssue(
-                isAntiAging: isAntiAging,
-                stomach: stomach,
-                breathing: breathing,
-                healthChest: healthChest,
-                nutrition: nutrition));
+      // case routeAbnormal:
+      //   bool abnormal = args[ArgumentConstant.isAbnormalKey];
+      //   bool maleHealth = args[ArgumentConstant.isMaleHealthKey];
+      //   bool femaleHealth = args[ArgumentConstant.isFemaleHealthKey];
+      //   bool woundSkin = args[ArgumentConstant.isWoundSkinKey];
+      //   bool dentalCare = args[ArgumentConstant.isDentalCareKey];
+      //   bool hearingSight = args[ArgumentConstant.isHearingSightKey];
+      //   return MaterialPageRoute(
+      //       builder: (_) => AbnormalSensation(
+      //           abnormal: abnormal,
+      //           maleHealth: maleHealth,
+      //           femaleHealth: femaleHealth,
+      //           woundSkin: woundSkin,
+      //           dentalCare: dentalCare,
+      //           hearingSight: hearingSight));
+      // case routeBreathingIssue:
+      //   bool isAntiAging = args[ArgumentConstant.isAntiAgingKey];
+      //   bool stomach = args[ArgumentConstant.isStomachKey];
+      //   bool breathing = args[ArgumentConstant.isBreathingKey];
+      //   bool healthChest = args[ArgumentConstant.isHealthChestKey];
+      //   bool nutrition = args[ArgumentConstant.isNutritionKey];
+      //   return MaterialPageRoute(
+      //       builder: (_) => BreathingIssue(
+      //           isAntiAging: isAntiAging,
+      //           stomach: stomach,
+      //           breathing: breathing,
+      //           healthChest: healthChest,
+      //           nutrition: nutrition));
       case routeVitalReviews:
         return MaterialPageRoute(builder: (_) => VitalReviews(args: args));
       case routeTestDiagnosis:
@@ -956,13 +956,13 @@ class Routes {
         return MaterialPageRoute(builder: (_) => MyMedicalHistory());
       case routeBodySymptoms:
         return MaterialPageRoute(builder: (_) => BodySymptoms());
-      case routePainSymptoms:
-        return MaterialPageRoute(
-          builder: (_) => PainSymptoms(
-            selectedBodyTypeIndex: args[ArgumentConstant.argselectedBodyType],
-            selectedBodyPart: args[ArgumentConstant.argsselectBodyPart],
-          ),
-        );
+      // case routePainSymptoms:
+      //   return MaterialPageRoute(
+      //     builder: (_) => PainSymptoms(
+      //       selectedBodyTypeIndex: args[ArgumentConstant.argselectedBodyType],
+      //       selectedBodyPart: args[ArgumentConstant.argsselectBodyPart],
+      //     ),
+      //   );
       case routeGeneralizedPainSymptoms:
         return MaterialPageRoute(builder: (_) => GeneralizedPainSymptoms());
       case routeSymptomsInformation:

@@ -290,9 +290,9 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                           Stripe.instance
                               .confirmSetupIntent(
                                   clientSecret,
-                                  PaymentMethodParams.card(
+                                  PaymentMethodParams.card(paymentMethodData: PaymentMethodData(
                                       billingDetails: BillingDetails(
-                                          name: _nameController.text)))
+                                          name: _nameController.text))))
                               .then((value) {
                             setState(() {
                               _isLoading = false;

@@ -705,11 +705,12 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
               Expanded(
                 child: ButtonTheme(
                   height: 55,
-                  child: OutlineButton(
-                    shape: new RoundedRectangleBorder(
+                  child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        shape:  new RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(14.0),
-                    ),
-                    highlightedBorderColor: AppColors.windsor,
+                    ),),
+                    // highlightedBorderColor: AppColors.windsor,
                     child: Text(
                       Localization.of(context).cancel,
                       style: TextStyle(

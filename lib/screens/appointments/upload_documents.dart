@@ -518,11 +518,12 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
               Expanded(
                 child: ButtonTheme(
                   height: 55,
-                  child: OutlineButton(
-                    shape: new RoundedRectangleBorder(
+                  child:  OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(14.0),
-                    ),
-                    highlightedBorderColor: AppColors.windsor,
+                      ),),
+                    // highlightedBorderColor: AppColors.windsor,
                     child: Text(
                       'Cancel',
                       style:

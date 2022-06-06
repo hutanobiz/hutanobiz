@@ -25,8 +25,8 @@ dependencies:
   pedantic: ^1.8.0
   firebase_messaging: ^11.2.6
   flutter_local_notifications: ^9.3.2
-  photo_view: ^0.13.0
-  flutter_stripe: ^2.4.0
+  photo_view: ^0.14.0
+  flutter_stripe: ^3.0.2
   flutter_svg: ^1.0.3
   url_launcher: ^6.0.3
   agora_rtc_engine: ^5.1.0
@@ -42,7 +42,7 @@ dependencies:
   cupertino_icons: ^1.0.3
   pin_code_fields: ^7.3.0
   flutter_custom_dialog: ^1.0.20
-  flutter_typeahead: ^3.2.1
+  flutter_typeahead: ^4.0.0
   contacts_service: ^0.6.1
   app_settings: ^4.1.1
   expandable: ^5.0.1
@@ -55,16 +55,17 @@ dependencies:
   dio: ^4.0.0
   share: ^2.0.4
   firebase_analytics: ^9.1.0
-  flutter_xlider: ^3.4.0
+  # flutter_xlider: ^3.4.0
   touchable: ^1.0.0
-  keyboard_actions: ^3.4.1
+  keyboard_actions: ^4.0.0
   socket_io_client: ^1.0.2
   collection: ^1.15.0
   carousel_slider: ^4.0.0
   table_calendar: ^3.0.3
-  fl_chart: ^0.45.0
+  fl_chart: ^0.51.0
   wakelock: ^0.5.6
   device_info_plus: ^3.2.3
+  foreground_service: ^2.0.1+1
   flutter: 
     sdk: flutter
 

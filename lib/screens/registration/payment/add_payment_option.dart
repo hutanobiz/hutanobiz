@@ -594,8 +594,8 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
         Stripe.instance
             .confirmSetupIntent(
                 clientSecret,
-                PaymentMethodParams.card(
-                    billingDetails: BillingDetails(name: _nameController.text)))
+                PaymentMethodParams.card(paymentMethodData: PaymentMethodData(
+                    billingDetails: BillingDetails(name: _nameController.text))))
             .then((value) {
           ProgressDialogUtils.dismissProgressDialog();
           Navigator.of(context).pushReplacementNamed(Routes.addCardComplete);

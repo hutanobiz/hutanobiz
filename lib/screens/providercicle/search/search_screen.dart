@@ -169,11 +169,10 @@ class _SearchScreenState extends State<SearchScreen> {
       borderSide: BorderSide.none,
     );
     return TextFormField(
-      controller: _searchController,
+      maxLengthEnforcement: MaxLengthEnforcement.enforced, controller: _searchController,
       style: TextStyle(color: colorDarkPurple),
       cursorColor: colorDarkPurple,
       maxLength: 10,
-      maxLengthEnforced: true,
       onChanged: (s) => _debouncer(() {
         if (_key.currentState.validate()) {
           _onSearch(s);
