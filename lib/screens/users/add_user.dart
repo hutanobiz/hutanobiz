@@ -166,10 +166,10 @@ class _AddUserState extends State<AddUser> {
         _relationList = res.response;
       });
     } on ErrorModel catch (e) {
-      ProgressDialogUtils.dismissProgressDialog();
+      // ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);
     } catch (e) {
-      ProgressDialogUtils.dismissProgressDialog();
+      // ProgressDialogUtils.dismissProgressDialog();
     }
   }
 
