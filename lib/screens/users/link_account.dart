@@ -134,16 +134,8 @@ class _LinkAccountState extends State<LinkAccount> {
                                 fit: BoxFit.cover,
                               )),
                           SizedBox(width: 8),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(widget.userData['fullName'],
-                                  style: AppTextStyle.boldStyle(fontSize: 16)),
-                              Text('Lorem ipsum Dummy Text',
-                                  style:
-                                      AppTextStyle.regularStyle(fontSize: 13)),
-                            ],
-                          ),
+                          Text(widget.userData['fullName'],
+                              style: AppTextStyle.boldStyle(fontSize: 16)),
                         ],
                       )),
                   GestureDetector(
