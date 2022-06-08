@@ -96,7 +96,6 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
   void initState() {
     super.initState();
 
-   
     setSourceAndDestinationIcons();
   }
 
@@ -572,7 +571,7 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                                         child: Text(
                                           _profileMap.containsKey("User")
                                               ? _profileMap['ProfessionalTitle']
-                                                  .length >
+                                                          .length >
                                                       0
                                                   ? _profileMap[
                                                           'ProfessionalTitle']
@@ -1439,31 +1438,57 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
     })).catchError((dynamic e) {
       ProgressDialogUtils.dismissProgressDialog();
       if (e is ErrorModel) {
-        Widgets.showErrorialog(
-            context: context,
-            description: e.response,
-            buttonText: (e.response.contains('already') ||
-                    e.response.contains('declined'))
-                ? 'Go to requests'
-                : 'Ok',
-            onPressed: () {
-              if (e.response.contains('already') ||
-                  e.response.contains('declined')) {
-                _container.consentToTreatMap.clear();
-                _container.getProviderData().clear();
-                _container.appointmentData.clear();
-                Provider.of<HealthConditionProvider>(context, listen: false)
-                    .resetHealthConditionProvider();
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  Routes.dashboardScreen,
-                  (Route<dynamic> route) => false,
-                  arguments: 1,
-                );
-              } else {
-                Navigator.pop(context);
-              }
-            });
-        e.toString().debugLog();
+        if (e.response == 'Please select correct appointment date') {
+          Widgets.showConfirmationDialog(
+              context: context,
+              title: 'Slot Unavailable',
+              description: 'Please select correct appointment slot',
+              rightText: 'Cancel',
+              leftText: 'Change Time',
+              onLeftPressed: () {
+                Navigator.of(context)
+                    .pushNamed(
+                  Routes.selectAppointmentTimeScreen,
+                  arguments: SelectDateTimeArguments(fromScreen: 1),
+                )
+                    .then((value) {
+                  if (value != null) {
+                    Map _editDateTimeData = value;
+
+                    setState(() {
+                      _setBookingTime(_editDateTimeData["time"]);
+                      _bookedDate = _editDateTimeData["date"];
+                    });
+                  }
+                });
+              });
+        } else {
+          Widgets.showErrorialog(
+              context: context,
+              description: e.response,
+              buttonText: (e.response.contains('already') ||
+                      e.response.contains('declined'))
+                  ? 'Go to requests'
+                  : 'Ok',
+              onPressed: () {
+                if (e.response.contains('already') ||
+                    e.response.contains('declined')) {
+                  _container.consentToTreatMap.clear();
+                  _container.getProviderData().clear();
+                  _container.appointmentData.clear();
+                  Provider.of<HealthConditionProvider>(context, listen: false)
+                      .resetHealthConditionProvider();
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    Routes.dashboardScreen,
+                    (Route<dynamic> route) => false,
+                    arguments: 1,
+                  );
+                } else {
+                  Navigator.pop(context);
+                }
+              });
+          e.toString().debugLog();
+        }
       }
     });
   }
