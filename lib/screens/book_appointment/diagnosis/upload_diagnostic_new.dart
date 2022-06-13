@@ -54,7 +54,8 @@ class UploadDiagnosticNew extends StatefulWidget {
   _UploadDiagnosticNewState createState() => _UploadDiagnosticNewState();
 }
 
-class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
+class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
+    with SingleTickerProviderStateMixin {
   bool _getData = false;
   bool _indicatorLoading = true;
   ApiBaseHelper _api = ApiBaseHelper();
@@ -62,6 +63,7 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
   final documentTypeController = TextEditingController();
   final documentDateController = TextEditingController();
   String documentName = '';
+  List<Map> filteredImagesList = List();
   List<String> _documentTypeList = [
     'X-Ray',
     'MRI',
@@ -80,6 +82,9 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
   bool isLoading = false;
   String defaultBodyPart;
   Map sidesMap = {1: "Left", 2: "Right", 3: "Top", 4: "Bottom", 5: "All Over"};
+  TabController _tabController;
+  List tabs;
+  int _currentIndex = 0;
 
   @override
   void initState() {
@@ -136,6 +141,15 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
         defaultBodyPart = side + ' ' + part;
       }
     }
+    tabs = ['Recent', 'Archive', 'View all'];
+    _tabController = TabController(length: tabs.length, vsync: this);
+    _tabController.addListener(_handleTabControllerTick);
+  }
+
+  void _handleTabControllerTick() {
+    setState(() {
+      _currentIndex = _tabController.index;
+    });
   }
 
   @override
@@ -217,11 +231,18 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
           _forwardButtonPressed(context);
         },
         padding: EdgeInsets.only(left: spacing20, right: spacing20, bottom: 60),
-        child: ListView(
+        child: Column(
           children: <Widget>[
+            TabBar(
+              indicatorColor: AppColors.windsor,
+              controller: _tabController,
+              tabs: _tabsHeader(),
+              indicatorSize: TabBarIndicatorSize.label,
+              indicatorWeight: 3,
+            ),
             _uploadMedicalDocumentsBanner(context),
             // _uploadFileHeader(context),
-            _uploadedDocumentsViews(context),
+            Expanded(child: _uploadedDocumentsViews(context)),
             // if (_isTookDiagnosticTest) SizedBox(height: spacing10),
             // if (_isTookDiagnosticTest)
             //   Padding(
@@ -251,6 +272,39 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
         ),
       ),
     );
+  }
+
+  List<Widget> _tabsHeader() {
+    return tabs
+        .asMap()
+        .map((index, text) => MapEntry(
+              index,
+              Container(
+                height: 50,
+                width: 100,
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(14)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      text,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: _tabController.index == index
+                              ? AppColors.windsor
+                              : colorBlack2,
+                          fontSize: fontSize14,
+                          fontWeight: _tabController.index == index
+                              ? fontWeightMedium
+                              : fontWeightRegular),
+                    )
+                  ],
+                ),
+              ),
+            ))
+        .values
+        .toList();
   }
 
   void showPickerDialog() {
@@ -316,198 +370,225 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
         ),
       );
 
-  Widget _uploadedDocumentsViews(BuildContext context) => GridView.builder(
-        itemCount: docsList.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-        ),
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemBuilder: (BuildContext context, int index) {
-          String document = docsList[index]['image'];
+  Widget _uploadedDocumentsViews(BuildContext context) {
+    filteredImagesList.clear();
+    if (_currentIndex == 0) {
+      for (dynamic m in docsList) {
+        if (m['isArchive'] != null && m['isArchive'] == false) {
+          filteredImagesList.add(m);
+        }
+      }
+    } else if (_currentIndex == 1) {
+      for (dynamic m in docsList) {
+        if (m['isArchive'] == null || m['isArchive'] == true) {
+          filteredImagesList.add(m);
+        }
+      }
+    } else {
+      for (dynamic m in docsList) {
+        filteredImagesList.add(m);
+      }
+    }
+    return GridView.builder(
+      itemCount: filteredImagesList.length,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+      ),
+      shrinkWrap: true,
+      itemBuilder: (BuildContext context, int index) {
+        String document = filteredImagesList[index]['image'];
 
-          if (!document.contains('data/')) {
-            document = ApiBaseHelper.imageUrl + docsList[index]['image'];
-          }
-          return Padding(
-            padding: const EdgeInsets.all(spacing5),
-            child: Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16.0)),
-              clipBehavior: Clip.antiAlias,
-              child: Stack(
-                fit: StackFit.expand,
-                children: <Widget>[
-                  ClipRRect(
-                      borderRadius: BorderRadius.circular(16.0),
-                      child: document.toLowerCase().endsWith("pdf")
-                          ? "ic_pdf".imageIcon()
-                          : (document.contains('http') ||
-                                  document.contains('https')
-                              ? Image.network(
-                                  document,
-                                  height: 125.0,
-                                  width: 180.0,
-                                  fit: BoxFit.cover,
-                                )
-                              : Image.file(
-                                  File(document),
-                                  height: 125.0,
-                                  width: 180.0,
-                                  fit: BoxFit.cover,
-                                ))),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: SizedBox(
-                        height: 32,
-                        width: 32,
-                        child: RoundCornerCheckBox(
-                          value: _selectedDocsList.contains(docsList[index]),
-                          onCheck: (value) {
-                            if (value) {
-                              if (!_selectedDocsList
-                                  .contains(docsList[index])) {
-                                setState(() {
-                                  _selectedDocsList.add(docsList[index]);
-                                });
-                              }
-                            } else {
+        if (!document.contains('data/')) {
+          document =
+              ApiBaseHelper.imageUrl + filteredImagesList[index]['image'];
+        }
+        return Padding(
+          padding: const EdgeInsets.all(spacing5),
+          child: Card(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0)),
+            clipBehavior: Clip.antiAlias,
+            child: Stack(
+              fit: StackFit.expand,
+              children: <Widget>[
+                ClipRRect(
+                    borderRadius: BorderRadius.circular(16.0),
+                    child: document.toLowerCase().endsWith("pdf")
+                        ? "ic_pdf".imageIcon()
+                        : (document.contains('http') ||
+                                document.contains('https')
+                            ? Image.network(
+                                document,
+                                height: 125.0,
+                                width: 180.0,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.file(
+                                File(document),
+                                height: 125.0,
+                                width: 180.0,
+                                fit: BoxFit.cover,
+                              ))),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: SizedBox(
+                      height: 32,
+                      width: 32,
+                      child: RoundCornerCheckBox(
+                        value: _selectedDocsList
+                            .contains(filteredImagesList[index]),
+                        onCheck: (value) {
+                          if (value) {
+                            if (!_selectedDocsList
+                                .contains(filteredImagesList[index])) {
                               setState(() {
-                                _selectedDocsList.remove(docsList[index]);
+                                _selectedDocsList
+                                    .add(filteredImagesList[index]);
                               });
                             }
-                          },
-                        ),
+                          } else {
+                            setState(() {
+                              _selectedDocsList
+                                  .remove(filteredImagesList[index]);
+                            });
+                          }
+                        },
                       ),
                     ),
                   ),
+                ),
 
-                  // : Padding(
-                  //     padding: const EdgeInsets.all(8.0),
-                  //     child: Align(
-                  //       alignment: Alignment.topRight,
-                  //       child: SizedBox(
-                  //         height: 22,
-                  //         width: 22,
-                  //         child: RawMaterialButton(
-                  //           onPressed: () {
-                  //             ProgressDialogUtils.showProgressDialog(
-                  //                 context);
-                  //             _api
-                  //                 .deletePatientMedicalDocs(
-                  //               token,
-                  //               docsList[index]['_id'],
-                  //             )
-                  //                 .whenComplete(() {
-                  //               ProgressDialogUtils
-                  //                   .dismissProgressDialog();
-                  //               setState(() =>
-                  //                   docsList.remove(docsList[index]));
-                  //             }).futureError((error) {
-                  //               ProgressDialogUtils
-                  //                   .dismissProgressDialog();
-                  //               error.toString().debugLog();
-                  //             });
-                  //           },
-                  //           child: Icon(
-                  //             Icons.close,
-                  //             color: Colors.grey,
-                  //             size: 16.0,
-                  //           ),
-                  //           shape: CircleBorder(),
-                  //           elevation: 2.0,
-                  //           fillColor: Colors.white,
-                  //           constraints: const BoxConstraints(
-                  //             minWidth: 22.0,
-                  //             minHeight: 22.0,
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      height: spacing70,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: spacing10, vertical: 5),
-                      alignment: Alignment.center,
-                      color: Colors.white,
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                docsList[index][ArgumentConstant.nameKey],
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontSize: fontSize14,
-                                    fontWeight: fontWeightSemiBold,
-                                    color: Color(0xff1b1200)),
-                              ),
+                // : Padding(
+                //     padding: const EdgeInsets.all(8.0),
+                //     child: Align(
+                //       alignment: Alignment.topRight,
+                //       child: SizedBox(
+                //         height: 22,
+                //         width: 22,
+                //         child: RawMaterialButton(
+                //           onPressed: () {
+                //             ProgressDialogUtils.showProgressDialog(
+                //                 context);
+                //             _api
+                //                 .deletePatientMedicalDocs(
+                //               token,
+                //               docsList[index]['_id'],
+                //             )
+                //                 .whenComplete(() {
+                //               ProgressDialogUtils
+                //                   .dismissProgressDialog();
+                //               setState(() =>
+                //                   docsList.remove(docsList[index]));
+                //             }).futureError((error) {
+                //               ProgressDialogUtils
+                //                   .dismissProgressDialog();
+                //               error.toString().debugLog();
+                //             });
+                //           },
+                //           child: Icon(
+                //             Icons.close,
+                //             color: Colors.grey,
+                //             size: 16.0,
+                //           ),
+                //           shape: CircleBorder(),
+                //           elevation: 2.0,
+                //           fillColor: Colors.white,
+                //           constraints: const BoxConstraints(
+                //             minWidth: 22.0,
+                //             minHeight: 22.0,
+                //           ),
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    height: spacing70,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: spacing10, vertical: 5),
+                    alignment: Alignment.center,
+                    color: Colors.white,
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              filteredImagesList[index]
+                                  [ArgumentConstant.nameKey],
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontSize: fontSize14,
+                                  fontWeight: fontWeightSemiBold,
+                                  color: Color(0xff1b1200)),
                             ),
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                docsList[index][ArgumentConstant.typeKey],
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontSize: fontSize12,
-                                    fontWeight: fontWeightRegular,
-                                    color: Colors.black),
-                              ),
+                          ),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              filteredImagesList[index]
+                                  [ArgumentConstant.typeKey],
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontSize: fontSize12,
+                                  fontWeight: fontWeightRegular,
+                                  color: Colors.black),
                             ),
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                docsList[index][ArgumentConstant.dateKey],
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontSize: fontSize12,
-                                    fontWeight: fontWeightRegular,
-                                    color: Colors.black),
-                              ),
+                          ),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              filteredImagesList[index]
+                                  [ArgumentConstant.dateKey],
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontSize: fontSize12,
+                                  fontWeight: fontWeightRegular,
+                                  color: Colors.black),
                             ),
-                          ]),
-                    ).onClick(onTap: () {
-                      _selectedDocsList.toString().debugLog();
+                          ),
+                        ]),
+                  ).onClick(onTap: () {
+                    _selectedDocsList.toString().debugLog();
 
-                      if (!_selectedDocsList.contains(docsList[index])) {
-                        setState(() {
-                          _selectedDocsList.add(docsList[index]);
-                        });
+                    if (!_selectedDocsList
+                        .contains(filteredImagesList[index])) {
+                      setState(() {
+                        _selectedDocsList.add(filteredImagesList[index]);
+                      });
+                    } else {
+                      setState(() {
+                        _selectedDocsList.remove(filteredImagesList[index]);
+                      });
+                    }
+                  }),
+                ),
+              ],
+            ).onClick(
+              onTap: document.toLowerCase().endsWith("pdf")
+                  ? () async {
+                      var url = document;
+                      if (await canLaunch(url)) {
+                        await launch(url);
                       } else {
-                        setState(() {
-                          _selectedDocsList.remove(docsList[index]);
-                        });
+                        throw 'Could not launch $url';
                       }
-                    }),
-                  ),
-                ],
-              ).onClick(
-                onTap: document.toLowerCase().endsWith("pdf")
-                    ? () async {
-                        var url = document;
-                        if (await canLaunch(url)) {
-                          await launch(url);
-                        } else {
-                          throw 'Could not launch $url';
-                        }
-                      }
-                    : () {
-                        Navigator.of(context).pushNamed(
-                          Routes.providerImageScreen,
-                          arguments: document,
-                        );
-                      },
-              ),
+                    }
+                  : () {
+                      Navigator.of(context).pushNamed(
+                        Routes.providerImageScreen,
+                        arguments: document,
+                      );
+                    },
             ),
-          );
-        },
-      );
+          ),
+        );
+      },
+    );
+  }
 
   Widget _uploadDocumentsButton(BuildContext context) => Center(
         child: IntrinsicWidth(
@@ -583,7 +664,7 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
   Future getImage(int source) async {
     ImagePicker _picker = ImagePicker();
 
-     XFile image = await _picker.pickImage(
+    XFile image = await _picker.pickImage(
         imageQuality: 25,
         source: (source == 1) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
@@ -706,10 +787,11 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew> {
                 child: ButtonTheme(
                   height: 55,
                   child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        shape:  new RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(14.0),
-                    ),),
+                    style: OutlinedButton.styleFrom(
+                      shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(14.0),
+                      ),
+                    ),
                     // highlightedBorderColor: AppColors.windsor,
                     child: Text(
                       Localization.of(context).cancel,
