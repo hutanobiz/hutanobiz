@@ -90,9 +90,10 @@ class _SettingsScreenState extends State<SettingScreen> {
         addHeader: true,
         title: "",
         padding: EdgeInsets.only(bottom: 0),
-        isAddBack: true,
+        isAddBack: false,
         isAddAppBar: true,
         addBottomArrows: false,
+        isBackRequired: false,
         isLoading: isLoading,
         child: ListView(
           physics: ClampingScrollPhysics(),
@@ -258,7 +259,8 @@ class _SettingsScreenState extends State<SettingScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: quickLinks('images/profile_notification.png',
+                      child: quickLinks(
+                              'assets/images/profile_notification.png',
                               'Notifications')
                           .onClick(
                         onTap: () {
@@ -320,7 +322,8 @@ class _SettingsScreenState extends State<SettingScreen> {
                       ),
                     ),
                     Expanded(
-                      child: quickLinks('images/profile_payment_method.png',
+                      child: quickLinks(
+                              'assets/images/profile_payment_method.png',
                               'Payment Method')
                           .onClick(
                         onTap: () {
@@ -342,7 +345,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                   children: [
                     Expanded(
                       child: quickLinks(
-                              'images/profile_payment_method.png', 'Address')
+                              'assets/images/profile_address.png', 'Address')
                           .onClick(
                         onTap: () {
                           Navigator.of(context).pushNamed(
@@ -353,7 +356,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                       ),
                     ),
                     Expanded(
-                      child: quickLinks('images/profile_payment_method.png',
+                      child: quickLinks('assets/images/profile_medical_doc.png',
                               'My Medical Documents')
                           .onClick(onTap: () {
                         Navigator.of(context).pushNamed(
@@ -426,7 +429,8 @@ class _SettingsScreenState extends State<SettingScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: quickLinks('images/profile_payment_method.png',
+                      child: quickLinks(
+                              'assets/images/profile_payment_method.png',
                               'My Medications')
                           .onClick(
                         onTap: () {
@@ -439,7 +443,8 @@ class _SettingsScreenState extends State<SettingScreen> {
                       ),
                     ),
                     Expanded(
-                      child: quickLinks('images/profile_payment_method.png',
+                      child: quickLinks(
+                              'assets/images/profile_social_history.png',
                               'Social History')
                           .onClick(onTap: () {
                         Navigator.of(context)
@@ -481,7 +486,8 @@ class _SettingsScreenState extends State<SettingScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: quickLinks('images/profile_payment_method.png',
+                      child: quickLinks(
+                              'assets/images/profile_my_providers.png',
                               'My Providers')
                           .onClick(
                         onTap: () {
@@ -493,7 +499,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                     ),
                     Expanded(
                       child: quickLinks(
-                        'images/profile_payment_method.png',
+                        'assets/images/profile_payment_history.png',
                         "Payment History",
                       ).onClick(onTap: () {
                         Navigator.of(context).pushNamed(Routes.paymentHistory);

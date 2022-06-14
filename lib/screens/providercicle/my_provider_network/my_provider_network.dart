@@ -193,16 +193,17 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
         title: "",
         padding: const EdgeInsets.only(left: 20, right: 20, bottom: spacing30),
         isAddBack: false,
-        addHeader: true,
+        addHeader: false,
+        isAddAppBar: false,
         isBackRequired: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: spacing10),
-            // if (widget.showBack) CustomBackButton(),
-            // if (!fromHome) AppLogo(),
-            _buildHeader(),
-            SizedBox(height: 16),
+            // SizedBox(height: spacing10),
+            // // if (widget.showBack) CustomBackButton(),
+            // // if (!fromHome) AppLogo(),
+            // _buildHeader(),
+            // SizedBox(height: 16),
             serachAppointmentWidget(context),
 
             SizedBox(height: 16),

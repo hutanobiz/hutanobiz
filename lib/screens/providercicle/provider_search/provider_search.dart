@@ -107,11 +107,11 @@ class _ProviderSearchState extends State<ProviderSearch> {
           widget.isOnBoarding ? AppColors.snow : AppColors.goldenTainoi,
       body: LoadingBackgroundNew(
         isAddBack: widget.isOnBoarding,
-        addHeader: !widget.isOnBoarding,
+        addHeader: widget.isOnBoarding,
         isBackRequired: widget.isOnBoarding,
         title: "",
         isLoading: isLoading,
-        isAddAppBar: !widget.isOnBoarding,
+        isAddAppBar: widget.isOnBoarding,
         addBottomArrows: false,
         padding: EdgeInsets.only(left: 20, right: 20, top: 0, bottom: 0),
         child: Column(

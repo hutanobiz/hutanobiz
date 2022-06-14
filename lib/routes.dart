@@ -86,6 +86,7 @@ import 'package:hutano/screens/dashboard/see_all_searches.dart';
 import 'package:hutano/screens/dashboard/update_medical_history.dart';
 import 'package:hutano/screens/familynetwork/add_family_member/add_family_member.dart';
 import 'package:hutano/screens/familynetwork/add_family_member/invite_family_complete.dart';
+import 'package:hutano/screens/familynetwork/add_more_contacts.dart';
 import 'package:hutano/screens/familynetwork/familycircle/family_circle.dart';
 import 'package:hutano/screens/familynetwork/member_message/member_message.dart';
 import 'package:hutano/screens/home.dart';
@@ -323,6 +324,7 @@ class Routes {
   static const String linkAccount = '/linkAccount';
   static const String addUser = '/addUser';
   static const String slectFollowUpToBook = '/slectFollowUpToBook';
+  static const String addMoreContacts = '/addMoreContacts';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final dynamic args = settings.arguments;
@@ -807,7 +809,10 @@ class Routes {
         return MaterialPageRoute(builder: (_) => AddInsuranceComplete());
         break;
       case familyCircle:
-        return MaterialPageRoute(builder: (_) => FamilyCircle());
+        return MaterialPageRoute(
+            builder: (_) => FamilyCircle(
+                  isOnboarding: args,
+                ));
         break;
       case inviteFamilyComplete:
         return MaterialPageRoute(builder: (_) => InviteFamilyComplete());
@@ -892,6 +897,8 @@ class Routes {
         return MaterialPageRoute(builder: (_) => WelcomeNewFollowUp());
       case slectFollowUpToBook:
         return MaterialPageRoute(builder: (_) => SelectFollowUpToBook());
+      case addMoreContacts:
+        return MaterialPageRoute(builder: (_) => AddMoreContacts());
       case routeBoneAndMuscle:
         String problemId = args[ArgumentConstant.problemIdKey];
         String problemName = args[ArgumentConstant.problemNameKey];
