@@ -285,7 +285,7 @@ class _MedicineInformationState extends State<MedicineInformation>
                           children: [
                             Expanded(
                               child: Text(
-                                '${appointmentMedication[index].name} ${appointmentMedication[index].dose} is ${medChangeString[appointmentMedication[index].status]} by ${appointmentMedication[index].doctor == null ? 'Me' : appointmentMedication[index].doctor.fullName}',
+                                '${appointmentMedication[index].name} ${(appointmentMedication[index].status == 2 ? '' : appointmentMedication[index].dose)} is ${medChangeString[appointmentMedication[index].status]} by ${appointmentMedication[index].doctor == null ? 'Me' : appointmentMedication[index].doctor.fullName}',
                                 style: AppTextStyle.mediumStyle(fontSize: 14),
                               ),
                             ),
