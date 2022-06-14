@@ -3,6 +3,8 @@ import 'package:hutano/apis/api_manager.dart';
 import 'package:hutano/apis/common_res.dart';
 import 'package:hutano/apis/error_model.dart';
 import 'package:hutano/dimens.dart';
+import 'package:hutano/routes.dart';
+import 'package:hutano/screens/familynetwork/add_family_member/family_member_list.dart';
 import 'package:hutano/screens/familynetwork/add_family_member/model/res_relation_list.dart';
 import 'package:hutano/screens/familynetwork/familycircle/model/member_permission_model.dart';
 import 'package:hutano/screens/familynetwork/familycircle/model/req_remove_family_member.dart';
@@ -10,6 +12,8 @@ import 'package:hutano/screens/familynetwork/familycircle/model/res_family_circl
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/constants.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/constants/key_constant.dart';
+import 'package:hutano/utils/enum_utils.dart';
 import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/utils/preference_key.dart';
 import 'package:hutano/utils/preference_utils.dart';
@@ -30,6 +34,9 @@ import 'model/req_family_network.dart';
 import 'permission_access.dart';
 
 class FamilyCircle extends StatefulWidget {
+  final bool isOnboarding;
+
+  const FamilyCircle({Key key, this.isOnboarding}) : super(key: key);
   @override
   _FamilyCircleState createState() => _FamilyCircleState();
 }
@@ -416,13 +423,59 @@ class _FamilyCircleState extends State<FamilyCircle> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _backButton(),
-            _buildHeader(context),
-            SizedBox(
-              height: spacing20,
-            ),
+            widget.isOnboarding ? _backButton() : SizedBox(),
+            widget.isOnboarding ? _buildHeader(context) : SizedBox(),
+            widget.isOnboarding
+                ? SizedBox(
+                    height: spacing20,
+                  )
+                : SizedBox(),
             _buildList(),
-            // _buildPermissionButton(),
+            widget.isOnboarding
+                ? SizedBox()
+                : Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: InkWell(
+                          onTap: () async {
+                            dynamic response = await Navigator.of(context)
+                                .pushNamed(Routes.addMoreContacts);
+                            // print(member);
+                            if (response != null) {
+                              setState(() {});
+                              _getFamilyNetwork();
+                            }
+                          },
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 60,
+                                width: 60,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    border: Border.all(
+                                      width: 1,
+                                      color: colorPurple100,
+                                    )),
+                                child: Center(
+                                  child: Image.asset(FileConstants.icAddUser),
+                                ),
+                              ),
+                              SizedBox(height: spacing10),
+                              Text(
+                                "Add \n More",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: fontSize13,
+                                  color: colorPurple100,
+                                  fontWeight: FontWeight.w500,
+                                  fontStyle: FontStyle.normal,
+                                ),
+                              ),
+                            ],
+                          )),
+                    ),
+                  ),
             SizedBox(
               height: spacing20,
             ),

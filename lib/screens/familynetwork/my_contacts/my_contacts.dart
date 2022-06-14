@@ -91,7 +91,7 @@ class _MyContactsState extends State<MyContacts> {
                       onTap: () {
                         searchController.clear();
                         FocusScope.of(context).requestFocus(FocusNode());
-                        widget.onRelationSelected(widget.relationList[pos]);
+
                         var reqModel = FamilyMembers(
                             name: name,
                             phone: phone,
@@ -107,6 +107,7 @@ class _MyContactsState extends State<MyContacts> {
                             .removeProviderContacts(index);
                         Provider.of<FamilyProvider>(context, listen: false)
                             .removeFilteredProviderContacts(index);
+                        widget.onRelationSelected(widget.relationList[pos]);
                       },
                       child: ListTile(
                         title: Center(
@@ -249,7 +250,7 @@ class _MyContactsState extends State<MyContacts> {
                                     : familyProvider.providerContacts[index];
                                 return ListTile(
                                     title: Text(
-                                      contact.displayName,
+                                      contact.displayName??'',
                                       style: const TextStyle(
                                           color: colorBlack2,
                                           fontWeight: FontWeight.w500,

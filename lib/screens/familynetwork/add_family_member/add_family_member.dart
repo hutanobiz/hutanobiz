@@ -27,8 +27,9 @@ import 'model/res_relation_list.dart';
 
 class AddFamilyMember extends StatefulWidget {
   final FamilyMember member;
-
-  const AddFamilyMember({Key key, this.member}) : super(key: key);
+  final bool isOnboarding;
+  const AddFamilyMember({Key key, this.isOnboarding = true, this.member})
+      : super(key: key);
 
   @override
   _AddFamilyMemberState createState() => _AddFamilyMemberState();
@@ -109,7 +110,7 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
   }
 
   _onContinue() {
-    Navigator.of(context).pushNamed(Routes.familyCircle);
+    Navigator.of(context).pushNamed(Routes.familyCircle,arguments: widget.isOnboarding);
   }
 
   _onAdd(FamilyMember member) async {
@@ -150,7 +151,7 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildHeader(),
+              widget.isOnboarding ? _buildHeader() : SizedBox(),
               Container(
                 height: screenSize.height * 0.4,
                 child: MyContacts(
@@ -293,7 +294,7 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
                 },
               ),
               // FamilyMemberList(memberList: _memberList),
-              _buildButtons(context)
+              widget.isOnboarding ? _buildButtons(context) : SizedBox()
             ],
           ),
         ),
@@ -349,11 +350,11 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
       var res = await ApiManager().addMember(request);
       // showToast(res.response);
       ProgressDialogUtils.dismissProgressDialog();
-      Navigator.of(context).pushNamed(Routes.familyCircle);
+      Navigator.of(context).pushNamed(Routes.familyCircle,arguments: widget.isOnboarding);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       if (e.hashCode == 422 && e.response == "Family member already exist") {
-        Navigator.of(context).pushNamed(Routes.familyCircle);
+        Navigator.of(context).pushNamed(Routes.familyCircle,arguments: widget.isOnboarding);
       } else {
         DialogUtils.showAlertDialog(context, e.response);
       }
