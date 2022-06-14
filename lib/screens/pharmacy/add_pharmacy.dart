@@ -227,7 +227,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
                 }
               }
             : () {
-                Widgets.showToast("Please add pharmacy details");
+                Widgets.showToast("Please save pharmacy details");
               },
         addBottomArrows: MediaQuery.of(context).viewInsets.bottom == 0,
         isSkipLater: !widget.args['isEdit'],
