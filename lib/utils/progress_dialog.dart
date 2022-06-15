@@ -33,8 +33,8 @@ class ProgressDialogUtils {
             children: <Widget>[
               Center(
                 child: CustomLoader(
-                  // valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
-                ),
+                    // valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                    ),
               )
             ],
           );

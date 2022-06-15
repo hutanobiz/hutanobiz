@@ -41,7 +41,8 @@ class FamilyCircle extends StatefulWidget {
   _FamilyCircleState createState() => _FamilyCircleState();
 }
 
-class _FamilyCircleState extends State<FamilyCircle> {
+class _FamilyCircleState extends State<FamilyCircle>
+    with AutomaticKeepAliveClientMixin {
   List<CircleMember> list = [];
   List<MemberPermissionModel> permissionList = [];
   bool _enableButton = false;
@@ -645,5 +646,10 @@ class _FamilyCircleState extends State<FamilyCircle> {
         e.toString().debugLog();
       }
     });
+  }
+
+  @override
+  bool get wantKeepAlive {
+    return !widget.isOnboarding ? true : false;
   }
 }

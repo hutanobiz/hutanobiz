@@ -47,7 +47,7 @@ class MyProviderNetwrok extends StatefulWidget {
   _MyProviderNetwrokState createState() => _MyProviderNetwrokState();
 }
 
-class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
+class _MyProviderNetwrokState extends State<MyProviderNetwrok>  with AutomaticKeepAliveClientMixin{
   List<ProviderGroupList> _providerGroupList = [];
   List<FamilyNetwork> _memberList = [];
   String _shareMessage;
@@ -445,4 +445,8 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok> {
       ),
     );
   }
+   @override
+  bool get wantKeepAlive {
+     return !widget.isOnBoarding? true:false;
+   }
 }
