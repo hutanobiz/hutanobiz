@@ -881,13 +881,30 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                                         color: Colors.grey[300],
                                       )
                                     : SizedBox(),
-                                TrackingButton(
-                                    title: 'Start driving',
-                                    image: 'images/trackStartDriving.png',
-                                    onTap: () {
-                                      changeRequestStatus(
-                                          widget.appointmentId, "1");
-                                    })
+                                Row(
+                                  children: [
+                                    TrackingButton(
+                                        title: 'Start driving',
+                                        image: 'images/trackStartDriving.png',
+                                        onTap: () {
+                                          changeRequestStatus(
+                                              widget.appointmentId, "1");
+                                        }),
+                                    TrackingButton(
+                                        title: 'Directions',
+                                        image:
+                                            'assets/images/ic_navigation_blue.png',
+                                        onTap: () {
+                                          Navigator.pushNamed(context,
+                                              Routes.officeDirectionScreen,
+                                              arguments:
+                                                  // TrackOfficeModel.fromJson(
+                                                  appointmentResponse
+                                              // )
+                                              );
+                                        }),
+                                  ],
+                                )
                               ],
                             )
                           : index == 1

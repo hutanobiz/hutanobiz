@@ -175,6 +175,26 @@ class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
   }
 
   Widget widgetList(dynamic appointment) {
+    String address = '---';
+    LatLng latLng = new LatLng(0, 0);
+    address = Extensions.addressFormat(
+      appointment['data']["doctorAddress"]["address"]?.toString(),
+      appointment['data']["doctorAddress"]["street"]?.toString(),
+      appointment['data']["doctorAddress"]["city"]?.toString(),
+      appointment['data']["doctorAddress"]["state"],
+      appointment['data']["doctorAddress"]["zipCode"]?.toString(),
+    );
+
+    if (appointment['data']["doctorAddress"]["coordinates"] != null) {
+      List location = appointment['data']["doctorAddress"]["coordinates"];
+
+      if (location.length > 0) {
+        latLng = LatLng(
+          double.parse(location[1].toString()),
+          double.parse(location[0].toString()),
+        );
+      }
+    }
     if (appointment['data']['doctorAddress'] != null) {
       if (appointment['data']['doctorAddress']['coordinates'] != null) {
         List location = appointment['data']['doctorAddress']['coordinates'];
@@ -250,60 +270,108 @@ class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
                 ),
               ),
               Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  margin: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(14.0),
-                    ),
-                    border: Border.all(color: Colors.grey[300]),
-                  ),
-                  height: 50,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: textEditingController,
-                          textAlignVertical: TextAlignVertical.top,
-                          keyboardType: TextInputType.multiline,
-                          maxLines: 5,
-                          minLines: 1,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            hintText: "Quick message",
-                            hintStyle: TextStyle(color: Colors.grey),
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 16),
-                          ),
+                  alignment: Alignment.bottomCenter,
+                  child: Column(mainAxisSize: MainAxisSize.min, children: [
+                    Container(
+                      margin: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(14.0),
                         ),
+                        border: Border.all(color: Colors.grey[300]),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 4, right: 2, left: 2, top: 4),
-                        child: CircleAvatar(
-                          radius: 25,
-                          backgroundColor: AppColors.goldenTainoi,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.send,
-                              color: Colors.white,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(
+                            Icons.location_on,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(width: 8.0),
+                          Expanded(
+                            child: Text(
+                              address,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                                fontSize: 14.0,
+                              ),
                             ),
-                            onPressed: () {
-                              if (textEditingController.text != '') {
-                                sendChatMessage();
-                                textEditingController.clear();
-                              }
-                            },
                           ),
-                        ),
+                          SizedBox(width: 4.0),
+                          FlatButton(
+                            padding: const EdgeInsets.all(0.0),
+                            onPressed: () => latLng.launchMaps(),
+                            child: Text(
+                              "Get Directions",
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: AppColors.windsor,
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-              ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(14.0),
+                        ),
+                        border: Border.all(color: Colors.grey[300]),
+                      ),
+                      height: 50,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: textEditingController,
+                              textAlignVertical: TextAlignVertical.top,
+                              keyboardType: TextInputType.multiline,
+                              maxLines: 5,
+                              minLines: 1,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                hintText: "Quick message",
+                                hintStyle: TextStyle(color: Colors.grey),
+                                contentPadding:
+                                    EdgeInsets.symmetric(horizontal: 16),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 4, right: 2, left: 2, top: 4),
+                            child: CircleAvatar(
+                              radius: 25,
+                              backgroundColor: AppColors.goldenTainoi,
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.send,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () {
+                                  if (textEditingController.text != '') {
+                                    sendChatMessage();
+                                    textEditingController.clear();
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ])),
             ],
           );
   }
