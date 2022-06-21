@@ -105,12 +105,7 @@ class _AddUserState extends State<AddUser> {
   final labelStyle = TextStyle(fontSize: fontSize14, color: colorGrey60);
   List<Genders> genders = [
     Genders(0, 'Binary'),
-    Genders(1, 'Lesbian'),
-    Genders(2, 'Gay'),
-    Genders(3, 'Bisexual'),
-    Genders(4, 'Transgender'),
-    Genders(5, 'Queer'),
-    Genders(6, 'Other'),
+    Genders(1, 'Non-binary'),
   ];
   List<Relations> _relationList = [];
   Relations _selectedRelation;
