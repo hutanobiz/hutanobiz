@@ -52,25 +52,29 @@ class _FamilyCircleState extends State<FamilyCircle>
   @override
   void initState() {
     super.initState();
-    _getRelation();
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      _getFamilyNetwork();
+      _getRelation();
       _getUserPermission();
     });
   }
 
   _getRelation() async {
-    ProgressDialogUtils.showProgressDialog(context);
+    // ProgressDialogUtils.showProgressDialog(context);
     try {
       var res = await ApiManager().getRelations();
+
+      // ProgressDialogUtils.dismissProgressDialog();
+
       setState(() {
         _relationList = res.response;
       });
-      ProgressDialogUtils.dismissProgressDialog();
     } on ErrorModel catch (e) {
-      ProgressDialogUtils.dismissProgressDialog();
+      // ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);
     } catch (e) {
-      ProgressDialogUtils.dismissProgressDialog();
+      // ProgressDialogUtils.dismissProgressDialog();
     }
   }
 
@@ -276,12 +280,12 @@ class _FamilyCircleState extends State<FamilyCircle>
   }
 
   _getUserPermission() async {
-    ProgressDialogUtils.showProgressDialog(context);
+    // ProgressDialogUtils.showProgressDialog(context);
     final request = ReqFamilyNetwork(
         id: getString(PreferenceKey.id), limit: dataLimit, page: _page);
     try {
       var res = await ApiManager().getUserPermission();
-      ProgressDialogUtils.dismissProgressDialog();
+      // ProgressDialogUtils.dismissProgressDialog();
       var i = 0;
       var imagesList = [
         FileConstants.icFullAccess,
@@ -295,12 +299,11 @@ class _FamilyCircleState extends State<FamilyCircle>
         i++;
       });
       setState(() {});
-      _getFamilyNetwork();
     } on ErrorModel catch (e) {
-      ProgressDialogUtils.dismissProgressDialog();
+      // ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response);
     } catch (e) {
-      ProgressDialogUtils.dismissProgressDialog();
+      // ProgressDialogUtils.dismissProgressDialog();
     }
   }
 
