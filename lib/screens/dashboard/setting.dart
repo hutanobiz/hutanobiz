@@ -271,7 +271,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                       ),
                     ),
                     Expanded(
-                      child: quickLinks('images/consultation_history.png',
+                      child: quickLinks('assets/images/consultation_history.png',
                               'Consultation history')
                           .onClick(
                         onTap: () {
@@ -288,14 +288,14 @@ class _SettingsScreenState extends State<SettingScreen> {
                   children: [
                     Expanded(
                         child: quickLinks(
-                                'images/health_record.png', 'Health records')
+                                'assets/images/health_record.png', 'Health records')
                             .onClick(onTap: () {
                       Navigator.of(context).pushNamed(
                         Routes.myMedicalDocuments,
                       );
                     })),
                     Expanded(
-                      child: quickLinks('images/health_monitoring.png',
+                      child: quickLinks('assets/images/health_monitoring.png',
                               'Health monitoring')
                           .onClick(
                         onTap: () {
@@ -311,7 +311,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: quickLinks('images/calender_reminder.png',
+                      child: quickLinks('assets/images/calender_reminder.png',
                               'Calendar reminder')
                           .onClick(
                         onTap: () {
@@ -430,7 +430,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                   children: [
                     Expanded(
                       child: quickLinks(
-                              'assets/images/profile_payment_method.png',
+                              'assets/images/profile_my_medications.png',
                               'My Medications')
                           .onClick(
                         onTap: () {
