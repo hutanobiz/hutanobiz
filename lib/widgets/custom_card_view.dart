@@ -11,21 +11,26 @@ class CustomCardView extends StatelessWidget {
       @required this.image,
       @required this.cardText,
       @required this.cardSubText,
-      this.isSelected = false})
+      this.isSelected = false,
+      this.isEnabled = true})
       : super(key: key);
 
   final Function onTap;
   final String image, cardText, cardSubText;
-  final bool isSelected;
+  final bool isSelected, isEnabled;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(spacing10),
       decoration: BoxDecoration(
-        color: isSelected ? AppColors.goldenTainoi : null,
+        color:  isSelected
+                ? AppColors.goldenTainoi
+                : null
+            ,
         borderRadius: BorderRadius.all(Radius.circular(14.0)),
-        border: Border.all(color: Colors.grey[200]),
+        border:
+             Border.all(color: isEnabled?Colors.grey[200]:Colors.grey[50]),
       ),
       child: InkWell(
         splashColor: Colors.grey,
@@ -43,7 +48,7 @@ class CustomCardView extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: fontWeightSemiBold,
                       fontSize: fontSize16,
-                      color: Colors.black,
+                      color: isEnabled? Colors.black:Colors.grey,
                     ),
                   ),
                   SizedBox(height: spacing5),
@@ -53,7 +58,7 @@ class CustomCardView extends StatelessWidget {
                       fontWeight: fontWeightRegular,
                       fontFamily: gilroyRegular,
                       fontSize: fontSize13,
-                      color: colorBlack2,
+                      color: isEnabled? Colors.black:Colors.grey,
                     ),
                   ),
                 ],

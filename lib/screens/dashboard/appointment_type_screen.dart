@@ -27,6 +27,8 @@ class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
   bool isVirtualSelected = false;
   bool isHomeSelected = false;
   String selectedType = "";
+  var isFirstAppointmentOnline;
+  var totalAppointmentWithProvider;
 
   @override
   void initState() {
@@ -44,7 +46,13 @@ class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
   @override
   Widget build(BuildContext context) {
     conatiner = InheritedContainer.of(context);
+    isFirstAppointmentOnline = conatiner.providerResponse['providerData']
+            ['data'][0]['isFirstAppointmentOnline'] ??
+        false;
 
+    totalAppointmentWithProvider = conatiner.providerResponse['providerData']
+            ['totalAppointmentWithProvider'] ??
+        0;
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackgroundNew(
@@ -100,7 +108,8 @@ class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
             Localization.of(context).providerOfficeSubLabel,
             _appointentTypeMap[ArgumentConstant.isOfficeEnabled],
             '1',
-            isOfficeSelected),
+            isOfficeSelected,
+            !(isFirstAppointmentOnline && totalAppointmentWithProvider == 0)),
         SizedBox(height: 20.0),
         cardView(
             FileConstants.icVideoChatAppointment,
@@ -108,7 +117,8 @@ class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
             Localization.of(context).videoChatSubLabel,
             _appointentTypeMap[ArgumentConstant.isVideoChatEnabled],
             '2',
-            isVirtualSelected),
+            isVirtualSelected,
+            true),
         SizedBox(height: 20.0),
         cardView(
             FileConstants.icOnSiteAppointment,
@@ -116,36 +126,46 @@ class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
             Localization.of(context).onSiteSubLabel,
             _appointentTypeMap[ArgumentConstant.isOnsiteEnabled],
             '3',
-            isHomeSelected),
+            isHomeSelected,
+            !(isFirstAppointmentOnline && totalAppointmentWithProvider == 0)),
       ],
     );
   }
 
-  Widget cardView(String image, String cardText, String subText,
-      bool isAppointmentTypeTrue, String type, bool isSelected) {
+  Widget cardView(
+      String image,
+      String cardText,
+      String subText,
+      bool isAppointmentTypeTrue,
+      String type,
+      bool isSelected,
+      bool isEnabled) {
     return !isAppointmentTypeTrue
         ? Container()
         : CustomCardView(
-            onTap: () {
-              if (type == '1') {
-                isOfficeSelected = true;
-                isVirtualSelected = false;
-                isHomeSelected = false;
-                selectedType = "1";
-              } else if (type == '2') {
-                isOfficeSelected = false;
-                isVirtualSelected = true;
-                isHomeSelected = false;
-                selectedType = "2";
-              }
-              if (type == '3') {
-                isOfficeSelected = false;
-                isVirtualSelected = false;
-                isHomeSelected = true;
-                selectedType = "3";
-              }
-              setState(() {});
-            },
+            onTap: isEnabled
+                ? () {
+                    if (type == '1') {
+                      isOfficeSelected = true;
+                      isVirtualSelected = false;
+                      isHomeSelected = false;
+                      selectedType = "1";
+                    } else if (type == '2') {
+                      isOfficeSelected = false;
+                      isVirtualSelected = true;
+                      isHomeSelected = false;
+                      selectedType = "2";
+                    }
+                    if (type == '3') {
+                      isOfficeSelected = false;
+                      isVirtualSelected = false;
+                      isHomeSelected = true;
+                      selectedType = "3";
+                    }
+                    setState(() {});
+                  }
+                : null,
+            isEnabled: isEnabled,
             image: image,
             cardText: cardText,
             cardSubText: subText,
