@@ -15,6 +15,8 @@ import 'package:hutano/text_style.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/constants.dart';
 import 'package:hutano/utils/extensions.dart';
+import 'package:hutano/utils/localization/localization.dart';
+import 'package:hutano/widgets/controller.dart';
 import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/fancy_button.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
@@ -53,9 +55,10 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
 
   Office officeData, videoData, onsiteData;
 
-  int _radioValue = 0;
+  int _radioValue =
+      0; // for radio button i concat appoinmentType and 0/1(0 for consultation 1 for service)
   int _selectedScheduleIndex = 0;
-  Map<String, ServiceData> _selectedServicesMap = Map();
+  Map<String, Services> _selectedServicesMap = Map();
   String mondayTimings,
       tuesdayTimings,
       wednesdayTimings,
@@ -65,6 +68,9 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
       sundayTimings;
   TabController _tabController;
   int selectedIndex = 0;
+  String appointmentTypeRadioValue = '0';
+  var isFirstAppointmentOnline;
+  var totalAppointmentWithProvider;
 
   List<dynamic> _timings = List(7);
 
@@ -176,6 +182,12 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
                         ? Office.fromJson(
                             _providerData['vedioConsultanceFee'][0])
                         : null;
+                    isFirstAppointmentOnline = profileMapResponse['data'][0]
+                            ['isFirstAppointmentOnline'] ??
+                        false;
+
+                    totalAppointmentWithProvider =
+                        profileMapResponse['totalAppointmentWithProvider'] ?? 0;
 
                     return LoadingBackgroundNew(
                       title: name,
@@ -199,25 +211,74 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
                             child: FancyButton(
                               title: "Book Appointment",
                               onPressed: () {
-                                Map _appointentTypeMap = {};
+                                if (appointmentTypeRadioValue != '0' &&
+                                    selectedIndex == 1) {
+                                  _container.setProjectsResponse(
+                                      "serviceType", appointmentTypeRadioValue);
 
-                                dynamic response =
-                                    profileMapResponse["data"][0];
+                                  if (!_radioValue.toString().contains('0')) {
+                                    if (_selectedServicesMap.values
+                                            .toList()
+                                            .length >
+                                        0) {
+                                      _container.setServicesData("status", "1");
+                                      _container.setServicesData("services",
+                                          _selectedServicesMap.values.toList());
 
-                                _appointentTypeMap["isOfficeEnabled"] =
-                                    response["isOfficeEnabled"];
-                                _appointentTypeMap["isVideoChatEnabled"] =
-                                    response["isVideoChatEnabled"];
-                                _appointentTypeMap["isOnsiteEnabled"] =
-                                    response["isOnsiteEnabled"];
-                                _container.providerResponse.clear();
+                                      Navigator.of(context).pushNamed(
+                                          Routes.selectAppointmentTimeScreen,
+                                          arguments: SelectDateTimeArguments(
+                                              fromScreen: 0));
+                                    } else {
+                                      Widgets.showToast(
+                                          "Please choose at least one service");
+                                    }
+                                  } else {
+                                    String _appointmentTypeKey;
+                                    switch (appointmentTypeRadioValue) {
+                                      case '1':
+                                        _appointmentTypeKey =
+                                            'officeConsultanceFee';
+                                        break;
+                                      case '2':
+                                        _appointmentTypeKey =
+                                            'vedioConsultanceFee';
+                                        break;
+                                      case '3':
+                                        _appointmentTypeKey =
+                                            'onsiteConsultanceFee';
+                                        break;
+                                      default:
+                                    }
+                                    _container.setServicesData("status", "0");
+                                    _container.setServicesData("consultaceFee",
+                                        _providerData[_appointmentTypeKey]);
+                                    Navigator.of(context).pushNamed(
+                                        Routes.selectAppointmentTimeScreen,
+                                        arguments: SelectDateTimeArguments(
+                                            fromScreen: 0));
+                                  }
+                                } else {
+                                  Map _appointentTypeMap = {};
 
-                                _container.setProviderData(
-                                    "providerData", profileMapResponse);
-                                Navigator.of(context).pushNamed(
-                                  Routes.appointmentTypeScreen,
-                                  arguments: _appointentTypeMap,
-                                );
+                                  dynamic response =
+                                      profileMapResponse["data"][0];
+
+                                  _appointentTypeMap["isOfficeEnabled"] =
+                                      response["isOfficeEnabled"];
+                                  _appointentTypeMap["isVideoChatEnabled"] =
+                                      response["isVideoChatEnabled"];
+                                  _appointentTypeMap["isOnsiteEnabled"] =
+                                      response["isOnsiteEnabled"];
+                                  _container.providerResponse.clear();
+
+                                  _container.setProviderData(
+                                      "providerData", profileMapResponse);
+                                  Navigator.of(context).pushNamed(
+                                    Routes.appointmentTypeScreen,
+                                    arguments: _appointentTypeMap,
+                                  );
+                                }
                               },
                             ),
                           ),
@@ -315,6 +376,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
           ),
           Visibility(
             child: ListView(
+              padding: EdgeInsets.symmetric(horizontal: 20),
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               children: _widgetList(),
@@ -1364,40 +1426,197 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
     List<Customer> groupOfficeList = [], groupOnsiteList = [];
     List<Widget> formWidget = [];
 
+    formWidget.add(
+      isFirstAppointmentOnline && totalAppointmentWithProvider == 0
+          ? Container(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              margin: EdgeInsets.only(top: 20),
+              decoration: BoxDecoration(
+                color: AppColors.sunglow.withOpacity(0.20),
+                border: Border.all(
+                  width: 1.0,
+                  color: AppColors.sunglow,
+                ),
+                borderRadius: BorderRadius.circular(
+                  8.0,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.info,
+                    color: AppColors.goldenTainoi,
+                  ),
+                  SizedBox(width: 4),
+                  Expanded(
+                    child: Text("This provider's first consult is virtual",
+                        style: AppTextStyle.mediumStyle(fontSize: 15)),
+                  ),
+                ],
+              ))
+          : SizedBox(),
+    );
+
     formWidget.add(officeData != null
         ? consultancyFeeWidget(
-            'Office', officeData.fee.toDouble(), officeData.duration.toString())
+            'Office',
+            officeData.fee.toDouble(),
+            officeData.duration.toString(),
+            '1',
+            !(isFirstAppointmentOnline && totalAppointmentWithProvider == 0))
         : SizedBox());
     if (groupAppointmentTypeMap.containsKey(1)) {
       var groupOfficeMap =
           groupBy(groupAppointmentTypeMap[1], (obj) => obj['serviceName']);
       groupOfficeMap.forEach((k, v) => groupOfficeList
           .add(Customer(k, v.map((m) => Services.fromJson(m)).toList())));
-
-      formWidget.add(servicesExpandedWidget(groupOfficeList));
+      formWidget.add(servicesWidget(groupOfficeList, '1',
+          !(isFirstAppointmentOnline && totalAppointmentWithProvider == 0)));
+      // formWidget.add(servicesExpandedWidget(groupOfficeList));
     }
 
     formWidget.add(videoData != null
         ? consultancyFeeWidget('Telemedicine', videoData.fee.toDouble(),
-            videoData.duration.toString())
+            videoData.duration.toString(), '2', true)
         : SizedBox());
 
     formWidget.add(onsiteData != null
         ? consultancyFeeWidget(
-            'Onsite', onsiteData.fee.toDouble(), onsiteData.duration.toString())
+            'Onsite',
+            onsiteData.fee.toDouble(),
+            onsiteData.duration.toString(),
+            '3',
+            !(isFirstAppointmentOnline && totalAppointmentWithProvider == 0))
         : SizedBox());
     if (groupAppointmentTypeMap.containsKey(3)) {
       var groupOnsiteMap =
           groupBy(groupAppointmentTypeMap[3], (obj) => obj['serviceName']);
       groupOnsiteMap.forEach((k, v) => groupOnsiteList
           .add(Customer(k, v.map((m) => Services.fromJson(m)).toList())));
-
-      formWidget.add(servicesExpandedWidget(groupOnsiteList));
+      formWidget.add(servicesWidget(groupOnsiteList, '3',
+          !(isFirstAppointmentOnline && totalAppointmentWithProvider == 0)));
+      // formWidget.add(servicesExpandedWidget(groupOnsiteList));
     }
 
     formWidget.add(SizedBox(height: 26));
 
     return formWidget;
+  }
+
+  Widget servicesWidget(
+      List<Customer> groupList, String appointmentType, bool isEnabled) {
+    return Container(
+      padding: const EdgeInsets.all(2.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14.0),
+        border: Border.all(
+          color: Colors.grey[100],
+        ),
+      ),
+      child: Column(
+        children: <Widget>[
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: _radioValue != int.parse(appointmentType + '1')
+                  ? Colors.white
+                  : Colors.grey[100],
+              borderRadius: BorderRadius.circular(14.0),
+            ),
+            child: Row(
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      "Services",
+                      style: TextStyle(
+                        fontSize: fontSize16,
+                        color: isEnabled ? Colors.black : Colors.grey,
+                        fontWeight: fontWeightBold,
+                      ),
+                    ),
+                    SizedBox(height: 7),
+                    Text(Localization.of(context).chooseOfferedServices,
+                        style: TextStyle(
+                            fontSize: fontSize13,
+                            fontWeight: fontWeightMedium,
+                            color: isEnabled ? Colors.black : Colors.grey)),
+                  ],
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Radio(
+                      activeColor: AppColors.windsor,
+                      groupValue: _radioValue,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      value: int.parse(appointmentType + '1'),
+                      onChanged: isEnabled
+                          ? (val) {
+                              _handleRadioValueChange(1, appointmentType);
+                            }
+                          : null,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ).onClick(
+            onTap: isEnabled
+                ? () => _handleRadioValueChange(1, appointmentType)
+                : null,
+          ),
+          _radioValue != int.parse(appointmentType + '1')
+              ? Container()
+              : groupList != null && groupList.length > 0
+                  ? ListView.separated(
+                      separatorBuilder: (BuildContext context, int index) =>
+                          Divider(),
+                      physics: ClampingScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: groupList.length,
+                      itemBuilder: (context, index) {
+                        if (groupList != null && groupList.length > 0) {
+                          return ExpansionTile(
+                            title: Text(
+                              groupList[index].name,
+                              style: TextStyle(
+                                fontSize: fontSize16,
+                                color: colorBlack2,
+                                fontWeight: fontWeightSemiBold,
+                              ),
+                            ),
+                            children: [
+                              ListView.separated(
+                                  separatorBuilder:
+                                      (BuildContext context, int index) =>
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                  physics: ClampingScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: groupList[index].services.length,
+                                  itemBuilder: (context, itemIndex) {
+                                    Services services =
+                                        groupList[index].services[itemIndex];
+                                    return serviceSlotWidget(services);
+                                  })
+                            ],
+                          );
+                        }
+
+                        return Container();
+                      })
+                  : Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.all(20),
+                      child: Text("NO services available"),
+                    ),
+        ],
+      ),
+    );
   }
 
   servicesExpandedWidget(groupList) {
@@ -1438,7 +1657,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
         });
   }
 
-  Widget consultancyFeeWidget(String title, double fee, String duration) {
+  Widget consultancyFeeWidget(String title, double fee, String duration,
+      String appointmentType, bool isEnabled) {
     return Container(
       margin: EdgeInsets.only(top: 20),
       padding: const EdgeInsets.all(16.0),
@@ -1454,8 +1674,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
           Text(
             title,
             style: AppTextStyle.boldStyle(
-              fontSize: 16,
-            ),
+                fontSize: 16, color: isEnabled ? Colors.black : Colors.grey),
           ),
           Row(
             children: <Widget>[
@@ -1465,9 +1684,9 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
                   Text(
                     "Consultation",
                     style: TextStyle(
-                      fontSize: 15.0,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w600,
+                      fontSize: fontSize16,
+                      color: isEnabled ? Colors.black : Colors.grey,
+                      fontWeight: fontWeightBold,
                     ),
                   ),
                   SizedBox(height: 7),
@@ -1475,7 +1694,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
                     text: TextSpan(
                       style: TextStyle(
                         fontSize: 13.0,
-                        color: Colors.black,
+                        color: isEnabled ? Colors.black : Colors.grey,
                         fontWeight: FontWeight.w400,
                       ),
                       children: <TextSpan>[
@@ -1498,24 +1717,49 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
                   ),
                 ],
               ),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Radio(
+                    activeColor: AppColors.windsor,
+                    groupValue: _radioValue,
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    value: int.parse(appointmentType + '0'),
+                    onChanged: isEnabled
+                        ? (v) => _handleRadioValueChange(0, appointmentType)
+                        : null,
+                  ),
+                ),
+              )
             ],
           ),
         ],
       ),
     ).onClick(
-      onTap: () => _handleRadioValueChange(0),
+      onTap:
+          isEnabled ? () => _handleRadioValueChange(0, appointmentType) : null,
     );
   }
 
   Widget serviceSlotWidget(Services services) {
-    return ListTile(
+    return CheckboxListTile(
       dense: false,
+      controlAffinity: ListTileControlAffinity.trailing,
+      value: _selectedServicesMap.containsKey(services.subServiceId),
+      activeColor: AppColors.goldenTainoi,
+      onChanged: (value) {
+        value
+            ? _selectedServicesMap[services.subServiceId] = services
+            : _selectedServicesMap.remove(services.subServiceId);
+
+        setState(() {});
+      },
       title: Text(
         services.subServiceName ?? "---",
         style: TextStyle(
-          fontSize: 15.0,
-          color: Colors.black,
+          fontSize: 14.0,
           fontWeight: FontWeight.w600,
+          color: Colors.black,
         ),
       ),
       subtitle: RichText(
@@ -1527,10 +1771,10 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
           ),
           children: <TextSpan>[
             TextSpan(
-              text: 'Amount \$ ',
+              text: 'Amount \$',
               style: TextStyle(
                 fontSize: 13.0,
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w500,
                 color: Colors.black.withOpacity(0.85),
               ),
             ),
@@ -1538,7 +1782,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
               text: '${services.amount.toStringAsFixed(2)} \u2022 ',
               style: TextStyle(
                 fontSize: 13.0,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w600,
                 color: Colors.black.withOpacity(0.85),
               ),
             ),
@@ -1546,7 +1790,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
               text: 'Duration ',
               style: TextStyle(
                 fontSize: 13.0,
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w500,
                 color: Colors.black.withOpacity(0.85),
               ),
             ),
@@ -1554,7 +1798,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
               text: '${services.duration} min',
               style: TextStyle(
                 fontSize: 13.0,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w600,
                 color: Colors.black.withOpacity(0.85),
               ),
             ),
@@ -1564,12 +1808,15 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
     );
   }
 
-  void _handleRadioValueChange(int value) {
-    setState(() => _radioValue = value);
+  void _handleRadioValueChange(int value, String appointmentType) {
+    setState(() {
+      appointmentTypeRadioValue = appointmentType;
+      _radioValue = int.parse(appointmentType + '' + value.toString());
+    });
 
-    if (value == 0) {
-      _selectedServicesMap.clear();
-    }
+    // if (value == 0) {
+    _selectedServicesMap.clear();
+    // }
   }
 
   void setTimings(List _scheduleList) {

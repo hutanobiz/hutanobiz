@@ -3,6 +3,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/models/services.dart';
 import 'package:hutano/routes.dart';
+import 'package:hutano/text_style.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/constants/key_constant.dart';
 import 'package:hutano/utils/localization/localization.dart';
@@ -102,6 +103,34 @@ class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
                   fontWeight: fontWeightSemiBold,
                   fontSize: fontSize18)),
         ),
+        isFirstAppointmentOnline && totalAppointmentWithProvider == 0
+            ? Container(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                margin: EdgeInsets.only(bottom: 20),
+                decoration: BoxDecoration(
+                  color: AppColors.sunglow.withOpacity(0.20),
+                  border: Border.all(
+                    width: 1.0,
+                    color: AppColors.sunglow,
+                  ),
+                  borderRadius: BorderRadius.circular(
+                    8.0,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.info,
+                      color: AppColors.goldenTainoi,
+                    ),
+                    SizedBox(width: 4),
+                    Expanded(
+                      child: Text("This provider's first consult is virtual",
+                          style: AppTextStyle.mediumStyle(fontSize: 15)),
+                    ),
+                  ],
+                ))
+            : SizedBox(),
         cardView(
             FileConstants.icProviderOffice,
             Localization.of(context).providerOfficeLabel,
