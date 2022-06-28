@@ -399,12 +399,14 @@ class _VitalReviewsState extends State<VitalReviews> {
               ? MainAxisAlignment.spaceBetween
               : MainAxisAlignment.start,
           children: [
-            Text(
-              label,
-              style: TextStyle(
-                color: colorBlack2,
-                fontSize: fontSize14,
-                fontWeight: fontWeightSemiBold,
+            Flexible(
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: colorBlack2,
+                  fontSize: fontSize14,
+                  fontWeight: fontWeightSemiBold,
+                ),
               ),
             ),
             if (!isForBloodPressure) SizedBox(width: spacing15),
@@ -488,7 +490,7 @@ class _VitalReviewsState extends State<VitalReviews> {
                     }
                   : null,
               child: Container(
-                width: 100,
+                width: !isFieldEnable && !isForTime ? 100 : 80,
                 height: 40,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -545,10 +547,11 @@ class _VitalReviewsState extends State<VitalReviews> {
                 SizedBox(width: spacing10),
                 _noButtonWidget(context),
               ]),
-            SizedBox(width: isForBloodPressure ? 0 : spacing15),
+            SizedBox(
+                width: isForBloodPressure || isAmPMVisible ? 0 : spacing15),
             if (isForBloodPressure)
               Container(
-                width: 90,
+                width: 80,
                 height: 40,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -681,12 +684,14 @@ class _VitalReviewsState extends State<VitalReviews> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              label,
-              style: TextStyle(
-                color: colorBlack2,
-                fontSize: fontSize14,
-                fontWeight: fontWeightSemiBold,
+            Flexible(
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: colorBlack2,
+                  fontSize: fontSize14,
+                  fontWeight: fontWeightSemiBold,
+                ),
               ),
             ),
             Container(
@@ -737,7 +742,7 @@ class _VitalReviewsState extends State<VitalReviews> {
             ),
             SizedBox(width: 0),
             Container(
-              width: 90,
+              width: 80,
               height: 40,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -793,7 +798,7 @@ class _VitalReviewsState extends State<VitalReviews> {
           });
         },
         buttonType: HutanoButtonType.onlyLabel,
-        width: 65,
+        width: 60,
         labelColor: isSwitchSelected ? colorWhite : colorPurple100,
         color: isSwitchSelected ? colorPurple100 : colorWhite,
         height: 34,
@@ -808,7 +813,7 @@ class _VitalReviewsState extends State<VitalReviews> {
           });
         },
         buttonType: HutanoButtonType.onlyLabel,
-        width: 65,
+        width: 60,
         labelColor: !isSwitchSelected ? colorWhite : colorPurple100,
         color: !isSwitchSelected ? colorPurple100 : colorWhite,
         borderWidth: 1,
