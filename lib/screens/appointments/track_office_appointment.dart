@@ -167,6 +167,17 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
         shrinkWrap: true,
         controller: scrollController,
         children: <Widget>[
+          // TrackingButton(
+          //     title: 'Directions',
+          //     image: 'assets/images/ic_navigation_blue.png',
+          //     onTap: () {
+          //       Navigator.pushNamed(context, Routes.officeDirectionScreen,
+          //           arguments:
+          //               // TrackOfficeModel.fromJson(
+          //               appointmentResponse
+          //           // )
+          //           );
+          //     }),
           SizedBox(
             height: 20,
           ),

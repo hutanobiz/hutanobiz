@@ -5,7 +5,7 @@ import 'package:encrypt/encrypt.dart' as Encrypt;
 import 'package:flutter/material.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
-import 'package:foreground_service/foreground_service.dart';
+import 'package:flutter_background/flutter_background.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
@@ -16,6 +16,7 @@ import 'package:hutano/utils/shared_prefrences.dart';
 import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:keyboard_actions/external/platform_check/platform_check.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 
@@ -47,20 +48,36 @@ class _CallPageState extends State<CallPage> {
   bool remoteAudio = true, remoteVideo = true;
 
   @override
-  void dispose() {
+  Future<void> dispose() async {
     // clear users
     // _users.clear();
     // destroy sdk
     _engine.leaveChannel();
     _engine.destroy();
-    ForegroundService.stopForegroundService();
+    await FlutterBackground.disableBackgroundExecution();
     disableWakeLock();
     super.dispose();
+  }
+
+  initialiseBackgroundService() async {
+    final androidConfig = FlutterBackgroundAndroidConfig(
+      notificationTitle: "Hutanop",
+      notificationText: "Call running app running in the background",
+      notificationImportance: AndroidNotificationImportance.Default,
+      notificationIcon: AndroidResource(
+          name: 'background_icon',
+          defType: 'drawable'), // Default is ic_launcher from folder mipmap
+    );
+    bool success =
+        await FlutterBackground.initialize(androidConfig: androidConfig);
   }
 
   @override
   void initState() {
     super.initState();
+    if (PlatformCheck.isAndroid) {
+      initialiseBackgroundService();
+    }
     SharedPref().getToken().then((usertoken) {
       token = usertoken;
       api
@@ -116,8 +133,10 @@ class _CallPageState extends State<CallPage> {
     _engine.enableLocalVideo(!mutedVideo);
     _engine
         .joinChannel(null, widget.channelName['_id'], null, userId)
-        .then((value) {
-      maybeStartFGS();
+        .then((value) async {
+      if (PlatformCheck.isAndroid) {
+        await FlutterBackground.enableBackgroundExecution();
+      }
     });
   }
 
@@ -214,7 +233,7 @@ class _CallPageState extends State<CallPage> {
     var stopMap = {};
     stopMap['appid'] = appid;
     stopMap['appointmentId'] = widget.channelName['_id'];
-    api.stopVideoCall(context, token, stopMap).then((value) {
+    api.stopVideoCall(context, token, stopMap).then((value) async {
       setLoading(false);
       var appointmentCompleteMap = {};
       appointmentCompleteMap['type'] = '2';
@@ -232,7 +251,8 @@ class _CallPageState extends State<CallPage> {
           .unHideOverlay();
       Provider.of<OverlayHandlerProvider>(context, listen: false)
           .removeOverlay(context);
-      ForegroundService.stopForegroundService();
+      await FlutterBackground.disableBackgroundExecution();
+
       Navigator.of(context).pushReplacementNamed(
         Routes.appointmentCompleteConfirmation,
         arguments: appointmentCompleteMap,
@@ -356,7 +376,7 @@ class _CallPageState extends State<CallPage> {
                                                 description:
                                                     'Are you sure to end Call?',
                                                 leftText: 'yes',
-                                                onLeftPressed: () {
+                                                onLeftPressed: () async {
                                                   Provider.of<OverlayHandlerProvider>(
                                                           context,
                                                           listen: false)
@@ -365,8 +385,8 @@ class _CallPageState extends State<CallPage> {
                                                           context,
                                                           listen: false)
                                                       .removeOverlay(context);
-                                                  ForegroundService
-                                                      .stopForegroundService();
+                                                  await FlutterBackground
+                                                      .disableBackgroundExecution();
                                                   // Navigator.pop(context);
                                                   var appointmentCompleteMap =
                                                       {};

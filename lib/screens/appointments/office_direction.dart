@@ -1,12 +1,10 @@
 import 'dart:async';
 import 'dart:isolate';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hutano/apis/api_helper.dart';
 import 'package:hutano/colors.dart';
-import 'package:hutano/screens/appointments/model/track_office_model.dart';
 import 'package:hutano/screens/chat/models/chat_data_model.dart';
 import 'package:hutano/screens/chat/socket_class.dart';
 import 'package:hutano/strings.dart';
@@ -17,7 +15,6 @@ import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/widgets.dart';
 import 'package:location/location.dart' as Loc;
 
-const double CAMERA_ZOOM = 10;
 const double CAMERA_TILT = 80;
 const double CAMERA_BEARING = 30;
 
@@ -32,16 +29,15 @@ class OfficeDirectionScreen extends StatefulWidget {
 }
 
 class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
-  // Future<dynamic> _profileFuture;
-
-  bool _isLoading = false;
   final Set<Marker> _markers = {};
   final Set<Polyline> _polyline = {};
   PolylinePoints polylinePoints = PolylinePoints();
   List<LatLng> _polyLineLatlngList = [];
   LatLng _initialPosition;
+  LatLng currentPosition;
   LatLng _desPosition = LatLng(0, 0);
-  Completer<GoogleMapController> _controller = Completer();
+
+  GoogleMapController _googleMapController;
   BitmapDescriptor sourceIcon;
   BitmapDescriptor destinationIcon;
   ApiBaseHelper api = ApiBaseHelper();
@@ -64,7 +60,7 @@ class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
   static const String _isolateName = "LocatorIsolate";
   ReceivePort port = ReceivePort();
 
-  setPolylines(LatLng _initialPosition, LatLng _desPosition) async {
+  setPolylines() async {
     PolylineResult polylineResult = await polylinePoints
         .getRouteBetweenCoordinates(
           Strings.kGoogleApiKey,
@@ -74,7 +70,8 @@ class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
         .catchError((error) => error.toString().debugLog());
 
     List<PointLatLng> result = polylineResult.points;
-
+    _polyLineLatlngList.clear();
+    _polyline.clear();
     if (result.isNotEmpty) {
       result.forEach((PointLatLng point) {
         _polyLineLatlngList.add(LatLng(point.latitude, point.longitude));
@@ -104,11 +101,46 @@ class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
     setInitialLocation();
   }
 
+  void _onMapCreated(GoogleMapController controller) async {
+    setState(() {
+      _googleMapController = controller;
+      setPolylines().then((_) => _setMapFitToTour(_polyline));
+    });
+  }
+
+  Future<void> _setMapFitToTour(Set<Polyline> p) async {
+    double minLat = p.first.points.first.latitude;
+    double minLong = p.first.points.first.longitude;
+    double maxLat = p.first.points.first.latitude;
+    double maxLong = p.first.points.first.longitude;
+
+    p.forEach((poly) {
+      poly.points.forEach((point) {
+        if (point.latitude < minLat) minLat = point.latitude;
+        if (point.latitude > maxLat) maxLat = point.latitude;
+        if (point.longitude < minLong) minLong = point.longitude;
+        if (point.longitude > maxLong) maxLong = point.longitude;
+      });
+    });
+    _googleMapController.animateCamera(CameraUpdate.newLatLngBounds(
+        LatLngBounds(
+            southwest: LatLng(minLat, minLong),
+            northeast: LatLng(maxLat, maxLong)),
+        20));
+  }
+
   void setInitialLocation() async {
     await location.getLocation().then((Loc.LocationData value) {
       setState(() {
         _initialPosition = LatLng(value.latitude, value.longitude);
+        currentPosition = LatLng(value.latitude, value.longitude);
       });
+
+      showPinsOnMap();
+      updateAppointmentCoordinates(LatLng(
+        _initialPosition.latitude,
+        _initialPosition.longitude,
+      ));
     });
   }
 
@@ -119,19 +151,10 @@ class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_initialPosition != null) {
-      initialCameraPosition = CameraPosition(
-        target: LatLng(_initialPosition.latitude, _initialPosition.longitude),
-        zoom: CAMERA_ZOOM,
-        tilt: CAMERA_TILT,
-        bearing: CAMERA_BEARING,
-      );
-    }
-
-    if (_initialPosition != null) {
+    if (currentPosition != null) {
       api
           .getDistanceAndTime(
-              _initialPosition, _desPosition, Strings.kGoogleApiKey)
+              currentPosition, _desPosition, Strings.kGoogleApiKey)
           .then((value) {
         _totalDistance =
             value["rows"][0]["elements"][0]["distance"]["text"].toString();
@@ -164,6 +187,8 @@ class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
       ),
     );
   }
+
+  void _onCameraMove(CameraPosition position) {}
 
   void setSourceAndDestinationIcons() async {
     destinationIcon = await BitmapDescriptor.fromAssetImage(
@@ -200,10 +225,11 @@ class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
         List location = appointment['data']['doctorAddress']['coordinates'];
 
         if (location.length > 0) {
-          _desPosition = LatLng(
-            double.parse(location[1].toString()),
-            double.parse(location[0].toString()),
-          );
+          _desPosition = LatLng(31.34, 76.68
+              // todo lat
+              // double.parse(location[1].toString()),
+              // double.parse(location[0].toString()),
+              );
         }
       }
     }
@@ -215,20 +241,18 @@ class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
                 height: MediaQuery.of(context).size.height,
                 child: ClipRRect(
                   child: GoogleMap(
-                    myLocationEnabled: false,
-                    compassEnabled: false,
-                    zoomControlsEnabled: false,
-                    rotateGesturesEnabled: false,
-                    initialCameraPosition: initialCameraPosition,
-                    polylines: _polyline,
+                    myLocationEnabled: true,
+                    compassEnabled: true,
+                    tiltGesturesEnabled: false,
                     markers: _markers,
-                    onMapCreated: (GoogleMapController controller) {
-                      _controller.complete(controller);
-
-                      setState(() {
-                        showPinsOnMap(_initialPosition);
-                      });
-                    },
+                    polylines: _polyline,
+                    mapType: MapType.normal,
+                    onMapCreated: _onMapCreated,
+                    initialCameraPosition: CameraPosition(
+                      target: _initialPosition,
+                      zoom: 13.0,
+                    ),
+                    onCameraMove: _onCameraMove,
                   ),
                 ),
               ),
@@ -376,27 +400,7 @@ class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
           );
   }
 
-  // static void callback(LocationDto locationDto) async {
-  //   final SendPort send = IsolateNameServer.lookupPortByName(_isolateName);
-  //   send?.send(locationDto);
-  // }
-
-  // void startLocationService() {
-  //   BackgroundLocator.registerLocationUpdate(
-  //     callback,
-  //     androidSettings: AndroidSettings(
-  //       androidNotificationSettings: AndroidNotificationSettings(
-  //         notificationTitle: "Start Location Tracking",
-  //         notificationMsg: "Track location in background",
-  //         //wakeLockTime: 20,
-  //         //autoStop: false,
-  //         //interval: 5,
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  void showPinsOnMap(LatLng _initialPosition) {
+  void showPinsOnMap() {
     var pinPosition =
         LatLng(_initialPosition.latitude, _initialPosition.longitude);
 
@@ -433,8 +437,6 @@ class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
           });
         },
         icon: destinationIcon));
-
-    setPolylines(_initialPosition, _desPosition);
   }
 
   updateAppointmentCoordinates(LatLng latLng) {
