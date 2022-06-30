@@ -1,8 +1,8 @@
 import '../../add_family_member/model/res_add_member.dart';
 
 class ResFamilyNetwork {
-  String status;
-  Response response;
+  String? status;
+  Response? response;
 
   ResFamilyNetwork({this.status, this.response});
 
@@ -16,15 +16,15 @@ class ResFamilyNetwork {
     final data = <String, dynamic>{};
     data['status'] = status;
     if (response != null) {
-      data['response'] = response.toJson();
+      data['response'] = response!.toJson();
     }
     return data;
   }
 }
 
 class Response {
-  String sId;
-  List<FamilyNetwork> familyNetwork;
+  String? sId;
+  List<FamilyNetwork>? familyNetwork;
 
   Response({this.sId, this.familyNetwork});
 
@@ -33,7 +33,7 @@ class Response {
     if (json['family_network'] != null) {
       familyNetwork = <FamilyNetwork>[];
       json['family_network'].forEach((v) {
-        familyNetwork.add(FamilyNetwork.fromJson(v));
+        familyNetwork!.add(FamilyNetwork.fromJson(v));
       });
     }
   }
@@ -42,7 +42,7 @@ class Response {
     final data = <String, dynamic>{};
     data['_id'] = this.sId;
     if (familyNetwork != null) {
-      data['family_network'] = familyNetwork.map((v) => v.toJson()).toList();
+      data['family_network'] = familyNetwork!.map((v) => v.toJson()).toList();
     }
     return data;
   }

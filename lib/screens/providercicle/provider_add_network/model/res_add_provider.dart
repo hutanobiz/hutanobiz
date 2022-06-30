@@ -1,6 +1,6 @@
 class ResAddProvider {
-  String status;
-  String response;
+  String? status;
+  String? response;
 
   ResAddProvider({this.status, this.response});
 

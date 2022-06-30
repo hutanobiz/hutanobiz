@@ -26,8 +26,8 @@ class GeneralizedPainSymptoms extends StatefulWidget {
 
 class _GeneralizedPainSymptomsState extends State<GeneralizedPainSymptoms> {
   int _currentStepIndex = 1;
-  String _selectedBodyPart;
-  String _selectedPainDesc;
+  String? _selectedBodyPart;
+  String? _selectedPainDesc;
 
   @override
   void initState() {
@@ -50,7 +50,7 @@ class _GeneralizedPainSymptomsState extends State<GeneralizedPainSymptoms> {
     }, onError: (e) {
       ProgressDialogUtils.dismissProgressDialog();
       if (e is ErrorModel) {
-        DialogUtils.showAlertDialog(context, e.response);
+        DialogUtils.showAlertDialog(context, e.response!);
       }
     });
   }
@@ -195,9 +195,9 @@ class _GeneralizedPainSymptomsState extends State<GeneralizedPainSymptoms> {
         });
       });
 
-  Widget _buildButton(String title, String selectedTitle, Function onTap) =>
+  Widget _buildButton(String title, String? selectedTitle, Function onTap) =>
       InkWell(
-        onTap: onTap,
+        onTap: onTap as void Function()?,
         child: Container(
           margin: EdgeInsets.only(top: spacing2),
           child: Text(
@@ -226,7 +226,7 @@ class _GeneralizedPainSymptomsState extends State<GeneralizedPainSymptoms> {
           children: [
             Expanded(
               child: HutanoButton(
-                label: Localization.of(context).skip,
+                label: Localization.of(context)!.skip,
                 color: primaryColor,
                 onPressed: () {
                   Navigator.of(context).pushNamed( routeMedicineInformation);
@@ -236,7 +236,7 @@ class _GeneralizedPainSymptomsState extends State<GeneralizedPainSymptoms> {
             SizedBox(width: spacing70),
             Expanded(
               child: HutanoButton(
-                label: Localization.of(context).next,
+                label: Localization.of(context)!.next,
                 onPressed: () {
                   switch (_currentStepIndex) {
                     case 1:
@@ -282,7 +282,7 @@ class _GeneralizedPainSymptomsState extends State<GeneralizedPainSymptoms> {
         child: Row(
           children: [
             _buildHeaderButton(0, FileConstants.icCreateFolder,
-                Localization.of(context).painSymptoms),
+                Localization.of(context)!.painSymptoms),
             Container(
               width: 0.5,
               margin: EdgeInsets.symmetric(vertical: 20),
@@ -290,7 +290,7 @@ class _GeneralizedPainSymptomsState extends State<GeneralizedPainSymptoms> {
               color: Colors.black,
             ),
             _buildHeaderButton(1, FileConstants.icSadFace,
-                Localization.of(context).generalizedSymptoms)
+                Localization.of(context)!.generalizedSymptoms)
           ],
         ),
       );

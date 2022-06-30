@@ -5,7 +5,7 @@ import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/localization/localization.dart';
 
 class CustomCheckBox extends StatefulWidget {
-  CustomCheckBox({Key key, @required this.onSelect, this.selected = false})
+  CustomCheckBox({Key? key, required this.onSelect, this.selected = false})
       : super(key: key);
 
   final ValueChanged<bool> onSelect;
@@ -56,7 +56,7 @@ class _CustomCheckBoxState extends State<CustomCheckBox> {
             padding: const EdgeInsets.only(left: spacing15),
             child: Center(
               child: Text(
-                Localization.of(context).remembermeTitle,
+                Localization.of(context)!.remembermeTitle,
                 style: TextStyle(color: colorBlack45, fontSize: fontSize12),
               ),
             ),

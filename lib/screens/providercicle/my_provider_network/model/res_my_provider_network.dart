@@ -2,8 +2,8 @@ import '../../provider_add_network/model/provider_network.dart';
 import '../../provider_search/model/doctor_data_model.dart';
 
 class ResMyProviderNetwork {
-  String status;
-  Response response;
+  String? status;
+  Response? response;
 
   ResMyProviderNetwork({this.status, this.response});
 
@@ -18,22 +18,22 @@ class ResMyProviderNetwork {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     if (this.response != null) {
-      data['response'] = this.response.toJson();
+      data['response'] = this.response!.toJson();
     }
     return data;
   }
 }
 
 class Response {
-  List<ProviderGroupList> data;
+  List<ProviderGroupList>? data;
 
   Response({this.data});
 
   Response.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
-      data = new List<ProviderGroupList>();
+      data = <ProviderGroupList>[];
       json['data'].forEach((v) {
-        data.add(new ProviderGroupList.fromJson(v));
+        data!.add(new ProviderGroupList.fromJson(v));
       });
     }
   }
@@ -41,30 +41,30 @@ class Response {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class ProviderGroupList {
-  String sId;
-  int type;
-  String title;
-  String fullName;
-  String firstName;
-  String lastName;
-  String dob;
-  String address;
-  String city;
-  String state;
-  String avatar;
-  int zipCode;
-  String phoneNumber;
-  int gender;
-  ProviderNetwork providerNetwork;
-  List<Doctor> doctor;
-  List<DoctorData> docInfo;
+  String? sId;
+  int? type;
+  String? title;
+  String? fullName;
+  String? firstName;
+  String? lastName;
+  String? dob;
+  String? address;
+  String? city;
+  String? state;
+  String? avatar;
+  int? zipCode;
+  String? phoneNumber;
+  int? gender;
+  ProviderNetwork? providerNetwork;
+  List<Doctor>? doctor;
+  List<DoctorData>? docInfo;
 
   ProviderGroupList(
       {this.sId,
@@ -104,15 +104,15 @@ class ProviderGroupList {
         ? new ProviderNetwork.fromJson(json['providerNetwork'])
         : null;
     if (json['Doctor'] != null) {
-      doctor = new List<Doctor>();
+      doctor = <Doctor>[];
       json['Doctor'].forEach((v) {
-        doctor.add(new Doctor.fromJson(v));
+        doctor!.add(new Doctor.fromJson(v));
       });
     }
     if (json['docInfo'] != null) {
-      docInfo = new List<DoctorData>();
+      docInfo = <DoctorData>[];
       json['docInfo'].forEach((v) {
-        docInfo.add(new DoctorData.fromJson(v));
+        docInfo!.add(new DoctorData.fromJson(v));
       });
     }
   }
@@ -134,34 +134,34 @@ class ProviderGroupList {
     data['phoneNumber'] = this.phoneNumber;
     data['gender'] = this.gender;
     if (this.providerNetwork != null) {
-      data['providerNetwork'] = this.providerNetwork.toJson();
+      data['providerNetwork'] = this.providerNetwork!.toJson();
     }
     if (this.doctor != null) {
-      data['Doctor'] = this.doctor.map((v) => v.toJson()).toList();
+      data['Doctor'] = this.doctor!.map((v) => v.toJson()).toList();
     }
     if (this.docInfo != null) {
-      data['docInfo'] = this.docInfo.map((v) => v.toJson()).toList();
+      data['docInfo'] = this.docInfo!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Doctor {
-  String sId;
-  Location location;
-  String fullName;
-  String firstName;
-  String lastName;
-  String dob;
-  String address;
-  String city;
-  String state;
-  String avatar;
-  int zipCode;
-  String phoneNumber;
-  int gender;
-  List<String> language;
-  int type;
+  String? sId;
+  Location? location;
+  String? fullName;
+  String? firstName;
+  String? lastName;
+  String? dob;
+  String? address;
+  String? city;
+  String? state;
+  String? avatar;
+  int? zipCode;
+  String? phoneNumber;
+  int? gender;
+  List<String>? language;
+  int? type;
 
   Doctor(
       {this.sId,
@@ -204,7 +204,7 @@ class Doctor {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_id'] = this.sId;
     if (this.location != null) {
-      data['location'] = this.location.toJson();
+      data['location'] = this.location!.toJson();
     }
     data['fullName'] = this.fullName;
     data['firstName'] = this.firstName;
@@ -224,8 +224,8 @@ class Doctor {
 }
 
 class Location {
-  String type;
-  List<int> coordinates;
+  String? type;
+  List<int>? coordinates;
 
   Location({this.type, this.coordinates});
 

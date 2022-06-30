@@ -1,6 +1,6 @@
 class ResGoogleAddressSuggetion {
-  List<Address> predictions;
-  String status;
+  List<Address>? predictions;
+  String? status;
 
   ResGoogleAddressSuggetion({this.predictions, this.status});
 
@@ -8,7 +8,7 @@ class ResGoogleAddressSuggetion {
     if (json['predictions'] != null) {
       predictions = <Address>[];
       json['predictions'].forEach((v) {
-        predictions.add(Address.fromJson(v));
+        predictions!.add(Address.fromJson(v));
       });
     }
     status = json['status'];
@@ -17,7 +17,7 @@ class ResGoogleAddressSuggetion {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     if (predictions != null) {
-      data['predictions'] = predictions.map((v) => v.toJson()).toList();
+      data['predictions'] = predictions!.map((v) => v.toJson()).toList();
     }
     data['status'] = status;
     return data;
@@ -25,11 +25,11 @@ class ResGoogleAddressSuggetion {
 }
 
 class Address {
-  String description;
-  String placeId;
-  String reference;
-  StructuredFormatting structuredFormatting;
-  List<String> types;
+  String? description;
+  String? placeId;
+  String? reference;
+  StructuredFormatting? structuredFormatting;
+  List<String>? types;
 
   Address(
       {this.description,
@@ -54,7 +54,7 @@ class Address {
     data['place_id'] = placeId;
     data['reference'] = reference;
     if (structuredFormatting != null) {
-      data['structured_formatting'] = structuredFormatting.toJson();
+      data['structured_formatting'] = structuredFormatting!.toJson();
     }
     data['types'] = types;
     return data;
@@ -62,9 +62,9 @@ class Address {
 }
 
 class StructuredFormatting {
-  String mainText;
-  List<MainTextMatchedSubstrings> mainTextMatchedSubstrings;
-  String secondaryText;
+  String? mainText;
+  List<MainTextMatchedSubstrings>? mainTextMatchedSubstrings;
+  String? secondaryText;
 
   StructuredFormatting(
       {this.mainText, this.mainTextMatchedSubstrings, this.secondaryText});
@@ -74,7 +74,7 @@ class StructuredFormatting {
     if (json['main_text_matched_substrings'] != null) {
       mainTextMatchedSubstrings = <MainTextMatchedSubstrings>[];
       json['main_text_matched_substrings'].forEach((v) {
-        mainTextMatchedSubstrings
+        mainTextMatchedSubstrings!
             .add(MainTextMatchedSubstrings.fromJson(v));
       });
     }
@@ -86,7 +86,7 @@ class StructuredFormatting {
     data['main_text'] = mainText;
     if (mainTextMatchedSubstrings != null) {
       data['main_text_matched_substrings'] =
-          mainTextMatchedSubstrings.map((v) => v.toJson()).toList();
+          mainTextMatchedSubstrings!.map((v) => v.toJson()).toList();
     }
     data['secondary_text'] = secondaryText;
     return data;
@@ -94,8 +94,8 @@ class StructuredFormatting {
 }
 
 class MainTextMatchedSubstrings {
-  int length;
-  int offset;
+  int? length;
+  int? offset;
 
   MainTextMatchedSubstrings({this.length, this.offset});
 

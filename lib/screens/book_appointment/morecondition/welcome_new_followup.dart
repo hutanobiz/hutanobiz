@@ -34,14 +34,14 @@ class _WelcomeNewFollowUpState extends State<WelcomeNewFollowUp> {
                 _welcomeBackHeader(context),
                 _commonListTileWidget(
                     context,
-                    Localization.of(context).newHealthIssueHeader,
-                    Localization.of(context).newEpisodeHeader,
+                    Localization.of(context)!.newHealthIssueHeader,
+                    Localization.of(context)!.newEpisodeHeader,
                     FileConstants.icProviderOffice,
                     1),
                 _commonListTileWidget(
                     context,
-                    Localization.of(context).followUpAppointmentHeader,
-                    Localization.of(context).followUpHeader,
+                    Localization.of(context)!.followUpAppointmentHeader,
+                    Localization.of(context)!.followUpHeader,
                     FileConstants.icNotificationAppointments,
                     2),
               ],
@@ -52,7 +52,7 @@ class _WelcomeNewFollowUpState extends State<WelcomeNewFollowUp> {
         padding:
             EdgeInsets.symmetric(vertical: spacing20, horizontal: spacing20),
         child: Text(
-          "${Localization.of(context).welcomeBackHeader} ${getString(PreferenceKey.fullName, "")}!",
+          "${Localization.of(context)!.welcomeBackHeader} ${getString(PreferenceKey.fullName, "")}!",
           style: AppTextStyle.boldStyle(
               color: Color(0xff0e1c2a),
               fontSize: 20,),

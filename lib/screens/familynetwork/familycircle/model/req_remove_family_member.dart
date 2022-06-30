@@ -1,6 +1,6 @@
 class ReqRemoveFamilyMember {
-  String sId;
-  String userId;
+  String? sId;
+  String? userId;
 
   ReqRemoveFamilyMember({this.sId, this.userId});
 

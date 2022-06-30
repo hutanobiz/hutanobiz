@@ -45,8 +45,8 @@ import 'state_list.dart';
 import 'upload_image.dart';
 
 class RegisterScreen extends StatefulWidget {
-  final String number;
-  final String countryCode;
+  final String? number;
+  final String? countryCode;
 
   RegisterScreen(this.number, this.countryCode);
 
@@ -71,14 +71,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final FocusNode _zipCodeFocus = FocusNode();
   final FocusNode _refCodeFocus = FocusNode();
 
-  String firstNameError;
-  String lastNameError;
-  String emailError;
-  String passwordError;
-  String addressError;
-  String cityError;
-  String zipCodeError;
-  String emailSuffixIcon;
+  String? firstNameError;
+  String? lastNameError;
+  String? emailError;
+  String? passwordError;
+  String? addressError;
+  String? cityError;
+  String? zipCodeError;
+  String? emailSuffixIcon;
 
   final _dobController = TextEditingController();
   final _firstNameController = TextEditingController();
@@ -95,20 +95,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _mobileFormatter = NumberTextInputFormatter();
   final GlobalKey<FormState> _key = GlobalKey();
 
-  File _imageFile;
-  GenderType _gender;
-  List<States> _stateList = [];
-  List<Insurance> _insuranceList = [];
-  States _selectedState;
-  Insurance _selectedInsurance;
+  File? _imageFile;
+  GenderType? _gender;
+  List<States>? _stateList = [];
+  List<Insurance>? _insuranceList = [];
+  late States _selectedState;
+  Insurance? _selectedInsurance;
   final _registerModel = ReqRegister();
   bool _enableButton = false;
   bool _dialogOpen = false;
-  List<Address> _placeList = [];
-  List<AddressComponents> _placeDetail = [];
-  Geometry geometry;
+  List<Address>? _placeList = [];
+  List<AddressComponents>? _placeDetail = [];
+  Geometry? geometry;
   bool isSecureField = true;
-  String deviceToken;
+  String? deviceToken;
 
   final labelStyle = TextStyle(fontSize: fontSize14, color: colorGrey60);
   List<Genders> genders = [
@@ -116,7 +116,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     Genders(1, 'Non-binary'),
   ];
 
-  Genders genderType;
+  Genders? genderType;
   @override
   void initState() {
     super.initState();
@@ -166,18 +166,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   _onStateSelected(int index) {
-    FocusManager.instance.primaryFocus.unfocus();
-    _stateController.text = _stateList[index].title;
-    _registerModel.state = _stateList[index].sId;
-    _selectedState = _stateList[index];
+    FocusManager.instance.primaryFocus!.unfocus();
+    _stateController.text = _stateList![index].title!;
+    _registerModel.state = _stateList![index].sId;
+    _selectedState = _stateList![index];
     showError(RegisterError.city.index);
   }
 
   _onInsuranceSelected(int index) {
-    FocusManager.instance.primaryFocus.unfocus();
-    _insuranceController.text = _insuranceList[index].title;
-    _registerModel.insuranceId = _insuranceList[index].sId;
-    _selectedInsurance = _insuranceList[index];
+    FocusManager.instance.primaryFocus!.unfocus();
+    _insuranceController.text = _insuranceList![index].title!;
+    _registerModel.insuranceId = _insuranceList![index].sId;
+    _selectedInsurance = _insuranceList![index];
     showError(RegisterError.zipCode.index);
   }
 
@@ -254,30 +254,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   _submitData() async {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
     if (_registerModel.dob == null) {
-      DialogUtils.showAlertDialog(context, Localization.of(context).errorDob);
+      DialogUtils.showAlertDialog(context, Localization.of(context)!.errorDob);
       return;
     }
     if (_registerModel.gender == null) {
       DialogUtils.showAlertDialog(
-          context, Localization.of(context).errorGender);
+          context, Localization.of(context)!.errorGender);
       return;
     }
     if (_registerModel.state == null) {
-      DialogUtils.showAlertDialog(context, Localization.of(context).errorState);
+      DialogUtils.showAlertDialog(context, Localization.of(context)!.errorState);
       return;
     }
 
     if (_imageFile == null) {
       DialogUtils.showAlertDialog(
-          context, Localization.of(context).errorSelectProfile);
+          context, Localization.of(context)!.errorSelectProfile);
       return;
     }
 
     if (_registerModel.haveHealthInsurance == null) {
       DialogUtils.showAlertDialog(
-          context, Localization.of(context).errorHealthInsurance);
+          context, Localization.of(context)!.errorHealthInsurance);
       return;
     }
     _register();
@@ -295,7 +295,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ProgressDialogUtils.dismissProgressDialog();
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       print(e);
@@ -303,15 +303,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   _getPlaceSuggetion(String query) async {
-    final params = <String, String>{
+    final params = <String, String?>{
       'input': query,
       'types': 'address',
       'components': 'country:us'
     };
     try {
       var res = await ApiManager().getAddressSuggetion(params);
-      _placeList = res.predictions.length >= 5
-          ? res.predictions.sublist(0, 5)
+      _placeList = res.predictions!.length >= 5
+          ? res.predictions!.sublist(0, 5)
           : res.predictions;
       return _placeList;
     } on ErrorModel catch (e) {
@@ -321,18 +321,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  _getPlaceDetail(String placeId) async {
+  _getPlaceDetail(String? placeId) async {
     ProgressDialogUtils.showProgressDialog(context);
-    final params = <String, String>{
+    final params = <String, String?>{
       'fields': 'geometry,address_components',
       'place_id': placeId
     };
 
     try {
       var res = await ApiManager().getPlaceDetail(params);
-      _placeDetail = res.result.addressComponents;
-      geometry = res.result.geometry;
-      if (_placeDetail != null && _placeDetail.length > 0) {
+      _placeDetail = res.result!.addressComponents;
+      geometry = res.result!.geometry;
+      if (_placeDetail != null && _placeDetail!.length > 0) {
         _parseAddress();
       }
       ProgressDialogUtils.dismissProgressDialog();
@@ -347,28 +347,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   _parseAddress() {
     var _addressParser = AddressUtil();
-    _addressParser.parseAddress(_placeDetail);
-    debugPrint("{${geometry.location.lat} ${geometry.location.lng}");
+    _addressParser.parseAddress(_placeDetail!);
+    debugPrint("{${geometry!.location!.lat} ${geometry!.location!.lng}");
     _addressController.text = _addressParser.address;
-    _zipCodeController.text = _addressParser.zipCode;
-    _cityController.text = _addressParser.city;
+    _zipCodeController.text = _addressParser.zipCode!;
+    _cityController.text = _addressParser.city!;
 
     _registerModel.address = _addressController.text;
     _registerModel.city = _cityController.text;
     _registerModel.zipCode = _zipCodeController.text;
-    _registerModel.latitude = geometry.location.lat.toString();
-    _registerModel.longitude = geometry.location.lng.toString();
+    _registerModel.latitude = geometry!.location!.lat.toString();
+    _registerModel.longitude = geometry!.location!.lng.toString();
     addressError = null;
     zipCodeError = null;
     cityError = null;
 
-    final index = _stateList
+    final index = _stateList!
         .indexWhere((element) => _addressParser.state == element.title);
 
     if (index != -1) {
-      _stateController.text = _stateList[index].title;
-      _registerModel.state = _stateList[index].sId;
-      _selectedState = _stateList[index];
+      _stateController.text = _stateList![index].title!;
+      _registerModel.state = _stateList![index].sId;
+      _selectedState = _stateList![index];
     }
 
     setState(() {});
@@ -396,21 +396,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       setBool(PreferenceKey.perFormedSteps, false);
       setBool(PreferenceKey.isEmailVerified, false);
-      setString(PreferenceKey.fullName, res.response.fullName);
-      setString(PreferenceKey.id, res.response.sId);
-      SharedPref().setValue(PreferenceKey.email, res.response.email);
-      setString(PreferenceKey.tokens, res.response.token);
-      setString(PreferenceKey.phone, res.response.phoneNumber.toString());
-      setInt(PreferenceKey.gender, res.response.gender);
+      setString(PreferenceKey.fullName, res.response!.fullName!);
+      setString(PreferenceKey.id, res.response!.sId!);
+      SharedPref().setValue(PreferenceKey.email, res.response!.email);
+      setString(PreferenceKey.tokens, res.response!.token!);
+      setString(PreferenceKey.phone, res.response!.phoneNumber.toString());
+      setInt(PreferenceKey.gender, res.response!.gender!);
       setString('patientSocialHistory',
-          jsonEncode(res.response.patientSocialHistory));
+          jsonEncode(res.response!.patientSocialHistory));
       setString('primaryUser', jsonEncode(res.response));
-      setString('primaryUserToken', res.response.token);
+      setString('primaryUserToken', res.response!.token!);
       setString('selectedAccount', jsonEncode(res.response));
       setBool(PreferenceKey.intro, true);
 
       //TODO : Verify code
-      SharedPref().saveToken(res.response.token);
+      SharedPref().saveToken(res.response!.token);
       // SharedPref().setValue("fullName", _registerModel.fullName);
       // SharedPref().setValue("complete", "0");
 
@@ -427,7 +427,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       // );
       ProgressDialogUtils.dismissProgressDialog();
       Navigator.of(context).pushNamed(
-        _registerModel.haveHealthInsurance
+        _registerModel.haveHealthInsurance!
             ? Routes.addInsurance
             : Routes.welcome,
       );
@@ -438,7 +438,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       //     (Route<dynamic> route) => false);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       print(e);
@@ -447,19 +447,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void validateFields() {
     if (_registerModel.address != null &&
-        _registerModel.address.isNotEmpty &&
+        _registerModel.address!.isNotEmpty &&
         _registerModel.city != null &&
-        _registerModel.city.isNotEmpty &&
+        _registerModel.city!.isNotEmpty &&
         _registerModel.email != null &&
-        _registerModel.email.isNotEmpty &&
+        _registerModel.email!.isNotEmpty &&
         _registerModel.firstName != null &&
-        _registerModel.firstName.isNotEmpty &&
+        _registerModel.firstName!.isNotEmpty &&
         _registerModel.lastName != null &&
-        _registerModel.lastName.isNotEmpty &&
+        _registerModel.lastName!.isNotEmpty &&
         _registerModel.password != null &&
-        _registerModel.password.isNotEmpty &&
+        _registerModel.password!.isNotEmpty &&
         _registerModel.zipCode != null &&
-        _registerModel.zipCode.isNotEmpty) {
+        _registerModel.zipCode!.isNotEmpty) {
       _enableButton = true;
     } else {
       _enableButton = false;
@@ -471,12 +471,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (index >= 0) {
       firstNameError = _firstNameController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorEnterFirstName);
+          .isBlank(context, Localization.of(context)!.errorEnterFirstName);
     }
     if (index >= 1) {
       lastNameError = _lastNameController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorEnterLastName);
+          .isBlank(context, Localization.of(context)!.errorEnterLastName);
     }
     if (index >= 2) {
       emailError = _emailController.text.toString().isValidEmail(context);
@@ -490,19 +490,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (index >= 4) {
       addressError = _addressController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorEnterAddress);
+          .isBlank(context, Localization.of(context)!.errorEnterAddress);
     }
 
     if (index >= 5) {
       cityError = _cityController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorEnterCity);
+          .isBlank(context, Localization.of(context)!.errorEnterCity);
     }
 
     if (index >= 6) {
       zipCodeError = _zipCodeController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorZipCode);
+          .isBlank(context, Localization.of(context)!.errorZipCode);
     }
 
     setState(() {});
@@ -529,7 +529,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     AppLogo(),
                     Text(
-                      Localization.of(context).createAccount,
+                      Localization.of(context)!.createAccount,
                       style: TextStyle(
                         color: colorBlack2.withOpacity(0.85),
                         fontStyle: FontStyle.normal,
@@ -610,15 +610,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide:
-                                BorderSide(color: Colors.grey[300], width: 1)),
+                                BorderSide(color: Colors.grey[300]!, width: 1)),
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide:
-                                BorderSide(color: Colors.grey[300], width: 1)),
+                                BorderSide(color: Colors.grey[300]!, width: 1)),
                         disabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide:
-                                BorderSide(color: Colors.grey[300], width: 1)),
+                                BorderSide(color: Colors.grey[300]!, width: 1)),
                       ),
                       value: genderType,
                       items: genders
@@ -630,7 +630,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       }).toList(),
                       onChanged: (val) {
                         setState(() {
-                          _registerModel.genderType = val.val;
+                          _registerModel.genderType = val!.val;
                           genderType = val;
                         });
                       },
@@ -655,7 +655,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     HutanoButton(
                       onPressed: _enableButton ? _submitData : null,
-                      label: Localization.of(context).next,
+                      label: Localization.of(context)!.next,
                     ),
                     SizedBox(
                       height: spacing20,
@@ -672,7 +672,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget _getLastNameTextField() {
     return Container(
-        width: SizeConfig.screenWidth / 2.4,
+        width: SizeConfig.screenWidth! / 2.4,
         child: HutanoTextField(
           focusNode: _lastNameFocus,
           focusedBorderColor: colorBlack20,
@@ -680,7 +680,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             _registerModel.lastName = value;
             setState(() {
               lastNameError = value.toString().isBlank(
-                  context, Localization.of(context).errorEnterLastName);
+                  context, Localization.of(context)!.errorEnterLastName);
             });
           },
           onFieldTap: () {
@@ -689,7 +689,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           labelTextStyle: labelStyle,
           errorText: lastNameError,
           controller: _lastNameController,
-          labelText: Localization.of(context).lastName,
+          labelText: Localization.of(context)!.lastName,
           textInputAction: TextInputAction.next,
           textInputFormatter: [
             FilteringTextInputFormatter.allow(RegExp("[a-zA-Z -]"))
@@ -703,20 +703,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget _getFirstNameTextField() {
     return HutanoTextField(
-        width: SizeConfig.screenWidth / 2.4,
+        width: SizeConfig.screenWidth! / 2.4,
         onValueChanged: (value) {
           _registerModel.firstName = value;
           setState(() {
             firstNameError = value
                 .toString()
-                .isBlank(context, Localization.of(context).errorEnterFirstName);
+                .isBlank(context, Localization.of(context)!.errorEnterFirstName);
           });
         },
         labelTextStyle: labelStyle,
         errorText: firstNameError,
         focusNode: _firstNameFocus,
         controller: _firstNameController,
-        labelText: Localization.of(context).firstName,
+        labelText: Localization.of(context)!.firstName,
         focusedBorderColor: colorBlack20,
         onFieldSubmitted: (s) {
           FocusScope.of(context).requestFocus(_lastNameFocus);
@@ -756,7 +756,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             suffixwidth: 22,
             errorText: emailError,
             focusedBorderColor: colorBlack20,
-            labelText: Localization.of(context).email,
+            labelText: Localization.of(context)!.email,
             textInputType: TextInputType.emailAddress,
             onFieldSubmitted: (s) {
               FocusScope.of(context).requestFocus(_passwordFocus);
@@ -782,7 +782,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             },
             focusedBorderColor: colorBlack20,
             errorText: passwordError,
-            labelText: Localization.of(context).password,
+            labelText: Localization.of(context)!.password,
             textInputType: TextInputType.visiblePassword,
             onFieldSubmitted: (s) {
               FocusScope.of(context).requestFocus(_addressFocus);
@@ -803,14 +803,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: HutanoTextField(
             textInputFormatter: <TextInputFormatter>[_mobileFormatter],
             isNumberField: true,
-            width: SizeConfig.screenWidth / 2.4,
+            width: SizeConfig.screenWidth! / 2.4,
             focusNode: _mobileFocus,
             controller: _phoneNoController
               ..text =
-                  '${widget.countryCode} ${widget.number.getUsFormatNumber()}',
+                  '${widget.countryCode} ${widget.number!.getUsFormatNumber()}',
             isFieldEnable: false,
             focusedBorderColor: colorBlack20,
-            labelText: Localization.of(context).phoneNo,
+            labelText: Localization.of(context)!.phoneNo,
             textInputType: TextInputType.number,
             onFieldSubmitted: (s) {},
             textInputAction: TextInputAction.next));
@@ -831,7 +831,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             setState(() {
               addressError = value
                   .toString()
-                  .isBlank(context, Localization.of(context).errorEnterAddress);
+                  .isBlank(context, Localization.of(context)!.errorEnterAddress);
             });
           },
           decoration: InputDecoration(
@@ -851,7 +851,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
               ),
-              labelText: Localization.of(context).address,
+              labelText: Localization.of(context)!.address,
               hintText: "",
               isDense: true,
               hintStyle: TextStyle(color: colorBlack60, fontSize: fontSize14),
@@ -874,7 +874,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       errorBuilder: (_, object) {
         return Container();
       },
-      itemBuilder: (context, suggestion) {
+      itemBuilder: (context, dynamic suggestion) {
         return ListTile(
           title: Text(suggestion.description),
         );
@@ -882,7 +882,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       transitionBuilder: (context, suggestionsBox, controller) {
         return suggestionsBox;
       },
-      onSuggestionSelected: (suggestion) {
+      onSuggestionSelected: (dynamic suggestion) {
         _addressController.text = suggestion.structuredFormatting.mainText;
         _getPlaceDetail(suggestion.placeId);
       },
@@ -894,7 +894,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget _buildCityTextField() {
     return Container(
-        width: SizeConfig.screenWidth / 2.4,
+        width: SizeConfig.screenWidth! / 2.4,
         child: HutanoTextField(
           labelTextStyle: labelStyle,
           focusNode: _cityFocus,
@@ -904,14 +904,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
             setState(() {
               cityError = value
                   .toString()
-                  .isBlank(context, Localization.of(context).errorEnterCity);
+                  .isBlank(context, Localization.of(context)!.errorEnterCity);
             });
           },
           onFieldTap: () {
             showError(RegisterError.address.index);
           },
           errorText: cityError,
-          labelText: Localization.of(context).city,
+          labelText: Localization.of(context)!.city,
           textInputAction: TextInputAction.next,
           onFieldSubmitted: (s) {
             FocusScope.of(context).requestFocus(_zipCodeFocus);
@@ -934,14 +934,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
               showError(RegisterError.zipCode.index);
             },
             controller: _refCodeController,
-            labelText: Localization.of(context).refCode,
+            labelText: Localization.of(context)!.refCode,
             textInputAction: TextInputAction.done));
   }
 
   Widget _buildZipCode() {
     return HutanoTextField(
         labelTextStyle: labelStyle,
-        width: SizeConfig.screenWidth / 2.4,
+        width: SizeConfig.screenWidth! / 2.4,
         focusedBorderColor: colorBlack20,
         controller: _zipCodeController,
         focusNode: _zipCodeFocus,
@@ -955,12 +955,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
           setState(() {
             zipCodeError = value
                 .toString()
-                .isBlank(context, Localization.of(context).errorZipCode);
+                .isBlank(context, Localization.of(context)!.errorZipCode);
           });
         },
         errorText: zipCodeError,
         textInputFormatter: [FilteringTextInputFormatter.digitsOnly],
-        labelText: Localization.of(context).zipcode,
+        labelText: Localization.of(context)!.zipcode,
         onFieldSubmitted: (s) {
           FocusScope.of(context).requestFocus(_mobileFocus);
           showError(RegisterError.zipCode.index);
@@ -986,13 +986,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 fontFamily: gilroyMedium,
                 fontStyle: FontStyle.normal,
               ),
-              label: Localization.of(context).labelHealthInsurance,
+              label: Localization.of(context)!.labelHealthInsurance,
               image: FileConstants.icInsuranceBlue),
           SizedBox(
             height: 14,
           ),
           Text(
-            Localization.of(context).healthInsurance,
+            Localization.of(context)!.healthInsurance,
             textAlign: TextAlign.start,
             style: TextStyle(
               fontSize: fontSize14,
@@ -1014,11 +1014,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 buttonType: HutanoButtonType.onlyLabel,
                 width: 80,
                 labelColor: (_registerModel.haveHealthInsurance != null &&
-                        _registerModel.haveHealthInsurance)
+                        _registerModel.haveHealthInsurance!)
                     ? colorWhite
                     : colorBlack,
                 color: (_registerModel.haveHealthInsurance != null &&
-                        _registerModel.haveHealthInsurance)
+                        _registerModel.haveHealthInsurance!)
                     ? colorPurple
                     : Colors.white,
                 height: 40,
@@ -1036,11 +1036,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 buttonType: HutanoButtonType.onlyLabel,
                 width: 80,
                 labelColor: (_registerModel.haveHealthInsurance != null &&
-                        !_registerModel.haveHealthInsurance)
+                        !_registerModel.haveHealthInsurance!)
                     ? colorWhite
                     : colorBlack,
                 color: (_registerModel.haveHealthInsurance != null &&
-                        !_registerModel.haveHealthInsurance)
+                        !_registerModel.haveHealthInsurance!)
                     ? colorPurple
                     : colorWhite,
                 borderWidth: 1,

@@ -6,11 +6,11 @@ import 'package:hutano/text_style.dart';
 
 class IntegumentryCompletedWidget extends StatelessWidget {
   IntegumentryCompletedWidget({
-    Key key,
-    @required this.integumentry,
+    Key? key,
+    required this.integumentry,
   }) : super(key: key);
 
-  final Integumentary integumentry;
+  final Integumentary? integumentry;
   List<String> radioValues = ['', "Bilateral", "Left", "Right"];
   Map<String, String> timeSpanConfig = {
     "1": "Hours",
@@ -56,11 +56,11 @@ class IntegumentryCompletedWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12)),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              integumentry.summary.isNotEmpty
+              integumentry!.summary!.isNotEmpty
                   ? ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: integumentry.summary.length,
+                      itemCount: integumentry!.summary!.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Container(
                             padding: EdgeInsets.symmetric(
@@ -82,166 +82,166 @@ class IntegumentryCompletedWidget extends StatelessWidget {
                               children: [
                                 Text(
                                   "\u2022 " +
-                                      (integumentry.summary[index].type ?? '') +
+                                      (integumentry!.summary![index].type ?? '') +
                                       ' ' +
-                                      (integumentry.summary[index].location ??
+                                      (integumentry!.summary![index].location ??
                                           ''),
                                   style:
                                       AppTextStyle.semiBoldStyle(fontSize: 16),
                                 ),
-                                integumentry.summary[index].length != null
+                                integumentry!.summary![index].length != null
                                     ? titleWidget('Length',
-                                        '${integumentry.summary[index].length.current} cm')
+                                        '${integumentry!.summary![index].length!.current} cm')
                                     : SizedBox(),
-                                integumentry.summary[index].length != null
+                                integumentry!.summary![index].length != null
                                     ? getGoalText(
-                                        integumentry.summary[index].length.goal)
+                                        integumentry!.summary![index].length!.goal)
                                     : SizedBox(),
-                                integumentry.summary[index].width != null
+                                integumentry!.summary![index].width != null
                                     ? titleWidget('Width',
-                                        '${integumentry.summary[index].width.current} cm')
+                                        '${integumentry!.summary![index].width!.current} cm')
                                     : SizedBox(),
-                                integumentry.summary[index].depth != null
+                                integumentry!.summary![index].depth != null
                                     ? getGoalText(
-                                        integumentry.summary[index].width.goal)
+                                        integumentry!.summary![index].width!.goal)
                                     : SizedBox(),
-                                integumentry.summary[index].depth != null
+                                integumentry!.summary![index].depth != null
                                     ? titleWidget('Depth',
-                                        '${integumentry.summary[index].depth.current} cm')
+                                        '${integumentry!.summary![index].depth!.current} cm')
                                     : SizedBox(),
-                                integumentry.summary[index].depth != null
+                                integumentry!.summary![index].depth != null
                                     ? getGoalText(
-                                        integumentry.summary[index].depth.goal)
+                                        integumentry!.summary![index].depth!.goal)
                                     : SizedBox(),
-                                integumentry.summary[index].staging != null
+                                integumentry!.summary![index].staging != null
                                     ? titleWidget('Staging',
-                                        '${integumentry.summary[index].staging}')
+                                        '${integumentry!.summary![index].staging}')
                                     : SizedBox(),
-                                integumentry.summary[index].granulation != null
+                                integumentry!.summary![index].granulation != null
                                     ? titleWidget('Granulation',
-                                        '${integumentry.summary[index].granulation.current} %')
+                                        '${integumentry!.summary![index].granulation!.current} %')
                                     : SizedBox(),
-                                integumentry.summary[index].granulation != null
-                                    ? getGoalText(integumentry
-                                        .summary[index].granulation.goal)
+                                integumentry!.summary![index].granulation != null
+                                    ? getGoalText(integumentry!
+                                        .summary![index].granulation!.goal)
                                     : SizedBox(),
-                                integumentry.summary[index].slough != null
+                                integumentry!.summary![index].slough != null
                                     ? titleWidget('Slough',
-                                        '${integumentry.summary[index].slough.current} %')
+                                        '${integumentry!.summary![index].slough!.current} %')
                                     : SizedBox(),
-                                integumentry.summary[index].slough != null
+                                integumentry!.summary![index].slough != null
                                     ? getGoalText(
-                                        integumentry.summary[index].slough.goal)
+                                        integumentry!.summary![index].slough!.goal)
                                     : SizedBox(),
-                                integumentry.summary[index].necrosis != null
+                                integumentry!.summary![index].necrosis != null
                                     ? titleWidget('Necrosis',
-                                        '${integumentry.summary[index].necrosis.current} %')
+                                        '${integumentry!.summary![index].necrosis!.current} %')
                                     : SizedBox(),
-                                integumentry.summary[index].necrosis != null
-                                    ? getGoalText(integumentry
-                                        .summary[index].necrosis.goal)
+                                integumentry!.summary![index].necrosis != null
+                                    ? getGoalText(integumentry!
+                                        .summary![index].necrosis!.goal)
                                     : SizedBox(),
-                                integumentry.summary[index].periwound != null &&
-                                        integumentry.summary[index].periwound
+                                integumentry!.summary![index].periwound != null &&
+                                        integumentry!.summary![index].periwound!
                                                 .length >
                                             0
                                     ? periWoundWidget(
-                                        integumentry.summary[index].periwound)
+                                        integumentry!.summary![index].periwound!)
                                     : SizedBox(),
-                                integumentry.summary[index].drainageType != null
+                                integumentry!.summary![index].drainageType != null
                                     ? titleWidget('Drainage Type',
-                                        '${integumentry.summary[index].drainageType.current}')
+                                        '${integumentry!.summary![index].drainageType!.current}')
                                     : SizedBox(),
-                                integumentry.summary[index].drainageType != null
-                                    ? getGoalText(integumentry
-                                        .summary[index].drainageType.goal)
+                                integumentry!.summary![index].drainageType != null
+                                    ? getGoalText(integumentry!
+                                        .summary![index].drainageType!.goal)
                                     : SizedBox(),
-                                integumentry.summary[index].drainageAmount !=
+                                integumentry!.summary![index].drainageAmount !=
                                         null
                                     ? titleWidget('Drainage Amount',
-                                        '${integumentry.summary[index].drainageAmount.current}')
+                                        '${integumentry!.summary![index].drainageAmount!.current}')
                                     : SizedBox(),
-                                integumentry.summary[index].drainageAmount !=
+                                integumentry!.summary![index].drainageAmount !=
                                         null
-                                    ? getGoalText(integumentry
-                                        .summary[index].drainageAmount.goal)
+                                    ? getGoalText(integumentry!
+                                        .summary![index].drainageAmount!.goal)
                                     : SizedBox(),
-                                integumentry.summary[index].odor != null
+                                integumentry!.summary![index].odor != null
                                     ? titleWidget('Odor',
-                                        '${integumentry.summary[index].odor.current}')
+                                        '${integumentry!.summary![index].odor!.current}')
                                     : SizedBox(),
-                                integumentry.summary[index].odor != null
+                                integumentry!.summary![index].odor != null
                                     ? getGoalText(
-                                        integumentry.summary[index].odor.goal)
+                                        integumentry!.summary![index].odor!.goal)
                                     : SizedBox(),
-                                integumentry.summary[index].mechanismOfInjury !=
+                                integumentry!.summary![index].mechanismOfInjury !=
                                         null
                                     ? titleWidget('Mechanism Of Injury',
-                                        '${integumentry.summary[index].mechanismOfInjury}')
+                                        '${integumentry!.summary![index].mechanismOfInjury}')
                                     : SizedBox(),
-                                integumentry.summary[index].pain != null
+                                integumentry!.summary![index].pain != null
                                     ? titleWidget('Pain',
-                                        '${integumentry.summary[index].pain}')
+                                        '${integumentry!.summary![index].pain}')
                                     : SizedBox(),
-                                integumentry.summary[index].notes != null
+                                integumentry!.summary![index].notes != null
                                     ? titleWidget('Notes',
-                                        '${integumentry.summary[index].notes}')
+                                        '${integumentry!.summary![index].notes}')
                                     : SizedBox(),
                               ],
                             ));
                       },
                     )
                   : SizedBox(),
-              integumentry.woundCareSummary != null &&
-                      (integumentry
-                              .woundCareSummary.clinicalConcern.isNotEmpty ||
-                          integumentry.woundCareSummary.treatment.isNotEmpty ||
-                          integumentry.woundCareSummary.icd.isNotEmpty)
+              integumentry!.woundCareSummary != null &&
+                      (integumentry!
+                              .woundCareSummary!.clinicalConcern!.isNotEmpty ||
+                          integumentry!.woundCareSummary!.treatment!.isNotEmpty ||
+                          integumentry!.woundCareSummary!.icd!.isNotEmpty)
                   ? Text(
                       "Wound Care",
                       style: AppTextStyle.boldStyle(fontSize: 15),
                     )
                   : SizedBox(),
-              integumentry.woundCareSummary.clinicalConcern.isNotEmpty
+              integumentry!.woundCareSummary!.clinicalConcern!.isNotEmpty
                   ? EmrCompleteConcernListWidget(
                       clinicalList:
-                          integumentry.woundCareSummary.clinicalConcern)
+                          integumentry!.woundCareSummary!.clinicalConcern)
                   : SizedBox(),
-              integumentry.woundCareSummary.treatment.isNotEmpty
+              integumentry!.woundCareSummary!.treatment!.isNotEmpty
                   ? EmrCompleteTreatmentListWidget(
-                      treatmentList: integumentry.woundCareSummary.treatment)
+                      treatmentList: integumentry!.woundCareSummary!.treatment)
                   : SizedBox(),
-              integumentry.woundCareSummary.icd.isNotEmpty
+              integumentry!.woundCareSummary!.icd!.isNotEmpty
                   ? EmrCompleteDiagnosisListWidget(
-                      diagnosisList: integumentry.woundCareSummary.icd)
+                      diagnosisList: integumentry!.woundCareSummary!.icd)
                   : SizedBox(),
-              integumentry.painSummary != null &&
-                      (integumentry.painSummary.clinicalConcern.isNotEmpty ||
-                          integumentry.painSummary.treatment.isNotEmpty ||
-                          integumentry.painSummary.icd.isNotEmpty)
+              integumentry!.painSummary != null &&
+                      (integumentry!.painSummary!.clinicalConcern!.isNotEmpty ||
+                          integumentry!.painSummary!.treatment!.isNotEmpty ||
+                          integumentry!.painSummary!.icd!.isNotEmpty)
                   ? Text(
                       "Pain",
                       style: AppTextStyle.boldStyle(fontSize: 15),
                     )
                   : SizedBox(),
-              integumentry.painSummary.clinicalConcern.isNotEmpty
+              integumentry!.painSummary!.clinicalConcern!.isNotEmpty
                   ? EmrCompleteConcernListWidget(
-                      clinicalList: integumentry.painSummary.clinicalConcern)
+                      clinicalList: integumentry!.painSummary!.clinicalConcern)
                   : SizedBox(),
-              integumentry.painSummary.treatment.isNotEmpty
+              integumentry!.painSummary!.treatment!.isNotEmpty
                   ? EmrCompleteTreatmentListWidget(
-                      treatmentList: integumentry.painSummary.treatment)
+                      treatmentList: integumentry!.painSummary!.treatment)
                   : SizedBox(),
-              integumentry.painSummary.icd.isNotEmpty
+              integumentry!.painSummary!.icd!.isNotEmpty
                   ? EmrCompleteDiagnosisListWidget(
-                      diagnosisList: integumentry.painSummary.icd)
+                      diagnosisList: integumentry!.painSummary!.icd)
                   : SizedBox(),
             ])),
       ],
     );
   }
 
-  periWoundWidget(List<String> periWound) {
+  periWoundWidget(List<String?> periWound) {
     var periString = '';
     periWound.forEach((element) {
       periString += (element ?? '') + ', ';
@@ -265,11 +265,11 @@ class IntegumentryCompletedWidget extends StatelessWidget {
     );
   }
 
-  getGoalText(Goal goal) {
+  getGoalText(Goal? goal) {
     if (goal != null && goal.achieve != null && goal.achieve != '') {
       var improvements = '';
       if (goal.improvements != null) {
-        goal.improvements.forEach((element) {
+        goal.improvements!.forEach((element) {
           improvements += element + ', ';
         });
       }
@@ -277,7 +277,7 @@ class IntegumentryCompletedWidget extends StatelessWidget {
         improvements = improvements.substring(0, improvements.length - 2);
       }
       return Text(
-          "Goal:${goal.achieve} within ${goal.timeFrame} ${timeSpanConfig[goal.timeUnit]}\nTreatment options: $improvements");
+          "Goal:${goal.achieve} within ${goal.timeFrame} ${timeSpanConfig[goal.timeUnit!]}\nTreatment options: $improvements");
     } else {
       return SizedBox();
     }

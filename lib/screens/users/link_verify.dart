@@ -58,7 +58,7 @@ class _LinkVerificationState extends State<LinkVerification> {
           });
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     }
   }
 
@@ -81,7 +81,7 @@ class _LinkVerificationState extends State<LinkVerification> {
       // Widgets.showToast(res.response);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     }
   }
 
@@ -106,7 +106,7 @@ class _LinkVerificationState extends State<LinkVerification> {
                 HutanoButton(
                   margin: spacing10,
                   onPressed: _enableButton ? _onButtonClick : null,
-                  label: Localization.of(context).verify,
+                  label: Localization.of(context)!.verify,
                 ),
                 SizedBox(
                   height: spacing20,
@@ -152,7 +152,7 @@ class _LinkVerificationState extends State<LinkVerification> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          Localization.of(context).msgCodeNotRecieved,
+          Localization.of(context)!.msgCodeNotRecieved,
           style: TextStyle(
             fontSize: fontSize14,
             color: colorBlack,
@@ -164,7 +164,7 @@ class _LinkVerificationState extends State<LinkVerification> {
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           onPressed: _resendCode,
           child: Text(
-            Localization.of(context).resend,
+            Localization.of(context)!.resend,
             style: TextStyle(
               fontSize: fontSize14,
               color: accentColor,
@@ -188,8 +188,8 @@ class _LinkVerificationState extends State<LinkVerification> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         HutanoHeaderInfo(
-          title: Localization.of(context).verifyCode,
-          subTitle: Localization.of(context).msgOtpReceived,
+          title: Localization.of(context)!.verifyCode,
+          subTitle: Localization.of(context)!.msgOtpReceived,
         ),
         SizedBox(
           height: spacing7,

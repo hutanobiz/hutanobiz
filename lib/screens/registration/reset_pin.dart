@@ -19,9 +19,9 @@ import 'forgotpassword/model/req_reset_password.dart';
 import 'otp_verification/model/verification_model.dart';
 
 class ResetPin extends StatefulWidget {
-  final VerificationModel verificationModel;
+  final VerificationModel? verificationModel;
 
-  const ResetPin({Key key, this.verificationModel}) : super(key: key);
+  const ResetPin({Key? key, this.verificationModel}) : super(key: key);
   @override
   _ResetPinState createState() => _ResetPinState();
 }
@@ -60,8 +60,8 @@ class _ResetPinState extends State<ResetPin> {
 
   void _onUpdateClick() async {
     if (_newPinController.text != _confirmPinController.text) {
-      _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text(Localization.of(context)
+      _scaffoldKey.currentState!.showSnackBar(SnackBar(
+          content: Text(Localization.of(context)!
               .errorPasswordNotMatch
               .format(["PIN", "PIN"]))));
 
@@ -70,8 +70,8 @@ class _ResetPinState extends State<ResetPin> {
     ProgressDialogUtils.showProgressDialog(context);
     final request = ReqResetPassword(
       step: 7,
-      phoneNumber: widget.verificationModel.phone.rawNumber(),
-      email: widget.verificationModel.email,
+      phoneNumber: widget.verificationModel!.phone!.rawNumber(),
+      email: widget.verificationModel!.email,
       pin: _confirmPinController.text.toString(),
       // mobileCountryCode: widget.verificationModel.countryCode,
     );
@@ -82,9 +82,9 @@ class _ResetPinState extends State<ResetPin> {
       DialogUtils.showOkCancelAlertDialog(
           context: context,
           message:
-              Localization.of(context).passwordResetSuccess.format(["PIN"]),
+              Localization.of(context)!.passwordResetSuccess.format(["PIN"]),
           isCancelEnable: false,
-          okButtonTitle: Localization.of(context).ok,
+          okButtonTitle: Localization.of(context)!.ok,
           okButtonAction: () {
             Navigator.of(context).pushReplacementNamed(
               Routes.loginPin,
@@ -93,7 +93,7 @@ class _ResetPinState extends State<ResetPin> {
       setBool(PreferenceKey.setPin, true);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     }
   }
 
@@ -109,13 +109,13 @@ class _ResetPinState extends State<ResetPin> {
               children: [
                 HutanoHeader(
                   headerInfo: HutanoHeaderInfo(
-                    title: Localization.of(context).resetPin,
-                    subTitle: Localization.of(context).msgResetPin,
+                    title: Localization.of(context)!.resetPin,
+                    subTitle: Localization.of(context)!.msgResetPin,
                   ),
                 ),
-                _buildPinInput(context, Localization.of(context).newPin,
+                _buildPinInput(context, Localization.of(context)!.newPin,
                     _newPinController, _onNewPinChange),
-                _buildPinInput(context, Localization.of(context).confirmNewPin,
+                _buildPinInput(context, Localization.of(context)!.confirmNewPin,
                     _confirmPinController, _onConfirmPinChange),
                 SizedBox(
                   height: spacing20,
@@ -131,7 +131,7 @@ class _ResetPinState extends State<ResetPin> {
 
   Widget _buildButton(BuildContext context) {
     return HutanoButton(
-      label: Localization.of(context).update,
+      label: Localization.of(context)!.update,
       margin: spacing10,
       onPressed: _enableButton ? _onUpdateClick : null,
     );
@@ -154,7 +154,7 @@ class _ResetPinState extends State<ResetPin> {
           HutanoPinInput(
             pinCount: 4,
             controller: controller,
-            width: SizeConfig.screenWidth / 1.7,
+            width: SizeConfig.screenWidth! / 1.7,
             onChanged: function,
           )
         ],

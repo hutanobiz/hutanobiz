@@ -17,14 +17,14 @@ import 'model/provider_detail_model.dart';
 import 'provider_info.dart';
 
 class ItemProviderDetail extends StatelessWidget {
-  final DoctorData providerDetail;
-  final bool isOnBoarding;
-  final Function onAddPressed;
+  final DoctorData? providerDetail;
+  final bool? isOnBoarding;
+  final Function? onAddPressed;
 
-  const ItemProviderDetail({Key key, this.providerDetail, this.isOnBoarding,this.onAddPressed})
+  const ItemProviderDetail({Key? key, this.providerDetail, this.isOnBoarding,this.onAddPressed})
       : super(key: key);
 
-  RoundedRectangleBorder _getBorder({double bottomLeft, double bottomRight}) {
+  RoundedRectangleBorder _getBorder({required double bottomLeft, required double bottomRight}) {
     return RoundedRectangleBorder(
         side: const BorderSide(color: colorPurple, width: 0.5),
         borderRadius: BorderRadius.only(
@@ -41,9 +41,9 @@ class ItemProviderDetail extends StatelessWidget {
             flex: 1,
             child: HutanoButton(
               onPressed: () {
-                onAddPressed();
+                onAddPressed!();
               },
-              label: Localization.of(context).addToNetwork,
+              label: Localization.of(context)!.addToNetwork,
               height: 45,
               fontSize: fontSize12,
               labelColor: colorWhite,
@@ -55,20 +55,20 @@ class ItemProviderDetail extends StatelessWidget {
   }
 
   _getProviderDetail() {
-    final user = providerDetail.user[0];
-    final avatar = user?.avatar ?? "";
-    final rating = providerDetail.averageRating ?? "0";
+    final user = providerDetail!.user![0];
+    final avatar = user.avatar ?? "";
+    final rating = providerDetail!.averageRating ?? "0";
     var occupation = "";
-    if (providerDetail?.professionalTitle?.length > 0) {
-      occupation = providerDetail?.professionalTitle[0]?.title ?? "";
+    if (providerDetail!.professionalTitle!.length > 0) {
+      occupation = providerDetail?.professionalTitle![0].title ?? "";
     }
-    var name = user?.fullName ?? "";
+    var name = user.fullName ?? "";
     if (occupation.isNotEmpty) {
       name = '$name , ${occupation.getInitials()}';
     }
-    final experience = providerDetail.practicingSince == null
+    final experience = providerDetail!.practicingSince == null
         ? '0'
-        : providerDetail.practicingSince.getYearCount();
+        : providerDetail!.practicingSince!.getYearCount();
     return ProviderDetail(
         image: avatar,
         rating: rating,
@@ -79,38 +79,37 @@ class ItemProviderDetail extends StatelessWidget {
 
   _getFee() {
     var fee = "0";
-    if (providerDetail.officeConsultanceFee != null &&
-        providerDetail.officeConsultanceFee.length > 0) {
-      fee = providerDetail.officeConsultanceFee[0].fee == null
+    if (providerDetail!.officeConsultanceFee != null &&
+        providerDetail!.officeConsultanceFee!.length > 0) {
+      fee = providerDetail!.officeConsultanceFee![0].fee == null
           ? '0.00'
-          : providerDetail.officeConsultanceFee[0].fee.toStringAsFixed(2) ??
-              '0.00';
+          : providerDetail!.officeConsultanceFee![0].fee!.toStringAsFixed(2);
     }
 
-    if (providerDetail.onsiteConsultanceFee != null &&
-        providerDetail.onsiteConsultanceFee.length > 0) {
-      fee = providerDetail.onsiteConsultanceFee[0].fee == null
+    if (providerDetail!.onsiteConsultanceFee != null &&
+        providerDetail!.onsiteConsultanceFee!.length > 0) {
+      fee = providerDetail!.onsiteConsultanceFee![0].fee == null
           ? '0.00'
           : min(
               double.parse(fee),
               double.parse(
-                providerDetail.onsiteConsultanceFee[0].fee.toStringAsFixed(2),
+                providerDetail!.onsiteConsultanceFee![0].fee!.toStringAsFixed(2),
               ),
             ).toStringAsFixed(2);
     }
 
-    if (providerDetail.vedioConsultanceFee != null &&
-        providerDetail.vedioConsultanceFee.length > 0) {
-      fee = providerDetail.vedioConsultanceFee[0].fee == null
+    if (providerDetail!.vedioConsultanceFee != null &&
+        providerDetail!.vedioConsultanceFee!.length > 0) {
+      fee = providerDetail!.vedioConsultanceFee![0].fee == null
           ? '0.00'
           : min(
               double.parse(fee),
               double.parse(
-                providerDetail.vedioConsultanceFee[0].fee.toStringAsFixed(2),
+                providerDetail!.vedioConsultanceFee![0].fee!.toStringAsFixed(2),
               ),
             ).toStringAsFixed(2);
     }
-    return fee ?? '0';
+    return fee;
   }
 
   Widget _buildProviderInfo(context) {
@@ -163,16 +162,16 @@ class ItemProviderDetail extends StatelessWidget {
 
   _getLocation() {
     var address = "";
-    if (providerDetail.businessLocation != null) {
-      dynamic business = providerDetail.businessLocation;
+    if (providerDetail!.businessLocation != null) {
+      dynamic business = providerDetail!.businessLocation;
 
       var _state;
 
       if (business.state is Map && business.state.length > 0) {
         _state = business.state;
-      } else if (providerDetail.state != null &&
-          providerDetail.state.length > 0) {
-        _state = providerDetail.state[0].toJson();
+      } else if (providerDetail!.state != null &&
+          providerDetail!.state!.length > 0) {
+        _state = providerDetail!.state![0].toJson();
       }
 
       address = Extensions.addressFormat(
@@ -200,9 +199,9 @@ class ItemProviderDetail extends StatelessWidget {
           IntrinsicWidth(
             child: TextWithImage(
               image: FileConstants.icLocation,
-              label: Localization.of(context)
+              label: Localization.of(context)!
                   .miles
-                  .format([providerDetail.distance.toStringAsFixed(2) ?? '0']),
+                  .format([providerDetail!.distance!.toStringAsFixed(2)]),
             ),
           )
         ],

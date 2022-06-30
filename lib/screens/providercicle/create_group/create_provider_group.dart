@@ -26,13 +26,13 @@ import '../../../widgets/hutano_textfield.dart';
 import '../provider_add_network/model/req_add_provider.dart';
 
 class CreateProviderGroup extends StatefulWidget {
-  String doctorId;
-  String doctorName;
-  String doctorAvatar;
-  bool isOnBoarding;
+  String? doctorId;
+  String? doctorName;
+  String? doctorAvatar;
+  bool? isOnBoarding;
   final onCompleteRoute;
   CreateProviderGroup(
-      {Key key,
+      {Key? key,
       this.isOnBoarding,
       this.doctorAvatar,
       this.doctorName,
@@ -79,7 +79,7 @@ class _CreateProviderGroupState extends State<CreateProviderGroup> {
               '${widget.doctorName} added to group ${_groupNameController.text}',
           buttonText: 'Done',
           onPressed: () {
-            if (widget.isOnBoarding) {
+            if (widget.isOnBoarding!) {
               Navigator.pop(context);
               Navigator.pop(context);
               Navigator.pop(context, true);
@@ -119,7 +119,7 @@ class _CreateProviderGroupState extends State<CreateProviderGroup> {
       //     });
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -131,20 +131,20 @@ class _CreateProviderGroupState extends State<CreateProviderGroup> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor:
-          widget.isOnBoarding ? AppColors.snow : AppColors.goldenTainoi,
+          widget.isOnBoarding! ? AppColors.snow : AppColors.goldenTainoi,
       body: LoadingBackgroundNew(
         isAddBack: widget.isOnBoarding,
-        addHeader: !widget.isOnBoarding,
-        isBackRequired: !widget.isOnBoarding,
+        addHeader: !widget.isOnBoarding!,
+        isBackRequired: !widget.isOnBoarding!,
         title: "",
-        isAddAppBar: !widget.isOnBoarding,
+        isAddAppBar: !widget.isOnBoarding!,
         addBottomArrows: false,
         padding: EdgeInsets.only(left: 20, right: 20, top: 0, bottom: 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widget.isOnBoarding ? CustomBackButton() : SizedBox(),
-            widget.isOnBoarding
+            widget.isOnBoarding! ? CustomBackButton() : SizedBox(),
+            widget.isOnBoarding!
                 ? AppHeader(
                     progressSteps: HutanoProgressSteps.four,
                   )
@@ -152,7 +152,7 @@ class _CreateProviderGroupState extends State<CreateProviderGroup> {
             _buildHeader(),
             SizedBox(height: spacing25),
             Text(
-              Localization.of(context).addCreateGroup,
+              Localization.of(context)!.addCreateGroup,
               style: const TextStyle(
                   color: colorDarkPurple,
                   fontSize: fontSize20,
@@ -167,12 +167,12 @@ class _CreateProviderGroupState extends State<CreateProviderGroup> {
             Align(
               alignment: Alignment.center,
               child: HutanoButton(
-                width: SizeConfig.screenWidth / 1.5,
+                width: SizeConfig.screenWidth! / 1.5,
                 onPressed: _enableButton ? _addGroup : null,
                 color: colorPurple,
                 icon: FileConstants.icAddGroup,
                 buttonType: HutanoButtonType.withPrefixIcon,
-                label: Localization.of(context).addCreateGroup,
+                label: Localization.of(context)!.addCreateGroup,
               ),
             ),
           ],
@@ -198,7 +198,7 @@ class _CreateProviderGroupState extends State<CreateProviderGroup> {
         ),
         Flexible(
           child: Text(
-            Localization.of(context)
+            Localization.of(context)!
                 .addDoctorNetwork
                 .format([widget.doctorName]),
             softWrap: true,
@@ -213,18 +213,18 @@ class _CreateProviderGroupState extends State<CreateProviderGroup> {
   Widget _buildEmailField(BuildContext context) {
     return HutanoTextField(
         width: SizeConfig.screenWidth,
-        labelText: Localization.of(context).groupName,
+        labelText: Localization.of(context)!.groupName,
         focusNode: _groupFocus,
         controller: _groupNameController,
         onValueChanged: (value) {
-          final _validate = _key.currentState.validate();
+          final _validate = _key.currentState!.validate();
           setState(() {
             _enableButton = _validate;
           });
         },
         validationMethod: (text) => text
             .toString()
-            .isBlank(context, Localization.of(context).errorEnterGroup));
+            .isBlank(context, Localization.of(context)!.errorEnterGroup));
   }
 
   Widget _buildBottomButtons() {

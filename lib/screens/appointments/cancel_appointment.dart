@@ -10,10 +10,10 @@ import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 
 class CancelAppointmentScreen extends StatefulWidget {
-  const CancelAppointmentScreen({Key key, this.appointmentData})
+  const CancelAppointmentScreen({Key? key, this.appointmentData})
       : super(key: key);
 
-  final Map appointmentData;
+  final Map? appointmentData;
 
   @override
   _CancelAppointmentScreenState createState() =>
@@ -21,10 +21,10 @@ class CancelAppointmentScreen extends StatefulWidget {
 }
 
 class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
-  Map _appointmentData = Map();
+  Map? _appointmentData = Map();
 
-  int _radioValue;
-  String _selectedReason;
+  int? _radioValue;
+  String? _selectedReason;
 
   final List<String> _reasonList = [
     'Booked by mistake.',
@@ -84,7 +84,7 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
                     color: Colors.grey[100],
                     child: Column(
                       children: [
-                        _appointmentWidget(_appointmentData),
+                        _appointmentWidget(_appointmentData!),
                         Padding(
                           padding: const EdgeInsets.all(14),
                           child: Text(
@@ -130,7 +130,7 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
                   ),
                   _reasonWidget(),
                   _selectedReason != null &&
-                          _selectedReason.toLowerCase() == 'other'
+                          _selectedReason!.toLowerCase() == 'other'
                       ? Container(
                           height: 80,
                           padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -148,7 +148,8 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
                               labelText: "Type something here...",
                               alignLabelWithHint: true,
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey[300]),
+                                borderSide:
+                                    BorderSide(color: Colors.grey[300]!),
                                 borderRadius: BorderRadius.circular(14.0),
                               ),
                               border: OutlineInputBorder(
@@ -176,7 +177,7 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
                           context: context,
                           description: 'Please select a reason');
                       return;
-                    } else if (_selectedReason.toLowerCase() == 'other' &&
+                    } else if (_selectedReason!.toLowerCase() == 'other' &&
                         _otherReasonController.text.isEmpty) {
                       Widgets.showErrorDialog(
                         context: context,
@@ -193,7 +194,7 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
                       Map appointmentData = Map();
 
                       appointmentData['appointmentId'] =
-                          _appointmentData['data']['_id'];
+                          _appointmentData!['data']['_id'];
                       appointmentData['cancellationFees'] = '20';
                       appointmentData['cancelledReason'] = _selectedReason;
 
@@ -237,11 +238,11 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
     Map _data = response['data'];
 
     String name = "---",
-        avatar,
         address = "---",
         averageRating = "---",
         appointmentType = "---",
         professionalTitle = "---";
+    String? avatar;
 
     if (_data["type"] != null)
       switch (_data["type"]) {
@@ -283,7 +284,7 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
 
       if (detail["professionalTitle"] != null) {
         professionalTitle = detail["professionalTitle"]["title"] ?? "---";
-        name += Extensions.getSortProfessionTitle(professionalTitle);
+        name += Extensions.getSortProfessionTitle(professionalTitle)!;
       }
     }
 
@@ -312,14 +313,15 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
                   margin: const EdgeInsets.only(top: 14.0),
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: avatar == null
-                          ? AssetImage('images/profile_user.png')
-                          : NetworkImage(ApiBaseHelper.imageUrl + avatar),
+                      image: (avatar == null
+                              ? AssetImage('images/profile_user.png')
+                              : NetworkImage(ApiBaseHelper.imageUrl + avatar))
+                          as ImageProvider<Object>,
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.all(Radius.circular(50.0)),
                     border: Border.all(
-                      color: Colors.grey[300],
+                      color: Colors.grey[300]!,
                       width: 1.0,
                     ),
                   ),
@@ -481,7 +483,7 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
               fontWeight: FontWeight.w400,
             ),
           ),
-          onChanged: (value) {
+          onChanged: (dynamic value) {
             setState(
               () => _radioValue = value,
             );
@@ -495,9 +497,9 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
 
   Widget _container({
     bool addBorder = true,
-    Color color,
-    Widget child,
-    EdgeInsets padding,
+    Color? color,
+    Widget? child,
+    EdgeInsets? padding,
     bool addMargin = true,
   }) {
     return Container(
@@ -508,7 +510,7 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
       decoration: BoxDecoration(
         color: color ?? Colors.white,
         borderRadius: BorderRadius.circular(14.0),
-        border: addBorder ? Border.all(color: Colors.grey[200]) : null,
+        border: addBorder ? Border.all(color: Colors.grey[200]!) : null,
       ),
       child: child,
     );

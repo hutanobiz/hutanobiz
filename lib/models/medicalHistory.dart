@@ -1,10 +1,10 @@
 class MedicalHistory {
-  String name;
-  int status;
-  String sId;
-  int iV;
-  String createdAt;
-  String updatedAt;
+  String? name;
+  int? status;
+  String? sId;
+  int? iV;
+  String? createdAt;
+  String? updatedAt;
   bool isSelected = false;
 
   MedicalHistory(

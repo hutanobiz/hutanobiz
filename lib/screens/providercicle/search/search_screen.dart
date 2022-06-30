@@ -24,10 +24,10 @@ import 'model/family_member.dart';
 import 'model/req_search_number.dart';
 
 class SearchScreen extends StatefulWidget {
-  final SearchScreenFrom searchScreen;
-  final String number;
+  final SearchScreenFrom? searchScreen;
+  final String? number;
 
-  const SearchScreen({Key key, this.searchScreen, this.number})
+  const SearchScreen({Key? key, this.searchScreen, this.number})
       : super(key: key);
 
   @override
@@ -37,7 +37,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final _searchController = TextEditingController();
   final _debouncer = Debouncer();
-  List<FamilyMember> _memberList = [];
+  List<FamilyMember>? _memberList = [];
   final int _page = 1;
   final GlobalKey<FormState> _key = GlobalKey();
 
@@ -47,7 +47,7 @@ class _SearchScreenState extends State<SearchScreen> {
     if (widget.searchScreen != null) {
       if (widget.searchScreen == SearchScreenFrom.inviteFamily) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
-          _searchController.text = widget.number;
+          _searchController.text = widget.number!;
           _searchUser(widget.number);
         });
       }
@@ -76,7 +76,7 @@ class _SearchScreenState extends State<SearchScreen> {
       });
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -109,11 +109,11 @@ class _SearchScreenState extends State<SearchScreen> {
             height: spacing30,
           ),
           Expanded(
-            child: (_memberList.length == 0 &&
+            child: (_memberList!.length == 0 &&
                     _searchController.text.length > 0)
                 ? Center(
                     child: NoDataFound(
-                    msg: Localization.of(context).noMemberFound,
+                    msg: Localization.of(context)!.noMemberFound,
                   ))
                 : ListView.separated(
                     separatorBuilder: (_, pos) {
@@ -123,24 +123,24 @@ class _SearchScreenState extends State<SearchScreen> {
                         height: 25,
                       );
                     },
-                    itemCount: _memberList.length,
+                    itemCount: _memberList!.length,
                     itemBuilder: (context, pos) {
                       return RippleEffect(
                         onTap: () {
                           if (widget.searchScreen != null &&
                               widget.searchScreen == SearchScreenFrom.addMore) {
                             Navigator.of(context).pop(
-                                {ArgumentConstant.member: _memberList[pos]});
+                                {ArgumentConstant.member: _memberList![pos]});
                           } else {
                             Navigator.of(context).pushReplacementNamed(
                                 Routes.addFamilyMember,
                                 arguments: {
-                                  ArgumentConstant.member: _memberList[pos]
+                                  ArgumentConstant.member: _memberList![pos]
                                 });
                           }
                         },
                         child: MemberDetail(
-                          member: _memberList[pos],
+                          member: _memberList![pos],
                         ),
                       );
                     }),
@@ -154,7 +154,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget _buildButton() {
     return HutanoButton(
       onPressed: () {
-        FocusManager.instance.primaryFocus.unfocus();
+        FocusManager.instance.primaryFocus!.unfocus();
 
         Navigator.of(context).pop();
       },
@@ -174,7 +174,7 @@ class _SearchScreenState extends State<SearchScreen> {
       cursorColor: colorDarkPurple,
       maxLength: 10,
       onChanged: (s) => _debouncer(() {
-        if (_key.currentState.validate()) {
+        if (_key.currentState!.validate()) {
           _onSearch(s);
         } else {
           setState(() {
@@ -215,7 +215,7 @@ class _SearchScreenState extends State<SearchScreen> {
         border: border,
         disabledBorder: border,
         focusedBorder: border,
-        hintText: Localization.of(context).search,
+        hintText: Localization.of(context)!.search,
       ),
     );
   }

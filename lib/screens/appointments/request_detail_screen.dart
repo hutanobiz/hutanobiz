@@ -16,27 +16,27 @@ import 'package:hutano/widgets/problem_widget.dart';
 import 'package:intl/intl.dart';
 
 class RequestDetailScreen extends StatefulWidget {
-  const RequestDetailScreen({Key key, this.appointmentId}) : super(key: key);
+  const RequestDetailScreen({Key? key, this.appointmentId}) : super(key: key);
 
-  final String appointmentId;
+  final String? appointmentId;
 
   @override
   _RequestDetailScreenState createState() => _RequestDetailScreenState();
 }
 
 class _RequestDetailScreenState extends State<RequestDetailScreen> {
-  List feeList = List();
+  List feeList = [];
   double totalFee = 0;
   String _appointmentStatus = "0";
-  Future<dynamic> _profileFuture;
-  InheritedContainerState _container;
-  Map profileMap = {};
+  Future<dynamic>? _profileFuture;
+  late InheritedContainerState _container;
+  Map? profileMap = {};
 
   Map _medicalHistoryMap = {};
   bool isLoading = false;
   final Set<Marker> _markers = {};
   ApiBaseHelper api = ApiBaseHelper();
-  BitmapDescriptor sourceIcon;
+  late BitmapDescriptor sourceIcon;
   Completer<GoogleMapController> _controller = Completer();
   Map<String, String> timeSpanConfig = {
     "1": "Hours",
@@ -97,17 +97,17 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                   child: CustomLoader(),
                 );
               } else if (snapshot.hasData) {
-                profileMap = snapshot.data;
-                _appointmentStatus = profileMap['data']["status"].toString();
+                profileMap = snapshot.data as Map?;
+                _appointmentStatus = profileMap!['data']["status"].toString();
                 return Column(
                   children: [
                     Expanded(
                       child: SingleChildScrollView(
                           padding: const EdgeInsets.fromLTRB(0, 20, 0, 75),
-                          child: profileWidget(profileMap)),
+                          child: profileWidget(profileMap!)),
                     ),
-                    (profileMap['data']['isFollowUp'] &&
-                            profileMap["data"]["paymentMethod"] == null)
+                    (profileMap!['data']['isFollowUp'] &&
+                            profileMap!["data"]["paymentMethod"] == null)
                         ? Container(
                             height: 55.0,
                             width: MediaQuery.of(context).size.width,
@@ -143,7 +143,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                                       });
                                       api
                                           .getProviderProfile(
-                                              profileMap['data']['doctor']
+                                              profileMap!['data']['doctor']
                                                   ['_id'],
                                               locMap)
                                           .then((value) {
@@ -152,7 +152,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
 
                                         _container.setProjectsResponse(
                                             'serviceType',
-                                            profileMap['data']['type']
+                                            profileMap!['data']['type']
                                                 .toString());
                                         setState(() {
                                           isLoading = false;
@@ -224,7 +224,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                                       });
                                       api
                                           .getProviderProfile(
-                                              profileMap['data']['doctor']
+                                              profileMap!['data']['doctor']
                                                   ['_id'],
                                               locMap)
                                           .then((value) {
@@ -235,7 +235,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                                             "providerData", value);
                                         _container.setProjectsResponse(
                                             'serviceType',
-                                            profileMap['data']['type']
+                                            profileMap!['data']['type']
                                                 .toString());
 
                                         // if (profileMap['subServices'].length >
@@ -255,7 +255,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                                             arguments: {
                                               'paymentType': 2,
                                               'appointmentId':
-                                                  profileMap["data"]["_id"]
+                                                  profileMap!["data"]["_id"]
                                             }).whenComplete(() =>
                                             appointmentDetailsFuture(
                                                 LatLng(0, 0)));
@@ -266,8 +266,8 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                               ],
                             ),
                           )
-                        : (profileMap["data"]["paymentMethod"] == 1 &&
-                                profileMap["data"]["paymentStatus"] == 2)
+                        : (profileMap!["data"]["paymentMethod"] == 1 &&
+                                profileMap!["data"]["paymentStatus"] == 2)
                             ? Align(
                                 alignment: FractionalOffset.bottomRight,
                                 child: Container(
@@ -281,15 +281,15 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                                       onPressed: () {
                                         _container.setProjectsResponse(
                                             'serviceType',
-                                            profileMap['data']['type']
+                                            profileMap!['data']['type']
                                                 .toString());
 
-                                        if (profileMap['subServices'].length >
+                                        if (profileMap!['subServices'].length >
                                             0) {
                                           _container.setServicesData(
                                               "status", "1");
                                           _container.setServicesData("services",
-                                              profileMap['subServices']);
+                                              profileMap!['subServices']);
                                         } else {
                                           _container.setServicesData(
                                               "status", "0");
@@ -301,7 +301,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                                             arguments: {
                                               'paymentType': 2,
                                               'appointmentId':
-                                                  profileMap["data"]["_id"]
+                                                  profileMap!["data"]["_id"]
                                             }).whenComplete(() =>
                                             appointmentDetailsFuture(
                                                 LatLng(0, 0)));
@@ -327,9 +327,9 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
   Widget profileWidget(Map _data) {
     Map _providerData = _data["data"];
 
-    int paymentType = _data["data"]["paymentMethod"];
-    String insuranceName = '';
-    List<String> insuranceImages = List();
+    int? paymentType = _data["data"]["paymentMethod"];
+    String? insuranceName = '';
+    List<String?> insuranceImages = [];
     if (_data["insuranceData"] != null) {
       if (_data["insuranceData"]["insuranceDocumentFront"] != null) {
         insuranceImages.add(_data["insuranceData"]["insuranceDocumentFront"]);
@@ -342,8 +342,8 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
       }
     }
 
-    String name = "---",
-        averageRating = "---",
+    String name = "---";
+    String? averageRating = "---",
         userRating,
         professionalTitle = "---",
         fee = "0.00",
@@ -410,8 +410,8 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
     if (_providerData["doctor"] != null) {
       name = (_providerData["doctor"]['title']?.toString() ?? 'Dr.') +
               ' ' +
-              _providerData["doctor"]["fullName"]?.toString() ??
-          "---";
+              (_providerData["doctor"]["fullName"]?.toString() ??
+          "---");
       avatar = _providerData["doctor"]["avatar"];
     }
 
@@ -419,7 +419,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
       for (dynamic detail in _data["doctorData"]) {
         if (detail["professionalTitle"] != null) {
           professionalTitle = detail["professionalTitle"]["title"] ?? "---";
-          name += Extensions.getSortProfessionTitle(professionalTitle);
+          name += Extensions.getSortProfessionTitle(professionalTitle)!;
         }
       }
     }
@@ -478,14 +478,15 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                 height: 62.0,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: avatar == null
-                        ? AssetImage('images/profile_user.png')
-                        : NetworkImage(ApiBaseHelper.imageUrl + avatar),
+                    image: (avatar == null
+                            ? AssetImage('images/profile_user.png')
+                            : NetworkImage(ApiBaseHelper.imageUrl + avatar))
+                        as ImageProvider<Object>,
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.all(Radius.circular(50.0)),
                   border: Border.all(
-                    color: Colors.grey[300],
+                    color: Colors.grey[300]!,
                     width: 1.0,
                   ),
                 ),
@@ -513,7 +514,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                           (_providerData['isFollowUp'] &&
                                   _providerData["paymentMethod"] == null)
                               ? SizedBox()
-                              : _appointmentStatus?.appointmentStatus(),
+                              : _appointmentStatus.appointmentStatus(),
                         ],
                       ),
                       SizedBox(
@@ -628,14 +629,14 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
     );
   }
 
-  Widget appoCard(int cardText) {
+  Widget appoCard(int? cardText) {
     return Container(
       margin: const EdgeInsets.only(left: 20.0, right: 20.0),
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(14.0)),
-        border: Border.all(color: Colors.grey[100]),
+        border: Border.all(color: Colors.grey[100]!),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -767,7 +768,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                 margin: const EdgeInsets.only(top: 11.0, right: 20),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(14.0),
-                  border: Border.all(color: Colors.grey[300]),
+                  border: Border.all(color: Colors.grey[300]!),
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(14.0),
@@ -803,8 +804,8 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
     );
   }
 
-  Widget feeWidget(String generalFee, String officeVisitCharge,
-      String parkingFee, String appType) {
+  Widget feeWidget(String? generalFee, String? officeVisitCharge,
+      String? parkingFee, String appType) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
       child: Column(
@@ -821,7 +822,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14.0),
               border: Border.all(
-                color: Colors.grey[100],
+                color: Colors.grey[100]!,
               ),
             ),
             child: Column(
@@ -866,12 +867,12 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
             separatorBuilder: (context, index) => SizedBox(height: 20),
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemCount: profileMap['appointmentProblems'].length,
+            itemCount: profileMap!['appointmentProblems'].length,
             itemBuilder: (context, index) {
               return ProblemWidget(
-                  dob: profileMap['data']['user']['dob'],
-                  gender: profileMap['data']['user']['gender'],
-                  appointmentProblem: profileMap['appointmentProblems'][index],
+                  dob: profileMap!['data']['user']['dob'],
+                  gender: profileMap!['data']['user']['gender'],
+                  appointmentProblem: profileMap!['appointmentProblems'][index],
                   problemTimeSpanMap: timeSpanConfig);
             },
           ),
@@ -1003,7 +1004,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
             child: Align(
               alignment: Alignment.centerRight,
               child: Text(
-                "\$" + feeMap["amount"]?.toStringAsFixed(2) ?? "0.00",
+                "\$" + (feeMap["amount"]?.toStringAsFixed(2) ?? "0.00"),
                 style: TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.w700,
@@ -1051,9 +1052,9 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
   }
 
   Widget paymentWidget(int paymentType,
-      {List<String> insuranceImages,
+      {List<String?>? insuranceImages,
       dynamic cardDetails,
-      String insuranceName}) {
+      String? insuranceName}) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
       child: Column(
@@ -1091,7 +1092,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
                         paymentType == 1
                             ? '************${cardDetails['card']['last4']}'
                             : paymentType == 2
-                                ? insuranceName
+                                ? insuranceName!
                                 : "Cash",
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -1109,7 +1110,7 @@ class _RequestDetailScreenState extends State<RequestDetailScreen> {
     );
   }
 
-  Widget divider({double topPadding}) {
+  Widget divider({double? topPadding}) {
     return Padding(
       padding: EdgeInsets.only(top: topPadding ?? 0.0),
       child: Divider(

@@ -5,12 +5,12 @@ import 'app_logo.dart';
 
 class HutanoHeader extends StatelessWidget {
   final Widget headerInfo;
-  final Widget headerLabel;
+  final Widget? headerLabel;
   final double spacing;
 
   const HutanoHeader({
-    Key key, 
-    this.headerInfo,
+    Key? key, 
+    required this.headerInfo,
     this.headerLabel,
     this.spacing =40
     })
@@ -21,7 +21,7 @@ class HutanoHeader extends StatelessWidget {
     return Column(
       children: [
         AppLogo(),
-        if(headerLabel!=null) headerLabel,
+        if(headerLabel!=null) headerLabel!,
         SizedBox(
           height: 35,
         ),

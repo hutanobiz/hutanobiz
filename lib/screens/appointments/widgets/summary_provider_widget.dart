@@ -4,11 +4,11 @@ import 'package:hutano/text_style.dart';
 
 class SummaryPatientWidget extends StatelessWidget {
   const SummaryPatientWidget({
-    Key key,
-    @required this.context,
-    @required this.name,
-    @required this.exp,
-    @required this.img,
+    Key? key,
+    required this.context,
+    required this.name,
+    required this.exp,
+    required this.img,
   }) : super(key: key);
 
   final BuildContext context;
@@ -24,7 +24,7 @@ class SummaryPatientWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.grey[50],
           borderRadius: BorderRadius.all(Radius.circular(10)),
-          border: Border.all(color: Colors.grey[200]),
+          border: Border.all(color: Colors.grey[200]!),
         ),
         child: Row(
           children: [
@@ -56,11 +56,11 @@ class SummaryPatientWidget extends StatelessWidget {
 
 class SummaryProviderWidget extends StatelessWidget {
   const SummaryProviderWidget({
-    Key key,
-    @required this.context,
-    @required this.name,
-    @required this.exp,
-    @required this.img,
+    Key? key,
+    required this.context,
+    required this.name,
+    required this.exp,
+    required this.img,
   }) : super(key: key);
 
   final BuildContext context;
@@ -76,7 +76,7 @@ class SummaryProviderWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.grey[50],
           borderRadius: BorderRadius.all(Radius.circular(10)),
-          border: Border.all(color: Colors.grey[200]),
+          border: Border.all(color: Colors.grey[200]!),
         ),
         child: Row(
           children: [
@@ -111,20 +111,20 @@ class SummaryProviderWidget extends StatelessWidget {
 
 class SummaryHeaderWidget extends StatelessWidget {
   const SummaryHeaderWidget({
-    Key key,
-    @required this.context,
-    @required this.encounterDate,
-    @required this.provider,
-    @required this.patient,
-    @required this.mrn,
-    @required this.appointmentType,
+    Key? key,
+    required this.context,
+    required this.encounterDate,
+    required this.provider,
+    required this.patient,
+    required this.mrn,
+    required this.appointmentType,
   }) : super(key: key);
 
   final BuildContext context;
   final String encounterDate;
-  final String provider;
-  final String patient;
-  final String mrn;
+  final String? provider;
+  final String? patient;
+  final String? mrn;
   final String appointmentType;
 
   @override
@@ -186,14 +186,14 @@ class SummaryHeaderWidget extends StatelessWidget {
 
 class RichTextWidget extends StatelessWidget {
   const RichTextWidget({
-    Key key,
-    @required this.keyText,
-    @required this.value,
+    Key? key,
+    required this.keyText,
+    required this.value,
     text,
   }) : super(key: key);
 
   final String keyText;
-  final String value;
+  final String? value;
   @override
   Widget build(BuildContext context) {
     return RichText(
@@ -215,13 +215,13 @@ class RichTextWidget extends StatelessWidget {
 
 class InstructionWidget extends StatelessWidget {
   const InstructionWidget({
-    Key key,
-    @required this.title,
-    @required this.text,
+    Key? key,
+    required this.title,
+    required this.text,
   }) : super(key: key);
 
   final String title;
-  final String text;
+  final String? text;
 
   @override
   Widget build(BuildContext context) {
@@ -235,7 +235,7 @@ class InstructionWidget extends StatelessWidget {
         ),
         SizedBox(height: 2),
         Text(
-          text,
+          text!,
           style: AppTextStyle.mediumStyle(fontSize: 14),
         ),
       ],

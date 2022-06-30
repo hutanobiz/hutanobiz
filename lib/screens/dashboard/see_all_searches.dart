@@ -7,7 +7,7 @@ import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/provider_tile_widget.dart';
 
 class SeeAllSearchScreeen extends StatefulWidget {
-  const SeeAllSearchScreeen({Key key, @required this.arguments})
+  const SeeAllSearchScreeen({Key? key, required this.arguments})
       : super(key: key);
 
   final SearchArguments arguments;
@@ -17,7 +17,7 @@ class SeeAllSearchScreeen extends StatefulWidget {
 }
 
 class _SeeAllSearchScreeenState extends State<SeeAllSearchScreeen> {
-  InheritedContainerState _container;
+  late InheritedContainerState _container;
 
   @override
   void didChangeDependencies() {
@@ -27,11 +27,11 @@ class _SeeAllSearchScreeenState extends State<SeeAllSearchScreeen> {
 
   @override
   Widget build(BuildContext context) {
-    List<dynamic> _list = widget.arguments.list;
-    String title = widget.arguments.title;
+    List<dynamic> _list = widget.arguments.list!;
+    String? title = widget.arguments.title;
     String professionalTitle = "---";
 
-    int type = widget.arguments.type;
+    int? type = widget.arguments.type;
 
     return Scaffold(
       backgroundColor: AppColors.goldenTainoi,
@@ -58,7 +58,7 @@ class _SeeAllSearchScreeenState extends State<SeeAllSearchScreeen> {
                 }
               }
 
-              return title.toLowerCase().contains("provider")
+              return title!.toLowerCase().contains("provider")
                   ? ProviderTileWidget(
                       avatar: _list[index]["avatar"] ?? '',
                       name: _list[index]["title"] +

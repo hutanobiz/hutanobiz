@@ -2,38 +2,38 @@ import 'package:hutano/screens/book_appointment/model/allergy.dart';
 import 'package:hutano/screens/book_appointment/vitals/model/social_history.dart';
 
 class ReqBookingAppointmentModel {
-  String cardId;
-  bool consentToTreat;
-  String consultation;
-  String date;
-  String doctor;
-  String fromTime;
-  String insuranceId;
-  String isFollowUp;
-  int isOndemand;
-  List<String> medicalDiagnosticsTests;
-  List<String> medicalDocuments;
-  List<BookedMedicalHistory> medicalHistory;
-  List<String> medicalImages;
-  String officeId;
-  String otherMedicalHistory;
-  int paymentMethod;
-  PreferredPharmacy preferredPharmacy;
-  List<Problems> problems;
-  List<dynamic> services;
-  String statusType;
-  String timeZonePlace;
-  String type;
-  Vitals vitals;
-  List<String> medicationDetails;
-  String previousAppointmentId;
-  String parkingFee;
-  String parkingType;
-  String instruction;
-  String userAddressId;
-  String parkingBay;
-  List<Allergy> allergy;
-  SocialHistory socialHistory;
+  String? cardId;
+  bool? consentToTreat;
+  String? consultation;
+  String? date;
+  String? doctor;
+  String? fromTime;
+  String? insuranceId;
+  String? isFollowUp;
+  int? isOndemand;
+  List<String?>? medicalDiagnosticsTests;
+  List<String?>? medicalDocuments;
+  List<BookedMedicalHistory>? medicalHistory;
+  List<String?>? medicalImages;
+  String? officeId;
+  String? otherMedicalHistory;
+  int? paymentMethod;
+  PreferredPharmacy? preferredPharmacy;
+  List<Problems>? problems;
+  List<dynamic>? services;
+  String? statusType;
+  String? timeZonePlace;
+  String? type;
+  Vitals? vitals;
+  List<String>? medicationDetails;
+  String? previousAppointmentId;
+  String? parkingFee;
+  String? parkingType;
+  String? instruction;
+  String? userAddressId;
+  String? parkingBay;
+  List<Allergy>? allergy;
+  SocialHistory? socialHistory;
 
   ReqBookingAppointmentModel(
       {this.cardId,
@@ -82,9 +82,9 @@ class ReqBookingAppointmentModel {
     medicalDiagnosticsTests = json['medicalDiagnosticsTests'].cast<String>();
     medicalDocuments = json['medicalDocuments'].cast<String>();
     if (json['medicalHistory'] != null) {
-      medicalHistory = new List<BookedMedicalHistory>();
+      medicalHistory = <BookedMedicalHistory>[];
       json['medicalHistory'].forEach((v) {
-        medicalHistory.add(new BookedMedicalHistory.fromJson(v));
+        medicalHistory!.add(new BookedMedicalHistory.fromJson(v));
       });
     }
     medicalImages = json['medicalImages'].cast<String>();
@@ -95,9 +95,9 @@ class ReqBookingAppointmentModel {
         ? new PreferredPharmacy.fromJson(json['preferredPharmacy'])
         : null;
     if (json['problems'] != null) {
-      problems = new List<Problems>();
+      problems = <Problems>[];
       json['problems'].forEach((v) {
-        problems.add(new Problems.fromJson(v));
+        problems!.add(new Problems.fromJson(v));
       });
     }
     services = json['services'].cast<String>();
@@ -114,9 +114,9 @@ class ReqBookingAppointmentModel {
     userAddressId = json['userAddressId'];
     parkingBay = json['parkingBay'];
     if (json['allergy'] != null) {
-      allergy = new List<Allergy>();
+      allergy = <Allergy>[];
       json['allergy'].forEach((v) {
-        allergy.add(new Allergy.fromJson(v));
+        allergy!.add(new Allergy.fromJson(v));
       });
     }
     socialHistory = json['socialHistory'] != null
@@ -139,24 +139,24 @@ class ReqBookingAppointmentModel {
     data['medicalDocuments'] = this.medicalDocuments;
     if (this.medicalHistory != null) {
       data['medicalHistory'] =
-          this.medicalHistory.map((v) => v.toJson()).toList();
+          this.medicalHistory!.map((v) => v.toJson()).toList();
     }
     data['medicalImages'] = this.medicalImages;
     data['officeId'] = this.officeId;
     data['otherMedicalHistory'] = this.otherMedicalHistory;
     data['paymentMethod'] = this.paymentMethod;
     if (this.preferredPharmacy != null) {
-      data['preferredPharmacy'] = this.preferredPharmacy.toJson();
+      data['preferredPharmacy'] = this.preferredPharmacy!.toJson();
     }
     if (this.problems != null) {
-      data['problems'] = this.problems.map((v) => v.toJson()).toList();
+      data['problems'] = this.problems!.map((v) => v.toJson()).toList();
     }
     data['services'] = this.services;
     data['statusType'] = this.statusType;
     data['timeZonePlace'] = this.timeZonePlace;
     data['type'] = this.type;
     if (this.vitals != null) {
-      data['vitals'] = this.vitals.toJson();
+      data['vitals'] = this.vitals!.toJson();
     }
     data['medicationDetails'] = this.medicationDetails;
     data['previousAppointmentId'] = this.previousAppointmentId;
@@ -166,19 +166,19 @@ class ReqBookingAppointmentModel {
     data['userAddressId'] = this.userAddressId;
     data['parkingBay'] = this.parkingBay;
     if (this.socialHistory != null) {
-      data['socialHistory'] = this.socialHistory.toJson();
+      data['socialHistory'] = this.socialHistory!.toJson();
     }
     if (this.allergy != null) {
-      data['allergy'] = this.allergy.map((v) => v.toJson()).toList();
+      data['allergy'] = this.allergy!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class BookedMedicalHistory {
-  String name;
-  int year;
-  String month;
+  String? name;
+  int? year;
+  String? month;
 
   BookedMedicalHistory({this.name, this.year, this.month});
 
@@ -198,7 +198,7 @@ class BookedMedicalHistory {
 }
 
 class PreferredPharmacy {
-  String pharmacyId;
+  String? pharmacyId;
 
   PreferredPharmacy({this.pharmacyId});
 
@@ -214,20 +214,20 @@ class PreferredPharmacy {
 }
 
 class Problems {
-  List<BodyPartWithSide> bodyPart;
-  String dailyActivity;
-  String image;
-  String isProblemImproving;
-  String isTreatmentReceived;
-  String name;
-  List<String> problemBetter;
-  ProblemFacingTimeSpan problemFacingTimeSpan;
-  String problemId;
-  int problemRating;
-  List<String> problemWorst;
-  List<String> symptoms;
-  ProblemFacingTimeSpan treatmentReceived;
-  String description;
+  List<BodyPartWithSide>? bodyPart;
+  String? dailyActivity;
+  String? image;
+  String? isProblemImproving;
+  String? isTreatmentReceived;
+  String? name;
+  List<String>? problemBetter;
+  ProblemFacingTimeSpan? problemFacingTimeSpan;
+  String? problemId;
+  int? problemRating;
+  List<String>? problemWorst;
+  List<String>? symptoms;
+  ProblemFacingTimeSpan? treatmentReceived;
+  String? description;
 
   Problems(
       {this.bodyPart,
@@ -247,9 +247,9 @@ class Problems {
 
   Problems.fromJson(Map<String, dynamic> json) {
     if (json['bodyPart'] != null) {
-      bodyPart = new List<BodyPartWithSide>();
+      bodyPart = <BodyPartWithSide>[];
       json['bodyPart'].forEach((v) {
-        bodyPart.add(new BodyPartWithSide.fromJson(v));
+        bodyPart!.add(new BodyPartWithSide.fromJson(v));
       });
     }
     dailyActivity = json['dailyActivity'];
@@ -274,7 +274,7 @@ class Problems {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.bodyPart != null) {
-      data['bodyPart'] = this.bodyPart.map((v) => v.toJson()).toList();
+      data['bodyPart'] = this.bodyPart!.map((v) => v.toJson()).toList();
     }
     data['dailyActivity'] = this.dailyActivity;
     data['image'] = this.image;
@@ -283,14 +283,14 @@ class Problems {
     data['name'] = this.name;
     data['problemBetter'] = this.problemBetter;
     if (this.problemFacingTimeSpan != null) {
-      data['problemFacingTimeSpan'] = this.problemFacingTimeSpan.toJson();
+      data['problemFacingTimeSpan'] = this.problemFacingTimeSpan!.toJson();
     }
     data['problemId'] = this.problemId;
     data['problemRating'] = this.problemRating;
     data['problemWorst'] = this.problemWorst;
     data['symptoms'] = this.symptoms;
     if (this.treatmentReceived != null) {
-      data['treatmentReceived'] = this.treatmentReceived.toJson();
+      data['treatmentReceived'] = this.treatmentReceived!.toJson();
     }
     data['description'] = description;
     return data;
@@ -298,8 +298,8 @@ class Problems {
 }
 
 class BodyPartWithSide {
-  String name;
-  String sides;
+  String? name;
+  String? sides;
 
   BodyPartWithSide({this.name, this.sides});
 
@@ -317,9 +317,9 @@ class BodyPartWithSide {
 }
 
 class ProblemFacingTimeSpan {
-  String type;
-  String period;
-  String typeOfCare;
+  String? type;
+  String? period;
+  String? typeOfCare;
 
   ProblemFacingTimeSpan({this.type, this.period, this.typeOfCare});
 
@@ -339,17 +339,17 @@ class ProblemFacingTimeSpan {
 }
 
 class Vitals {
-  String date;
-  String time;
-  int bloodPressureSbp;
-  int bloodPressureDbp;
-  int heartRate;
-  int oxygenSaturation;
-  double temperature;
-  double height;
-  double weight;
-  double bmi;
-  double bloodGlucose;
+  String? date;
+  String? time;
+  int? bloodPressureSbp;
+  int? bloodPressureDbp;
+  int? heartRate;
+  int? oxygenSaturation;
+  double? temperature;
+  double? height;
+  double? weight;
+  double? bmi;
+  double? bloodGlucose;
 
   Vitals(
       {this.date,

@@ -1,14 +1,14 @@
 class Services {
-  String userId;
-  String serviceId;
-  String subServiceId;
-  int duration;
+  String? userId;
+  String? serviceId;
+  String? subServiceId;
+  int? duration;
   dynamic amount;
-  String sId;
-  int iV;
-  String serviceName;
-  String subServiceName;
-  int serviceType;
+  String? sId;
+  int? iV;
+  String? serviceName;
+  String? subServiceName;
+  int? serviceType;
   bool isSelected = false;
 
   Services(

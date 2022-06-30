@@ -5,7 +5,7 @@ import 'package:hutano/utils/constants/file_constants.dart';
 class CommonRatingWidget extends StatefulWidget {
   final double initRating;
   final bool isIgnoreGesture;
-  final Function onRatingTap;
+  final Function? onRatingTap;
   final bool isFromRating;
   CommonRatingWidget(
       {this.initRating = 0.0,
@@ -33,7 +33,7 @@ class _CommonRatingWidgetState extends State<CommonRatingWidget> {
         half: image(FileConstants.icRatingStar),
         empty: image(FileConstants.icRatingStar),
       ),
-      onRatingUpdate: (rating) => widget.onRatingTap(rating) ?? () {},
+      onRatingUpdate: (rating) => widget.onRatingTap!(rating) ?? () {},
     );
   }
 }

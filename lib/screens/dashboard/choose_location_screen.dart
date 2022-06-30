@@ -18,7 +18,7 @@ final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: Strings.kGoogleApiKey);
 
 class ChooseLocationScreen extends StatefulWidget {
-  ChooseLocationScreen({Key key, @required this.latLng}) : super(key: key);
+  ChooseLocationScreen({Key? key, required this.latLng}) : super(key: key);
 
   final LatLng latLng;
 
@@ -29,8 +29,8 @@ class ChooseLocationScreen extends StatefulWidget {
 class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
   Completer<GoogleMapController> _controller = Completer();
   TextEditingController _addressController = TextEditingController();
-  CameraPosition _myLocation;
-  GoogleMapController controller;
+  CameraPosition? _myLocation;
+  late GoogleMapController controller;
 
   @override
   void initState() {
@@ -70,7 +70,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
 
             setState(() {
               _myLocation = CameraPosition(
-                target: LatLng(locationData.latitude, locationData.longitude),
+                target: LatLng(locationData.latitude!, locationData.longitude!),
               );
             });
           } on PlatformException catch (e) {
@@ -79,7 +79,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
 
             log(e.code);
 
-            _location = null;
+            // _location = null;
           }
         } else {
           bool serviceStatusResult = await _location.requestService();
@@ -114,7 +114,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
                         _myLocation == null
                             ? Container()
                             : GoogleMap(
-                                initialCameraPosition: _myLocation,
+                                initialCameraPosition: _myLocation!,
                                 onMapCreated: _onMapCreated,
                                 myLocationButtonEnabled: true,
                                 myLocationEnabled: true,
@@ -123,8 +123,8 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
                                 },
                                 onCameraIdle: () {
                                   getLocationAddress(
-                                    _myLocation.target.latitude,
-                                    _myLocation.target.longitude,
+                                    _myLocation!.target.latitude,
+                                    _myLocation!.target.longitude,
                                   );
                                 },
                               ),
@@ -170,7 +170,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
                               decoration: BoxDecoration(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(8.0)),
-                                  border: Border.all(color: Colors.grey[300])),
+                                  border: Border.all(color: Colors.grey[300]!)),
                               child: Row(
                                 children: <Widget>[
                                   Icon(
@@ -209,7 +209,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
                         title: "Submit",
                         buttonColor: AppColors.goldenTainoi,
                         onPressed: () {
-                          Navigator.pop(context, _myLocation.target);
+                          Navigator.pop(context, _myLocation!.target);
                         }),
                   ),
                 ],
@@ -234,18 +234,18 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
     try {
       // final coordinates = new Coordinates(latitude, longitude);
       var addresses = await Geo.placemarkFromCoordinates(latitude, longitude);
-      var first = addresses.first.locality + ' ' + addresses.first.country;
+      var first = addresses.first.locality! + ' ' + addresses.first.country!;
       _addressController.text = first;
       return first;
     } on PlatformException catch (e) {
-      print(e.message.toString() ?? e.toString());
+      // print(e.message.toString() ?? e.toString());
     }
   }
 
   void _onMapCreated(GoogleMapController controller) async {
     _controller.complete(controller);
     if ([_myLocation] != null) {
-      LatLng position = _myLocation.target;
+      LatLng position = _myLocation!.target;
       setState(() {});
 
       Future.delayed(Duration(seconds: 0), () async {
@@ -263,16 +263,16 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
   }
 
   Future<void> _handlePressButton() async {
-    Prediction p = await PlacesAutocomplete.show(
+    Prediction? p = await PlacesAutocomplete.show(
         context: context,
         apiKey: Strings.kGoogleApiKey,
         mode: Mode.fullscreen,
         language: "en");
     if (p != null) {
       PlacesDetailsResponse detail =
-          await _places.getDetailsByPlaceId(p.placeId);
-      final lat = detail.result.geometry.location.lat;
-      final lng = detail.result.geometry.location.lng;
+          await _places.getDetailsByPlaceId(p.placeId!);
+      final lat = detail.result.geometry!.location.lat;
+      final lng = detail.result.geometry!.location.lng;
       _myLocation = CameraPosition(
         bearing: 0,
         target: LatLng(lat, lng),
@@ -280,10 +280,10 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
       );
       controller = await _controller.future;
       controller.animateCamera(CameraUpdate.newCameraPosition(
-        _myLocation,
+        _myLocation!,
       ));
       getLocationAddress(
-          _myLocation.target.latitude, _myLocation.target.longitude);
+          _myLocation!.target.latitude, _myLocation!.target.longitude);
     }
   }
 }

@@ -9,7 +9,7 @@ import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/utils/extensions.dart';
 
 class MyProviders extends StatefulWidget {
-  MyProviders({Key key}) : super(key: key);
+  MyProviders({Key? key}) : super(key: key);
 
   @override
   _MyProvidersState createState() => _MyProvidersState();
@@ -20,9 +20,9 @@ class _MyProvidersState extends State<MyProviders> {
 
   bool isLoading = false;
 
-  Future<List<dynamic>> _addressesFuture;
+  Future<List<dynamic>>? _addressesFuture;
 
-  String _token;
+  String? _token;
 
   @override
   void initState() {
@@ -60,7 +60,7 @@ class _MyProvidersState extends State<MyProviders> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data == null ||
-              snapshot.data.isEmpty ||
+              snapshot.data!.isEmpty ||
               snapshot.data is String) {
             return Center(
               child: Text('No providers.'),
@@ -73,9 +73,9 @@ class _MyProvidersState extends State<MyProviders> {
                   ),
               physics: ClampingScrollPhysics(),
               shrinkWrap: true,
-              itemCount: snapshot.data.length,
+              itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
-                return providerWidget(context, snapshot.data[index]);
+                return providerWidget(context, snapshot.data![index]);
               });
         } else if (snapshot.hasError) {
           return Text('No providers.');
@@ -88,14 +88,14 @@ class _MyProvidersState extends State<MyProviders> {
   }
 
   Container providerWidget(BuildContext context, dynamic provider) {
-    var practicingSince = provider['experience'].toString() ?? '';
+    var practicingSince = (provider['experience']?.toString() ?? '');
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(
           Radius.circular(14.0),
         ),
-        border: Border.all(color: Colors.grey[300]),
+        border: Border.all(color: Colors.grey[300]!),
       ),
       child: Column(
         children: <Widget>[
@@ -121,16 +121,16 @@ class _MyProvidersState extends State<MyProviders> {
                       height: 58.0,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: provider['avatar'] == null
+                          image: (provider['avatar'] == null
                               ? AssetImage('images/profile_user.png')
                               : NetworkImage(
-                                  ApiBaseHelper.imageUrl + provider['avatar']),
+                                  ApiBaseHelper.imageUrl + provider['avatar'])) as ImageProvider<Object>,
                           fit: BoxFit.cover,
                         ),
                         borderRadius:
                             new BorderRadius.all(Radius.circular(50.0)),
                         border: new Border.all(
-                          color: Colors.grey[300],
+                          color: Colors.grey[300]!,
                           width: 1.0,
                         ),
                       ),

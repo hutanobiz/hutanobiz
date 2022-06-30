@@ -36,11 +36,11 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       TextEditingController();
   bool _enableButton = false;
   bool _isComplete = false;
-  String otp;
-  String email;
-  String phoneNumber;
+  String? otp;
+  String email = '';
+  String? phoneNumber;
   ApiBaseHelper api = ApiBaseHelper();
-  Future<dynamic> _requestsFuture;
+  Future<dynamic>? _requestsFuture;
 
   @override
   void initState() {
@@ -74,7 +74,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               } else if (snapshot.hasError) {
                 return new Text('Error: ${snapshot.error}');
               } else if (snapshot.hasData) {
-                email = snapshot.data['response']['email'].toString() ?? "---";
+                email = snapshot.data['response']['email'].toString();
                 phoneNumber =
                     snapshot.data['response']['phoneNumber']?.toString();
                 String emailText;
@@ -92,13 +92,13 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                         children: [
                           AppHeader(
                             progressSteps: HutanoProgressSteps.one,
-                            title: Localization.of(context).emailVerification,
+                            title: Localization.of(context)!.emailVerification,
                           ),
                           SizedBox(
                             height: 10,
                           ),
                           Text(
-                            Localization.of(context)
+                            Localization.of(context)!
                                 .enterActivationCode
                                 .format([getString(PreferenceKey.email, "")]),
                             textAlign: TextAlign.center,
@@ -146,7 +146,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          Localization.of(context).msgCodeNotRecieved,
+          Localization.of(context)!.msgCodeNotRecieved,
           style: TextStyle(
             fontSize: fontSize14,
             color: colorBlack,
@@ -160,7 +160,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
             _resendCode();
           },
           child: Text(
-            Localization.of(context).resend,
+            Localization.of(context)!.resend,
             style: TextStyle(
               fontSize: fontSize14,
               color: accentColor,
@@ -200,7 +200,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       child: HutanoButton(
         color: colorOrange,
         iconSize: spacing30,
-        label: Localization.of(context).verify,
+        label: Localization.of(context)!.verify,
         onPressed: _enableButton ? _activationEmail : null,
       ));
 
@@ -216,13 +216,13 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
         ProgressDialogUtils.dismissProgressDialog();
         if (e is ErrorModel) {
           if (e.response != null) {
-            DialogUtils.showAlertDialog(context, e.response);
+            DialogUtils.showAlertDialog(context, e.response!);
           }
         }
       });
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     }
   }
 
@@ -242,11 +242,11 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       });
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(
-          context, Localization.of(context).commonErrorMsg);
+          context, Localization.of(context)!.commonErrorMsg);
     }
   }
 

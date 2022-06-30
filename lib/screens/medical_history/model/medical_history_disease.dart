@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class Disease {
-  String disease;
+  String? disease;
   bool isChecked;
-  Disease({@required this.disease, @required this.isChecked});
+  Disease({required this.disease, required this.isChecked});
 }
 
 class ResDiseases {
   List<Disease> disease = [];
 
-  ResDiseases.fromJson(Map<String, dynamic> json) {
+  ResDiseases.fromJson(Map<String, dynamic>? json) {
     if (json != null) {
       if (json['response'] != null) {
         json['response'].forEach((element) {

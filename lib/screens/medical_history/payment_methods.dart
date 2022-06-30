@@ -37,8 +37,8 @@ class PaymentMethods extends StatefulWidget {
 
 class _PaymentMethodsState extends State<PaymentMethods> {
   List<MyCreditCard> list = [];
-  int _selectedCardIndex;
-  int _selectedInsuranceIndex;
+  int? _selectedCardIndex;
+  int? _selectedInsuranceIndex;
   bool _initialApiCalled = false;
   bool _enableSaveButton = false;
 
@@ -53,8 +53,8 @@ class _PaymentMethodsState extends State<PaymentMethods> {
   final GlobalKey<FormState> _keyNumber = GlobalKey();
   CardNumberInputFormatter maskFormatter = CardNumberInputFormatter();
 
-  List<Insurance> _myInsuranceList = [];
-  Insurance _selectedInsurance;
+  List<Insurance>? _myInsuranceList = [];
+  Insurance? _selectedInsurance;
   @override
   void initState() {
     super.initState();
@@ -70,26 +70,26 @@ class _PaymentMethodsState extends State<PaymentMethods> {
     ApiManager().getCard().then((value) {
       if (value.status == success) {
         ProgressDialogUtils.dismissProgressDialog();
-        var response = value.response;
+        var response = value.response!;
 
-        if (response.data.length > 0) {
+        if (response.data!.length > 0) {
           _enableSaveButton = false;
         } else {
           setState(() {
             _enableSaveButton = true;
           });
         }
-        for (var i = 0; i < value.response.data.length; i++) {
+        for (var i = 0; i < value.response!.data!.length; i++) {
           list.add(MyCreditCard(
-              nameOnCard: response.data[i].billingDetails.name,
-              cardNumber: "**** **** ****" + response.data[i].card.last4,
-              expiryDate: response.data[i].card.expMonth.toString() +
+              nameOnCard: response.data![i].billingDetails!.name,
+              cardNumber: "**** **** ****" + response.data![i].card!.last4!,
+              expiryDate: response.data![i].card!.expMonth.toString() +
                   "/" +
-                  response.data[i].card.expYear.toString(),
+                  response.data![i].card!.expYear.toString(),
               cvv: "",
-              customer: response.data[i].customer,
-              id: response.data[i].id,
-              type: getBrandType(response.data[i].card.brand)));
+              customer: response.data![i].customer,
+              id: response.data![i].id,
+              type: getBrandType(response.data![i].card!.brand)));
         }
         _initialApiCalled = true;
         setState(() {});
@@ -100,7 +100,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
       setState(() {});
       if (e is ErrorModel) {
         if (e.response != null) {
-          DialogUtils.showAlertDialog(context, e.response);
+          DialogUtils.showAlertDialog(context, e.response!);
         }
       }
     });
@@ -109,7 +109,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
   _getInsurance() {
     Map req = <String, dynamic>{};
     req['userId'] = getString(PreferenceKey.id);
-    ApiManager().myInsuranceList(req).then(
+    ApiManager().myInsuranceList(req as Map<String, dynamic>).then(
       (value) {
         setState(() {
           _myInsuranceList = value.response;
@@ -123,22 +123,22 @@ class _PaymentMethodsState extends State<PaymentMethods> {
 
   void _saveCard() {
     ProgressDialogUtils.dismissProgressDialog();
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
 
     if (_cvvController.text.length == 0 ||
         _nameController.text.length == 0 ||
         _expiryController.text.length == 0 ||
         _cardNumberController.text.length == 0) {
       DialogUtils.showAlertDialog(
-          context, Localization.of(context).addCardErrorMsg);
+          context, Localization.of(context)!.addCardErrorMsg);
 
       return;
     }
 
-    if (_keyExpiary.currentState.validate() &&
-        _keyName.currentState.validate() &&
-        _keyNumber.currentState.validate() &&
-        _keyCVV.currentState.validate()) {
+    if (_keyExpiary.currentState!.validate() &&
+        _keyName.currentState!.validate() &&
+        _keyNumber.currentState!.validate() &&
+        _keyCVV.currentState!.validate()) {
       ProgressDialogUtils.showProgressDialog(context);
       var _apiService = ApiServiceStripe();
       ReqCreateCardToken card;
@@ -161,7 +161,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
             if (e is ErrorModel) {
               if (e.response != null) {
                 ProgressDialogUtils.dismissProgressDialog();
-                DialogUtils.showAlertDialog(context, e.response);
+                DialogUtils.showAlertDialog(context, e.response!);
               }
             }
           });
@@ -171,14 +171,14 @@ class _PaymentMethodsState extends State<PaymentMethods> {
         if (e is ErrorModelStripe) {
           if (e.error != null) {
             ProgressDialogUtils.dismissProgressDialog();
-            DialogUtils.showAlertDialog(context, e.error.message);
+            DialogUtils.showAlertDialog(context, e.error!.message!);
           }
         }
       });
     } else {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(
-          context, Localization.of(context).addCardErrorMsg);
+          context, Localization.of(context)!.addCardErrorMsg);
     }
   }
 
@@ -202,7 +202,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
                 okButtonAction: () {
                   _getInsurance();
                 },
-                okButtonTitle: Localization.of(context).ok,
+                okButtonTitle: Localization.of(context)!.ok,
                 isCancelEnable: false,
               );
             },
@@ -278,7 +278,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      getCardIcon(list[index].type),
+                      getCardIcon(list[index].type)!,
                       SizedBox(width: spacing25),
                       Expanded(
                         child: Column(
@@ -292,7 +292,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
                                   fontWeight: fontWeightSemiBold),
                             ),
                             Text(
-                              list[index].expiryDate,
+                              list[index].expiryDate!,
                               style: TextStyle(
                                   fontSize: fontSize12,
                                   fontWeight: fontWeightRegular),
@@ -303,7 +303,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
                       Radio(
                           value: index,
                           groupValue: _selectedCardIndex,
-                          onChanged: (newvalue) {
+                          onChanged: (dynamic newvalue) {
                             setState(() {
                               _selectedCardIndex = newvalue;
                             });
@@ -484,7 +484,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
                 Spacer(),
                 Flexible(
                   child: Visibility(
-                    visible: _myInsuranceList.length > 0 ? false : true,
+                    visible: _myInsuranceList!.length > 0 ? false : true,
                     child: RippleEffect(
                       onTap: _onAddInsurance,
                       child: TextWithImage(
@@ -497,7 +497,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
               ],
             ),
             SizedBox(height: spacing8),
-            if (_myInsuranceList.length == 0)
+            if (_myInsuranceList!.length == 0)
               Container(
                 height: 70,
                 width: SizeConfig.screenWidth,
@@ -512,11 +512,11 @@ class _PaymentMethodsState extends State<PaymentMethods> {
                   ),
                 ),
               ),
-            if (_myInsuranceList.length != 0)
+            if (_myInsuranceList!.length != 0)
               ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: _myInsuranceList.length,
+                  itemCount: _myInsuranceList!.length,
                   itemBuilder: (context, index) {
                     return Container(
                       height: 80,
@@ -532,7 +532,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
                           SizedBox(width: spacing15),
                           Expanded(
                             child: Text(
-                              _myInsuranceList[index].title ?? "",
+                              _myInsuranceList![index].title ?? "",
                               style: TextStyle(
                                 fontSize: fontSize14,
                                 fontWeight: fontWeightMedium,
@@ -542,10 +542,10 @@ class _PaymentMethodsState extends State<PaymentMethods> {
                           Radio(
                               value: index,
                               groupValue: _selectedInsuranceIndex,
-                              onChanged: (newvalue) {
+                              onChanged: (dynamic newvalue) {
                                 setState(() {
                                   _selectedInsuranceIndex = newvalue;
-                                  _selectedInsurance = _myInsuranceList[index];
+                                  _selectedInsurance = _myInsuranceList![index];
                                 });
                               }),
                           SizedBox(width: spacing10),
@@ -625,15 +625,15 @@ class _PaymentMethodsState extends State<PaymentMethods> {
             Spacer(),
             HutanoButton(
               width: 140,
-              label: Localization.of(context).next,
+              label: Localization.of(context)!.next,
               onPressed: () {
                 if (_selectedCardIndex == null || _selectedCardIndex == -1) {
                   DialogUtils.showAlertDialog(
-                      context, Localization.of(context).selectCreditCard);
+                      context, Localization.of(context)!.selectCreditCard);
                   return;
                 }
                 Navigator.of(context).pushNamed( routeCheckout, arguments: {
-                  ArgumentConstant.card: list[_selectedCardIndex]
+                  ArgumentConstant.card: list[_selectedCardIndex!]
                 });
               },
             ),

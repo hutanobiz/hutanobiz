@@ -1,15 +1,15 @@
 class ReqTest {
-  String status;
-  List<ResponseDetailsDetails> response;
+  String? status;
+  List<ResponseDetailsDetails>? response;
 
   ReqTest({this.status, this.response});
 
   ReqTest.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     if (json['response'] != null) {
-      response = new List<ResponseDetailsDetails>();
+      response = <ResponseDetailsDetails>[];
       json['response'].forEach((v) {
-        response.add(new ResponseDetailsDetails.fromJson(v));
+        response!.add(new ResponseDetailsDetails.fromJson(v));
       });
     }
   }
@@ -18,26 +18,26 @@ class ReqTest {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     if (this.response != null) {
-      data['response'] = this.response.map((v) => v.toJson()).toList();
+      data['response'] = this.response!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class ResponseDetailsDetails {
-  String title;
-  int addresstype;
-  String address;
-  String street;
-  String city;
-  StateDetails state;
-  String stateCode;
-  String zipCode;
-  String type;
-  List<dynamic> coordinates;
-  String sId;
-  String number;
-  String securityGate;
+  String? title;
+  int? addresstype;
+  String? address;
+  String? street;
+  String? city;
+  StateDetails? state;
+  String? stateCode;
+  String? zipCode;
+  String? type;
+  List<dynamic>? coordinates;
+  String? sId;
+  String? number;
+  String? securityGate;
 
   ResponseDetailsDetails(
       {this.title,
@@ -79,7 +79,7 @@ class ResponseDetailsDetails {
     data['street'] = this.street;
     data['city'] = this.city;
     if (this.state != null) {
-      data['state'] = this.state.toJson();
+      data['state'] = this.state!.toJson();
     }
     data['stateCode'] = this.stateCode;
     data['zipCode'] = this.zipCode;
@@ -93,13 +93,13 @@ class ResponseDetailsDetails {
 }
 
 class StateDetails {
-  String sId;
-  String title;
-  String stateCode;
-  String status;
-  String createdAt;
-  String updatedAt;
-  int iV;
+  String? sId;
+  String? title;
+  String? stateCode;
+  String? status;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
 
   StateDetails(
       {this.sId,

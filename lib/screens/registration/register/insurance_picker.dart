@@ -8,12 +8,12 @@ import '../../../widgets/list_picker.dart';
 import 'model/res_insurance_list.dart';
 
 class InsuranceList extends StatefulWidget {
-  final TextEditingController controller;
-  final List<Insurance> insuranceList;
-  final Function onInsuranceSelected;
+  final TextEditingController? controller;
+  final List<Insurance>? insuranceList;
+  final Function? onInsuranceSelected;
 
   const InsuranceList({
-    Key key,
+    Key? key,
     this.controller,
     this.insuranceList,
     this.onInsuranceSelected,
@@ -27,16 +27,16 @@ class _InsuranceListState extends State<InsuranceList> {
     showDropDownSheet(
         list: ListView.builder(
           shrinkWrap: true,
-          itemCount: widget.insuranceList.length,
+          itemCount: widget.insuranceList!.length,
           itemBuilder: (context, pos) {
             return InkWell(
                 onTap: () {
-                  widget.onInsuranceSelected(pos);
+                  widget.onInsuranceSelected!(pos);
                   Navigator.pop(context);
                 },
                 child: ListTile(
                   title: Center(
-                    child: Text(widget.insuranceList[pos].title,
+                    child: Text(widget.insuranceList![pos].title!,
                     textAlign: TextAlign.center,),
                   ),
                 ));
@@ -56,7 +56,7 @@ class _InsuranceListState extends State<InsuranceList> {
           suffixheight: spacing12,
           suffixwidth: spacing12,
           isFieldEnable: false,
-          labelText: Localization.of(context).primaryInsurance,
+          labelText: Localization.of(context)!.primaryInsurance,
           textInputAction: TextInputAction.next),
     ));
   }

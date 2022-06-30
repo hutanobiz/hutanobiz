@@ -18,16 +18,16 @@ import 'model/req_pay_appointment.dart';
 import 'provider/appoinment_provider.dart';
 
 class Checkout extends StatefulWidget {
-  final MyCreditCard card;
+  final MyCreditCard? card;
 
-  const Checkout({Key key, this.card}) : super(key: key);
+  const Checkout({Key? key, this.card}) : super(key: key);
   @override
   _CheckoutState createState() => _CheckoutState();
 }
 
 class _CheckoutState extends State<Checkout> {
-  int _selectedCardIndex;
-  List<MyCreditCard> list = [];
+  int? _selectedCardIndex;
+  List<MyCreditCard?> list = [];
 
   @override
   void initState() {
@@ -49,8 +49,8 @@ class _CheckoutState extends State<Checkout> {
     final request = ReqPayAppointmnet(
         amount: '80',
         appointmentId: appointmentId,
-        customer: list[_selectedCardIndex].customer,
-        token: list[_selectedCardIndex].id);
+        customer: list[_selectedCardIndex!]!.customer,
+        token: list[_selectedCardIndex!]!.id);
 
     ProgressDialogUtils.showProgressDialog(context);
     try {
@@ -59,16 +59,16 @@ class _CheckoutState extends State<Checkout> {
       if (res.response != null) {
         DialogUtils.showOkCancelAlertDialog(
             context: context,
-            message: Localization.of(context).appointmentSuccess,
+            message: Localization.of(context)!.appointmentSuccess,
             isCancelEnable: false,
-            okButtonTitle: Localization.of(context).ok,
+            okButtonTitle: Localization.of(context)!.ok,
             okButtonAction: () {
               Navigator.of(context).pushNamedAndRemoveUntil(Routes.dashboardScreen,(route) => false);
             });
       }
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -79,17 +79,17 @@ class _CheckoutState extends State<Checkout> {
       if (value.status == success) {
         ProgressDialogUtils.dismissProgressDialog();
         var response = value.response;
-        for (var i = 0; i < value.response.data.length; i++) {
+        for (var i = 0; i < value.response!.data!.length; i++) {
           list.add(MyCreditCard(
-              nameOnCard: response.data[i].billingDetails.name,
-              cardNumber: "**** **** ****" + response.data[i].card.last4,
-              expiryDate: response.data[i].card.expMonth.toString() +
+              nameOnCard: response!.data![i].billingDetails!.name,
+              cardNumber: "**** **** ****" + response.data![i].card!.last4!,
+              expiryDate: response.data![i].card!.expMonth.toString() +
                   "/" +
-                  response.data[i].card.expYear.toString(),
+                  response.data![i].card!.expYear.toString(),
               cvv: "",
-              customer: response.data[i].customer,
-              id: response.data[i].id,
-              type: getBrandType(response.data[i].card.brand)));
+              customer: response.data![i].customer,
+              id: response.data![i].id,
+              type: getBrandType(response.data![i].card!.brand)));
         }
         setState(() {});
       }
@@ -97,7 +97,7 @@ class _CheckoutState extends State<Checkout> {
       if (e is ErrorModel) {
         if (e.response != null) {
           ProgressDialogUtils.dismissProgressDialog();
-          DialogUtils.showAlertDialog(context, e.response);
+          DialogUtils.showAlertDialog(context, e.response!);
         }
       }
     });
@@ -198,7 +198,7 @@ class _CheckoutState extends State<Checkout> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      getCardIcon(list[index].type),
+                      getCardIcon(list[index]!.type)!,
                       SizedBox(width: spacing25),
                       Expanded(
                         child: Column(
@@ -206,13 +206,13 @@ class _CheckoutState extends State<Checkout> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              list[index].cardNumber,
+                              list[index]!.cardNumber,
                               style: TextStyle(
                                   fontSize: fontSize14,
                                   fontWeight: fontWeightSemiBold),
                             ),
                             Text(
-                              list[index].expiryDate,
+                              list[index]!.expiryDate!,
                               style: TextStyle(
                                   fontSize: fontSize12,
                                   fontWeight: fontWeightRegular),
@@ -223,7 +223,7 @@ class _CheckoutState extends State<Checkout> {
                       Radio(
                           value: index,
                           groupValue: _selectedCardIndex,
-                          onChanged: (newvalue) {
+                          onChanged: (dynamic newvalue) {
                             setState(() {
                               _selectedCardIndex = newvalue;
                             });

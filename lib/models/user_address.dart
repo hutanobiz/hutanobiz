@@ -1,17 +1,17 @@
 class Address {
-  String title;
-  int addresstype;
-  String address;
-  String street;
-  String city;
-  State state;
-  String stateCode;
-  String zipCode;
-  String type;
-  List<double> coordinates;
-  String sId;
-  String number;
-  String securityGate;
+  String? title;
+  int? addresstype;
+  String? address;
+  String? street;
+  String? city;
+  State? state;
+  String? stateCode;
+  String? zipCode;
+  String? type;
+  List<double>? coordinates;
+  String? sId;
+  String? number;
+  String? securityGate;
 
   Address(
       {this.title,
@@ -52,7 +52,7 @@ class Address {
     data['street'] = this.street;
     data['city'] = this.city;
     if (this.state != null) {
-      data['state'] = this.state.toJson();
+      data['state'] = this.state!.toJson();
     }
     data['stateCode'] = this.stateCode;
     data['zipCode'] = this.zipCode;
@@ -66,13 +66,13 @@ class Address {
 }
 
 class State {
-  String sId;
-  String title;
-  String stateCode;
+  String? sId;
+  String? title;
+  String? stateCode;
   Null status;
-  String createdAt;
-  String updatedAt;
-  int iV;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
 
   State(
       {this.sId,

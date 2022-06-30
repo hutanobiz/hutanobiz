@@ -1,6 +1,6 @@
 class ReqShareProvider {
-  final String doctorId;
-  final String userId;
+  final String? doctorId;
+  final String? userId;
   ReqShareProvider({
     this.doctorId,
     this.userId,

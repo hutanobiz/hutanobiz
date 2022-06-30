@@ -28,7 +28,7 @@ import '../../../colors.dart';
 import '../../../routes.dart';
 
 class ConditionTimeScreen extends StatefulWidget {
-  final bool isForProblem;
+  final bool? isForProblem;
   ConditionTimeScreen({this.isForProblem = false});
   @override
   _ConditionTimeScreenState createState() => _ConditionTimeScreenState();
@@ -85,13 +85,13 @@ class _ConditionTimeScreenState extends State<ConditionTimeScreen> {
         _yearsList.add(CommonTimeModel("$i", false, i));
       }
       _listOfSymptoms.add(DescribeSymptomsModel(
-          Localization.of(context).improvingProblem, false, 1));
+          Localization.of(context)!.improvingProblem, false, 1));
       _listOfSymptoms.add(DescribeSymptomsModel(
-          Localization.of(context).worseningProblem, false, 2));
+          Localization.of(context)!.worseningProblem, false, 2));
       _listOfSymptoms.add(DescribeSymptomsModel(
-          Localization.of(context).stayingSameProblem, false, 3));
+          Localization.of(context)!.stayingSameProblem, false, 3));
       setState(() {
-        if (widget.isForProblem) {
+        if (widget.isForProblem!) {
           _isTreated = true;
         }
       });
@@ -118,46 +118,46 @@ class _ConditionTimeScreenState extends State<ConditionTimeScreen> {
                 children: [
                   _treatedConditionHeader(
                       context,
-                      widget.isForProblem
-                          ? Localization.of(context).howLongHadProblemHeader
-                          : Localization.of(context).treatedForCondition),
-                  if (!widget.isForProblem) SizedBox(height: spacing10),
-                  if (!widget.isForProblem)
+                      widget.isForProblem!
+                          ? Localization.of(context)!.howLongHadProblemHeader
+                          : Localization.of(context)!.treatedForCondition),
+                  if (!widget.isForProblem!) SizedBox(height: spacing10),
+                  if (!widget.isForProblem!)
                     Row(children: [
                       _yesButtonWidget(context),
                       SizedBox(width: spacing15),
                       _noButtonWidget(context),
                     ]),
-                  if (!widget.isForProblem) _howLongAgoHeader(context),
+                  if (!widget.isForProblem!) _howLongAgoHeader(context),
                   _commonHeaderWidget(context,
-                      Localization.of(context).hoursLabel, _isHourVisible),
+                      Localization.of(context)!.hoursLabel, _isHourVisible),
                   if (_isHourVisible)
                     _horizontalSelectionWidget(
                         context, _hoursList, AppConstants.hours),
                   _commonHeaderWidget(context,
-                      Localization.of(context).daysLabel, _isDayVisible),
+                      Localization.of(context)!.daysLabel, _isDayVisible),
                   if (_isDayVisible)
                     _horizontalSelectionWidget(
                         context, _daysList, AppConstants.days),
                   _commonHeaderWidget(context,
-                      Localization.of(context).weeksLabel, _isWeekVisible),
+                      Localization.of(context)!.weeksLabel, _isWeekVisible),
                   if (_isWeekVisible)
                     _horizontalSelectionWidget(
                         context, _weeksList, AppConstants.weeks),
                   _commonHeaderWidget(context,
-                      Localization.of(context).monthsLabel, _isMonthVisible),
+                      Localization.of(context)!.monthsLabel, _isMonthVisible),
                   if (_isMonthVisible)
                     _horizontalSelectionWidget(
                         context, _monthsList, AppConstants.monthsConst),
                   _commonHeaderWidget(context,
-                      Localization.of(context).yearsLabel, _isYearVisible),
+                      Localization.of(context)!.yearsLabel, _isYearVisible),
                   if (_isYearVisible)
                     _horizontalSelectionWidget(
                         context, _yearsList, AppConstants.years),
-                  if (widget.isForProblem && _listOfSymptoms.isNotEmpty)
+                  if (widget.isForProblem! && _listOfSymptoms.isNotEmpty)
                     _treatedConditionHeader(
-                        context, Localization.of(context).theProblemIsHeader),
-                  if (widget.isForProblem) _symptomsList(context),
+                        context, Localization.of(context)!.theProblemIsHeader),
+                  if (widget.isForProblem!) _symptomsList(context),
                 ],
               ),
             )));
@@ -176,7 +176,7 @@ class _ConditionTimeScreenState extends State<ConditionTimeScreen> {
       );
 
   Widget _yesButtonWidget(BuildContext context) => HutanoButton(
-        label: Localization.of(context).yes,
+        label: Localization.of(context)!.yes,
         onPressed: () {
           setState(() {
             _isTreated = true;
@@ -191,7 +191,7 @@ class _ConditionTimeScreenState extends State<ConditionTimeScreen> {
 
   Widget _noButtonWidget(BuildContext context) => HutanoButton(
         borderColor: colorGrey,
-        label: Localization.of(context).no,
+        label: Localization.of(context)!.no,
         onPressed: () {
           setState(() {
             _isTreated = false;
@@ -209,7 +209,7 @@ class _ConditionTimeScreenState extends State<ConditionTimeScreen> {
       ? Padding(
           padding: EdgeInsets.only(top: spacing20, bottom: spacing10),
           child: Text(
-            Localization.of(context).howLongAgoHeader,
+            Localization.of(context)!.howLongAgoHeader,
             style: TextStyle(
                 color: Color(0xff0e1c2a),
                 fontSize: fontSize16,
@@ -310,7 +310,7 @@ class _ConditionTimeScreenState extends State<ConditionTimeScreen> {
                       padding: EdgeInsets.symmetric(
                           horizontal: spacing15, vertical: spacing10),
                       decoration: BoxDecoration(
-                          color: _listOfSymptoms[index].isSelected
+                          color: _listOfSymptoms[index].isSelected??false
                               ? AppColors.windsor
                               : Colors.white,
                           border: Border.all(color: Colors.grey, width: 0.5),
@@ -319,7 +319,7 @@ class _ConditionTimeScreenState extends State<ConditionTimeScreen> {
                           style: TextStyle(
                               fontSize: fontSize14,
                               fontWeight: fontWeightRegular,
-                              color: _listOfSymptoms[index].isSelected
+                              color: _listOfSymptoms[index].isSelected??false
                                   ? Colors.white
                                   : AppColors.windsor)))
                   .onClick(onTap: () {

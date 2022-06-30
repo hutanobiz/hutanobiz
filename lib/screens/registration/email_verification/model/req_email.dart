@@ -1,9 +1,9 @@
 class ReqEmail {
-  int step;
-  String emailVerificationCode;
-  String phoneNumber;
-  String email;
-  String otp;
+  int? step;
+  String? emailVerificationCode;
+  String? phoneNumber;
+  String? email;
+  String? otp;
 
   ReqEmail(
       {this.step,

@@ -22,9 +22,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UploadInsuranceImagesScreen extends StatefulWidget {
-  final Map insuranceViewMap;
+  final Map? insuranceViewMap;
 
-  const UploadInsuranceImagesScreen({Key key, this.insuranceViewMap})
+  const UploadInsuranceImagesScreen({Key? key, this.insuranceViewMap})
       : super(key: key);
 
   @override
@@ -34,22 +34,22 @@ class UploadInsuranceImagesScreen extends StatefulWidget {
 
 class _UploadInsuranceImagesScreenState
     extends State<UploadInsuranceImagesScreen> {
-  CroppedFile croppedFile;
+  CroppedFile? croppedFile;
   JsonDecoder _decoder = new JsonDecoder();
 
-  InheritedContainerState _container;
-  Map _insuranceMap;
-  String frontImagePath, backImagePath;
+  late InheritedContainerState _container;
+  late Map _insuranceMap;
+  String? frontImagePath, backImagePath;
 
   bool _isLoading = false;
-  Map _insuranceViewMap = {};
+  Map? _insuranceViewMap = {};
 
-  String insuranceName = '', userInsuranceId = '', insuranceId = '';
+  String? insuranceName = '', userInsuranceId = '', insuranceId = '';
 
   dynamic uploadedInsurance;
 
-  String token;
-  bool isFromRegister = false;
+  String? token;
+  bool? isFromRegister = false;
 
   @override
   void initState() {
@@ -60,27 +60,27 @@ class _UploadInsuranceImagesScreenState
     if (widget.insuranceViewMap != null) {
       _insuranceViewMap = widget.insuranceViewMap;
 
-      if (_insuranceViewMap['isFromRegister'] != null) {
-        isFromRegister = _insuranceViewMap['isFromRegister'];
+      if (_insuranceViewMap!['isFromRegister'] != null) {
+        isFromRegister = _insuranceViewMap!['isFromRegister'];
       }
 
-      if (_insuranceViewMap['insurance'] != null) {
-        if (_insuranceViewMap['insurance']['insuranceName'] != null) {
-          insuranceName = _insuranceViewMap['insurance']['insuranceName'];
+      if (_insuranceViewMap!['insurance'] != null) {
+        if (_insuranceViewMap!['insurance']['insuranceName'] != null) {
+          insuranceName = _insuranceViewMap!['insurance']['insuranceName'];
         }
-        if (_insuranceViewMap['insurance']['_id'] != null) {
-          userInsuranceId = _insuranceViewMap['insurance']['_id'];
+        if (_insuranceViewMap!['insurance']['_id'] != null) {
+          userInsuranceId = _insuranceViewMap!['insurance']['_id'];
         }
-        if (_insuranceViewMap['insurance']['insuranceId'] != null) {
-          insuranceId = _insuranceViewMap['insurance']['insuranceId'];
+        if (_insuranceViewMap!['insurance']['insuranceId'] != null) {
+          insuranceId = _insuranceViewMap!['insurance']['insuranceId'];
         }
-        if (_insuranceViewMap['insurance']['insuranceDocumentFront'] != null) {
+        if (_insuranceViewMap!['insurance']['insuranceDocumentFront'] != null) {
           frontImagePath = ApiBaseHelper.imageUrl +
-              _insuranceViewMap['insurance']['insuranceDocumentFront'];
+              _insuranceViewMap!['insurance']['insuranceDocumentFront'];
         }
-        if (_insuranceViewMap['insurance']['insuranceDocumentBack'] != null) {
+        if (_insuranceViewMap!['insurance']['insuranceDocumentBack'] != null) {
           backImagePath = ApiBaseHelper.imageUrl +
-              _insuranceViewMap['insurance']['insuranceDocumentBack'];
+              _insuranceViewMap!['insurance']['insuranceDocumentBack'];
         }
       }
     }
@@ -100,16 +100,16 @@ class _UploadInsuranceImagesScreenState
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackgroundNew(
         addHeader: true,
-        title: _insuranceViewMap['isViewDetail']
+        title: _insuranceViewMap!['isViewDetail']
             ? insuranceName
             : "Upload insurance images",
         isLoading: _isLoading,
-        isAddBack: !_insuranceViewMap['isPayment'],
-        addBackButton: _insuranceViewMap['isPayment'],
+        isAddBack: !_insuranceViewMap!['isPayment'],
+        addBackButton: _insuranceViewMap!['isPayment'],
         color: Colors.white,
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-        rightButtonText: !_insuranceViewMap['isViewDetail'] ? null : 'Delete',
-        onRightButtonTap: !_insuranceViewMap['isViewDetail']
+        rightButtonText: !_insuranceViewMap!['isViewDetail'] ? null : 'Delete',
+        onRightButtonTap: !_insuranceViewMap!['isViewDetail']
             ? null
             : () {
                 Widgets.showAlertDialog(
@@ -141,12 +141,12 @@ class _UploadInsuranceImagesScreenState
             ListView(
               children: widgetList(),
             ),
-            if (_insuranceViewMap['isViewDetail'])
+            if (_insuranceViewMap!['isViewDetail'])
               Container()
             else
               Padding(
                 padding: EdgeInsets.only(
-                    left: _insuranceViewMap['isPayment'] ? 80 : 0),
+                    left: _insuranceViewMap!['isPayment'] ? 80 : 0),
                 child: Align(
                   alignment: FractionalOffset.bottomCenter,
                   child: Container(
@@ -169,7 +169,7 @@ class _UploadInsuranceImagesScreenState
     if (frontImagePath == null) {
       Widgets.showToast("Please upload front insurance card image");
     } else {
-      if (isFromRegister) {
+      if (isFromRegister!) {
         Navigator.of(context).pushNamedAndRemoveUntil(
             Routes.homeMain, (Route<dynamic> route) => false);
       } else {
@@ -182,7 +182,7 @@ class _UploadInsuranceImagesScreenState
   }
 
   List<Widget> widgetList() {
-    List<Widget> formWidget = List();
+    List<Widget> formWidget = [];
 
     // formWidget.add(Text(
     //   "Upload insurance front and back (optional) image",
@@ -200,9 +200,9 @@ class _UploadInsuranceImagesScreenState
           Expanded(
             child: DashedBorder(
               onTap: frontImagePath != null
-                  ? frontImagePath.toLowerCase().endsWith("pdf")
+                  ? frontImagePath!.toLowerCase().endsWith("pdf")
                       ? () async {
-                          var url = frontImagePath;
+                          var url = frontImagePath!;
                           if (await canLaunch(url)) {
                             await launch(url);
                           } else {
@@ -222,7 +222,7 @@ class _UploadInsuranceImagesScreenState
                   ? uploadWidget(
                       "Front", AssetImage("images/ic_front_image.png"))
                   : imageWidget(
-                      frontImagePath,
+                      frontImagePath!,
                       true,
                     ),
             ),
@@ -231,9 +231,9 @@ class _UploadInsuranceImagesScreenState
           Expanded(
             child: DashedBorder(
               onTap: backImagePath != null
-                  ? backImagePath.toLowerCase().endsWith("pdf")
+                  ? backImagePath!.toLowerCase().endsWith("pdf")
                       ? () async {
-                          var url = backImagePath;
+                          var url = backImagePath!;
                           if (await canLaunch(url)) {
                             await launch(url);
                           } else {
@@ -252,7 +252,7 @@ class _UploadInsuranceImagesScreenState
               child: backImagePath == null
                   ? uploadWidget("Back", AssetImage("images/ic_back_image.png"))
                   : imageWidget(
-                      backImagePath,
+                      backImagePath!,
                       false,
                     ),
             ),
@@ -300,7 +300,7 @@ class _UploadInsuranceImagesScreenState
         color: Colors.white,
         borderRadius: BorderRadius.circular(8.0),
         border: Border.all(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
         ),
       ),
       child: Stack(
@@ -359,7 +359,7 @@ class _UploadInsuranceImagesScreenState
   Future getImage(bool isFront, int source) async {
     ImagePicker _picker = ImagePicker();
 
-     XFile image = await _picker.pickImage(
+     XFile? image = await _picker.pickImage(
         imageQuality: 25,
         source: (source == 2) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
@@ -390,8 +390,8 @@ class _UploadInsuranceImagesScreenState
       if (croppedFile != null) {
         setState(
           () => isFront
-              ? frontImagePath = croppedFile.path
-              : backImagePath = croppedFile.path,
+              ? frontImagePath = croppedFile!.path
+              : backImagePath = croppedFile!.path,
         );
 
         if (userInsuranceId == '') {
@@ -410,12 +410,12 @@ class _UploadInsuranceImagesScreenState
       setLoading(true);
       Uri uri = Uri.parse(ApiBaseHelper.base_url + "api/profile/update");
       http.MultipartRequest request = http.MultipartRequest('POST', uri);
-      request.headers['authorization'] = token;
+      request.headers['authorization'] = token!;
 
       request.fields["insuranceId[]"] = _insuranceMap["insuranceId"].toString();
 
       if (frontImagePath != null) {
-        File frontImage = File(frontImagePath);
+        File frontImage = File(frontImagePath!);
         var stream = http.ByteStream(DelegatingStream(frontImage.openRead()));
         var length = await frontImage.length();
         var frontMultipartFile = http.MultipartFile(
@@ -429,7 +429,7 @@ class _UploadInsuranceImagesScreenState
       }
 
       if (backImagePath != null) {
-        File backImage = File(backImagePath);
+        File backImage = File(backImagePath!);
         var stream = http.ByteStream(DelegatingStream(backImage.openRead()));
         var length = await backImage.length();
         var backMultipartFile = http.MultipartFile(
@@ -469,7 +469,7 @@ class _UploadInsuranceImagesScreenState
         responseJson.toString().debugLog();
 
         if (responseJson['response'] != null) {
-          List insuranceList = responseJson['response']['insurance'];
+          List? insuranceList = responseJson['response']['insurance'];
 
           if (insuranceList != null) {
             dynamic insurance = insuranceList[insuranceList.length - 1];
@@ -493,15 +493,15 @@ class _UploadInsuranceImagesScreenState
       Uri uri =
           Uri.parse(ApiBaseHelper.base_url + "api/patient/update-insurance");
       http.MultipartRequest request = http.MultipartRequest('POST', uri);
-      request.headers['authorization'] = token;
+      request.headers['authorization'] = token!;
 
-      request.fields["userInsuranceId"] = userInsuranceId;
-      request.fields["insuranceId"] = insuranceId;
+      request.fields["userInsuranceId"] = userInsuranceId!;
+      request.fields["insuranceId"] = insuranceId!;
 
       if (frontImagePath != null &&
-          !(frontImagePath.contains('http') ||
-              frontImagePath.contains('https'))) {
-        File frontImage = File(frontImagePath);
+          !(frontImagePath!.contains('http') ||
+              frontImagePath!.contains('https'))) {
+        File frontImage = File(frontImagePath!);
         var stream = http.ByteStream(DelegatingStream(frontImage.openRead()));
         var length = await frontImage.length();
         var frontMultipartFile = http.MultipartFile(
@@ -515,9 +515,9 @@ class _UploadInsuranceImagesScreenState
       }
 
       if (backImagePath != null &&
-          !(backImagePath.contains('http') ||
-              backImagePath.contains('https'))) {
-        File backImage = File(backImagePath);
+          !(backImagePath!.contains('http') ||
+              backImagePath!.contains('https'))) {
+        File backImage = File(backImagePath!);
         var stream = http.ByteStream(DelegatingStream(backImage.openRead()));
         var length = await backImage.length();
         var backMultipartFile = http.MultipartFile(
@@ -567,8 +567,8 @@ class _UploadInsuranceImagesScreenState
   void showPickerDialog(bool isFront) {
     showCommonUploadDialog(
       context,
-      Localization.of(context).picker,
-      Localization.of(context).uploadPhoto,
+      Localization.of(context)!.picker,
+      Localization.of(context)!.uploadPhoto,
       onTop: () {
         getImage(isFront, 2);
         Navigator.pop(context);

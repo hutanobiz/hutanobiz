@@ -13,10 +13,10 @@ import '../search/model/family_member.dart';
 import 'bottom_option_list.dart';
 
 class ShareProvider extends StatelessWidget {
-  final List<FamilyNetwork> memberList;
-  final String shareMessage;
+  final List<FamilyNetwork>? memberList;
+  final String? shareMessage;
 
-  const ShareProvider({Key key, this.memberList, this.shareMessage})
+  const ShareProvider({Key? key, this.memberList, this.shareMessage})
       : super(key: key);
 
   @override
@@ -31,23 +31,23 @@ class ShareProvider extends StatelessWidget {
             child: ListView.separated(
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
-                itemCount: memberList.length,
+                itemCount: memberList!.length,
                 separatorBuilder: (_, pos) {
-                  return SizedBox(width: SizeConfig.screenWidth / 6);
+                  return SizedBox(width: SizeConfig.screenWidth! / 6);
                 },
                 itemBuilder: (_, pos) {
                   return RippleEffect(
                     onTap: () {
                       Navigator.of(context).pushNamed( Routes.memberMessage,
                           arguments: {
-                            ArgumentConstant.member: memberList[pos],
+                            ArgumentConstant.member: memberList![pos],
                             ArgumentConstant.shareMessage: shareMessage
                           });
                     },
                     child: Member(FamilyMember(
-                      avatar: memberList[pos].avatar ?? "",
-                      fullName: memberList[pos].fullName,
-                      sId: memberList[pos].sId,
+                      avatar: memberList![pos].avatar ?? "",
+                      fullName: memberList![pos].fullName,
+                      sId: memberList![pos].sId,
                     )),
                   );
                 }),
@@ -86,7 +86,7 @@ class Member extends StatelessWidget {
           height: spacing12,
         ),
         Text(
-          _member.fullName,
+          _member.fullName!,
           style: const TextStyle(fontSize: fontSize11, color: colorBlack60),
         )
       ],

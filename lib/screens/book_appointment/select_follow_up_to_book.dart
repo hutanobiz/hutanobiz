@@ -24,7 +24,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class SelectFollowUpToBook extends StatefulWidget {
-  SelectFollowUpToBook({Key key}) : super(key: key);
+  SelectFollowUpToBook({Key? key}) : super(key: key);
 
   @override
   _SelectFollowUpToBookState createState() => _SelectFollowUpToBookState();
@@ -34,7 +34,7 @@ class _SelectFollowUpToBookState extends State<SelectFollowUpToBook> {
   bool isLoading = true;
   TextEditingController controller = new TextEditingController();
 
-  List<dynamic> appointments = [];
+  List<dynamic>? appointments = [];
   List<dynamic> _searchResult = [];
   dynamic selectedAppointmnet;
 
@@ -214,11 +214,11 @@ class _SelectFollowUpToBookState extends State<SelectFollowUpToBook> {
                     shrinkWrap: true,
                     physics: ClampingScrollPhysics(),
                     itemCount: controller.text.isEmpty
-                        ? appointments.length
+                        ? appointments!.length
                         : _searchResult.length,
                     itemBuilder: (context, index) {
                       return recentChatProviderWidget(controller.text.isEmpty
-                          ? appointments[index]
+                          ? appointments![index]
                           : _searchResult[index]);
                     }),
               ),
@@ -247,7 +247,7 @@ class _SelectFollowUpToBookState extends State<SelectFollowUpToBook> {
           border: Border.all(
               color: selectedAppointmnet == chatAppointment
                   ? AppColors.goldenTainoi
-                  : Colors.grey[300]),
+                  : Colors.grey[300]!),
         ),
         child: Column(
           children: <Widget>[
@@ -276,16 +276,16 @@ class _SelectFollowUpToBookState extends State<SelectFollowUpToBook> {
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             image:
-                                chatAppointment['doctor'][0]["avatar"] == null
+                                (chatAppointment['doctor'][0]["avatar"] == null
                                     ? AssetImage(FileConstants.icImgPlaceHolder)
                                     : NetworkImage(ApiBaseHelper.imageUrl +
-                                        chatAppointment['doctor'][0]["avatar"]),
+                                        chatAppointment['doctor'][0]["avatar"])) as ImageProvider<Object>,
                             fit: BoxFit.cover,
                           ),
                           borderRadius:
                               new BorderRadius.all(Radius.circular(50.0)),
                           border: new Border.all(
-                            color: Colors.grey[300],
+                            color: Colors.grey[300]!,
                             width: 1.0,
                           ),
                         ),
@@ -375,7 +375,7 @@ class _SelectFollowUpToBookState extends State<SelectFollowUpToBook> {
       setState(() {});
       return;
     }
-    appointments.forEach((userDetail) {
+    appointments!.forEach((userDetail) {
       if (userDetail['doctorName']
           .toString()
           .toLowerCase()

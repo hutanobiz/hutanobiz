@@ -1,15 +1,15 @@
 import 'dart:convert';
 
 class ProviderDetail {
-  final String name;
-  final String rating;
-  final String occupation;
-  final String experience;
-  final String address;
-  final String miles;
-  final String fee;
-  final String image;
-  final String painType;
+  final String? name;
+  final String? rating;
+  final String? occupation;
+  final String? experience;
+  final String? address;
+  final String? miles;
+  final String? fee;
+  final String? image;
+  final String? painType;
   ProviderDetail({
     this.name,
     this.rating,
@@ -24,14 +24,14 @@ class ProviderDetail {
 
 
   ProviderDetail copyWith({
-    String name,
-    String rating,
-    String occupation,
-    String experience,
-    String address,
-    String miles,
-    String fee,
-    String image,
+    String? name,
+    String? rating,
+    String? occupation,
+    String? experience,
+    String? address,
+    String? miles,
+    String? fee,
+    String? image,
   }) {
     return ProviderDetail(
       name: name ?? this.name,
@@ -60,8 +60,7 @@ class ProviderDetail {
   }
 
   factory ProviderDetail.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
-  
+   
     return ProviderDetail(
       name: map['name'],
       rating: map['rating'],

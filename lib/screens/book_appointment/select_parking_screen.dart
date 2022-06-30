@@ -12,17 +12,17 @@ import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/widgets.dart';
 
 class SelectParkingScreen extends StatefulWidget {
-  SelectParkingScreen({Key key}) : super(key: key);
+  SelectParkingScreen({Key? key}) : super(key: key);
 
   @override
   _SelectParkingScreenState createState() => _SelectParkingScreenState();
 }
 
 class _SelectParkingScreenState extends State<SelectParkingScreen> {
-  String _selectedParking;
-  double _parkingFee;
+  String? _selectedParking;
+  double? _parkingFee;
 
-  InheritedContainerState _container;
+  late InheritedContainerState _container;
 
   List _parkingList = ['Driveway', 'Street', 'Designated', 'Parking Garage'];
   final TextEditingController _instructionsController = TextEditingController();
@@ -132,7 +132,7 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
         child: Align(
           alignment: Alignment.topLeft,
           child: Text(
-            Localization.of(context).locationTypeLabel,
+            Localization.of(context)!.locationTypeLabel,
             style: TextStyle(
                 fontSize: fontSize18,
                 fontWeight: fontWeightSemiBold,
@@ -142,7 +142,7 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
       );
 
   List<Widget> _widgetList() {
-    List<Widget> _widgetList = List();
+    List<Widget> _widgetList = [];
     _widgetList.add(_locationTypeWidget(context));
     _widgetList.add(_containerWidget(parkingWidget()));
 
@@ -156,7 +156,7 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
           color: Colors.white,
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(width: 0.5, color: Colors.grey[300]),
+          border: Border.all(width: 0.5, color: Colors.grey[300]!),
         ),
         child: Column(
           children: [
@@ -212,7 +212,7 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
                         contentPadding:
                             EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey[300]),
+                          borderSide: BorderSide(color: Colors.grey[300]!),
                           borderRadius: BorderRadius.circular(5.0),
                         ),
                         border: OutlineInputBorder(
@@ -257,14 +257,14 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14.0),
             borderSide: BorderSide(
-              color: Colors.grey[300],
+              color: Colors.grey[300]!,
               width: 0.5,
             ),
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14.0),
             borderSide: BorderSide(
-              color: Colors.grey[300],
+              color: Colors.grey[300]!,
               width: 0.5,
             ),
           ),
@@ -284,7 +284,7 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
         color: Colors.white,
         shape: BoxShape.rectangle,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(width: 0.5, color: Colors.grey[300]),
+        border: Border.all(width: 0.5, color: Colors.grey[300]!),
       ),
       child: child,
     );
@@ -393,7 +393,7 @@ class _SelectParkingScreenState extends State<SelectParkingScreen> {
                                 contentPadding: EdgeInsets.all(8),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide:
-                                      BorderSide(color: Colors.grey[300]),
+                                      BorderSide(color: Colors.grey[300]!),
                                   borderRadius: BorderRadius.circular(5.0),
                                 ),
                                 border: OutlineInputBorder(

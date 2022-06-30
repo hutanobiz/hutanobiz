@@ -38,7 +38,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class BookingUploadMedicalDocument extends StatefulWidget {
   dynamic args;
-  BookingUploadMedicalDocument({Key key, this.args}) : super(key: key);
+  BookingUploadMedicalDocument({Key? key, this.args}) : super(key: key);
   @override
   _BookingUploadMedicalDocumentState createState() =>
       _BookingUploadMedicalDocumentState();
@@ -47,17 +47,17 @@ class BookingUploadMedicalDocument extends StatefulWidget {
 class _BookingUploadMedicalDocumentState
     extends State<BookingUploadMedicalDocument>
     with SingleTickerProviderStateMixin {
-  TabController _tabController;
-  List tabs;
+  TabController? _tabController;
+  late List tabs;
   int _currentIndex = 0;
 
   bool _isLoading = false;
   ApiBaseHelper _api = ApiBaseHelper();
 
-  String token;
+  String? token;
 
-  List<Map> docsList = List();
-  List<Map> filteredImagesList = List();
+  List<Map?> docsList = [];
+  List<Map?> filteredImagesList = [];
   List<String> _documentTypeList = [
     'X-Ray',
     'MRI',
@@ -71,14 +71,14 @@ class _BookingUploadMedicalDocumentState
   final documentTypeController = TextEditingController();
   final documentDateController = TextEditingController();
 
-  String documentName = '';
-  String defaultBodyPart;
+  String? documentName = '';
+  String? defaultBodyPart;
   Map sidesMap = {1: "Left", 2: "Right", 3: "Top", 4: "Bottom", 5: "All Over"};
-  List<Map> _selectedDocsList = [];
+  List<Map?> _selectedDocsList = [];
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _tabController!.dispose();
     documentTypeController.dispose();
     documentDateController.dispose();
     super.dispose();
@@ -99,7 +99,7 @@ class _BookingUploadMedicalDocumentState
     });
     tabs = ['Recent', 'Archive', 'View all'];
     _tabController = TabController(length: tabs.length, vsync: this);
-    _tabController.addListener(_handleTabControllerTick);
+    _tabController!.addListener(_handleTabControllerTick);
   }
 
   void getMedicalDocuments({bool isAdd = false}) {
@@ -128,13 +128,13 @@ class _BookingUploadMedicalDocumentState
                   }
                   for (dynamic images in value['medicalDocuments']) {
                     if ((docsList.singleWhere(
-                            (img) => img['_id'] == images['_id'],
+                            (img) => img!['_id'] == images['_id'],
                             orElse: () => null)) !=
                         null) {
                       docsList.removeWhere(
-                          (element) => element['_id'] == images['_id']);
+                          (element) => element!['_id'] == images['_id']);
                       _selectedDocsList.removeWhere(
-                          (element) => element['_id'] == images['_id']);
+                          (element) => element!['_id'] == images['_id']);
                       images['isArchive'] = false;
                       _selectedDocsList.add(images);
                       docsList.add(images);
@@ -182,18 +182,18 @@ class _BookingUploadMedicalDocumentState
               null &&
           Provider.of<HealthConditionProvider>(context, listen: false)
                   .allHealthIssuesData[0]
-                  .bodyPart
+                  .bodyPart!
                   .length >
               0) {
         var part = Provider.of<HealthConditionProvider>(context, listen: false)
             .allHealthIssuesData[0]
-            .bodyPart[0]
+            .bodyPart![0]
             .name;
         var side = sidesMap[int.parse(
             Provider.of<HealthConditionProvider>(context, listen: false)
                 .allHealthIssuesData[0]
-                .bodyPart[0]
-                .sides[0])];
+                .bodyPart![0]
+                .sides![0])];
 
         defaultBodyPart = side + ' ' + part;
       }
@@ -212,7 +212,7 @@ class _BookingUploadMedicalDocumentState
 
   void _handleTabControllerTick() {
     setState(() {
-      _currentIndex = _tabController.index;
+      _currentIndex = _tabController!.index;
     });
   }
 
@@ -240,10 +240,10 @@ class _BookingUploadMedicalDocumentState
         },
         onForwardTap: () {
           if (widget.args['isEdit']) {
-            List<String> selectedDocsId = [];
+            List<String?> selectedDocsId = [];
             if (_selectedDocsList != null && _selectedDocsList.length > 0) {
               _selectedDocsList.forEach((element) {
-                selectedDocsId.add(MedicalImages.fromJson(element).sId);
+                selectedDocsId.add(MedicalImages.fromJson(element as Map<String, dynamic>).sId);
               });
             }
             Map<String, dynamic> model = {};
@@ -258,7 +258,7 @@ class _BookingUploadMedicalDocumentState
             List<MedicalDocuments> _selectedMedicalDocs = [];
             if (_selectedDocsList != null && _selectedDocsList.length > 0) {
               _selectedDocsList.forEach((element) {
-                _selectedMedicalDocs.add(MedicalDocuments.fromJson(element));
+                _selectedMedicalDocs.add(MedicalDocuments.fromJson(element as Map<String, dynamic>));
               });
               Provider.of<HealthConditionProvider>(context, listen: false)
                   .updateDocuments(_selectedMedicalDocs);
@@ -322,11 +322,11 @@ class _BookingUploadMedicalDocumentState
                       text,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          color: _tabController.index == index
+                          color: _tabController!.index == index
                               ? AppColors.windsor
                               : colorBlack2,
                           fontSize: fontSize14,
-                          fontWeight: _tabController.index == index
+                          fontWeight: _tabController!.index == index
                               ? fontWeightMedium
                               : fontWeightRegular),
                     )
@@ -383,28 +383,28 @@ class _BookingUploadMedicalDocumentState
                 ClipRRect(
                     borderRadius: BorderRadius.circular(16.0),
                     child: (ApiBaseHelper.imageUrl +
-                                filteredImagesList[index]['medicalDocuments'])
+                                filteredImagesList[index]!['medicalDocuments'])
                             .toLowerCase()
                             .endsWith("pdf")
                         ? "ic_pdf".imageIcon()
                         : ((ApiBaseHelper.imageUrl +
-                                        filteredImagesList[index]
+                                        filteredImagesList[index]!
                                             ['medicalDocuments'])
                                     .contains('http') ||
                                 (ApiBaseHelper.imageUrl +
-                                        filteredImagesList[index]
+                                        filteredImagesList[index]!
                                             ['medicalDocuments'])
                                     .contains('https')
                             ? Image.network(
                                 (ApiBaseHelper.imageUrl +
-                                    filteredImagesList[index]
+                                    filteredImagesList[index]!
                                         ['medicalDocuments']),
                                 height: 125.0,
                                 width: 180.0,
                                 fit: BoxFit.cover,
                               )
                             : Image.file(
-                                File(filteredImagesList[index]
+                                File(filteredImagesList[index]!
                                     ['medicalDocuments']),
                                 height: 125.0,
                                 width: 180.0,
@@ -454,7 +454,7 @@ class _BookingUploadMedicalDocumentState
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              filteredImagesList[index]
+                              filteredImagesList[index]!
                                   [ArgumentConstant.nameKey],
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -466,7 +466,7 @@ class _BookingUploadMedicalDocumentState
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              filteredImagesList[index]
+                              filteredImagesList[index]!
                                   [ArgumentConstant.typeKey],
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -478,7 +478,7 @@ class _BookingUploadMedicalDocumentState
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              filteredImagesList[index]
+                              filteredImagesList[index]!
                                   [ArgumentConstant.dateKey],
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -506,12 +506,12 @@ class _BookingUploadMedicalDocumentState
               ],
             ).onClick(
               onTap: (ApiBaseHelper.imageUrl +
-                          filteredImagesList[index]['medicalDocuments'])
+                          filteredImagesList[index]!['medicalDocuments'])
                       .toLowerCase()
                       .endsWith("pdf")
                   ? () async {
                       var url = (ApiBaseHelper.imageUrl +
-                          filteredImagesList[index]['medicalDocuments']);
+                          filteredImagesList[index]!['medicalDocuments']);
                       if (await canLaunch(url)) {
                         await launch(url);
                       } else {
@@ -522,7 +522,7 @@ class _BookingUploadMedicalDocumentState
                       Navigator.of(context).pushNamed(
                         Routes.providerImageScreen,
                         arguments: (ApiBaseHelper.imageUrl +
-                            filteredImagesList[index]['medicalDocuments']),
+                            filteredImagesList[index]!['medicalDocuments']),
                       );
                     },
             ),
@@ -547,14 +547,14 @@ class _BookingUploadMedicalDocumentState
         title: ListTile(
           contentPadding: EdgeInsets.all(0),
           title: Text(
-            Localization.of(context).uploadMedicalDocsLabel,
+            Localization.of(context)!.uploadMedicalDocsLabel,
             style: TextStyle(
                 fontSize: fontSize15,
                 fontWeight: fontWeightSemiBold,
                 color: Colors.black),
           ),
           subtitle: Text(
-            Localization.of(context).uploadMedicalDocsSubLabel,
+            Localization.of(context)!.uploadMedicalDocsSubLabel,
             style: TextStyle(
                 fontSize: fontSize12,
                 fontWeight: fontWeightRegular,
@@ -565,13 +565,13 @@ class _BookingUploadMedicalDocumentState
       );
 
   void getDocumentType() async {
-    FilePickerResult file = await FilePicker.platform.pickFiles(
+    FilePickerResult? file = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
     );
 
     if (file != null) {
-      uploadDocsBottomSheet(File(file.files.first.path));
+      uploadDocsBottomSheet(File(file.files.first.path!));
     }
   }
 
@@ -675,7 +675,7 @@ class _BookingUploadMedicalDocumentState
                         documentTypeController.text.isEmpty) {
                       Widgets.showToast("Document type can't be empty");
                       return;
-                    } else if (documentName == null || documentName.isEmpty) {
+                    } else if (documentName == null || documentName!.isEmpty) {
                       Widgets.showToast("Document name can't be empty");
                       return;
                     } else if (documentDateController.text == null ||
@@ -687,7 +687,7 @@ class _BookingUploadMedicalDocumentState
                       Navigator.pop(context);
 
                       Map<String, String> fileMap = {};
-                      fileMap['name'] = documentName;
+                      fileMap['name'] = documentName!;
                       fileMap['type'] = documentTypeController.text;
                       fileMap['date'] = documentDateController.text;
                       var stream =
@@ -760,7 +760,7 @@ class _BookingUploadMedicalDocumentState
 
   Widget textField(String label, String initVal, Function onChanged) {
     return TextFormField(
-      onChanged: onChanged,
+      onChanged: onChanged as void Function(String)?,
       initialValue: initVal,
       decoration: getInputDecoration(label),
     );
@@ -774,21 +774,21 @@ class _BookingUploadMedicalDocumentState
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14.0),
         borderSide: BorderSide(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
           width: 0.5,
         ),
       ),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14.0),
         borderSide: BorderSide(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
           width: 0.5,
         ),
       ),
       disabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14.0),
         borderSide: BorderSide(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
           width: 0.5,
         ),
       ),
@@ -796,8 +796,8 @@ class _BookingUploadMedicalDocumentState
   }
 
   void showPickerDialog() {
-    showCommonUploadDialog(context, Localization.of(context).picker,
-        Localization.of(context).uploadDocument, onTop: () {
+    showCommonUploadDialog(context, Localization.of(context)!.picker,
+        Localization.of(context)!.uploadDocument, onTop: () {
       Navigator.pop(context);
       showImagePickerDialog();
     }, onBottom: () {
@@ -809,8 +809,8 @@ class _BookingUploadMedicalDocumentState
   void showImagePickerDialog() {
     showCommonUploadDialog(
       context,
-      Localization.of(context).picker,
-      Localization.of(context).uploadPhoto,
+      Localization.of(context)!.picker,
+      Localization.of(context)!.uploadPhoto,
       onTop: () {
         getImage(1);
         Navigator.pop(context);
@@ -825,7 +825,7 @@ class _BookingUploadMedicalDocumentState
   Future getImage(int source) async {
     ImagePicker _picker = ImagePicker();
 
-     XFile image = await _picker.pickImage(
+     XFile? image = await _picker.pickImage(
         imageQuality: 25,
         source: (source == 1) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {

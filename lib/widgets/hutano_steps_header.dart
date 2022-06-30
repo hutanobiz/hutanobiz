@@ -5,21 +5,21 @@ import 'hutano_round_button.dart';
 
 class HutanoStepsHeader extends StatelessWidget {
   final String title;
-  final String subTitle;
+  final String? subTitle;
   final bool isIcon;
   final String iconText;
-  final String icon;
-  final double iconSize;
-  final Color bgColor;
-  final Color borderColor;
+  final String? icon;
+  final double? iconSize;
+  final Color? bgColor;
+  final Color? borderColor;
   final CrossAxisAlignment alignment;
   final bool subTitlePadding;
-  final TextStyle titleStyle;
-  final TextStyle subTitleStyle;
+  final TextStyle? titleStyle;
+  final TextStyle? subTitleStyle;
 
   const HutanoStepsHeader(
-      {Key key,
-      @required this.title,
+      {Key? key,
+      required this.title,
       this.subTitle,
       this.iconText = "",
       this.isIcon = false,
@@ -79,7 +79,7 @@ class HutanoStepsHeader extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: subTitlePadding ? 20 : 0),
                     child: Text(
-                      subTitle,
+                      subTitle!,
                       style: subTitleStyle ??
                           TextStyle(
                             fontSize:

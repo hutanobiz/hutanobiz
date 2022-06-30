@@ -15,9 +15,9 @@ import '../forgotpassword/model/req_reset_password.dart';
 import '../otp_verification/model/verification_model.dart';
 
 class ResetPassword extends StatefulWidget {
-  final VerificationModel verificationModel;
+  final VerificationModel? verificationModel;
 
-  const ResetPassword({Key key, this.verificationModel}) : super(key: key);
+  const ResetPassword({Key? key, this.verificationModel}) : super(key: key);
 
   @override
   _ResetPasswordState createState() => _ResetPasswordState();
@@ -38,8 +38,8 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   Future<void> _onUpdateClick() async {
     if (_newPasswordController.text != _confirmPasswordController.text) {
-      _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text(Localization.of(context)
+      _scaffoldKey.currentState!.showSnackBar(SnackBar(
+          content: Text(Localization.of(context)!
               .errorPasswordNotMatch
               .format(["Password", "Password"]))));
 
@@ -48,8 +48,8 @@ class _ResetPasswordState extends State<ResetPassword> {
     ProgressDialogUtils.showProgressDialog(context);
     final request = ReqResetPassword(
       step: 3,
-      phoneNumber: widget.verificationModel.phone,
-      email: widget.verificationModel.email,
+      phoneNumber: widget.verificationModel!.phone,
+      email: widget.verificationModel!.email,
       password: _confirmPasswordController.text.toString(),
       // mobileCountryCode: widget.verificationModel.countryCode,
     );
@@ -62,7 +62,7 @@ class _ResetPasswordState extends State<ResetPassword> {
       );
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     }  
   }
 
@@ -82,8 +82,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                 child: Column(
                   children: [
                     AppHeader(
-                      title: Localization.of(context).msgResetPassword,
-                      subTitle: Localization.of(context).createNewPassowrd,
+                      title: Localization.of(context)!.msgResetPassword,
+                      subTitle: Localization.of(context)!.createNewPassowrd,
                     ),
                     SizedBox(
                       height: spacing30,
@@ -109,7 +109,7 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   Widget _buildNewPasswordField() {
     return HutanoTextField(
-        labelText: Localization.of(context).newPassword,
+        labelText: Localization.of(context)!.newPassword,
         prefixIcon: FileConstants.icLock,
         controller: _newPasswordController,
         focusNode: _newPasswordFocusNode,
@@ -123,7 +123,7 @@ class _ResetPasswordState extends State<ResetPassword> {
         prefixwidth: spacing15,
         onValueChanged: (value) {
           setState(() {
-            _enableButton = _key.currentState.validate();
+            _enableButton = _key.currentState!.validate();
           });
         },
         passwordTap: () {
@@ -137,7 +137,7 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   Widget _buildConfirmPasswordField() {
     return HutanoTextField(
-        labelText: Localization.of(context).confirmPassword,
+        labelText: Localization.of(context)!.confirmPassword,
         prefixIcon: FileConstants.icLock,
         controller: _confirmPasswordController,
         focusNode: _confirmPasswordFocusNode,
@@ -148,7 +148,7 @@ class _ResetPasswordState extends State<ResetPassword> {
         prefixwidth: spacing15,
         onValueChanged: (value) {
           setState(() {
-            _enableButton = _key.currentState.validate();
+            _enableButton = _key.currentState!.validate();
           });
         },
         passwordTap: () {
@@ -162,7 +162,7 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   Widget _buildButton(BuildContext context) {
     return HutanoButton(
-      label: Localization.of(context).update,
+      label: Localization.of(context)!.update,
       margin: 0,
       onPressed: _enableButton ? _onUpdateClick : null,
     );

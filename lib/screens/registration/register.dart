@@ -32,7 +32,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class Register extends StatefulWidget {
-  Register({Key key, @required this.args}) : super(key: key);
+  Register({Key? key, required this.args}) : super(key: key);
 
   final RegisterArguments args;
 
@@ -50,10 +50,10 @@ class _SignUpFormState extends State<Register> {
   final _phoneController = TextEditingController();
   final _zipController = TextEditingController();
   GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: Strings.kGoogleApiKey);
-  String stateId = "";
+  String? stateId = "";
   var uuid = new Uuid();
-  String _sessionToken;
-  List<dynamic> _placeList = [];
+  String? _sessionToken;
+  List<dynamic>? _placeList = [];
   bool isShowList = false;
 
   String _genderGroup = "";
@@ -68,18 +68,18 @@ class _SignUpFormState extends State<Register> {
   bool _obscureText = true;
 
   final GlobalKey<FormFieldState> _emailKey = GlobalKey<FormFieldState>();
-  String phoneNumber, token, deviceToken;
-  File profileImage;
+  String? phoneNumber, token, deviceToken;
+  File? profileImage;
   bool isLoading = false;
-  DateTime _selectedDate;
-  bool isUpdateProfile = false;
-  PlacesDetailsResponse detail;
-  double longitude, latitude;
+  DateTime? _selectedDate;
+  bool? isUpdateProfile = false;
+  late PlacesDetailsResponse detail;
+  double? longitude, latitude;
   bool isButtonTapped = false;
 
   final _dobController = new TextEditingController();
 
-  String avatar;
+  String? avatar;
 
   @override
   void initState() {
@@ -130,7 +130,7 @@ class _SignUpFormState extends State<Register> {
       setState(() {});
     });
 
-    if (isUpdateProfile) {
+    if (isUpdateProfile!) {
       SharedPref().getToken().then((token) {
         setLoading(true);
 
@@ -142,24 +142,25 @@ class _SignUpFormState extends State<Register> {
             if (response['response'] != null) {
               dynamic res = response['response'];
 
-              _firstNameController.text = res["firstName"]?.toString();
-              _lastNameController.text = res["lastName"]?.toString();
-              _emailController.text = res["email"]?.toString();
+              _firstNameController.text = (res["firstName"]?.toString() ?? '');
+              _lastNameController.text = (res["lastName"]?.toString() ?? '');
+              _emailController.text = (res["email"]?.toString() ?? '');
 
               if (res['phoneNumber'] != null) {
                 _phoneController.text = res['phoneNumber'].toString();
               }
 
-              _addressController.text = res['address']?.toString();
-              _cityController.text = res['city']?.toString();
+              _addressController.text = (res['address']?.toString() ?? '');
+              _cityController.text = (res['city']?.toString() ?? '');
 
               if (res["state"] != null) {
-                _stateController.text = res["state"]["title"]?.toString();
-                stateId = res["state"]["_id"]?.toString();
+                _stateController.text =
+                    (res["state"]["title"]?.toString() ?? '');
+                stateId = (res["state"]["_id"]?.toString() ?? '');
               }
 
-              _zipController.text = res["zipCode"]?.toString();
-              _dobController.text = res["dob"]?.toString();
+              _zipController.text = (res["zipCode"]?.toString() ?? '');
+              _dobController.text = (res["dob"]?.toString() ?? '');
 
               setState(() {
                 if (res["dob"] != null) {
@@ -221,7 +222,7 @@ class _SignUpFormState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: isUpdateProfile
+      appBar: isUpdateProfile!
           ? AppBar(
               elevation: 0,
               backgroundColor: AppColors.white_smoke,
@@ -250,7 +251,7 @@ class _SignUpFormState extends State<Register> {
             children: getFormWidget(),
             padding: EdgeInsets.fromLTRB(
               Dimens.padding,
-              isUpdateProfile ? 20 : 51.0,
+              isUpdateProfile! ? 20 : 51.0,
               Dimens.padding,
               Dimens.padding,
             ),
@@ -261,12 +262,12 @@ class _SignUpFormState extends State<Register> {
   }
 
   List<Widget> getFormWidget() {
-    List<Widget> formWidget = new List();
+    List<Widget> formWidget = [];
     formWidget.add(AppLogo());
     formWidget.add(
       Center(
         child: Text(
-          isUpdateProfile
+          isUpdateProfile!
               ? "Update your account"
               : "Let's start creating your account.",
           style: TextStyle(
@@ -392,12 +393,12 @@ class _SignUpFormState extends State<Register> {
                 ? AutovalidateMode.always
                 : AutovalidateMode.onUserInteraction,
             style: AppTextStyle.regularStyle(fontSize: 14),
-            autofocus: !isUpdateProfile,
+            autofocus: !isUpdateProfile!,
             decoration: InputDecoration(
                 labelStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
                 labelText: "First Name",
                 enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey[300]),
+                    borderSide: BorderSide(color: Colors.grey[300]!),
                     borderRadius: BorderRadius.circular(5.0)),
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0))),
@@ -417,7 +418,7 @@ class _SignUpFormState extends State<Register> {
                 labelStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
                 labelText: "Last Name",
                 enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey[300]),
+                    borderSide: BorderSide(color: Colors.grey[300]!),
                     borderRadius: BorderRadius.circular(5.0)),
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0))),
@@ -473,7 +474,7 @@ class _SignUpFormState extends State<Register> {
             borderSide: BorderSide(
                 color: _dobController.text.isEmpty && isButtonTapped
                     ? AppColors.errorColor
-                    : Colors.grey[300]),
+                    : Colors.grey[300]!),
             borderRadius: BorderRadius.circular(8.0),
           ),
         ),
@@ -525,7 +526,7 @@ class _SignUpFormState extends State<Register> {
                 style: TextStyle(color: Colors.black, fontSize: 14),
               ),
               enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey[300]),
+                  borderSide: BorderSide(color: Colors.grey[300]!),
                   borderRadius: BorderRadius.circular(5.0)),
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
@@ -537,7 +538,7 @@ class _SignUpFormState extends State<Register> {
     formWidget.add(Widgets.sizedBox(height: 29.0));
 
     formWidget.add(
-      isUpdateProfile
+      isUpdateProfile!
           ? Container()
           : PasswordTextField(
               labelText: "Password",
@@ -562,7 +563,7 @@ class _SignUpFormState extends State<Register> {
     );
 
     formWidget
-        .add(isUpdateProfile ? Container() : Widgets.sizedBox(height: 29.0));
+        .add(isUpdateProfile! ? Container() : Widgets.sizedBox(height: 29.0));
 
     formWidget.add(
       TextFormField(
@@ -590,7 +591,7 @@ class _SignUpFormState extends State<Register> {
             labelText: "Address",
             labelStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
             enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[300]),
+                borderSide: BorderSide(color: Colors.grey[300]!),
                 borderRadius: BorderRadius.circular(5.0)),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
@@ -602,63 +603,63 @@ class _SignUpFormState extends State<Register> {
         ? ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: _placeList.length,
+            itemCount: _placeList!.length,
             itemBuilder: (context, index) {
               return ListTile(
                 onTap: () async {
                   detail = await _places
-                      .getDetailsByPlaceId(_placeList[index]["place_id"]);
-                  final lat = detail.result.geometry.location.lat;
-                  final lng = detail.result.geometry.location.lng;
+                      .getDetailsByPlaceId(_placeList![index]["place_id"]);
+                  final lat = detail.result.geometry!.location.lat;
+                  final lng = detail.result.geometry!.location.lng;
                   print(detail.result.adrAddress.toString());
                   PlacesDetailsResponse aa = detail;
                   print(aa);
-                  List<double> coordinates = List();
-                  longitude = aa.result.geometry.location.lng;
-                  latitude = aa.result.geometry.location.lat;
+                  List<double> coordinates = [];
+                  longitude = aa.result.geometry!.location.lng;
+                  latitude = aa.result.geometry!.location.lat;
                   print(aa.result.adrAddress);
-                  if (aa.result.adrAddress.contains('locality')) {
+                  if (aa.result.adrAddress!.contains('locality')) {
                     final startIndex =
-                        aa.result.adrAddress.indexOf('"locality">');
-                    final endIndex = aa.result.adrAddress
+                        aa.result.adrAddress!.indexOf('"locality">');
+                    final endIndex = aa.result.adrAddress!
                         .indexOf('</span>', startIndex + '"locality">'.length);
-                    _cityController.text = aa.result.adrAddress
+                    _cityController.text = aa.result.adrAddress!
                         .substring(startIndex + '"locality">'.length, endIndex);
-                    print(aa.result.adrAddress.substring(
+                    print(aa.result.adrAddress!.substring(
                         startIndex + '"locality">'.length, endIndex));
                   } else {
                     _cityController.text = "";
                   }
 
-                  if (aa.result.adrAddress.contains('postal-code')) {
+                  if (aa.result.adrAddress!.contains('postal-code')) {
                     final startIndex =
-                        aa.result.adrAddress.indexOf('"postal-code">');
-                    final endIndex = aa.result.adrAddress.indexOf(
+                        aa.result.adrAddress!.indexOf('"postal-code">');
+                    final endIndex = aa.result.adrAddress!.indexOf(
                         '</span>', startIndex + '"postal-code">'.length);
-                    _zipController.text = aa.result.adrAddress
+                    _zipController.text = aa.result.adrAddress!
                         .substring(
                             startIndex + '"postal-code">'.length, endIndex)
                         .substring(0, 5);
-                    print(aa.result.adrAddress.substring(
+                    print(aa.result.adrAddress!.substring(
                         startIndex + '"postal-code">'.length, endIndex));
                   } else {
                     _zipController.text = "";
                   }
 
-                  if (aa.result.adrAddress.contains('region')) {
+                  if (aa.result.adrAddress!.contains('region')) {
                     final startIndex =
-                        aa.result.adrAddress.indexOf('"region">');
-                    final endIndex = aa.result.adrAddress
+                        aa.result.adrAddress!.indexOf('"region">');
+                    final endIndex = aa.result.adrAddress!
                         .indexOf('</span>', startIndex + '"region">'.length);
-                    print(aa.result.adrAddress
+                    print(aa.result.adrAddress!
                         .substring(startIndex + '"region">'.length, endIndex));
 
                     for (dynamic state in stateList) {
                       if (state['title'] ==
-                              aa.result.adrAddress.substring(
+                              aa.result.adrAddress!.substring(
                                   startIndex + '"region">'.length, endIndex) ||
                           state['stateCode'] ==
-                              aa.result.adrAddress.substring(
+                              aa.result.adrAddress!.substring(
                                   startIndex + '"region">'.length, endIndex)) {
                         _stateController.text = state['title'];
                         stateId = state["_id"]?.toString();
@@ -672,7 +673,7 @@ class _SignUpFormState extends State<Register> {
                     isShowList = false;
                   });
                 },
-                title: Text(_placeList[index]["description"]),
+                title: Text(_placeList![index]["description"]),
               );
             },
           )
@@ -692,7 +693,7 @@ class _SignUpFormState extends State<Register> {
             labelText: "City",
             labelStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
             enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[300])),
+                borderSide: BorderSide(color: Colors.grey[300]!)),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
         keyboardType: TextInputType.emailAddress,
@@ -727,7 +728,7 @@ class _SignUpFormState extends State<Register> {
               counterText: "",
               labelText: "Zip Code",
               enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey[300])),
+                  borderSide: BorderSide(color: Colors.grey[300]!)),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(5.0),
               ),
@@ -753,7 +754,7 @@ class _SignUpFormState extends State<Register> {
         child: FancyButton(
             buttonHeight: Dimens.buttonHeight,
             title: "Save",
-            onPressed: isUpdateProfile
+            onPressed: isUpdateProfile!
                 ? () {
                     setState(() {
                       isButtonTapped = true;
@@ -809,7 +810,7 @@ class _SignUpFormState extends State<Register> {
                         border: Border.all(
                             color: _genderGroup == "male"
                                 ? AppColors.female
-                                : Colors.grey[300],
+                                : Colors.grey[300]!,
                             width: 1.0)),
                     child: Row(children: <Widget>[
                       Image(
@@ -847,7 +848,7 @@ class _SignUpFormState extends State<Register> {
                       width: 1,
                       color: _genderGroup == "female"
                           ? AppColors.female
-                          : Colors.grey[300],
+                          : Colors.grey[300]!,
                     )),
                 child: Center(
                     child: Row(children: <Widget>[
@@ -888,17 +889,17 @@ class _SignUpFormState extends State<Register> {
     loginData["firstName"] = _firstNameController.text.trim();
     loginData["lastName"] = _lastNameController.text.trim();
 
-    if (!isUpdateProfile) {
+    if (!isUpdateProfile!) {
       loginData["type"] = "1";
       loginData["step"] = "3";
       loginData["password"] = _passwordController.text;
       loginData["confirmPassword"] = _passwordController.text;
-      loginData["deviceToken"] = deviceToken;
+      loginData["deviceToken"] = deviceToken!;
       loginData["addressTitle"] = 'My Address';
       loginData["address"] = _addressController.text;
       loginData["city"] = _cityController.text;
       loginData["zipCode"] = _zipController.text;
-      loginData["state"] = stateId;
+      loginData["state"] = stateId!;
       loginData["isEdit"] = 'false';
       loginData["addresstype"] = '1';
       loginData['addressNumber'] = '112';
@@ -908,36 +909,37 @@ class _SignUpFormState extends State<Register> {
       loginData["longitude"] = longitude.toString();
     }
 
-    loginData["phoneNumber"] = Validations.getCleanedNumber(phoneNumber);
+    loginData["phoneNumber"] = Validations.getCleanedNumber(phoneNumber!);
     loginData["gender"] = _genderGroup.trim().toString() == "male" ? "2" : "1";
 
-    if (isUpdateProfile) {
+    if (isUpdateProfile!) {
       loginData["dob"] =
-          DateFormat("MM/dd/yyyy").format(_selectedDate).toString();
+          DateFormat("MM/dd/yyyy").format(_selectedDate!).toString();
     } else {
       loginData["dob"] =
-          DateFormat("MM/dd/yyyy").format(_selectedDate).toString();
+          DateFormat("MM/dd/yyyy").format(_selectedDate!).toString();
     }
 
     try {
       setLoading(true);
       Uri uri = Uri.parse(ApiBaseHelper.base_url +
-          (isUpdateProfile ? "api/profile/update" : "auth/api/set-password"));
+          (isUpdateProfile! ? "api/profile/update" : "auth/api/set-password"));
       http.MultipartRequest request = http.MultipartRequest('POST', uri);
       token.toString().debugLog();
 
-      if (isUpdateProfile) {
-        request.headers['authorization'] = token;
+      if (isUpdateProfile!) {
+        request.headers['authorization'] = token!;
       }
 
       request.fields.addAll(loginData);
 
       if (profileImage != null) {
-        var stream = http.ByteStream(DelegatingStream(profileImage.openRead()));
-        var length = await profileImage.length();
+        var stream =
+            http.ByteStream(DelegatingStream(profileImage!.openRead()));
+        var length = await profileImage!.length();
 
         request.files.add(http.MultipartFile("avatar", stream.cast(), length,
-            filename: profileImage.path));
+            filename: profileImage!.path));
       }
 
       http.StreamedResponse response = await request.send();
@@ -966,7 +968,7 @@ class _SignUpFormState extends State<Register> {
       } else {
         responseJson["response"].toString().debugLog();
 
-        if (isUpdateProfile) {
+        if (isUpdateProfile!) {
           Widgets.showToast("Profile updated successfully");
           setString('selectedAccount', jsonEncode(responseJson["response"]));
           if (responseJson["response"]['_id'] ==
@@ -984,11 +986,11 @@ class _SignUpFormState extends State<Register> {
               .setValue("fullName", responseJson["response"]["fullName"]);
 
           var verifyEmail = Map();
-          String phonenumber = widget.args.phoneNumber.substring(1, 4) +
+          String phonenumber = widget.args.phoneNumber!.substring(1, 4) +
               "" +
-              widget.args.phoneNumber.substring(6, 9) +
+              widget.args.phoneNumber!.substring(6, 9) +
               "" +
-              widget.args.phoneNumber.substring(10, 14);
+              widget.args.phoneNumber!.substring(10, 14);
           verifyEmail["email"] = _emailController.text;
           verifyEmail["phoneNumber"] = phonenumber;
           setLoading(false);
@@ -1038,7 +1040,7 @@ class _SignUpFormState extends State<Register> {
   Future getImage(int source) async {
     ImagePicker _picker = ImagePicker();
 
-    XFile image = await _picker.pickImage(
+    XFile? image = await _picker.pickImage(
         source: (source == 1) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
       File imageFile = File(image.path);
@@ -1096,7 +1098,7 @@ class _SignUpFormState extends State<Register> {
               borderSide: BorderSide(
                   color: controller.text.isEmpty && isButtonTapped
                       ? AppColors.errorColor
-                      : Colors.grey[300]),
+                      : Colors.grey[300]!),
               borderRadius: BorderRadius.circular(8.0),
             ),
           ),
@@ -1153,7 +1155,8 @@ class _SignUpFormState extends State<Register> {
       return false;
     else if (_passwordController.text.length < 6)
       return false;
-    else if (((DateTime.now().difference(_selectedDate).inDays) / 365).floor() <
+    else if (((DateTime.now().difference(_selectedDate!).inDays) / 365)
+            .floor() <
         18) {
       return false;
     } else

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -12,7 +13,7 @@ class SvgParser {
   List<PathSegment> pathSegmentList = <PathSegment>[];
   final List<Path> _paths = <Path>[];
 
-  Color parseColor(String cStr) {
+  Color? parseColor(String? cStr) {
     if (cStr == null || cStr.isEmpty) {
       throw UnsupportedError("Empty color field found.");
     }
@@ -21,13 +22,14 @@ class SvgParser {
     } else if (cStr == 'none') {
       return Colors.transparent;
     } else {
+      return Colors.transparent;
       // throw UnsupportedError(
       //     "Only hex color format currently supported. String:  $cStr");
     }
   }
 
   void addPathSegments(
-      Path path, int index, double strokeWidth, Color color, String pathname) {
+      Path path, int index, double? strokeWidth, Color? color, String? pathname) {
     var firstPathSegmentIndex = pathSegments.length;
     var relativeIndex = 0;
     path.computeMetrics().forEach((pp) {
@@ -56,20 +58,18 @@ class SvgParser {
         .findAllElements("path")
         .map((node) => node.attributes)
         .forEach((attributes) {
-      var dPath = attributes.firstWhere((attr) => attr.name.local == "d",
-          orElse: () => null);
+      var dPath = attributes.firstWhereOrNull((attr) => attr.name.local == "d");
       if (dPath != null) {
         var path = Path();
         writeSvgPathDataToPath(dPath.value, PathModifier(path));
 
-        Color color;
-        double strokeWidth;
+        Color? color;
+        double? strokeWidth;
 //-------------------------
         // var id = attributes.firstWhere((attr) => attr.name.local == "data-name",
         //     orElse: () => null);
-        var id = attributes.firstWhere((attr) => attr.name.local == "id",
-        orElse: () => null);
-        String pathname;
+        var id = attributes.firstWhereOrNull((attr) => attr.name.local == "id");
+        String? pathname;
         if (id != null) {
           // var newstr = id.toString().substring(11);
           var newstr = id.toString().substring(4);
@@ -80,13 +80,12 @@ class SvgParser {
 
 //-------------------------
         //Attributes - [1] css-styling
-        var style = attributes.firstWhere((attr) => attr.name.local == "style",
-            orElse: () => null);
+        var style = attributes.firstWhereOrNull((attr) => attr.name.local == "style");
 
         if (style != null) {
           //Parse color of stroke
           var exp = RegExp(r"stroke:([^;]+);");
-          Match match = exp.firstMatch(style.value);
+          Match? match = exp.firstMatch(style.value);
           if (match != null) {
             var cStr = match.group(1);
             color = parseColor(cStr);
@@ -95,22 +94,20 @@ class SvgParser {
           exp = RegExp(r"stroke-width:([0-9.]+)");
           match = exp.firstMatch(style.value);
           if (match != null) {
-            var cStr = match.group(1);
+            var cStr = match.group(1)!;
             strokeWidth = double.tryParse(cStr) ?? null;
           }
         }
 
         //Attributes - [2] svg-attributes
-        var strokeElement = attributes.firstWhere(
-            (attr) => attr.name.local == "stroke",
-            orElse: () => null);
+        var strokeElement = attributes.firstWhereOrNull(
+            (attr) => attr.name.local == "stroke");
         if (strokeElement != null) {
           color = parseColor(strokeElement.value);
         }
 
-        var strokeWidthElement = attributes.firstWhere(
-            (attr) => attr.name.local == "stroke-width",
-            orElse: () => null);
+        var strokeWidthElement = attributes.firstWhereOrNull(
+            (attr) => attr.name.local == "stroke-width");
         if (strokeWidthElement != null) {
           strokeWidth = double.tryParse(strokeWidthElement.value) ?? null;
         }
@@ -149,14 +146,14 @@ class PathSegment {
         pathIndex = 0;
 
 //--------------------
-  String pathname;
+  String? pathname;
 //--------------------
 
-  Path path;
+  Path? path;
   double strokeWidth;
   Color color;
 
-  double length;
+  double? length;
 
   int firstSegmentOfPathIndex;
 

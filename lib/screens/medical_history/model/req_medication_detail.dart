@@ -1,8 +1,8 @@
 class ReqMedicationDetail {
-  String dose;
-  String name;
-  String frequency;
-  String prescriptionId;
+  String? dose;
+  String? name;
+  String? frequency;
+  String? prescriptionId;
 
   ReqMedicationDetail(
       {this.dose, this.name, this.frequency, this.prescriptionId});

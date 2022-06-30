@@ -52,7 +52,7 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
   final documentDateController = TextEditingController();
   String documentName = '';
   ApiBaseHelper _api = ApiBaseHelper();
-  String token;
+  String? token;
   List<String> _documentTypeList = [
     'X-Ray',
     'MRI',
@@ -63,7 +63,7 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
     'Other',
   ];
   bool _isLoading = false;
-  List<DiagnosticTest> _finalTestList = [];
+  List<DiagnosticTest>? _finalTestList = [];
 
   @override
   void initState() {
@@ -138,7 +138,7 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
   Widget _anyDiagnosticTest(BuildContext context) => Padding(
         padding: EdgeInsets.symmetric(vertical: spacing20),
         child: Text(
-          Localization.of(context).diagnosticTestHeader,
+          Localization.of(context)!.diagnosticTestHeader,
           style: TextStyle(
               color: Color(0xff0e1c2a),
               fontSize: fontSize16,
@@ -147,7 +147,7 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
       );
 
   Widget _yesButtonWidget(BuildContext context) => HutanoButton(
-        label: Localization.of(context).yes,
+        label: Localization.of(context)!.yes,
         onPressed: () {
           setState(() {
             _isTookDiagnosticTest = true;
@@ -162,7 +162,7 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
 
   Widget _noButtonWidget(BuildContext context) => HutanoButton(
         borderColor: colorGrey,
-        label: Localization.of(context).no,
+        label: Localization.of(context)!.no,
         onPressed: () {
           setState(() {
             _isTookDiagnosticTest = false;
@@ -179,7 +179,7 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
   Widget _howLongAgoWidget(BuildContext context) => Padding(
         padding: EdgeInsets.symmetric(vertical: spacing20),
         child: Text(
-          Localization.of(context).typeOfTests,
+          Localization.of(context)!.typeOfTests,
           style: TextStyle(
               color: Color(0xff0e1c2a),
               fontSize: fontSize16,
@@ -196,27 +196,27 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
                 return ListTile(
                   dense: true,
                   title: Row(children: [
-                    Text(_finalTestList[pos].name,
+                    Text(_finalTestList![pos].name!,
                         style: TextStyle(
                             color: colorBlack2,
                             fontWeight: fontWeightSemiBold,
                             fontSize: fontSize14))
                   ]),
-                  trailing: _finalTestList[pos].isSelected
+                  trailing: _finalTestList![pos].isSelected
                       ? Image.asset("images/checkedCheck.png",
                           height: 24, width: 24)
                       : Image.asset("images/uncheckedCheck.png",
                           height: 24, width: 24),
                   onTap: () {
-                    setState(() => _finalTestList[pos].isSelected =
-                        !_finalTestList[pos].isSelected);
+                    setState(() => _finalTestList![pos].isSelected =
+                        !_finalTestList![pos].isSelected);
                   },
                 );
               },
               separatorBuilder: (_, pos) {
                 return SizedBox();
               },
-              itemCount: _finalTestList.length)
+              itemCount: _finalTestList!.length)
           : SizedBox();
 
   Widget _uploadDocumentsButton(BuildContext context) => Center(
@@ -231,7 +231,7 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
                 width: 18,
               ),
               SizedBox(width: spacing10),
-              Text(Localization.of(context).uploadDocumentsLabel,
+              Text(Localization.of(context)!.uploadDocumentsLabel,
                   style: TextStyle(
                       color: AppColors.windsor,
                       fontWeight: fontWeightMedium,
@@ -239,14 +239,14 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
             ],
           ),
           SizedBox(height: spacing5),
-          Text(Localization.of(context).uploadTypeOfDocLabel,
+          Text(Localization.of(context)!.uploadTypeOfDocLabel,
               style: TextStyle(
                   color: colorBlack2,
                   fontWeight: fontWeightRegular,
                   fontSize: fontSize12)),
           SizedBox(height: spacing5),
           Text(
-            Localization.of(context).myHutanoLibLabel,
+            Localization.of(context)!.myHutanoLibLabel,
             style: TextStyle(
                 decoration: TextDecoration.underline,
                 color: Color(0xff1a5ee1),
@@ -269,18 +269,18 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(Localization.of(context).picker),
-          content: Text(Localization.of(context).selectDocPickerTypeLabel),
+          title: Text(Localization.of(context)!.picker),
+          content: Text(Localization.of(context)!.selectDocPickerTypeLabel),
           actions: <Widget>[
             FlatButton(
-              child: Text(Localization.of(context).imageLabel),
+              child: Text(Localization.of(context)!.imageLabel),
               onPressed: () {
                 Navigator.pop(context);
                 showImagePickerDialog();
               },
             ),
             FlatButton(
-              child: Text(Localization.of(context).pdfLabel),
+              child: Text(Localization.of(context)!.pdfLabel),
               onPressed: () {
                 getDocumentType();
                 Navigator.pop(context);
@@ -297,18 +297,18 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(Localization.of(context).picker),
-          content: Text(Localization.of(context).selectImagePickerTypeLabel),
+          title: Text(Localization.of(context)!.picker),
+          content: Text(Localization.of(context)!.selectImagePickerTypeLabel),
           actions: <Widget>[
             FlatButton(
-              child: Text(Localization.of(context).camera),
+              child: Text(Localization.of(context)!.camera),
               onPressed: () {
                 getImage(1);
                 Navigator.pop(context);
               },
             ),
             FlatButton(
-              child: Text(Localization.of(context).gallery),
+              child: Text(Localization.of(context)!.gallery),
               onPressed: () {
                 getImage(2);
                 Navigator.pop(context);
@@ -323,7 +323,7 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
   Future getImage(int source) async {
     ImagePicker _picker = ImagePicker();
 
-     XFile image = await _picker.pickImage(
+     XFile? image = await _picker.pickImage(
         imageQuality: 25,
         source: (source == 1) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
@@ -358,13 +358,13 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
   }
 
   void getDocumentType() async {
-    FilePickerResult file = await FilePicker.platform.pickFiles(
+    FilePickerResult? file = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
     );
 
     if (file != null) {
-      uploadDocsBottomSheet(File(file.files.first.path));
+      uploadDocsBottomSheet(File(file.files.first.path!));
     }
   }
 
@@ -375,7 +375,7 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            Localization.of(context).documentLabel,
+            Localization.of(context)!.documentLabel,
             style: TextStyle(
               color: AppColors.midnight_express,
               fontSize: 16,
@@ -407,11 +407,11 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
             enabled: false,
             controller: documentTypeController,
             decoration:
-                getInputDecoration(Localization.of(context).whatKindOfDocLabel),
+                getInputDecoration(Localization.of(context)!.whatKindOfDocLabel),
           ).onClick(onTap: _documentTypeBottomDialog),
           SizedBox(height: spacing25),
           textField(
-            Localization.of(context).whatBodyPartLabel,
+            Localization.of(context)!.whatBodyPartLabel,
             (value) {
               documentName = value;
             },
@@ -449,7 +449,7 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
                     ),),
                     // highlightedBorderColor: AppColors.windsor,
                     child: Text(
-                      Localization.of(context).cancel,
+                      Localization.of(context)!.cancel,
                       style: TextStyle(
                           color: AppColors.windsor, fontSize: fontSize16),
                     ),
@@ -460,19 +460,19 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
               SizedBox(width: spacing16),
               Expanded(
                 child: FancyButton(
-                  title: Localization.of(context).upload,
+                  title: Localization.of(context)!.upload,
                   buttonColor: AppColors.windsor,
                   onPressed: () async {
                     if (documentTypeController.text == null ||
                         documentTypeController.text.isEmpty) {
-                      Widgets.showToast(Localization.of(context).errDocType);
+                      Widgets.showToast(Localization.of(context)!.errDocType);
                       return;
                     } else if (documentName == null || documentName.isEmpty) {
-                      Widgets.showToast(Localization.of(context).errDocName);
+                      Widgets.showToast(Localization.of(context)!.errDocName);
                       return;
                     } else if (documentDateController.text == null ||
                         documentDateController.text.isEmpty) {
-                      Widgets.showToast(Localization.of(context).errDocDate);
+                      Widgets.showToast(Localization.of(context)!.errDocDate);
                       return;
                     } else {
                       Navigator.pop(context);
@@ -522,7 +522,7 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
 
   Widget textField(String label, Function onChanged) {
     return TextField(
-      onChanged: onChanged,
+      onChanged: onChanged as void Function(String)?,
       decoration: getInputDecoration(label),
     );
   }
@@ -535,21 +535,21 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14.0),
         borderSide: BorderSide(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
           width: 0.5,
         ),
       ),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14.0),
         borderSide: BorderSide(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
           width: 0.5,
         ),
       ),
       disabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14.0),
         borderSide: BorderSide(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
           width: 0.5,
         ),
       ),
@@ -593,7 +593,7 @@ class _TestDiagnosisScreenState extends State<TestDiagnosisScreen> {
 
   void _forwardButtonPressed(BuildContext context) {
     List<DiagnosticTest> selectedTestsModel = [];
-    _finalTestList.forEach((element) {
+    _finalTestList!.forEach((element) {
       if (element.isSelected) {
         selectedTestsModel.add(element);
       }

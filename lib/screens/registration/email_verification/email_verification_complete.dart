@@ -30,8 +30,8 @@ class _EmailVerifiCompleteScreenState extends State<EmailVerifiCompleteScreen> {
             children: [
               AppHeader(
                 progressSteps: HutanoProgressSteps.one,
-                title: Localization.of(context).emailVerification,
-                subTitle: Localization.of(context).taskComplete,
+                title: Localization.of(context)!.emailVerification,
+                subTitle: Localization.of(context)!.taskComplete,
               ),
               Spacer(),
               RoundSuccess(),
@@ -53,7 +53,7 @@ class _EmailVerifiCompleteScreenState extends State<EmailVerifiCompleteScreen> {
         buttonType: HutanoButtonType.onlyLabel,
         color: colorYellow,
         iconSize: 20,
-        label: Localization.of(context).next,
+        label: Localization.of(context)!.next,
         onPressed: _nextClick,
       ));
 

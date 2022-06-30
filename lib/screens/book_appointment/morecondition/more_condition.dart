@@ -28,10 +28,10 @@ class MoreCondition extends StatefulWidget {
 }
 
 class _MoreConditionState extends State<MoreCondition> {
-  List<HealthCondition> _tempConditionList = [];
+  List<HealthCondition>? _tempConditionList = [];
   final _searchConditionController = TextEditingController();
   final _searchConditionFocusNode = FocusNode();
-  List<HealthCondition> _conditionList = [];
+  List<HealthCondition>? _conditionList = [];
 
   @override
   void initState() {
@@ -72,12 +72,12 @@ class _MoreConditionState extends State<MoreCondition> {
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(Localization.of(context).tellUsAboutMore,
+                                Text(Localization.of(context)!.tellUsAboutMore,
                                     style: TextStyle(
                                         fontSize: fontSize20,
                                         fontWeight: fontWeightBold,
                                         color: Color(0xff0E1C2A))),
-                                Text(Localization.of(context).aboutMore,
+                                Text(Localization.of(context)!.aboutMore,
                                     style: TextStyle(
                                         fontSize: fontSize20,
                                         fontWeight: fontWeightBold,
@@ -104,7 +104,7 @@ class _MoreConditionState extends State<MoreCondition> {
                                             TextAlignVertical.center,
                                         decoration: InputDecoration(
                                             isDense: true,
-                                            hintText: Localization.of(context)
+                                            hintText: Localization.of(context)!
                                                 .searchForProblem,
                                             hintStyle: TextStyle(
                                                 fontSize: fontSize14,
@@ -130,7 +130,7 @@ class _MoreConditionState extends State<MoreCondition> {
                       Padding(
                           padding: EdgeInsets.symmetric(horizontal: spacing10),
                           child: GridView.builder(
-                              itemCount: _conditionList.length,
+                              itemCount: _conditionList!.length,
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               gridDelegate:
@@ -139,11 +139,11 @@ class _MoreConditionState extends State<MoreCondition> {
                               itemBuilder: (BuildContext context, int index) {
                                 return _columnCommonItem(
                                   context,
-                                  _conditionList[index].name,
-                                  _conditionList[index].subName,
-                                  _conditionList[index].image,
+                                  _conditionList![index].name!,
+                                  _conditionList![index].subName!,
+                                  _conditionList![index].image!,
                                   index,
-                                  _conditionList[index].isSelected,
+                                  _conditionList![index].isSelected,
                                 );
                               }))
                     ])))));
@@ -181,11 +181,11 @@ class _MoreConditionState extends State<MoreCondition> {
                   InkWell(
                     onTap: () {
                       setState(() {
-                        _conditionList[viewNumber].isSelected =
-                            !_conditionList[viewNumber].isSelected;
+                        _conditionList![viewNumber].isSelected =
+                            !_conditionList![viewNumber].isSelected;
                       });
                     },
-                    child: _conditionList[viewNumber].isSelected
+                    child: _conditionList![viewNumber].isSelected
                         ? Image.asset("images/checkedCheck.png",
                             height: 24, width: 24)
                         : Image.asset("images/uncheckedCheck.png",
@@ -219,30 +219,30 @@ class _MoreConditionState extends State<MoreCondition> {
         ),
       ).onClick(onTap: () {
         setState(() {
-          _conditionList[viewNumber].isSelected =
-              !_conditionList[viewNumber].isSelected;
+          _conditionList![viewNumber].isSelected =
+              !_conditionList![viewNumber].isSelected;
         });
       });
 
   _getConditionList(String _searchText, BuildContext context) {
     List<HealthCondition> tempList = [];
     if (_searchText == null || _searchText.isEmpty) {
-      tempList.addAll(_tempConditionList);
+      tempList.addAll(_tempConditionList!);
     } else {
       List<HealthCondition> tempCondition = [];
-      for (var item in _tempConditionList) {
+      for (var item in _tempConditionList!) {
         if (item.name != null) {
-          if (item.name
+          if (item.name!
                   .toLowerCase()
                   .startsWith(_searchText.trim().toLowerCase()) ||
-              item.subName
+              item.subName!
                       .toLowerCase()
                       .indexOf(_searchText.trim().toLowerCase()) !=
                   -1) {
             tempCondition.add(item);
           }
         } else {
-          if (item.subName
+          if (item.subName!
                   .toLowerCase()
                   .indexOf(_searchText.trim().toLowerCase()) !=
               -1) {
@@ -299,7 +299,7 @@ class _MoreConditionState extends State<MoreCondition> {
     List<SelectionHealthIssueModel> _selectedConditionList = [];
     List<int> tempList = [];
     int i = 0;
-    _conditionList.forEach((element) {
+    _conditionList!.forEach((element) {
       if (element.isSelected) {
         _selectedConditionList.add(SelectionHealthIssueModel(
             index: i,

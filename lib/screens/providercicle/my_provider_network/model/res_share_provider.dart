@@ -1,7 +1,7 @@
 class ResShareProvider {
-  String status;
-  String response;
-  String message;
+  String? status;
+  String? response;
+  String? message;
 
   ResShareProvider({this.status, this.response, this.message});
 

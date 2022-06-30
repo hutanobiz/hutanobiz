@@ -1,6 +1,6 @@
 class ReqUploadInsuranceDocuments {
-  final String insuranceId;
-  final String appointmentId;
+  final String? insuranceId;
+  final String? appointmentId;
   ReqUploadInsuranceDocuments({
     this.insuranceId,
     this.appointmentId,

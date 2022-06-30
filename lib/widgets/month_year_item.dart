@@ -12,13 +12,13 @@ import 'package:hutano/widgets/hutano_button.dart';
 import 'package:hutano/widgets/hutano_textfield.dart';
 
 class MonthYearItem extends StatefulWidget {
-  final String selectedSid;
-  final String selectedDisease;
-  final YYDialog yyDialog;
-  final Function onSavePressed;
+  final String? selectedSid;
+  final String? selectedDisease;
+  final YYDialog? yyDialog;
+  final Function? onSavePressed;
   final bool isForUpdate;
-  final String month;
-  final String year;
+  final String? month;
+  final String? year;
   MonthYearItem(
       {this.selectedSid,
       this.selectedDisease,
@@ -44,8 +44,8 @@ class _MonthYearItemState extends State<MonthYearItem> {
   void initState() {
     super.initState();
     if (widget.isForUpdate) {
-      _monthController.text = widget.month;
-      _yearController.text = widget.year;
+      _monthController.text = widget.month!;
+      _yearController.text = widget.year!;
     }
     for (var i = DateTime.now().year - 21; i < DateTime.now().year; i++) {
       _years.add(i);
@@ -71,7 +71,7 @@ class _MonthYearItemState extends State<MonthYearItem> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _dialogHeaderViewWidget(context, widget.selectedDisease),
+              _dialogHeaderViewWidget(context, widget.selectedDisease!),
               _dialogWhenViewWidget(context),
               _buildMonthAndYearDropDownRow(context, _years),
               _addDiseaseButton(context)
@@ -96,7 +96,7 @@ class _MonthYearItemState extends State<MonthYearItem> {
   Widget _dialogWhenViewWidget(BuildContext context) => Padding(
         padding: EdgeInsets.only(top: spacing10, left: spacing20),
         child: Text(
-          Localization.of(context).whenLabel,
+          Localization.of(context)!.whenLabel,
           style: TextStyle(
               color: colorBlack2,
               fontWeight: fontWeightBold,
@@ -130,8 +130,8 @@ class _MonthYearItemState extends State<MonthYearItem> {
         child: HutanoTextField(
           width: (MediaQuery.of(context).size.width - 35) * 0.4,
           hintText: months.isEmpty
-              ? Localization.of(context).selectYearHint
-              : Localization.of(context).selectMonthHint,
+              ? Localization.of(context)!.selectYearHint
+              : Localization.of(context)!.selectMonthHint,
           textInputAction: TextInputAction.next,
           controller: months.isEmpty ? _yearController : _monthController,
           focusNode: months.isEmpty ? _yearFocus : _monthFocus,
@@ -147,11 +147,11 @@ class _MonthYearItemState extends State<MonthYearItem> {
           validationMethod: (value) {
             if (months.isEmpty) {
               if (value.isEmpty) {
-                return Localization.of(context).selectYearError;
+                return Localization.of(context)!.selectYearError;
               }
             } else {
               if (value.isEmpty) {
-                return Localization.of(context).selectMonthError;
+                return Localization.of(context)!.selectMonthError;
               }
             }
           },
@@ -249,13 +249,13 @@ class _MonthYearItemState extends State<MonthYearItem> {
           buttonType: HutanoButtonType.onlyLabel,
           color: colorYellow,
           iconSize: 20,
-          label: Localization.of(context).saveLabel,
+          label: Localization.of(context)!.saveLabel,
           onPressed: () {
             FocusScope.of(context).requestFocus(FocusNode());
-            if (_formKey.currentState.validate()) {
-              _formKey.currentState.save();
-              widget.yyDialog.dismiss();
-              widget.onSavePressed(
+            if (_formKey.currentState!.validate()) {
+              _formKey.currentState!.save();
+              widget.yyDialog!.dismiss();
+              widget.onSavePressed!(
                   widget.selectedSid,
                   widget.selectedDisease,
                   _monthController.text,

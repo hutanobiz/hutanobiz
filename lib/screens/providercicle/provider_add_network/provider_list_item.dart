@@ -10,7 +10,7 @@ import 'model/provider_network.dart';
 
 class GroupListItem extends StatelessWidget {
   final ProviderNetwork _item;
-  final ProviderNetwork selectedGroup;
+  final ProviderNetwork? selectedGroup;
   final Function onDeleteGroup;
   GroupListItem(this._item, this.selectedGroup, this.onDeleteGroup);
   @override
@@ -21,7 +21,7 @@ class GroupListItem extends StatelessWidget {
           color: Colors.white,
           border: Border.all(
               color: selectedGroup != null &&
-                      selectedGroup.doctorId == _item.doctorId
+                      selectedGroup!.doctorId == _item.doctorId
                   ? AppColors.windsor
                   : Colors.transparent),
           boxShadow: [
@@ -48,7 +48,7 @@ class GroupListItem extends StatelessWidget {
             child: Container(
               margin: const EdgeInsets.only(left: 10.0),
               child: Text(
-                _item.groupName,
+                _item.groupName!,
                 style: const TextStyle(
                     color: colorBlack85,
                     fontSize: fontSize14,
@@ -58,7 +58,7 @@ class GroupListItem extends StatelessWidget {
           ),
 
           GestureDetector(
-            onTap: onDeleteGroup,
+            onTap: onDeleteGroup as void Function()?,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Icon(

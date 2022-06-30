@@ -1,6 +1,6 @@
 class ReqUploadImage {
-  final String name;
-  final String appointmentId;
+  final String? name;
+  final String? appointmentId;
   ReqUploadImage({
     this.name,
     this.appointmentId,

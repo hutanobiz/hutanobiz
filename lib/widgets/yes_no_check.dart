@@ -7,11 +7,11 @@ class YesNoCheckWidget extends StatefulWidget {
   final Function onYesTap;
   final Function onNoTap;
   const YesNoCheckWidget(
-      {Key key,
-      @required this.labelValue,
-      @required this.value,
-      @required this.onYesTap,
-      @required this.onNoTap})
+      {Key? key,
+      required this.labelValue,
+      required this.value,
+      required this.onYesTap,
+      required this.onNoTap})
       : super(key: key);
 
   @override
@@ -28,14 +28,14 @@ class _YesNoCheckWidgetState extends State<YesNoCheckWidget> {
         Row(
           children: <Widget>[
             Checkbox(
-              onChanged: widget.onYesTap,
+              onChanged: widget.onYesTap as void Function(bool?)?,
               value: widget.value,
               activeColor: AppColors.goldenTainoi,
             ),
             Text("Yes"),
             SizedBox(width: 20.0),
             Checkbox(
-              onChanged: widget.onNoTap,
+              onChanged: widget.onNoTap as void Function(bool?)?,
               value: !widget.value,
               activeColor: AppColors.goldenTainoi,
             ),

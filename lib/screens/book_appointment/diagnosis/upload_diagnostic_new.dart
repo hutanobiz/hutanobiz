@@ -46,9 +46,9 @@ import 'package:hutano/routes.dart';
 import 'package:hutano/strings.dart';
 
 class UploadDiagnosticNew extends StatefulWidget {
-  UploadDiagnosticNew({Key key, this.args}) : super(key: key);
+  UploadDiagnosticNew({Key? key, this.args}) : super(key: key);
 
-  final Map args;
+  final Map? args;
 
   @override
   _UploadDiagnosticNewState createState() => _UploadDiagnosticNewState();
@@ -59,11 +59,11 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
   bool _getData = false;
   bool _indicatorLoading = true;
   ApiBaseHelper _api = ApiBaseHelper();
-  String token;
+  String? token;
   final documentTypeController = TextEditingController();
   final documentDateController = TextEditingController();
-  String documentName = '';
-  List<Map> filteredImagesList = List();
+  String? documentName = '';
+  List<Map?> filteredImagesList = [];
   List<String> _documentTypeList = [
     'X-Ray',
     'MRI',
@@ -73,17 +73,17 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
     'EKG',
     'Other',
   ];
-  InheritedContainerState _container;
-  List<DiagnosticTest> _finalTestList = [];
+  InheritedContainerState? _container;
+  List<DiagnosticTest>? _finalTestList = [];
 
-  List<Map> docsList = List();
-  Map<String, String> filesPaths;
-  List<Map> _selectedDocsList = [];
+  List<Map?> docsList = [];
+  Map<String, String>? filesPaths;
+  List<Map?> _selectedDocsList = [];
   bool isLoading = false;
-  String defaultBodyPart;
+  String? defaultBodyPart;
   Map sidesMap = {1: "Left", 2: "Right", 3: "Top", 4: "Bottom", 5: "All Over"};
-  TabController _tabController;
-  List tabs;
+  TabController? _tabController;
+  late List tabs;
   int _currentIndex = 0;
 
   @override
@@ -115,27 +115,27 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
               null &&
           Provider.of<HealthConditionProvider>(context, listen: false)
                   .allHealthIssuesData[0]
-                  .bodyPart
+                  .bodyPart!
                   .length >
               0) {
         var part = Provider.of<HealthConditionProvider>(context, listen: false)
             .allHealthIssuesData[0]
-            .bodyPart[0]
+            .bodyPart![0]
             .name;
         var side = sidesMap[int.parse(
             Provider.of<HealthConditionProvider>(context, listen: false)
                 .allHealthIssuesData[0]
-                .bodyPart[0]
-                .sides[0])];
+                .bodyPart![0]
+                .sides![0])];
 
         defaultBodyPart = side + ' ' + part;
       }
     }
-    if (widget.args['appointmentProblems'] != null) {
-      if (widget.args['appointmentProblems']['bodyPart'] != null &&
-          widget.args['appointmentProblems']['bodyPart'].length > 0) {
-        var part = widget.args['appointmentProblems']['bodyPart'][0]['name'];
-        var side = sidesMap[widget.args['appointmentProblems']['bodyPart'][0]
+    if (widget.args!['appointmentProblems'] != null) {
+      if (widget.args!['appointmentProblems']['bodyPart'] != null &&
+          widget.args!['appointmentProblems']['bodyPart'].length > 0) {
+        var part = widget.args!['appointmentProblems']['bodyPart'][0]['name'];
+        var side = sidesMap[widget.args!['appointmentProblems']['bodyPart'][0]
             ['sides'][0]];
 
         defaultBodyPart = side + ' ' + part;
@@ -143,12 +143,12 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
     }
     tabs = ['Recent', 'Archive', 'View all'];
     _tabController = TabController(length: tabs.length, vsync: this);
-    _tabController.addListener(_handleTabControllerTick);
+    _tabController!.addListener(_handleTabControllerTick);
   }
 
   void _handleTabControllerTick() {
     setState(() {
-      _currentIndex = _tabController.index;
+      _currentIndex = _tabController!.index;
     });
   }
 
@@ -176,22 +176,22 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
                 docsList.add(value['medicalDiagnostics'].last);
                 _selectedDocsList.add(docsList.last);
               } else {
-                if (widget.args['medicalDiagnostics'] != null &&
-                    widget.args['medicalDiagnostics'].length > 0) {
-                  for (dynamic img in widget.args['medicalDiagnostics']) {
+                if (widget.args!['medicalDiagnostics'] != null &&
+                    widget.args!['medicalDiagnostics'].length > 0) {
+                  for (dynamic img in widget.args!['medicalDiagnostics']) {
                     // img['isArchive'] = false;
                     docsList.add(img);
                     _selectedDocsList.add(img);
                   }
                   for (dynamic images in value['medicalDiagnostics']) {
                     if ((docsList.singleWhere(
-                            (img) => img['_id'] == images['_id'],
+                            (img) => img!['_id'] == images['_id'],
                             orElse: () => null)) !=
                         null) {
                       docsList.removeWhere(
-                          (element) => element['_id'] == images['_id']);
+                          (element) => element!['_id'] == images['_id']);
                       _selectedDocsList.removeWhere(
-                          (element) => element['_id'] == images['_id']);
+                          (element) => element!['_id'] == images['_id']);
                       // images['isArchive'] = false;
                       _selectedDocsList.add(images);
                       docsList.add(images);
@@ -291,11 +291,11 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
                       text,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          color: _tabController.index == index
+                          color: _tabController!.index == index
                               ? AppColors.windsor
                               : colorBlack2,
                           fontSize: fontSize14,
-                          fontWeight: _tabController.index == index
+                          fontWeight: _tabController!.index == index
                               ? fontWeightMedium
                               : fontWeightRegular),
                     )
@@ -308,8 +308,8 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
   }
 
   void showPickerDialog() {
-    showCommonUploadDialog(context, Localization.of(context).picker,
-        Localization.of(context).uploadDocument, onTop: () {
+    showCommonUploadDialog(context, Localization.of(context)!.picker,
+        Localization.of(context)!.uploadDocument, onTop: () {
       Navigator.pop(context);
       showImagePickerDialog();
     }, onBottom: () {
@@ -321,8 +321,8 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
   void showImagePickerDialog() {
     showCommonUploadDialog(
       context,
-      Localization.of(context).picker,
-      Localization.of(context).uploadPhoto,
+      Localization.of(context)!.picker,
+      Localization.of(context)!.uploadPhoto,
       onTop: () {
         getImage(1);
         Navigator.pop(context);
@@ -346,7 +346,7 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
                 color: Colors.black),
           ),
           subtitle: Text(
-            Localization.of(context).uploadFileLowerLabel,
+            Localization.of(context)!.uploadFileLowerLabel,
             style: TextStyle(
                 fontSize: fontSize12,
                 fontWeight: fontWeightRegular,
@@ -361,7 +361,7 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
         child: Align(
           alignment: Alignment.topLeft,
           child: Text(
-            Localization.of(context).uploadFilesHeader,
+            Localization.of(context)!.uploadFilesHeader,
             style: TextStyle(
                 fontSize: fontSize14,
                 fontWeight: fontWeightMedium,
@@ -396,11 +396,11 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
       ),
       shrinkWrap: true,
       itemBuilder: (BuildContext context, int index) {
-        String document = filteredImagesList[index]['image'];
+        String document = filteredImagesList[index]!['image'];
 
         if (!document.contains('data/')) {
           document =
-              ApiBaseHelper.imageUrl + filteredImagesList[index]['image'];
+              ApiBaseHelper.imageUrl + filteredImagesList[index]!['image'];
         }
         return Padding(
           padding: const EdgeInsets.all(spacing5),
@@ -517,7 +517,7 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              filteredImagesList[index]
+                              filteredImagesList[index]!
                                   [ArgumentConstant.nameKey],
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -529,7 +529,7 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              filteredImagesList[index]
+                              filteredImagesList[index]!
                                   [ArgumentConstant.typeKey],
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -541,7 +541,7 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              filteredImagesList[index]
+                              filteredImagesList[index]!
                                   [ArgumentConstant.dateKey],
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -595,7 +595,7 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
           child: TextWithImage(
             imageSpacing: spacing10,
             image: FileConstants.icUploadDocs,
-            label: Localization.of(context).uploadDocumentsLabel,
+            label: Localization.of(context)!.uploadDocumentsLabel,
             size: 18,
             textStyle: TextStyle(
                 color: AppColors.windsor,
@@ -664,7 +664,7 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
   Future getImage(int source) async {
     ImagePicker _picker = ImagePicker();
 
-    XFile image = await _picker.pickImage(
+    XFile? image = await _picker.pickImage(
         imageQuality: 25,
         source: (source == 1) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
@@ -700,13 +700,13 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
   }
 
   void getDocumentType() async {
-    FilePickerResult file = await FilePicker.platform.pickFiles(
+    FilePickerResult? file = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
     );
 
     if (file != null) {
-      uploadDocsBottomSheet(File(file.files.first.path));
+      uploadDocsBottomSheet(File(file.files.first.path!));
     }
   }
 
@@ -718,7 +718,7 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            Localization.of(context).documentLabel,
+            Localization.of(context)!.documentLabel,
             style: TextStyle(
               color: AppColors.midnight_express,
               fontSize: 16,
@@ -750,11 +750,11 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
             enabled: false,
             controller: documentTypeController,
             decoration:
-                getInputDecoration(Localization.of(context).whatKindOfDocLabel),
+                getInputDecoration(Localization.of(context)!.whatKindOfDocLabel),
           ).onClick(onTap: _documentTypeBottomDialog),
           SizedBox(height: spacing25),
           textField(
-            Localization.of(context).whatBodyPartLabel,
+            Localization.of(context)!.whatBodyPartLabel,
             documentName ?? '',
             (value) {
               documentName = value;
@@ -794,7 +794,7 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
                     ),
                     // highlightedBorderColor: AppColors.windsor,
                     child: Text(
-                      Localization.of(context).cancel,
+                      Localization.of(context)!.cancel,
                       style: TextStyle(
                           color: AppColors.windsor, fontSize: fontSize16),
                     ),
@@ -805,25 +805,25 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
               SizedBox(width: spacing16),
               Expanded(
                 child: FancyButton(
-                  title: Localization.of(context).upload,
+                  title: Localization.of(context)!.upload,
                   buttonColor: AppColors.windsor,
                   onPressed: () async {
                     if (documentTypeController.text == null ||
                         documentTypeController.text.isEmpty) {
-                      Widgets.showToast(Localization.of(context).errDocType);
+                      Widgets.showToast(Localization.of(context)!.errDocType);
                       return;
-                    } else if (documentName == null || documentName.isEmpty) {
-                      Widgets.showToast(Localization.of(context).errDocName);
+                    } else if (documentName == null || documentName!.isEmpty) {
+                      Widgets.showToast(Localization.of(context)!.errDocName);
                       return;
                     } else if (documentDateController.text == null ||
                         documentDateController.text.isEmpty) {
-                      Widgets.showToast(Localization.of(context).errDocDate);
+                      Widgets.showToast(Localization.of(context)!.errDocDate);
                       return;
                     } else {
                       Navigator.pop(context);
                       ProgressDialogUtils.showProgressDialog(context);
                       Map<String, String> fileMap = {};
-                      fileMap[ArgumentConstant.nameKey] = documentName;
+                      fileMap[ArgumentConstant.nameKey] = documentName!;
                       fileMap[ArgumentConstant.typeKey] =
                           documentTypeController.text;
                       fileMap[ArgumentConstant.dateKey] =
@@ -872,7 +872,7 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
 
   Widget textField(String label, String initVal, Function onChanged) {
     return TextFormField(
-      onChanged: onChanged,
+      onChanged: onChanged as void Function(String)?,
       initialValue: initVal,
       decoration: getInputDecoration(label),
     );
@@ -886,21 +886,21 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14.0),
         borderSide: BorderSide(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
           width: 0.5,
         ),
       ),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14.0),
         borderSide: BorderSide(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
           width: 0.5,
         ),
       ),
       disabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14.0),
         borderSide: BorderSide(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
           width: 0.5,
         ),
       ),
@@ -914,9 +914,9 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
         builder: (context) {
           return ListView.builder(
             shrinkWrap: true,
-            itemCount: _finalTestList.length,
+            itemCount: _finalTestList!.length,
             itemBuilder: (context, index) {
-              String docType = _finalTestList[index].name;
+              String docType = _finalTestList![index].name!;
               return ListTile(
                 title: Center(
                   child: Text(
@@ -944,16 +944,16 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
   }
 
   void _forwardButtonPressed(BuildContext context) {
-    if (widget.args['isEdit']) {
-      List<String> selectedTestsId = [];
+    if (widget.args!['isEdit']) {
+      List<String?> selectedTestsId = [];
       if (_selectedDocsList != null && _selectedDocsList.length > 0) {
         _selectedDocsList.forEach((element) {
-          selectedTestsId.add(MedicalImages.fromJson(element).sId);
+          selectedTestsId.add(MedicalImages.fromJson(element as Map<String, dynamic>).sId);
         });
       }
       Map<String, dynamic> model = {};
       model['medicalDiagnosticsTests'] = selectedTestsId;
-      model['appointmentId'] = widget.args['appointmentId'];
+      model['appointmentId'] = widget.args!['appointmentId'];
       setLoading(true);
       ApiManager().updateAppointmentData(model).then((value) {
         setLoading(false);
@@ -963,7 +963,7 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
       List<DiagnosticTest> selectedTestsModel = [];
       if (_selectedDocsList != null && _selectedDocsList.length > 0) {
         _selectedDocsList.forEach((element) {
-          selectedTestsModel.add(DiagnosticTest.fromJson(element));
+          selectedTestsModel.add(DiagnosticTest.fromJson(element as Map<String, dynamic>));
         });
       }
 

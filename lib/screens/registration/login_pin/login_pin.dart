@@ -45,7 +45,7 @@ class _LoginPinState extends State<LoginPin> {
   final LocalAuthentication auth = LocalAuthentication();
   final _canCheckBiometrics = ValueNotifier<bool>(false);
   // final _availableBiometrics = ValueNotifier<List<BiometricType>>(null);
-  String deviceToken;
+  String? deviceToken;
   dynamic primaryUser;
   @override
   void initState() {
@@ -126,11 +126,11 @@ class _LoginPinState extends State<LoginPin> {
       });
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(
-          context, Localization.of(context).commonErrorMsg);
+          context, Localization.of(context)!.commonErrorMsg);
     }
   }
 
@@ -141,7 +141,7 @@ class _LoginPinState extends State<LoginPin> {
     return Container(
       padding: const EdgeInsets.all(spacing10),
       child: HutanoPinInput(
-        width: SizeConfig.screenWidth / 1.7,
+        width: SizeConfig.screenWidth! / 1.7,
         pinCount: 4,
         controller: _otpController,
         onChanged: (text) {
@@ -166,9 +166,9 @@ class _LoginPinState extends State<LoginPin> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         HutanoHeaderInfo(
-          title: Localization.of(context).enterPin,
+          title: Localization.of(context)!.enterPin,
           subTitle:
-              Localization.of(context).msgEnterPin.format([widget.number]),
+              Localization.of(context)!.msgEnterPin.format([widget.number]),
         ),
       ],
     );
@@ -177,7 +177,7 @@ class _LoginPinState extends State<LoginPin> {
   Future<void> _authenticate() async {
     try {
       var authenticated = await auth.authenticate(
-          localizedReason: Localization.of(context).labelAuthWithFingerPrint,
+          localizedReason: Localization.of(context)!.labelAuthWithFingerPrint,
           options: const AuthenticationOptions(
             useErrorDialogs: true,
           ));
@@ -217,7 +217,7 @@ class _LoginPinState extends State<LoginPin> {
 
   Widget _buildHeaderLabel(BuildContext context) {
     return Text(
-      Localization.of(context).signInTitle,
+      Localization.of(context)!.signInTitle,
       style: const TextStyle(color: colorBlack85, fontSize: fontSize13),
     );
   }
@@ -226,7 +226,7 @@ class _LoginPinState extends State<LoginPin> {
     return FlatButton(
       onPressed: _onForgotPinClick,
       child: Text(
-        Localization.of(context).forgotPin,
+        Localization.of(context)!.forgotPin,
         style: const TextStyle(color: colorPurple, fontSize: fontSize13),
       ),
     );
@@ -237,13 +237,13 @@ class _LoginPinState extends State<LoginPin> {
       text: TextSpan(
         children: <TextSpan>[
           TextSpan(
-              text: Localization.of(context).signIn,
+              text: Localization.of(context)!.signIn,
               style: TextStyle(
                 color: colorBlack,
                 fontSize: fontSize14,
               )),
           TextSpan(
-            text: Localization.of(context).register,
+            text: Localization.of(context)!.register,
             style: TextStyle(color: colorYellow, fontSize: fontSize14),
             recognizer: _tapRecognizer..onTap = _onRegisterClick,
           )
@@ -275,7 +275,7 @@ class _LoginPinState extends State<LoginPin> {
                 HutanoButton(
                   margin: spacing10,
                   onPressed: _enableButton ? _onLoginClick : null,
-                  label: Localization.of(context).logIn,
+                  label: Localization.of(context)!.logIn,
                 ),
                 SizedBox(
                   height: spacing30,

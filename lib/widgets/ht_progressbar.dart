@@ -7,11 +7,11 @@ class HTProgressBar extends StatelessWidget {
   final int totalSteps;
   final int currentSteps;
   final double progressBarheight = 8;
-  final double spacing;
+  final double? spacing;
 
   const HTProgressBar({
-    @required this.totalSteps,
-    @required this.currentSteps,
+    required this.totalSteps,
+    required this.currentSteps,
     this.spacing
   });
 

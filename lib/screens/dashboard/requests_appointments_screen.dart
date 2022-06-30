@@ -10,7 +10,7 @@ import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/request_list_widget.dart';
 
 class RequestAppointmentsScreen extends StatefulWidget {
-  const RequestAppointmentsScreen({Key key}) : super(key: key);
+  const RequestAppointmentsScreen({Key? key}) : super(key: key);
 
   @override
   _RequestAppointmentsScreenState createState() =>
@@ -22,15 +22,15 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
 
   ApiBaseHelper api = ApiBaseHelper();
 
-  List<dynamic> _closedRequestsList = List();
-  List<dynamic> _activeRequestsList = List();
-  List<dynamic> ondemandAppointmentsList = List();
-  List<dynamic> followupRequestList = List();
+  List<dynamic> _closedRequestsList = [];
+  List<dynamic>? _activeRequestsList = [];
+  List<dynamic>? ondemandAppointmentsList = [];
+  List<dynamic>? followupRequestList = [];
   bool isLoading = false;
-  Future<dynamic> _requestsFuture;
-  InheritedContainerState _container;
+  Future<dynamic>? _requestsFuture;
+  late InheritedContainerState _container;
   var _userLocation = LatLng(0.00, 0.00);
-  String userToken;
+  String? userToken;
 
   @override
   void didChangeDependencies() {
@@ -103,10 +103,10 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
               _closedRequestsList
                   .addAll(snapshot.data["ondemandExpiredAppointments"]);
 
-              if (_activeRequestsList.length == 0 &&
+              if (_activeRequestsList!.length == 0 &&
                   _closedRequestsList.length == 0 &&
-                  followupRequestList.length == 0 &&
-                  ondemandAppointmentsList.length == 0)
+                  followupRequestList!.length == 0 &&
+                  ondemandAppointmentsList!.length == 0)
                 return Center(
                   child: Text("No Requests."),
                 );
@@ -118,18 +118,18 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          heading("FollowUp Requests", followupRequestList, 3),
-                          followupRequestList.isNotEmpty
-                              ? _listWidget(followupRequestList, 3)
+                          heading("FollowUp Requests", followupRequestList!, 3),
+                          followupRequestList!.isNotEmpty
+                              ? _listWidget(followupRequestList!, 3)
                               : Container(),
                           heading("On Demand Requests",
-                              ondemandAppointmentsList, 0),
-                          ondemandAppointmentsList.isNotEmpty
-                              ? _listWidget(ondemandAppointmentsList, 0)
+                              ondemandAppointmentsList!, 0),
+                          ondemandAppointmentsList!.isNotEmpty
+                              ? _listWidget(ondemandAppointmentsList!, 0)
                               : Container(),
-                          heading("Active Requests", _activeRequestsList, 1),
-                          _activeRequestsList.isNotEmpty
-                              ? _listWidget(_activeRequestsList, 1)
+                          heading("Active Requests", _activeRequestsList!, 1),
+                          _activeRequestsList!.isNotEmpty
+                              ? _listWidget(_activeRequestsList!, 1)
                               : Container(),
                           heading("Past Requests", _closedRequestsList, 2),
                           _closedRequestsList.isNotEmpty
@@ -144,7 +144,7 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
               return Text('No Requests.');
             }
         }
-        return null;
+        return SizedBox();
       },
     );
   }
@@ -181,14 +181,14 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
   }
 
   Widget _requestList(Map response, int listType) {
-    String name = "---", avatar, professionalTitle = '';
+    String? name = "---", avatar, professionalTitle = '';
 
     if (response["doctor"] != null) {
       if (response["isOndemand"]) {
         name = (response["doctor"][0]['title']?.toString() ?? 'Dr.') +
                 ' ' +
-                response["doctor"][0]["fullName"]?.toString() ??
-            "---";
+                (response["doctor"][0]["fullName"]?.toString() ??
+            "---");
         avatar = response["doctor"][0]["avatar"].toString();
         if (response['doctorData'] != null) {
           if (response['doctorData']["professionalTitle"] != null) {
@@ -199,17 +199,17 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
           }
           if (response['doctorData']["education"].isNotEmpty) {
             name += ' ' +
-                    response['doctorData']["education"][0]["degree"]
+                    (response['doctorData']["education"][0]["degree"]
                         ?.toString() ??
-                "---";
+                "---");
             ;
           }
         }
       } else if (response['isFollowUp']) {
         name = (response["doctor"]['title']?.toString() ?? 'Dr.') +
                 ' ' +
-                response["doctor"]["fullName"]?.toString() ??
-            "---";
+                (response["doctor"]["fullName"]?.toString() ??
+            "---");
         avatar = response["doctor"]["avatar"].toString();
         if (response['doctorData'] != null) {
           if (response['doctorData'][0]["professionalTitle"] != null) {
@@ -220,16 +220,16 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
           }
           if (response['doctorData'][0]["education"].isNotEmpty) {
             name += ' ' +
-                    response['doctorData'][0]["education"][0]["degree"]
+                    (response['doctorData'][0]["education"][0]["degree"]
                         ?.toString() ??
-                "---";
+                "---");
           }
         }
       } else {
         name = (response["doctor"]['title']?.toString() ?? 'Dr.') +
                 ' ' +
-                response["doctor"]["fullName"]?.toString() ??
-            "---";
+                (response["doctor"]["fullName"]?.toString() ??
+            "---");
         avatar = response["doctor"]["avatar"].toString();
         if (response['doctorData'] != null) {
           if (response['doctorData'][0]["professionalTitle"] != null) {
@@ -240,9 +240,9 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
           }
           if (response['doctorData'][0]["education"].isNotEmpty) {
             name += ' ' +
-                    response['doctorData'][0]["education"][0]["degree"]
+                    (response['doctorData'][0]["education"][0]["degree"]
                         ?.toString() ??
-                "---";
+                "---");
           }
         }
       }

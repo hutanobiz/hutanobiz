@@ -1,6 +1,6 @@
 class ResGetMedicationDetail {
-  String status;
-  Response response;
+  String? status;
+  Response? response;
 
   ResGetMedicationDetail({this.status, this.response});
 
@@ -15,24 +15,24 @@ class ResGetMedicationDetail {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     if (this.response != null) {
-      data['response'] = this.response.toJson();
+      data['response'] = this.response!.toJson();
     }
     return data;
   }
 }
 
 class Response {
-  String sId;
-  List<Medications> medications;
+  String? sId;
+  List<Medications>? medications;
 
   Response({this.sId, this.medications});
 
   Response.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     if (json['medications'] != null) {
-      medications = new List<Medications>();
+      medications = <Medications>[];
       json['medications'].forEach((v) {
-        medications.add(new Medications.fromJson(v));
+        medications!.add(new Medications.fromJson(v));
       });
     }
   }
@@ -41,19 +41,19 @@ class Response {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_id'] = this.sId;
     if (this.medications != null) {
-      data['medications'] = this.medications.map((v) => v.toJson()).toList();
+      data['medications'] = this.medications!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Medications {
-  String prescriptionId;
-  String name;
-  String dose;
-  String frequency;
-  String sId;
-  bool isSelected;
+  String? prescriptionId;
+  String? name;
+  String? dose;
+  String? frequency;
+  String? sId;
+  bool? isSelected;
 
   Medications(
       {this.prescriptionId, this.name, this.dose, this.frequency, this.sId});
@@ -78,8 +78,8 @@ class Medications {
 }
 
 class PatientMedicationResponseData {
-  String status;
-  PatientMedicationResponse response;
+  String? status;
+  PatientMedicationResponse? response;
 
   PatientMedicationResponseData({this.status, this.response});
 
@@ -94,18 +94,18 @@ class PatientMedicationResponseData {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     if (this.response != null) {
-      data['response'] = this.response.toJson();
+      data['response'] = this.response!.toJson();
     }
     return data;
   }
 }
 
 class PatientMedicationResponse {
-  int perPage;
-  int currentPage;
-  int totalPages;
-  int totalCount;
-  List<Data> data;
+  int? perPage;
+  int? currentPage;
+  int? totalPages;
+  int? totalCount;
+  List<Data>? data;
 
   PatientMedicationResponse(
       {this.perPage,
@@ -122,7 +122,7 @@ class PatientMedicationResponse {
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
-        data.add(new Data.fromJson(v));
+        data!.add(new Data.fromJson(v));
       });
     }
   }
@@ -134,28 +134,28 @@ class PatientMedicationResponse {
     data['totalPages'] = this.totalPages;
     data['totalCount'] = this.totalCount;
     if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Data {
-  User user;
-  Doctor doctor;
-  String appointment;
-  String prescriptionId;
-  PreviousRef previousRef;
-  String name;
-  String dose;
-  String frequency;
-  String providerReason;
-  int actionBy;
-  int status;
-  String sId;
-  String createdAt;
-  String updatedAt;
-  int iV;
+  User? user;
+  Doctor? doctor;
+  String? appointment;
+  String? prescriptionId;
+  PreviousRef? previousRef;
+  String? name;
+  String? dose;
+  String? frequency;
+  String? providerReason;
+  int? actionBy;
+  int? status;
+  String? sId;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
 
   Data(
       {this.user,
@@ -198,15 +198,15 @@ class Data {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.user != null) {
-      data['user'] = this.user.toJson();
+      data['user'] = this.user!.toJson();
     }
     if (this.doctor != null) {
-      data['doctor'] = this.doctor.toJson();
+      data['doctor'] = this.doctor!.toJson();
     }
     data['appointment'] = this.appointment;
     data['prescriptionId'] = this.prescriptionId;
     if (this.previousRef != null) {
-      data['previousRef'] = this.previousRef.toJson();
+      data['previousRef'] = this.previousRef!.toJson();
     }
     data['name'] = this.name;
     data['dose'] = this.dose;
@@ -223,46 +223,46 @@ class Data {
 }
 
 class User {
-  Location location;
-  String title;
-  String fullName;
-  String firstName;
-  String lastName;
-  String dob;
-  String address;
-  String addressTitle;
-  String addresstype;
-  String addressNumber;
-  String city;
-  String state;
-  String avatar;
-  int zipCode;
-  int phoneNumber;
-  int gender;
-  int genderType;
-  List<String> language;
-  String email;
-  int status;
-  bool isReferred;
-  int type;
-  String ssn;
-  String signature;
-  bool isOtpValid;
-  int wallet;
-  bool isResetPinOTPVerified;
+  Location? location;
+  String? title;
+  String? fullName;
+  String? firstName;
+  String? lastName;
+  String? dob;
+  String? address;
+  String? addressTitle;
+  String? addresstype;
+  String? addressNumber;
+  String? city;
+  String? state;
+  String? avatar;
+  int? zipCode;
+  int? phoneNumber;
+  int? gender;
+  int? genderType;
+  List<String>? language;
+  String? email;
+  int? status;
+  bool? isReferred;
+  int? type;
+  String? ssn;
+  String? signature;
+  bool? isOtpValid;
+  int? wallet;
+  bool? isResetPinOTPVerified;
 
-  String referredByUserId;
-  List<String> doctorTestAndMeasurePreference;
-  List<String> doctorTreatmentPreference;
-  String sId;
-  List<Insurance> insurance;
-  List<Tokens> tokens;
-  List<FamilyMembers> familyMembers;
+  String? referredByUserId;
+  List<String>? doctorTestAndMeasurePreference;
+  List<String>? doctorTreatmentPreference;
+  String? sId;
+  List<Insurance>? insurance;
+  List<Tokens>? tokens;
+  List<FamilyMembers>? familyMembers;
   // List<Null>? familyNetwork;
-  List<ProviderNetwork> providerNetwork;
-  String createdAt;
-  String updatedAt;
-  int iV;
+  List<ProviderNetwork>? providerNetwork;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
 
   User(
       {this.location,
@@ -328,7 +328,7 @@ class User {
     if (json['language'] != null) {
       language = <String>[];
       json['language'].forEach((v) {
-        language.add(v);
+        language!.add(v);
       });
     }
     email = json['email'];
@@ -343,32 +343,32 @@ class User {
     if (json['doctorTestAndMeasurePreference'] != null) {
       doctorTestAndMeasurePreference = <String>[];
       json['doctorTestAndMeasurePreference'].forEach((v) {
-        doctorTestAndMeasurePreference.add(v);
+        doctorTestAndMeasurePreference!.add(v);
       });
     }
     if (json['doctorTreatmentPreference'] != null) {
-      doctorTreatmentPreference = <Null>[];
+      doctorTreatmentPreference = [];
       json['doctorTreatmentPreference'].forEach((v) {
-        doctorTreatmentPreference.add(v);
+        doctorTreatmentPreference!.add(v);
       });
     }
     sId = json['_id'];
     if (json['insurance'] != null) {
       insurance = <Insurance>[];
       json['insurance'].forEach((v) {
-        insurance.add(new Insurance.fromJson(v));
+        insurance!.add(new Insurance.fromJson(v));
       });
     }
     if (json['tokens'] != null) {
       tokens = <Tokens>[];
       json['tokens'].forEach((v) {
-        tokens.add(new Tokens.fromJson(v));
+        tokens!.add(new Tokens.fromJson(v));
       });
     }
     if (json['familyMembers'] != null) {
       familyMembers = <FamilyMembers>[];
       json['familyMembers'].forEach((v) {
-        familyMembers.add(new FamilyMembers.fromJson(v));
+        familyMembers!.add(new FamilyMembers.fromJson(v));
       });
     }
     // if (json['familyNetwork'] != null) {
@@ -380,7 +380,7 @@ class User {
     if (json['providerNetwork'] != null) {
       providerNetwork = <ProviderNetwork>[];
       json['providerNetwork'].forEach((v) {
-        providerNetwork.add(new ProviderNetwork.fromJson(v));
+        providerNetwork!.add(new ProviderNetwork.fromJson(v));
       });
     }
     createdAt = json['createdAt'];
@@ -391,7 +391,7 @@ class User {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.location != null) {
-      data['location'] = this.location.toJson();
+      data['location'] = this.location!.toJson();
     }
     data['title'] = this.title;
     data['fullName'] = this.fullName;
@@ -410,7 +410,7 @@ class User {
     data['gender'] = this.gender;
     data['genderType'] = this.genderType;
     if (this.language != null) {
-      data['language'] = this.language.map((v) => v).toList();
+      data['language'] = this.language!.map((v) => v).toList();
     }
     data['email'] = this.email;
     data['status'] = this.status;
@@ -423,22 +423,22 @@ class User {
     data['referredByUserId'] = this.referredByUserId;
     if (this.doctorTestAndMeasurePreference != null) {
       data['doctorTestAndMeasurePreference'] =
-          this.doctorTestAndMeasurePreference.map((v) => v).toList();
+          this.doctorTestAndMeasurePreference!.map((v) => v).toList();
     }
     if (this.doctorTreatmentPreference != null) {
       data['doctorTreatmentPreference'] =
-          this.doctorTreatmentPreference.map((v) => v).toList();
+          this.doctorTreatmentPreference!.map((v) => v).toList();
     }
     data['_id'] = this.sId;
     if (this.insurance != null) {
-      data['insurance'] = this.insurance.map((v) => v.toJson()).toList();
+      data['insurance'] = this.insurance!.map((v) => v.toJson()).toList();
     }
     if (this.tokens != null) {
-      data['tokens'] = this.tokens.map((v) => v.toJson()).toList();
+      data['tokens'] = this.tokens!.map((v) => v.toJson()).toList();
     }
     if (this.familyMembers != null) {
       data['familyMembers'] =
-          this.familyMembers.map((v) => v.toJson()).toList();
+          this.familyMembers!.map((v) => v.toJson()).toList();
     }
     // if (this.familyNetwork != null) {
     //   data['familyNetwork'] =
@@ -446,7 +446,7 @@ class User {
     // }
     if (this.providerNetwork != null) {
       data['providerNetwork'] =
-          this.providerNetwork.map((v) => v.toJson()).toList();
+          this.providerNetwork!.map((v) => v.toJson()).toList();
     }
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
@@ -456,8 +456,8 @@ class User {
 }
 
 class Location {
-  String type;
-  List<int> coordinates;
+  String? type;
+  List<int>? coordinates;
 
   Location({this.type, this.coordinates});
 
@@ -475,16 +475,16 @@ class Location {
 }
 
 class Insurance {
-  String insuranceId;
-  String insuranceDocumentFront;
-  String insuranceDocumentBack;
-  bool isPrimary;
-  String sId;
-  String insuredMemberName;
-  String memberId;
-  String groupNumber;
-  String healthPlan;
-  String effectiveDate;
+  String? insuranceId;
+  String? insuranceDocumentFront;
+  String? insuranceDocumentBack;
+  bool? isPrimary;
+  String? sId;
+  String? insuredMemberName;
+  String? memberId;
+  String? groupNumber;
+  String? healthPlan;
+  String? effectiveDate;
 
   Insurance(
       {this.insuranceId,
@@ -528,9 +528,9 @@ class Insurance {
 }
 
 class Tokens {
-  String sId;
-  String access;
-  String token;
+  String? sId;
+  String? access;
+  String? token;
 
   Tokens({this.sId, this.access, this.token});
 
@@ -550,11 +550,11 @@ class Tokens {
 }
 
 class FamilyMembers {
-  String name;
-  String phone;
-  int relationId;
+  String? name;
+  String? phone;
+  int? relationId;
   // List<Null> userPermissions;
-  String sId;
+  String? sId;
 
   FamilyMembers({this.name, this.phone, this.relationId, this.sId});
 
@@ -578,9 +578,9 @@ class FamilyMembers {
 }
 
 class ProviderNetwork {
-  String groupName;
-  List<String> doctorId;
-  String sId;
+  String? groupName;
+  List<String>? doctorId;
+  String? sId;
 
   ProviderNetwork({this.groupName, this.doctorId, this.sId});
 
@@ -600,41 +600,41 @@ class ProviderNetwork {
 }
 
 class Doctor {
-  Location location;
-  String title;
-  String fullName;
-  String firstName;
-  String lastName;
-  String dob;
-  String address;
-  String addressTitle;
-  String addresstype;
-  String addressNumber;
-  String city;
-  String state;
-  String avatar;
-  int zipCode;
-  int phoneNumber;
-  int gender;
+  Location? location;
+  String? title;
+  String? fullName;
+  String? firstName;
+  String? lastName;
+  String? dob;
+  String? address;
+  String? addressTitle;
+  String? addresstype;
+  String? addressNumber;
+  String? city;
+  String? state;
+  String? avatar;
+  int? zipCode;
+  int? phoneNumber;
+  int? gender;
   // int? genderType;
-  List<String> language;
-  String email;
-  int status;
-  bool isReferred;
-  int type;
+  List<String>? language;
+  String? email;
+  int? status;
+  bool? isReferred;
+  int? type;
 
-  String ssn;
-  String signature;
-  bool isOtpValid;
-  int wallet;
+  String? ssn;
+  String? signature;
+  bool? isOtpValid;
+  int? wallet;
 
-  String referredByUserId;
+  String? referredByUserId;
 
-  String sId;
+  String? sId;
 
-  String createdAt;
-  String updatedAt;
-  int iV;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
 
   Doctor({
     this.location,
@@ -709,7 +709,7 @@ class Doctor {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.location != null) {
-      data['location'] = this.location.toJson();
+      data['location'] = this.location!.toJson();
     }
     data['title'] = this.title;
     data['fullName'] = this.fullName;
@@ -746,21 +746,21 @@ class Doctor {
 }
 
 class PreviousRef {
-  String user;
-  String doctor;
-  String appointment;
-  String prescriptionId;
-  String previousRef;
-  String name;
-  String dose;
-  String frequency;
-  String providerReason;
-  int actionBy;
-  int status;
-  String sId;
-  String createdAt;
-  String updatedAt;
-  int iV;
+  String? user;
+  String? doctor;
+  String? appointment;
+  String? prescriptionId;
+  String? previousRef;
+  String? name;
+  String? dose;
+  String? frequency;
+  String? providerReason;
+  int? actionBy;
+  int? status;
+  String? sId;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
 
   PreviousRef(
       {this.user,

@@ -1,6 +1,6 @@
 class ResInsuranceList {
-  String status;
-  List<Insurance> response;
+  String? status;
+  List<Insurance>? response;
 
   ResInsuranceList({this.status, this.response});
 
@@ -9,7 +9,7 @@ class ResInsuranceList {
     if (json['response'] != null) {
       response = <Insurance>[];
       json['response'].forEach((v) {
-        response.add(Insurance.fromJson(v));
+        response!.add(Insurance.fromJson(v));
       });
     }
   }
@@ -18,22 +18,22 @@ class ResInsuranceList {
     final data = <String, dynamic>{};
     data['status'] = status;
     if (response != null) {
-      data['response'] = response.map((v) => v.toJson()).toList();
+      data['response'] = response!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Insurance {
-  String title;
-  String image;
-  int status;
-  String sId;
+  String? title;
+  String? image;
+  int? status;
+  String? sId;
   bool isSelected = false;
 
   Insurance({this.title, this.image, this.status, this.sId});
 
-  Insurance.fromJson(Map<String, dynamic> json) {
+  Insurance.fromJson(Map<String, dynamic>? json) {
     if (json != null) {
       title = json['title'];
       image = json['image'];

@@ -27,14 +27,14 @@ import 'model/provider_network.dart';
 import 'model/req_add_provider.dart';
 
 class ProivderAddToNetwork extends StatefulWidget {
-  final String doctorName;
-  final String doctorId;
-  final String doctorAvatar;
-  final bool isOnBoarding;
+  final String? doctorName;
+  final String? doctorId;
+  final String? doctorAvatar;
+  final bool? isOnBoarding;
   final onCompleteRoute;
 
   const ProivderAddToNetwork(
-      {Key key,
+      {Key? key,
       this.doctorName,
       this.doctorId,
       this.doctorAvatar,
@@ -47,8 +47,8 @@ class ProivderAddToNetwork extends StatefulWidget {
 
 class _ProivderAddToNetworkState extends State<ProivderAddToNetwork> {
   bool _enableButton = false;
-  ProviderNetwork selectedGroup; //selected group index
-  List<ProviderNetwork> specialityList = <ProviderNetwork>[];
+  ProviderNetwork? selectedGroup; //selected group index
+  List<ProviderNetwork>? specialityList = <ProviderNetwork>[];
   @override
   void initState() {
     super.initState();
@@ -62,9 +62,9 @@ class _ProivderAddToNetworkState extends State<ProivderAddToNetwork> {
     try {
       var res = await ApiManager().getProviderGroups();
       ProgressDialogUtils.dismissProgressDialog();
-      if (res.response.data.providerNetwork != null) {
+      if (res.response!.data!.providerNetwork != null) {
         setState(() {
-          specialityList = res.response.data.providerNetwork;
+          specialityList = res.response!.data!.providerNetwork;
         });
       }
       // if (specialityList.length > 0) {
@@ -76,7 +76,7 @@ class _ProivderAddToNetworkState extends State<ProivderAddToNetwork> {
       // }
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -88,7 +88,7 @@ class _ProivderAddToNetworkState extends State<ProivderAddToNetwork> {
     final request = ReqAddProvider(
         doctorId: widget.doctorId,
         userId: getString(PreferenceKey.id),
-        groupId: selectedGroup.sId);
+        groupId: selectedGroup!.sId);
     try {
       var res = await ApiManager().addProviderNetwork(request);
       ProgressDialogUtils.dismissProgressDialog();
@@ -105,10 +105,10 @@ class _ProivderAddToNetworkState extends State<ProivderAddToNetwork> {
       Widgets.showAppDialog(
           context: context,
           description:
-              '${widget.doctorName} added to group ${selectedGroup.groupName}',
+              '${widget.doctorName} added to group ${selectedGroup!.groupName}',
           buttonText: 'Done',
           onPressed: () {
-            if (widget.isOnBoarding) {
+            if (widget.isOnBoarding!) {
               Navigator.pop(context);
               Navigator.pop(context,true);
               // Navigator.pop(context);
@@ -150,7 +150,7 @@ class _ProivderAddToNetworkState extends State<ProivderAddToNetwork> {
       //     });
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -174,20 +174,20 @@ class _ProivderAddToNetworkState extends State<ProivderAddToNetwork> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor:
-          widget.isOnBoarding ? AppColors.snow : AppColors.goldenTainoi,
+          widget.isOnBoarding! ? AppColors.snow : AppColors.goldenTainoi,
       body: LoadingBackgroundNew(
         isAddBack: widget.isOnBoarding,
-        addHeader: !widget.isOnBoarding,
-        isBackRequired: !widget.isOnBoarding,
+        addHeader: !widget.isOnBoarding!,
+        isBackRequired: !widget.isOnBoarding!,
         title: "",
-        isAddAppBar: !widget.isOnBoarding,
+        isAddAppBar: !widget.isOnBoarding!,
         addBottomArrows: false,
         padding: EdgeInsets.only(left: 20, right: 20, top: 0, bottom: 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widget.isOnBoarding ? CustomBackButton() : SizedBox(),
-            widget.isOnBoarding
+            widget.isOnBoarding! ? CustomBackButton() : SizedBox(),
+            widget.isOnBoarding!
                 ? AppHeader(
                     progressSteps: HutanoProgressSteps.four,
                   )
@@ -195,7 +195,7 @@ class _ProivderAddToNetworkState extends State<ProivderAddToNetwork> {
             _buildHeader(),
             SizedBox(height: spacing25),
             Text(
-              Localization.of(context).addToExistinGroup,
+              Localization.of(context)!.addToExistinGroup,
               style: const TextStyle(
                 color: colorBlack2,
                 fontSize: fontSize16,
@@ -212,7 +212,7 @@ class _ProivderAddToNetworkState extends State<ProivderAddToNetwork> {
               color: colorPurple,
               icon: FileConstants.icAddGroup,
               buttonType: HutanoButtonType.withPrefixIcon,
-              label: Localization.of(context).addCreateGroup,
+              label: Localization.of(context)!.addCreateGroup,
             ),
             SizedBox(height: spacing5),
             _buildBottomButtons(),
@@ -230,13 +230,13 @@ class _ProivderAddToNetworkState extends State<ProivderAddToNetwork> {
                 padding: EdgeInsets.symmetric(vertical: 8),
               ),
           shrinkWrap: true,
-          itemCount: specialityList.length,
+          itemCount: specialityList!.length,
           itemBuilder: (context, index) {
             return Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(10.0)),
                 border: Border.all(
-                  color: Colors.grey[300],
+                  color: Colors.grey[300]!,
                   width: 1.0,
                 ),
               ),
@@ -257,17 +257,17 @@ class _ProivderAddToNetworkState extends State<ProivderAddToNetwork> {
                     child: Container(
                       margin: const EdgeInsets.only(left: 10.0),
                       child: Text(
-                        specialityList[index].groupName,
+                        specialityList![index].groupName!,
                         style: const TextStyle(
                             color: colorBlack85, fontSize: fontSize14),
                       ),
                     ),
                   ),
                   Radio(
-                      value: specialityList[index],
+                      value: specialityList![index],
                       groupValue: selectedGroup,
                       activeColor: AppColors.windsor,
-                      onChanged: (val) {
+                      onChanged: (dynamic val) {
                         setState(() {
                           selectedGroup = val;
                           _enableButton = true;
@@ -316,7 +316,7 @@ class _ProivderAddToNetworkState extends State<ProivderAddToNetwork> {
         ),
         Flexible(
           child: Text(
-            Localization.of(context)
+            Localization.of(context)!
                 .addDoctorNetwork
                 .format([widget.doctorName]),
             softWrap: true,
@@ -336,7 +336,7 @@ class _ProivderAddToNetworkState extends State<ProivderAddToNetwork> {
           Flexible(
             flex: 1,
             child: HutanoButton(
-              label: Localization.of(context).add,
+              label: Localization.of(context)!.add,
               labelColor: colorBlack,
               onPressed: _enableButton ? _addToSelectedGroup : null,
             ),

@@ -32,16 +32,16 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UploadDocumentsScreen extends StatefulWidget {
-  UploadDocumentsScreen({Key key, this.isBottomButtonsShow}) : super(key: key);
+  UploadDocumentsScreen({Key? key, this.isBottomButtonsShow}) : super(key: key);
 
-  final Map isBottomButtonsShow;
+  final Map? isBottomButtonsShow;
 
   @override
   _UploadDocumentsScreenState createState() => _UploadDocumentsScreenState();
 }
 
 class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
-  List<Map> docsList = List();
+  List<Map?> docsList = [];
   List<String> _documentTypeList = [
     'X-Ray',
     'MRI',
@@ -53,9 +53,9 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
   ];
 
   bool _isLoading = false;
-  Map<String, String> filesPaths;
+  Map<String, String>? filesPaths;
 
-  String token;
+  String? token;
 
   ApiBaseHelper _api = ApiBaseHelper();
 
@@ -63,32 +63,32 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
   final documentDateController = TextEditingController();
 
   String documentName = '';
-  bool isBottomButtonsShow = true;
-  bool isFromAppointment = false;
-  List<Map> _selectedDocsList = [];
+  bool? isBottomButtonsShow = true;
+  bool? isFromAppointment = false;
+  List<Map?> _selectedDocsList = [];
 
   @override
   void initState() {
     super.initState();
 
     if (widget.isBottomButtonsShow != null) {
-      if (widget.isBottomButtonsShow['isBottomButtonsShow'] != null) {
-        isBottomButtonsShow = widget.isBottomButtonsShow['isBottomButtonsShow'];
+      if (widget.isBottomButtonsShow!['isBottomButtonsShow'] != null) {
+        isBottomButtonsShow = widget.isBottomButtonsShow!['isBottomButtonsShow'];
       }
-      if (widget.isBottomButtonsShow['isFromAppointment'] != null) {
-        isFromAppointment = widget.isBottomButtonsShow['isFromAppointment'];
+      if (widget.isBottomButtonsShow!['isFromAppointment'] != null) {
+        isFromAppointment = widget.isBottomButtonsShow!['isFromAppointment'];
       }
 
-      if (isFromAppointment) {
-        if (widget.isBottomButtonsShow['medicalDocuments'] != null &&
-            widget.isBottomButtonsShow['medicalDocuments'].length > 0) {
-          for (dynamic docs in widget.isBottomButtonsShow['medicalDocuments']) {
+      if (isFromAppointment!) {
+        if (widget.isBottomButtonsShow!['medicalDocuments'] != null &&
+            widget.isBottomButtonsShow!['medicalDocuments'].length > 0) {
+          for (dynamic docs in widget.isBottomButtonsShow!['medicalDocuments']) {
             docsList.add(docs);
           }
         }
       }
     }
-    if (!isFromAppointment) {
+    if (!isFromAppointment!) {
       setLoading(true);
       getMedicalDocuments();
     }
@@ -127,7 +127,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
           setState(() {
             if (value['medicalDocuments'] != null &&
                 value['medicalDocuments'].isNotEmpty) {
-              if (isBottomButtonsShow && isAdd) {
+              if (isBottomButtonsShow! && isAdd) {
                 docsList.add(value['medicalDocuments'].last);
               } else {
                 docsList.clear();
@@ -138,7 +138,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
             }
           });
 
-          if (isBottomButtonsShow && isAdd) {
+          if (isBottomButtonsShow! && isAdd) {
             setState(() {
               _selectedDocsList.add(docsList.last);
             });
@@ -155,7 +155,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor:
-            isBottomButtonsShow ? AppColors.goldenTainoi : Colors.white,
+            isBottomButtonsShow! ? AppColors.goldenTainoi : Colors.white,
         body: LoadingBackgroundNew(
             title: "",
             isAddAppBar: false,
@@ -173,7 +173,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
               List<MedicalDocuments> _selectedMedicalDocs = [];
               if (_selectedDocsList != null && _selectedDocsList.length > 0) {
                 _selectedDocsList.forEach((element) {
-                  _selectedMedicalDocs.add(MedicalDocuments.fromJson(element));
+                  _selectedMedicalDocs.add(MedicalDocuments.fromJson(element as Map<String, dynamic>));
                 });
                 Provider.of<HealthConditionProvider>(context, listen: false)
                     .updateDocuments(_selectedMedicalDocs);
@@ -182,14 +182,14 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
             },
             color: Colors.white,
             padding: EdgeInsets.fromLTRB(
-                0, 0, 0, isBottomButtonsShow ? spacing70 : spacing20),
+                0, 0, 0, isBottomButtonsShow! ? spacing70 : spacing20),
             child: ListView(
               children: widgetList(context),
             )));
   }
 
   List<Widget> widgetList(BuildContext context) {
-    List<Widget> formWidget = List();
+    List<Widget> formWidget = [];
     formWidget.add(SizedBox(height: spacing10));
     formWidget.add(_uploadMedicalDocumentsBanner(context));
     formWidget.add(SizedBox(height: spacing30));
@@ -205,11 +205,11 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
-          String document = docsList[index]['medicalDocuments'];
+          String document = docsList[index]!['medicalDocuments'];
 
           if (!document.contains('data/')) {
             document =
-                ApiBaseHelper.imageUrl + docsList[index]['medicalDocuments'];
+                ApiBaseHelper.imageUrl + docsList[index]!['medicalDocuments'];
           }
           return Padding(
             padding: const EdgeInsets.all(spacing5),
@@ -238,7 +238,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                                   width: 180.0,
                                   fit: BoxFit.cover,
                                 ))),
-                  isBottomButtonsShow
+                  isBottomButtonsShow!
                       ? Padding(
                           padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
                           child: Align(
@@ -267,7 +267,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                             ),
                           ),
                         )
-                      : isFromAppointment
+                      : isFromAppointment!
                           ? Container()
                           : Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -288,7 +288,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                                             _api
                                                 .deletePatientMedicalDocs(
                                               token,
-                                              docsList[index]['_id'],
+                                              docsList[index]!['_id'],
                                             )
                                                 .whenComplete(() {
                                               setLoading(false);
@@ -330,7 +330,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                             Align(
                               alignment: Alignment.topLeft,
                               child: Text(
-                                docsList[index][ArgumentConstant.nameKey],
+                                docsList[index]![ArgumentConstant.nameKey],
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     fontSize: fontSize14,
@@ -341,7 +341,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                             Align(
                               alignment: Alignment.topLeft,
                               child: Text(
-                                docsList[index][ArgumentConstant.typeKey],
+                                docsList[index]![ArgumentConstant.typeKey],
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     fontSize: fontSize12,
@@ -352,7 +352,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                             Align(
                               alignment: Alignment.topLeft,
                               child: Text(
-                                docsList[index][ArgumentConstant.dateKey],
+                                docsList[index]![ArgumentConstant.dateKey],
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     fontSize: fontSize12,
@@ -399,7 +399,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
       );
 
   Widget _uploadMedicalDocumentsBanner(BuildContext context) =>
-      (!isFromAppointment)
+      (!isFromAppointment!)
           ? ListTile(
               onTap: showPickerDialog,
               leading: CircleAvatar(
@@ -415,14 +415,14 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
               title: ListTile(
                 contentPadding: EdgeInsets.all(0),
                 title: Text(
-                  Localization.of(context).uploadMedicalDocsLabel,
+                  Localization.of(context)!.uploadMedicalDocsLabel,
                   style: TextStyle(
                       fontSize: fontSize15,
                       fontWeight: fontWeightSemiBold,
                       color: Colors.black),
                 ),
                 subtitle: Text(
-                  Localization.of(context).uploadMedicalDocsSubLabel,
+                  Localization.of(context)!.uploadMedicalDocsSubLabel,
                   style: TextStyle(
                       fontSize: fontSize12,
                       fontWeight: fontWeightRegular,
@@ -435,13 +435,13 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
           : SizedBox();
 
   void getDocumentType() async {
-    FilePickerResult file = await FilePicker.platform.pickFiles(
+    FilePickerResult? file = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
     );
 
     if (file != null) {
-      uploadDocsBottomSheet(File(file.files.first.path));
+      uploadDocsBottomSheet(File(file.files.first.path!));
     }
   }
 
@@ -628,7 +628,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
 
   Widget textField(String label, Function onChanged) {
     return TextField(
-      onChanged: onChanged,
+      onChanged: onChanged as void Function(String)?,
       decoration: getInputDecoration(label),
     );
   }
@@ -641,21 +641,21 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14.0),
         borderSide: BorderSide(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
           width: 0.5,
         ),
       ),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14.0),
         borderSide: BorderSide(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
           width: 0.5,
         ),
       ),
       disabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14.0),
         borderSide: BorderSide(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
           width: 0.5,
         ),
       ),
@@ -663,8 +663,8 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
   }
 
   void showPickerDialog() {
-    showCommonUploadDialog(context, Localization.of(context).picker,
-        Localization.of(context).uploadDocument, onTop: () {
+    showCommonUploadDialog(context, Localization.of(context)!.picker,
+        Localization.of(context)!.uploadDocument, onTop: () {
       Navigator.pop(context);
       showImagePickerDialog();
     }, onBottom: () {
@@ -676,8 +676,8 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
   void showImagePickerDialog() {
     showCommonUploadDialog(
       context,
-      Localization.of(context).picker,
-      Localization.of(context).uploadPhoto,
+      Localization.of(context)!.picker,
+      Localization.of(context)!.uploadPhoto,
       onTop: () {
         getImage(1);
         Navigator.pop(context);
@@ -692,7 +692,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
   Future getImage(int source) async {
     ImagePicker _picker = ImagePicker();
 
-     XFile image = await _picker.pickImage(
+     XFile? image = await _picker.pickImage(
         imageQuality: 25,
         source: (source == 1) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {

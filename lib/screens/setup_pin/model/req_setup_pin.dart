@@ -1,7 +1,7 @@
 class ReqSetupPin {
   String step;
   String id;
-  String pin;
+  String? pin;
 
   ReqSetupPin({this.step = '7', this.id = "", this.pin});
 

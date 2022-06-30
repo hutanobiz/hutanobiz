@@ -2,10 +2,10 @@ import 'dart:convert';
 import '../../provider_search/model/provider_detail_model.dart';
 
 class ProviderGroup {
-  final String image;
-  final String groupType;
-  final int count;
-  final List<ProviderDetail> list;
+  final String? image;
+  final String? groupType;
+  final int? count;
+  final List<ProviderDetail>? list;
   ProviderGroup({
     this.image,
     this.groupType,
@@ -14,10 +14,10 @@ class ProviderGroup {
   });
 
   ProviderGroup copyWith({
-    String image,
-    String groupType,
-    int count,
-    List<ProviderDetail> list,
+    String? image,
+    String? groupType,
+    int? count,
+    List<ProviderDetail>? list,
   }) {
     return ProviderGroup(
       image: image ?? this.image,
@@ -32,13 +32,11 @@ class ProviderGroup {
       'image': image,
       'groupType': groupType,
       'count': count,
-      'list': list?.map((x) => x?.toMap())?.toList(),
+      'list': list?.map((x) => x.toMap()).toList(),
     };
   }
 
   factory ProviderGroup.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
-
     return ProviderGroup(
       image: map['image'],
       groupType: map['groupType'],

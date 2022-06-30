@@ -5,15 +5,15 @@ import 'package:intl/intl.dart';
 
 class TrackingProviderWidget extends StatelessWidget {
   const TrackingProviderWidget({
-    Key key,
-    @required this.avatar,
-    @required this.name,
-    @required this.stringStatus,
-    @required this.appointment,
+    Key? key,
+    required this.avatar,
+    required this.name,
+    required this.stringStatus,
+    required this.appointment,
   }) : super(key: key);
 
-  final String avatar;
-  final String name;
+  final String? avatar;
+  final String? name;
   final String stringStatus;
   final dynamic appointment;
 
@@ -23,7 +23,7 @@ class TrackingProviderWidget extends StatelessWidget {
       padding: EdgeInsets.only(left: 12, bottom: 12),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.grey[300])),
+          border: Border.all(color: Colors.grey[300]!)),
       child: Column(
         children: [
           Row(
@@ -35,14 +35,14 @@ class TrackingProviderWidget extends StatelessWidget {
                 height: 56.0,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: avatar == null
+                    image: (avatar == null
                         ? AssetImage('images/profile_user.png')
-                        : NetworkImage(ApiBaseHelper.imageUrl + avatar),
+                        : NetworkImage(ApiBaseHelper.imageUrl + avatar!)) as ImageProvider<Object>,
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.all(Radius.circular(28.0)),
                   border: Border.all(
-                    color: Colors.grey[300],
+                    color: Colors.grey[300]!,
                     width: 1.0,
                   ),
                 ),
@@ -56,7 +56,7 @@ class TrackingProviderWidget extends StatelessWidget {
                     children: <Widget>[
                       SizedBox(height: 14.0),
                       Text(
-                        name,
+                        name!,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 14.0,

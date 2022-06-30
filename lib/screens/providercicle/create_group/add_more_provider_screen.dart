@@ -26,14 +26,14 @@ import '../../../widgets/hutano_textfield.dart';
 import '../provider_add_network/model/req_add_provider.dart';
 
 class AddMoreProviderScreen extends StatefulWidget {
-  final String groupName;
-  String doctorId;
-  String doctorName;
-  String doctorAvatar;
-  bool isOnBoarding;
+  final String? groupName;
+  String? doctorId;
+  String? doctorName;
+  String? doctorAvatar;
+  bool? isOnBoarding;
   final onCompleteRoute;
   AddMoreProviderScreen(
-      {Key key,
+      {Key? key,
       this.isOnBoarding,
       this.doctorAvatar,
       this.doctorName,
@@ -57,7 +57,7 @@ class _AddMoreProviderScreenState extends State<AddMoreProviderScreen> {
   }
 
   void _addMoreProviderTapped() {
-    if (widget.isOnBoarding) {
+    if (widget.isOnBoarding!) {
       Navigator.popUntil(
           context, ModalRoute.withName(Routes.myProviderNetwork));
     } else {
@@ -72,13 +72,13 @@ class _AddMoreProviderScreenState extends State<AddMoreProviderScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor:
-          widget.isOnBoarding ? AppColors.snow : AppColors.goldenTainoi,
+          widget.isOnBoarding! ? AppColors.snow : AppColors.goldenTainoi,
       body: LoadingBackgroundNew(
         isAddBack: widget.isOnBoarding,
-        addHeader: !widget.isOnBoarding,
-        isBackRequired: !widget.isOnBoarding,
+        addHeader: !widget.isOnBoarding!,
+        isBackRequired: !widget.isOnBoarding!,
         title: "",
-        isAddAppBar: !widget.isOnBoarding,
+        isAddAppBar: !widget.isOnBoarding!,
         addBottomArrows: widget.isOnBoarding,
         padding: EdgeInsets.only(left: 20, right: 20, top: 0, bottom: 0),
         onForwardTap: () {
@@ -89,8 +89,8 @@ class _AddMoreProviderScreenState extends State<AddMoreProviderScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widget.isOnBoarding ? CustomBackButton() : SizedBox(),
-            widget.isOnBoarding
+            widget.isOnBoarding! ? CustomBackButton() : SizedBox(),
+            widget.isOnBoarding!
                 ? AppHeader(
                     progressSteps: HutanoProgressSteps.four,
                   )
@@ -102,7 +102,7 @@ class _AddMoreProviderScreenState extends State<AddMoreProviderScreen> {
             Align(
               alignment: Alignment.center,
               child: HutanoButton(
-                width: SizeConfig.screenWidth / 1.5,
+                width: SizeConfig.screenWidth! / 1.5,
                 onPressed: _addMoreProviderTapped,
                 color: colorPurple,
                 icon: FileConstants.icAddGroup,
@@ -136,13 +136,13 @@ class _AddMoreProviderScreenState extends State<AddMoreProviderScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                widget.doctorName,
+                widget.doctorName!,
                 softWrap: true,
                 maxLines: 2,
                 style: const TextStyle(fontSize: fontSize16),
               ),
               Text(
-                widget.groupName,
+                widget.groupName!,
                 softWrap: true,
                 maxLines: 1,
                 style: const TextStyle(fontSize: fontSize16),

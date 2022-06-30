@@ -14,8 +14,8 @@ import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 class Chat extends StatefulWidget {
-  Chat({Key key, this.appointment}) : super(key: key);
-  SearchAppointment appointment;
+  Chat({Key? key, this.appointment}) : super(key: key);
+  SearchAppointment? appointment;
 
   @override
   ChatState createState() => ChatState();
@@ -25,7 +25,7 @@ class ChatState extends State<Chat> {
   bool sendButton = false;
 
   TextEditingController textEditingController = TextEditingController();
-  ScrollController scrollController;
+  ScrollController? scrollController;
 
   @override
   void initState() {
@@ -41,19 +41,19 @@ class ChatState extends State<Chat> {
   }
 
   getChatDetail() async {
-    var messageData = await ApiManager().getChatDetail(widget.appointment.sId);
+    var messageData = await ApiManager().getChatDetail(widget.appointment!.sId);
     try {
       Provider.of<ChatProvider>(context, listen: false)
-          .addAll(messageData.response.reversed.toList());
+          .addAll(messageData.response!.reversed.toList());
     } catch (e) {}
   }
 
   sendChatMessage() {
     sendMessage(Message(
-        sender: widget.appointment.user,
-        receiver: widget.appointment.doctor[0].sId,
+        sender: widget.appointment!.user,
+        receiver: widget.appointment!.doctor![0].sId,
         message: textEditingController.text,
-        appointmentId: widget.appointment.sId));
+        appointmentId: widget.appointment!.sId));
   }
 
   sendMessage(Message message) {
@@ -95,7 +95,7 @@ class ChatState extends State<Chat> {
                         return Container(height: 70);
                       }
                       if (todos.messages[index].sender ==
-                          widget.appointment.user) {
+                          widget.appointment!.user) {
                         return OwnMessageCard(
                             message: todos.messages[index].message,
                             time: todos.messages[index].createdAt,
@@ -121,7 +121,7 @@ class ChatState extends State<Chat> {
                   borderRadius: BorderRadius.all(
                     Radius.circular(14.0),
                   ),
-                  border: Border.all(color: Colors.grey[300]),
+                  border: Border.all(color: Colors.grey[300]!),
                 ),
                 height: 50,
                 child: Row(

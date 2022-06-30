@@ -1,15 +1,15 @@
 class ResSelectConditionModel {
-  String status;
-  List<SelectedCondition> response;
+  String? status;
+  List<SelectedCondition>? response;
 
   ResSelectConditionModel({this.status, this.response});
 
   ResSelectConditionModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     if (json['response'] != null) {
-      response = new List<SelectedCondition>();
+      response = <SelectedCondition>[];
       json['response'].forEach((v) {
-        response.add(new SelectedCondition.fromJson(v));
+        response!.add(new SelectedCondition.fromJson(v));
       });
     }
   }
@@ -18,27 +18,27 @@ class ResSelectConditionModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     if (this.response != null) {
-      data['response'] = this.response.map((v) => v.toJson()).toList();
+      data['response'] = this.response!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class SelectedCondition {
-  String name;
-  String subName;
-  String image;
-  List<String> symptoms;
-  List<String> problemBetter;
-  List<String> problemWorst;
-  String sId;
-  List<BodyPart> bodyPart;
-  String createdAt;
-  String updatedAt;
-  int hasBodyParts;
-  int hasSymptoms;
-  int hasRatings;
-  int iV;
+  String? name;
+  String? subName;
+  String? image;
+  List<String>? symptoms;
+  List<String>? problemBetter;
+  List<String>? problemWorst;
+  String? sId;
+  List<BodyPart>? bodyPart;
+  String? createdAt;
+  String? updatedAt;
+  int? hasBodyParts;
+  int? hasSymptoms;
+  int? hasRatings;
+  int? iV;
 
   SelectedCondition(
       {this.name,
@@ -65,9 +65,9 @@ class SelectedCondition {
     problemWorst = json['problemWorst'].cast<String>();
     sId = json['_id'];
     if (json['bodyPart'] != null) {
-      bodyPart = new List<BodyPart>();
+      bodyPart = <BodyPart>[];
       json['bodyPart'].forEach((v) {
-        bodyPart.add(new BodyPart.fromJson(v));
+        bodyPart!.add(new BodyPart.fromJson(v));
       });
     }
     createdAt = json['createdAt'];
@@ -88,7 +88,7 @@ class SelectedCondition {
     data['problemWorst'] = this.problemWorst;
     data['_id'] = this.sId;
     if (this.bodyPart != null) {
-      data['bodyPart'] = this.bodyPart.map((v) => v.toJson()).toList();
+      data['bodyPart'] = this.bodyPart!.map((v) => v.toJson()).toList();
     }
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
@@ -101,9 +101,9 @@ class SelectedCondition {
 }
 
 class BodyPart {
-  String name;
-  List<int> sides;
-  String sId;
+  String? name;
+  List<int>? sides;
+  String? sId;
 
   BodyPart({this.name, this.sides, this.sId});
 

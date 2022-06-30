@@ -41,15 +41,15 @@ class _AddCardCompleteState extends State<AddCardComplete> {
         ProgressDialogUtils.dismissProgressDialog();
         var response = value.response;
         List<MyCreditCard> list = [];
-        for (var i = 0; i < value.response.data.length; i++) {
+        for (var i = 0; i < value.response!.data!.length; i++) {
           list.add(MyCreditCard(
-              nameOnCard: response.data[i].billingDetails.name,
-              cardNumber: "**** **** ****" + response.data[i].card.last4,
-              expiryDate: response.data[i].card.expMonth.toString() +
+              nameOnCard: response!.data![i].billingDetails!.name,
+              cardNumber: "**** **** ****" + response.data![i].card!.last4!,
+              expiryDate: response.data![i].card!.expMonth.toString() +
                   "/" +
-                  response.data[i].card.expYear.toString(),
+                  response.data![i].card!.expYear.toString(),
               cvv: "",
-              type: getBrandType(response.data[i].card.brand)));
+              type: getBrandType(response.data![i].card!.brand)));
         }
         setState(() {
           cardList = list;
@@ -59,7 +59,7 @@ class _AddCardCompleteState extends State<AddCardComplete> {
       if (e is ErrorModel) {
         if (e.response != null) {
           ProgressDialogUtils.dismissProgressDialog();
-          DialogUtils.showAlertDialog(context, e.response);
+          DialogUtils.showAlertDialog(context, e.response!);
         }
       }
     });
@@ -77,8 +77,8 @@ class _AddCardCompleteState extends State<AddCardComplete> {
                 child: Column(children: [
                   AppHeader(
                     progressSteps: HutanoProgressSteps.two,
-                    title: Localization.of(context).paymentOptions,
-                    subTitle: Localization.of(context).creditCardAdded,
+                    title: Localization.of(context)!.paymentOptions,
+                    subTitle: Localization.of(context)!.creditCardAdded,
                   ),
                   SizedBox(
                     height: spacing40,
@@ -92,7 +92,7 @@ class _AddCardCompleteState extends State<AddCardComplete> {
                       imageSpacing: 13,
                       textStyle: TextStyle(
                           fontSize: fontSize15, fontWeight: fontWeightBold),
-                      label: Localization.of(context).creditCard,
+                      label: Localization.of(context)!.creditCard,
                       image: FileConstants.icCreditCard),
                   SizedBox(
                     height: spacing10,
@@ -138,7 +138,7 @@ class _AddCardCompleteState extends State<AddCardComplete> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    getCardIcon(cardList[index].type),
+                    getCardIcon(cardList[index].type)!,
                     SizedBox(width: spacing25),
                     Expanded(
                       child: Column(

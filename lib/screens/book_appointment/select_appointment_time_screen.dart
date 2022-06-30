@@ -22,10 +22,10 @@ import 'package:hutano/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 
 class SelectAppointmentTimeScreen extends StatefulWidget {
-  final SelectDateTimeArguments
+  final SelectDateTimeArguments?
       arguments; // fromScreen: 0-services,1-edit datetime,2-reschedule,3-followup Reschedule
 
-  const SelectAppointmentTimeScreen({Key key, this.arguments})
+  const SelectAppointmentTimeScreen({Key? key, this.arguments})
       : super(key: key);
 
   @override
@@ -35,31 +35,31 @@ class SelectAppointmentTimeScreen extends StatefulWidget {
 
 class _SelectAppointmentTimeScreenState
     extends State<SelectAppointmentTimeScreen> {
-  Map _providerData;
-  Future<List<Schedule>> _scheduleFuture;
+  late Map _providerData;
+  Future<List<Schedule>>? _scheduleFuture;
   ApiBaseHelper _apiBaseHelper = ApiBaseHelper();
   Map _dayDateMap = Map();
   String _timezone = 'Unknown';
-  List<Schedule> _morningList = List();
-  List<Schedule> _afternoonList = List();
-  List<Schedule> _eveningList = List();
+  List<Schedule> _morningList = [];
+  List<Schedule> _afternoonList = [];
+  List<Schedule> _eveningList = [];
 
-  List<Schedule> _scheduleList;
-  InheritedContainerState _container;
+  List<Schedule>? _scheduleList;
+  late InheritedContainerState _container;
 
-  String _selectedTiming;
-  DateTime _selectedDate, startDate;
-  Map profileMap = new Map();
-  String currentDate;
+  String? _selectedTiming;
+  DateTime? _selectedDate, startDate;
+  Map? profileMap = new Map();
+  String? currentDate;
   String averageRating = "0";
   dynamic selectedAddress;
   bool firstLoad = true;
   bool isAutoNextDay = false;
-  Future<dynamic> _addressFuture;
+  Future<dynamic>? _addressFuture;
   String providerId = '';
   List<int> _scheduleDaysList = [];
   int _initialDay = 1;
-  DateTime newDate;
+  DateTime? newDate;
   bool isLoading = false;
 
   @override
@@ -92,17 +92,17 @@ class _SelectAppointmentTimeScreenState
               "0";
 
       _providerData["providerData"]["data"].map((f) {
-        profileMap.addAll(f);
+        profileMap!.addAll(f);
       }).toList();
     } else {
       profileMap = _providerData["providerData"];
-      averageRating = profileMap["averageRating"]?.toStringAsFixed(1) ?? "0";
+      averageRating = profileMap!["averageRating"]?.toStringAsFixed(1) ?? "0";
     }
 
-    if (profileMap["userId"] != null && profileMap["userId"] is Map) {
-      providerId = profileMap["userId"]["_id"].toString();
-    } else if (profileMap["User"] != null is Map) {
-      providerId = profileMap["User"][0]["_id"].toString();
+    if (profileMap!["userId"] != null && profileMap!["userId"] is Map) {
+      providerId = profileMap!["userId"]["_id"].toString();
+    } else if (profileMap!["User"] != null is Map) {
+      providerId = profileMap!["User"][0]["_id"].toString();
     }
 
     if (_container.projectsResponse['serviceType'] == '1') {
@@ -147,7 +147,7 @@ class _SelectAppointmentTimeScreenState
                 DateTime.now().add(Duration(days: i + 1)).weekday.toString();
             _dayDateMap["date"] = DateFormat('MM/dd/yyyy')
                 .format(DateTime.now().add(Duration(days: i + 1)));
-            startDate = startDate.add(Duration(days: i + 1));
+            startDate = startDate!.add(Duration(days: i + 1));
             _selectedDate = startDate;
             break;
           }
@@ -190,15 +190,15 @@ class _SelectAppointmentTimeScreenState
         addBottomArrows: true,
         onForwardTap: () {
           if (_selectedDate != null && _selectedTiming != null) {
-            if (widget.arguments.fromScreen == 2 ||
-                widget.arguments.fromScreen == 3) {
+            if (widget.arguments!.fromScreen == 2 ||
+                widget.arguments!.fromScreen == 3) {
               setState(() {
                 isLoading = true;
               });
               var map = {};
-              map['appointmentId'] = widget.arguments.appointmentId;
+              map['appointmentId'] = widget.arguments!.appointmentId;
               map['date'] =
-                  DateFormat("MM/dd/yyyy").format(_selectedDate).toString();
+                  DateFormat("MM/dd/yyyy").format(_selectedDate!).toString();
               map['fromTime'] = _selectedTiming;
 
               SharedPref().getToken().then((token) {
@@ -206,7 +206,7 @@ class _SelectAppointmentTimeScreenState
                   setState(() {
                     isLoading = false;
                   });
-                  if (widget.arguments.fromScreen == 2) {
+                  if (widget.arguments!.fromScreen == 2) {
                     Widgets.showAppDialog(
                         context: context,
                         description: 'Appointment Rescheduled',
@@ -222,7 +222,7 @@ class _SelectAppointmentTimeScreenState
                     Navigator.pushNamed(context, Routes.paymentMethodScreen,
                         arguments: {
                           'paymentType': 3,
-                          'appointmentId': widget.arguments.appointmentId
+                          'appointmentId': widget.arguments!.appointmentId
                         });
                   }
                 }).futureError((onError) {
@@ -241,7 +241,7 @@ class _SelectAppointmentTimeScreenState
                 _container.setAppointmentData(
                     'selectedAddress', selectedAddress);
               }
-              if (widget.arguments.fromScreen == 1) {
+              if (widget.arguments!.fromScreen == 1) {
                 Navigator.pop(context, _container.appointmentData);
               } else {
                 Navigator.of(context).pushNamed(Routes.consentToTreatScreen);
@@ -262,8 +262,8 @@ class _SelectAppointmentTimeScreenState
   }
 
   void _getScheduleDaysList() {
-    if (profileMap['schedules'] != null && profileMap['schedules'].isNotEmpty) {
-      List scheduleList = profileMap['schedules'];
+    if (profileMap!['schedules'] != null && profileMap!['schedules'].isNotEmpty) {
+      List scheduleList = profileMap!['schedules'];
 
       for (dynamic schedule in scheduleList) {
         if (_container.projectsResponse['serviceType'] ==
@@ -300,7 +300,7 @@ class _SelectAppointmentTimeScreenState
                           children: [
                             Flexible(
                               child: Text(
-                                Localization.of(context).onDemandServiceLabel,
+                                Localization.of(context)!.onDemandServiceLabel,
                                 style: TextStyle(
                                     fontSize: fontSize14,
                                     fontWeight: fontWeightSemiBold),
@@ -312,7 +312,7 @@ class _SelectAppointmentTimeScreenState
                           ],
                         ),
                       ),
-                      Text(Localization.of(context).activeLabel,
+                      Text(Localization.of(context)!.activeLabel,
                           style: TextStyle(
                               fontSize: fontSize14,
                               fontWeight: fontWeightMedium,
@@ -328,12 +328,12 @@ class _SelectAppointmentTimeScreenState
                       borderRadius: BorderRadius.all(
                         Radius.circular(14.0),
                       ),
-                      border: Border.all(color: Colors.grey[300]),
+                      border: Border.all(color: Colors.grey[300]!),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text(Localization.of(context).instantAppointmentLabel,
+                        Text(Localization.of(context)!.instantAppointmentLabel,
                             style: TextStyle(
                                 color: colorPurple100,
                                 fontSize: fontSize13,
@@ -356,7 +356,7 @@ class _SelectAppointmentTimeScreenState
                             'officeId', selectedAddress['_id']);
                         _container.setAppointmentData(
                             'selectedAddress', selectedAddress);
-                        if (widget.arguments.fromScreen == 1) {
+                        if (widget.arguments!.fromScreen == 1) {
                           Navigator.pop(context, _container.appointmentData);
                         } else {
                           Navigator.of(context)
@@ -366,7 +366,7 @@ class _SelectAppointmentTimeScreenState
                         Widgets.showToast("Please select address");
                       }
                     } else {
-                      if (widget.arguments.fromScreen == 1) {
+                      if (widget.arguments!.fromScreen == 1) {
                         Navigator.pop(context, _container.appointmentData);
                       } else {
                         Navigator.of(context)
@@ -382,7 +382,7 @@ class _SelectAppointmentTimeScreenState
   }
 
   List<Widget> noScheduleAdded() {
-    List<Widget> formWidget = new List();
+    List<Widget> formWidget = [];
 
     formWidget.add(onDemandWidget());
 
@@ -396,10 +396,10 @@ class _SelectAppointmentTimeScreenState
   List<Widget> widgetList() {
     String providerId = '';
 
-    if (profileMap["userId"] != null && profileMap["userId"] is Map) {
-      providerId = profileMap["userId"]["_id"].toString();
-    } else if (profileMap["User"] != null is Map) {
-      providerId = profileMap["User"][0]["_id"].toString();
+    if (profileMap!["userId"] != null && profileMap!["userId"] is Map) {
+      providerId = profileMap!["userId"]["_id"].toString();
+    } else if (profileMap!["User"] != null is Map) {
+      providerId = profileMap!["User"][0]["_id"].toString();
     }
     double servicesPrize = 0.0;
     if (_container.selectServiceMap['status'] == '1') {
@@ -410,7 +410,7 @@ class _SelectAppointmentTimeScreenState
       }
     }
 
-    List<Widget> formWidget = new List();
+    List<Widget> formWidget = [];
 
     formWidget.add(ProviderWidget(
       data: profileMap,
@@ -459,7 +459,7 @@ class _SelectAppointmentTimeScreenState
                 _afternoonList.clear();
                 _scheduleList = snapshot.data;
 
-                for (Schedule schedule in _scheduleList) {
+                for (Schedule schedule in _scheduleList!) {
                   var fromTime = new DateTime.utc(
                       int.parse(_dayDateMap["date"].split('/')[2]),
                       int.parse(_dayDateMap["date"].split('/')[0]),
@@ -590,14 +590,14 @@ class _SelectAppointmentTimeScreenState
                 int.parse(_dayDateMap["date"].split('/')[0]),
                 int.parse(_dayDateMap["date"].split('/')[1]))
             .add(Duration(days: i + 1)));
-        startDate = startDate.add(Duration(days: i + 1));
+        startDate = startDate!.add(Duration(days: i + 1));
         _selectedDate = startDate;
         break;
       }
     }
-    _dayDateMap["day"] = _selectedDate.weekday.toString();
+    _dayDateMap["day"] = _selectedDate!.weekday.toString();
     _dayDateMap["date"] =
-        DateFormat("MM/dd/yyyy").format(_selectedDate).toString();
+        DateFormat("MM/dd/yyyy").format(_selectedDate!).toString();
     _apiBaseHelper
         .getScheduleList(
       providerId,
@@ -687,7 +687,7 @@ class _SelectAppointmentTimeScreenState
               if (snapshot.data == null) {
                 return Container();
               }
-              List _addressList = snapshot.data;
+              List? _addressList = snapshot.data;
               if (_addressList == null || _addressList.isEmpty) {
                 return Container();
               } else {
@@ -749,7 +749,7 @@ class _SelectAppointmentTimeScreenState
                                     color:
                                         selectedAddress == _addressList[index]
                                             ? AppColors.windsor
-                                            : Colors.grey[300],
+                                            : Colors.grey[300]!,
                                     width: 0.5),
                               ),
                               child: Column(
@@ -875,10 +875,10 @@ class _SelectAppointmentTimeScreenState
         .toLowerCase();
 
     return InkWell(
-      onTap: currentSchedule.isBlock
+      onTap: currentSchedule.isBlock!
           ? null
           : () {
-              _scheduleList.forEach((f) => f.isSelected = false);
+              _scheduleList!.forEach((f) => f.isSelected = false);
 
               currentSchedule.isSelected = true;
               _selectedTiming = currentSchedule.startTime.toString();
@@ -889,24 +889,24 @@ class _SelectAppointmentTimeScreenState
         margin: const EdgeInsets.only(right: 14.0),
         padding: const EdgeInsets.symmetric(horizontal: 12.0),
         decoration: BoxDecoration(
-          color: currentSchedule.isBlock
+          color: currentSchedule.isBlock!
               ? Colors.grey.withOpacity(0.05)
               : currentSchedule.isSelected
                   ? AppColors.goldenTainoi
                   : AppColors.snow,
           borderRadius: BorderRadius.all(Radius.circular(14.0)),
           border: Border.all(
-              color: currentSchedule.isBlock
+              color: currentSchedule.isBlock!
                   ? Colors.grey.withOpacity(0.05)
                   : (currentSchedule.isSelected
                       ? AppColors.windsor
-                      : Colors.grey[300]),
+                      : Colors.grey[300]!),
               width: 0.5),
         ),
         child: Text(
           timing,
           style: TextStyle(
-            color: currentSchedule.isBlock
+            color: currentSchedule.isBlock!
                 ? Colors.grey.withOpacity(0.6)
                 : currentSchedule.isSelected
                     ? AppColors.windsor

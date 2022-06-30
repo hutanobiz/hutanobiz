@@ -9,12 +9,12 @@ import 'package:hutano/widgets/hutano_textfield.dart';
 import 'package:hutano/widgets/list_picker.dart';
 
 class InsuranceList extends StatefulWidget {
-  final TextEditingController controller;
-  final List<Insurance> insuranceList;
-  final Function onInsuranceSelected;
+  final TextEditingController? controller;
+  final List<Insurance>? insuranceList;
+  final Function? onInsuranceSelected;
 
   const InsuranceList({
-    Key key,
+    Key? key,
     this.controller,
     this.insuranceList,
     this.onInsuranceSelected,
@@ -28,17 +28,17 @@ class _InsuranceListState extends State<InsuranceList> {
     showDropDownSheet(
         list: ListView.builder(
           shrinkWrap: true,
-          itemCount: widget.insuranceList.length,
+          itemCount: widget.insuranceList!.length,
           itemBuilder: (context, pos) {
             return InkWell(
                 onTap: () {
-                  widget.onInsuranceSelected(pos);
+                  widget.onInsuranceSelected!(pos);
                   Navigator.pop(context);
                 },
                 child: ListTile(
                   title: Center(
                     child: Text(
-                      widget.insuranceList[pos].title,
+                      widget.insuranceList![pos].title!,
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -70,7 +70,7 @@ class _InsuranceListState extends State<InsuranceList> {
               suffixIconConstraints: BoxConstraints(),
               suffixIcon: GestureDetector(
                 onTap: () {
-                  widget.controller.text = "";
+                  widget.controller!.text = "";
                 },
                 child: Padding(
                   padding: EdgeInsets.all(14.0),
@@ -104,7 +104,7 @@ class _InsuranceListState extends State<InsuranceList> {
       errorBuilder: (_, object) {
         return Container();
       },
-      itemBuilder: (context, suggestion) {
+      itemBuilder: (context, dynamic suggestion) {
         return ListTile(
           title: Text(suggestion.title),
         );
@@ -112,8 +112,8 @@ class _InsuranceListState extends State<InsuranceList> {
       transitionBuilder: (context, suggestionsBox, controller) {
         return suggestionsBox;
       },
-      onSuggestionSelected: (suggestion) {
-        widget.onInsuranceSelected(suggestion.title, suggestion.sId);
+      onSuggestionSelected: (dynamic suggestion) {
+        widget.onInsuranceSelected!(suggestion.title, suggestion.sId);
         // widget.controller.text = suggestion.title;
       },
       hideOnError: true,
@@ -123,9 +123,9 @@ class _InsuranceListState extends State<InsuranceList> {
   }
 
   _getFilteredInsuranceList() {
-    return widget.insuranceList.where((element) => element.title
+    return widget.insuranceList!.where((element) => element.title!
         .toLowerCase()
-        .contains(widget.controller.text.toLowerCase()));
+        .contains(widget.controller!.text.toLowerCase()));
   }
 
   Widget _getEmailTextField() {

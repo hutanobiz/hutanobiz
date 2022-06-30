@@ -28,7 +28,7 @@ class AppoinmentService {
       );
       return ResDiseases.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -37,7 +37,7 @@ class AppoinmentService {
       final response = await ApiService().get(apiSymptoms, params: model);
       return ResSymptoms.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -49,7 +49,7 @@ class AppoinmentService {
       );
       return ResMedicine.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -59,12 +59,12 @@ class AppoinmentService {
           await ApiService().post(apiCreateAppoinment, data: request.toJson());
       return ResAppoinment.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
   Future<CommonRes> uploadDocument(
-      File file, String type, String appointmentid) async {
+      File file, String? type, String appointmentid) async {
     final fileName = file.path.split('/').last;
     final formData = FormData.fromMap({
       "medicalDocuments": await MultipartFile.fromFile(
@@ -82,12 +82,12 @@ class AppoinmentService {
       );
       return CommonRes.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
   Future<ResDocumentList> documentListing(
-      {String appoitmetid, int page, int limit}) async {
+      {String? appoitmetid, int? page, int? limit}) async {
     try {
       final response = await ApiService().post(
         apiDocumentList,
@@ -101,7 +101,7 @@ class AppoinmentService {
       );
       return ResDocumentList.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 }

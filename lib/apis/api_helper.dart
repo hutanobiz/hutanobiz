@@ -220,9 +220,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> profile(String token, Map map) {
+  Future<dynamic> profile(String? token, Map map) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
       HttpHeaders.contentTypeHeader: "application/json"
     };
 
@@ -234,9 +234,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> getPatientCard(String token) {
+  Future<dynamic> getPatientCard(String? token) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     return _netUtil
         .get(
@@ -248,9 +248,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> getConsentContent(String token) {
+  Future<dynamic> getConsentContent(String? token) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     return _netUtil
         .get(
@@ -262,9 +262,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> deletePharmacy(String token, String pharmacyId) {
+  Future<dynamic> deletePharmacy(String? token, String? pharmacyId) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     return _netUtil
         .get(
@@ -277,9 +277,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> getSetupIntent(BuildContext context, String token) {
+  Future<dynamic> getSetupIntent(BuildContext context, String? token) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     return _netUtil
         .get(
@@ -291,9 +291,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> emailVerfication(String token, Map map) {
+  Future<dynamic> emailVerfication(String? token, Map map) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
       HttpHeaders.contentTypeHeader: "application/json"
     };
 
@@ -306,9 +306,9 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> bookAppointment2(
-      BuildContext context, String token, Map map) {
+      BuildContext context, String? token, Map map) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
       HttpHeaders.contentTypeHeader: "application/json"
     };
     return _netUtil
@@ -350,9 +350,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> bookAppointment(String token, Map appointmentData) {
+  Future<dynamic> bookAppointment(String? token, Map appointmentData) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -372,9 +372,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> appointmentRequests(String token, LatLng latLng) {
+  Future<dynamic> appointmentRequests(String? token, LatLng latLng) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 // user-notification
     return _netUtil
@@ -389,9 +389,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> userAppointments(String token, LatLng latLng) {
+  Future<dynamic> userAppointments(String? token, LatLng latLng) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -406,7 +406,7 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> getProviderProfile(String providerId, Map locMap) {
+  Future<dynamic> getProviderProfile(String? providerId, Map locMap) {
     return _netUtil
         .get(
       Uri.encodeFull(
@@ -420,9 +420,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> getProviderAddress(String token, String providerId) {
+  Future<dynamic> getProviderAddress(String? token, String providerId) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     return _netUtil
         .get(
@@ -437,7 +437,7 @@ class ApiBaseHelper {
 
   Future<Map> getUnreadNotifications(BuildContext context, token) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     return _netUtil
         .get(base_url + "api/patient/unread-notification-list",
@@ -490,7 +490,7 @@ class ApiBaseHelper {
 
   Future<List<dynamic>> getStripeStatements(BuildContext context, token) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     return _netUtil
         .get(base_url + "api/patient/stripe-statements", headers: headers)
@@ -501,9 +501,9 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getAppointmentDetails(
-      String token, String providerId, LatLng latLng) {
+      String? token, String? providerId, LatLng latLng) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     return _netUtil
         .get(
@@ -520,9 +520,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> getGraphData(String token, String key, String date) {
+  Future<dynamic> getGraphData(String? token, String key, String date) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     return _netUtil
         .get(
@@ -536,9 +536,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> postGraphData(String token, Map graphData) {
+  Future<dynamic> postGraphData(String? token, Map graphData) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -549,9 +549,9 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getChatAppointmentDetails(
-      String token, String appointmentId) {
+      String? token, String? appointmentId) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     return _netUtil
         .get(
@@ -564,9 +564,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> rescheduleAppointment(String token, Map map) {
+  Future<dynamic> rescheduleAppointment(String? token, Map map) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
       HttpHeaders.contentTypeHeader: "application/json"
     };
 
@@ -579,9 +579,9 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> postPayment(
-      String token, String appointmentId, Map paymentMap) {
+      String? token, String appointmentId, Map paymentMap) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     return _netUtil
         .post(
@@ -595,9 +595,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> rateDoctor(String token, Map rateDoctorData) {
+  Future<dynamic> rateDoctor(String? token, Map rateDoctorData) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -608,9 +608,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> patientAvailableForCall(String token, Map appointmentId) {
+  Future<dynamic> patientAvailableForCall(String? token, Map appointmentId) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -621,9 +621,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> cancelRequest(String token, Map rateDoctorData) {
+  Future<dynamic> cancelRequest(String? token, Map rateDoctorData) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -640,9 +640,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> getLastAppointmentDetails(String token) {
+  Future<dynamic> getLastAppointmentDetails(String? token) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     return _netUtil
         .get(
@@ -654,9 +654,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> getUserDetails(String token) {
+  Future<dynamic> getUserDetails(String? token) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     return _netUtil
         .get(
@@ -689,9 +689,9 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> updateAppointmentCoordinates(
-      String token, Map locationMap, String appointmentId) {
+      String? token, Map locationMap, String? appointmentId) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -706,9 +706,9 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> appointmentTrackingStatus(
-      String token, Map rateDoctorData, String appointmentId) {
+      String? token, Map rateDoctorData, String appointmentId) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     return _netUtil
         .post(base_url + "api/appointment-tracking-status/" + appointmentId,
@@ -719,9 +719,9 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> onsiteAppointmentTrackingStatus(
-      String token, Map rateDoctorData, String appointmentId) {
+      String? token, Map rateDoctorData, String appointmentId) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     return _netUtil
         .post(
@@ -735,9 +735,9 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> updateAppointmentData(
-      String token, Map<String, dynamic> rateDoctorData) {
+      String? token, Map<String, dynamic> rateDoctorData) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     return _netUtil
         .post(
@@ -750,9 +750,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> deleteinsurance(String token, String insuranceId) {
+  Future<dynamic> deleteinsurance(String? token, String? insuranceId) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     Map insuranceMap = {};
@@ -769,9 +769,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> insuranceRemove(String token, String insuranceId) {
+  Future<dynamic> insuranceRemove(String? token, String? insuranceId) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     return _netUtil
         .post(
@@ -784,9 +784,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> deleteStripeCard(String token, String cardId) {
+  Future<dynamic> deleteStripeCard(String? token, String? cardId) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     return _netUtil
         .post(
@@ -799,9 +799,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> providerFilter(String token, Map filterMap) {
+  Future<dynamic> providerFilter(String? token, Map filterMap) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -827,9 +827,9 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getAppointmentRecordings(
-      BuildContext context, String token, String appointmentId) {
+      BuildContext context, String? token, String? appointmentId) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
       HttpHeaders.contentTypeHeader: "application/json"
     };
     return _netUtil
@@ -843,7 +843,7 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> multipartPost(String url, String token,
+  Future<dynamic> multipartPost(String url, String? token,
       Map<String, String> fileMap, List<MultipartFile> files) {
     return _netUtil
         .multipartPost(
@@ -857,9 +857,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<String> deletePatientImage(String token, String imageId) {
+  Future<String> deletePatientImage(String? token, String? imageId) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     Map imageNameMap = {};
@@ -876,9 +876,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<String> deletePatientMedicalDocs(String token, String medicalDocId) {
+  Future<String> deletePatientMedicalDocs(String? token, String? medicalDocId) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     Map medicalDocumentMap = {};
@@ -895,9 +895,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> getPatientDocuments(String token) {
+  Future<dynamic> getPatientDocuments(String? token) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     return _netUtil
         .get(
@@ -915,9 +915,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<String> sendPatientMedicalHistory(String token, Map diseaseMap) {
+  Future<String> sendPatientMedicalHistory(String? token, Map diseaseMap) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -931,9 +931,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<String> deletePatientMedicalHistory(String token, String diseaseId) {
+  Future<String> deletePatientMedicalHistory(String? token, String? diseaseId) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     Map diseaseMap = {};
@@ -950,9 +950,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<String> deletePatientAllergyHistory(String token, String allergyId) {
+  Future<String> deletePatientAllergyHistory(String? token, String? allergyId) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     Map diseaseMap = {};
@@ -981,9 +981,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<List<dynamic>> getMyDoctors(String token, LatLng latLng) {
+  Future<List<dynamic>> getMyDoctors(String? token, LatLng latLng) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -999,9 +999,9 @@ class ApiBaseHelper {
   }
 
   Future<List<dynamic>> getOnDemandDoctors(
-      String token, LatLng latLng, String radius, String timeZone) {
+      String? token, LatLng latLng, String? radius, String timeZone) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -1016,9 +1016,9 @@ class ApiBaseHelper {
   }
 
   Future<List<dynamic>> getSavedDoctors(
-      String token, LatLng latLng, String radius) {
+      String? token, LatLng latLng, String radius) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -1032,7 +1032,7 @@ class ApiBaseHelper {
     });
   }
 
-  Future<List<dynamic>> getServices({String specialityId}) {
+  Future<List<dynamic>> getServices({String? specialityId}) {
     return _netUtil
         .get(
       base_url + "api/services?id=$specialityId",
@@ -1059,9 +1059,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<List<dynamic>> getAddress(String token) {
+  Future<List<dynamic>> getAddress(String? token) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     return _netUtil
         .get(
@@ -1073,12 +1073,12 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> deleteAddress(String token, String id) {
+  Future<dynamic> deleteAddress(String? token, String id) {
     Map _map = {};
     _map['id'] = id;
 
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     return _netUtil
         .post(
@@ -1091,9 +1091,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> addAddress(String token, Map addressMap) {
+  Future<dynamic> addAddress(String? token, Map addressMap) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
       HttpHeaders.contentTypeHeader: "application/json"
     };
     return _netUtil
@@ -1107,9 +1107,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> editAddress(String token, Map addressMap) {
+  Future<dynamic> editAddress(String? token, Map addressMap) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
       HttpHeaders.contentTypeHeader: "application/json"
     };
     return _netUtil
@@ -1123,9 +1123,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> logOUt(String token, String deviceToken) {
+  Future<dynamic> logOUt(String? token, String deviceToken) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     Map map = {};
@@ -1142,9 +1142,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> cancelAppointment(String token, Map appointmentData) {
+  Future<dynamic> cancelAppointment(String? token, Map appointmentData) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -1158,9 +1158,10 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> cancelCallEndNotification(String token, Map appointmentData) {
+  Future<dynamic> cancelCallEndNotification(
+      String? token, Map appointmentData) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -1176,7 +1177,7 @@ class ApiBaseHelper {
 
   Future<List<dynamic>> getReviewReasons(token) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     return _netUtil
         .get(
@@ -1190,10 +1191,10 @@ class ApiBaseHelper {
 
   Future<ResGetMyInsurance> getPatientInsurance(
     BuildContext context,
-    String token,
+    String? token,
   ) async {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -1206,10 +1207,10 @@ class ApiBaseHelper {
 
   Future<ResGetCard> getCard(
     BuildContext context,
-    String token,
+    String? token,
   ) async {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -1221,11 +1222,11 @@ class ApiBaseHelper {
 
   Future<ResAddMember> setMemberPermission(
     BuildContext context,
-    String token,
+    String? token,
     ReqAddPermission model,
   ) async {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -1237,9 +1238,9 @@ class ApiBaseHelper {
   }
 
   Future<CommonRes> setSpecificMemberPermission(BuildContext context,
-      String token, ReqAddUserPermissionModel model, String memberId) async {
+      String? token, ReqAddUserPermissionModel model, String memberId) async {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -1255,10 +1256,10 @@ class ApiBaseHelper {
 
   Future<ResUserPermissionModel> getUserPermission(
     BuildContext context,
-    String token,
+    String? token,
   ) async {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -1270,9 +1271,9 @@ class ApiBaseHelper {
   }
 
   Future<ResFamilyCircle> getFamilyCircle(
-      BuildContext context, String token, ReqFamilyNetwork model) async {
+      BuildContext context, String? token, ReqFamilyNetwork model) async {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -1284,9 +1285,9 @@ class ApiBaseHelper {
   }
 
   Future<ResProviderSearch> searchProvider(
-      BuildContext context, String token, Map<String, dynamic> search) async {
+      BuildContext context, String? token, Map<String, dynamic> search) async {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
 //Todo: aaaaaaaaaa
@@ -1300,9 +1301,9 @@ class ApiBaseHelper {
   }
 
   Future<ResProviderGroup> getProviderGroups(
-      BuildContext context, String token) async {
+      BuildContext context, String? token) async {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -1314,9 +1315,9 @@ class ApiBaseHelper {
   }
 
   Future<ResAddProvider> addProviderNetwork(
-      BuildContext context, String token, ReqAddProvider model) async {
+      BuildContext context, String? token, ReqAddProvider model) async {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     print(model.toMap());
 
@@ -1329,9 +1330,9 @@ class ApiBaseHelper {
   }
 
   Future<ResMyProviderNetwork> getMyProviderNetwork(
-      BuildContext context, String token) async {
+      BuildContext context, String? token) async {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -1343,9 +1344,9 @@ class ApiBaseHelper {
   }
 
   Future<ResRemoveProvider> removeProvider(
-      BuildContext context, String token, ReqRemoveProvider model) async {
+      BuildContext context, String? token, ReqRemoveProvider model) async {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -1357,9 +1358,9 @@ class ApiBaseHelper {
   }
 
   Future<ResShareProvider> shareProvider(
-      BuildContext context, String token, ReqShareProvider model) async {
+      BuildContext context, String? token, ReqShareProvider model) async {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -1371,9 +1372,9 @@ class ApiBaseHelper {
   }
 
   Future<ResShareProvider> shareAllProvider(
-      BuildContext context, String token, ReqShareProvider model) async {
+      BuildContext context, String? token, ReqShareProvider model) async {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -1385,9 +1386,9 @@ class ApiBaseHelper {
   }
 
   Future<ResSearchNumber> searchContact(
-      BuildContext context, String token, ReqSearchNumber model) async {
+      BuildContext context, String? token, ReqSearchNumber model) async {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -1399,9 +1400,9 @@ class ApiBaseHelper {
   }
 
   Future<ResFamilyNetwork> getFamilyNetowrk(
-      BuildContext context, String token, ReqFamilyNetwork model) async {
+      BuildContext context, String? token, ReqFamilyNetwork model) async {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -1413,9 +1414,9 @@ class ApiBaseHelper {
   }
 
   Future<ResRelationList> getRelations(
-      BuildContext context, String token) async {
+      BuildContext context, String? token) async {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -1426,9 +1427,9 @@ class ApiBaseHelper {
     });
   }
 
-  Future<dynamic> getLinkAccount(String token) async {
+  Future<dynamic> getLinkAccount(String? token) async {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     try {
       final response = await _netUtil.get(
@@ -1438,9 +1439,9 @@ class ApiBaseHelper {
     } catch (error) {}
   }
 
-  Future<dynamic> switchAccount(String token, Map map) async {
+  Future<dynamic> switchAccount(String? token, Map map) async {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
     try {
       final response = await _netUtil.post(
@@ -1452,9 +1453,9 @@ class ApiBaseHelper {
   }
 
   Future<ResAddMember> addMember(
-      BuildContext context, String token, ReqAddMember model) async {
+      BuildContext context, String? token, ReqAddMember model) async {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
       HttpHeaders.contentTypeHeader: "application/json"
     };
 
@@ -1467,9 +1468,9 @@ class ApiBaseHelper {
   }
 
   Future<ResMessageShare> shareMessage(
-      BuildContext context, String token, ReqMessageShare model) async {
+      BuildContext context, String? token, ReqMessageShare model) async {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -1481,9 +1482,9 @@ class ApiBaseHelper {
   }
 
   Future<CommonRes> setPin(
-      BuildContext context, String token, ReqSetupPin model) async {
+      BuildContext context, String? token, ReqSetupPin model) async {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -1495,9 +1496,9 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> checkTimeToStartVideo(
-      BuildContext context, String token, Map locationMap) {
+      BuildContext context, String? token, Map locationMap) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -1509,9 +1510,9 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> startVideoCall(
-      BuildContext context, String token, Map locationMap) {
+      BuildContext context, String? token, Map locationMap) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -1523,9 +1524,9 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> stopVideoCall(
-      BuildContext context, String token, Map locationMap) {
+      BuildContext context, String? token, Map locationMap) {
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: token,
+      HttpHeaders.authorizationHeader: token!,
     };
 
     return _netUtil
@@ -1536,7 +1537,7 @@ class ApiBaseHelper {
     });
   }
 
-  // Future<dynamic> multipartPost(String url, String token,
+  // Future<dynamic> multipartPost(String url, String? token,
   //     Map<String, String> fileMap, List<MultipartFile> files) {
   //   return _netUtil
   //       .multipartPost(
@@ -1551,8 +1552,8 @@ class ApiBaseHelper {
   // }
 
   Future<CommonRes> addInsuranceDoc(
-      String token, File frontImage, ReqAddInsurance model,
-      {File backImage}) async {
+      String? token, File frontImage, ReqAddInsurance model,
+      {File? backImage}) async {
     // try {
     // var formData = FormData.fromMap(model.toMap());
     // final fileName = frontImage.path.split('/').last;
@@ -1586,7 +1587,7 @@ class ApiBaseHelper {
         .multipartPost(
       base_url + 'api/patient/add-patient-insurance',
       token: token,
-      fileMap: model.toMap(),
+      fileMap: model.toMap() as Map<String, String>,
       files: multipartList,
     )
         .then((res) {
@@ -1613,10 +1614,11 @@ class NetworkUtil {
 
   final JsonDecoder _decoder = new JsonDecoder();
 
-  Future<dynamic> getUri(Uri url, {Map headers}) async {
+  Future<dynamic> getUri(Uri url, {Map? headers}) async {
     var responseJson;
     try {
-      final response = await http.get(url, headers: headers);
+      final response =
+          await http.get(url, headers: headers as Map<String, String>?);
       final int statusCode = response.statusCode;
       log("Status code: $statusCode");
 
@@ -1647,7 +1649,7 @@ class NetworkUtil {
     return responseJson;
   }
 
-  Future<dynamic> get(url, {Map headers}) async {
+  Future<dynamic> get(url, {Map<String, String>? headers}) async {
     var responseJson;
     try {
       final response = await http.get(Uri.parse(url), headers: headers);
@@ -1681,11 +1683,13 @@ class NetworkUtil {
     return responseJson;
   }
 
-  Future<dynamic> post(String url, {Map headers, body, encoding}) async {
+  Future<dynamic> post(String url, {Map? headers, body, encoding}) async {
     var responseJson;
     try {
       final response = await http.post(Uri.parse(url),
-          body: body, headers: headers, encoding: encoding);
+          body: body,
+          headers: headers as Map<String, String>?,
+          encoding: encoding);
       final int statusCode = response.statusCode;
       log("Status code: $statusCode");
 
@@ -1717,11 +1721,13 @@ class NetworkUtil {
   }
 
   Future<dynamic> postNotHandleError(String url,
-      {Map headers, body, encoding}) async {
+      {Map? headers, body, encoding}) async {
     var responseJson;
     try {
       final response = await http.post(Uri.parse(url),
-          body: body, headers: headers, encoding: encoding);
+          body: body,
+          headers: headers as Map<String, String>?,
+          encoding: encoding);
       final int statusCode = response.statusCode;
 
       // if (statusCode < 200 || statusCode > 400 || json == null) {
@@ -1745,9 +1751,9 @@ class NetworkUtil {
 
   Future<dynamic> multipartPost(
     String url, {
-    String token,
-    Map<String, String> fileMap,
-    List<MultipartFile> files,
+    String? token,
+    required Map<String, String> fileMap,
+    required List<MultipartFile> files,
   }) async {
     var responseJson;
     try {
@@ -1797,17 +1803,17 @@ class NetworkUtil {
 
   void showError(String message) {
     Widgets.showErrorDialog(
-        context: navigatorKey.currentState.overlay.context,
+        context: navigatorKey.currentState!.overlay!.context,
         description: message,
         onPressed: () {
           if (message == 'Unauthorized') {
             SharedPref().clearSharedPref();
-            Navigator.of(navigatorKey.currentState.overlay.context)
+            Navigator.of(navigatorKey.currentState!.overlay!.context)
                 .pushNamedAndRemoveUntil(
                     Routes.loginRoute, (Route<dynamic> route) => false,
                     arguments: false);
           } else {
-            Navigator.pop(navigatorKey.currentState.overlay.context);
+            Navigator.pop(navigatorKey.currentState!.overlay!.context);
           }
         });
   }

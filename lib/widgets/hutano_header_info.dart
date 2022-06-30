@@ -6,12 +6,12 @@ import 'package:hutano/utils/constants/file_constants.dart';
 
 class HutanoHeaderInfo extends StatelessWidget {
   final String title;
-  final String subTitle;
+  final String? subTitle;
   final double subTitleFontSize;
   final bool showLogo;
   const HutanoHeaderInfo(
-      {Key key,
-      @required this.title,
+      {Key? key,
+      required this.title,
       this.subTitle,
       this.showLogo = false,
       this.subTitleFontSize = 13})
@@ -48,7 +48,7 @@ class HutanoHeaderInfo extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 15),
               child: Text(
-                subTitle,
+                subTitle!,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 13,

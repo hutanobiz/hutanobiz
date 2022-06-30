@@ -7,17 +7,17 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 const int kDuration = 60000;
 
 class OtpCall extends StatefulWidget {
-  final VoidCallback onCall;
+  final VoidCallback? onCall;
 
-  const OtpCall({Key key, this.onCall}) : super(key: key);
+  const OtpCall({Key? key, this.onCall}) : super(key: key);
   @override
   _OtpCallState createState() => _OtpCallState();
 }
 
 class _OtpCallState extends State<OtpCall> with TickerProviderStateMixin {
   bool animation = false;
-  AnimationController _controller;
-  Duration duration;
+  late AnimationController _controller;
+  Duration? duration;
 
   @override
   void initState() {
@@ -39,7 +39,7 @@ class _OtpCallState extends State<OtpCall> with TickerProviderStateMixin {
       animation = true;
     });
     _controller.forward();
-    widget.onCall();
+    widget.onCall!();
   }
 
   @override
@@ -62,7 +62,7 @@ class _OtpCallState extends State<OtpCall> with TickerProviderStateMixin {
                   width: 150,
                   percent: 1,
                   center: Countdown(
-                      label: Localization.of(context).msgGetCode,
+                      label: Localization.of(context)!.msgGetCode,
                       animation: StepTween(
                         begin: 1000,
                         end: 0,
@@ -80,7 +80,7 @@ class _OtpCallState extends State<OtpCall> with TickerProviderStateMixin {
                     child: Container(
                         alignment: Alignment.center,
                         child: Text(
-                          Localization.of(context).msgGetCode,
+                          Localization.of(context)!.msgGetCode,
                           style: TextStyle(
                               color: colorPurple100, fontSize: fontSize13),
                         )),
@@ -99,10 +99,10 @@ class _OtpCallState extends State<OtpCall> with TickerProviderStateMixin {
 }
 
 class Countdown extends AnimatedWidget {
-  Countdown({Key key, this.animation, this.label})
+  Countdown({Key? key, required this.animation, this.label})
       : super(key: key, listenable: animation);
   final Animation<int> animation;
-  final String label;
+  final String? label;
 
   @override
   Widget build(BuildContext context) {

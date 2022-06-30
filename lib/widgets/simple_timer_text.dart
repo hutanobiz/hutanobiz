@@ -3,23 +3,23 @@ import 'package:flutter/material.dart';
 /// Create a Circular Countdown Timer
 class SimpleCountDownTimer extends StatefulWidget {
   /// Key for Countdown Timer
-  final Key key;
+  final Key? key;
 
   /// Text Style for Countdown Text
-  final TextStyle textStyle;
+  final TextStyle? textStyle;
 
   final String text;
   final int duration;
   final bool isReverse, isReverseAnimation;
-  final Function onComplete;
-  final double fontSize;
+  final Function? onComplete;
+  final double? fontSize;
 
   /// Controller to control (i.e Pause, Resume, Restart) the Countdown
-  final SimpleCountDownController controller;
+  final SimpleCountDownController? controller;
 
   SimpleCountDownTimer(
-      {@required this.duration,
-      @required this.text,
+      {required this.duration,
+      required this.text,
       this.isReverse = true,
       this.isReverseAnimation = false,
       this.onComplete,
@@ -36,24 +36,24 @@ class SimpleCountDownTimer extends StatefulWidget {
 
 class SimpleCountDownTimerState extends State<SimpleCountDownTimer>
     with TickerProviderStateMixin {
-  AnimationController _controller;
-  Animation<double> _countDownAnimation;
-  AnimationController _animationcontroller;
+  AnimationController? _controller;
+  Animation<double>? _countDownAnimation;
+  AnimationController? _animationcontroller;
 
   String get time {
-    if (widget.isReverse && _controller.isDismissed) {
+    if (widget.isReverse && _controller!.isDismissed) {
       return '0:00';
     } else {
-      Duration duration = _controller.duration * _controller.value;
+      Duration duration = _controller!.duration! * _controller!.value;
       return _getTime(duration);
     }
   }
 
   void _setAnimation() {
     if (widget.isReverse) {
-      _controller.reverse(from: 1);
+      _controller!.reverse(from: 1);
     } else {
-      _controller.forward();
+      _controller!.forward();
     }
   }
 
@@ -61,7 +61,7 @@ class SimpleCountDownTimerState extends State<SimpleCountDownTimer>
     if ((!widget.isReverse && widget.isReverseAnimation) ||
         (widget.isReverse && !widget.isReverseAnimation)) {
       _countDownAnimation =
-          Tween<double>(begin: 1, end: 0).animate(_controller);
+          Tween<double>(begin: 1, end: 0).animate(_controller!);
     }
   }
 
@@ -82,7 +82,7 @@ class SimpleCountDownTimerState extends State<SimpleCountDownTimer>
   }
 
   void _onComplete() {
-    if (widget.onComplete != null) widget.onComplete();
+    if (widget.onComplete != null) widget.onComplete!();
   }
 
   @override
@@ -97,7 +97,7 @@ class SimpleCountDownTimerState extends State<SimpleCountDownTimer>
       duration: Duration(seconds: widget.duration),
     );
 
-    _controller.addStatusListener((status) {
+    _controller!.addStatusListener((status) {
       switch (status) {
         case AnimationStatus.dismissed:
           _onComplete();
@@ -120,7 +120,7 @@ class SimpleCountDownTimerState extends State<SimpleCountDownTimer>
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-        animation: _controller,
+        animation: _controller!,
         builder: (context, child) {
           return Text(
             widget.text + time,
@@ -135,16 +135,16 @@ class SimpleCountDownTimerState extends State<SimpleCountDownTimer>
 
   @override
   void dispose() {
-    _controller.stop();
-    _controller.dispose();
+    _controller!.stop();
+    _controller!.dispose();
     super.dispose();
   }
 }
 
 /// Controller for controlling Countdown Widget (i.e Pause, Resume, Restart)
 class SimpleCountDownController {
-  SimpleCountDownTimerState _state;
-  bool _isReverse;
+  late SimpleCountDownTimerState _state;
+  late bool _isReverse;
 
   /// This Method Pauses the Countdown Timer
   void pause() {
@@ -155,17 +155,17 @@ class SimpleCountDownController {
   void resume() {
     if (_isReverse) {
       _state._controller
-          ?.reverse(from: _state._controller.value = _state._controller.value);
+          ?.reverse(from: _state._controller!.value = _state._controller!.value);
     } else {
-      _state._controller?.forward(from: _state._controller.value);
+      _state._controller?.forward(from: _state._controller!.value);
     }
   }
 
   /// This Method Restarts the Countdown Timer,
   /// Here optional int parameter **duration** is the updated duration for countdown timer
-  void restart({int duration}) {
-    _state._controller.duration =
-        Duration(seconds: duration ?? _state._controller.duration.inSeconds);
+  void restart({int? duration}) {
+    _state._controller!.duration =
+        Duration(seconds: duration ?? _state._controller!.duration!.inSeconds);
     if (_isReverse) {
       _state._controller?.reverse(from: 1);
     } else {
@@ -177,6 +177,6 @@ class SimpleCountDownController {
   /// Time Used in terms of **Forward Countdown** and Time Left in terms of **Reverse Countdown**
   String getTime() {
     return _state
-        ._getTime(_state._controller.duration * _state._controller?.value);
+        ._getTime(_state._controller!.duration! * _state._controller!.value);
   }
 }

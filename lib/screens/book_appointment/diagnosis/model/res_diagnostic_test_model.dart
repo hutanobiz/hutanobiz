@@ -1,15 +1,15 @@
 class ResDiagnositcTestModel {
-  String status;
-  List<DiagnosticTest> response;
+  String? status;
+  List<DiagnosticTest>? response;
 
   ResDiagnositcTestModel({this.status, this.response});
 
   ResDiagnositcTestModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     if (json['response'] != null) {
-      response = new List<DiagnosticTest>();
+      response = <DiagnosticTest>[];
       json['response'].forEach((v) {
-        response.add(new DiagnosticTest.fromJson(v));
+        response!.add(new DiagnosticTest.fromJson(v));
       });
     }
   }
@@ -18,21 +18,21 @@ class ResDiagnositcTestModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     if (this.response != null) {
-      data['response'] = this.response.map((v) => v.toJson()).toList();
+      data['response'] = this.response!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class DiagnosticTest {
-  String name;
-  String image;
-  String sId;
-  int iV;
-  String createdAt;
-  String updatedAt;
-  String type;
-  String date;
+  String? name;
+  String? image;
+  String? sId;
+  int? iV;
+  String? createdAt;
+  String? updatedAt;
+  String? type;
+  String? date;
   bool isSelected = false;
 
   DiagnosticTest(

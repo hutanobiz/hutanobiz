@@ -14,7 +14,7 @@ import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/provider_list_widget.dart';
 
 class ProviderListScreen extends StatefulWidget {
-  ProviderListScreen({Key key}) : super(key: key);
+  ProviderListScreen({Key? key}) : super(key: key);
 
   @override
   _ProviderListScreenState createState() => _ProviderListScreenState();
@@ -25,14 +25,14 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
   final GlobalKey<FormFieldState> _searchKey = GlobalKey<FormFieldState>();
 
   ApiBaseHelper api = new ApiBaseHelper();
-  Future<dynamic> _providerFuture;
+  Future<dynamic>? _providerFuture;
 
-  List<dynamic> _responseData;
+  List<dynamic>? _responseData;
   String _searchText = "";
 
-  Map _degreeMap;
+  Map? _degreeMap;
 
-  List<dynamic> _dummySearchList = List();
+  List<dynamic> _dummySearchList = [];
 
   List<String> _appointmentTypeFilterList = [
     'All',
@@ -42,10 +42,10 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
     'Filter'
   ];
 
-  String _selectedAppointmentType;
+  String? _selectedAppointmentType;
 
-  Map _containerMap;
-  InheritedContainerState _container;
+  Map? _containerMap;
+  late InheritedContainerState _container;
 
   Map filterMap = {};
 
@@ -53,9 +53,9 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
 
   Map _appointmentFilterMap = {};
 
-  String token = '';
+  String? token = '';
 
-  LatLng _userLocation = LatLng(0, 0);
+  LatLng? _userLocation = LatLng(0, 0);
   bool isLoading = false;
 
   setLoading(loading) {
@@ -97,8 +97,8 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
     if (_container.userLocationMap.isNotEmpty) {
       _userLocation = _container.userLocationMap['latLng'];
 
-      _providerMap['lattitude'] = _userLocation.latitude.toStringAsFixed(2);
-      _providerMap['longitude'] = _userLocation.longitude.toStringAsFixed(2);
+      _providerMap['lattitude'] = _userLocation!.latitude.toStringAsFixed(2);
+      _providerMap['longitude'] = _userLocation!.longitude.toStringAsFixed(2);
     }
 
     _providerMap.remove('serviceType');
@@ -211,7 +211,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                         .then((value) {
                       if (value != null) {
                         setState(() {
-                          filterMap = value;
+                          filterMap = value as Map<dynamic, dynamic>;
                         });
 
                         if (filterMap.length > 0) {
@@ -325,20 +325,20 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                   _degreeMap = snapshot.data["degree"];
 
                 return _searchText == null || _searchText == ""
-                    ? _listWidget(_degreeMap, _responseData)
+                    ? _listWidget(_degreeMap, _responseData!)
                     : _listWidget(_degreeMap, _dummySearchList);
               } else if (snapshot.hasError) {
                 return Text("${snapshot.error}");
               }
               break;
           }
-          return null;
+          return SizedBox();
         },
       ),
     );
   }
 
-  Widget _listWidget(Map degreeMap, List _responseData) {
+  Widget _listWidget(Map? degreeMap, List _responseData) {
     return ListView.builder(
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 70),
       itemCount: _responseData.length,
@@ -507,7 +507,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
   }
 
   Widget _appointmentTypeWidget(String title, bool isSelected,
-      {Function onClick}) {
+      {Function? onClick}) {
     String icon = title.toLowerCase().contains('office')
         ? (isSelected ? 'ic_office_app' : 'ic_office_app_unselected')
         : title.toLowerCase().contains('video')
@@ -517,7 +517,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
                 : '';
 
     return InkWell(
-      onTap: onClick,
+      onTap: onClick as void Function()?,
       child: Container(
         height: 42,
         width: title.toLowerCase().contains('all') ? 64 : 104,
@@ -563,7 +563,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
     _dummySearchList.clear();
 
     if (searchKey.isNotEmpty) {
-      _dummySearchList = _responseData.where((f) {
+      _dummySearchList = _responseData!.where((f) {
         if (f['provider']["userId"] != null &&
             f['provider']["userId"] is Map &&
             f['provider']["userId"]["fullName"]

@@ -5,7 +5,7 @@ import 'dart:math' as math;
 /// Create a Circular Countdown Timer
 class CircularCountDownTimer extends StatefulWidget {
   /// Key for Countdown Timer
-  final Key key;
+  final Key? key;
 
   /// Filling Color for Countdown Timer
   final Color fillColor;
@@ -14,10 +14,10 @@ class CircularCountDownTimer extends StatefulWidget {
   final Color color;
 
   /// Background Color for Countdown Widget
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   /// Function which will execute when the Countdown Ends
-  final Function onComplete;
+  final Function? onComplete;
 
   /// Countdown Duration in Seconds
   final int duration;
@@ -29,16 +29,16 @@ class CircularCountDownTimer extends StatefulWidget {
   final double height;
 
   /// Border Thickness of the Countdown Circle
-  final double strokeWidth;
+  final double? strokeWidth;
 
   /// Begin and end contours with a flat edge and no extension
-  final StrokeCap strokeCap;
+  final StrokeCap? strokeCap;
 
   /// Text Style for Countdown Text
-  final TextStyle textStyle;
+  final TextStyle? textStyle;
 
   final String bottomText;
-  final TextStyle bottomTextStyle;
+  final TextStyle? bottomTextStyle;
 
   /// true for reverse countdown (max to 0), false for forward countdown (0 to max)
   final bool isReverse;
@@ -51,15 +51,15 @@ class CircularCountDownTimer extends StatefulWidget {
   final bool isImage;
 
   /// Controller to control (i.e Pause, Resume, Restart) the Countdown
-  final CountDownController controller;
+  final CountDownController? controller;
 
   CircularCountDownTimer(
-      {@required this.width,
-      @required this.height,
-      @required this.duration,
-      @required this.fillColor,
-      @required this.color,
-      @required this.bottomText,
+      {required this.width,
+      required this.height,
+      required this.duration,
+      required this.fillColor,
+      required this.color,
+      required this.bottomText,
       this.backgroundColor,
       this.isReverse = false,
       this.isReverseAnimation = false,
@@ -85,25 +85,25 @@ class CircularCountDownTimer extends StatefulWidget {
 
 class CircularCountDownTimerState extends State<CircularCountDownTimer>
     with TickerProviderStateMixin {
-  AnimationController _controller;
-  Animation<double> _countDownAnimation;
-  AnimationController _animationcontroller;
+  AnimationController? _controller;
+  Animation<double>? _countDownAnimation;
+  late AnimationController _animationcontroller;
   String bottomTextVar = '';
 
   String get time {
-    if (widget.isReverse && _controller.isDismissed) {
+    if (widget.isReverse && _controller!.isDismissed) {
       return '0:00';
     } else {
-      Duration duration = _controller.duration * _controller.value;
+      Duration duration = _controller!.duration! * _controller!.value;
       return _getTime(duration);
     }
   }
 
   void _setAnimation() {
     if (widget.isReverse) {
-      _controller.reverse(from: 1);
+      _controller!.reverse(from: 1);
     } else {
-      _controller.forward();
+      _controller!.forward();
     }
   }
 
@@ -111,7 +111,7 @@ class CircularCountDownTimerState extends State<CircularCountDownTimer>
     if ((!widget.isReverse && widget.isReverseAnimation) ||
         (widget.isReverse && !widget.isReverseAnimation)) {
       _countDownAnimation =
-          Tween<double>(begin: 1, end: 0).animate(_controller);
+          Tween<double>(begin: 1, end: 0).animate(_controller!);
     }
   }
 
@@ -134,7 +134,7 @@ class CircularCountDownTimerState extends State<CircularCountDownTimer>
   }
 
   void _onComplete() {
-    if (widget.onComplete != null) widget.onComplete();
+    if (widget.onComplete != null) widget.onComplete!();
   }
 
   @override
@@ -149,7 +149,7 @@ class CircularCountDownTimerState extends State<CircularCountDownTimer>
       duration: Duration(seconds: widget.duration),
     );
 
-    _controller.addStatusListener((status) {
+    _controller!.addStatusListener((status) {
       switch (status) {
         case AnimationStatus.dismissed:
           _onComplete();
@@ -176,7 +176,7 @@ class CircularCountDownTimerState extends State<CircularCountDownTimer>
       width: widget.width,
       height: widget.height,
       child: AnimatedBuilder(
-          animation: _controller,
+          animation: _controller!,
           builder: (context, child) {
             return Stack(
               children: <Widget>[
@@ -266,16 +266,16 @@ class CircularCountDownTimerState extends State<CircularCountDownTimer>
 
   @override
   void dispose() {
-    _controller.stop();
-    _controller.dispose();
+    _controller!.stop();
+    _controller!.dispose();
     super.dispose();
   }
 }
 
 /// Controller for controlling Countdown Widget (i.e Pause, Resume, Restart)
 class CountDownController {
-  CircularCountDownTimerState _state;
-  bool _isReverse;
+  late CircularCountDownTimerState _state;
+  late bool _isReverse;
 
   /// This Method Pauses the Countdown Timer
   void pause() {
@@ -286,17 +286,17 @@ class CountDownController {
   void resume() {
     if (_isReverse) {
       _state._controller
-          ?.reverse(from: _state._controller.value = _state._controller.value);
+          ?.reverse(from: _state._controller!.value = _state._controller!.value);
     } else {
-      _state._controller?.forward(from: _state._controller.value);
+      _state._controller?.forward(from: _state._controller!.value);
     }
   }
 
   /// This Method Restarts the Countdown Timer,
   /// Here optional int parameter **duration** is the updated duration for countdown timer
-  void restart({int duration}) {
-    _state._controller.duration =
-        Duration(seconds: duration ?? _state._controller.duration.inSeconds);
+  void restart({int? duration}) {
+    _state._controller!.duration =
+        Duration(seconds: duration ?? _state._controller!.duration!.inSeconds);
     if (_isReverse) {
       _state._controller?.reverse(from: 1);
     } else {
@@ -308,6 +308,6 @@ class CountDownController {
   /// Time Used in terms of **Forward Countdown** and Time Left in terms of **Reverse Countdown**
   String getTime() {
     return _state
-        ._getTime(_state._controller.duration * _state._controller?.value);
+        ._getTime(_state._controller!.duration! * _state._controller!.value);
   }
 }

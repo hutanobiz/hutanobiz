@@ -15,23 +15,23 @@ import '../../widgets/hutano_checkbox.dart';
 import 'provider/appoinment_provider.dart';
 
 class SymptomsInformation extends StatefulWidget {
-  final int selectedSymtomsType;
+  final int? selectedSymtomsType;
 
-  const SymptomsInformation({@required this.selectedSymtomsType});
+  const SymptomsInformation({required this.selectedSymtomsType});
   @override
   _SymptomsInformationState createState() => _SymptomsInformationState();
 }
 
 class _SymptomsInformationState extends State<SymptomsInformation> {
   int _currentStepIndex = 1;
-  String _isFirstTimeIssue;
-  String _isHospitalized;
-  String _isDiagnostic;
+  String? _isFirstTimeIssue;
+  String? _isHospitalized;
+  String? _isDiagnostic;
   final _selectedDiagnosticTests = <String>[];
   final _yearfocusnode = FocusNode();
 
-  String _selectedPainTime;
-  int _selectedPainTimeNumber;
+  String? _selectedPainTime;
+  int? _selectedPainTimeNumber;
   final _scrollController = ScrollController();
 
   @override
@@ -447,9 +447,9 @@ class _SymptomsInformationState extends State<SymptomsInformation> {
   }
 
   Widget _buildButton(
-          String title, String selectedTitle, Function onTap, bool enabled) =>
+          String title, String? selectedTitle, Function onTap, bool enabled) =>
       InkWell(
-        onTap: enabled ? onTap : () {},
+        onTap: enabled ? onTap as void Function()? : () {},
         child: Container(
           margin: EdgeInsets.only(top: spacing2),
           child: Text(
@@ -476,7 +476,7 @@ class _SymptomsInformationState extends State<SymptomsInformation> {
           children: [
             Expanded(
               child: HutanoButton(
-                label: Localization.of(context).skip,
+                label: Localization.of(context)!.skip,
                 color: primaryColor,
                 onPressed: () {
                   Navigator.of(context).pushNamed( routeUploadSymptomsImages);
@@ -486,7 +486,7 @@ class _SymptomsInformationState extends State<SymptomsInformation> {
             SizedBox(width: spacing70),
             Expanded(
               child: HutanoButton(
-                label: Localization.of(context).next,
+                label: Localization.of(context)!.next,
                 onPressed: () {
                   switch (_currentStepIndex) {
                     case 1:
@@ -592,7 +592,7 @@ class _SymptomsInformationState extends State<SymptomsInformation> {
         child: Row(
           children: [
             _buildHeaderButton(0, FileConstants.icCreateFolder,
-                Localization.of(context).painSymptoms),
+                Localization.of(context)!.painSymptoms),
             Container(
               width: 0.5,
               margin: EdgeInsets.symmetric(vertical: 20),
@@ -600,7 +600,7 @@ class _SymptomsInformationState extends State<SymptomsInformation> {
               color: Colors.black,
             ),
             _buildHeaderButton(1, FileConstants.icSadFace,
-                Localization.of(context).generalizedSymptoms)
+                Localization.of(context)!.generalizedSymptoms)
           ],
         ),
       );

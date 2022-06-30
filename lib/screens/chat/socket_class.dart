@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 class SocketClass {
-  Function onMessgae;
+  Function? onMessgae;
 
   Socket socket = io(
       '${ApiBaseHelper.socket_url}?userId=${getString(PreferenceKey.id)}',
@@ -30,7 +30,7 @@ class SocketClass {
         if (!isCurrentChatAppointment(
             Routes.chat, Message.fromJson(msg).appointmentId)) {
         } else {
-          Provider.of<ChatProvider>(navigatorContext, listen: false)
+          Provider.of<ChatProvider>(navigatorContext!, listen: false)
               .add(Message.fromJson(msg));
         }
       });
@@ -40,9 +40,9 @@ class SocketClass {
 
   bool isCurrentChatAppointment(String routeName, args) {
     bool isCurrent = false;
-    Navigator.popUntil(navigatorContext, (route) {
+    Navigator.popUntil(navigatorContext!, (route) {
       if (route.settings.name == routeName) {
-        SearchAppointment routeArg = route.settings.arguments;
+        SearchAppointment routeArg = route.settings.arguments as SearchAppointment;
         if (routeArg.sId == args) {
           isCurrent = true;
         }

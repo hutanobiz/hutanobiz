@@ -1,15 +1,15 @@
 class ResCommunicationReasonModel {
-  String status;
-  List<CommunicationReason> response;
+  String? status;
+  List<CommunicationReason>? response;
 
   ResCommunicationReasonModel({this.status, this.response});
 
   ResCommunicationReasonModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     if (json['response'] != null) {
-      response = new List<CommunicationReason>();
+      response = <CommunicationReason>[];
       json['response'].forEach((v) {
-        response.add(new CommunicationReason.fromJson(v));
+        response!.add(new CommunicationReason.fromJson(v));
       });
     }
   }
@@ -18,17 +18,17 @@ class ResCommunicationReasonModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     if (this.response != null) {
-      data['response'] = this.response.map((v) => v.toJson()).toList();
+      data['response'] = this.response!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class CommunicationReason {
-  String name;
-  String createdAt;
-  String sId;
-  int iV;
+  String? name;
+  String? createdAt;
+  String? sId;
+  int? iV;
 
   CommunicationReason({this.name, this.createdAt, this.sId, this.iV});
 

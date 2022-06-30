@@ -1,8 +1,8 @@
 class ReqAddProvider {
-  String userId;
-  String doctorId;
-  String groupId;
-  String groupName;
+  String? userId;
+  String? doctorId;
+  String? groupId;
+  String? groupName;
   ReqAddProvider({
     this.userId,
     this.doctorId,
@@ -20,7 +20,7 @@ class ReqAddProvider {
   }
 
   factory ReqAddProvider.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
+    
 
     return ReqAddProvider(
       userId: map['userId'],

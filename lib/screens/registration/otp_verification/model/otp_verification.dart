@@ -22,7 +22,7 @@ import '../otp_call.dart';
 import 'verification_model.dart';
 
 class OtpVerification extends StatefulWidget {
-  final VerificationModel verificationModel;
+  final VerificationModel? verificationModel;
 
   OtpVerification({this.verificationModel});
 
@@ -35,7 +35,7 @@ class _OtpVerificationState extends State<OtpVerification> {
   bool _enableButton = false;
 
   _onButtonClick() async {
-    final _screenType = widget.verificationModel.verificationScreen;
+    final _screenType = widget.verificationModel!.verificationScreen;
     if (_screenType == VerificationScreen.resetPassword) {
       _resetPassword();
     } else if (_screenType == VerificationScreen.resetPin) {
@@ -50,10 +50,10 @@ class _OtpVerificationState extends State<OtpVerification> {
     final otp = _otpController.text.trim().toString();
     final request = ReqResetPassword(
       step: 2,
-      phoneNumber: widget.verificationModel.phone == null
+      phoneNumber: widget.verificationModel!.phone == null
           ? null
-          : widget.verificationModel.phone.rawNumber(),
-      email: widget.verificationModel.email,
+          : widget.verificationModel!.phone!.rawNumber(),
+      email: widget.verificationModel!.email,
       verificationCode: otp.toString(),
       // mobileCountryCode: widget.verificationModel.countryCode,
     );
@@ -67,7 +67,7 @@ class _OtpVerificationState extends State<OtpVerification> {
           .pushReplacementNamed(Routes.resetPasswordRoute, arguments: args);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     }
   }
 
@@ -76,10 +76,10 @@ class _OtpVerificationState extends State<OtpVerification> {
     final otp = _otpController.text.trim().toString();
     final request = ReqResetPassword(
       step: 2,
-      phoneNumber: widget.verificationModel.phone == null
+      phoneNumber: widget.verificationModel!.phone == null
           ? null
-          : widget.verificationModel.phone.rawNumber(),
-      email: widget.verificationModel.email,
+          : widget.verificationModel!.phone!.rawNumber(),
+      email: widget.verificationModel!.email,
       verificationCode: otp,
       // mobileCountryCode: widget.verificationModel.countryCode,
     );
@@ -93,7 +93,7 @@ class _OtpVerificationState extends State<OtpVerification> {
       });
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     }
   }
 
@@ -104,9 +104,9 @@ class _OtpVerificationState extends State<OtpVerification> {
       step: 2,
       type: 1,
       isAgreeTermsAndCondition: 1,
-      phoneNumber: widget.verificationModel.phone.rawNumber(),
+      phoneNumber: widget.verificationModel!.phone!.rawNumber(),
       verificationCode: otp,
-      mobileCountryCode: widget.verificationModel.countryCode,
+      mobileCountryCode: widget.verificationModel!.countryCode,
     );
     try {
       await ApiManager().register(request);
@@ -114,17 +114,17 @@ class _OtpVerificationState extends State<OtpVerification> {
 
       Navigator.of(context)
           .pushReplacementNamed(Routes.routeRegister, arguments: {
-        ArgumentConstant.number: widget.verificationModel.phone.rawNumber(),
-        ArgumentConstant.countryCode: widget.verificationModel.countryCode
+        ArgumentConstant.number: widget.verificationModel!.phone!.rawNumber(),
+        ArgumentConstant.countryCode: widget.verificationModel!.countryCode
       });
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     }
   }
 
   _resendCode() async {
-    final _screenType = widget.verificationModel.verificationScreen;
+    final _screenType = widget.verificationModel!.verificationScreen;
     if (_screenType == VerificationScreen.resetPassword) {
       _resendResetPasswordApi();
     } else if (_screenType == VerificationScreen.resetPin) {
@@ -138,10 +138,10 @@ class _OtpVerificationState extends State<OtpVerification> {
     ProgressDialogUtils.showProgressDialog(context);
     final request = ReqResetPassword(
       step: 4,
-      phoneNumber: widget.verificationModel.phone == null
+      phoneNumber: widget.verificationModel!.phone == null
           ? null
-          : widget.verificationModel.phone.rawNumber(),
-      email: widget.verificationModel.email,
+          : widget.verificationModel!.phone!.rawNumber(),
+      email: widget.verificationModel!.email,
       // mobileCountryCode: widget.verificationModel.countryCode,
     );
     try {
@@ -150,7 +150,7 @@ class _OtpVerificationState extends State<OtpVerification> {
       // Widgets.showToast(res.response);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     }
   }
 
@@ -158,10 +158,10 @@ class _OtpVerificationState extends State<OtpVerification> {
     ProgressDialogUtils.showProgressDialog(context);
     final request = ReqResetPassword(
       step: 4,
-      phoneNumber: widget.verificationModel.phone == null
+      phoneNumber: widget.verificationModel!.phone == null
           ? null
-          : widget.verificationModel.phone.rawNumber(),
-      email: widget.verificationModel.email,
+          : widget.verificationModel!.phone!.rawNumber(),
+      email: widget.verificationModel!.email,
       // mobileCountryCode: widget.verificationModel.countryCode,
     );
     try {
@@ -170,7 +170,7 @@ class _OtpVerificationState extends State<OtpVerification> {
       // Widgets.showToast(res.response);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     }
   }
 
@@ -180,8 +180,8 @@ class _OtpVerificationState extends State<OtpVerification> {
       step: 4,
       type: 1,
       isAgreeTermsAndCondition: 1,
-      phoneNumber: widget.verificationModel.phone.rawNumber(),
-      mobileCountryCode: widget.verificationModel.countryCode,
+      phoneNumber: widget.verificationModel!.phone!.rawNumber(),
+      mobileCountryCode: widget.verificationModel!.countryCode,
     );
     try {
       var res = await ApiManager().resendPhoneVerificationCode(request);
@@ -190,7 +190,7 @@ class _OtpVerificationState extends State<OtpVerification> {
       //     "Your Hutano code is: ${res.response['verificationCode']}. This code is expires in 10 minutes.");
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     }
   }
 
@@ -199,8 +199,8 @@ class _OtpVerificationState extends State<OtpVerification> {
     final request = ReqRegsiterNumber(
         step: 1,
         type: 1,
-        phoneNumber: widget.verificationModel.phone.rawNumber(),
-        mobileCountryCode: widget.verificationModel.countryCode,
+        phoneNumber: widget.verificationModel!.phone!.rawNumber(),
+        mobileCountryCode: widget.verificationModel!.countryCode,
         isAgreeTermsAndCondition: 1);
     try {
       var res = await ApiManager().otpOnCall(request);
@@ -208,7 +208,7 @@ class _OtpVerificationState extends State<OtpVerification> {
       // Widgets.showToast(res.response);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -235,7 +235,7 @@ class _OtpVerificationState extends State<OtpVerification> {
                 HutanoButton(
                   margin: spacing10,
                   onPressed: _enableButton ? _onButtonClick : null,
-                  label: Localization.of(context).verify,
+                  label: Localization.of(context)!.verify,
                 ),
                 SizedBox(
                   height: spacing20,
@@ -244,7 +244,7 @@ class _OtpVerificationState extends State<OtpVerification> {
                 SizedBox(
                   height: spacing20,
                 ),
-                if (widget.verificationModel.verificationScreen ==
+                if (widget.verificationModel!.verificationScreen ==
                     VerificationScreen.registration)
                   OtpCall(onCall: _callRegsitrationApi)
               ],
@@ -284,7 +284,7 @@ class _OtpVerificationState extends State<OtpVerification> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          Localization.of(context).msgCodeNotRecieved,
+          Localization.of(context)!.msgCodeNotRecieved,
           style: TextStyle(
             fontSize: fontSize14,
             color: colorBlack,
@@ -296,7 +296,7 @@ class _OtpVerificationState extends State<OtpVerification> {
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           onPressed: _resendCode,
           child: Text(
-            Localization.of(context).resend,
+            Localization.of(context)!.resend,
             style: TextStyle(
               fontSize: fontSize14,
               color: accentColor,
@@ -312,22 +312,22 @@ class _OtpVerificationState extends State<OtpVerification> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         HutanoHeaderInfo(
-          title: Localization.of(context).verifyCode,
-          subTitle: Localization.of(context).msgOtpReceived,
+          title: Localization.of(context)!.verifyCode,
+          subTitle: Localization.of(context)!.msgOtpReceived,
         ),
         SizedBox(
           height: spacing7,
         ),
         Text(
-          _getLabel(),
+          _getLabel()!,
           style: TextStyle(fontSize: fontSize13),
         )
       ],
     );
   }
 
-  String _getLabel() {
-    final _model = widget.verificationModel;
+  String? _getLabel() {
+    final _model = widget.verificationModel!;
     if (_model.verificationType == VerificationType.email) {
       return _model.email;
     } else {

@@ -22,10 +22,10 @@ import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart' as Permission;
 
 class AppointmentDetailScreen extends StatefulWidget {
-  const AppointmentDetailScreen({Key key, this.appointmentId})
+  const AppointmentDetailScreen({Key? key, this.appointmentId})
       : super(key: key);
 
-  final String appointmentId;
+  final String? appointmentId;
 
   @override
   _AppointmentDetailScreenState createState() =>
@@ -33,22 +33,22 @@ class AppointmentDetailScreen extends StatefulWidget {
 }
 
 class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
-  Future<dynamic> _profileFuture;
-  InheritedContainerState _container;
-  List feeList = List();
+  Future<dynamic>? _profileFuture;
+  late InheritedContainerState _container;
+  List feeList =[];
   double totalFee = 0;
   String _appointmentStatus = "---";
 
-  Map profileMap = Map();
+  Map? profileMap = Map();
 
   Map _medicalHistoryMap = {};
 
   ApiBaseHelper api = ApiBaseHelper();
-  String token = '';
-  String name = "---", avatar;
+  String? token = '',avatar;
+  String name = "---";
 
   final Set<Marker> _markers = {};
-  BitmapDescriptor sourceIcon;
+  late BitmapDescriptor sourceIcon;
   Completer<GoogleMapController> _controller = Completer();
 
   Map<String, String> timeSpanConfig = {
@@ -59,7 +59,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     "5": "Years"
   };
 
-  LatLng _userLocation = new LatLng(0.00, 0.00);
+  LatLng? _userLocation = new LatLng(0.00, 0.00);
 
   void setSourceAndDestinationIcons() async {
     sourceIcon = await BitmapDescriptor.fromAssetImage(
@@ -93,14 +93,13 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             LocationData locationData = await _location.getLocation();
 
             _userLocation =
-                LatLng(locationData.latitude, locationData.longitude);
+                LatLng(locationData.latitude!, locationData.longitude!);
           } on PlatformException catch (e) {
             Widgets.showToast(e.message.toString());
             e.toString().debugLog();
 
             log(e.code);
 
-            _location = null;
           }
         } else {
           bool serviceStatusResult = await _location.requestService();
@@ -133,14 +132,14 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     appointmentDetailsFuture(_userLocation);
   }
 
-  void appointmentDetailsFuture(LatLng latLng) {
+  void appointmentDetailsFuture(LatLng? latLng) {
     SharedPref().getToken().then((userToken) {
       token = userToken;
       token.debugLog();
 
       setState(() {
         _profileFuture =
-            api.getAppointmentDetails(userToken, widget.appointmentId, latLng);
+            api.getAppointmentDetails(userToken, widget.appointmentId, latLng!);
       });
     });
   }
@@ -161,14 +160,14 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             future: _profileFuture,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                profileMap = snapshot.data;
-                _appointmentStatus = profileMap['data']["status"].toString();
+                profileMap = snapshot.data as Map?;
+                _appointmentStatus = profileMap!['data']["status"].toString();
                 return Column(
                   children: [
                     Expanded(
                       child: SingleChildScrollView(
                         padding: const EdgeInsets.only(bottom: 20),
-                        child: profileWidget(profileMap),
+                        child: profileWidget(profileMap!),
                       ),
                     ),
                     Align(
@@ -191,31 +190,31 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
                                     Navigator.of(context).pushNamed(
                                       Routes.completedAppointmentSummary,
-                                      arguments: profileMap['data']["_id"],
+                                      arguments: profileMap!['data']["_id"],
                                     );
                                   })
                               : _appointmentStatus == "2" ||
                                       _appointmentStatus == "6"
                                   ? SizedBox()
-                                  : (profileMap["data"]["paymentMethod"] == 1 &&
-                                          profileMap["data"]["paymentStatus"] ==
+                                  : (profileMap!["data"]["paymentMethod"] == 1 &&
+                                          profileMap!["data"]["paymentStatus"] ==
                                               2)
                                       ? FancyButton(
                                           title: "Change Payment Method",
                                           onPressed: () {
                                             _container.setProjectsResponse(
                                                 'serviceType',
-                                                profileMap['data']['type']
+                                                profileMap!['data']['type']
                                                     .toString());
 
-                                            if (profileMap['subServices']
+                                            if (profileMap!['subServices']
                                                     .length >
                                                 0) {
                                               _container.setServicesData(
                                                   "status", "1");
                                               _container.setServicesData(
                                                   "services",
-                                                  profileMap['subServices']);
+                                                  profileMap!['subServices']);
                                             } else {
                                               _container.setServicesData(
                                                   "status", "0");
@@ -227,25 +226,25 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                                 arguments: {
                                                   'paymentType': 2,
                                                   'appointmentId':
-                                                      profileMap["data"]["_id"]
+                                                      profileMap!["data"]["_id"]
                                                 }).whenComplete(() =>
                                                 appointmentDetailsFuture(
                                                     _userLocation));
                                           })
-                                      : profileMap['data']["type"] == 1
+                                      : profileMap!['data']["type"] == 1
                                           ? FancyButton(
                                               title: "Track Appointment",
                                               onPressed: () {
                                                 Navigator.pushNamed(
                                                   context,
                                                   Routes.trackOfficeAppointment,
-                                                  arguments: profileMap["data"]
+                                                  arguments: profileMap!["data"]
                                                       ["_id"],
                                                 ).whenComplete(() =>
                                                     appointmentDetailsFuture(
                                                         _userLocation));
                                               })
-                                          : profileMap['data']["type"] == 2
+                                          : profileMap!['data']["type"] == 2
                                               ? FancyButton(
                                                   title: "Track Appointment",
                                                   onPressed: () {
@@ -254,13 +253,13 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                                       Routes
                                                           .trackTelemedicineAppointment,
                                                       arguments:
-                                                          profileMap["data"]
+                                                          profileMap!["data"]
                                                               ["_id"],
                                                     ).whenComplete(() =>
                                                         appointmentDetailsFuture(
                                                             _userLocation));
                                                   })
-                                              : profileMap['data']["type"] == 3
+                                              : profileMap!['data']["type"] == 3
                                                   ? FancyButton(
                                                       title:
                                                           'Track Appointment',
@@ -270,7 +269,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                                                               Routes
                                                                   .trackOnsiteAppointment,
                                                               arguments:
-                                                                  profileMap[
+                                                                  profileMap![
                                                                           "data"]
                                                                       ["_id"],
                                                             )
@@ -313,9 +312,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   Widget profileWidget(Map _data) {
     Map _providerData = _data["data"];
 
-    int paymentType = _data["data"]["paymentMethod"];
-    String insuranceName = '';
-    List<String> insuranceImages = List();
+    int? paymentType = _data["data"]["paymentMethod"];
+    String? insuranceName = '';
+    List<String?> insuranceImages = [];
     if (_data["insuranceData"] != null) {
       if (_data["insuranceData"]["insuranceDocumentFront"] != null) {
         insuranceImages.add(_data["insuranceData"]["insuranceDocumentFront"]);
@@ -331,7 +330,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     _container.providerResponse.clear();
     _container.setProviderData("providerData", _data);
 
-    String averageRating = "---",
+    String? averageRating = "---",
         userRating,
         professionalTitle = "---",
         fee = "0.00",
@@ -393,8 +392,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     if (_providerData["doctor"] != null) {
       name = (_providerData["doctor"]['title']?.toString() ?? 'Dr.') +
               ' ' +
-              _providerData["doctor"]["fullName"]?.toString() ??
-          "---";
+              (_providerData["doctor"]["fullName"]?.toString() ??
+          "---");
       avatar = _providerData["doctor"]["avatar"];
     }
 
@@ -402,10 +401,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       for (dynamic detail in _data["doctorData"]) {
         if (detail["professionalTitle"] != null) {
           professionalTitle = detail["professionalTitle"]["title"] ?? "---";
-          name += Extensions.getSortProfessionTitle(professionalTitle);
+          name += (Extensions.getSortProfessionTitle(professionalTitle)??'');
         }
 
-        List providerInsuranceList = List();
+        List? providerInsuranceList = [];
 
         if (detail["insuranceId"] != null) {
           providerInsuranceList = detail["insuranceId"];
@@ -471,14 +470,14 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                 height: 62.0,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: avatar == null
+                    image: (avatar == null
                         ? AssetImage('images/profile_user.png')
-                        : NetworkImage(ApiBaseHelper.imageUrl + avatar),
+                        : NetworkImage(ApiBaseHelper.imageUrl + avatar!)) as ImageProvider<Object>,
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.all(Radius.circular(50.0)),
                   border: Border.all(
-                    color: Colors.grey[300],
+                    color: Colors.grey[300]!,
                     width: 1.0,
                   ),
                 ),
@@ -503,7 +502,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                               ),
                             ),
                           ),
-                          _appointmentStatus?.appointmentStatus(),
+                          _appointmentStatus.appointmentStatus(),
                         ],
                       ),
                       SizedBox(
@@ -628,7 +627,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     );
   }
 
-  Widget rateWidget(String userRating) {
+  Widget rateWidget(String? userRating) {
     return Container(
       padding: userRating == null
           ? const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0)
@@ -661,7 +660,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                           'appointmentId': widget.appointmentId,
                           'name': name,
                           'avatar': avatar,
-                          'type': profileMap['data']['type']
+                          'type': profileMap!['data']['type']
                         },
                       ).whenComplete(
                           () => appointmentDetailsFuture(_userLocation)),
@@ -686,7 +685,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         Icons.star,
                         color: Colors.amber,
                       ),
-                      onRatingUpdate: null,
+                      onRatingUpdate: (v){},
                     ),
             ),
           )
@@ -695,14 +694,14 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     );
   }
 
-  Widget appoCard(int cardText) {
+  Widget appoCard(int? cardText) {
     return Container(
       margin: const EdgeInsets.only(left: 20.0, right: 20.0),
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(14.0)),
-        border: Border.all(color: Colors.grey[100]),
+        border: Border.all(color: Colors.grey[100]!),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -876,7 +875,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                 margin: const EdgeInsets.only(top: 11.0, right: 20),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(14.0),
-                  border: Border.all(color: Colors.grey[300]),
+                  border: Border.all(color: Colors.grey[300]!),
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(14.0),
@@ -948,7 +947,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.all(Radius.circular(14.0)),
-                    border: Border.all(color: Colors.grey[100]),
+                    border: Border.all(color: Colors.grey[100]!),
                   ),
                   child: Row(
                     children: <Widget>[
@@ -957,7 +956,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                             color: AppColors.goldenTainoi.withOpacity(0.2),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(8.0)),
-                            border: Border.all(color: Colors.grey[100]),
+                            border: Border.all(color: Colors.grey[100]!),
                           ),
                           height: 44,
                           width: 44,
@@ -1003,8 +1002,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     );
   }
 
-  Widget feeWidget(String generalFee, String officeVisitCharge,
-      String parkingFee, String appType) {
+  Widget feeWidget(String? generalFee, String? officeVisitCharge,
+      String? parkingFee, String appType) {
     _container.setProviderData("totalFee", totalFee.toStringAsFixed(2));
 
     return Padding(
@@ -1023,7 +1022,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14.0),
               border: Border.all(
-                color: Colors.grey[100],
+                color: Colors.grey[100]!,
               ),
             ),
             child: Column(
@@ -1067,12 +1066,12 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             separatorBuilder: (context, index) => SizedBox(height: 20),
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemCount: profileMap['appointmentProblems'].length,
+            itemCount: profileMap!['appointmentProblems'].length,
             itemBuilder: (context, index) {
               return ProblemWidget(
-                  dob: profileMap['data']['user']['dob'],
-                  gender: profileMap['data']['user']['gender'],
-                  appointmentProblem: profileMap['appointmentProblems'][index],
+                  dob: profileMap!['data']['user']['dob'],
+                  gender: profileMap!['data']['user']['gender'],
+                  appointmentProblem: profileMap!['appointmentProblems'][index],
                   problemTimeSpanMap: timeSpanConfig);
             },
           ),
@@ -1204,7 +1203,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             child: Align(
               alignment: Alignment.centerRight,
               child: Text(
-                "\$" + feeMap["amount"]?.toStringAsFixed(2) ?? "0.00",
+                "\$" + (feeMap["amount"]?.toStringAsFixed(2) ?? "0.00"),
                 style: TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.w700,
@@ -1251,10 +1250,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     );
   }
 
-  Widget paymentWidget(int paymentType,
-      {List<String> insuranceImages,
+  Widget paymentWidget(int? paymentType,
+      {List<String?>? insuranceImages,
       dynamic cardDetails,
-      String insuranceName,
+      String? insuranceName,
       isRejected = false}) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 10.0),
@@ -1293,7 +1292,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         paymentType == 1
                             ? '************${cardDetails['card']['last4']}'
                             : paymentType == 2
-                                ? insuranceName
+                                ? insuranceName!
                                 : "Cash",
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -1311,7 +1310,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     );
   }
 
-  Widget divider({double topPadding}) {
+  Widget divider({double? topPadding}) {
     return Padding(
       padding: EdgeInsets.only(top: topPadding ?? 0.0),
       child: Divider(

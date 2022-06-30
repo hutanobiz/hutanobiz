@@ -7,9 +7,9 @@ import 'dialog_utils.dart';
 class PermissionUtils {
   static void requestPermission(
       List<Permission> permission, BuildContext context,
-      {Function permissionGrant,
-      Function permissionDenied,
-      Function permissionNotAskAgain,
+      {Function? permissionGrant,
+      Function? permissionDenied,
+      Function? permissionNotAskAgain,
       bool isOpenSettings = false,
       bool isShowMessage = true}) async {
     final statuses = await permission.request();

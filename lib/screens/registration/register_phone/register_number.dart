@@ -120,7 +120,7 @@ class _RegisterNumberState extends State<RegisterNumber> {
       }
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -128,7 +128,7 @@ class _RegisterNumberState extends State<RegisterNumber> {
 
   void enableButton() {
     setState(() {
-      _enableButton = _key.currentState.validate() && _privacyPolicyChecked;
+      _enableButton = _key.currentState!.validate() && _privacyPolicyChecked;
     });
   }
 
@@ -150,8 +150,8 @@ class _RegisterNumberState extends State<RegisterNumber> {
                   ),
                   HutanoHeader(
                     headerInfo: HutanoHeaderInfo(
-                      title: Localization.of(context).yourPhone,
-                      subTitle: Localization.of(context).msgVerification,
+                      title: Localization.of(context)!.yourPhone,
+                      subTitle: Localization.of(context)!.msgVerification,
                     ),
                   ),
                   _buildPhoneInput(),
@@ -171,7 +171,7 @@ class _RegisterNumberState extends State<RegisterNumber> {
     return HutanoButton(
       margin: spacing20,
       onPressed: _enableButton ? _onSubmitClick : null,
-      label: Localization.of(context).next,
+      label: Localization.of(context)!.next,
     );
   }
 
@@ -200,18 +200,18 @@ class _RegisterNumberState extends State<RegisterNumber> {
             flex: 1,
             child: RichText(
               text: TextSpan(
-                  text: Localization.of(context).privacyPolicy,
+                  text: Localization.of(context)!.privacyPolicy,
                   style: TextStyle(color: colorBlack85, fontSize: fontSize13),
                   children: [
                     TextSpan(
-                        text: Localization.of(context).termsAndCondition,
+                        text: Localization.of(context)!.termsAndCondition,
                         recognizer: _termsAndConditionTap,
                         style: TextStyle(
                           decoration: TextDecoration.underline,
                         )),
                     TextSpan(text: ' & '),
                     TextSpan(
-                        text: Localization.of(context).privacyPolicyLabel,
+                        text: Localization.of(context)!.privacyPolicyLabel,
                         recognizer: _privacyPolicyTap,
                         style: TextStyle(
                           decoration: TextDecoration.underline,
@@ -226,7 +226,7 @@ class _RegisterNumberState extends State<RegisterNumber> {
                   _privacyPolicyChecked = !_privacyPolicyChecked;
                   _enableButton = _privacyPolicyChecked &&
                       _controller.text.length > 0 &&
-                      _key.currentState.validate();
+                      _key.currentState!.validate();
                 });
               },
               child: Padding(
@@ -258,14 +258,14 @@ class _RegisterNumberState extends State<RegisterNumber> {
     return Column(
       children: [
         SizedBox(height: spacing30),
-        Text(Localization.of(context).helpSigningIn,
+        Text(Localization.of(context)!.helpSigningIn,
             style: const TextStyle(
               fontSize: fontSize13,
             )),
         SizedBox(height: spacing15),
         GestureDetector(
           onTap: _navigate,
-          child: Text(Localization.of(context).dataSecurityStatement,
+          child: Text(Localization.of(context)!.dataSecurityStatement,
               style: const TextStyle(
                 fontSize: fontSize12,
                 color: colorBlack85,

@@ -1,6 +1,6 @@
 class ResReset {
-  String status;
-  String response;
+  String? status;
+  String? response;
 
   ResReset({this.status, this.response});
 

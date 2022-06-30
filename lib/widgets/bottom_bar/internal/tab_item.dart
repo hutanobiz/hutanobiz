@@ -11,29 +11,29 @@ const int kAnimDuration = 300;
 
 class TabItem extends StatelessWidget {
   TabItem(
-      {@required this.uniqueKey,
-      @required this.selected,
+      {required this.uniqueKey,
+      required this.selected,
       this.iconData,
       this.icon,
-      @required this.title,
-      @required this.callbackFunction,
-      @required this.titleStyle,
-      @required this.iconColor,
+      required this.title,
+      required this.callbackFunction,
+      required this.titleStyle,
+      required this.iconColor,
       this.iconSize,
       this.animDuration,
       this.gradient});
 
   final UniqueKey uniqueKey;
   final String title;
-  final IconData iconData;
-  final Widget icon;
+  final IconData? iconData;
+  final Widget? icon;
   final bool selected;
   final Function(UniqueKey uniqueKey) callbackFunction;
-  final TextStyle titleStyle;
-  final Color iconColor;
-  final double iconSize;
-  final int animDuration;
-  final Gradient gradient;
+  final TextStyle? titleStyle;
+  final Color? iconColor;
+  final double? iconSize;
+  final int? animDuration;
+  final Gradient? gradient;
 
   final double iconYAlign = kIconOn;
   final double textYAlign = kTextOff;
@@ -49,7 +49,7 @@ class TabItem extends StatelessWidget {
             height: double.infinity,
             width: double.infinity,
             child: AnimatedAlign(
-                duration: Duration(milliseconds: animDuration),
+                duration: Duration(milliseconds: animDuration!),
                 alignment: Alignment(0, (selected) ? kTextOn : kTextOff),
                   child: Text(
                     title,
@@ -62,11 +62,11 @@ class TabItem extends StatelessWidget {
             height: double.infinity,
             width: double.infinity,
             child: AnimatedAlign(
-              duration: Duration(milliseconds: animDuration),
+              duration: Duration(milliseconds: animDuration!),
               curve: Curves.easeIn,
               alignment: Alignment(0, (selected) ? kIconOff : kIconOn),
               child: AnimatedOpacity(
-                duration: Duration(milliseconds: animDuration),
+                duration: Duration(milliseconds: animDuration!),
                 opacity: (selected) ? kAlphaOff : kAlphaOn,
                 child: IconButton(
                   highlightColor: Colors.transparent,
@@ -78,7 +78,7 @@ class TabItem extends StatelessWidget {
                       blendMode: BlendMode.srcIn,
                       shaderCallback: (Rect bounds) {
                         return ui.Gradient.linear(Offset(4.0, 24.0),
-                          Offset(24.0, 4.0), gradient.colors);
+                          Offset(24.0, 4.0), gradient!.colors);
                       },
                       child: icon != null ? SizedBox(width: iconSize, height: iconSize, child: icon) 
                         : Icon(iconData, size: iconSize),

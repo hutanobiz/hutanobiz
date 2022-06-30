@@ -40,11 +40,11 @@ enum AddInsuranceError {
 enum InsuranceType { primary, secondary }
 
 class AddInsurance extends StatefulWidget {
-  InsuranceType insuranceType;
-  final bool isFromSetting;
+  InsuranceType? insuranceType;
+  final bool? isFromSetting;
 
   AddInsurance(
-      {Key key,
+      {Key? key,
       this.insuranceType = InsuranceType.primary,
       this.isFromSetting = false})
       : super(key: key);
@@ -63,12 +63,12 @@ class _AddInsuranceState extends State<AddInsurance> {
   bool _enableButton = false;
   bool showSecondaryInsurance = false;
 
-  String _insuranceCompanyError;
-  String _insuranceMemberError;
-  String _memberIdError;
-  String _groupNumberError;
-  String _healthPlanError;
-  String _effectiveDateError;
+  String? _insuranceCompanyError;
+  String? _insuranceMemberError;
+  String? _memberIdError;
+  String? _groupNumberError;
+  String? _healthPlanError;
+  String? _effectiveDateError;
 
   final _companyController = TextEditingController();
   final _memberController = TextEditingController();
@@ -79,8 +79,8 @@ class _AddInsuranceState extends State<AddInsurance> {
 
   final _addInsuranceModel = ReqAddInsurance();
 
-  File _backImage;
-  File _frontImage;
+  File? _backImage;
+  File? _frontImage;
 
   final labelStyle = TextStyle(fontSize: fontSize14, color: colorGrey60);
 
@@ -92,14 +92,14 @@ class _AddInsuranceState extends State<AddInsurance> {
   }
 
   _onInsuranceSelected(String title, String id) {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
     _companyController.text = title;
     _addInsuranceModel.insuranceCompany = id;
     showError(AddInsuranceError.insuranceCompany.index);
   }
 
-  List<Insurance> _insuranceList = [];
-  List<Insurance> myInsuranceList = [];
+  List<Insurance>? _insuranceList = [];
+  List<Insurance>? myInsuranceList = [];
   @override
   void initState() {
     super.initState();
@@ -114,9 +114,9 @@ class _AddInsuranceState extends State<AddInsurance> {
       var res = await ApiManager().insuraceList();
       setState(() {
         _insuranceList = res.response;
-        if (myInsuranceList.isNotEmpty && _insuranceList.isNotEmpty) {
-          _insuranceList.removeWhere((element) {
-            return myInsuranceList.any((item) => item.title == element.title);
+        if (myInsuranceList!.isNotEmpty && _insuranceList!.isNotEmpty) {
+          _insuranceList!.removeWhere((element) {
+            return myInsuranceList!.any((item) => item.title == element.title);
           });
         }
       });
@@ -133,15 +133,15 @@ class _AddInsuranceState extends State<AddInsurance> {
 
         setState(() {
           myInsuranceList = value.response;
-          if (myInsuranceList.isNotEmpty &&
-              myInsuranceList[0].sId != null &&
+          if (myInsuranceList!.isNotEmpty &&
+              myInsuranceList![0].sId != null &&
               widget.insuranceType == InsuranceType.primary) {
             Navigator.pushReplacementNamed(
                 context, Routes.addInsuranceComplete);
           } else {
-            if (myInsuranceList.isNotEmpty && _insuranceList.isNotEmpty) {
-              _insuranceList.removeWhere((element) {
-                return myInsuranceList
+            if (myInsuranceList!.isNotEmpty && _insuranceList!.isNotEmpty) {
+              _insuranceList!.removeWhere((element) {
+                return myInsuranceList!
                     .any((item) => item.title == element.title);
               });
             }
@@ -152,7 +152,7 @@ class _AddInsuranceState extends State<AddInsurance> {
       if (e is ErrorModel) {
         if (e.response != null) {
           ProgressDialogUtils.dismissProgressDialog();
-          DialogUtils.showAlertDialog(context, e.response);
+          DialogUtils.showAlertDialog(context, e.response!);
         }
       }
     });
@@ -186,7 +186,7 @@ class _AddInsuranceState extends State<AddInsurance> {
           (widget.insuranceType == InsuranceType.primary);
       ProgressDialogUtils.showProgressDialog(context);
       ApiManager()
-          .addInsuranceDoc(_frontImage, _addInsuranceModel,
+          .addInsuranceDoc(_frontImage!, _addInsuranceModel,
               backImage: _backImage)
           .then((value) {
         _frontImage = null;
@@ -200,7 +200,7 @@ class _AddInsuranceState extends State<AddInsurance> {
         widget.insuranceType = InsuranceType.secondary;
 
         ProgressDialogUtils.dismissProgressDialog();
-        if (widget.isFromSetting) {
+        if (widget.isFromSetting!) {
           Navigator.pop(context);
         } else {
           Navigator.pushNamed(context, Routes.addInsuranceComplete);
@@ -238,10 +238,10 @@ class _AddInsuranceState extends State<AddInsurance> {
                   ),
                   HutanoHeaderInfo(
                     showLogo: true,
-                    title: Localization.of(context).welcome,
+                    title: Localization.of(context)!.welcome,
                     subTitle: (widget.insuranceType == InsuranceType.primary)
-                        ? Localization.of(context).addInsurance
-                        : Localization.of(context).addSecondaryInsurance,
+                        ? Localization.of(context)!.addInsurance
+                        : Localization.of(context)!.addSecondaryInsurance,
                     subTitleFontSize: fontSize15,
                   ),
                   SizedBox(
@@ -250,7 +250,7 @@ class _AddInsuranceState extends State<AddInsurance> {
                   TextWithImage(
                       size: spacing30,
                       textStyle: TextStyle(fontSize: fontSize16),
-                      label: Localization.of(context).labelHealthInsurance,
+                      label: Localization.of(context)!.labelHealthInsurance,
                       image: FileConstants.icInsuranceBlue),
                   SizedBox(
                     height: spacing12,
@@ -289,7 +289,7 @@ class _AddInsuranceState extends State<AddInsurance> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      Localization.of(context).uploadInsuranceCardImage,
+                      Localization.of(context)!.uploadInsuranceCardImage,
                       textAlign: TextAlign.start,
                       style: TextStyle(
                         color: colorBorder2,
@@ -317,7 +317,7 @@ class _AddInsuranceState extends State<AddInsurance> {
                         });
                       },
                       child: Text(
-                          Localization.of(context)
+                          Localization.of(context)!
                               .addSecondaryInsurance
                               .toUpperCase(),
                           style: const TextStyle(
@@ -349,8 +349,8 @@ class _AddInsuranceState extends State<AddInsurance> {
         color: colorYellow,
         iconSize: spacing30,
         label: (widget.insuranceType == InsuranceType.primary)
-            ? Localization.of(context).addInsurance
-            : Localization.of(context).addSecondaryInsurance,
+            ? Localization.of(context)!.addInsurance
+            : Localization.of(context)!.addSecondaryInsurance,
         onPressed: _enableButton ? uploadInsuranceData : null,
       );
 
@@ -366,7 +366,7 @@ class _AddInsuranceState extends State<AddInsurance> {
               iconSize: spacing20,
               color: Colors.transparent,
               icon: FileConstants.icSkipBlack,
-              label: Localization.of(context).skipTasks,
+              label: Localization.of(context)!.skipTasks,
               onPressed: _skipTaskNow,
             ),
             if (showSecondaryInsurance) ...[
@@ -402,14 +402,14 @@ class _AddInsuranceState extends State<AddInsurance> {
           setState(() {
             _insuranceMemberError = value
                 .toString()
-                .isBlank(context, Localization.of(context).errorEnterFirstName);
+                .isBlank(context, Localization.of(context)!.errorEnterFirstName);
           });
         },
         labelTextStyle: labelStyle,
         errorText: _insuranceMemberError,
         focusNode: _insuranceMember,
         controller: _memberController,
-        labelText: Localization.of(context).insuranceMemberName,
+        labelText: Localization.of(context)!.insuranceMemberName,
         focusedBorderColor: colorBlack20,
         onFieldSubmitted: (s) {
           FocusScope.of(context).requestFocus(_memberId);
@@ -429,14 +429,14 @@ class _AddInsuranceState extends State<AddInsurance> {
           setState(() {
             _memberIdError = value
                 .toString()
-                .isBlank(context, Localization.of(context).errorEnterFirstName);
+                .isBlank(context, Localization.of(context)!.errorEnterFirstName);
           });
         },
         labelTextStyle: labelStyle,
         errorText: _memberIdError,
         focusNode: _memberId,
         controller: _memberIdController,
-        labelText: Localization.of(context).memberId,
+        labelText: Localization.of(context)!.memberId,
         focusedBorderColor: colorBlack20,
         onFieldSubmitted: (s) {
           FocusScope.of(context).requestFocus(_groupNumber);
@@ -457,14 +457,14 @@ class _AddInsuranceState extends State<AddInsurance> {
           setState(() {
             _groupNumberError = value
                 .toString()
-                .isBlank(context, Localization.of(context).errorEnterFirstName);
+                .isBlank(context, Localization.of(context)!.errorEnterFirstName);
           });
         },
         labelTextStyle: labelStyle,
         errorText: _groupNumberError,
         focusNode: _groupNumber,
         controller: _groupNumberController,
-        labelText: Localization.of(context).groupNumber,
+        labelText: Localization.of(context)!.groupNumber,
         focusedBorderColor: colorBlack20,
         onFieldSubmitted: (s) {
           FocusScope.of(context).requestFocus(_healthPlan);
@@ -481,7 +481,7 @@ class _AddInsuranceState extends State<AddInsurance> {
   Widget _getHealthPlan() {
     return HutanoTextField(
         labelTextStyle: labelStyle,
-        width: SizeConfig.screenWidth / 2.4,
+        width: SizeConfig.screenWidth! / 2.4,
         focusedBorderColor: colorBlack20,
         controller: _healthPlanController,
         focusNode: _healthPlan,
@@ -494,12 +494,12 @@ class _AddInsuranceState extends State<AddInsurance> {
           _addInsuranceModel.healthPlan = value;
           setState(() {
             _healthPlanError = value.toString().isBlank(
-                context, Localization.of(context).errorHealthInsurance);
+                context, Localization.of(context)!.errorHealthInsurance);
           });
         },
         errorText: _healthPlanError,
         textInputFormatter: [],
-        labelText: Localization.of(context).healthPlan,
+        labelText: Localization.of(context)!.healthPlan,
         onFieldSubmitted: (s) {
           FocusScope.of(context).requestFocus(_effectiveDate);
           showError(AddInsuranceError.healthPlan.index);
@@ -512,35 +512,35 @@ class _AddInsuranceState extends State<AddInsurance> {
     if (index >= 0) {
       _insuranceCompanyError = _companyController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorEnterField);
+          .isBlank(context, Localization.of(context)!.errorEnterField);
     }
     if (index >= 1) {
       _insuranceMemberError = _memberController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorEnterField);
+          .isBlank(context, Localization.of(context)!.errorEnterField);
     }
     if (index >= 2) {
       _memberIdError = _memberIdController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorEnterField);
+          .isBlank(context, Localization.of(context)!.errorEnterField);
     }
 
     if (index >= 3) {
       _groupNumberError = _groupNumberController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorEnterField);
+          .isBlank(context, Localization.of(context)!.errorEnterField);
     }
 
     if (index >= 4) {
       _healthPlanError = _healthPlanController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorEnterField);
+          .isBlank(context, Localization.of(context)!.errorEnterField);
     }
 
     if (index >= 5) {
       _effectiveDateError = _effectiveDateController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorEnterField);
+          .isBlank(context, Localization.of(context)!.errorEnterField);
     }
 
     setState(() {});

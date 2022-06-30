@@ -1,8 +1,8 @@
 class ReqFamilyNetwork {
-  final String id;
-  final int page;
-  final int limit;
-  final String search;
+  final String? id;
+  final int? page;
+  final int? limit;
+  final String? search;
 
   ReqFamilyNetwork({
     this.id,
@@ -29,7 +29,7 @@ class ReqFamilyNetwork {
   }
 
   factory ReqFamilyNetwork.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
+   
     return ReqFamilyNetwork(
       id: map['_id'],
       page: map['page'],

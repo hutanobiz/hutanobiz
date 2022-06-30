@@ -6,7 +6,7 @@ class AppointmentCompleteConfirmation extends StatelessWidget {
   final Map appointmentCompleteMap;
 
   const AppointmentCompleteConfirmation(
-      {Key key, @required this.appointmentCompleteMap})
+      {Key? key, required this.appointmentCompleteMap})
       : super(key: key);
 
   @override

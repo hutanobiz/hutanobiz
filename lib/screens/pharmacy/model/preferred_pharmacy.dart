@@ -1,8 +1,8 @@
 import 'package:hutano/screens/pharmacy/model/res_preferred_pharmacy_list.dart';
 
 class PreferredPharmacyData {
-  String status;
-  PreferredPharmacyList response;
+  String? status;
+  PreferredPharmacyList? response;
 
   PreferredPharmacyData({this.status, this.response});
 
@@ -17,24 +17,24 @@ class PreferredPharmacyData {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     if (this.response != null) {
-      data['response'] = this.response.toJson();
+      data['response'] = this.response!.toJson();
     }
     return data;
   }
 }
 
 class PreferredPharmacyList {
-  String sId;
-  List<Pharmacy> preferredPharmacy;
+  String? sId;
+  List<Pharmacy>? preferredPharmacy;
 
   PreferredPharmacyList({this.sId, this.preferredPharmacy});
 
   PreferredPharmacyList.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     if (json['preferredPharmacy'] != null) {
-      preferredPharmacy = new List<Pharmacy>();
+      preferredPharmacy = <Pharmacy>[];
       json['preferredPharmacy'].forEach((v) {
-        preferredPharmacy.add(new Pharmacy.fromJson(v));
+        preferredPharmacy!.add(new Pharmacy.fromJson(v));
       });
     }
   }
@@ -44,7 +44,7 @@ class PreferredPharmacyList {
     data['_id'] = this.sId;
     if (this.preferredPharmacy != null) {
       data['preferredPharmacy'] =
-          this.preferredPharmacy.map((v) => v.toJson()).toList();
+          this.preferredPharmacy!.map((v) => v.toJson()).toList();
     }
     return data;
   }

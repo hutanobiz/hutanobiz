@@ -17,8 +17,8 @@ import 'package:hutano/widgets/text_with_image.dart';
 
 class ProviderWidget extends StatelessWidget {
   ProviderWidget(
-      {Key key,
-      @required this.data,
+      {Key? key,
+      required this.data,
       this.selectedAppointment,
       this.bookAppointment,
       this.isOptionsShow = true,
@@ -36,20 +36,20 @@ class ProviderWidget extends StatelessWidget {
         super(key: key);
 
   final data;
-  final String averageRating, selectedAppointment;
-  final Function bookAppointment;
+  final String? averageRating, selectedAppointment;
+  final Function? bookAppointment;
   final bool isOptionsShow, isProverPicShow, isService;
-  final EdgeInsets margin;
-  final Function onRatingClick, onLocationClick;
-  List<Services> searchedSubService;
+  final EdgeInsets? margin;
+  final Function? onRatingClick, onLocationClick;
+  List<Services>? searchedSubService;
   // Show extra details in confirm and pay screen
   final bool showPaymentProcced;
-  final String appointmentTime;
-  final String servicesPrize;
+  final String? appointmentTime;
+  final String? servicesPrize;
 
   @override
   Widget build(BuildContext context) {
-    String nameTitle = "Dr. ",
+    String? nameTitle = "Dr. ",
         name = "---",
         avatar,
         fee = "0.00",
@@ -60,7 +60,7 @@ class ProviderWidget extends StatelessWidget {
         professionalTitle = "---",
         distance = "0",
         address;
-    bool isOnline = false;
+    bool? isOnline = false;
 
     isOnline = data['ondemandavailabledoctor'] != null
         ? data['ondemandavailabledoctor']['isOnline']
@@ -68,7 +68,7 @@ class ProviderWidget extends StatelessWidget {
 
     if (data['distance'] != null) {
       distance =
-          ((double.parse(data['distance']?.toString() ?? 0) * 0.000621371)
+          ((double.parse(data['distance']?.toString() ?? 0 as String) * 0.000621371)
                   .toStringAsFixed(0)) +
               ' mi';
 
@@ -126,7 +126,7 @@ class ProviderWidget extends StatelessWidget {
     if (data['userId'] is Map) {
       if (data["userId"] != null) {
         nameTitle = data["userId"]["title"]?.toString() ?? 'Dr. ';
-        name = nameTitle + data["userId"]["fullName"]?.toString() ?? "---";
+        name = nameTitle + (data["userId"]["fullName"]?.toString() ?? "---");
         avatar = data["userId"]["avatar"]?.toString();
       }
     } else if (data["User"] != null && data["User"].length > 0) {
@@ -136,7 +136,7 @@ class ProviderWidget extends StatelessWidget {
     }
 
     if (data["education"] != null && data["education"].isNotEmpty) {
-      name += ', ' + data["education"][0]["degree"]?.toString() ?? '---̥';
+      name += ', ' + (data["education"][0]["degree"]?.toString() ?? '---̥');
     }
 
     practicingSince = data["practicingSince"] != null
@@ -151,13 +151,13 @@ class ProviderWidget extends StatelessWidget {
       if (data['professionalTitle'] != null) {
         professionalTitle =
             data['professionalTitle']['title']?.toString() ?? "----";
-        name += Extensions.getSortProfessionTitle(professionalTitle);
+        name += Extensions.getSortProfessionTitle(professionalTitle)!;
       }
     } else if (data['ProfessionalTitle'] != null &&
         data["ProfessionalTitle"].length > 0) {
       professionalTitle =
           data['ProfessionalTitle'][0]['title']?.toString() ?? "----";
-      name += Extensions.getSortProfessionTitle(professionalTitle);
+      name += Extensions.getSortProfessionTitle(professionalTitle)!;
     }
 
     if (data["businessLocation"] != null) {
@@ -192,7 +192,7 @@ class ProviderWidget extends StatelessWidget {
             borderRadius: BorderRadius.all(
               Radius.circular(14.0),
             ),
-            border: Border.all(color: Colors.grey[300]),
+            border: Border.all(color: Colors.grey[300]!),
           ),
           child: Column(
             children: <Widget>[
@@ -214,7 +214,7 @@ class ProviderWidget extends StatelessWidget {
                                     Navigator.of(context).pushNamed(
                                       Routes.providerImageScreen,
                                       arguments:
-                                          (ApiBaseHelper.imageUrl + avatar),
+                                          (ApiBaseHelper.imageUrl + avatar!),
                                     );
                                   }
                                 : null,
@@ -223,17 +223,17 @@ class ProviderWidget extends StatelessWidget {
                               height: 100.0,
                               decoration: BoxDecoration(
                                 image: DecorationImage(
-                                  image: avatar == null
+                                  image: (avatar == null
                                       ? AssetImage(
                                           FileConstants.icImgPlaceHolder)
                                       : NetworkImage(
-                                          ApiBaseHelper.imageUrl + avatar),
+                                          ApiBaseHelper.imageUrl + avatar)) as ImageProvider<Object>,
                                   fit: BoxFit.cover,
                                 ),
                                 borderRadius:
                                     new BorderRadius.all(Radius.circular(50.0)),
                                 border: new Border.all(
-                                  color: Colors.grey[300],
+                                  color: Colors.grey[300]!,
                                   width: 1.0,
                                 ),
                               ),
@@ -243,7 +243,7 @@ class ProviderWidget extends StatelessWidget {
                         Positioned(
                             top: 0,
                             right: spacing10,
-                            child: isOnline
+                            child: isOnline!
                                 ? CircleAvatar(
                                     backgroundColor: Color(0xff009900),
                                     radius: spacing10)
@@ -362,7 +362,7 @@ class ProviderWidget extends StatelessWidget {
                             ),
                             isService
                                 ? Text(
-                                    searchedSubService.first.subServiceName,
+                                    searchedSubService!.first.subServiceName!,
                                     style: TextStyle(
                                         fontWeight: fontWeightMedium,
                                         fontSize: fontSize13),
@@ -406,10 +406,10 @@ class ProviderWidget extends StatelessWidget {
                   ? Padding(
                       padding: const EdgeInsets.only(left: 12.0, right: 12.0),
                       child: Column(children: [
-                        searchedSubService.any((item) => item.serviceType == 1)
+                        searchedSubService!.any((item) => item.serviceType == 1)
                             ? officePriceWidget()
                             : SizedBox(),
-                        searchedSubService.any((item) => item.serviceType == 3)
+                        searchedSubService!.any((item) => item.serviceType == 3)
                             ? onsitePriceWidget()
                             : SizedBox(),
                         Padding(
@@ -514,7 +514,7 @@ class ProviderWidget extends StatelessWidget {
                                     width: 15, height: 15),
                                 SizedBox(width: 5.0),
                                 Text(
-                                  distance,
+                                  distance!,
                                   style: TextStyle(
                                       fontWeight: fontWeightRegular,
                                       fontSize: fontSize12),
@@ -579,7 +579,7 @@ class ProviderWidget extends StatelessWidget {
                                     color: AppColors.persian_indigo),
                               ),
                               child: Text(
-                                Localization.of(context).addToNetwork,
+                                Localization.of(context)!.addToNetwork,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 12.0,
@@ -588,8 +588,8 @@ class ProviderWidget extends StatelessWidget {
                               ),
                               onPressed: () {
                                 final user = data["User"][0];
-                                var name = "";
-                                var occupation = "";
+                                String? name = "";
+                                String? occupation = "";
                                 if (user == null) {
                                   return;
                                 }
@@ -597,7 +597,7 @@ class ProviderWidget extends StatelessWidget {
                                 if (data["Specialties"].length > 0) {
                                   occupation = data["Specialties"][0]["title"];
                                   name =
-                                      'Dr. $name , ${occupation.getInitials()}';
+                                      'Dr. $name , ${occupation!.getInitials()}';
                                 }
 
                                 // Navigator.of(context).pushNamed(
@@ -650,7 +650,7 @@ class ProviderWidget extends StatelessWidget {
                                   color: Colors.white,
                                 ),
                               ),
-                              onPressed: bookAppointment,
+                              onPressed: bookAppointment as void Function()?,
                             ),
                           ),
                         ),
@@ -703,7 +703,7 @@ class ProviderWidget extends StatelessWidget {
     );
   }
 
-  Row consultationPriceWidget(String title, String price) {
+  Row consultationPriceWidget(String title, String? price) {
     return Row(
       children: <Widget>[
         Expanded(
@@ -739,7 +739,7 @@ class ProviderWidget extends StatelessWidget {
           ),
         ),
         Text(
-          "\$${searchedSubService[searchedSubService.indexWhere((element) => element.serviceType == 1)].amount.toStringAsFixed(2)}",
+          "\$${searchedSubService![searchedSubService!.indexWhere((element) => element.serviceType == 1)].amount.toStringAsFixed(2)}",
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style:
@@ -762,7 +762,7 @@ class ProviderWidget extends StatelessWidget {
           ),
         ),
         Text(
-          "\$${searchedSubService[searchedSubService.indexWhere((element) => element.serviceType == 3)].amount.toStringAsFixed(2)}",
+          "\$${searchedSubService![searchedSubService!.indexWhere((element) => element.serviceType == 3)].amount.toStringAsFixed(2)}",
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style:

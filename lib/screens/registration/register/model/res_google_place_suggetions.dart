@@ -1,6 +1,6 @@
 class ResGooglePlaceSuggetions {
-  List<Places> results;
-  String status;
+  List<Places>? results;
+  String? status;
 
   ResGooglePlaceSuggetions({this.results, this.status});
 
@@ -8,7 +8,7 @@ class ResGooglePlaceSuggetions {
     if (json['results'] != null) {
       results = <Places>[];
       json['results'].forEach((v) {
-        results.add(Places.fromJson(v));
+        results!.add(Places.fromJson(v));
       });
     }
     status = json['status'];
@@ -17,7 +17,7 @@ class ResGooglePlaceSuggetions {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     if (results != null) {
-      data['results'] = results.map((v) => v.toJson()).toList();
+      data['results'] = results!.map((v) => v.toJson()).toList();
     }
     data['status'] = status;
     return data;
@@ -25,12 +25,12 @@ class ResGooglePlaceSuggetions {
 }
 
 class Places {
-  String formattedAddress;
-  String name;
-  String placeId;
-  PlusCode plusCode;
-  String reference;
-  List<String> types;
+  String? formattedAddress;
+  String? name;
+  String? placeId;
+  PlusCode? plusCode;
+  String? reference;
+  List<String>? types;
 
   Places(
       {this.formattedAddress,
@@ -57,7 +57,7 @@ class Places {
     data['name'] = name;
     data['place_id'] = placeId;
     if (plusCode != null) {
-      data['plus_code'] = plusCode.toJson();
+      data['plus_code'] = plusCode!.toJson();
     }
     data['reference'] = reference;
     data['types'] = types;
@@ -66,8 +66,8 @@ class Places {
 }
 
 class PlusCode {
-  String compoundCode;
-  String globalCode;
+  String? compoundCode;
+  String? globalCode;
 
   PlusCode({this.compoundCode, this.globalCode});
 

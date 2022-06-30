@@ -27,7 +27,7 @@ class _InviteFamilyCompleteState extends State<InviteFamilyComplete> {
               AppHeader(
                 progressSteps: HutanoProgressSteps.three,
                 title: "Invite Family and Friends",
-                subTitle: Localization.of(context).taskComplete,
+                subTitle: Localization.of(context)!.taskComplete,
               ),
               Spacer(),
               RoundSuccess(),

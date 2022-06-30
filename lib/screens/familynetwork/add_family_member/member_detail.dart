@@ -7,9 +7,9 @@ import 'package:hutano/widgets/ripple_effect.dart';
 
 class MemberRow extends StatelessWidget {
   final FamilyMember member;
-  final ValueSetter<FamilyMember> onAdd;
+  final ValueSetter<FamilyMember>? onAdd;
 
-  const MemberRow({Key key, @required this.member, this.onAdd})
+  const MemberRow({Key? key, required this.member, this.onAdd})
       : assert(member != null),
         super(key: key);
 
@@ -25,7 +25,7 @@ class MemberRow extends StatelessWidget {
         ),
         RippleEffect(
           onTap: () {
-            onAdd(member);
+            onAdd!(member);
           },
           child: Image.asset(
             FileConstants.icAdd,

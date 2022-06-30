@@ -1,6 +1,6 @@
 class ResResetPassword {
-  String status;
-  String response;
+  String? status;
+  String? response;
 
   ResResetPassword({this.status, this.response});
 

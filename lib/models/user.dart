@@ -1,29 +1,29 @@
 class User {
-  Location location;
-  String fullName;
-  String dob;
-  String address;
-  String city;
-  String state;
-  String avatar;
-  String zipCode;
-  String phoneNumber;
-  String gender;
-  String language;
-  bool isAbleTOReceiveOffersAndPromotions;
-  bool isAgreeTermsAndCondition;
-  String mobileCountryCode;
-  bool isContactInformationVerified;
-  int status;
-  int type;
-  int resetPasswordVerificationCode;
-  String resetPasswordVerificationCodeSentAt;
-  String sId;
-  String email;
-  List<Tokens> tokens;
-  String createdAt;
-  String updatedAt;
-  int iV;
+  Location? location;
+  String? fullName;
+  String? dob;
+  String? address;
+  String? city;
+  String? state;
+  String? avatar;
+  String? zipCode;
+  String? phoneNumber;
+  String? gender;
+  String? language;
+  bool? isAbleTOReceiveOffersAndPromotions;
+  bool? isAgreeTermsAndCondition;
+  String? mobileCountryCode;
+  bool? isContactInformationVerified;
+  int? status;
+  int? type;
+  int? resetPasswordVerificationCode;
+  String? resetPasswordVerificationCodeSentAt;
+  String? sId;
+  String? email;
+  List<Tokens>? tokens;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
 
   User(
       {this.location,
@@ -79,9 +79,9 @@ class User {
     sId = json['_id'];
     email = json['email'];
     if (json['tokens'] != null) {
-      tokens = new List<Tokens>();
+      tokens =  [];
       json['tokens'].forEach((v) {
-        tokens.add(new Tokens.fromJson(v));
+        tokens!.add(new Tokens.fromJson(v));
       });
     }
     createdAt = json['createdAt'];
@@ -92,7 +92,7 @@ class User {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.location != null) {
-      data['location'] = this.location.toJson();
+      data['location'] = this.location!.toJson();
     }
     data['fullName'] = this.fullName;
     data['dob'] = this.dob;
@@ -117,7 +117,7 @@ class User {
     data['_id'] = this.sId;
     data['email'] = this.email;
     if (this.tokens != null) {
-      data['tokens'] = this.tokens.map((v) => v.toJson()).toList();
+      data['tokens'] = this.tokens!.map((v) => v.toJson()).toList();
     }
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
@@ -127,17 +127,17 @@ class User {
 }
 
 class Location {
-  String type;
-  List<Object> coordinates;
+  String? type;
+  List<Object>? coordinates;
 
   Location({this.type, this.coordinates});
 
   Location.fromJson(Map<String, dynamic> json) {
     type = json['type'];
     if (json['coordinates'] != null) {
-      coordinates = new List<Object>();
+      coordinates = [];
       json['coordinates'].forEach((v) {
-        coordinates.add(new Location.fromJson(v));
+        coordinates!.add(new Location.fromJson(v));
       });
     }
   }
@@ -151,9 +151,9 @@ class Location {
 }
 
 class Tokens {
-  String sId;
-  String access;
-  String token;
+  String? sId;
+  String? access;
+  String? token;
 
   Tokens({this.sId, this.access, this.token});
 

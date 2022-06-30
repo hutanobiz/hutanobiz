@@ -1,19 +1,19 @@
 class ResAddCard {
-  String _status;
-  Response _response;
+  String? _status;
+  Response? _response;
 
-  ResAddCard({String status, Response response}) {
+  ResAddCard({String? status, Response? response}) {
     this._status = status;
     this._response = response;
   }
 
-  String get status => _status;
+  String? get status => _status;
 
-  set status(String status) => _status = status;
+  set status(String? status) => _status = status;
 
-  Response get response => _response;
+  Response? get response => _response;
 
-  set response(Response response) => _response = response;
+  set response(Response? response) => _response = response;
 
   ResAddCard.fromJson(Map<String, dynamic> json) {
     _status = json['status'];
@@ -26,59 +26,59 @@ class ResAddCard {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this._status;
     if (this._response != null) {
-      data['response'] = this._response.toJson();
+      data['response'] = this._response!.toJson();
     }
     return data;
   }
 }
 
 class Response {
-  String _id;
-  String _object;
-  String _addressCity;
-  String _addressCountry;
-  String _addressLine1;
-  String _addressLine1Check;
-  String _addressLine2;
-  String _addressState;
-  String _addressZip;
-  String _addressZipCheck;
-  String _brand;
-  String _country;
-  String _customer;
-  String _cvcCheck;
-  String _dynamicLast4;
-  int _expMonth;
-  int _expYear;
-  String _fingerprint;
-  String _funding;
-  String _last4;
-  String _name;
-  String _tokenizationMethod;
+  String? _id;
+  String? _object;
+  String? _addressCity;
+  String? _addressCountry;
+  String? _addressLine1;
+  String? _addressLine1Check;
+  String? _addressLine2;
+  String? _addressState;
+  String? _addressZip;
+  String? _addressZipCheck;
+  String? _brand;
+  String? _country;
+  String? _customer;
+  String? _cvcCheck;
+  String? _dynamicLast4;
+  int? _expMonth;
+  int? _expYear;
+  String? _fingerprint;
+  String? _funding;
+  String? _last4;
+  String? _name;
+  String? _tokenizationMethod;
 
   Response(
-      {String id,
-      String object,
-      String addressCity,
-      String addressCountry,
-      String addressLine1,
-      String addressLine1Check,
-      String addressLine2,
-      String addressState,
-      String addressZip,
-      String addressZipCheck,
-      String brand,
-      String country,
-      String customer,
-      String cvcCheck,
-      String dynamicLast4,
-      int expMonth,
-      int expYear,
-      String fingerprint,
-      String funding,
-      String last4,
-      String name,
-      String tokenizationMethod}) {
+      {String? id,
+      String? object,
+      String? addressCity,
+      String? addressCountry,
+      String? addressLine1,
+      String? addressLine1Check,
+      String? addressLine2,
+      String? addressState,
+      String? addressZip,
+      String? addressZipCheck,
+      String? brand,
+      String? country,
+      String? customer,
+      String? cvcCheck,
+      String? dynamicLast4,
+      int? expMonth,
+      int? expYear,
+      String? fingerprint,
+      String? funding,
+      String? last4,
+      String? name,
+      String? tokenizationMethod}) {
     this._id = id;
     this._object = object;
     this._addressCity = addressCity;
@@ -103,95 +103,95 @@ class Response {
     this._tokenizationMethod = tokenizationMethod;
   }
 
-  String get id => _id;
+  String? get id => _id;
 
-  set id(String id) => _id = id;
+  set id(String? id) => _id = id;
 
-  String get object => _object;
+  String? get object => _object;
 
-  set object(String object) => _object = object;
+  set object(String? object) => _object = object;
 
-  String get addressCity => _addressCity;
+  String? get addressCity => _addressCity;
 
-  set addressCity(String addressCity) => _addressCity = addressCity;
+  set addressCity(String? addressCity) => _addressCity = addressCity;
 
-  String get addressCountry => _addressCountry;
+  String? get addressCountry => _addressCountry;
 
-  set addressCountry(String addressCountry) => _addressCountry = addressCountry;
+  set addressCountry(String? addressCountry) => _addressCountry = addressCountry;
 
-  String get addressLine1 => _addressLine1;
+  String? get addressLine1 => _addressLine1;
 
-  set addressLine1(String addressLine1) => _addressLine1 = addressLine1;
+  set addressLine1(String? addressLine1) => _addressLine1 = addressLine1;
 
-  String get addressLine1Check => _addressLine1Check;
+  String? get addressLine1Check => _addressLine1Check;
 
-  set addressLine1Check(String addressLine1Check) =>
+  set addressLine1Check(String? addressLine1Check) =>
       _addressLine1Check = addressLine1Check;
 
-  String get addressLine2 => _addressLine2;
+  String? get addressLine2 => _addressLine2;
 
-  set addressLine2(String addressLine2) => _addressLine2 = addressLine2;
+  set addressLine2(String? addressLine2) => _addressLine2 = addressLine2;
 
-  String get addressState => _addressState;
+  String? get addressState => _addressState;
 
-  set addressState(String addressState) => _addressState = addressState;
+  set addressState(String? addressState) => _addressState = addressState;
 
-  String get addressZip => _addressZip;
+  String? get addressZip => _addressZip;
 
-  set addressZip(String addressZip) => _addressZip = addressZip;
+  set addressZip(String? addressZip) => _addressZip = addressZip;
 
-  String get addressZipCheck => _addressZipCheck;
+  String? get addressZipCheck => _addressZipCheck;
 
-  set addressZipCheck(String addressZipCheck) =>
+  set addressZipCheck(String? addressZipCheck) =>
       _addressZipCheck = addressZipCheck;
 
-  String get brand => _brand;
+  String? get brand => _brand;
 
-  set brand(String brand) => _brand = brand;
+  set brand(String? brand) => _brand = brand;
 
-  String get country => _country;
+  String? get country => _country;
 
-  set country(String country) => _country = country;
+  set country(String? country) => _country = country;
 
-  String get customer => _customer;
+  String? get customer => _customer;
 
-  set customer(String customer) => _customer = customer;
+  set customer(String? customer) => _customer = customer;
 
-  String get cvcCheck => _cvcCheck;
+  String? get cvcCheck => _cvcCheck;
 
-  set cvcCheck(String cvcCheck) => _cvcCheck = cvcCheck;
+  set cvcCheck(String? cvcCheck) => _cvcCheck = cvcCheck;
 
-  String get dynamicLast4 => _dynamicLast4;
+  String? get dynamicLast4 => _dynamicLast4;
 
-  set dynamicLast4(String dynamicLast4) => _dynamicLast4 = dynamicLast4;
+  set dynamicLast4(String? dynamicLast4) => _dynamicLast4 = dynamicLast4;
 
-  int get expMonth => _expMonth;
+  int? get expMonth => _expMonth;
 
-  set expMonth(int expMonth) => _expMonth = expMonth;
+  set expMonth(int? expMonth) => _expMonth = expMonth;
 
-  int get expYear => _expYear;
+  int? get expYear => _expYear;
 
-  set expYear(int expYear) => _expYear = expYear;
+  set expYear(int? expYear) => _expYear = expYear;
 
-  String get fingerprint => _fingerprint;
+  String? get fingerprint => _fingerprint;
 
-  set fingerprint(String fingerprint) => _fingerprint = fingerprint;
+  set fingerprint(String? fingerprint) => _fingerprint = fingerprint;
 
-  String get funding => _funding;
+  String? get funding => _funding;
 
-  set funding(String funding) => _funding = funding;
+  set funding(String? funding) => _funding = funding;
 
-  String get last4 => _last4;
+  String? get last4 => _last4;
 
-  set last4(String last4) => _last4 = last4;
+  set last4(String? last4) => _last4 = last4;
 
-  String get name => _name;
+  String? get name => _name;
 
-  set name(String name) => _name = name;
+  set name(String? name) => _name = name;
 
-  String get tokenizationMethod => _tokenizationMethod;
+  String? get tokenizationMethod => _tokenizationMethod;
 
-  set tokenizationMethod(String tokenizationMethod) =>
+  set tokenizationMethod(String? tokenizationMethod) =>
       _tokenizationMethod = tokenizationMethod;
 
   Response.fromJson(Map<String, dynamic> json) {

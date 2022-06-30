@@ -3,15 +3,15 @@ import 'package:hutano/utils/color_utils.dart';
 
 
 class HutanoRoundButton extends StatelessWidget {
-  final String iconText;
-  final Color bgColor;
+  final String? iconText;
+  final Color? bgColor;
   final bool isIcon;
-  final String icon;
-  final double iconSize;
-  final Color borderColor;
+  final String? icon;
+  final double? iconSize;
+  final Color? borderColor;
 
   const HutanoRoundButton(
-      {Key key,
+      {Key? key,
       this.bgColor = accentColor,
       this.iconText,
       this.isIcon=false,
@@ -29,13 +29,13 @@ class HutanoRoundButton extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(
-              width: 1.0, color: borderColor!=null ?borderColor: colorBorder2.withOpacity(0.1),
+              width: 1.0, color: borderColor!=null ?borderColor!: colorBorder2.withOpacity(0.1),
               style: BorderStyle.solid),
           color: bgColor!=null ?bgColor : accentColor ,
         ),
-        child: isIcon ? Image.asset(icon, width: iconSize, height: iconSize) :Container(
+        child: isIcon ? Image.asset(icon!, width: iconSize, height: iconSize) :Container(
           padding: const EdgeInsets.all(9.0),
-          child: Text(iconText,
+          child: Text(iconText!,
               style: TextStyle(color: Colors.white, fontSize: 20)),
         ));
   }

@@ -1,6 +1,6 @@
 class ResMedicalDocumentsModel {
-  String status;
-  MyDiseaseData response;
+  String? status;
+  MyDiseaseData? response;
 
   ResMedicalDocumentsModel({this.status, this.response});
 
@@ -15,16 +15,16 @@ class ResMedicalDocumentsModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     if (this.response != null) {
-      data['response'] = this.response.toJson();
+      data['response'] = this.response!.toJson();
     }
     return data;
   }
 }
 
 class MyDiseaseData {
-  List<dynamic> otherMedicalHistory;
-  String sId;
-  List<MedicalHistory> medicalHistory;
+  List<dynamic>? otherMedicalHistory;
+  String? sId;
+  List<MedicalHistory>? medicalHistory;
   // String userId;
   // List<dynamic> medicalImages;
   // List<MedicalDocuments> medicalDocuments;
@@ -50,9 +50,9 @@ class MyDiseaseData {
     otherMedicalHistory = json['otherMedicalHistory'];
     sId = json['_id'];
     if (json['medicalHistory'] != null) {
-      medicalHistory = new List<MedicalHistory>();
+      medicalHistory = <MedicalHistory>[];
       json['medicalHistory'].forEach((v) {
-        medicalHistory.add(new MedicalHistory.fromJson(v));
+        medicalHistory!.add(new MedicalHistory.fromJson(v));
       });
     }
     // userId = json['userId'];
@@ -80,7 +80,7 @@ class MyDiseaseData {
     data['_id'] = this.sId;
     if (this.medicalHistory != null) {
       data['medicalHistory'] =
-          this.medicalHistory.map((v) => v.toJson()).toList();
+          this.medicalHistory!.map((v) => v.toJson()).toList();
     }
     // data['userId'] = this.userId;
     // data['medicalImages'] = this.medicalImages;
@@ -99,10 +99,10 @@ class MyDiseaseData {
 }
 
 class MedicalHistory {
-  String name;
-  String year;
-  String month;
-  String sId;
+  String? name;
+  String? year;
+  String? month;
+  String? sId;
 
   MedicalHistory({this.name, this.year, this.month, this.sId});
 
@@ -124,11 +124,11 @@ class MedicalHistory {
 }
 
 class MedicalDocuments {
-  String medicalDocuments;
-  String type;
-  String name;
-  String date;
-  String sId;
+  String? medicalDocuments;
+  String? type;
+  String? name;
+  String? date;
+  String? sId;
 
   MedicalDocuments(
       {this.medicalDocuments, this.type, this.name, this.date, this.sId});
@@ -153,19 +153,19 @@ class MedicalDocuments {
 }
 
 class UserAddress {
-  String title;
-  int addresstype;
-  String address;
-  String street;
-  String city;
-  String state;
-  String stateCode;
-  String zipCode;
-  String type;
-  List<dynamic> coordinates;
-  String sId;
-  String number;
-  String securityGate;
+  String? title;
+  int? addresstype;
+  String? address;
+  String? street;
+  String? city;
+  String? state;
+  String? stateCode;
+  String? zipCode;
+  String? type;
+  List<dynamic>? coordinates;
+  String? sId;
+  String? number;
+  String? securityGate;
 
   UserAddress(
       {this.title,

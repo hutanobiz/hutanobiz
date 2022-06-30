@@ -5,15 +5,15 @@ import 'package:hutano/utils/constants/file_constants.dart';
 
 class HutanoCheckBox extends StatelessWidget {
   final bool isChecked;
-  final Function onValueChange;
+  final Function? onValueChange;
 
   const HutanoCheckBox(
-      {@required this.isChecked, @required this.onValueChange});
+      {required this.isChecked, required this.onValueChange});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (onValueChange != null) onValueChange(!isChecked);
+        if (onValueChange != null) onValueChange!(!isChecked);
       },
       child: Container(
         height: 20,

@@ -26,10 +26,10 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-  String email;
-  String phoneNumber;
+  String email = '---';
+  String? phoneNumber;
   ApiBaseHelper api = ApiBaseHelper();
-  Future<dynamic> _requestsFuture;
+  Future<dynamic>? _requestsFuture;
 
   @override
   void initState() {
@@ -57,7 +57,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               } else if (snapshot.hasError) {
                 return new Text('Error: ${snapshot.error}');
               } else if (snapshot.hasData) {
-                email = snapshot.data['response']['email'].toString() ?? "---";
+                email = snapshot.data['response']['email'].toString();
                 phoneNumber =
                     snapshot.data['response']['phoneNumber']?.toString();
                 String emailText;
@@ -75,8 +75,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     SizedBox(height: spacing30),
                     HutanoHeaderInfo(
                       showLogo: true,
-                      title: Localization.of(context).welcome,
-                      subTitle: Localization.of(context).accNowActive,
+                      title: Localization.of(context)!.welcome,
+                      subTitle: Localization.of(context)!.accNowActive,
                       subTitleFontSize: fontSize15,
                     ),
                     SizedBox(height: spacing30),
@@ -91,7 +91,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         SizedBox(width: 20),
                         Flexible(
                           child: Text(
-                            Localization.of(context).completeTask,
+                            Localization.of(context)!.completeTask,
                             maxLines: 2,
                             style: TextStyle(
                                 color: colorBlack2,
@@ -113,8 +113,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           : spacing20,
                     ),
                     HutanoStepsHeader(
-                      title: Localization.of(context).activateEmail,
-                      subTitle: Localization.of(context).activateEmailDesc,
+                      title: Localization.of(context)!.activateEmail,
+                      subTitle: Localization.of(context)!.activateEmailDesc,
                       iconText: stepOne,
                       titleStyle: _getTitletStyle(),
                       subTitleStyle: _getSubTitletStyle(),
@@ -123,8 +123,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       height: 20,
                     ),
                     HutanoStepsHeader(
-                      title: Localization.of(context).addPaymentOption,
-                      subTitle: Localization.of(context).addPaymentDesc,
+                      title: Localization.of(context)!.addPaymentOption,
+                      subTitle: Localization.of(context)!.addPaymentDesc,
                       iconText: stepTwo,
                       titleStyle: _getTitletStyle(),
                       subTitleStyle: _getSubTitletStyle(),
@@ -133,8 +133,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       height: 20,
                     ),
                     HutanoStepsHeader(
-                        title: Localization.of(context).addFamily,
-                        subTitle: Localization.of(context).addFamilyDesc,
+                        title: Localization.of(context)!.addFamily,
+                        subTitle: Localization.of(context)!.addFamilyDesc,
                         titleStyle: _getTitletStyle(),
                         subTitleStyle: _getSubTitletStyle(),
                         iconText: stepThree),
@@ -142,8 +142,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       height: 20,
                     ),
                     HutanoStepsHeader(
-                      title: Localization.of(context).addProvider,
-                      subTitle: Localization.of(context).addProviderDesc,
+                      title: Localization.of(context)!.addProvider,
+                      subTitle: Localization.of(context)!.addProviderDesc,
                       titleStyle: _getTitletStyle(),
                       subTitleStyle: _getSubTitletStyle(),
                       iconText: stepFour,
@@ -205,7 +205,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         icon: FileConstants.icDone,
         color: colorOrange,
         iconSize: spacing30,
-        label: Localization.of(context).completeTaskNow,
+        label: Localization.of(context)!.completeTaskNow,
         onPressed: _completeTaskNow,
       ));
 
@@ -219,7 +219,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         iconSize: spacing20,
         color: Colors.transparent,
         icon: FileConstants.icSkipBlack,
-        label: Localization.of(context).skipTasks,
+        label: Localization.of(context)!.skipTasks,
         onPressed: _skipTaskNow,
       ));
 

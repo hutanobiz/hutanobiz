@@ -3,13 +3,13 @@ import 'package:intl/intl.dart';
 
 class ReplyCard extends StatelessWidget {
   const ReplyCard(
-      {Key key,
-      @required this.message,
-      @required this.time,
-      @required this.isLocalTime})
+      {Key? key,
+      required this.message,
+      required this.time,
+      required this.isLocalTime})
       : super(key: key);
-  final String message;
-  final String time;
+  final String? message;
+  final String? time;
   final bool isLocalTime;
 
   @override
@@ -40,7 +40,7 @@ class ReplyCard extends StatelessWidget {
                   bottom: 8,
                 ),
                 child: Text(
-                  message,
+                  message!,
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -56,9 +56,9 @@ class ReplyCard extends StatelessWidget {
               ),
               child: Text(
                 isLocalTime
-                    ? DateFormat('hh:mm a').format(DateTime.parse(time))
+                    ? DateFormat('hh:mm a').format(DateTime.parse(time!))
                     : DateFormat('hh:mm a')
-                        .format(DateTime.parse(time).toLocal()),
+                        .format(DateTime.parse(time!).toLocal()),
                 style: TextStyle(
                   fontSize: 13,
                   color: Colors.grey[600],

@@ -4,17 +4,17 @@ import 'package:hutano/text_style.dart';
 
 class ProblemWidget extends StatelessWidget {
   ProblemWidget({
-    Key key,
-    @required this.dob,
-    @required this.gender,
-    @required this.appointmentProblem,
+    Key? key,
+    required this.dob,
+    required this.gender,
+    required this.appointmentProblem,
     this.problemTimeSpanMap,
   }) : super(key: key);
 
   final dynamic appointmentProblem;
-  final Map problemTimeSpanMap;
-  final String dob;
-  final int gender;
+  final Map? problemTimeSpanMap;
+  final String? dob;
+  final int? gender;
   Map sidesMap = {1: "Left", 2: "Right", 3: "Top", 4: "Bottom", 5: "All Over"};
   Map<String, String> timeSpanConfig = {
     "1": "Hours",
@@ -51,13 +51,13 @@ class ProblemWidget extends StatelessWidget {
     if (dob != null) {
       int day, month, year;
       if (dob.toString().contains('-')) {
-        day = int.parse(dob.split("-")[2]);
-        month = int.parse(dob.split("-")[1]);
-        year = int.parse(dob.split("-")[0]);
+        day = int.parse(dob!.split("-")[2]);
+        month = int.parse(dob!.split("-")[1]);
+        year = int.parse(dob!.split("-")[0]);
       } else {
-        day = int.parse(dob.split("/")[1]);
-        month = int.parse(dob.split("/")[0]);
-        year = int.parse(dob.split("/")[2]);
+        day = int.parse(dob!.split("/")[1]);
+        month = int.parse(dob!.split("/")[0]);
+        year = int.parse(dob!.split("/")[2]);
       }
       final birthday = DateTime(year, month, day);
       Duration dur = DateTime.now().difference(birthday);
@@ -156,7 +156,7 @@ class ProblemWidget extends StatelessWidget {
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(10)),
-          border: Border.all(color: Colors.grey[200]),
+          border: Border.all(color: Colors.grey[200]!),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -166,7 +166,7 @@ class ProblemWidget extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
-                    border: Border.all(color: Colors.grey[200]),
+                    border: Border.all(color: Colors.grey[200]!),
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(10)),

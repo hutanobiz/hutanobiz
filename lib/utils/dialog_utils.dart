@@ -8,17 +8,17 @@ import 'package:hutano/strings.dart';
 
 class DialogUtils {
   static void showAlertDialog(BuildContext context, String message,
-      {String title}) {
+      {String? title}) {
     customDialog(context, message, title: title);
   }
 
   static customDialog(BuildContext context, String description,
-      {Function onPressed,
-      String leftText,
-      String title,
-      Function onLeftPressed,
-      String rightText,
-      Function onRightPressed,
+      {Function? onPressed,
+      String? leftText,
+      String? title,
+      Function? onLeftPressed,
+      String? rightText,
+      Function? onRightPressed,
       bool isConfirmationDialog = false}) {
     var yyDialog = YYDialog();
     yyDialog.build(context)
@@ -67,7 +67,7 @@ class DialogUtils {
                                   side: BorderSide(color: AppColors.windsor)),
                               onPressed: () {
                                 yyDialog.dismiss();
-                                onLeftPressed();
+                                onLeftPressed!();
                               },
                               child: Padding(
                                 padding: EdgeInsets.all(10),
@@ -99,10 +99,10 @@ class DialogUtils {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
                             side: BorderSide(color: AppColors.windsor)),
-                        onPressed: onPressed ??
+                        onPressed: onPressed as void Function()? ??
                             () {
                               yyDialog.dismiss();
-                              onPressed();
+                              onPressed!();
                             },
                         child: Padding(
                           padding: EdgeInsets.all(10),
@@ -120,22 +120,22 @@ class DialogUtils {
   }
 
   static void showCustomDialog(
-      {BuildContext context, String title, String message}) {
+      {required BuildContext context, String? title, String? message}) {
     showDialog(
       context: context,
       builder: (context) {
-        return _showMaterialAlertDialog(context, message);
+        return _showMaterialAlertDialog(context, message!);
       },
     );
   }
 
   static void showOkCancelAlertDialog({
-    BuildContext context,
-    String message,
-    String okButtonTitle,
-    String cancelButtonTitle,
-    Function cancelButtonAction,
-    Function okButtonAction,
+    required BuildContext context,
+    String? message,
+    String? okButtonTitle,
+    String? cancelButtonTitle,
+    Function? cancelButtonAction,
+    Function? okButtonAction,
     bool isCancelEnable = true,
   }) {
     showDialog(
@@ -147,7 +147,7 @@ class DialogUtils {
             onWillPop: () async => false,
             child: _showOkCancelCupertinoAlertDialog(
                 context,
-                message,
+                message!,
                 okButtonTitle,
                 cancelButtonTitle,
                 okButtonAction,
@@ -159,7 +159,7 @@ class DialogUtils {
             onWillPop: () async => false,
             child: _showOkCancelMaterialAlertDialog(
                 context,
-                message,
+                message!,
                 okButtonTitle,
                 cancelButtonTitle,
                 okButtonAction,
@@ -174,11 +174,11 @@ class DialogUtils {
   static AlertDialog _showOkCancelMaterialAlertDialog(
       BuildContext context,
       String message,
-      String okButtonTitle,
-      String cancelButtonTitle,
-      Function okButtonAction,
+      String? okButtonTitle,
+      String? cancelButtonTitle,
+      Function? okButtonAction,
       bool isCancelEnable,
-      Function cancelButtonAction) {
+      Function? cancelButtonAction) {
     return AlertDialog(
         title: Text(Strings.appName),
         content: Text(message),
@@ -190,7 +190,7 @@ class DialogUtils {
                 okButtonAction: okButtonAction,
                 isCancelEnable: isCancelEnable,
                 cancelButtonAction: cancelButtonAction,
-              )
+              ) as List<Widget>?
             : _okAction(
                 context: context,
                 okButtonAction: okButtonAction,
@@ -200,11 +200,11 @@ class DialogUtils {
   static CupertinoAlertDialog _showOkCancelCupertinoAlertDialog(
     BuildContext context,
     String message,
-    String okButtonTitle,
-    String cancelButtonTitle,
-    Function okButtonAction,
+    String? okButtonTitle,
+    String? cancelButtonTitle,
+    Function? okButtonAction,
     bool isCancelEnable,
-    Function cancelButtonAction,
+    Function? cancelButtonAction,
   ) {
     return CupertinoAlertDialog(
         title: Text(Strings.appName),
@@ -217,7 +217,7 @@ class DialogUtils {
                 okButtonAction: okButtonAction,
                 isCancelEnable: isCancelEnable,
                 cancelButtonAction: cancelButtonAction,
-              )
+              ) as List<Widget>
             : _okAction(
                 context: context,
                 okButtonAction: okButtonAction,
@@ -242,15 +242,15 @@ class DialogUtils {
     ];
   }
 
-  static List<Widget> _okCancelActions({
-    BuildContext context,
-    String okButtonTitle,
-    String cancelButtonTitle,
-    Function okButtonAction,
-    bool isCancelEnable,
-    Function cancelButtonAction,
+  static List<Widget?> _okCancelActions({
+    BuildContext? context,
+    String? okButtonTitle,
+    String? cancelButtonTitle,
+    Function? okButtonAction,
+    bool? isCancelEnable,
+    Function? cancelButtonAction,
   }) {
-    return <Widget>[
+    return <Widget?>[
       cancelButtonTitle != null
           ? Platform.isIOS
               ? CupertinoDialogAction(
@@ -258,10 +258,10 @@ class DialogUtils {
                   child: Text(cancelButtonTitle),
                   onPressed: cancelButtonAction == null
                       ? () {
-                          Navigator.of(context).pop();
+                          Navigator.of(context!).pop();
                         }
                       : () {
-                          Navigator.of(context).pop();
+                          Navigator.of(context!).pop();
                           cancelButtonAction();
                         },
                 )
@@ -269,48 +269,48 @@ class DialogUtils {
                   child: Text(cancelButtonTitle),
                   onPressed: cancelButtonAction == null
                       ? () {
-                          Navigator.of(context).pop();
+                          Navigator.of(context!).pop();
                         }
                       : () {
-                          Navigator.of(context).pop();
+                          Navigator.of(context!).pop();
                           cancelButtonAction();
                         },
                 )
           : null,
       Platform.isIOS
           ? CupertinoDialogAction(
-              child: Text(okButtonTitle),
+              child: Text(okButtonTitle!),
               onPressed: () {
-                Navigator.of(context).pop();
-                okButtonAction();
+                Navigator.of(context!).pop();
+                okButtonAction!();
               },
             )
           : FlatButton(
-              child: Text(okButtonTitle),
+              child: Text(okButtonTitle!),
               onPressed: () {
-                Navigator.of(context).pop();
-                okButtonAction();
+                Navigator.of(context!).pop();
+                okButtonAction!();
               },
             ),
     ];
   }
 
   static List<Widget> _okAction(
-      {BuildContext context, String okButtonTitle, Function okButtonAction}) {
+      {BuildContext? context, String? okButtonTitle, Function? okButtonAction}) {
     return <Widget>[
       Platform.isIOS
           ? CupertinoDialogAction(
-              child: Text(okButtonTitle),
+              child: Text(okButtonTitle!),
               onPressed: () {
-                Navigator.of(context).pop();
-                okButtonAction();
+                Navigator.of(context!).pop();
+                okButtonAction!();
               },
             )
           : FlatButton(
-              child: Text(okButtonTitle),
+              child: Text(okButtonTitle!),
               onPressed: () {
-                Navigator.of(context).pop();
-                okButtonAction();
+                Navigator.of(context!).pop();
+                okButtonAction!();
               },
             ),
     ];

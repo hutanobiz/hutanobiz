@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:hutano/utils/color_utils.dart';
 
 class CustomScaffold extends StatelessWidget {
-  final Widget child;
-  final Widget appbar;
-  final EdgeInsets padding;
+  final Widget? child;
+  final Widget? appbar;
+  final EdgeInsets? padding;
 
-  const CustomScaffold({Key key, this.child, this.padding, this.appbar})
+  const CustomScaffold({Key? key, this.child, this.padding, this.appbar})
       : super(key: key);
   @override
   Widget build(BuildContext context) {

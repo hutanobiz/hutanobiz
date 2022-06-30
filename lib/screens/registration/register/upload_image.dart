@@ -16,18 +16,18 @@ import '../../../utils/localization/localization.dart';
 import '../../../utils/permission_utils.dart';
 
 class UploadImage extends StatefulWidget {
-  final Function onImagePicked;
-  final String image;
+  final Function? onImagePicked;
+  final String? image;
 
-  const UploadImage({Key key, this.onImagePicked, this.image})
+  const UploadImage({Key? key, this.onImagePicked, this.image})
       : super(key: key);
   @override
   _UploadImageState createState() => _UploadImageState();
 }
 
 class _UploadImageState extends State<UploadImage> {
-  XFile imageFile;
-  File _file;
+  XFile? imageFile;
+  late File _file;
   final _picker = ImagePicker();
 
   _openImageDialog(source) {
@@ -43,8 +43,8 @@ class _UploadImageState extends State<UploadImage> {
 
     showCommonUploadDialog(
       context,
-      Localization.of(context).picker,
-      Localization.of(context).uploadPhoto,
+      Localization.of(context)!.picker,
+      Localization.of(context)!.uploadPhoto,
       onTop: () {
         Navigator.pop(context);
         FocusScope.of(context).unfocus();
@@ -65,7 +65,7 @@ class _UploadImageState extends State<UploadImage> {
 
   Future<Null> _cropImage() async {
     var croppedFile = await ImageCropper().cropImage(
-        sourcePath: imageFile.path,
+        sourcePath: imageFile!.path,
         aspectRatioPresets: Platform.isAndroid
             ? [
                 CropAspectRatioPreset.square,
@@ -97,8 +97,8 @@ class _UploadImageState extends State<UploadImage> {
         ]);
     if (croppedFile != null) {
       imageFile = XFile(croppedFile.path);
-      var path = File(imageFile.path);
-      widget.onImagePicked(path);
+      var path = File(imageFile!.path);
+      widget.onImagePicked!(path);
       setState(() {
         _file = path;
       });
@@ -121,7 +121,7 @@ class _UploadImageState extends State<UploadImage> {
                       )
                     : ClipOval(
                         child: Image.network(
-                          ApiBaseHelper.imageUrl + widget.image,
+                          ApiBaseHelper.imageUrl + widget.image!,
                           fit: BoxFit.cover,
                         ),
                       )
@@ -155,7 +155,7 @@ class _UploadImageState extends State<UploadImage> {
                 width: 5,
               ),
               Text(
-                Localization.of(context).uploadPhoto,
+                Localization.of(context)!.uploadPhoto,
                 style: TextStyle(
                     color: colorPurple100.withOpacity(0.85),
                     fontSize: fontSize14,

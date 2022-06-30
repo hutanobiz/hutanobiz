@@ -39,18 +39,19 @@ import 'model/res_my_provider_network.dart';
 import 'share_provider.dart';
 
 class MyProviderNetwrok extends StatefulWidget {
-  final bool isOnBoarding;
+  final bool? isOnBoarding;
 
-  const MyProviderNetwrok({Key key, this.isOnBoarding = false})
+  const MyProviderNetwrok({Key? key, this.isOnBoarding = false})
       : super(key: key);
   @override
   _MyProviderNetwrokState createState() => _MyProviderNetwrokState();
 }
 
-class _MyProviderNetwrokState extends State<MyProviderNetwrok>  with AutomaticKeepAliveClientMixin{
-  List<ProviderGroupList> _providerGroupList = [];
-  List<FamilyNetwork> _memberList = [];
-  String _shareMessage;
+class _MyProviderNetwrokState extends State<MyProviderNetwrok>
+    with AutomaticKeepAliveClientMixin {
+  List<ProviderGroupList>? _providerGroupList = [];
+  List<FamilyNetwork>? _memberList = [];
+  String? _shareMessage;
   TextEditingController searchController = TextEditingController();
   // chnage flow when coming from home screen
 
@@ -60,7 +61,7 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok>  with AutomaticKe
   void initState() {
     super.initState();
     //from home screen then change show provider screen
-    if (!widget.isOnBoarding)
+    if (!widget.isOnBoarding!)
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _getMyProviderGroupList();
       });
@@ -73,7 +74,7 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok>  with AutomaticKe
     try {
       var res = await ApiManager().getFamilyNetowrk(request);
       setState(() {
-        _memberList = res.response.familyNetwork;
+        _memberList = res.response!.familyNetwork;
       });
     } on ErrorModel catch (e) {
       print(e.response);
@@ -92,7 +93,7 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok>  with AutomaticKe
 
   onShare(int index, int subIndex) async {
     ProgressDialogUtils.showProgressDialog(context);
-    final id = _providerGroupList[index].doctor[subIndex].sId;
+    final id = _providerGroupList![index].doctor![subIndex].sId;
     final request = ReqShareProvider(doctorId: id);
     try {
       var res = await ApiManager().shareProvider(request);
@@ -101,17 +102,17 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok>  with AutomaticKe
       _onShareClick();
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
   }
 
   onRemove(int index, int subIndex) async {
-    var name = _providerGroupList[index].doctor[subIndex].fullName;
+    var name = _providerGroupList![index].doctor![subIndex].fullName;
 
     Widgets.showConfirmationDialog(
-        context: navigatorKey.currentState.overlay.context,
+        context: navigatorKey.currentState!.overlay!.context,
         description: "Are you sure you want to remove \n Dr. ${name} ?",
         title: "",
         leftText: "Remove",
@@ -131,17 +132,17 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok>  with AutomaticKe
     ProgressDialogUtils.showProgressDialog(context);
     try {
       var res = await ApiManager().removeProvider(ReqRemoveProvider(
-          doctorId: _providerGroupList[index].doctor[subIndex].sId,
-          groupId: _providerGroupList[index].providerNetwork.sId,
+          doctorId: _providerGroupList![index].doctor![subIndex].sId,
+          groupId: _providerGroupList![index].providerNetwork!.sId,
           userId: getString(PreferenceKey.id)));
-      _providerGroupList[index].doctor.removeAt(subIndex);
+      _providerGroupList![index].doctor!.removeAt(subIndex);
       setState(() {});
       // if (widget.showBack) Navigator.of(context).pop();
       // _getMyProviderGroupList(showProgress: false);
       ProgressDialogUtils.dismissProgressDialog();
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -156,11 +157,11 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok>  with AutomaticKe
       ProgressDialogUtils.dismissProgressDialog();
       isInitlized = true;
       setState(() {
-        _providerGroupList = res.response.data;
+        _providerGroupList = res.response!.data;
       });
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -170,7 +171,7 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok>  with AutomaticKe
   Widget build(BuildContext context) {
     return Container(
         color: Colors.white,
-        child: widget.isOnBoarding
+        child: widget.isOnBoarding!
             ? ProviderSearch(isOnBoarding: widget.isOnBoarding)
             : _getRoute());
   }
@@ -179,7 +180,7 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok>  with AutomaticKe
     if (!isInitlized) {
       return Container();
     }
-    return _providerGroupList.isEmpty
+    return _providerGroupList!.isEmpty
         ? ProviderSearch(
             isOnBoarding: widget.isOnBoarding,
           )
@@ -267,14 +268,14 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok>  with AutomaticKe
   _deleteAddress(int index) async {
     ProgressDialogUtils.showProgressDialog(context);
     try {
-      var map = {'groupId': _providerGroupList[index].providerNetwork.sId};
+      var map = {'groupId': _providerGroupList![index].providerNetwork!.sId};
       var res = await ApiManager().deleteProviderGroup(map);
       ProgressDialogUtils.dismissProgressDialog();
-      _providerGroupList.removeAt(index);
+      _providerGroupList!.removeAt(index);
       setState(() {});
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -282,8 +283,8 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok>  with AutomaticKe
 
   onMakeAppointment(int index, int subIndex) {
     Navigator.of(context).pushNamed(Routes.providerProfileScreen,
-        arguments: _providerGroupList[index]
-            .doctor[subIndex]
+        arguments: _providerGroupList![index]
+            .doctor![subIndex]
             .sId); // _providerGroup.providerNetwork.doctorId[subIndex]);
   }
 
@@ -329,7 +330,7 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok>  with AutomaticKe
           errorBuilder: (_, object) {
             return Container();
           },
-          itemBuilder: (context, suggestion) {
+          itemBuilder: (context, dynamic suggestion) {
             return ItemProviderDetail(
               providerDetail: suggestion,
               isOnBoarding: widget.isOnBoarding,
@@ -353,7 +354,7 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok>  with AutomaticKe
                   ArgumentConstant.doctorAvatar: suggestion.user[0].avatar,
                   'isOnBoarding': widget.isOnBoarding
                 }).then((value) {
-                  if (value) {
+                  if (value as bool) {
                     _getMyProviderGroupList();
                   }
                 });
@@ -363,7 +364,7 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok>  with AutomaticKe
           transitionBuilder: (context, suggestionsBox, controller) {
             return suggestionsBox;
           },
-          onSuggestionSelected: (suggestion) {
+          onSuggestionSelected: (dynamic suggestion) {
             searchController.text = '';
             // Navigator.pushNamed(context, Routes.chat, arguments: suggestion);
             final user = suggestion.user[0];
@@ -384,7 +385,7 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok>  with AutomaticKe
               ArgumentConstant.doctorAvatar: suggestion.user[0].avatar,
               'isOnBoarding': widget.isOnBoarding
             }).then((value) {
-              if (value) {
+              if (value as bool) {
                 _getMyProviderGroupList();
               }
             });
@@ -405,7 +406,7 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok>  with AutomaticKe
       _onShareClick();
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -422,11 +423,13 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok>  with AutomaticKe
     }
     try {
       ResProviderSearch res = await ApiManager().searchProvider(param);
-      return res.response.doctorData;
+      return res.response!.doctorData!;
     } on ErrorModel catch (e) {
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
+      return [];
     } catch (e) {
-      debugPrint(e);
+      debugPrint(e.toString());
+      return [];
     }
   }
 
@@ -434,7 +437,7 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok>  with AutomaticKe
     return Align(
       alignment: Alignment.center,
       child: Text(
-        Localization.of(context).myProviderNetwork,
+        Localization.of(context)!.myProviderNetwork,
         textAlign: TextAlign.center,
         style: const TextStyle(
             color: colorBlack2,
@@ -445,8 +448,9 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok>  with AutomaticKe
       ),
     );
   }
-   @override
+
+  @override
   bool get wantKeepAlive {
-     return !widget.isOnBoarding? true:false;
-   }
+    return !widget.isOnBoarding! ? true : false;
+  }
 }

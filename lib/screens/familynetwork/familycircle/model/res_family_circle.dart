@@ -1,15 +1,15 @@
 class ResFamilyCircle {
-  String status;
-  List<CircleMember> response;
+  String? status;
+  List<CircleMember>? response;
 
   ResFamilyCircle({this.status, this.response});
 
   ResFamilyCircle.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     if (json['response'] != null) {
-      response = new List<CircleMember>();
+      response = <CircleMember>[];
       json['response'].forEach((v) {
-        response.add(new CircleMember.fromJson(v));
+        response!.add(new CircleMember.fromJson(v));
       });
     }
   }
@@ -18,19 +18,19 @@ class ResFamilyCircle {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     if (this.response != null) {
-      data['response'] = this.response.map((v) => v.toJson()).toList();
+      data['response'] = this.response!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class CircleMember {
-  String sId;
-  String name;
-  String phone;
-  int relationId;
-  String relationName;
-  List<UserPermissions> userPermissions;
+  String? sId;
+  String? name;
+  String? phone;
+  int? relationId;
+  String? relationName;
+  List<UserPermissions>? userPermissions;
   bool isSelected = false;
 
   CircleMember(
@@ -48,9 +48,9 @@ class CircleMember {
     relationId = json['relationId'];
     relationName = json['relationName'];
     if (json['userPermissions'] != null) {
-      userPermissions = new List<UserPermissions>();
+      userPermissions = <UserPermissions>[];
       json['userPermissions'].forEach((v) {
-        userPermissions.add(new UserPermissions.fromJson(v));
+        userPermissions!.add(new UserPermissions.fromJson(v));
       });
     }
   }
@@ -64,15 +64,15 @@ class CircleMember {
     data['relationName'] = this.relationName;
     if (this.userPermissions != null) {
       data['userPermissions'] =
-          this.userPermissions.map((v) => v.toJson()).toList();
+          this.userPermissions!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class UserPermissions {
-  String permission;
-  String sId;
+  String? permission;
+  String? sId;
   bool isSelected = false;
 
   UserPermissions({this.permission, this.sId});

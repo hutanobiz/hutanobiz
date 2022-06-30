@@ -1,6 +1,6 @@
 class ResSymptoms {
   List<Symptom> symptoms = [];
-  ResSymptoms.fromJson(Map<String, dynamic> json) {
+  ResSymptoms.fromJson(Map<String, dynamic>? json) {
     if (json != null) {
       if (json['response'] != null) {
         json['response'].forEach((element) {
@@ -12,7 +12,7 @@ class ResSymptoms {
 }
 
 class Symptom {
-  String bodyPart;
+  String? bodyPart;
   List<String> pains = [];
   Symptom.fromJson(Map<String, dynamic> json) {
     bodyPart = json['bodyPart'];

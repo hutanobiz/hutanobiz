@@ -1,6 +1,6 @@
 class ResGooglePlaceDetail {
-  Result result;
-  String status;
+  Result? result;
+  String? status;
 
   ResGooglePlaceDetail({this.result, this.status});
 
@@ -13,7 +13,7 @@ class ResGooglePlaceDetail {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.result != null) {
-      data['result'] = this.result.toJson();
+      data['result'] = this.result!.toJson();
     }
     data['status'] = this.status;
     return data;
@@ -21,18 +21,18 @@ class ResGooglePlaceDetail {
 }
 
 class Result {
-  List<AddressComponents> addressComponents;
-  Geometry geometry;
-  String international_phone_number;
+  List<AddressComponents>? addressComponents;
+  Geometry? geometry;
+  String? international_phone_number;
 
   Result(
       {this.addressComponents, this.geometry, this.international_phone_number});
 
   Result.fromJson(Map<String, dynamic> json) {
     if (json['address_components'] != null) {
-      addressComponents = new List<AddressComponents>();
+      addressComponents = <AddressComponents>[];
       json['address_components'].forEach((v) {
-        addressComponents.add(new AddressComponents.fromJson(v));
+        addressComponents!.add(new AddressComponents.fromJson(v));
       });
     }
     geometry = json['geometry'] != null
@@ -45,10 +45,10 @@ class Result {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.addressComponents != null) {
       data['address_components'] =
-          this.addressComponents.map((v) => v.toJson()).toList();
+          this.addressComponents!.map((v) => v.toJson()).toList();
     }
     if (this.geometry != null) {
-      data['geometry'] = this.geometry.toJson();
+      data['geometry'] = this.geometry!.toJson();
     }
     data['international_phone_number'] = this.international_phone_number;
     return data;
@@ -56,9 +56,9 @@ class Result {
 }
 
 class AddressComponents {
-  String longName;
-  String shortName;
-  List<String> types;
+  String? longName;
+  String? shortName;
+  List<String>? types;
 
   AddressComponents({this.longName, this.shortName, this.types});
 
@@ -78,8 +78,8 @@ class AddressComponents {
 }
 
 class Geometry {
-  Location location;
-  Viewport viewport;
+  Location? location;
+  Viewport? viewport;
 
   Geometry({this.location, this.viewport});
 
@@ -95,18 +95,18 @@ class Geometry {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.location != null) {
-      data['location'] = this.location.toJson();
+      data['location'] = this.location!.toJson();
     }
     if (this.viewport != null) {
-      data['viewport'] = this.viewport.toJson();
+      data['viewport'] = this.viewport!.toJson();
     }
     return data;
   }
 }
 
 class Location {
-  double lat;
-  double lng;
+  double? lat;
+  double? lng;
 
   Location({this.lat, this.lng});
 
@@ -124,8 +124,8 @@ class Location {
 }
 
 class Viewport {
-  Location northeast;
-  Location southwest;
+  Location? northeast;
+  Location? southwest;
 
   Viewport({this.northeast, this.southwest});
 
@@ -141,10 +141,10 @@ class Viewport {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.northeast != null) {
-      data['northeast'] = this.northeast.toJson();
+      data['northeast'] = this.northeast!.toJson();
     }
     if (this.southwest != null) {
-      data['southwest'] = this.southwest.toJson();
+      data['southwest'] = this.southwest!.toJson();
     }
     return data;
   }

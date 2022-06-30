@@ -1,5 +1,5 @@
 class ResRegisterNumber {
-  String status;
+  String? status;
   dynamic response;
 
   ResRegisterNumber({this.status, this.response});

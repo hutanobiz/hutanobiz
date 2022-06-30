@@ -1,9 +1,9 @@
 class ReqAddDiseaseModel {
-  String sId;
-  String year;
-  String month;
-  String name;
-  String medicalHistoryId;
+  String? sId;
+  String? year;
+  String? month;
+  String? name;
+  String? medicalHistoryId;
 
   ReqAddDiseaseModel({this.sId, this.year, this.month, this.name,this.medicalHistoryId});
 

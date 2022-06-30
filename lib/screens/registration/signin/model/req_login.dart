@@ -3,7 +3,7 @@ class ReqLogin {
   int type;
   String phoneNumber;
   String password;
-  String deviceToken;
+  String? deviceToken;
   String mobileCountryCode;
 
   ReqLogin({this.type=1,

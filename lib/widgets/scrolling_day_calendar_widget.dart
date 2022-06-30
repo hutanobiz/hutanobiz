@@ -14,18 +14,18 @@ typedef ScrollingDayCalendarBuilder = Widget Function(
 );
 
 class ScrollingDayCalendar extends StatefulWidget {
-  final DateTime startDate;
+  final DateTime? startDate;
   final DateTime endDate;
-  final DateTime selectedDate;
-  final Function onDateChange;
-  final List<int> scheduleDaysList;
+  final DateTime? selectedDate;
+  final Function? onDateChange;
+  final List<int>? scheduleDaysList;
 
-  final String displayDateFormat;
+  final String? displayDateFormat;
 
   ScrollingDayCalendar({
-    @required this.startDate,
-    @required this.endDate,
-    @required this.selectedDate,
+    required this.startDate,
+    required this.endDate,
+    required this.selectedDate,
     this.onDateChange,
     this.displayDateFormat,
     this.scheduleDaysList,
@@ -36,13 +36,13 @@ class ScrollingDayCalendar extends StatefulWidget {
 }
 
 class _ScrollingDayCalendarState extends State<ScrollingDayCalendar> {
-  DateTime _selectedDate;
+  DateTime? _selectedDate;
   int _addDays = 1;
-  List<int> scheduleDaysList = [1, 2, 3, 4, 5, 6, 7];
+  List<int>? scheduleDaysList = [1, 2, 3, 4, 5, 6, 7];
   bool isRightButtonEnable = true;
   bool isLeftButtonEnable = true;
-  Color rightButtonColor = Colors.black;
-  Color leftButtonColor = Colors.black;
+  Color? rightButtonColor = Colors.black;
+  Color? leftButtonColor = Colors.black;
 
   int _initialDay = 1;
 
@@ -52,25 +52,25 @@ class _ScrollingDayCalendarState extends State<ScrollingDayCalendar> {
 
     _selectedDate = widget.selectedDate;
 
-    if (widget.scheduleDaysList != null && widget.scheduleDaysList.isNotEmpty) {
+    if (widget.scheduleDaysList != null && widget.scheduleDaysList!.isNotEmpty) {
       scheduleDaysList = widget.scheduleDaysList;
 
-      if (scheduleDaysList.length > 1) {
-        scheduleDaysList.sort();
+      if (scheduleDaysList!.length > 1) {
+        scheduleDaysList!.sort();
       }
     }
 
-    DateTime newDate = widget.selectedDate;
+    DateTime? newDate = widget.selectedDate;
 
     while (true) {
-      if (scheduleDaysList.contains(newDate.weekday)) {
+      if (scheduleDaysList!.contains(newDate!.weekday)) {
         setState(() {
           _selectedDate = newDate;
         });
 
         break;
       } else {
-        newDate = widget.selectedDate.add(
+        newDate = widget.selectedDate!.add(
           Duration(days: _initialDay),
         );
         _initialDay++;
@@ -88,28 +88,28 @@ class _ScrollingDayCalendarState extends State<ScrollingDayCalendar> {
         children: <Widget>[
           MaterialButton(
             minWidth: 20,
-            onPressed: DateFormat('MM/dd/yyyy').format(widget.startDate) ==
-                    DateFormat('MM/dd/yyyy').format(_selectedDate)
+            onPressed: DateFormat('MM/dd/yyyy').format(widget.startDate!) ==
+                    DateFormat('MM/dd/yyyy').format(_selectedDate!)
                 ? null
                 : () {
                     while (true) {
-                      DateTime newDate = _selectedDate.subtract(
+                      DateTime newDate = _selectedDate!.subtract(
                         Duration(days: _addDays),
                       );
 
-                      if (widget.startDate.isBefore(newDate) ||
-                          widget.startDate.isAtSameMomentAs(newDate)) {
+                      if (widget.startDate!.isBefore(newDate) ||
+                          widget.startDate!.isAtSameMomentAs(newDate)) {
                         setState(() {
                           isLeftButtonEnable = true;
                           leftButtonColor = Colors.black;
                         });
 
-                        if (scheduleDaysList.contains(newDate.weekday)) {
+                        if (scheduleDaysList!.contains(newDate.weekday)) {
                           setState(() {
                             _selectedDate = newDate;
                           });
 
-                          widget.onDateChange(_selectedDate);
+                          widget.onDateChange!(_selectedDate);
                           _addDays = 1;
                           break;
                         } else {
@@ -127,8 +127,8 @@ class _ScrollingDayCalendarState extends State<ScrollingDayCalendar> {
                   },
             child: Icon(
               Icons.arrow_back_ios,
-              color: DateFormat('MM/dd/yyyy').format(widget.startDate) ==
-                      DateFormat('MM/dd/yyyy').format(_selectedDate)
+              color: DateFormat('MM/dd/yyyy').format(widget.startDate!) ==
+                      DateFormat('MM/dd/yyyy').format(_selectedDate!)
                   ? Colors.grey[300]
                   : Colors.black,
               size: 12.0,
@@ -145,7 +145,7 @@ class _ScrollingDayCalendarState extends State<ScrollingDayCalendar> {
             DateFormat(widget.displayDateFormat != null
                     ? widget.displayDateFormat
                     : "MM/dd/yyyy")
-                .format(_selectedDate),
+                .format(_selectedDate!),
             style: TextStyle(
               fontWeight: FontWeight.w500,
               color: Colors.black,
@@ -155,10 +155,10 @@ class _ScrollingDayCalendarState extends State<ScrollingDayCalendar> {
           SizedBox(width: 8.0),
           MaterialButton(
             minWidth: 20,
-            onPressed: widget.endDate.isAfter(_selectedDate)
+            onPressed: widget.endDate.isAfter(_selectedDate!)
                 ? () {
                     while (true) {
-                      DateTime newDate = _selectedDate.add(
+                      DateTime newDate = _selectedDate!.add(
                         Duration(days: _addDays),
                       );
 
@@ -168,12 +168,12 @@ class _ScrollingDayCalendarState extends State<ScrollingDayCalendar> {
                           rightButtonColor = Colors.black;
                         });
 
-                        if (scheduleDaysList.contains(newDate.weekday)) {
+                        if (scheduleDaysList!.contains(newDate.weekday)) {
                           setState(() {
                             _selectedDate = newDate;
                           });
 
-                          widget.onDateChange(_selectedDate);
+                          widget.onDateChange!(_selectedDate);
                           _addDays = 1;
                           break;
                         } else {
@@ -192,7 +192,7 @@ class _ScrollingDayCalendarState extends State<ScrollingDayCalendar> {
                 : null,
             child: Icon(
               Icons.arrow_forward_ios,
-              color: widget.endDate.isAfter(_selectedDate)
+              color: widget.endDate.isAfter(_selectedDate!)
                   ? Colors.black
                   : Colors.grey[300],
               size: 12.0,
@@ -203,13 +203,13 @@ class _ScrollingDayCalendarState extends State<ScrollingDayCalendar> {
     ).onClick(onTap: () {
       showDatePicker(
         context: context,
-        initialDate: _selectedDate,
+        initialDate: _selectedDate!,
         firstDate: DateTime.utc(DateTime.now().year, DateTime.now().month,
             DateTime.now().day, 0, 0, 0, 0, 0),
         lastDate: DateTime(DateTime.now().year + 2),
         selectableDayPredicate: (DateTime val) =>
-            scheduleDaysList.contains(val.weekday) ? true : false,
-        builder: (BuildContext context, Widget child) {
+            scheduleDaysList!.contains(val.weekday) ? true : false,
+        builder: (BuildContext context, Widget? child) {
           return Theme(
             data: ThemeData.dark().copyWith(
               colorScheme: ColorScheme.light(
@@ -220,14 +220,14 @@ class _ScrollingDayCalendarState extends State<ScrollingDayCalendar> {
               ),
               dialogBackgroundColor: Colors.white,
             ),
-            child: child,
+            child: child!,
           );
         },
       ).then((date) {
         if (date != null)
           setState(() {
             _selectedDate = date;
-            widget.onDateChange(_selectedDate);
+            widget.onDateChange!(_selectedDate);
           });
       });
     });

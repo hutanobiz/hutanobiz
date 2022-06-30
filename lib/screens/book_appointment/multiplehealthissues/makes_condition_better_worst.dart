@@ -21,7 +21,7 @@ import 'model/req_selected_condition_model.dart';
 import 'model/res_selected_condition_model.dart';
 
 class MakesConditionBetterWorst extends StatefulWidget {
-  final String problemId;
+  final String? problemId;
   MakesConditionBetterWorst({this.problemId});
   @override
   _MakesConditionBetterWorstState createState() =>
@@ -33,9 +33,9 @@ class _MakesConditionBetterWorstState extends State<MakesConditionBetterWorst> {
   TextEditingController _problemWorstController = TextEditingController();
   FocusNode _problemBetterFocusNode = FocusNode();
   FocusNode _problemWorstFocusNode = FocusNode();
-  List<String> _problemBetterList = [];
+  List<String>? _problemBetterList = [];
   List<String> _selectedProblemBetterList = [];
-  List<String> _problemWorstList = [];
+  List<String>? _problemWorstList = [];
   List<String> _selectedProblemWorstList = [];
 
   @override
@@ -74,7 +74,7 @@ class _MakesConditionBetterWorstState extends State<MakesConditionBetterWorst> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _commonHeaderText(
-                      context, Localization.of(context).makesYourProblemBetter),
+                      context, Localization.of(context)!.makesYourProblemBetter),
                   _buildSearchForProblemBetter(context),
                   _selectedProblemBetterListItems(context),
                   SizedBox(height: spacing15),
@@ -119,7 +119,7 @@ class _MakesConditionBetterWorstState extends State<MakesConditionBetterWorst> {
                           child: Image.asset(FileConstants.icSearchBlack,
                               color: colorBlack2, width: 20, height: 20))),
                   hintText:
-                      Localization.of(context).actuallyMakesYourProblemBetter,
+                      Localization.of(context)!.actuallyMakesYourProblemBetter,
                   isDense: true,
                   hintStyle: TextStyle(
                       color: colorBlack2,
@@ -140,13 +140,13 @@ class _MakesConditionBetterWorstState extends State<MakesConditionBetterWorst> {
           errorBuilder: (_, object) {
             return Container();
           },
-          itemBuilder: (context, suggestion) {
+          itemBuilder: (context, dynamic suggestion) {
             return ListTile(title: Text(suggestion));
           },
           transitionBuilder: (context, suggestionsBox, controller) {
             return suggestionsBox;
           },
-          onSuggestionSelected: (suggestion) {
+          onSuggestionSelected: (dynamic suggestion) {
             setState(() {
               if (!_selectedProblemBetterList.contains(suggestion))
                 _selectedProblemBetterList.add(suggestion);
@@ -160,7 +160,7 @@ class _MakesConditionBetterWorstState extends State<MakesConditionBetterWorst> {
       );
 
   _getFilteredProblemBetterList() {
-    return _problemBetterList.where((element) => element
+    return _problemBetterList!.where((element) => element
         .toLowerCase()
         .contains(_problemBetterController.text.toLowerCase()));
   }
@@ -173,8 +173,8 @@ class _MakesConditionBetterWorstState extends State<MakesConditionBetterWorst> {
             return PopupMenuButton(
               offset: Offset(300, 50),
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                _popMenuCommonItem(context, Localization.of(context).remove,
-                    FileConstants.icRemoveBlack)
+                _popMenuCommonItem(context, Localization.of(context)!.remove,
+                    FileConstants.icRemoveBlack) as PopupMenuEntry<String>
               ],
               child: ListTile(
                 contentPadding: EdgeInsets.all(0),
@@ -187,7 +187,7 @@ class _MakesConditionBetterWorstState extends State<MakesConditionBetterWorst> {
                 ),
                 trailing: Icon(Icons.more_vert, color: colorBlack2),
               ),
-              onSelected: (value) {
+              onSelected: (dynamic value) {
                 setState(() {
                   _selectedProblemBetterList
                       .remove(_selectedProblemBetterList[index]);
@@ -220,7 +220,7 @@ class _MakesConditionBetterWorstState extends State<MakesConditionBetterWorst> {
                         child: Image.asset(FileConstants.icSearchBlack,
                             color: colorBlack2, width: 20, height: 20))),
                 hintText:
-                    Localization.of(context).actuallyMakesYourProblemWorst,
+                    Localization.of(context)!.actuallyMakesYourProblemWorst,
                 isDense: true,
                 hintStyle: TextStyle(
                     color: colorBlack2,
@@ -242,7 +242,7 @@ class _MakesConditionBetterWorstState extends State<MakesConditionBetterWorst> {
           errorBuilder: (_, object) {
             return Container();
           },
-          itemBuilder: (context, suggestion) {
+          itemBuilder: (context, dynamic suggestion) {
             return ListTile(
               title: Text(suggestion),
             );
@@ -250,7 +250,7 @@ class _MakesConditionBetterWorstState extends State<MakesConditionBetterWorst> {
           transitionBuilder: (context, suggestionsBox, controller) {
             return suggestionsBox;
           },
-          onSuggestionSelected: (suggestion) {
+          onSuggestionSelected: (dynamic suggestion) {
             setState(() {
               if (!_selectedProblemWorstList.contains(suggestion))
                 _selectedProblemWorstList.add(suggestion);
@@ -264,7 +264,7 @@ class _MakesConditionBetterWorstState extends State<MakesConditionBetterWorst> {
       );
 
   _getFilteredProblemWorstLst() {
-    return _problemWorstList.where((element) => element
+    return _problemWorstList!.where((element) => element
         .toLowerCase()
         .contains(_problemWorstController.text.toLowerCase()));
   }
@@ -277,8 +277,8 @@ class _MakesConditionBetterWorstState extends State<MakesConditionBetterWorst> {
             return PopupMenuButton(
               offset: Offset(300, 50),
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                _popMenuCommonItem(context, Localization.of(context).remove,
-                    FileConstants.icRemoveBlack)
+                _popMenuCommonItem(context, Localization.of(context)!.remove,
+                    FileConstants.icRemoveBlack) as PopupMenuEntry<String>
               ],
               child: ListTile(
                 contentPadding: EdgeInsets.all(0),
@@ -291,7 +291,7 @@ class _MakesConditionBetterWorstState extends State<MakesConditionBetterWorst> {
                 ),
                 trailing: Icon(Icons.more_vert, color: colorBlack2),
               ),
-              onSelected: (value) {
+              onSelected: (dynamic value) {
                 setState(() {
                   _selectedProblemWorstList
                       .remove(_selectedProblemWorstList[index]);
@@ -321,8 +321,8 @@ class _MakesConditionBetterWorstState extends State<MakesConditionBetterWorst> {
       if (result is ResSelectConditionModel) {
         ProgressDialogUtils.dismissProgressDialog();
         setState(() {
-          _problemBetterList = result.response[0].problemBetter;
-          _problemWorstList = result.response[0].problemWorst;
+          _problemBetterList = result.response![0].problemBetter;
+          _problemWorstList = result.response![0].problemWorst;
         });
       }
     })).catchError((dynamic e) {

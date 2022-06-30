@@ -5,12 +5,12 @@ import 'package:hutano/utils/color_utils.dart';
 import 'model/family_member.dart';
 
 class MemberDetail extends StatelessWidget {
-  final FamilyMember member;
-  final TextStyle titleStyle;
-  final TextStyle subTitleStyle;
+  final FamilyMember? member;
+  final TextStyle? titleStyle;
+  final TextStyle? subTitleStyle;
 
   const MemberDetail(
-      {Key key, this.member, this.titleStyle, this.subTitleStyle})
+      {Key? key, this.member, this.titleStyle, this.subTitleStyle})
       : super(key: key);
 
   @override
@@ -18,14 +18,14 @@ class MemberDetail extends StatelessWidget {
     return Container(
       child: Row(
         children: [
-          member.avatar == null
+          member!.avatar == null
               ? CircleAvatar(
                   radius: spacing20,
                   backgroundColor: colorPurple.withOpacity(0.3),
                   child: Text(
-                    member.fullName == null
+                    member!.fullName == null
                         ? ""
-                        : member.fullName.substring(0, 1).toUpperCase(),
+                        : member!.fullName!.substring(0, 1).toUpperCase(),
                     style: TextStyle(
                         color: colorPurple,
                         fontWeight: fontWeightMedium,
@@ -33,7 +33,7 @@ class MemberDetail extends StatelessWidget {
                   ))
               : CircleAvatar(
                   radius: spacing20,
-                  backgroundImage: NetworkImage('$imageUrl${member.avatar}'),
+                  backgroundImage: NetworkImage('$imageUrl${member!.avatar}'),
                 ),
           SizedBox(
             width: spacing20,
@@ -44,25 +44,25 @@ class MemberDetail extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Text(
-                member.fullName == null ? "" : member.fullName,
+                member!.fullName == null ? "" : member!.fullName!,
                 style: titleStyle ??
                     const TextStyle(
                         color: colorBlack,
                         fontWeight: fontWeightMedium,
                         fontFamily: poppins),
               ),
-              if (member.phoneNumber != null)
+              if (member!.phoneNumber != null)
                 Text(
-                  member.phoneNumber.toString(),
+                  member!.phoneNumber.toString(),
                   style: subTitleStyle ??
                       const TextStyle(
                           color: colorBlack70,
                           fontSize: fontSize12,
                           fontFamily: poppins),
                 ),
-              if (member.relation != null)
+              if (member!.relation != null)
                 Text(
-                  member.relation,
+                  member!.relation!,
                   style: subTitleStyle ??
                       const TextStyle(
                           color: colorBlack70,

@@ -7,9 +7,9 @@ import 'package:hutano/screens/dashboard/profile/medical_history_setting_screen.
 import 'package:hutano/widgets/loading_background_new.dart';
 
 class UpdateMedicalHistory extends StatefulWidget {
-  UpdateMedicalHistory({Key key, this.isBottomButtonsShow}) : super(key: key);
+  UpdateMedicalHistory({Key? key, this.isBottomButtonsShow}) : super(key: key);
 
-  final Map isBottomButtonsShow;
+  final Map? isBottomButtonsShow;
 
   @override
   _UpdateMedicalHistoryState createState() => _UpdateMedicalHistoryState();
@@ -17,8 +17,8 @@ class UpdateMedicalHistory extends StatefulWidget {
 
 class _UpdateMedicalHistoryState extends State<UpdateMedicalHistory>
     with SingleTickerProviderStateMixin {
-  TabController _controller;
-  Map _map = {};
+  TabController? _controller;
+  Map? _map = {};
 
   List<Widget> _children = [];
 
@@ -29,7 +29,7 @@ class _UpdateMedicalHistoryState extends State<UpdateMedicalHistory>
     if (widget.isBottomButtonsShow != null) {
       _map = widget.isBottomButtonsShow;
     } else {
-      _map['isBottomButtonsShow'] = false;
+      _map!['isBottomButtonsShow'] = false;
     }
 
     _children = [
@@ -67,7 +67,7 @@ class _UpdateMedicalHistoryState extends State<UpdateMedicalHistory>
             decoration: BoxDecoration(
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.circular(14.0),
-                border: Border.all(color: Colors.grey[300])),
+                border: Border.all(color: Colors.grey[300]!)),
             child: TabBar(
               controller: _controller,
               labelPadding: EdgeInsets.all(0),

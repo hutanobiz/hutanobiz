@@ -16,8 +16,8 @@ import 'package:hutano/utils/extensions.dart';
 import 'package:permission_handler/permission_handler.dart' as Permission;
 
 class VirtualWaingRoom extends StatefulWidget {
-  final String appointmentId;
-  const VirtualWaingRoom({Key key, @required this.appointmentId})
+  final String? appointmentId;
+  const VirtualWaingRoom({Key? key, required this.appointmentId})
       : super(key: key);
 
   @override
@@ -25,7 +25,7 @@ class VirtualWaingRoom extends StatefulWidget {
 }
 
 class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
-  Future<dynamic> _profileFuture;
+  Future<dynamic>? _profileFuture;
   ApiBaseHelper api = ApiBaseHelper();
   bool video = true;
   bool record = true;
@@ -68,7 +68,7 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
                 } else if (snapshot.hasError) {
                   return new Text('Error: ${snapshot.error}');
                 } else if (snapshot.hasData) {
-                  Map profileMap = snapshot.data;
+                  Map profileMap = snapshot.data as Map;
                   return widgetList(profileMap);
                 } else {
                   return Center(
@@ -164,15 +164,15 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
                         Permission.Permission.camera,
                         Permission.Permission.microphone
                       ].request();
-                      if ((statuses[Permission.Permission.camera].isGranted) &&
-                          (statuses[Permission.Permission.microphone]
+                      if ((statuses[Permission.Permission.camera]!.isGranted) &&
+                          (statuses[Permission.Permission.microphone]!
                               .isGranted)) {
                         Map appointment = {};
                         appointment["_appointmentStatus"] = "1";
                         appointment["_id"] = widget.appointmentId;
                         appointment['video'] = video;
                         appointment['record'] = record;
-                        return Navigator.of(context).pushNamed(
+                         Navigator.of(context).pushNamed(
                           Routes.callPage,
                           arguments: appointment,
                         );
@@ -313,7 +313,7 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
                     borderRadius: BorderRadius.all(
                       Radius.circular(14.0),
                     ),
-                    border: Border.all(color: Colors.grey[300]),
+                    border: Border.all(color: Colors.grey[300]!),
                   ),
                   height: 55,
                   width: 90,
@@ -346,7 +346,7 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
             .toStringAsFixed(1)
         : "---";
 
-    String name = "---",
+    String? name = "---",
         rating = "---",
         professionalTitle = "---",
         avatar,
@@ -385,7 +385,7 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
 
     if (response["doctor"] != null) {
       String title = response["doctor"]["title"]?.toString() ?? "";
-      name = title + ' ' + response["doctor"]["fullName"]?.toString() ?? "---";
+      name = title + ' ' + (response["doctor"]["fullName"]?.toString() ?? "---");
       avatar = response["doctor"]["avatar"];
     }
 
@@ -393,7 +393,7 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
       for (dynamic detail in appointment["doctorData"]) {
         if (detail["businessLocation"] != null) {
           if (detail["businessLocation"]["coordinates"] != null) {
-            List location = detail["businessLocation"]["coordinates"];
+            List? location = detail["businessLocation"]["coordinates"];
           }
         }
       }
@@ -405,7 +405,7 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
         borderRadius: BorderRadius.all(
           Radius.circular(14.0),
         ),
-        border: Border.all(color: Colors.grey[300]),
+        border: Border.all(color: Colors.grey[300]!),
       ),
       child: Column(
         children: <Widget>[
@@ -422,7 +422,7 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
                       FocusScope.of(context).requestFocus(FocusNode());
                       Navigator.of(context).pushNamed(
                         Routes.providerImageScreen,
-                        arguments: (ApiBaseHelper.imageUrl + avatar),
+                        arguments: (ApiBaseHelper.imageUrl + avatar!),
                       );
                     },
                     child: Container(
@@ -430,15 +430,15 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
                       height: 58.0,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: avatar == null
+                          image: (avatar == null
                               ? AssetImage('images/profile_user.png')
-                              : NetworkImage(ApiBaseHelper.imageUrl + avatar),
+                              : NetworkImage(ApiBaseHelper.imageUrl + avatar)) as ImageProvider<Object>,
                           fit: BoxFit.cover,
                         ),
                         borderRadius:
                             new BorderRadius.all(Radius.circular(50.0)),
                         border: new Border.all(
-                          color: Colors.grey[300],
+                          color: Colors.grey[300]!,
                           width: 1.0,
                         ),
                       ),
@@ -512,7 +512,7 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
                             SizedBox(width: 3),
                             Expanded(
                               child: Text(
-                                '\u2022 ' + professionalTitle,
+                                '\u2022 ' + professionalTitle!,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -602,7 +602,7 @@ class _VirtualWaingRoomState extends State<VirtualWaingRoom> {
                 SizedBox(width: 3.0),
                 Expanded(
                   child: Text(
-                    address,
+                    address!,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(

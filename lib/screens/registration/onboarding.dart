@@ -31,23 +31,23 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
   _addContent() {
     _pageContnet = [
       {
-        'title': Localization.of(context).introTitle1,
-        'subTitle': Localization.of(context).introSubTitle1,
+        'title': Localization.of(context)!.introTitle1,
+        'subTitle': Localization.of(context)!.introSubTitle1,
         'image': FileConstants.icIntro1
       },
       {
-        'title': Localization.of(context).introTitle2,
-        'subTitle': Localization.of(context).introSubTitle2,
+        'title': Localization.of(context)!.introTitle2,
+        'subTitle': Localization.of(context)!.introSubTitle2,
         'image': FileConstants.icIntro2
       },
       {
-        'title': Localization.of(context).introTitle3,
-        'subTitle': Localization.of(context).introSubTitle3,
+        'title': Localization.of(context)!.introTitle3,
+        'subTitle': Localization.of(context)!.introSubTitle3,
         'image': FileConstants.icIntro3
       },
       {
-        'title': Localization.of(context).introTitle4,
-        'subTitle': Localization.of(context).introSubTitle4,
+        'title': Localization.of(context)!.introTitle4,
+        'subTitle': Localization.of(context)!.introSubTitle4,
         'image': FileConstants.icIntro4
       }
     ];
@@ -82,10 +82,10 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
             ? HutanoButton(
                 onPressed: _goToLogin,
                 color: colorDarkYellow2,
-                label: Localization.of(context).start,
+                label: Localization.of(context)!.start,
                 margin: 20,
               )
-            : Text(Localization.of(context).swipeLeft,
+            : Text(Localization.of(context)!.swipeLeft,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: colorLightGrey3,
@@ -115,7 +115,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
           child: GestureDetector(
             onTap: _goToLogin,
             child: Text(
-              Localization.of(context).skip,
+              Localization.of(context)!.skip,
               textAlign: TextAlign.end,
               style: TextStyle(
                 color: colorBlue2,
@@ -149,7 +149,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                       showSkipButton: false,
                       showNextButton: false,
                       globalBackgroundColor: Colors.white,
-                      skip: Text(Localization.of(context).swipeLeft),
+                      skip: Text(Localization.of(context)!.swipeLeft),
                       done: const SizedBox(),
                       onChange: (i) {
                         setState(() {

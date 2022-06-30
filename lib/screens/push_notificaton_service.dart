@@ -45,7 +45,7 @@ class PushNotificationService {
     }
     FirebaseMessaging.instance
         .getInitialMessage()
-        .then((RemoteMessage message) {
+        .then((RemoteMessage? message) {
       if (message != null) {
         navigateUser(message);
       }
@@ -61,7 +61,7 @@ class PushNotificationService {
           case 'call':
           case 'call_join':
             Widgets.showCallDialog(
-                context: navigatorContext,
+                context: navigatorContext!,
                 isRejoin: true,
                 onEnterCall: (bool record, bool video) async {
                   Map<Permission.Permission, Permission.PermissionStatus>
@@ -69,15 +69,15 @@ class PushNotificationService {
                     Permission.Permission.camera,
                     Permission.Permission.microphone
                   ].request();
-                  if ((statuses[Permission.Permission.camera].isGranted) &&
-                      (statuses[Permission.Permission.microphone].isGranted)) {
+                  if ((statuses[Permission.Permission.camera]!.isGranted) &&
+                      (statuses[Permission.Permission.microphone]!.isGranted)) {
                     var map = {};
                     map['_id'] = message.data['appointmentId'];
                     map['video'] = video;
                     map['record'] = record;
-                    Navigator.pop(navigatorContext);
+                    Navigator.pop(navigatorContext!);
                       OverlayService().addVideosOverlay(
-                        Provider.of<OverlayHandlerProvider>(navigatorContext,
+                        Provider.of<OverlayHandlerProvider>(navigatorContext!,
                                 listen: false)
                             .videCallContext,
                         CallPage(channelName: map));
@@ -85,12 +85,12 @@ class PushNotificationService {
                     //     .pushReplacementNamed(Routes.callPage, arguments: map);
                   } else {
                     Widgets.showErrorialog(
-                        context: navigatorContext,
+                        context: navigatorContext!,
                         description: 'Camera & Microphone permission Requied');
                   }
                 },
                 onCancelCall: () {
-                  Navigator.pop(navigatorContext);
+                  Navigator.pop(navigatorContext!);
                 });
 
             break;
@@ -104,7 +104,7 @@ class PushNotificationService {
                 // );
                 showNotification(message);
               } else {
-                Navigator.of(navigatorContext).pushReplacementNamed(
+                Navigator.of(navigatorContext!).pushReplacementNamed(
                   Routes.trackTelemedicineAppointment,
                   arguments: message.data['appointmentId'],
                 );
@@ -119,7 +119,7 @@ class PushNotificationService {
                     description: 'Do you want to enter to waiting room?',
                     leftText: 'Cancel',
                     onLeftPressed: () {
-                      Navigator.pop(navigatorContext);
+                      Navigator.pop(navigatorContext!);
                     },
                     rightText: 'Waiting Room',
                     onRightPressed: () {
@@ -132,8 +132,8 @@ class PushNotificationService {
                               "Bearer ${getString(PreferenceKey.tokens)}",
                               appointmentId)
                           .then((value) {
-                        Navigator.pop(navigatorContext);
-                        Navigator.of(navigatorContext).pushNamed(
+                        Navigator.pop(navigatorContext!);
+                        Navigator.of(navigatorContext!).pushNamed(
                             Routes.trackTelemedicineAppointment,
                             arguments: message.data['appointmentId']);
                       });
@@ -148,7 +148,7 @@ class PushNotificationService {
                   api
                       .patientAvailableForCall(token, appointmentId)
                       .then((value) {
-                    Navigator.of(navigatorContext).pushReplacementNamed(
+                    Navigator.of(navigatorContext!).pushReplacementNamed(
                       Routes.trackTelemedicineAppointment,
                       arguments: message.data['appointmentId'],
                     );
@@ -168,7 +168,7 @@ class PushNotificationService {
                 // );
                 showNotification(message);
               } else {
-                Navigator.of(navigatorContext).pushReplacementNamed(
+                Navigator.of(navigatorContext!).pushReplacementNamed(
                   Routes.trackOfficeAppointment,
                   arguments: message.data['appointmentId'],
                 );
@@ -183,7 +183,7 @@ class PushNotificationService {
                 // );
                 showNotification(message);
               } else {
-                Navigator.of(navigatorContext).pushReplacementNamed(
+                Navigator.of(navigatorContext!).pushReplacementNamed(
                   Routes.trackOnsiteAppointment,
                   arguments: message.data['appointmentId'],
                 );
@@ -205,7 +205,7 @@ class PushNotificationService {
                   // );
                   showNotification(message);
                 } else {
-                  Navigator.of(navigatorContext).pushReplacementNamed(
+                  Navigator.of(navigatorContext!).pushReplacementNamed(
                     Routes.trackOfficeAppointment,
                     arguments: message.data['appointmentId'],
                   );
@@ -220,7 +220,7 @@ class PushNotificationService {
                   // );
                   showNotification(message);
                 } else {
-                  Navigator.of(navigatorContext).pushReplacementNamed(
+                  Navigator.of(navigatorContext!).pushReplacementNamed(
                     Routes.trackOnsiteAppointment,
                     arguments: message.data['appointmentId'],
                   );
@@ -263,14 +263,14 @@ class PushNotificationService {
     var initializationSettings = new InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: (String payload) async {
+        onSelectNotification: (String? payload) async {
       print(payload);
-      RemoteMessage data = RemoteMessage(data: jsonDecode(payload));
+      RemoteMessage data = RemoteMessage(data: jsonDecode(payload!));
       navigateUser(data);
     });
   }
 
-  void showNotification(RemoteMessage message, {int id}) async {
+  void showNotification(RemoteMessage message, {int? id}) async {
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
       'xyz.appening.hutano',
       'Hutano Patient',
@@ -287,8 +287,8 @@ class PushNotificationService {
 
     await flutterLocalNotificationsPlugin.show(
         id ?? 0,
-        message.notification.title,
-        message.notification.body,
+        message.notification!.title,
+        message.notification!.body,
         platformChannelSpecifics,
         payload: json.encode(message.data));
   }
@@ -299,20 +299,20 @@ class PushNotificationService {
     switch (notificationType) {
       case 'call':
       case 'call_join':
-        Navigator.of(navigatorContext).pushNamed(
+        Navigator.of(navigatorContext!).pushNamed(
           Routes.appointmentDetailScreen,
           arguments: message.data['appointmentId'],
         );
         break;
       case 'ready_to_join':
         Navigator.pushNamed(
-          navigatorContext,
+          navigatorContext!,
           Routes.trackTelemedicineAppointment,
           arguments: message.data['appointmentId'],
         );
         break;
       case 'call-reminder':
-        Navigator.of(navigatorContext).pushNamed(
+        Navigator.of(navigatorContext!).pushNamed(
           Routes.appointmentDetailScreen,
           arguments: message.data['appointmentId'],
         );
@@ -322,12 +322,12 @@ class PushNotificationService {
         if (message.data['appointmentType'] == '1') {
           if (!isCurrent(
               Routes.trackOfficeAppointment, message.data['appointmentId'])) {
-            Navigator.of(navigatorContext).pushNamed(
+            Navigator.of(navigatorContext!).pushNamed(
               Routes.trackOfficeAppointment,
               arguments: message.data['appointmentId'],
             );
           } else {
-            Navigator.of(navigatorContext).pushReplacementNamed(
+            Navigator.of(navigatorContext!).pushReplacementNamed(
               Routes.trackOfficeAppointment,
               arguments: message.data['appointmentId'],
             );
@@ -335,12 +335,12 @@ class PushNotificationService {
         } else {
           if (!isCurrent(
               Routes.trackOnsiteAppointment, message.data['appointmentId'])) {
-            Navigator.of(navigatorContext).pushNamed(
+            Navigator.of(navigatorContext!).pushNamed(
               Routes.trackOnsiteAppointment,
               arguments: message.data['appointmentId'],
             );
           } else {
-            Navigator.of(navigatorContext).pushReplacementNamed(
+            Navigator.of(navigatorContext!).pushReplacementNamed(
               Routes.trackOnsiteAppointment,
               arguments: message.data['appointmentId'],
             );
@@ -350,7 +350,7 @@ class PushNotificationService {
         break;
 
       case 'request_status':
-        Navigator.of(navigatorContext).pushNamed(
+        Navigator.of(navigatorContext!).pushNamed(
           Routes.appointmentDetailScreen,
           arguments: message.data['appointmentId'],
         );
@@ -361,30 +361,30 @@ class PushNotificationService {
         if (message.data['appointmentType'] == '1') {
           if (!isCurrent(
               Routes.trackOfficeAppointment, message.data['appointmentId'])) {
-            Navigator.of(navigatorContext).pushNamed(
+            Navigator.of(navigatorContext!).pushNamed(
               Routes.trackOfficeAppointment,
               arguments: message.data['appointmentId'],
             );
           } else {
-            Navigator.of(navigatorContext).pushReplacementNamed(
+            Navigator.of(navigatorContext!).pushReplacementNamed(
               Routes.trackOfficeAppointment,
               arguments: message.data['appointmentId'],
             );
           }
         } else if (message.data['appointmentType'] == '2') {
-          Navigator.of(navigatorContext).pushNamed(
+          Navigator.of(navigatorContext!).pushNamed(
             Routes.appointmentDetailScreen,
             arguments: message.data['appointmentId'],
           );
         } else {
           if (!isCurrent(
               Routes.trackOnsiteAppointment, message.data['appointmentId'])) {
-            Navigator.of(navigatorContext).pushNamed(
+            Navigator.of(navigatorContext!).pushNamed(
               Routes.trackOnsiteAppointment,
               arguments: message.data['appointmentId'],
             );
           } else {
-            Navigator.of(navigatorContext).pushReplacementNamed(
+            Navigator.of(navigatorContext!).pushReplacementNamed(
               Routes.trackOnsiteAppointment,
               arguments: message.data['appointmentId'],
             );
@@ -398,7 +398,7 @@ class PushNotificationService {
             api
                 .getChatAppointmentDetails(token, message.data['appointmentId'])
                 .then((value) {
-              Navigator.of(navigatorContext).pushNamed(Routes.chat,
+              Navigator.of(navigatorContext!).pushNamed(Routes.chat,
                   arguments: SearchAppointment.fromJson(value));
             });
           });
@@ -407,14 +407,14 @@ class PushNotificationService {
         break;
 
       case 'follow_up_request':
-        Navigator.of(navigatorContext).pushNamed(
+        Navigator.of(navigatorContext!).pushNamed(
           Routes.requestDetailScreen,
           arguments: message.data['appointmentId'],
         );
         break;
 
       default:
-        Navigator.of(navigatorContext).pushNamed(
+        Navigator.of(navigatorContext!).pushNamed(
           Routes.appointmentDetailScreen,
           arguments: message.data['appointmentId'],
         );
@@ -423,7 +423,7 @@ class PushNotificationService {
 
   bool isCurrent(String routeName, args) {
     bool isCurrent = false;
-    Navigator.popUntil(navigatorContext, (route) {
+    Navigator.popUntil(navigatorContext!, (route) {
       if (route.settings.name == routeName) {
         if (route.settings.arguments == args) {
           isCurrent = true;
@@ -436,9 +436,9 @@ class PushNotificationService {
 
   bool isCurrentChatAppointment(String routeName, args) {
     bool isCurrent = false;
-    Navigator.popUntil(navigatorContext, (route) {
+    Navigator.popUntil(navigatorContext!, (route) {
       if (route.settings.name == routeName) {
-        SearchAppointment routeArg = route.settings.arguments;
+        SearchAppointment routeArg = route.settings.arguments as SearchAppointment;
         if (routeArg.sId == args) {
           isCurrent = true;
         }

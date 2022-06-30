@@ -15,7 +15,7 @@ import '../../utils/preference_key.dart';
 import '../../utils/preference_utils.dart';
 
 class MedicineInformation extends StatefulWidget {
-  MedicineInformation({Key key, this.args}) : super(key: key);
+  MedicineInformation({Key? key, this.args}) : super(key: key);
   dynamic args;
 
   @override
@@ -30,11 +30,11 @@ class _MedicineInformationState extends State<MedicineInformation>
   List<String> medChangeString = ['Added', 'Reviewed', 'Discontinued'];
   List<String> medChangeString1 = ['New', 'Reviewed', 'Discontinued'];
   TextEditingController medSearchController = TextEditingController();
-  List<Data> appointmentMedication = [];
-  String patientId, appointmentId;
+  List<Data>? appointmentMedication = [];
+  String? patientId, appointmentId;
   ScrollController scrollController = ScrollController();
   int current_page = 1, last_page = 1;
-  TabController _tabController;
+  TabController? _tabController;
   int _currentIndex = 0;
 
   @override
@@ -53,19 +53,19 @@ class _MedicineInformationState extends State<MedicineInformation>
     getMedicationHistoryApi(1);
 
     _tabController = TabController(length: tabs.length, vsync: this);
-    _tabController.addListener(_handleTabControllerTick);
+    _tabController!.addListener(_handleTabControllerTick);
 
     super.initState();
   }
 
   void _handleTabControllerTick() {
-    if (_currentIndex != _tabController.index) {
-      _currentIndex = _tabController.index;
+    if (_currentIndex != _tabController!.index) {
+      _currentIndex = _tabController!.index;
       getMedicationHistoryApi(1);
     }
   }
 
-  getMedicationHistoryApi(int page) async {
+  getMedicationHistoryApi(int? page) async {
     setLoading(true);
     var filterString = '';
     if (_currentIndex != 0) {
@@ -77,13 +77,13 @@ class _MedicineInformationState extends State<MedicineInformation>
             patientId, page, medSearchController.text, filterString)
         .then((value) {
       if (page == 1) {
-        current_page = value.currentPage;
-        last_page = value.totalPages;
+        current_page = value!.currentPage!;
+        last_page = value.totalPages!;
         appointmentMedication = value.data;
       } else {
-        current_page = value.currentPage;
-        last_page = value.totalPages;
-        appointmentMedication.addAll(value.data);
+        current_page = value!.currentPage!;
+        last_page = value.totalPages!;
+        appointmentMedication!.addAll(value.data!);
       }
       setLoading(false);
     });
@@ -229,11 +229,11 @@ class _MedicineInformationState extends State<MedicineInformation>
                 text,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: _tabController.index == index
+                    color: _tabController!.index == index
                         ? AppColors.goldenTainoi
                         : colorBlack2,
                     fontSize: fontSize14,
-                    fontWeight: _tabController.index == index
+                    fontWeight: _tabController!.index == index
                         ? fontWeightMedium
                         : fontWeightRegular),
               ),
@@ -248,14 +248,14 @@ class _MedicineInformationState extends State<MedicineInformation>
         controller: scrollController,
         separatorBuilder: (BuildContext context, int index) =>
             SizedBox(height: 10),
-        itemCount: appointmentMedication.length,
+        itemCount: appointmentMedication!.length,
         itemBuilder: (context, index) {
           return Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(width: 0.5, color: Colors.grey[100])),
+                border: Border.all(width: 0.5, color: Colors.grey[100]!)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -267,11 +267,11 @@ class _MedicineInformationState extends State<MedicineInformation>
                         borderRadius: BorderRadius.circular(26.0),
                         child: Image.network(
                             ApiBaseHelper.image_base_url +
-                                (appointmentMedication[index].doctor == null
-                                    ? appointmentMedication[index].user.avatar
-                                    : appointmentMedication[index]
-                                        .doctor
-                                        .avatar),
+                                (appointmentMedication![index].doctor == null
+                                    ? appointmentMedication![index].user!.avatar!
+                                    : appointmentMedication![index]
+                                        .doctor!
+                                        .avatar!),
                             width: 52,
                             height: 52),
                       ),
@@ -285,7 +285,7 @@ class _MedicineInformationState extends State<MedicineInformation>
                           children: [
                             Expanded(
                               child: Text(
-                                '${appointmentMedication[index].name} ${(appointmentMedication[index].status == 2 ? '' : appointmentMedication[index].dose)} is ${medChangeString[appointmentMedication[index].status]} by ${appointmentMedication[index].doctor == null ? 'Me' : appointmentMedication[index].doctor.fullName}',
+                                '${appointmentMedication![index].name} ${(appointmentMedication![index].status == 2 ? '' : appointmentMedication![index].dose)} is ${medChangeString[appointmentMedication![index].status!]} by ${appointmentMedication![index].doctor == null ? 'Me' : appointmentMedication![index].doctor!.fullName}',
                                 style: AppTextStyle.mediumStyle(fontSize: 14),
                               ),
                             ),
@@ -299,7 +299,7 @@ class _MedicineInformationState extends State<MedicineInformation>
                                       BorderRadius.all(Radius.circular(8))),
                               child: Text(
                                 medChangeString1[
-                                    appointmentMedication[index].status],
+                                    appointmentMedication![index].status!],
                                 style: TextStyle(
                                     color: AppColors.goldenTainoi,
                                     fontSize: 13,
@@ -308,10 +308,10 @@ class _MedicineInformationState extends State<MedicineInformation>
                             )
                           ],
                         ),
-                        appointmentMedication[index].doctor == null
+                        appointmentMedication![index].doctor == null
                             ? SizedBox()
                             : Text(
-                                appointmentMedication[index].providerReason ??
+                                appointmentMedication![index].providerReason ??
                                     '',
                                 style: AppTextStyle.regularStyle(fontSize: 14),
                               ),
@@ -323,7 +323,7 @@ class _MedicineInformationState extends State<MedicineInformation>
                             ),
                             SizedBox(width: 8),
                             Text(DateFormat('MM/dd/yyyy').format(dateTime(
-                                appointmentMedication[index].createdAt))),
+                                appointmentMedication![index].createdAt))),
                           ],
                         )
                       ],
@@ -357,11 +357,17 @@ class _MedicineInformationState extends State<MedicineInformation>
 class CircleTabIndicator extends Decoration {
   final BoxPainter _painter;
 
-  CircleTabIndicator({@required Color color, @required double radius})
+  CircleTabIndicator({required Color color, required double radius})
       : _painter = _CirclePainter(color, radius);
+      
+        @override
+        BoxPainter createBoxPainter([VoidCallback? onChanged]) {
+          // TODO: implement createBoxPainter
+          throw UnimplementedError();
+        }
 
-  @override
-  BoxPainter createBoxPainter([onChanged]) => _painter;
+  // @override
+  // BoxPainter createBoxPainter([onChanged]) => _painter;
 }
 
 class _CirclePainter extends BoxPainter {
@@ -376,7 +382,7 @@ class _CirclePainter extends BoxPainter {
   @override
   void paint(Canvas canvas, Offset offset, ImageConfiguration cfg) {
     final Offset circleOffset =
-        offset + Offset(cfg.size.width / 2, cfg.size.height - radius);
+        offset + Offset(cfg.size!.width / 2, cfg.size!.height - radius);
     canvas.drawCircle(circleOffset, radius, _paint);
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-Future showDropDownSheet({BuildContext context, Widget list,isFromFamilyCircle=false}) {
+Future showDropDownSheet({required BuildContext context, Widget? list,isFromFamilyCircle=false}) {
   return showModalBottomSheet(
     backgroundColor: isFromFamilyCircle?Colors.transparent:null,
       builder: (context) {
@@ -9,7 +9,7 @@ Future showDropDownSheet({BuildContext context, Widget list,isFromFamilyCircle=f
           onClosing: () {},
           builder: (BuildContext context) {
             return StatefulBuilder(
-              builder: (BuildContext context, setState) => list,
+              builder: (BuildContext context, setState) => list!,
             );
           },
         );

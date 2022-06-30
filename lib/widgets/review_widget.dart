@@ -3,11 +3,11 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hutano/apis/api_helper.dart';
 
 class ReviewWidget extends StatelessWidget {
-  final String reviewerName, reviewDate, dateOfReview, reviewText, avatar;
-  final double reviewerRating;
+  final String? reviewerName, reviewDate, dateOfReview, reviewText, avatar;
+  final double? reviewerRating;
 
   const ReviewWidget({
-    Key key,
+    Key? key,
     this.reviewerName,
     this.reviewerRating,
     this.dateOfReview,
@@ -28,14 +28,14 @@ class ReviewWidget extends StatelessWidget {
               height: 58.0,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: avatar == null
+                  image: (avatar == null
                       ? AssetImage('images/profile_user.png')
-                      : NetworkImage(ApiBaseHelper.imageUrl + avatar),
+                      : NetworkImage(ApiBaseHelper.imageUrl + avatar!)) as ImageProvider<Object>,
                   fit: BoxFit.cover,
                 ),
                 borderRadius: new BorderRadius.all(Radius.circular(50.0)),
                 border: new Border.all(
-                  color: Colors.grey[300],
+                  color: Colors.grey[300]!,
                   width: 1.0,
                 ),
               ),
@@ -47,7 +47,7 @@ class ReviewWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      reviewerName,
+                      reviewerName!,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 14.0,
@@ -60,7 +60,7 @@ class ReviewWidget extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: Text(
-                        reviewDate,
+                        reviewDate!,
                         style: TextStyle(
                           fontSize: 12.0,
                           color: Colors.black.withOpacity(0.85),
@@ -75,7 +75,7 @@ class ReviewWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 RatingBar.builder(
-                  initialRating: reviewerRating,
+                  initialRating: reviewerRating!,
                   itemSize: 20.0,
                   minRating: 1,
                   direction: Axis.horizontal,
@@ -85,8 +85,7 @@ class ReviewWidget extends StatelessWidget {
                   itemBuilder: (context, index) => Icon(
                     Icons.star,
                     color: Colors.amber,
-                  ),
-                  onRatingUpdate: null,
+                  ), onRatingUpdate: (double value) {  },
                 ),
                 Text(
                   reviewerRating.toString(),
@@ -103,7 +102,7 @@ class ReviewWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(top: 16.0),
           child: Text(
-            reviewText,
+            reviewText!,
             style: TextStyle(
               color: Colors.black.withOpacity(0.85),
             ),

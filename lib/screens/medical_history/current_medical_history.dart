@@ -36,8 +36,8 @@ class _CurrentMedicalHistoryState extends State<CurrentMedicalHistory> {
   List<MedicalTimeModel> _medicalTimeList = [];
   TextEditingController _searchBodyPartController = TextEditingController();
   FocusNode _searchBodyPartFocusNode = FocusNode();
-  List<BodyPart> _bodyPartList = [];
-  List<String> _selectedBodyPartList = [];
+  List<BodyPart>? _bodyPartList = [];
+  List<String?> _selectedBodyPartList = [];
   String _selectedProblemTime = "";
 
   @override
@@ -83,7 +83,7 @@ class _CurrentMedicalHistoryState extends State<CurrentMedicalHistory> {
               debugPrint("HELLO ${reqCurrentMedicalHistory.toJson()}");
               _addCurrentMedicalHistory(context, reqCurrentMedicalHistory);
             } else {
-              Widgets.showToast(Localization.of(context).fillEmptyFields);
+              Widgets.showToast(Localization.of(context)!.fillEmptyFields);
             }
           },
           child: SingleChildScrollView(
@@ -91,16 +91,16 @@ class _CurrentMedicalHistoryState extends State<CurrentMedicalHistory> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _reusableHeader(context,
-                  Localization.of(context).currentMedicalHistoryHeader),
+                  Localization.of(context)!.currentMedicalHistoryHeader),
               _tellUsAboutSeekingCareWidget(context),
               _reusableHeader(
-                  context, Localization.of(context).chiefComplaintHeader),
+                  context, Localization.of(context)!.chiefComplaintHeader),
               _searchBodyPart(context),
               _selectedBodyPartListView(context),
-              _reusableHeader(context, Localization.of(context).howLongHeader),
+              _reusableHeader(context, Localization.of(context)!.howLongHeader),
               _horizontalTimeListView(context),
               _reusableHeader(
-                  context, Localization.of(context).rateYourDiscomfort),
+                  context, Localization.of(context)!.rateYourDiscomfort),
               _rateDiscomfort(context)
             ],
           ))),
@@ -125,7 +125,7 @@ class _CurrentMedicalHistoryState extends State<CurrentMedicalHistory> {
           focusNode: _reviewFocus,
           controller: _reviewController,
           focusedBorderColor: colorBlack20,
-          labelText: Localization.of(context).tellUsAboutCare,
+          labelText: Localization.of(context)!.tellUsAboutCare,
           textInputType: TextInputType.text,
           maxLines: 3,
           onFieldSubmitted: (s) {},
@@ -144,7 +144,7 @@ class _CurrentMedicalHistoryState extends State<CurrentMedicalHistory> {
             onTap: () {},
             onChanged: (value) {},
             decoration: InputDecoration(
-              hintText: Localization.of(context).bodyPartHint,
+              hintText: Localization.of(context)!.bodyPartHint,
               isDense: true,
               hintStyle: TextStyle(
                   color: colorBlack2,
@@ -169,7 +169,7 @@ class _CurrentMedicalHistoryState extends State<CurrentMedicalHistory> {
         errorBuilder: (_, object) {
           return Container();
         },
-        itemBuilder: (context, suggestion) {
+        itemBuilder: (context, dynamic suggestion) {
           return ListTile(
             title: Text(
               suggestion.name,
@@ -181,7 +181,7 @@ class _CurrentMedicalHistoryState extends State<CurrentMedicalHistory> {
         transitionBuilder: (context, suggestionsBox, controller) {
           return suggestionsBox;
         },
-        onSuggestionSelected: (suggestion) {
+        onSuggestionSelected: (dynamic suggestion) {
           _searchBodyPartController.text = "";
           setState(() {
             _selectedBodyPartList.add(suggestion.name);
@@ -193,7 +193,7 @@ class _CurrentMedicalHistoryState extends State<CurrentMedicalHistory> {
       );
 
   _getFilteredBodyPartList() {
-    return _bodyPartList.where((element) => element.name
+    return _bodyPartList!.where((element) => element.name!
         .toLowerCase()
         .contains(_searchBodyPartController.text.toLowerCase()));
   }
@@ -212,24 +212,24 @@ class _CurrentMedicalHistoryState extends State<CurrentMedicalHistory> {
                           <PopupMenuEntry<String>>[
                         _popMenuCommonItem(
                             context,
-                            Localization.of(context).edit,
-                            FileConstants.icEdit),
+                            Localization.of(context)!.edit,
+                            FileConstants.icEdit) as PopupMenuEntry<String>,
                         _popMenuCommonItem(
                             context,
-                            Localization.of(context).remove,
-                            FileConstants.icRemoveBlack)
+                            Localization.of(context)!.remove,
+                            FileConstants.icRemoveBlack) as PopupMenuEntry<String>
                       ],
                       child: ListTile(
                         contentPadding: EdgeInsets.all(0),
                         title: Text(
-                          _selectedBodyPartList[index],
+                          _selectedBodyPartList[index]!,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
                         trailing: Icon(Icons.more_vert),
                       ),
-                      onSelected: (value) {
-                        if (value == Localization.of(context).remove) {
+                      onSelected: (dynamic value) {
+                        if (value == Localization.of(context)!.remove) {
                           setState(() {
                             _selectedBodyPartList
                                 .remove(_selectedBodyPartList[index]);
@@ -391,7 +391,7 @@ class _CurrentMedicalHistoryState extends State<CurrentMedicalHistory> {
     await ApiManager().addCurrentMedicalHistory(reqModel).then(((result) {
       if (result is CommonRes) {
         ProgressDialogUtils.dismissProgressDialog();
-        Widgets.showToast(result.response);
+        Widgets.showToast(result.response!);
         Navigator.of(context).pushNamed(Routes.routeTestDiagnosis);
       }
     })).catchError((dynamic e) {

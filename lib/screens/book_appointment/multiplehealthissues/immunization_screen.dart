@@ -70,7 +70,7 @@ class _ImmunizationScreenState extends State<ImmunizationScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _commonHeaderText(
-                      context, Localization.of(context).immunizationLabel),
+                      context, Localization.of(context)!.immunizationLabel),
                   _buildSearchForVaccine(context),
                   _currentVaccineList(context),
                   SizedBox(height: spacing20),
@@ -111,7 +111,7 @@ class _ImmunizationScreenState extends State<ImmunizationScreen> {
                         padding: const EdgeInsets.all(spacing8),
                         child: Image.asset(FileConstants.icSearchBlack,
                             color: colorBlack2, width: 20, height: 20))),
-                hintText: Localization.of(context).vaccineHint,
+                hintText: Localization.of(context)!.vaccineHint,
                 isDense: true,
                 hintStyle: TextStyle(
                     color: colorBlack2,
@@ -131,7 +131,7 @@ class _ImmunizationScreenState extends State<ImmunizationScreen> {
           errorBuilder: (_, object) {
             return Container();
           },
-          itemBuilder: (context, suggestion) {
+          itemBuilder: (context, dynamic suggestion) {
             return ListTile(
               title: Text(suggestion.bodyPart),
             );
@@ -139,7 +139,7 @@ class _ImmunizationScreenState extends State<ImmunizationScreen> {
           transitionBuilder: (context, suggestionsBox, controller) {
             return suggestionsBox;
           },
-          onSuggestionSelected: (suggestion) {
+          onSuggestionSelected: (dynamic suggestion) {
             setState(() {
               _listOfSelectedVaccines.add(BodyPartModel(
                   suggestion.bodyPart,
@@ -157,7 +157,7 @@ class _ImmunizationScreenState extends State<ImmunizationScreen> {
       );
 
   _getFilteredVaccineList() {
-    return _listOfVaccines.where((element) => element.bodyPart
+    return _listOfVaccines.where((element) => element.bodyPart!
         .toLowerCase()
         .contains(_searchVaccineController.text.toLowerCase()));
   }
@@ -172,21 +172,21 @@ class _ImmunizationScreenState extends State<ImmunizationScreen> {
             offset: Offset(300, 50),
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
               _popMenuCommonItem(
-                  context, Localization.of(context).edit, FileConstants.icEdit),
-              _popMenuCommonItem(context, Localization.of(context).remove,
-                  FileConstants.icRemoveBlack)
+                  context, Localization.of(context)!.edit, FileConstants.icEdit) as PopupMenuEntry<String>,
+              _popMenuCommonItem(context, Localization.of(context)!.remove,
+                  FileConstants.icRemoveBlack) as PopupMenuEntry<String>
             ],
             child: ListTile(
                 contentPadding: EdgeInsets.all(0),
                 title: Text(
-                    "${index + 1}. " + _listOfSelectedVaccines[index].bodyPart,
+                    "${index + 1}. " + _listOfSelectedVaccines[index].bodyPart!,
                     style: TextStyle(
                         fontWeight: fontWeightMedium,
                         fontSize: fontSize14,
                         color: colorBlack2)),
                 trailing: Icon(Icons.more_vert, color: colorBlack2)),
-            onSelected: (value) {
-              if (value == Localization.of(context).edit) {
+            onSelected: (dynamic value) {
+              if (value == Localization.of(context)!.edit) {
                 setState(() {
                   _listOfSelectedVaccines[index].isItClicked = false;
                 });
@@ -198,7 +198,7 @@ class _ImmunizationScreenState extends State<ImmunizationScreen> {
               }
             },
           ),
-          if (_listOfSelectedVaccines[index].hasInternalPart)
+          if (_listOfSelectedVaccines[index].hasInternalPart!)
             _haveVaccinatedHeader(context),
           Row(children: [
             _yesButtonWidget(context, index),
@@ -211,7 +211,7 @@ class _ImmunizationScreenState extends State<ImmunizationScreen> {
   Widget _haveVaccinatedHeader(BuildContext context) => Padding(
         padding: EdgeInsets.symmetric(vertical: spacing20),
         child: Text(
-          Localization.of(context).haveYouHadVaccineLabel,
+          Localization.of(context)!.haveYouHadVaccineLabel,
           style: TextStyle(
               color: Color(0xff0e1c2a),
               fontSize: fontSize16,
@@ -220,7 +220,7 @@ class _ImmunizationScreenState extends State<ImmunizationScreen> {
       );
 
   Widget _yesButtonWidget(BuildContext context, int index) => HutanoButton(
-        label: Localization.of(context).yes,
+        label: Localization.of(context)!.yes,
         onPressed: () {
           setState(() {
             _listOfSelectedVaccines[index].isItClicked = true;
@@ -228,10 +228,10 @@ class _ImmunizationScreenState extends State<ImmunizationScreen> {
         },
         buttonType: HutanoButtonType.onlyLabel,
         width: 65,
-        labelColor: _listOfSelectedVaccines[index].isItClicked
+        labelColor: _listOfSelectedVaccines[index].isItClicked!
             ? colorWhite
             : colorPurple100,
-        color: _listOfSelectedVaccines[index].isItClicked
+        color: _listOfSelectedVaccines[index].isItClicked!
             ? colorPurple100
             : colorWhite,
         height: 34,
@@ -239,7 +239,7 @@ class _ImmunizationScreenState extends State<ImmunizationScreen> {
 
   Widget _noButtonWidget(BuildContext context, int index) => HutanoButton(
         borderColor: colorGrey,
-        label: Localization.of(context).no,
+        label: Localization.of(context)!.no,
         onPressed: () {
           setState(() {
             _listOfSelectedVaccines[index].isItClicked = false;
@@ -247,10 +247,10 @@ class _ImmunizationScreenState extends State<ImmunizationScreen> {
         },
         buttonType: HutanoButtonType.onlyLabel,
         width: 65,
-        labelColor: !_listOfSelectedVaccines[index].isItClicked
+        labelColor: !_listOfSelectedVaccines[index].isItClicked!
             ? colorWhite
             : colorPurple100,
-        color: !_listOfSelectedVaccines[index].isItClicked
+        color: !_listOfSelectedVaccines[index].isItClicked!
             ? colorPurple100
             : colorWhite,
         borderWidth: 1,
@@ -279,7 +279,7 @@ class _ImmunizationScreenState extends State<ImmunizationScreen> {
                           padding: const EdgeInsets.all(spacing8),
                           child: Image.asset(FileConstants.icSearchBlack,
                               color: colorBlack2, width: 20, height: 20))),
-                  hintText: Localization.of(context).associatedSymptomsLabel,
+                  hintText: Localization.of(context)!.associatedSymptomsLabel,
                   isDense: true,
                   hintStyle: TextStyle(
                       color: colorBlack2,
@@ -299,13 +299,13 @@ class _ImmunizationScreenState extends State<ImmunizationScreen> {
             errorBuilder: (_, object) {
               return Container();
             },
-            itemBuilder: (context, suggestion) {
+            itemBuilder: (context, dynamic suggestion) {
               return ListTile(title: Text(suggestion.symptom));
             },
             transitionBuilder: (context, suggestionsBox, controller) {
               return suggestionsBox;
             },
-            onSuggestionSelected: (suggestion) {
+            onSuggestionSelected: (dynamic suggestion) {
               setState(() {
                 _listOfSelectedSymptoms
                     .add(AssociatedSymptomsModel(suggestion.symptom));
@@ -318,7 +318,7 @@ class _ImmunizationScreenState extends State<ImmunizationScreen> {
       );
 
   _getFilteredSymptomsList() {
-    return _listOfAssociatedSymptoms.where((element) => element.symptom
+    return _listOfAssociatedSymptoms.where((element) => element.symptom!
         .toLowerCase()
         .contains(_searchVaccineController.text.toLowerCase()));
   }
@@ -332,23 +332,23 @@ class _ImmunizationScreenState extends State<ImmunizationScreen> {
           PopupMenuButton(
               offset: Offset(300, 50),
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                    _popMenuCommonItem(context, Localization.of(context).edit,
-                        FileConstants.icEdit),
-                    _popMenuCommonItem(context, Localization.of(context).remove,
-                        FileConstants.icRemoveBlack)
+                    _popMenuCommonItem(context, Localization.of(context)!.edit,
+                        FileConstants.icEdit) as PopupMenuEntry<String>,
+                    _popMenuCommonItem(context, Localization.of(context)!.remove,
+                        FileConstants.icRemoveBlack) as PopupMenuEntry<String>
                   ],
               child: ListTile(
                   contentPadding: EdgeInsets.all(0),
                   title: Text(
-                    "${index + 1}. " + _listOfSelectedSymptoms[index].symptom,
+                    "${index + 1}. " + _listOfSelectedSymptoms[index].symptom!,
                     style: TextStyle(
                         fontWeight: fontWeightMedium,
                         fontSize: fontSize14,
                         color: colorBlack2),
                   ),
                   trailing: Icon(Icons.more_vert, color: colorBlack2)),
-              onSelected: (value) {
-                if (value == Localization.of(context).edit) {
+              onSelected: (dynamic value) {
+                if (value == Localization.of(context)!.edit) {
                 } else {
                   setState(() {
                     _listOfSelectedSymptoms

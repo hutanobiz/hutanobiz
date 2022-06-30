@@ -5,19 +5,19 @@ import 'arrow_button.dart';
 
 class BottomArrows extends StatelessWidget {
   BottomArrows(
-      {Key key,
-      @required this.onForwardTap,
+      {Key? key,
+      required this.onForwardTap,
       this.isSkipLater = false,
       this.isCameraVisible = false,
       this.onCameraForTap,
       this.onSkipForTap})
       : super(key: key);
 
-  final Function onForwardTap;
+  final Function? onForwardTap;
   final bool isSkipLater;
-  final Function onSkipForTap;
+  final Function? onSkipForTap;
   final bool isCameraVisible;
-  final Function onCameraForTap;
+  final Function? onCameraForTap;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class BottomArrows extends StatelessWidget {
               iconData: Icons.camera_alt,
               onTap: onCameraForTap,
             ),
-          if (isSkipLater) SkipLater(onTap: onSkipForTap),
+          if (isSkipLater) SkipLater(onTap: onSkipForTap as void Function()?),
           Spacer(),
           ArrowButton(
             iconData: Icons.arrow_forward,

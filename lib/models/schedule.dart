@@ -1,9 +1,9 @@
 class Schedule {
-  int day;
+  int? day;
   dynamic date;
   dynamic startTime;
   dynamic endTime;
-  bool isBlock;
+  bool? isBlock;
   dynamic isSelected = false;
 
   Schedule(

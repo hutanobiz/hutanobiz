@@ -1,6 +1,6 @@
 class ReqCommunicationReasonModel {
-  String description;
-  List<String> reasonIds;
+  String? description;
+  List<String>? reasonIds;
 
   ReqCommunicationReasonModel({this.description, this.reasonIds});
 

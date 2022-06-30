@@ -42,14 +42,14 @@ class ConfirmBookAppointmentScreen extends StatefulWidget {
 
 class _ConfirmBookAppointmentScreenState
     extends State<ConfirmBookAppointmentScreen> {
-  InheritedContainerState _container;
-  Map _appointmentData;
-  Map _providerData, _userLocationMap;
+  late InheritedContainerState _container;
+  late Map _appointmentData;
+ late Map _providerData, _userLocationMap;
   bool _isLoading = false;
-  String _timeHours, _timeMins;
-  DateTime _bookedDate;
-  String _bookedTime;
-  List<Services> _servicesList = new List();
+  String? _timeHours, _timeMins;
+  DateTime? _bookedDate;
+  String? _bookedTime;
+  List<Services>? _servicesList = [];
   String _timezone = 'Unknown';
 
   final Set<Marker> _markers = {};
@@ -59,28 +59,28 @@ class _ConfirmBookAppointmentScreenState
   PolylinePoints _polylinePoints = PolylinePoints();
 
   List<LatLng> latlng = [];
-  LatLng _initialPosition, _middlePoint;
+  LatLng? _initialPosition, _middlePoint;
   LatLng _desPosition = LatLng(0, 0);
   Completer<GoogleMapController> _controller = Completer();
-  BitmapDescriptor _sourceIcon;
-  BitmapDescriptor _destinationIcon;
+  BitmapDescriptor? _sourceIcon;
+  BitmapDescriptor? _destinationIcon;
 
   String _totalDistance = "";
   String _totalDuration = "";
-  Map _profileMap = new Map();
+  Map? _profileMap = new Map();
   Map _servicesMap = new Map();
-  Map<String, String> _reviewAppointmentData = Map();
-  Map _consentToTreatMap;
-  String paymentType, insuranceName, insuranceImage, insuranceId;
+  Map<String, String?> _reviewAppointmentData = Map();
+  Map? _consentToTreatMap;
+  String? paymentType, insuranceName, insuranceImage, insuranceId;
 
-  List<dynamic> _consultaceList = List();
+  List<dynamic>? _consultaceList = [];
   double _totalAmount = 0;
 
   setPolylines() async {
     PolylineResult polylineResult =
-        await _polylinePoints?.getRouteBetweenCoordinates(
+        await _polylinePoints.getRouteBetweenCoordinates(
       Strings.kGoogleApiKey,
-      PointLatLng(_initialPosition.latitude, _initialPosition.longitude),
+      PointLatLng(_initialPosition!.latitude, _initialPosition!.longitude),
       PointLatLng(_desPosition.latitude, _desPosition.longitude),
     );
 
@@ -127,17 +127,17 @@ class _ConfirmBookAppointmentScreenState
     }
     _consentToTreatMap = _container.consentToTreatMap;
 
-    if (_consentToTreatMap["paymentMap"] != null) {
-      paymentType = _consentToTreatMap["paymentMap"]["paymentType"];
+    if (_consentToTreatMap!["paymentMap"] != null) {
+      paymentType = _consentToTreatMap!["paymentMap"]["paymentType"];
 
-      if (_consentToTreatMap["paymentMap"]["insuranceId"] != null) {
-        insuranceId = _consentToTreatMap["paymentMap"]["insuranceId"];
+      if (_consentToTreatMap!["paymentMap"]["insuranceId"] != null) {
+        insuranceId = _consentToTreatMap!["paymentMap"]["insuranceId"];
       }
-      if (_consentToTreatMap["paymentMap"]["insuranceName"] != null) {
-        insuranceName = _consentToTreatMap["paymentMap"]["insuranceName"];
+      if (_consentToTreatMap!["paymentMap"]["insuranceName"] != null) {
+        insuranceName = _consentToTreatMap!["paymentMap"]["insuranceName"];
       }
-      if (_consentToTreatMap["paymentMap"]["insuranceImage"] != null) {
-        insuranceImage = _consentToTreatMap["paymentMap"]["insuranceImage"];
+      if (_consentToTreatMap!["paymentMap"]["insuranceImage"] != null) {
+        insuranceImage = _consentToTreatMap!["paymentMap"]["insuranceImage"];
       }
     }
 
@@ -147,11 +147,11 @@ class _ConfirmBookAppointmentScreenState
               "0";
 
       _providerData["providerData"]["data"].map((f) {
-        _profileMap.addAll(f);
+        _profileMap!.addAll(f);
       }).toList();
     } else {
       _profileMap = _providerData["providerData"];
-      averageRating = _profileMap["averageRating"]?.toStringAsFixed(2) ?? "0";
+      averageRating = _profileMap!["averageRating"]?.toStringAsFixed(2) ?? "0";
     }
     _initialPosition = _userLocationMap["latLng"];
 
@@ -161,34 +161,34 @@ class _ConfirmBookAppointmentScreenState
           null) {
         _desPosition = LatLng(
             Provider.of<HealthConditionProvider>(context, listen: false)
-                .coordinatesDetails
+                .coordinatesDetails!
                 .longitude,
             Provider.of<HealthConditionProvider>(context, listen: false)
-                .coordinatesDetails
+                .coordinatesDetails!
                 .latitude);
       } else {
         _desPosition = LatLng(
-            _consentToTreatMap["userAddress"]['coordinates'][1],
-            _consentToTreatMap["userAddress"]['coordinates'][0]);
+            _consentToTreatMap!["userAddress"]['coordinates'][1],
+            _consentToTreatMap!["userAddress"]['coordinates'][0]);
       }
     } else if (_container.projectsResponse["serviceType"].toString() == '1') {
-      if (_profileMap["businessLocation"] != null) {
-        if (_profileMap["businessLocation"]["coordinates"].length > 0) {
+      if (_profileMap!["businessLocation"] != null) {
+        if (_profileMap!["businessLocation"]["coordinates"].length > 0) {
           _desPosition = LatLng(
               double.parse(
-                  _profileMap["businessLocation"]["coordinates"][1].toString()),
-              double.parse(_profileMap["businessLocation"]["coordinates"][0]
+                  _profileMap!["businessLocation"]["coordinates"][1].toString()),
+              double.parse(_profileMap!["businessLocation"]["coordinates"][0]
                   .toString()));
         }
       }
     } else {}
     if (_initialPosition != null) {
       _middlePoint = LatLng(
-          (_initialPosition.latitude + _desPosition.latitude) / 2,
-          (_initialPosition.longitude + _desPosition.longitude) / 2);
+          (_initialPosition!.latitude + _desPosition.latitude) / 2,
+          (_initialPosition!.longitude + _desPosition.longitude) / 2);
 
       if (_initialPosition != null) {
-        getDistanceAndTime(_initialPosition, _desPosition);
+        getDistanceAndTime(_initialPosition!, _desPosition);
       }
     }
 
@@ -199,35 +199,35 @@ class _ConfirmBookAppointmentScreenState
 
     _reviewAppointmentData["statusType"] = _servicesMap["status"].toString();
 
-    if (_servicesList.length > 0) _servicesList.clear();
+    if (_servicesList!.length > 0) _servicesList!.clear();
 
     if (_servicesMap["status"].toString() == "1") {
       if (_servicesMap["services"] != null) {
         _servicesList = _servicesMap["services"];
 
-        for (int i = 0; i < _servicesList.length; i++) {
+        for (int i = 0; i < _servicesList!.length; i++) {
           _totalAmount =
-              double.parse(_servicesList[i].amount.toString()) + _totalAmount;
+              double.parse(_servicesList![i].amount.toString()) + _totalAmount;
           _reviewAppointmentData["services[${i.toString()}][subServiceId]"] =
-              _servicesList[i].subServiceId;
+              _servicesList![i].subServiceId;
           _reviewAppointmentData["services[${i.toString()}][amount]"] =
-              _servicesList[i].amount.toString();
+              _servicesList![i].amount.toString();
         }
       }
     } else {
       _consultaceList = _servicesMap["consultaceFee"];
 
-      for (int i = 0; i < _consultaceList.length; i++) {
+      for (int i = 0; i < _consultaceList!.length; i++) {
         _totalAmount =
-            double.parse(_consultaceList[i]["fee"].toString()) + _totalAmount;
+            double.parse(_consultaceList![i]["fee"].toString()) + _totalAmount;
         _reviewAppointmentData["consultanceFee[${i.toString()}][fee]"] =
-            _consultaceList[i]["fee"].toString();
+            _consultaceList![i]["fee"].toString();
       }
     }
     if (_consentToTreatMap != null &&
-        _consentToTreatMap["parkingMap"] != null &&
-        _consentToTreatMap["parkingMap"]["parkingFee"] != null)
-      _totalAmount += _consentToTreatMap["parkingMap"]["parkingFee"];
+        _consentToTreatMap!["parkingMap"] != null &&
+        _consentToTreatMap!["parkingMap"]["parkingFee"] != null)
+      _totalAmount += _consentToTreatMap!["parkingMap"]["parkingFee"];
   }
 
   initPlatformState() async {
@@ -250,13 +250,13 @@ class _ConfirmBookAppointmentScreenState
             LocationData locationData = await _location.getLocation();
 
             _initialPosition =
-                LatLng(locationData.latitude, locationData.longitude);
+                LatLng(locationData.latitude!, locationData.longitude!);
             _middlePoint = LatLng(
-                (_initialPosition.latitude + _desPosition.latitude) / 2,
-                (_initialPosition.longitude + _desPosition.longitude) / 2);
+                (_initialPosition!.latitude + _desPosition.latitude) / 2,
+                (_initialPosition!.longitude + _desPosition.longitude) / 2);
 
             if (_initialPosition != null) {
-              getDistanceAndTime(_initialPosition, _desPosition);
+              getDistanceAndTime(_initialPosition!, _desPosition);
             }
           } on PlatformException catch (e) {
             Widgets.showToast(e.message.toString());
@@ -264,7 +264,7 @@ class _ConfirmBookAppointmentScreenState
 
             log(e.code);
 
-            _location = null;
+            // _location = null;
           }
         } else {
           bool serviceStatusResult = await _location.requestService();
@@ -370,7 +370,7 @@ class _ConfirmBookAppointmentScreenState
                   paymentType == "3"
                       ? "Cash"
                       : paymentType == "1"
-                          ? "Card **** **** **** ${_consentToTreatMap["paymentMap"]["selectedCard"]['card']['last4']}"
+                          ? "Card **** **** **** ${_consentToTreatMap!["paymentMap"]["selectedCard"]['card']['last4']}"
                           : insuranceName,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -391,9 +391,9 @@ class _ConfirmBookAppointmentScreenState
   Widget _buildCardWidget() {
     var _card;
     var title;
-    var image;
+    late var image;
     if (paymentType == "1") {
-      _card = _consentToTreatMap["paymentMap"]["selectedCard"]['card'];
+      _card = _consentToTreatMap!["paymentMap"]["selectedCard"]['card'];
       title = "**** **** **** ${_card['last4']}";
     } else if (paymentType == "2") {
       image = "images/insurancePlaceHolder.png";
@@ -412,7 +412,7 @@ class _ConfirmBookAppointmentScreenState
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 paymentType == "1"
-                    ? getCardIcon(CardType.Master)
+                    ? getCardIcon(CardType.Master)!
                     : (paymentType == "2" && insuranceImage == null)
                         ? Container(
                             height: 42,
@@ -516,7 +516,7 @@ class _ConfirmBookAppointmentScreenState
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Text(
-                        'Hutano Cash Applied (\$${_consentToTreatMap['hutanoCash'].toString()})',
+                        'Hutano Cash Applied (\$${_consentToTreatMap!['hutanoCash'].toString()})',
                         style: TextStyle(
                             fontSize: fontSize14,
                             color: colorBorder2,
@@ -563,27 +563,27 @@ class _ConfirmBookAppointmentScreenState
         Uri uri = Uri.parse(
             ApiBaseHelper.base_url + "api/patient/appointment-booking");
         http.MultipartRequest request = http.MultipartRequest('POST', uri);
-        request.headers['authorization'] = token;
+        request.headers['authorization'] = token!;
 
         token.toString().debugLog();
 
         String doctorId = '';
 
-        if (_profileMap["userId"] != null && _profileMap["userId"] is Map) {
-          doctorId = _profileMap["userId"]["_id"].toString();
-        } else if (_profileMap["User"] != null is Map) {
-          doctorId = _profileMap["User"][0]["_id"].toString();
+        if (_profileMap!["userId"] != null && _profileMap!["userId"] is Map) {
+          doctorId = _profileMap!["userId"]["_id"].toString();
+        } else if (_profileMap!["User"] != null is Map) {
+          doctorId = _profileMap!["User"][0]["_id"].toString();
         }
 
         _reviewAppointmentData["type"] =
             _container.getProjectsResponse()["serviceType"]?.toString() ?? "1";
         _reviewAppointmentData["date"] =
-            DateFormat("MM/dd/yyyy").format(_bookedDate).toString();
+            DateFormat("MM/dd/yyyy").format(_bookedDate!).toString();
         _reviewAppointmentData["fromTime"] = _bookedTime;
         _reviewAppointmentData["timeZonePlace"] = _timezone;
         _reviewAppointmentData["doctor"] = doctorId;
 
-        request.fields.addAll(_reviewAppointmentData);
+        request.fields.addAll(_reviewAppointmentData as Map<String, String>);
 
         if (_reviewAppointmentData["type"] == '3') {
           if (Provider.of<HealthConditionProvider>(context, listen: false)
@@ -591,29 +591,29 @@ class _ConfirmBookAppointmentScreenState
               null) {
             request.fields['userAddressId'] =
                 Provider.of<HealthConditionProvider>(context, listen: false)
-                    .addressDetails
-                    .sId;
+                    .addressDetails!
+                    .sId!;
           } else {
             request.fields['userAddressId'] =
-                _consentToTreatMap["userAddress"]["_id"].toString();
+                _consentToTreatMap!["userAddress"]["_id"].toString();
           }
-          if (_consentToTreatMap["parkingMap"]["parkingType"] == null) {
+          if (_consentToTreatMap!["parkingMap"]["parkingType"] == null) {
             request.fields['parkingType'] = "";
             request.fields['parkingFee'] = "";
             request.fields['parkingBay'] = "";
           } else {
             request.fields['parkingType'] =
-                _consentToTreatMap["parkingMap"]["parkingType"].toString();
+                _consentToTreatMap!["parkingMap"]["parkingType"].toString();
             request.fields['parkingFee'] =
-                _consentToTreatMap["parkingMap"]["parkingFee"].toString();
+                _consentToTreatMap!["parkingMap"]["parkingFee"].toString();
             request.fields['parkingBay'] =
-                _consentToTreatMap["parkingMap"]["parkingBay"].toString();
+                _consentToTreatMap!["parkingMap"]["parkingBay"].toString();
           }
 
-          if (_consentToTreatMap["parkingMap"]["instructions"].toString() !=
+          if (_consentToTreatMap!["parkingMap"]["instructions"].toString() !=
               null) {
             request.fields['instructions'] =
-                _consentToTreatMap["parkingMap"]["instructions"].toString();
+                _consentToTreatMap!["parkingMap"]["instructions"].toString();
           }
         }
 
@@ -640,23 +640,23 @@ class _ConfirmBookAppointmentScreenState
             request.fields['paymentMethod'] = "3";
           } else if (paymentType == "2") {
             request.fields['paymentMethod'] = "2";
-            request.fields['insuranceId'] = insuranceId;
+            request.fields['insuranceId'] = insuranceId!;
           } else {
             request.fields['paymentMethod'] = "1";
             request.fields['cardId'] =
-                _consentToTreatMap["paymentMap"]["selectedCard"]['id'];
+                _consentToTreatMap!["paymentMap"]["selectedCard"]['id'];
           }
         }
 
         // If hutano cash is selecetd from payment method
-        if (_consentToTreatMap['hutanoCashApplied'] != null &&
-            _consentToTreatMap['hutanoCashApplied'] != 0) {
+        if (_consentToTreatMap!['hutanoCashApplied'] != null &&
+            _consentToTreatMap!['hutanoCashApplied'] != 0) {
           request.fields['isHutanoCashApplied'] = "1";
         }
 
-        if (_consentToTreatMap["imagesList"] != null &&
-            _consentToTreatMap["imagesList"].length > 0) {
-          List<Map> imagesList = _consentToTreatMap["imagesList"];
+        if (_consentToTreatMap!["imagesList"] != null &&
+            _consentToTreatMap!["imagesList"].length > 0) {
+          List<Map>? imagesList = _consentToTreatMap!["imagesList"];
           if (imagesList != null && imagesList.length > 0) {
             for (int i = 0; i < imagesList.length; i++) {
               request.fields["medicalImages[$i][images]"] =
@@ -666,9 +666,9 @@ class _ConfirmBookAppointmentScreenState
           }
         }
 
-        if (_consentToTreatMap["docsList"] != null &&
-            _consentToTreatMap["docsList"].length > 0) {
-          List<Map> imagesList = _consentToTreatMap["docsList"];
+        if (_consentToTreatMap!["docsList"] != null &&
+            _consentToTreatMap!["docsList"].length > 0) {
+          List<Map>? imagesList = _consentToTreatMap!["docsList"];
           if (imagesList != null && imagesList.length > 0) {
             for (int i = 0; i < imagesList.length; i++) {
               request.fields["medicalDocuments[$i][type]"] =
@@ -683,19 +683,19 @@ class _ConfirmBookAppointmentScreenState
           }
         }
 
-        if (_consentToTreatMap["medicalHistory"] != null &&
-            _consentToTreatMap["medicalHistory"].length > 0) {
+        if (_consentToTreatMap!["medicalHistory"] != null &&
+            _consentToTreatMap!["medicalHistory"].length > 0) {
           for (int i = 0;
-              i < _consentToTreatMap["medicalHistory"].length;
+              i < _consentToTreatMap!["medicalHistory"].length;
               i++) {
             request.fields["medicalHistory[$i]"] =
-                _consentToTreatMap["medicalHistory"][i];
+                _consentToTreatMap!["medicalHistory"][i];
           }
         }
 
         request.fields.toString().debugLog();
 
-        var response = await request.send().futureError((e) {
+        http.StreamedResponse response = await request.send().futureError((e) {
           _loading(false);
           e.toString().debugLog();
         });
@@ -854,19 +854,19 @@ class _ConfirmBookAppointmentScreenState
   }
 
   List<Widget> widgetList() {
-    List<Widget> _widgetList = new List();
+    List<Widget> _widgetList = [];
     String address;
 
-    if (_profileMap["businessLocation"] != null) {
-      dynamic business = _profileMap["businessLocation"];
+    if (_profileMap!["businessLocation"] != null) {
+      dynamic business = _profileMap!["businessLocation"];
 
       dynamic _state;
 
       if (business["state"] is Map && business["state"].length > 0) {
         _state = business["state"];
-      } else if (_profileMap['State'] != null &&
-          _profileMap["State"].length > 0) {
-        _state = _profileMap['State'][0];
+      } else if (_profileMap!['State'] != null &&
+          _profileMap!["State"].length > 0) {
+        _state = _profileMap!['State'][0];
       }
 
       if (_container.projectsResponse["serviceType"].toString() == '3') {
@@ -875,28 +875,28 @@ class _ConfirmBookAppointmentScreenState
             null) {
           address = Extensions.addressFormat(
             Provider.of<HealthConditionProvider>(context, listen: false)
-                .addressDetails
+                .addressDetails!
                 .address,
             Provider.of<HealthConditionProvider>(context, listen: false)
-                .addressDetails
+                .addressDetails!
                 .street,
             Provider.of<HealthConditionProvider>(context, listen: false)
-                .addressDetails
+                .addressDetails!
                 .city,
             Provider.of<HealthConditionProvider>(context, listen: false)
-                .addressDetails
+                .addressDetails!
                 .state,
             Provider.of<HealthConditionProvider>(context, listen: false)
-                .addressDetails
+                .addressDetails!
                 .zipCode,
           );
         } else {
           address = Extensions.addressFormat(
-            _consentToTreatMap["userAddress"]["address"]?.toString(),
-            _consentToTreatMap["userAddress"]["street"]?.toString(),
-            _consentToTreatMap["userAddress"]["city"]?.toString(),
-            _consentToTreatMap["userAddress"]['state'],
-            _consentToTreatMap["userAddress"]["zipCode"]?.toString(),
+            _consentToTreatMap!["userAddress"]["address"]?.toString(),
+            _consentToTreatMap!["userAddress"]["street"]?.toString(),
+            _consentToTreatMap!["userAddress"]["city"]?.toString(),
+            _consentToTreatMap!["userAddress"]['state'],
+            _consentToTreatMap!["userAddress"]["zipCode"]?.toString(),
           );
         }
       } else if (_container.projectsResponse["serviceType"].toString() == '1') {
@@ -920,7 +920,7 @@ class _ConfirmBookAppointmentScreenState
           data: _profileMap,
           showPaymentProcced: true,
           appointmentTime:
-              '${DateFormat('EEEE, dd MMMM').format(_bookedDate).toString()}',
+              '${DateFormat('EEEE, dd MMMM').format(_bookedDate!).toString()}',
           selectedAppointment:
               _container.projectsResponse['serviceType'].toString(),
           isOptionsShow: false,
@@ -1136,7 +1136,7 @@ class _ConfirmBookAppointmentScreenState
                             )
                                 .then((value) {
                               if (value != null) {
-                                Map _editDateTimeData = value;
+                                Map _editDateTimeData = value as Map<dynamic, dynamic>;
 
                                 setState(() {
                                   _setBookingTime(_editDateTimeData["time"]);
@@ -1207,15 +1207,15 @@ class _ConfirmBookAppointmentScreenState
             child: Column(
               children: [
                 Container(
-                  child: _servicesList != null && _servicesList.length > 0
+                  child: _servicesList != null && _servicesList!.length > 0
                       ? ListView.separated(
                           separatorBuilder: (BuildContext context, int index) =>
                               Divider(),
                           physics: ClampingScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: _servicesList.length,
+                          itemCount: _servicesList!.length,
                           itemBuilder: (context, index) {
-                            Services services = _servicesList[index];
+                            Services services = _servicesList![index];
                             return serviceSlotWidget(services);
                           })
                       : ListView.separated(
@@ -1223,9 +1223,9 @@ class _ConfirmBookAppointmentScreenState
                               Divider(),
                           physics: ClampingScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: _consultaceList.length,
+                          itemCount: _consultaceList!.length,
                           itemBuilder: (context, index) {
-                            dynamic consultance = _consultaceList[index];
+                            dynamic consultance = _consultaceList![index];
                             return consultationSlotWidget("Consultation Fee",
                                 ('\$ ${consultance["fee"]?.toStringAsFixed(2)}'));
                           }),
@@ -1234,18 +1234,18 @@ class _ConfirmBookAppointmentScreenState
                   height: 13,
                 ),
                 if (_consentToTreatMap != null &&
-                    _consentToTreatMap["parkingMap"] != null &&
-                    _consentToTreatMap["parkingMap"]["parkingFee"] != null)
+                    _consentToTreatMap!["parkingMap"] != null &&
+                    _consentToTreatMap!["parkingMap"]["parkingFee"] != null)
                   Container(
                       child: serviceSlotWidget(Services(
-                          amount: _consentToTreatMap["parkingMap"]
+                          amount: _consentToTreatMap!["parkingMap"]
                               ["parkingFee"],
                           duration: 60,
                           subServiceName: "Parking Fee"))),
                 Divider(
                   height: 30,
                 ),
-                (_servicesList != null && _servicesList.length > 0)
+                (_servicesList != null && _servicesList!.length > 0)
                     ? consultationSlotWidget(
                         "Total", '\$ ${_totalAmount.toStringAsFixed(2)}',
                         isBold: true)
@@ -1407,8 +1407,8 @@ class _ConfirmBookAppointmentScreenState
         servicesWidget(),
         // paymentWidget(paymentType, insuranceName, insuranceImage),
         _buildCardWidget(),
-        if (_consentToTreatMap['hutanoCashApplied'] != null &&
-            _consentToTreatMap['hutanoCashApplied'] == 1)
+        if (_consentToTreatMap!['hutanoCashApplied'] != null &&
+            _consentToTreatMap!['hutanoCashApplied'] == 1)
           _buildHutanoCashWidget(),
         _buildRefCodeField(),
         Padding(
@@ -1453,7 +1453,7 @@ class _ConfirmBookAppointmentScreenState
                       TextStyle(fontSize: fontSize14, color: colorGrey60),
                   onValueChanged: (value) {},
                   controller: _refCodeController,
-                  labelText: Localization.of(context).refCode,
+                  labelText: Localization.of(context)!.refCode,
                   textInputAction: TextInputAction.done)),
         ],
       ),

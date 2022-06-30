@@ -18,7 +18,7 @@ import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:provider/provider.dart';
 
 class SocialHistoryScreen extends StatefulWidget {
-  SocialHistoryScreen({Key key, this.map}) : super(key: key);
+  SocialHistoryScreen({Key? key, this.map}) : super(key: key);
   dynamic map;
 
   @override
@@ -32,10 +32,10 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
       isCoccine = false,
       isMetaphetamin = false,
       isHeroine = false;
-  String smokerGroupValue = "1",
+  String? smokerGroupValue = "1",
       drinkGroupValue = "1",
       recreationalGroupValue = "1";
-  String marijuanaGroupValue = "1",
+  String? marijuanaGroupValue = "1",
       coccineGroupValue = "1",
       metaGroupValue = "1",
       heroineGroupValue = "1";
@@ -142,7 +142,7 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
                     borderRadius: BorderRadius.all(
                       Radius.circular(14.0),
                     ),
-                    border: Border.all(width: 0.5, color: Colors.grey[300]),
+                    border: Border.all(width: 0.5, color: Colors.grey[300]!),
                   ),
                   child: Column(
                     children: [
@@ -178,7 +178,7 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
                     borderRadius: BorderRadius.all(
                       Radius.circular(14.0),
                     ),
-                    border: Border.all(width: 0.5, color: Colors.grey[300]),
+                    border: Border.all(width: 0.5, color: Colors.grey[300]!),
                   ),
                   child: Column(
                     children: [
@@ -305,7 +305,7 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
                     borderRadius: BorderRadius.all(
                       Radius.circular(14.0),
                     ),
-                    border: Border.all(width: 0.5, color: Colors.grey[300]),
+                    border: Border.all(width: 0.5, color: Colors.grey[300]!),
                   ),
                   child: Column(
                     children: [
@@ -504,7 +504,7 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
       );
 
   Row smokerRadioListItem(
-      int type, String value, String title, String groupValue) {
+      int type, String value, String title, String? groupValue) {
     return Row(
       children: [
         Expanded(child: Text(title)),
@@ -512,7 +512,7 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
             value: value,
             activeColor: AppColors.windsor,
             groupValue: groupValue,
-            onChanged: ((val) {
+            onChanged: ((dynamic val) {
               setState(() {
                 switch (type) {
                   case 1:

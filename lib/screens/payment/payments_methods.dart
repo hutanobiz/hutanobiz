@@ -23,37 +23,37 @@ class PaymentMethodScreen extends StatefulWidget {
   final dynamic
       args; //0 , 1- normal payment, 2-change payment, 3-reschedule pay
 
-  PaymentMethodScreen({Key key, this.args}) : super(key: key);
+  PaymentMethodScreen({Key? key, this.args}) : super(key: key);
 
   @override
   _PaymentMethodScreenState createState() => _PaymentMethodScreenState();
 }
 
 class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
-  int _radioValue;
-  int _listRadioValue;
-  int _cardListRadioValue;
+  int? _radioValue;
+  int? _listRadioValue;
+  int? _cardListRadioValue;
   dynamic selectedCard;
-  Future<dynamic> _insuranceFuture, _cardFuture;
+  Future<dynamic>? _insuranceFuture, _cardFuture;
   ApiBaseHelper _api = ApiBaseHelper();
-  InheritedContainerState _container;
-  String insuranceId, insuranceImage, insuranceName;
+  late InheritedContainerState _container;
+  String? insuranceId, insuranceImage, insuranceName;
 
   bool _isLoading = false;
-  Map providerMap;
-  String name, avatar, cashPayment = "0";
-  double totalFee = 0.0;
+  Map? providerMap;
+  String? name, avatar, cashPayment = "0";
+  double? totalFee = 0.0;
 
-  Map<String, dynamic> _profileMap = {};
+  Map<String, dynamic>? _profileMap = {};
 
-  List _providerInsuranceList = [];
+  List? _providerInsuranceList = [];
 
-  List _insuranceList = [];
+  List? _insuranceList = [];
 
-  int isPayment = 0;
+  int? isPayment = 0;
 
   bool insuranceAdded = false;
-  int hutanoCash = 0;
+  int? hutanoCash = 0;
   int _huntaoCashRadioValue = 1;
   int _huntaoCashRadioGrupValue = 0;
 
@@ -73,7 +73,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
     }).catchError((dynamic e) {
       if (e is ErrorModel) {
         if (e.response != null) {
-          DialogUtils.showAlertDialog(context, e.response);
+          DialogUtils.showAlertDialog(context, e.response!);
         }
       }
     });
@@ -95,7 +95,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
       if (_providerData["providerData"]["data"] != null) {
         _providerData["providerData"]["data"].map((f) {
-          _profileMap.addAll(f);
+          _profileMap!.addAll(f);
         }).toList();
       } else {
         _profileMap = _providerData["providerData"];
@@ -106,7 +106,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
           List<Services> _servicesList = _servicesMap["services"];
 
           totalFee = _servicesList.fold(
-              0, (sum, item) => sum + double.parse(item.amount.toString()));
+              0, ((sum, item) => sum + double.parse(item.amount.toString())) as double? Function(double?, Services));
         }
       } else if (_servicesMap["status"].toString() == "2") {
       } else {
@@ -115,13 +115,13 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         totalFee = _consultaceList[0]["fee"].toDouble();
       }
 
-      if (_profileMap["paymentMethod"] != null) {
+      if (_profileMap!["paymentMethod"] != null) {
         cashPayment =
-            _profileMap["paymentMethod"]["cashPayment"]?.toString() ?? "0";
+            _profileMap!["paymentMethod"]["cashPayment"]?.toString() ?? "0";
       }
 
-      if (_profileMap["insuranceId"] != null) {
-        _providerInsuranceList = _profileMap["insuranceId"];
+      if (_profileMap!["insuranceId"] != null) {
+        _providerInsuranceList = _profileMap!["insuranceId"];
         _container.setProviderInsuranceMap(_providerInsuranceList);
       }
     }
@@ -268,7 +268,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   }
 
   List<Widget> _widgetList() {
-    List<Widget> _widgetList = List();
+    List<Widget> _widgetList = [];
 
     _widgetList.add(
       Text(
@@ -293,7 +293,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
     _widgetList.add(Text(
       isPayment == 0 &&
-              (_providerInsuranceList == null || _providerInsuranceList.isEmpty)
+              (_providerInsuranceList == null || _providerInsuranceList!.isEmpty)
           ? 'Insurance'
           : "Your Insurance",
       style: TextStyle(
@@ -306,17 +306,17 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
     _widgetList.add(SizedBox(height: 8.0));
 
     _widgetList.add(isPayment != 0 &&
-            (_providerInsuranceList == null || _providerInsuranceList.isEmpty)
+            (_providerInsuranceList == null || _providerInsuranceList!.isEmpty)
         ? Container()
         : _insuranceFutureWidget());
 
     _widgetList.add(isPayment != 0 &&
-            (_providerInsuranceList == null || _providerInsuranceList.isEmpty)
+            (_providerInsuranceList == null || _providerInsuranceList!.isEmpty)
         ? Container()
         : SizedBox(height: 10.0));
 
     _widgetList.add(isPayment != 0 &&
-            (_providerInsuranceList == null || _providerInsuranceList.isEmpty)
+            (_providerInsuranceList == null || _providerInsuranceList!.isEmpty)
         ? Padding(
             padding: const EdgeInsets.only(top: 10.0),
             child: Text(
@@ -373,7 +373,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                   child: Text("NO saved insurance available"),
                 );
               }
-              List _cardList = snapshot.data['data'];
+              List? _cardList = snapshot.data['data'];
 
               if (_cardList == null || _cardList.isEmpty) {
                 return Padding(
@@ -394,7 +394,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(14.0)),
-                        border: Border.all(color: Colors.grey[100]),
+                        border: Border.all(color: Colors.grey[100]!),
                       ),
                       child: Row(
                         children: <Widget>[
@@ -456,7 +456,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                   groupValue: _cardListRadioValue,
                                   materialTapTargetSize:
                                       MaterialTapTargetSize.shrinkWrap,
-                                  onChanged: (int value) {
+                                  onChanged: (int? value) {
                                     setState(() {
                                       _radioValue = null;
                                       _listRadioValue = null;
@@ -515,7 +515,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
               }
               _insuranceList = snapshot.data['insuranceData'];
 
-              if (_insuranceList == null || _insuranceList.isEmpty) {
+              if (_insuranceList == null || _insuranceList!.isEmpty) {
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
                   child: Text("NO saved insurance available"),
@@ -527,18 +527,18 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                   padding: EdgeInsets.zero,
                   shrinkWrap: true,
                   physics: ClampingScrollPhysics(),
-                  itemCount: _insuranceList.length,
+                  itemCount: _insuranceList!.length,
                   itemBuilder: (context, index) {
                     if (insuranceAdded) {
                       _radioValue = null;
                       _cardListRadioValue = null;
-                      _listRadioValue = _insuranceList.length - 1;
+                      _listRadioValue = _insuranceList!.length - 1;
 
-                      insuranceId = _insuranceList[_insuranceList.length - 1]
+                      insuranceId = _insuranceList![_insuranceList!.length - 1]
                           ["insuranceId"];
-                      insuranceName = _insuranceList[_insuranceList.length - 1]
+                      insuranceName = _insuranceList![_insuranceList!.length - 1]
                           ["insuranceName"];
-                      insuranceImage = _insuranceList[_insuranceList.length - 1]
+                      insuranceImage = _insuranceList![_insuranceList!.length - 1]
                           ["insuranceDocumentFront"];
                     }
 
@@ -549,8 +549,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                       children: <Widget>[
                         isPayment == 0
                             ? Container()
-                            : !_providerInsuranceList.contains(
-                                    _insuranceList[index]["insuranceId"]
+                            : !_providerInsuranceList!.contains(
+                                    _insuranceList![index]["insuranceId"]
                                         .toString())
                                 ? Text(
                                     "Insurance not accepted by the provider",
@@ -565,8 +565,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                 : Container(),
                         isPayment == 0
                             ? Container()
-                            : _providerInsuranceList.contains(
-                                    _insuranceList[index]["insuranceId"]
+                            : _providerInsuranceList!.contains(
+                                    _insuranceList![index]["insuranceId"]
                                         .toString())
                                 ? Container()
                                 : SizedBox(height: 8),
@@ -576,18 +576,18 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                             color: Colors.white,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(14.0)),
-                            border: Border.all(color: Colors.grey[100]),
+                            border: Border.all(color: Colors.grey[100]!),
                           ),
                           child: Row(
                             children: <Widget>[
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(16.0),
                                 child: Image.network(
-                                  _insuranceList[index]
+                                  _insuranceList![index]
                                               ["insuranceDocumentFront"] !=
                                           null
                                       ? ApiBaseHelper.imageUrl +
-                                          _insuranceList[index]
+                                          _insuranceList![index]
                                               ["insuranceDocumentFront"]
                                       : ApiBaseHelper.imageUrl,
                                   width: 70,
@@ -599,7 +599,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                               Expanded(
                                 flex: 3,
                                 child: Text(
-                                  _insuranceList[index]["insuranceName"]
+                                  _insuranceList![index]["insuranceName"]
                                           ?.toString() ??
                                       '---',
                                   maxLines: 2,
@@ -617,7 +617,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                       ? PopupMenuButton<String>(
                                           onSelected: ((val) {
                                             handleClick(
-                                                val, _insuranceList[index]);
+                                                val, _insuranceList![index]);
                                           }),
                                           itemBuilder: (BuildContext context) {
                                             return {'Remove'}
@@ -634,8 +634,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                       //     color: Colors.grey,
                                       //     size: 16,
                                       //   )
-                                      : (!_providerInsuranceList.contains(
-                                              _insuranceList[index]
+                                      : (!_providerInsuranceList!.contains(
+                                              _insuranceList![index]
                                                       ["insuranceId"]
                                                   .toString())
                                           ? Container()
@@ -646,7 +646,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                               materialTapTargetSize:
                                                   MaterialTapTargetSize
                                                       .shrinkWrap,
-                                              onChanged: (int value) {
+                                              onChanged: (int? value) {
                                                 setState(() {
                                                   _radioValue = null;
                                                   _cardListRadioValue = null;
@@ -654,12 +654,12 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                                 });
 
                                                 insuranceId =
-                                                    _insuranceList[index]
+                                                    _insuranceList![index]
                                                         ["insuranceId"];
                                                 insuranceName =
-                                                    _insuranceList[index]
+                                                    _insuranceList![index]
                                                         ["insuranceName"];
-                                                insuranceImage = _insuranceList[
+                                                insuranceImage = _insuranceList![
                                                         index]
                                                     ["insuranceDocumentFront"];
                                               },
@@ -672,7 +672,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                 ? null
                                 : () {
                                     _insuranceViewMap['insurance'] =
-                                        _insuranceList[index];
+                                        _insuranceList![index];
 
                                     if (_container.insuranceDataMap != null) {
                                       _container.insuranceDataMap.clear();
@@ -766,13 +766,13 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   }
 
   Widget paymentCard(String imageIcon, String title, int value,
-      {String cardExpiryDate}) {
+      {String? cardExpiryDate}) {
     return Container(
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(14.0)),
-        border: Border.all(color: Colors.grey[100]),
+        border: Border.all(color: Colors.grey[100]!),
       ),
       child: Row(
         children: <Widget>[
@@ -798,7 +798,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                     ),
                     SizedBox(height: 8.0),
                     Text(
-                      cardExpiryDate,
+                      cardExpiryDate!,
                       style: TextStyle(
                         fontSize: 12.0,
                         color: Colors.black.withOpacity(0.7),
@@ -943,14 +943,14 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                           width: 38,
                         )
                       : Image.network(
-                          ApiBaseHelper.imageUrl + avatar,
+                          ApiBaseHelper.imageUrl + avatar!,
                           height: 38,
                           width: 38,
                         ),
                 ),
                 SizedBox(height: 6),
                 Text(
-                  name,
+                  name!,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
@@ -989,7 +989,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
     );
   }
 
-  void _handleRadioValueChange(int value) => setState(() {
+  void _handleRadioValueChange(int? value) => setState(() {
         _radioValue = value;
         _listRadioValue = null;
         _cardListRadioValue = null;
@@ -1019,7 +1019,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(14.0)),
-          border: Border.all(color: Colors.grey[100]),
+          border: Border.all(color: Colors.grey[100]!),
         ),
         child: Row(
           children: <Widget>[
@@ -1043,7 +1043,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                           groupValue: _huntaoCashRadioGrupValue,
                           materialTapTargetSize:
                               MaterialTapTargetSize.shrinkWrap,
-                          onChanged: (val) {}),
+                          onChanged: (dynamic val) {}),
                     ),
                   )
           ],

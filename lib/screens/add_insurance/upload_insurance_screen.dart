@@ -9,17 +9,17 @@ import 'package:image_picker/image_picker.dart';
 import '../../utils/size_config.dart';
 
 class UploadInsuranceScreen extends StatefulWidget {
-  final Function onUpload;
+  final Function? onUpload;
 
-  const UploadInsuranceScreen({Key key, this.onUpload}) : super(key: key);
+  const UploadInsuranceScreen({Key? key, this.onUpload}) : super(key: key);
   @override
   _UploadInsuranceScreenState createState() => _UploadInsuranceScreenState();
 }
 
 class _UploadInsuranceScreenState extends State<UploadInsuranceScreen> {
-  CroppedFile croppedFile;
-  String frontImagePath, backImagePath;
-  File _frontImageFile, _backImageFile;
+  CroppedFile? croppedFile;
+  String? frontImagePath, backImagePath;
+  File? _frontImageFile, _backImageFile;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -34,7 +34,7 @@ class _UploadInsuranceScreenState extends State<UploadInsuranceScreen> {
                   ? uploadWidget(
                       "Front", AssetImage("images/ic_front_image.png"))
                   : imageWidget(
-                      frontImagePath,
+                      frontImagePath!,
                       true,
                     )),
         ),
@@ -47,7 +47,7 @@ class _UploadInsuranceScreenState extends State<UploadInsuranceScreen> {
               child: backImagePath == null
                   ? uploadWidget("Back", AssetImage("images/ic_back_image.png"))
                   : imageWidget(
-                      backImagePath,
+                      backImagePath!,
                       false,
                     )),
         ),
@@ -63,7 +63,7 @@ class _UploadInsuranceScreenState extends State<UploadInsuranceScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(8.0),
         border: Border.all(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
         ),
       ),
       child: Stack(
@@ -95,7 +95,7 @@ class _UploadInsuranceScreenState extends State<UploadInsuranceScreen> {
                     var frontPath = isFront ? null : _frontImageFile;
                     var backPath = !isFront ? null : _backImageFile;
 
-                    widget.onUpload(frontPath, backPath);
+                    widget.onUpload!(frontPath, backPath);
                     setState(
                       () => isFront
                           ? frontImagePath = null
@@ -126,7 +126,7 @@ class _UploadInsuranceScreenState extends State<UploadInsuranceScreen> {
   Widget uploadWidget(title, image) {
     return SizedBox(
       height: 70.0,
-      width: SizeConfig.screenWidth / 2.4,
+      width: SizeConfig.screenWidth! / 2.4,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -198,7 +198,7 @@ class _UploadInsuranceScreenState extends State<UploadInsuranceScreen> {
   Future getImage(bool isFront, int source) async {
     ImagePicker _picker = ImagePicker();
 
-    XFile image = await _picker.pickImage(
+    XFile? image = await _picker.pickImage(
         imageQuality: 25,
         source: (source == 2) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
@@ -227,9 +227,9 @@ class _UploadInsuranceScreenState extends State<UploadInsuranceScreen> {
             ),
           ]);
       if (croppedFile != null) {
-        var frontPath = isFront ? File(croppedFile.path) : _frontImageFile;
-        var backPath = !isFront ? File(croppedFile.path) : _backImageFile;
-        widget.onUpload(frontPath, backPath);
+        var frontPath = isFront ? File(croppedFile!.path) : _frontImageFile;
+        var backPath = !isFront ? File(croppedFile!.path) : _backImageFile;
+        widget.onUpload!(frontPath, backPath);
         if (isFront) {
           _frontImageFile = frontPath;
         } else {
@@ -237,8 +237,8 @@ class _UploadInsuranceScreenState extends State<UploadInsuranceScreen> {
         }
         setState(
           () => isFront
-              ? frontImagePath = croppedFile.path
-              : backImagePath = croppedFile.path,
+              ? frontImagePath = croppedFile!.path
+              : backImagePath = croppedFile!.path,
         );
       }
     }

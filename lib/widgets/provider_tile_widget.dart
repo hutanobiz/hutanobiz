@@ -4,14 +4,14 @@ import 'package:hutano/colors.dart';
 
 class ProviderTileWidget extends StatelessWidget {
   const ProviderTileWidget({
-    Key key,
+    Key? key,
     this.avatar,
-    @required this.name,
-    @required this.profession,
-    @required this.onTap,
+    required this.name,
+    required this.profession,
+    required this.onTap,
   }) : super(key: key);
 
-  final String name, profession, avatar;
+  final String? name, profession, avatar;
   final Function onTap;
 
   @override
@@ -26,17 +26,17 @@ class ProviderTileWidget extends StatelessWidget {
           ),
           child: avatar == ''
               ? Center(
-                  child: Text(name[0]),
+                  child: Text(name![0]),
                 )
               : ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: Image.network(
-                    ApiBaseHelper.imageUrl + avatar,
+                    ApiBaseHelper.imageUrl + avatar!,
                     fit: BoxFit.cover,
                   ))),
-      title: Text(name),
-      subtitle: Text(profession),
-      onTap: onTap,
+      title: Text(name!),
+      subtitle: Text(profession!),
+      onTap: onTap as void Function()?,
     );
   }
 }

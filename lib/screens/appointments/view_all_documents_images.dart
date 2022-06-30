@@ -23,8 +23,8 @@ class ViewAllDocumentImages extends StatefulWidget {
 }
 
 class _ViewAllDocumentImagesState extends State<ViewAllDocumentImages> {
-  List<MedicalImages> _allImages = List();
-  List<MedicalDocuments> _allDocuments = List();
+  List<MedicalImages>? _allImages = [];
+  List<MedicalDocuments>? _allDocuments = [];
   bool _getData = false;
   bool _indicatorLoading = true;
   @override
@@ -54,8 +54,8 @@ class _ViewAllDocumentImagesState extends State<ViewAllDocumentImages> {
                       child: Center(
                         child: Text(
                           widget.isForImage
-                              ? Localization.of(context).noMedicalImagesFound
-                              : Localization.of(context)
+                              ? Localization.of(context)!.noMedicalImagesFound
+                              : Localization.of(context)!
                                   .noMedicalDocumentsFound,
                           style: TextStyle(
                               fontSize: fontSize16,
@@ -68,15 +68,15 @@ class _ViewAllDocumentImagesState extends State<ViewAllDocumentImages> {
                 )
               : GridView.builder(
                   itemCount: widget.isForImage
-                      ? _allImages.length
-                      : _allDocuments.length,
+                      ? _allImages!.length
+                      : _allDocuments!.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                   ),
                   itemBuilder: (BuildContext context, int index) {
                     String imageFile = widget.isForImage
-                        ? _allImages[index].images
-                        : _allDocuments[index].medicalDocuments;
+                        ? _allImages![index].images!
+                        : _allDocuments![index].medicalDocuments!;
                     return Padding(
                       padding: const EdgeInsets.all(spacing5),
                       child: Card(
@@ -92,9 +92,9 @@ class _ViewAllDocumentImagesState extends State<ViewAllDocumentImages> {
                                 child: Image.network(
                                   widget.isForImage
                                       ? ApiBaseHelper.imageUrl +
-                                          _allImages[index].images
+                                          _allImages![index].images!
                                       : ApiBaseHelper.imageUrl +
-                                          _allDocuments[index].medicalDocuments,
+                                          _allDocuments![index].medicalDocuments!,
                                   fit: BoxFit.cover,
                                 )),
                             Align(
@@ -114,8 +114,8 @@ class _ViewAllDocumentImagesState extends State<ViewAllDocumentImages> {
                                       alignment: Alignment.topLeft,
                                       child: Text(
                                         widget.isForImage
-                                            ? _allImages[index].name
-                                            : _allDocuments[index].name,
+                                            ? _allImages![index].name!
+                                            : _allDocuments![index].name!,
                                         style: TextStyle(
                                             fontSize: fontSize14,
                                             fontWeight: fontWeightSemiBold,
@@ -126,7 +126,7 @@ class _ViewAllDocumentImagesState extends State<ViewAllDocumentImages> {
                                       Align(
                                         alignment: Alignment.topLeft,
                                         child: Text(
-                                          _allDocuments[index].type,
+                                          _allDocuments![index].type!,
                                           style: TextStyle(
                                               fontSize: fontSize12,
                                               fontWeight: fontWeightRegular,
@@ -139,9 +139,9 @@ class _ViewAllDocumentImagesState extends State<ViewAllDocumentImages> {
                                       alignment: Alignment.topLeft,
                                       child: Text(
                                         widget.isForImage
-                                            ? _allImages[index].date ??
+                                            ? _allImages![index].date ??
                                                 '---+---'
-                                            : _allDocuments[index].date ??
+                                            : _allDocuments![index].date ??
                                                 "---+---",
                                         style: TextStyle(
                                             fontSize: fontSize12,
@@ -189,14 +189,14 @@ class _ViewAllDocumentImagesState extends State<ViewAllDocumentImages> {
       if (result is ResUploadedDocumentImagesModel) {
         if (widget.isForImage) {
           setState(() {
-            _allImages = result.response.medicalImages;
+            _allImages = result.response!.medicalImages;
           });
-          _getData = _allImages.isNotEmpty;
+          _getData = _allImages!.isNotEmpty;
         } else {
           setState(() {
-            _allDocuments = result.response.medicalDocuments;
+            _allDocuments = result.response!.medicalDocuments;
           });
-          _getData = _allDocuments.isNotEmpty;
+          _getData = _allDocuments!.isNotEmpty;
         }
         setLoading(false);
       }

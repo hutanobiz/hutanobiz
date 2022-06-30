@@ -1,8 +1,8 @@
 class ReqSearchNumber {
-  String searchByNumber;
-  int limit;
-  int page;
-  int skip;
+  String? searchByNumber;
+  int? limit;
+  int? page;
+  int? skip;
   ReqSearchNumber({
     this.searchByNumber,
     this.limit,
@@ -20,8 +20,7 @@ class ReqSearchNumber {
   }
 
   factory ReqSearchNumber.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
-
+ 
     return ReqSearchNumber(
       searchByNumber: map['searchByNumber'],
       limit: map['limit'],

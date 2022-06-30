@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hutano/widgets/mask_input_formatter.dart';
 
 class CustomInputFormatter extends MaskedTextInputFormatter {
+  CustomInputFormatter({required String mask, required String separator}) : super(mask: mask, separator: separator);
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     var text = newValue.text;

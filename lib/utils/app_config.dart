@@ -4,7 +4,7 @@ const _googleApiKey = "_googleApiKey";
 
 enum Environment { dev, stage, prod }
 
-Map<String, dynamic> _config;
+late Map<String, dynamic> _config;
 
 void setEnvironment(Environment env) {
   switch (env) {

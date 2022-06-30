@@ -1,6 +1,6 @@
 class ResRelationList {
-  String status;
-  List<Relations> response;
+  String? status;
+  List<Relations>? response;
 
   ResRelationList({this.status, this.response});
 
@@ -9,7 +9,7 @@ class ResRelationList {
     if (json['response'] != null) {
       response = <Relations>[];
       json['response'].forEach((v) {
-        response.add(Relations.fromJson(v));
+        response!.add(Relations.fromJson(v));
       });
     }
   }
@@ -18,16 +18,16 @@ class ResRelationList {
     final data = <String, dynamic>{};
     data['status'] = status;
     if (response != null) {
-      data['response'] = response.map((v) => v.toJson()).toList();
+      data['response'] = response!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Relations {
-  String relation;
-  String sId;
-  int relationId;
+  String? relation;
+  String? sId;
+  int? relationId;
 
   Relations({this.relation, this.sId, this.relationId});
 

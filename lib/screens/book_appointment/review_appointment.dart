@@ -30,14 +30,14 @@ class ReviewAppointmentScreen extends StatefulWidget {
 }
 
 class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
-  InheritedContainerState _container;
-  Map _appointmentData;
-  Map _providerData, _userLocationMap;
+  late InheritedContainerState _container;
+  late Map _appointmentData;
+  late Map _providerData, _userLocationMap;
   bool _isLoading = false;
-  String _timeHours, _timeMins;
-  DateTime _bookedDate;
-  String _bookedTime;
-  List<Services> _servicesList = new List();
+  String? _timeHours, _timeMins;
+  DateTime? _bookedDate;
+  String? _bookedTime;
+  List<Services>? _servicesList = [];
   String _timezone = 'Unknown';
 
   final Set<Marker> _markers = {};
@@ -47,27 +47,27 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   PolylinePoints _polylinePoints = PolylinePoints();
 
   List<LatLng> latlng = [];
-  LatLng _initialPosition, _middlePoint;
+  LatLng? _initialPosition, _middlePoint;
   LatLng _desPosition = LatLng(0, 0);
   Completer<GoogleMapController> _controller = Completer();
-  BitmapDescriptor _sourceIcon;
-  BitmapDescriptor _destinationIcon;
+  late BitmapDescriptor _sourceIcon;
+  late BitmapDescriptor _destinationIcon;
 
   String _totalDistance = "";
   String _totalDuration = "";
-  Map _profileMap = new Map();
+  Map? _profileMap = new Map();
   Map _servicesMap = new Map();
   Map<String, dynamic> _reviewAppointmentData = Map();
-  Map _consentToTreatMap;
-  String paymentType, insuranceName, insuranceImage, insuranceId;
+  late Map _consentToTreatMap;
+  String? paymentType, insuranceName, insuranceImage, insuranceId;
   ApiBaseHelper api = ApiBaseHelper();
-  List<dynamic> _consultaceList = List();
+  List<dynamic>? _consultaceList = [];
 
   setPolylines() async {
     PolylineResult polylineResult =
-        await _polylinePoints?.getRouteBetweenCoordinates(
+        await _polylinePoints.getRouteBetweenCoordinates(
       Strings.kGoogleApiKey,
-      PointLatLng(_initialPosition.latitude, _initialPosition.longitude),
+      PointLatLng(_initialPosition!.latitude, _initialPosition!.longitude),
       PointLatLng(_desPosition.latitude, _desPosition.longitude),
     );
 
@@ -129,11 +129,11 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
               "0";
 
       _providerData["providerData"]["data"].map((f) {
-        _profileMap.addAll(f);
+        _profileMap!.addAll(f);
       }).toList();
     } else {
       _profileMap = _providerData["providerData"];
-      averageRating = _profileMap["averageRating"]?.toStringAsFixed(1) ?? "0";
+      averageRating = _profileMap!["averageRating"]?.toStringAsFixed(1) ?? "0";
     }
 
     _initialPosition = _userLocationMap["latLng"];
@@ -144,33 +144,33 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
               _consentToTreatMap["userAddress"]['coordinates'][1].toString()),
           double.parse(
               _consentToTreatMap["userAddress"]['coordinates'][0].toString()));
-      if (_profileMap["businessLocation"] != null) {
-        if (_profileMap["businessLocation"]["coordinates"].length > 0) {
+      if (_profileMap!["businessLocation"] != null) {
+        if (_profileMap!["businessLocation"]["coordinates"].length > 0) {
           _initialPosition = LatLng(
               double.parse(
-                  _profileMap["businessLocation"]["coordinates"][1].toString()),
-              double.parse(_profileMap["businessLocation"]["coordinates"][0]
+                  _profileMap!["businessLocation"]["coordinates"][1].toString()),
+              double.parse(_profileMap!["businessLocation"]["coordinates"][0]
                   .toString()));
         }
       }
     } else if (_container.projectsResponse["serviceType"].toString() == '1') {
-      if (_profileMap["businessLocation"] != null) {
-        if (_profileMap["businessLocation"]["coordinates"].length > 0) {
+      if (_profileMap!["businessLocation"] != null) {
+        if (_profileMap!["businessLocation"]["coordinates"].length > 0) {
           _desPosition = LatLng(
               double.parse(
-                  _profileMap["businessLocation"]["coordinates"][1].toString()),
-              double.parse(_profileMap["businessLocation"]["coordinates"][0]
+                  _profileMap!["businessLocation"]["coordinates"][1].toString()),
+              double.parse(_profileMap!["businessLocation"]["coordinates"][0]
                   .toString()));
         }
       }
     } else {}
 
     _middlePoint = LatLng(
-        (_initialPosition.latitude + _desPosition.latitude) / 2,
-        (_initialPosition.longitude + _desPosition.longitude) / 2);
+        (_initialPosition!.latitude + _desPosition.latitude) / 2,
+        (_initialPosition!.longitude + _desPosition.longitude) / 2);
 
     if (_initialPosition != null) {
-      getDistanceAndTime(_initialPosition, _desPosition);
+      getDistanceAndTime(_initialPosition!, _desPosition);
     }
 
     _setBookingTime(_appointmentData["time"]);
@@ -180,22 +180,22 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
     _reviewAppointmentData["statusType"] = _servicesMap["status"].toString();
 
-    if (_servicesList.length > 0) _servicesList.clear();
+    if (_servicesList!.length > 0) _servicesList!.clear();
 
     if (_servicesMap["status"].toString() == "1") {
       if (_servicesMap["services"] != null) {
         _servicesList = _servicesMap["services"];
 
-        if (_servicesList.length > 0) {
+        if (_servicesList!.length > 0) {
           _reviewAppointmentData["services"] = _servicesList;
         }
       }
     } else {
       _consultaceList = _servicesMap["consultaceFee"];
 
-      for (int i = 0; i < _consultaceList.length; i++) {
+      for (int i = 0; i < _consultaceList!.length; i++) {
         _reviewAppointmentData["consultanceFee[${i.toString()}][fee]"] =
-            _consultaceList[i]["fee"].toString();
+            _consultaceList![i]["fee"].toString();
       }
     }
   }
@@ -272,7 +272,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   }
 
   Widget paymentWidget(
-      String paymentType, String insuranceName, String insuranceImage) {
+      String? paymentType, String? insuranceName, String? insuranceImage) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 10.0),
       child: Column(
@@ -314,7 +314,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                       ? "Cash"
                       : paymentType == "1"
                           ? "Card **** **** **** ${_consentToTreatMap["paymentMap"]["selectedCard"]['card']['last4']}"
-                          : insuranceName,
+                          : insuranceName!,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -348,16 +348,16 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
         String doctorId = '';
 
-        if (_profileMap["userId"] != null && _profileMap["userId"] is Map) {
-          doctorId = _profileMap["userId"]["_id"].toString();
-        } else if (_profileMap["User"] != null is Map) {
-          doctorId = _profileMap["User"][0]["_id"].toString();
+        if (_profileMap!["userId"] != null && _profileMap!["userId"] is Map) {
+          doctorId = _profileMap!["userId"]["_id"].toString();
+        } else if (_profileMap!["User"] != null is Map) {
+          doctorId = _profileMap!["User"][0]["_id"].toString();
         }
 
         _reviewAppointmentData["type"] =
             _container.getProjectsResponse()["serviceType"]?.toString() ?? "1";
         _reviewAppointmentData["date"] =
-            DateFormat("MM/dd/yyyy").format(_bookedDate).toString();
+            DateFormat("MM/dd/yyyy").format(_bookedDate!).toString();
         _reviewAppointmentData["fromTime"] = _bookedTime;
         _reviewAppointmentData["timeZonePlace"] = _timezone;
         _reviewAppointmentData["doctor"] = doctorId;
@@ -464,20 +464,20 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             _loading(false);
             responseJson["response"].toString().debugLog();
             String name = '', nameTitle = '';
-            if (_profileMap['userId'] is Map) {
-              if (_profileMap["userId"] != null) {
+            if (_profileMap!['userId'] is Map) {
+              if (_profileMap!["userId"] != null) {
                 nameTitle =
-                    _profileMap["userId"]["title"]?.toString() ?? 'Dr. ';
+                    _profileMap!["userId"]["title"]?.toString() ?? 'Dr. ';
                 name =
-                    nameTitle + _profileMap["userId"]["fullName"]?.toString() ??
-                        "---";
+                    nameTitle + (_profileMap!["userId"]["fullName"]?.toString() ??
+                        "---");
               }
-            } else if (_profileMap["User"] != null &&
-                _profileMap["User"].length > 0) {
+            } else if (_profileMap!["User"] != null &&
+                _profileMap!["User"].length > 0) {
               nameTitle =
-                  (_profileMap["User"][0]["title"]?.toString() ?? 'Dr. ');
+                  (_profileMap!["User"][0]["title"]?.toString() ?? 'Dr. ');
               name = '$nameTitle ' +
-                  (_profileMap["User"][0]["fullName"]?.toString() ?? "---");
+                  (_profileMap!["User"][0]["fullName"]?.toString() ?? "---");
             }
             var appointmentType = '';
             appointmentType = _container.projectsResponse["serviceType"]
@@ -599,19 +599,19 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
   }
 
   List<Widget> widgetList() {
-    List<Widget> _widgetList = new List();
-    String address;
+    List<Widget> _widgetList = [];
+    String? address;
 
-    if (_profileMap["businessLocation"] != null) {
-      dynamic business = _profileMap["businessLocation"];
+    if (_profileMap!["businessLocation"] != null) {
+      dynamic business = _profileMap!["businessLocation"];
 
       dynamic _state;
 
       if (business["state"] is Map && business["state"].length > 0) {
         _state = business["state"];
-      } else if (_profileMap['State'] != null &&
-          _profileMap["State"].length > 0) {
-        _state = _profileMap['State'][0];
+      } else if (_profileMap!['State'] != null &&
+          _profileMap!["State"].length > 0) {
+        _state = _profileMap!['State'][0];
       }
 
       if (_container.projectsResponse["serviceType"].toString() == '3') {
@@ -670,10 +670,10 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
           "Date & Time",
           _appointmentData["isOndemand"] == '1'
               ? "On-demand Appointment"
-              : "${DateFormat('EEEE, dd MMMM').format(_bookedDate).toString()} " +
+              : "${DateFormat('EEEE, dd MMMM').format(_bookedDate!).toString()} " +
                   TimeOfDay(
-                          hour: int.parse(_timeHours),
-                          minute: int.parse(_timeMins))
+                          hour: int.parse(_timeHours!),
+                          minute: int.parse(_timeMins!))
                       .format(context),
           "ic_calendar"),
     );
@@ -695,37 +695,37 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                         zoomControlsEnabled: false,
                         myLocationButtonEnabled: false,
                         initialCameraPosition: CameraPosition(
-                          target: _middlePoint,
+                          target: _middlePoint!,
                           zoom: 8,
                         ),
                         polylines: _polyline,
                         markers: _markers,
                         onMapCreated: (GoogleMapController controller) async {
                           LatLngBounds bound;
-                          if (_initialPosition.latitude >
+                          if (_initialPosition!.latitude >
                                   _desPosition.latitude &&
-                              _initialPosition.longitude >
+                              _initialPosition!.longitude >
                                   _desPosition.longitude) {
                             bound = LatLngBounds(
                                 southwest: _desPosition,
-                                northeast: _initialPosition);
-                          } else if (_initialPosition.longitude >
+                                northeast: _initialPosition!);
+                          } else if (_initialPosition!.longitude >
                               _desPosition.longitude) {
                             bound = LatLngBounds(
-                                southwest: LatLng(_initialPosition.latitude,
+                                southwest: LatLng(_initialPosition!.latitude,
                                     _desPosition.longitude),
                                 northeast: LatLng(_desPosition.latitude,
-                                    _initialPosition.longitude));
-                          } else if (_initialPosition.latitude >
+                                    _initialPosition!.longitude));
+                          } else if (_initialPosition!.latitude >
                               _desPosition.latitude) {
                             bound = LatLngBounds(
                                 southwest: LatLng(_desPosition.latitude,
-                                    _initialPosition.longitude),
-                                northeast: LatLng(_initialPosition.latitude,
+                                    _initialPosition!.longitude),
+                                northeast: LatLng(_initialPosition!.latitude,
                                     _desPosition.longitude));
                           } else {
                             bound = LatLngBounds(
-                                southwest: _initialPosition,
+                                southwest: _initialPosition!,
                                 northeast: _desPosition);
                           }
 
@@ -734,7 +734,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
 
                             _markers.add(Marker(
                               markerId: MarkerId(_initialPosition.toString()),
-                              position: _initialPosition,
+                              position: _initialPosition!,
                               icon: _sourceIcon,
                             ));
 
@@ -934,7 +934,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
     );
   }
 
-  Widget container(String heading, String subtitle, String icon) {
+  Widget container(String heading, String? subtitle, String icon) {
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(20.0),
@@ -985,7 +985,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                             )
                                 .then((value) {
                               if (value != null) {
-                                Map _editDateTimeData = value;
+                                Map _editDateTimeData = value as Map<dynamic, dynamic>;
 
                                 setState(() {
                                   _setBookingTime(_editDateTimeData["time"]);
@@ -1049,19 +1049,19 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14.0),
               border: Border.all(
-                color: Colors.grey[200],
+                color: Colors.grey[200]!,
                 width: 0.5,
               ),
             ),
-            child: _servicesList != null && _servicesList.length > 0
+            child: _servicesList != null && _servicesList!.length > 0
                 ? ListView.separated(
                     separatorBuilder: (BuildContext context, int index) =>
                         Divider(),
                     physics: ClampingScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: _servicesList.length,
+                    itemCount: _servicesList!.length,
                     itemBuilder: (context, index) {
-                      Services services = _servicesList[index];
+                      Services services = _servicesList![index];
                       return serviceSlotWidget(services);
                     })
                 : ListView.separated(
@@ -1069,9 +1069,9 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                         Divider(),
                     physics: ClampingScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: _consultaceList.length,
+                    itemCount: _consultaceList!.length,
                     itemBuilder: (context, index) {
-                      dynamic consultance = _consultaceList[index];
+                      dynamic consultance = _consultaceList![index];
                       return consultationSlotWidget(consultance);
                     }),
           ),
@@ -1181,8 +1181,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
               ),
             ),
             TextSpan(
-              text: consultaion["duration"]?.toString() + ' minutes' ??
-                  "---" + ' minutes',
+              text: consultaion["duration"]?.toString()??'---' + ' minutes' ,
               style: TextStyle(
                 fontSize: 13.0,
                 fontWeight: FontWeight.w600,
@@ -1209,7 +1208,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(14.0)),
-        border: Border.all(color: Colors.grey[100]),
+        border: Border.all(color: Colors.grey[100]!),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

@@ -44,7 +44,7 @@ import '../../../widgets/hutano_textfield.dart';
 
 class AddUser extends StatefulWidget {
   AddUser({this.whom});
-  String whom;
+  String? whom;
 
   @override
   _AddUserState createState() => _AddUserState();
@@ -61,14 +61,14 @@ class _AddUserState extends State<AddUser> {
   final FocusNode _zipCodeFocus = FocusNode();
   final FocusNode _refCodeFocus = FocusNode();
 
-  String firstNameError;
-  String lastNameError;
-  String emailError;
-  String passwordError;
-  String addressError;
-  String cityError;
-  String zipCodeError;
-  String emailSuffixIcon;
+  String? firstNameError;
+  String? lastNameError;
+  String? emailError;
+  String? passwordError;
+  String? addressError;
+  String? cityError;
+  String? zipCodeError;
+  String? emailSuffixIcon;
 
   final _dobController = TextEditingController();
   final _firstNameController = TextEditingController();
@@ -85,37 +85,37 @@ class _AddUserState extends State<AddUser> {
   final _mobileFormatter = NumberTextInputFormatter();
   final GlobalKey<FormState> _key = GlobalKey();
 
-  File _imageFile;
-  GenderType _gender;
-  List<States> _stateList = [];
+  File? _imageFile;
+  GenderType? _gender;
+  List<States>? _stateList = [];
   // List<Insurance> _insuranceList = [];
-  States _selectedState;
+  States? _selectedState;
   // Insurance _selectedInsurance;
   final _registerModel = ReqRegister();
   bool _enableButton = false;
   bool _dialogOpen = false;
-  List<Address> _placeList = [];
-  List<AddressComponents> _placeDetail = [];
-  Geometry geometry;
+  List<Address>? _placeList = [];
+  List<AddressComponents>? _placeDetail = [];
+  Geometry? geometry;
   bool isSecureField = true;
-  String deviceToken;
-  var fcmId = '';
-  var deviceId = '';
+  String? deviceToken;
+  String? fcmId = '';
+  String? deviceId = '';
 
   final labelStyle = TextStyle(fontSize: fontSize14, color: colorGrey60);
   List<Genders> genders = [
     Genders(0, 'Binary'),
     Genders(1, 'Non-binary'),
   ];
-  List<Relations> _relationList = [];
-  Relations _selectedRelation;
+  List<Relations>? _relationList = [];
+  Relations? _selectedRelation;
 
-  Genders genderType;
+  Genders? genderType;
   @override
   void initState() {
     super.initState();
     _getRelation();
-    _registerModel.whom = int.parse(widget.whom);
+    _registerModel.whom = int.parse(widget.whom!);
     WidgetsBinding.instance.addPostFrameCallback((_) => _getStatesList());
 
     SharedPref().getValue("deviceToken").then((value) {
@@ -162,7 +162,7 @@ class _AddUserState extends State<AddUser> {
       });
     } on ErrorModel catch (e) {
       // ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       // ProgressDialogUtils.dismissProgressDialog();
     }
@@ -187,10 +187,10 @@ class _AddUserState extends State<AddUser> {
   }
 
   _onStateSelected(int index) {
-    FocusManager.instance.primaryFocus.unfocus();
-    _stateController.text = _stateList[index].title;
-    _registerModel.state = _stateList[index].sId;
-    _selectedState = _stateList[index];
+    FocusManager.instance.primaryFocus!.unfocus();
+    _stateController.text = _stateList![index].title!;
+    _registerModel.state = _stateList![index].sId;
+    _selectedState = _stateList![index];
     showError(RegisterError.city.index);
   }
 
@@ -256,24 +256,25 @@ class _AddUserState extends State<AddUser> {
   }
 
   _submitData() async {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
     if (_registerModel.dob == null) {
-      DialogUtils.showAlertDialog(context, Localization.of(context).errorDob);
+      DialogUtils.showAlertDialog(context, Localization.of(context)!.errorDob);
       return;
     }
     if (_registerModel.gender == null) {
       DialogUtils.showAlertDialog(
-          context, Localization.of(context).errorGender);
+          context, Localization.of(context)!.errorGender);
       return;
     }
     if (_registerModel.state == null) {
-      DialogUtils.showAlertDialog(context, Localization.of(context).errorState);
+      DialogUtils.showAlertDialog(
+          context, Localization.of(context)!.errorState);
       return;
     }
 
     if (_imageFile == null) {
       DialogUtils.showAlertDialog(
-          context, Localization.of(context).errorSelectProfile);
+          context, Localization.of(context)!.errorSelectProfile);
       return;
     }
 
@@ -281,15 +282,15 @@ class _AddUserState extends State<AddUser> {
   }
 
   _getPlaceSuggetion(String query) async {
-    final params = <String, String>{
+    final params = <String, String?>{
       'input': query,
       'types': 'address',
       'components': 'country:us'
     };
     try {
       var res = await ApiManager().getAddressSuggetion(params);
-      _placeList = res.predictions.length >= 5
-          ? res.predictions.sublist(0, 5)
+      _placeList = res.predictions!.length >= 5
+          ? res.predictions!.sublist(0, 5)
           : res.predictions;
       return _placeList;
     } on ErrorModel catch (e) {
@@ -299,18 +300,18 @@ class _AddUserState extends State<AddUser> {
     }
   }
 
-  _getPlaceDetail(String placeId) async {
+  _getPlaceDetail(String? placeId) async {
     ProgressDialogUtils.showProgressDialog(context);
-    final params = <String, String>{
+    final params = <String, String?>{
       'fields': 'geometry,address_components',
       'place_id': placeId
     };
 
     try {
       var res = await ApiManager().getPlaceDetail(params);
-      _placeDetail = res.result.addressComponents;
-      geometry = res.result.geometry;
-      if (_placeDetail != null && _placeDetail.length > 0) {
+      _placeDetail = res.result!.addressComponents;
+      geometry = res.result!.geometry;
+      if (_placeDetail != null && _placeDetail!.length > 0) {
         _parseAddress();
       }
       ProgressDialogUtils.dismissProgressDialog();
@@ -325,28 +326,28 @@ class _AddUserState extends State<AddUser> {
 
   _parseAddress() {
     var _addressParser = AddressUtil();
-    _addressParser.parseAddress(_placeDetail);
-    debugPrint("{${geometry.location.lat} ${geometry.location.lng}");
+    _addressParser.parseAddress(_placeDetail!);
+    debugPrint("{${geometry!.location!.lat} ${geometry!.location!.lng}");
     _addressController.text = _addressParser.address;
-    _zipCodeController.text = _addressParser.zipCode;
-    _cityController.text = _addressParser.city;
+    _zipCodeController.text = _addressParser.zipCode!;
+    _cityController.text = _addressParser.city!;
 
     _registerModel.address = _addressController.text;
     _registerModel.city = _cityController.text;
     _registerModel.zipCode = _zipCodeController.text;
-    _registerModel.latitude = geometry.location.lat.toString();
-    _registerModel.longitude = geometry.location.lng.toString();
+    _registerModel.latitude = geometry!.location!.lat.toString();
+    _registerModel.longitude = geometry!.location!.lng.toString();
     addressError = null;
     zipCodeError = null;
     cityError = null;
 
-    final index = _stateList
+    final index = _stateList!
         .indexWhere((element) => _addressParser.state == element.title);
 
     if (index != -1) {
-      _stateController.text = _stateList[index].title;
-      _registerModel.state = _stateList[index].sId;
-      _selectedState = _stateList[index];
+      _stateController.text = _stateList![index].title!;
+      _registerModel.state = _stateList![index].sId;
+      _selectedState = _stateList![index];
     }
 
     setState(() {});
@@ -377,7 +378,7 @@ class _AddUserState extends State<AddUser> {
       } else {
         var request = {
           'phoneNumber': _phoneNoController.text.trim().toString().rawNumber(),
-          'relation': _selectedRelation.relation
+          'relation': _selectedRelation!.relation
         };
         try {
           var res = await ApiManager().sendLinkAccountCode(request);
@@ -390,14 +391,14 @@ class _AddUserState extends State<AddUser> {
           }
         } on ErrorModel catch (e) {
           ProgressDialogUtils.dismissProgressDialog();
-          DialogUtils.showAlertDialog(context, e.response);
+          DialogUtils.showAlertDialog(context, e.response!);
         } catch (e) {
           ProgressDialogUtils.dismissProgressDialog();
         }
       }
 
       Navigator.of(context).pushNamed(
-        _registerModel.haveHealthInsurance
+        _registerModel.haveHealthInsurance!
             ? Routes.addInsurance
             : Routes.welcome,
       );
@@ -408,7 +409,7 @@ class _AddUserState extends State<AddUser> {
       //     (Route<dynamic> route) => false);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       print(e);
@@ -417,15 +418,15 @@ class _AddUserState extends State<AddUser> {
 
   void validateFields() {
     if (_registerModel.address != null &&
-        _registerModel.address.isNotEmpty &&
+        _registerModel.address!.isNotEmpty &&
         _registerModel.city != null &&
-        _registerModel.city.isNotEmpty &&
+        _registerModel.city!.isNotEmpty &&
         _registerModel.firstName != null &&
-        _registerModel.firstName.isNotEmpty &&
+        _registerModel.firstName!.isNotEmpty &&
         _registerModel.lastName != null &&
-        _registerModel.lastName.isNotEmpty &&
+        _registerModel.lastName!.isNotEmpty &&
         _registerModel.zipCode != null &&
-        _registerModel.zipCode.isNotEmpty &&
+        _registerModel.zipCode!.isNotEmpty &&
         _selectedRelation != null) {
       if (widget.whom == '2') {
         if (_phoneNoController.text.length == 14) {
@@ -445,12 +446,12 @@ class _AddUserState extends State<AddUser> {
     if (index >= 0) {
       firstNameError = _firstNameController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorEnterFirstName);
+          .isBlank(context, Localization.of(context)!.errorEnterFirstName);
     }
     if (index >= 1) {
       lastNameError = _lastNameController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorEnterLastName);
+          .isBlank(context, Localization.of(context)!.errorEnterLastName);
     }
     if (index >= 2) {
       emailError = _emailController.text.toString().isValidEmail(context);
@@ -464,19 +465,19 @@ class _AddUserState extends State<AddUser> {
     if (index >= 4) {
       addressError = _addressController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorEnterAddress);
+          .isBlank(context, Localization.of(context)!.errorEnterAddress);
     }
 
     if (index >= 5) {
       cityError = _cityController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorEnterCity);
+          .isBlank(context, Localization.of(context)!.errorEnterCity);
     }
 
     if (index >= 6) {
       zipCodeError = _zipCodeController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorZipCode);
+          .isBlank(context, Localization.of(context)!.errorZipCode);
     }
 
     setState(() {});
@@ -503,7 +504,7 @@ class _AddUserState extends State<AddUser> {
                     ),
                     AppLogo(),
                     Text(
-                      Localization.of(context).createAccount,
+                      Localization.of(context)!.createAccount,
                       style: TextStyle(
                         color: colorBlack2.withOpacity(0.85),
                         fontStyle: FontStyle.normal,
@@ -584,15 +585,15 @@ class _AddUserState extends State<AddUser> {
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide:
-                                BorderSide(color: Colors.grey[300], width: 1)),
+                                BorderSide(color: Colors.grey[300]!, width: 1)),
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide:
-                                BorderSide(color: Colors.grey[300], width: 1)),
+                                BorderSide(color: Colors.grey[300]!, width: 1)),
                         disabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide:
-                                BorderSide(color: Colors.grey[300], width: 1)),
+                                BorderSide(color: Colors.grey[300]!, width: 1)),
                       ),
                       value: genderType,
                       items: genders
@@ -604,7 +605,7 @@ class _AddUserState extends State<AddUser> {
                       }).toList(),
                       onChanged: (val) {
                         setState(() {
-                          _registerModel.genderType = val.val;
+                          _registerModel.genderType = val!.val;
                           genderType = val;
                         });
                       },
@@ -619,14 +620,14 @@ class _AddUserState extends State<AddUser> {
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(8.0),
                             border: Border.all(
-                              color: Colors.grey[300],
+                              color: Colors.grey[300]!,
                             ),
                           ),
                           child: Row(
                             children: [
                               Text(_selectedRelation == null
                                   ? 'Select Relation'
-                                  : _selectedRelation.relation),
+                                  : _selectedRelation!.relation!),
                             ],
                           )),
                       onTap: () {
@@ -642,20 +643,20 @@ class _AddUserState extends State<AddUser> {
                                 Expanded(
                                   child: ListView.builder(
                                     shrinkWrap: true,
-                                    itemCount: _relationList.length,
+                                    itemCount: _relationList!.length,
                                     itemBuilder: (context, pos) {
                                       return InkWell(
                                           onTap: () {
                                             setState(() {
                                               _selectedRelation =
-                                                  _relationList[pos];
+                                                  _relationList![pos];
                                             });
                                             Navigator.pop(context);
                                           },
                                           child: ListTile(
                                             title: Center(
-                                              child: Text(
-                                                  _relationList[pos].relation),
+                                              child: Text(_relationList![pos]
+                                                  .relation!),
                                             ),
                                           ));
                                     },
@@ -687,7 +688,7 @@ class _AddUserState extends State<AddUser> {
                     ),
                     HutanoButton(
                       onPressed: _enableButton ? _submitData : null,
-                      label: Localization.of(context).next,
+                      label: Localization.of(context)!.next,
                     ),
                     SizedBox(
                       height: spacing20,
@@ -704,7 +705,7 @@ class _AddUserState extends State<AddUser> {
 
   Widget _getLastNameTextField() {
     return Container(
-        width: SizeConfig.screenWidth / 2.4,
+        width: SizeConfig.screenWidth! / 2.4,
         child: HutanoTextField(
           focusNode: _lastNameFocus,
           focusedBorderColor: colorBlack20,
@@ -712,7 +713,7 @@ class _AddUserState extends State<AddUser> {
             _registerModel.lastName = value;
             setState(() {
               lastNameError = value.toString().isBlank(
-                  context, Localization.of(context).errorEnterLastName);
+                  context, Localization.of(context)!.errorEnterLastName);
             });
           },
           onFieldTap: () {
@@ -721,7 +722,7 @@ class _AddUserState extends State<AddUser> {
           labelTextStyle: labelStyle,
           errorText: lastNameError,
           controller: _lastNameController,
-          labelText: Localization.of(context).lastName,
+          labelText: Localization.of(context)!.lastName,
           textInputAction: TextInputAction.next,
           textInputFormatter: [
             FilteringTextInputFormatter.allow(RegExp("[a-zA-Z -]"))
@@ -735,20 +736,19 @@ class _AddUserState extends State<AddUser> {
 
   Widget _getFirstNameTextField() {
     return HutanoTextField(
-        width: SizeConfig.screenWidth / 2.4,
+        width: SizeConfig.screenWidth! / 2.4,
         onValueChanged: (value) {
           _registerModel.firstName = value;
           setState(() {
-            firstNameError = value
-                .toString()
-                .isBlank(context, Localization.of(context).errorEnterFirstName);
+            firstNameError = value.toString().isBlank(
+                context, Localization.of(context)!.errorEnterFirstName);
           });
         },
         labelTextStyle: labelStyle,
         errorText: firstNameError,
         focusNode: _firstNameFocus,
         controller: _firstNameController,
-        labelText: Localization.of(context).firstName,
+        labelText: Localization.of(context)!.firstName,
         focusedBorderColor: colorBlack20,
         onFieldSubmitted: (s) {
           FocusScope.of(context).requestFocus(_lastNameFocus);
@@ -788,7 +788,7 @@ class _AddUserState extends State<AddUser> {
             suffixwidth: 22,
             errorText: emailError,
             focusedBorderColor: colorBlack20,
-            labelText: Localization.of(context).email,
+            labelText: Localization.of(context)!.email,
             textInputType: TextInputType.emailAddress,
             onFieldSubmitted: (s) {
               FocusScope.of(context).requestFocus(_passwordFocus);
@@ -814,7 +814,7 @@ class _AddUserState extends State<AddUser> {
             },
             focusedBorderColor: colorBlack20,
             errorText: passwordError,
-            labelText: Localization.of(context).password,
+            labelText: Localization.of(context)!.password,
             textInputType: TextInputType.visiblePassword,
             onFieldSubmitted: (s) {
               FocusScope.of(context).requestFocus(_addressFocus);
@@ -871,9 +871,8 @@ class _AddUserState extends State<AddUser> {
           onChanged: (value) {
             _registerModel.address = value;
             setState(() {
-              addressError = value
-                  .toString()
-                  .isBlank(context, Localization.of(context).errorEnterAddress);
+              addressError = value.toString().isBlank(
+                  context, Localization.of(context)!.errorEnterAddress);
             });
           },
           decoration: InputDecoration(
@@ -893,7 +892,7 @@ class _AddUserState extends State<AddUser> {
                   ),
                 ),
               ),
-              labelText: Localization.of(context).address,
+              labelText: Localization.of(context)!.address,
               hintText: "",
               isDense: true,
               hintStyle: TextStyle(color: colorBlack60, fontSize: fontSize14),
@@ -916,7 +915,7 @@ class _AddUserState extends State<AddUser> {
       errorBuilder: (_, object) {
         return Container();
       },
-      itemBuilder: (context, suggestion) {
+      itemBuilder: (context, dynamic suggestion) {
         return ListTile(
           title: Text(suggestion.description),
         );
@@ -924,7 +923,7 @@ class _AddUserState extends State<AddUser> {
       transitionBuilder: (context, suggestionsBox, controller) {
         return suggestionsBox;
       },
-      onSuggestionSelected: (suggestion) {
+      onSuggestionSelected: (dynamic suggestion) {
         _addressController.text = suggestion.structuredFormatting.mainText;
         _getPlaceDetail(suggestion.placeId);
       },
@@ -936,7 +935,7 @@ class _AddUserState extends State<AddUser> {
 
   Widget _buildCityTextField() {
     return Container(
-        width: SizeConfig.screenWidth / 2.4,
+        width: SizeConfig.screenWidth! / 2.4,
         child: HutanoTextField(
           labelTextStyle: labelStyle,
           focusNode: _cityFocus,
@@ -946,14 +945,14 @@ class _AddUserState extends State<AddUser> {
             setState(() {
               cityError = value
                   .toString()
-                  .isBlank(context, Localization.of(context).errorEnterCity);
+                  .isBlank(context, Localization.of(context)!.errorEnterCity);
             });
           },
           onFieldTap: () {
             showError(RegisterError.address.index);
           },
           errorText: cityError,
-          labelText: Localization.of(context).city,
+          labelText: Localization.of(context)!.city,
           textInputAction: TextInputAction.next,
           onFieldSubmitted: (s) {
             FocusScope.of(context).requestFocus(_zipCodeFocus);
@@ -976,14 +975,14 @@ class _AddUserState extends State<AddUser> {
               showError(RegisterError.zipCode.index);
             },
             controller: _refCodeController,
-            labelText: Localization.of(context).refCode,
+            labelText: Localization.of(context)!.refCode,
             textInputAction: TextInputAction.done));
   }
 
   Widget _buildZipCode() {
     return HutanoTextField(
         labelTextStyle: labelStyle,
-        width: SizeConfig.screenWidth / 2.4,
+        width: SizeConfig.screenWidth! / 2.4,
         focusedBorderColor: colorBlack20,
         controller: _zipCodeController,
         focusNode: _zipCodeFocus,
@@ -997,12 +996,12 @@ class _AddUserState extends State<AddUser> {
           setState(() {
             zipCodeError = value
                 .toString()
-                .isBlank(context, Localization.of(context).errorZipCode);
+                .isBlank(context, Localization.of(context)!.errorZipCode);
           });
         },
         errorText: zipCodeError,
         textInputFormatter: [FilteringTextInputFormatter.digitsOnly],
-        labelText: Localization.of(context).zipcode,
+        labelText: Localization.of(context)!.zipcode,
         onFieldSubmitted: (s) {
           FocusScope.of(context).requestFocus(_mobileFocus);
           showError(RegisterError.zipCode.index);
@@ -1028,13 +1027,13 @@ class _AddUserState extends State<AddUser> {
                 fontFamily: gilroyMedium,
                 fontStyle: FontStyle.normal,
               ),
-              label: Localization.of(context).labelHealthInsurance,
+              label: Localization.of(context)!.labelHealthInsurance,
               image: FileConstants.icInsuranceBlue),
           SizedBox(
             height: 14,
           ),
           Text(
-            Localization.of(context).healthInsurance,
+            Localization.of(context)!.healthInsurance,
             textAlign: TextAlign.start,
             style: TextStyle(
               fontSize: fontSize14,
@@ -1056,11 +1055,11 @@ class _AddUserState extends State<AddUser> {
                 buttonType: HutanoButtonType.onlyLabel,
                 width: 80,
                 labelColor: (_registerModel.haveHealthInsurance != null &&
-                        _registerModel.haveHealthInsurance)
+                        _registerModel.haveHealthInsurance!)
                     ? colorWhite
                     : colorBlack,
                 color: (_registerModel.haveHealthInsurance != null &&
-                        _registerModel.haveHealthInsurance)
+                        _registerModel.haveHealthInsurance!)
                     ? colorPurple
                     : Colors.white,
                 height: 40,
@@ -1078,11 +1077,11 @@ class _AddUserState extends State<AddUser> {
                 buttonType: HutanoButtonType.onlyLabel,
                 width: 80,
                 labelColor: (_registerModel.haveHealthInsurance != null &&
-                        !_registerModel.haveHealthInsurance)
+                        !_registerModel.haveHealthInsurance!)
                     ? colorWhite
                     : colorBlack,
                 color: (_registerModel.haveHealthInsurance != null &&
-                        !_registerModel.haveHealthInsurance)
+                        !_registerModel.haveHealthInsurance!)
                     ? colorPurple
                     : colorWhite,
                 borderWidth: 1,

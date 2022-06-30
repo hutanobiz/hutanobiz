@@ -4,13 +4,13 @@ import 'package:intl/intl.dart';
 
 class OwnMessageCard extends StatelessWidget {
   const OwnMessageCard(
-      {Key key,
-      @required this.message,
-      @required this.time,
-      @required this.isLocalTime})
+      {Key? key,
+      required this.message,
+      required this.time,
+      required this.isLocalTime})
       : super(key: key);
-  final String message;
-  final String time;
+  final String? message;
+  final String? time;
   final bool isLocalTime;
 
   @override
@@ -41,7 +41,7 @@ class OwnMessageCard extends StatelessWidget {
                   bottom: 8,
                 ),
                 child: Text(
-                  message,
+                  message!,
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -80,9 +80,9 @@ class OwnMessageCard extends StatelessWidget {
               ),
               child: Text(
                 isLocalTime
-                    ? DateFormat('hh:mm a').format(DateTime.parse(time))
+                    ? DateFormat('hh:mm a').format(DateTime.parse(time!))
                     : DateFormat('hh:mm a')
-                        .format(DateTime.parse(time).toLocal()),
+                        .format(DateTime.parse(time!).toLocal()),
                 style: TextStyle(
                   fontSize: 13,
                   color: Colors.grey[600],

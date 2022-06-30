@@ -12,10 +12,10 @@ enum HutanoProgressSteps {
 }
 
 class HutanoProgressBar extends StatelessWidget {
-  final HutanoProgressSteps progressSteps;
+  final HutanoProgressSteps? progressSteps;
 
   const HutanoProgressBar(
-      {Key key, this.progressSteps = HutanoProgressSteps.one})
+      {Key? key, this.progressSteps = HutanoProgressSteps.one})
       : super(key: key);
 
   @override

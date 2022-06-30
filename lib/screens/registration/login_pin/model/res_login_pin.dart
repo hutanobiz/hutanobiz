@@ -1,16 +1,16 @@
 class ResLoginPin {
-  String _status;
-  Response _response;
+  String? _status;
+  Response? _response;
 
-  ResLoginPin({String status, Response response}) {
+  ResLoginPin({String? status, Response? response}) {
     this._status = status;
     this._response = response;
   }
 
-  String get status => _status;
-  set status(String status) => _status = status;
-  Response get response => _response;
-  set response(Response response) => _response = response;
+  String? get status => _status;
+  set status(String? status) => _status = status;
+  Response? get response => _response;
+  set response(Response? response) => _response = response;
 
   ResLoginPin.fromJson(Map<String, dynamic> json) {
     _status = json['status'];
@@ -23,95 +23,95 @@ class ResLoginPin {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this._status;
     if (this._response != null) {
-      data['response'] = this._response.toJson();
+      data['response'] = this._response!.toJson();
     }
     return data;
   }
 }
 
 class Response {
-  Location _location;
-  String _title;
-  String _fullName;
-  String _firstName;
-  String _lastName;
-  String _dob;
-  String _address;
-  String _city;
-  String _state;
-  String _avatar;
-  int _zipCode;
-  String _phoneNumber;
-  int _gender;
-  List<Null> _language;
-  String _email;
-  bool _isAbleTOReceiveOffersAndPromotions;
-  bool _isAgreeTermsAndCondition;
-  String _mobileCountryCode;
-  bool _isContactInformationVerified;
-  bool _isEmailVerified;
-  int _status;
-  int _type;
-  String _resetPasswordVerificationCode;
-  String _resetPasswordVerificationCodeSentAt;
-  String _stripeCustomerId;
-  String _stripeConnectAccount;
-  String _referalCode;
-  int _referalPoints;
-  int _resetPinVerificationCode;
-  String _resetPinVerificationCodeSentAt;
-  String _emailVerificationCodeSendAt;
-  String _emailVerificationCode;
-  String _sId;
-  List<Insurance> _insurance;
-  List<Tokens> _tokens;
-  List<ProviderNetwork> _providerNetwork;
-  String _createdAt;
-  String _updatedAt;
-  int _iV;
-  List<FamilyNetwork> _familyNetwork;
+  Location? _location;
+  String? _title;
+  String? _fullName;
+  String? _firstName;
+  String? _lastName;
+  String? _dob;
+  String? _address;
+  String? _city;
+  String? _state;
+  String? _avatar;
+  int? _zipCode;
+  String? _phoneNumber;
+  int? _gender;
+  List<Null>? _language;
+  String? _email;
+  bool? _isAbleTOReceiveOffersAndPromotions;
+  bool? _isAgreeTermsAndCondition;
+  String? _mobileCountryCode;
+  bool? _isContactInformationVerified;
+  bool? _isEmailVerified;
+  int? _status;
+  int? _type;
+  String? _resetPasswordVerificationCode;
+  String? _resetPasswordVerificationCodeSentAt;
+  String? _stripeCustomerId;
+  String? _stripeConnectAccount;
+  String? _referalCode;
+  int? _referalPoints;
+  int? _resetPinVerificationCode;
+  String? _resetPinVerificationCodeSentAt;
+  String? _emailVerificationCodeSendAt;
+  String? _emailVerificationCode;
+  String? _sId;
+  List<Insurance>? _insurance;
+  List<Tokens>? _tokens;
+  List<ProviderNetwork>? _providerNetwork;
+  String? _createdAt;
+  String? _updatedAt;
+  int? _iV;
+  List<FamilyNetwork>? _familyNetwork;
 
   Response(
-      {Location location,
-      String title,
-      String fullName,
-      String firstName,
-      String lastName,
-      String dob,
-      String address,
-      String city,
-      String state,
-      String avatar,
-      int zipCode,
-      String phoneNumber,
-      int gender,
-      List<Null> language,
-      String email,
-      bool isAbleTOReceiveOffersAndPromotions,
-      bool isAgreeTermsAndCondition,
-      String mobileCountryCode,
-      bool isContactInformationVerified,
-      bool isEmailVerified,
-      int status,
-      int type,
-      String resetPasswordVerificationCode,
-      String resetPasswordVerificationCodeSentAt,
-      String stripeCustomerId,
-      String stripeConnectAccount,
-      String referalCode,
-      int referalPoints,
-      int resetPinVerificationCode,
-      String resetPinVerificationCodeSentAt,
-      String emailVerificationCodeSendAt,
-      String emailVerificationCode,
-      String sId,
-      List<Insurance> insurance,
-      List<Tokens> tokens,
-      List<ProviderNetwork> providerNetwork,
-      String createdAt,
-      String updatedAt,
-      int iV,
-      List<FamilyNetwork> familyNetwork}) {
+      {Location? location,
+      String? title,
+      String? fullName,
+      String? firstName,
+      String? lastName,
+      String? dob,
+      String? address,
+      String? city,
+      String? state,
+      String? avatar,
+      int? zipCode,
+      String? phoneNumber,
+      int? gender,
+      List<Null>? language,
+      String? email,
+      bool? isAbleTOReceiveOffersAndPromotions,
+      bool? isAgreeTermsAndCondition,
+      String? mobileCountryCode,
+      bool? isContactInformationVerified,
+      bool? isEmailVerified,
+      int? status,
+      int? type,
+      String? resetPasswordVerificationCode,
+      String? resetPasswordVerificationCodeSentAt,
+      String? stripeCustomerId,
+      String? stripeConnectAccount,
+      String? referalCode,
+      int? referalPoints,
+      int? resetPinVerificationCode,
+      String? resetPinVerificationCodeSentAt,
+      String? emailVerificationCodeSendAt,
+      String? emailVerificationCode,
+      String? sId,
+      List<Insurance>? insurance,
+      List<Tokens>? tokens,
+      List<ProviderNetwork>? providerNetwork,
+      String? createdAt,
+      String? updatedAt,
+      int? iV,
+      List<FamilyNetwork>? familyNetwork}) {
     this._location = location;
     this._title = title;
     this._fullName = fullName;
@@ -156,105 +156,105 @@ class Response {
     this._familyNetwork = familyNetwork;
   }
 
-  Location get location => _location;
-  set location(Location location) => _location = location;
-  String get title => _title;
-  set title(String title) => _title = title;
-  String get fullName => _fullName;
-  set fullName(String fullName) => _fullName = fullName;
-  String get firstName => _firstName;
-  set firstName(String firstName) => _firstName = firstName;
-  String get lastName => _lastName;
-  set lastName(String lastName) => _lastName = lastName;
-  String get dob => _dob;
-  set dob(String dob) => _dob = dob;
-  String get address => _address;
-  set address(String address) => _address = address;
-  String get city => _city;
-  set city(String city) => _city = city;
-  String get state => _state;
-  set state(String state) => _state = state;
-  String get avatar => _avatar;
-  set avatar(String avatar) => _avatar = avatar;
-  int get zipCode => _zipCode;
-  set zipCode(int zipCode) => _zipCode = zipCode;
-  String get phoneNumber => _phoneNumber;
-  set phoneNumber(String phoneNumber) => _phoneNumber = phoneNumber;
-  int get gender => _gender;
-  set gender(int gender) => _gender = gender;
-  List<Null> get language => _language;
-  set language(List<Null> language) => _language = language;
-  String get email => _email;
-  set email(String email) => _email = email;
-  bool get isAbleTOReceiveOffersAndPromotions =>
+  Location? get location => _location;
+  set location(Location? location) => _location = location;
+  String? get title => _title;
+  set title(String? title) => _title = title;
+  String? get fullName => _fullName;
+  set fullName(String? fullName) => _fullName = fullName;
+  String? get firstName => _firstName;
+  set firstName(String? firstName) => _firstName = firstName;
+  String? get lastName => _lastName;
+  set lastName(String? lastName) => _lastName = lastName;
+  String? get dob => _dob;
+  set dob(String? dob) => _dob = dob;
+  String? get address => _address;
+  set address(String? address) => _address = address;
+  String? get city => _city;
+  set city(String? city) => _city = city;
+  String? get state => _state;
+  set state(String? state) => _state = state;
+  String? get avatar => _avatar;
+  set avatar(String? avatar) => _avatar = avatar;
+  int? get zipCode => _zipCode;
+  set zipCode(int? zipCode) => _zipCode = zipCode;
+  String? get phoneNumber => _phoneNumber;
+  set phoneNumber(String? phoneNumber) => _phoneNumber = phoneNumber;
+  int? get gender => _gender;
+  set gender(int? gender) => _gender = gender;
+  List<Null>? get language => _language;
+  set language(List<Null>? language) => _language = language;
+  String? get email => _email;
+  set email(String? email) => _email = email;
+  bool? get isAbleTOReceiveOffersAndPromotions =>
       _isAbleTOReceiveOffersAndPromotions;
   set isAbleTOReceiveOffersAndPromotions(
-          bool isAbleTOReceiveOffersAndPromotions) =>
+          bool? isAbleTOReceiveOffersAndPromotions) =>
       _isAbleTOReceiveOffersAndPromotions = isAbleTOReceiveOffersAndPromotions;
-  bool get isAgreeTermsAndCondition => _isAgreeTermsAndCondition;
-  set isAgreeTermsAndCondition(bool isAgreeTermsAndCondition) =>
+  bool? get isAgreeTermsAndCondition => _isAgreeTermsAndCondition;
+  set isAgreeTermsAndCondition(bool? isAgreeTermsAndCondition) =>
       _isAgreeTermsAndCondition = isAgreeTermsAndCondition;
-  String get mobileCountryCode => _mobileCountryCode;
-  set mobileCountryCode(String mobileCountryCode) =>
+  String? get mobileCountryCode => _mobileCountryCode;
+  set mobileCountryCode(String? mobileCountryCode) =>
       _mobileCountryCode = mobileCountryCode;
-  bool get isContactInformationVerified => _isContactInformationVerified;
-  set isContactInformationVerified(bool isContactInformationVerified) =>
+  bool? get isContactInformationVerified => _isContactInformationVerified;
+  set isContactInformationVerified(bool? isContactInformationVerified) =>
       _isContactInformationVerified = isContactInformationVerified;
-  bool get isEmailVerified => _isEmailVerified;
-  set isEmailVerified(bool isEmailVerified) =>
+  bool? get isEmailVerified => _isEmailVerified;
+  set isEmailVerified(bool? isEmailVerified) =>
       _isEmailVerified = isEmailVerified;
-  int get status => _status;
-  set status(int status) => _status = status;
-  int get type => _type;
-  set type(int type) => _type = type;
-  String get resetPasswordVerificationCode => _resetPasswordVerificationCode;
-  set resetPasswordVerificationCode(String resetPasswordVerificationCode) =>
+  int? get status => _status;
+  set status(int? status) => _status = status;
+  int? get type => _type;
+  set type(int? type) => _type = type;
+  String? get resetPasswordVerificationCode => _resetPasswordVerificationCode;
+  set resetPasswordVerificationCode(String? resetPasswordVerificationCode) =>
       _resetPasswordVerificationCode = resetPasswordVerificationCode;
-  String get resetPasswordVerificationCodeSentAt =>
+  String? get resetPasswordVerificationCodeSentAt =>
       _resetPasswordVerificationCodeSentAt;
   set resetPasswordVerificationCodeSentAt(
-          String resetPasswordVerificationCodeSentAt) =>
+          String? resetPasswordVerificationCodeSentAt) =>
       _resetPasswordVerificationCodeSentAt =
           resetPasswordVerificationCodeSentAt;
-  String get stripeCustomerId => _stripeCustomerId;
-  set stripeCustomerId(String stripeCustomerId) =>
+  String? get stripeCustomerId => _stripeCustomerId;
+  set stripeCustomerId(String? stripeCustomerId) =>
       _stripeCustomerId = stripeCustomerId;
-  String get stripeConnectAccount => _stripeConnectAccount;
-  set stripeConnectAccount(String stripeConnectAccount) =>
+  String? get stripeConnectAccount => _stripeConnectAccount;
+  set stripeConnectAccount(String? stripeConnectAccount) =>
       _stripeConnectAccount = stripeConnectAccount;
-  String get referalCode => _referalCode;
-  set referalCode(String referalCode) => _referalCode = referalCode;
-  int get referalPoints => _referalPoints;
-  set referalPoints(int referalPoints) => _referalPoints = referalPoints;
-  int get resetPinVerificationCode => _resetPinVerificationCode;
-  set resetPinVerificationCode(int resetPinVerificationCode) =>
+  String? get referalCode => _referalCode;
+  set referalCode(String? referalCode) => _referalCode = referalCode;
+  int? get referalPoints => _referalPoints;
+  set referalPoints(int? referalPoints) => _referalPoints = referalPoints;
+  int? get resetPinVerificationCode => _resetPinVerificationCode;
+  set resetPinVerificationCode(int? resetPinVerificationCode) =>
       _resetPinVerificationCode = resetPinVerificationCode;
-  String get resetPinVerificationCodeSentAt => _resetPinVerificationCodeSentAt;
-  set resetPinVerificationCodeSentAt(String resetPinVerificationCodeSentAt) =>
+  String? get resetPinVerificationCodeSentAt => _resetPinVerificationCodeSentAt;
+  set resetPinVerificationCodeSentAt(String? resetPinVerificationCodeSentAt) =>
       _resetPinVerificationCodeSentAt = resetPinVerificationCodeSentAt;
-  String get emailVerificationCodeSendAt => _emailVerificationCodeSendAt;
-  set emailVerificationCodeSendAt(String emailVerificationCodeSendAt) =>
+  String? get emailVerificationCodeSendAt => _emailVerificationCodeSendAt;
+  set emailVerificationCodeSendAt(String? emailVerificationCodeSendAt) =>
       _emailVerificationCodeSendAt = emailVerificationCodeSendAt;
-  String get emailVerificationCode => _emailVerificationCode;
-  set emailVerificationCode(String emailVerificationCode) =>
+  String? get emailVerificationCode => _emailVerificationCode;
+  set emailVerificationCode(String? emailVerificationCode) =>
       _emailVerificationCode = emailVerificationCode;
-  String get sId => _sId;
-  set sId(String sId) => _sId = sId;
-  List<Insurance> get insurance => _insurance;
-  set insurance(List<Insurance> insurance) => _insurance = insurance;
-  List<Tokens> get tokens => _tokens;
-  set tokens(List<Tokens> tokens) => _tokens = tokens;
-  List<ProviderNetwork> get providerNetwork => _providerNetwork;
-  set providerNetwork(List<ProviderNetwork> providerNetwork) =>
+  String? get sId => _sId;
+  set sId(String? sId) => _sId = sId;
+  List<Insurance>? get insurance => _insurance;
+  set insurance(List<Insurance>? insurance) => _insurance = insurance;
+  List<Tokens>? get tokens => _tokens;
+  set tokens(List<Tokens>? tokens) => _tokens = tokens;
+  List<ProviderNetwork>? get providerNetwork => _providerNetwork;
+  set providerNetwork(List<ProviderNetwork>? providerNetwork) =>
       _providerNetwork = providerNetwork;
-  String get createdAt => _createdAt;
-  set createdAt(String createdAt) => _createdAt = createdAt;
-  String get updatedAt => _updatedAt;
-  set updatedAt(String updatedAt) => _updatedAt = updatedAt;
-  int get iV => _iV;
-  set iV(int iV) => _iV = iV;
-  List<FamilyNetwork> get familyNetwork => _familyNetwork;
-  set familyNetwork(List<FamilyNetwork> familyNetwork) =>
+  String? get createdAt => _createdAt;
+  set createdAt(String? createdAt) => _createdAt = createdAt;
+  String? get updatedAt => _updatedAt;
+  set updatedAt(String? updatedAt) => _updatedAt = updatedAt;
+  int? get iV => _iV;
+  set iV(int? iV) => _iV = iV;
+  List<FamilyNetwork>? get familyNetwork => _familyNetwork;
+  set familyNetwork(List<FamilyNetwork>? familyNetwork) =>
       _familyNetwork = familyNetwork;
 
   Response.fromJson(Map<String, dynamic> json) {
@@ -274,7 +274,7 @@ class Response {
     _phoneNumber = json['phoneNumber'].toString();
     _gender = json['gender'];
     if (json['language'] != null) {
-      _language = new List<Null>();
+      _language = <Null>[];
       json['language'].forEach((v) {
         // _language.add(new Null.fromJson(v));
       });
@@ -302,30 +302,30 @@ class Response {
     _emailVerificationCode = json['emailVerificationCode'].toString();
     _sId = json['_id'];
     if (json['insurance'] != null) {
-      _insurance = new List<Insurance>();
+      _insurance = <Insurance>[];
       json['insurance'].forEach((v) {
-        _insurance.add(new Insurance.fromJson(v));
+        _insurance!.add(new Insurance.fromJson(v));
       });
     }
     if (json['tokens'] != null) {
-      _tokens = new List<Tokens>();
+      _tokens = <Tokens>[];
       json['tokens'].forEach((v) {
-        _tokens.add(new Tokens.fromJson(v));
+        _tokens!.add(new Tokens.fromJson(v));
       });
     }
     if (json['providerNetwork'] != null) {
-      _providerNetwork = new List<ProviderNetwork>();
+      _providerNetwork = <ProviderNetwork>[];
       json['providerNetwork'].forEach((v) {
-        _providerNetwork.add(new ProviderNetwork.fromJson(v));
+        _providerNetwork!.add(new ProviderNetwork.fromJson(v));
       });
     }
     _createdAt = json['createdAt'];
     _updatedAt = json['updatedAt'];
     _iV = json['__v'];
     if (json['familyNetwork'] != null) {
-      _familyNetwork = new List<FamilyNetwork>();
+      _familyNetwork = <FamilyNetwork>[];
       json['familyNetwork'].forEach((v) {
-        _familyNetwork.add(new FamilyNetwork.fromJson(v));
+        _familyNetwork!.add(new FamilyNetwork.fromJson(v));
       });
     }
   }
@@ -333,7 +333,7 @@ class Response {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this._location != null) {
-      data['location'] = this._location.toJson();
+      data['location'] = this._location!.toJson();
     }
     data['title'] = this._title;
     data['fullName'] = this._fullName;
@@ -373,39 +373,39 @@ class Response {
     data['emailVerificationCode'] = this._emailVerificationCode;
     data['_id'] = this._sId;
     if (this._insurance != null) {
-      data['insurance'] = this._insurance.map((v) => v.toJson()).toList();
+      data['insurance'] = this._insurance!.map((v) => v.toJson()).toList();
     }
     if (this._tokens != null) {
-      data['tokens'] = this._tokens.map((v) => v.toJson()).toList();
+      data['tokens'] = this._tokens!.map((v) => v.toJson()).toList();
     }
     if (this._providerNetwork != null) {
       data['providerNetwork'] =
-          this._providerNetwork.map((v) => v.toJson()).toList();
+          this._providerNetwork!.map((v) => v.toJson()).toList();
     }
     data['createdAt'] = this._createdAt;
     data['updatedAt'] = this._updatedAt;
     data['__v'] = this._iV;
     if (this._familyNetwork != null) {
       data['familyNetwork'] =
-          this._familyNetwork.map((v) => v.toJson()).toList();
+          this._familyNetwork!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Location {
-  String _type;
-  List<int> _coordinates;
+  String? _type;
+  List<int>? _coordinates;
 
-  Location({String type, List<int> coordinates}) {
+  Location({String? type, List<int>? coordinates}) {
     this._type = type;
     this._coordinates = coordinates;
   }
 
-  String get type => _type;
-  set type(String type) => _type = type;
-  List<int> get coordinates => _coordinates;
-  set coordinates(List<int> coordinates) => _coordinates = coordinates;
+  String? get type => _type;
+  set type(String? type) => _type = type;
+  List<int>? get coordinates => _coordinates;
+  set coordinates(List<int>? coordinates) => _coordinates = coordinates;
 
   Location.fromJson(Map<String, dynamic> json) {
     _type = json['type'];
@@ -421,32 +421,32 @@ class Location {
 }
 
 class Insurance {
-  String _insuranceId;
-  String _insuranceDocumentFront;
-  String _insuranceDocumentBack;
-  String _sId;
+  String? _insuranceId;
+  String? _insuranceDocumentFront;
+  String? _insuranceDocumentBack;
+  String? _sId;
 
   Insurance(
-      {String insuranceId,
-      String insuranceDocumentFront,
-      String insuranceDocumentBack,
-      String sId}) {
+      {String? insuranceId,
+      String? insuranceDocumentFront,
+      String? insuranceDocumentBack,
+      String? sId}) {
     this._insuranceId = insuranceId;
     this._insuranceDocumentFront = insuranceDocumentFront;
     this._insuranceDocumentBack = insuranceDocumentBack;
     this._sId = sId;
   }
 
-  String get insuranceId => _insuranceId;
-  set insuranceId(String insuranceId) => _insuranceId = insuranceId;
-  String get insuranceDocumentFront => _insuranceDocumentFront;
-  set insuranceDocumentFront(String insuranceDocumentFront) =>
+  String? get insuranceId => _insuranceId;
+  set insuranceId(String? insuranceId) => _insuranceId = insuranceId;
+  String? get insuranceDocumentFront => _insuranceDocumentFront;
+  set insuranceDocumentFront(String? insuranceDocumentFront) =>
       _insuranceDocumentFront = insuranceDocumentFront;
-  String get insuranceDocumentBack => _insuranceDocumentBack;
-  set insuranceDocumentBack(String insuranceDocumentBack) =>
+  String? get insuranceDocumentBack => _insuranceDocumentBack;
+  set insuranceDocumentBack(String? insuranceDocumentBack) =>
       _insuranceDocumentBack = insuranceDocumentBack;
-  String get sId => _sId;
-  set sId(String sId) => _sId = sId;
+  String? get sId => _sId;
+  set sId(String? sId) => _sId = sId;
 
   Insurance.fromJson(Map<String, dynamic> json) {
     _insuranceId = json['insuranceId'];
@@ -466,22 +466,22 @@ class Insurance {
 }
 
 class Tokens {
-  String _sId;
-  String _access;
-  String _token;
+  String? _sId;
+  String? _access;
+  String? _token;
 
-  Tokens({String sId, String access, String token}) {
+  Tokens({String? sId, String? access, String? token}) {
     this._sId = sId;
     this._access = access;
     this._token = token;
   }
 
-  String get sId => _sId;
-  set sId(String sId) => _sId = sId;
-  String get access => _access;
-  set access(String access) => _access = access;
-  String get token => _token;
-  set token(String token) => _token = token;
+  String? get sId => _sId;
+  set sId(String? sId) => _sId = sId;
+  String? get access => _access;
+  set access(String? access) => _access = access;
+  String? get token => _token;
+  set token(String? token) => _token = token;
 
   Tokens.fromJson(Map<String, dynamic> json) {
     _sId = json['_id'];
@@ -499,22 +499,22 @@ class Tokens {
 }
 
 class ProviderNetwork {
-  String _groupName;
-  List<String> _doctorId;
-  String _sId;
+  String? _groupName;
+  List<String>? _doctorId;
+  String? _sId;
 
-  ProviderNetwork({String groupName, List<String> doctorId, String sId}) {
+  ProviderNetwork({String? groupName, List<String>? doctorId, String? sId}) {
     this._groupName = groupName;
     this._doctorId = doctorId;
     this._sId = sId;
   }
 
-  String get groupName => _groupName;
-  set groupName(String groupName) => _groupName = groupName;
-  List<String> get doctorId => _doctorId;
-  set doctorId(List<String> doctorId) => _doctorId = doctorId;
-  String get sId => _sId;
-  set sId(String sId) => _sId = sId;
+  String? get groupName => _groupName;
+  set groupName(String? groupName) => _groupName = groupName;
+  List<String>? get doctorId => _doctorId;
+  set doctorId(List<String>? doctorId) => _doctorId = doctorId;
+  String? get sId => _sId;
+  set sId(String? sId) => _sId = sId;
 
   ProviderNetwork.fromJson(Map<String, dynamic> json) {
     _groupName = json['groupName'];
@@ -532,31 +532,31 @@ class ProviderNetwork {
 }
 
 class FamilyNetwork {
-  String _userId;
-  int _userRelation;
-  List<int> _userPermissions;
-  String _sId;
+  String? _userId;
+  int? _userRelation;
+  List<int>? _userPermissions;
+  String? _sId;
 
   FamilyNetwork(
-      {String userId,
-      int userRelation,
-      List<int> userPermissions,
-      String sId}) {
+      {String? userId,
+      int? userRelation,
+      List<int>? userPermissions,
+      String? sId}) {
     this._userId = userId;
     this._userRelation = userRelation;
     this._userPermissions = userPermissions;
     this._sId = sId;
   }
 
-  String get userId => _userId;
-  set userId(String userId) => _userId = userId;
-  int get userRelation => _userRelation;
-  set userRelation(int userRelation) => _userRelation = userRelation;
-  List<int> get userPermissions => _userPermissions;
-  set userPermissions(List<int> userPermissions) =>
+  String? get userId => _userId;
+  set userId(String? userId) => _userId = userId;
+  int? get userRelation => _userRelation;
+  set userRelation(int? userRelation) => _userRelation = userRelation;
+  List<int>? get userPermissions => _userPermissions;
+  set userPermissions(List<int>? userPermissions) =>
       _userPermissions = userPermissions;
-  String get sId => _sId;
-  set sId(String sId) => _sId = sId;
+  String? get sId => _sId;
+  set sId(String? sId) => _sId = sId;
 
   FamilyNetwork.fromJson(Map<String, dynamic> json) {
     _userId = json['userId'];

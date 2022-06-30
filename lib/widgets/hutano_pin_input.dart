@@ -7,14 +7,14 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 class HutanoPinInput extends StatelessWidget {
   final double width;
   final int pinCount;
-  final Function onChanged;
-  final Function onCompleted;
-  final TextEditingController controller;
+  final Function? onChanged;
+  final Function? onCompleted;
+  final TextEditingController? controller;
 
   const HutanoPinInput({
-    Key key,
-    @required this.width,
-    @required this.pinCount,
+    Key? key,
+    required this.width,
+    required this.pinCount,
     this.onChanged,
     this.onCompleted,
     this.controller,
@@ -46,8 +46,8 @@ class HutanoPinInput extends StatelessWidget {
             activeFillColor: colorPurple,
             activeColor: colorPurple),
         animationDuration: Duration(milliseconds: 300),
-        onCompleted: onCompleted,
-        onChanged: onChanged,
+        onCompleted: onCompleted as void Function(String)?,
+        onChanged: onChanged as void Function(String),
       ),
     );
   }

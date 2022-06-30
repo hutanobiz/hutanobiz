@@ -1,8 +1,8 @@
 class ReqLoginPin {
-  String phoneNumber;
-  int type;
-  String deviceToken;
-  String pin;
+  String? phoneNumber;
+  int? type;
+  String? deviceToken;
+  String? pin;
 
   ReqLoginPin({
     this.phoneNumber,
@@ -11,7 +11,7 @@ class ReqLoginPin {
     this.pin,
   });
 
-  Map<String, String> toMap() {
+  Map<String, String?> toMap() {
     return {
       'phoneNumber': phoneNumber,
       'type': type.toString(),
@@ -21,7 +21,7 @@ class ReqLoginPin {
   }
 
   factory ReqLoginPin.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
+
 
     return ReqLoginPin(
       phoneNumber: map['phoneNumber'],

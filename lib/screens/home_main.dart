@@ -4,7 +4,7 @@ import 'package:hutano/screens/home.dart';
 import 'package:hutano/screens/push_notificaton_service.dart';
 
 class HomeMain extends StatelessWidget {
-  const HomeMain({Key key}) : super(key: key);
+  const HomeMain({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

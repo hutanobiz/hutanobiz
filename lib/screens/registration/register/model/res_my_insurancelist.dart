@@ -1,8 +1,8 @@
 import 'package:hutano/screens/registration/register/model/res_insurance_list.dart';
 
 class ResMyInsuranceList {
-  String status;
-  List<Insurance> response;
+  String? status;
+  List<Insurance>? response;
 
   ResMyInsuranceList({this.status, this.response});
 
@@ -12,7 +12,7 @@ class ResMyInsuranceList {
       response = <Insurance>[];
       json['data']['insurance'].forEach((v) {
         if (v['insuranceId'] != null) {
-          response.add(Insurance.fromJson(v['insuranceId']));
+          response!.add(Insurance.fromJson(v['insuranceId']));
         }
       });
     }
@@ -22,7 +22,7 @@ class ResMyInsuranceList {
     final data = <String, dynamic>{};
     data['status'] = status;
     if (response != null) {
-      data['response'] = response.map((v) => v.toJson()).toList();
+      data['response'] = response!.map((v) => v.toJson()).toList();
     }
     return data;
   }

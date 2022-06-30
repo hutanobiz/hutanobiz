@@ -14,13 +14,13 @@ class CreditCardProvider extends ChangeNotifier {
 }
 
 class MyCreditCard {
-  String nameOnCard;
+  String? nameOnCard;
   String cardNumber;
-  String expiryDate;
-  String cvv;
+  String? expiryDate;
+  String? cvv;
   CardType type;
-  String id;
-  String customer;
+  String? id;
+  String? customer;
 
 
   MyCreditCard(

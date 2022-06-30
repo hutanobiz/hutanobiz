@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 
 import '../model/medical_history_disease.dart';
@@ -18,39 +19,39 @@ class SymptomsInfoProvider extends ChangeNotifier {
   int bodyType = 1;
 
   ///pain details
-  String bodypart = "";
-  String bodyPartPain = "";
-  String timeForpain = "";
-  int timeForpainNumber;
-  int painIntensity;
-  String painCondition = "";
+  String? bodypart = "";
+  String? bodyPartPain = "";
+  String? timeForpain = "";
+  int? timeForpainNumber;
+  int? painIntensity;
+  String? painCondition = "";
 
   ///general info
-  bool firestTimeIssue;
-  bool hospitalizedBefore;
-  String hositalizedTime;
-  int hositalizedTimeNumber;
-  bool diagnosticTest;
-  List<String> diagnosticTests = [];
+  bool? firestTimeIssue;
+  bool? hospitalizedBefore;
+  String? hositalizedTime;
+  int? hositalizedTimeNumber;
+  bool? diagnosticTest;
+  List<String>? diagnosticTests = [];
 
-  String doctorId;
-  String userId;
+  String? doctorId;
+  String? userId;
 
   ///medicine info
-  bool isTakingMedicine;
+  bool? isTakingMedicine;
 
-  List<String> medicines = [];
-  List<String> medicinDose = [];
-  List<String> medcineTime = [];
+  List<String>? medicines = [];
+  List<String>? medicinDose = [];
+  List<String>? medcineTime = [];
 
   List<MedicalImages> medicalImages = [];
 
   String appoinmentId = "";
 
   // To set body part selection 
-  Offset touchPosition;
-  String bodyPart;
-  String selectedBodyPart;
+  Offset? touchPosition;
+  String? bodyPart;
+  String? selectedBodyPart;
 
   // FRONT-1,BACK-2,SIDE-3,ALLOVER-4
   int getBodySide() {
@@ -88,10 +89,10 @@ class SymptomsInfoProvider extends ChangeNotifier {
   }
 
   void setMedicineDetails(
-      {bool isTakingMedicine,
-      List<String> medicines,
-      List<String> medicinDose,
-      List<String> medcineTime}) {
+      {bool? isTakingMedicine,
+      List<String>? medicines,
+      List<String>? medicinDose,
+      List<String>? medcineTime}) {
     this.isTakingMedicine = isTakingMedicine;
     this.medicines = medicines;
     this.medicinDose = medicinDose;
@@ -108,11 +109,10 @@ class SymptomsInfoProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<String> getSymptomsByBodyPart(String bodypart) {
+  List<String> getSymptomsByBodyPart(String? bodypart) {
     if (symptoms.isEmpty) return [];
     return symptoms
-            .firstWhere((element) => element.bodyPart == bodypart,
-                orElse: () => null)
+            .firstWhereOrNull((element) => element.bodyPart == bodypart)
             ?.pains ??
         [];
   }
@@ -133,12 +133,12 @@ class SymptomsInfoProvider extends ChangeNotifier {
   }
 
   void setPainDetails(
-      {String bodypart,
-      String bodyPartPain,
-      String timeForpain,
-      int timeForpainNumber,
-      int painIntensity,
-      String painCondition}) {
+      {String? bodypart,
+      String? bodyPartPain,
+      String? timeForpain,
+      int? timeForpainNumber,
+      int? painIntensity,
+      String? painCondition}) {
     this.bodypart = bodypart;
     this.bodyPartPain = bodyPartPain;
     this.timeForpain = timeForpain;
@@ -147,18 +147,18 @@ class SymptomsInfoProvider extends ChangeNotifier {
     this.painCondition = painCondition;
   }
 
-  void setGeneralSysptomDetails({String bodypart, String bodyPartPain}) {
+  void setGeneralSysptomDetails({String? bodypart, String? bodyPartPain}) {
     this.bodypart = bodypart;
     this.bodyPartPain = bodyPartPain;
   }
 
   void setGeneralPainInfo(
-      {bool firestTimeIssue,
-      bool hospitalizedBefore,
-      String hositalizedTime,
-      int hositalizedTimeNumber,
-      bool diagnosticTest,
-      List<String> diagnosticTests}) {
+      {bool? firestTimeIssue,
+      bool? hospitalizedBefore,
+      String? hositalizedTime,
+      int? hositalizedTimeNumber,
+      bool? diagnosticTest,
+      List<String>? diagnosticTests}) {
     this.firestTimeIssue = firestTimeIssue;
     this.hospitalizedBefore = hospitalizedBefore;
     this.hositalizedTime = hositalizedTime;

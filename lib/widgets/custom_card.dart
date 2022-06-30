@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 class CustomCard extends StatelessWidget {
   final Widget child;
-  final EdgeInsets margin;
-  final BorderSide borderStyle;
+  final EdgeInsets? margin;
+  final BorderSide? borderStyle;
   final double borderRadius;
   final double elevation;
   const CustomCard(
-      {Key key,
-      @required this.child,
+      {Key? key,
+      required this.child,
       this.margin,
       this.borderStyle,
       this.borderRadius = 14,

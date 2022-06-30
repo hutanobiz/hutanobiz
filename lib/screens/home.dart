@@ -30,7 +30,7 @@ import 'package:hutano/widgets/fancy_button.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key key, this.currentIndex = 0}) : super(key: key);
+  HomeScreen({Key? key, this.currentIndex = 0}) : super(key: key);
   int currentIndex;
 
   @override
@@ -39,7 +39,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
-  List<dynamic> linkedAccounts = [];
+  List<dynamic>? linkedAccounts = [];
   dynamic selectedAccount;
   ApiBaseHelper api = ApiBaseHelper();
 
@@ -87,8 +87,8 @@ class _HomeScreenState extends State<HomeScreen> {
   getLinkedAccount() async {
     linkedAccounts = await api.getLinkAccount(
         'Bearer ${getString('primaryUserToken')}');
-    linkedAccounts.insert(0, json.decode(getString('primaryUser')));
-    linkedAccounts.add('Add');
+    linkedAccounts!.insert(0, json.decode(getString('primaryUser')));
+    linkedAccounts!.add('Add');
     selectedAccount = json.decode(getString('selectedAccount'));
     Provider.of<LinkedAccountProvider>(context, listen: false)
         .add(linkedAccounts);
@@ -115,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
           topRight: Radius.circular(14.0),
           topLeft: Radius.circular(14.0),
         ),
-        border: Border.all(width: 0.5, color: Colors.grey[300]),
+        border: Border.all(width: 0.5, color: Colors.grey[300]!),
       ),
       child: FancyBottomNavigation(
         key: bottomNavigationKey,
@@ -143,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               onclick: () {
                 final FancyBottomNavigationState fState =
-                    bottomNavigationKey.currentState;
+                    bottomNavigationKey.currentState as FancyBottomNavigationState;
                 fState.setPage(0);
                 _pageController.jumpToPage(0);
                 setState(() {});
@@ -163,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               onclick: () {
                 final FancyBottomNavigationState fState =
-                    bottomNavigationKey.currentState;
+                    bottomNavigationKey.currentState as FancyBottomNavigationState;
                 fState.setPage(1);
                 _pageController.jumpToPage(1);
                 setState(() {});
@@ -183,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               onclick: () {
                 final FancyBottomNavigationState fState =
-                    bottomNavigationKey.currentState;
+                    bottomNavigationKey.currentState as FancyBottomNavigationState;
                 fState.setPage(2);
                 _pageController.jumpToPage(2);
                 setState(() {});
@@ -203,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               onclick: () {
                 final FancyBottomNavigationState fState =
-                    bottomNavigationKey.currentState;
+                    bottomNavigationKey.currentState as FancyBottomNavigationState;
                 fState.setPage(3);
                 setState(() {});
               },
@@ -222,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               onclick: () {
                 final FancyBottomNavigationState fState =
-                    bottomNavigationKey.currentState;
+                    bottomNavigationKey.currentState as FancyBottomNavigationState;
                 fState.setPage(4);
                 setState(() {});
               },

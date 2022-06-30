@@ -1,13 +1,13 @@
 class ReqAddMember {
-  List<FamilyMembers> familyMembers;
+  List<FamilyMembers>? familyMembers;
 
   ReqAddMember({this.familyMembers});
 
   ReqAddMember.fromJson(Map<String, dynamic> json) {
     if (json['familyMembers'] != null) {
-      familyMembers = new List<FamilyMembers>();
+      familyMembers = <FamilyMembers>[];
       json['familyMembers'].forEach((v) {
-        familyMembers.add(new FamilyMembers.fromJson(v));
+        familyMembers!.add(new FamilyMembers.fromJson(v));
       });
     }
   }
@@ -16,17 +16,17 @@ class ReqAddMember {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.familyMembers != null) {
       data['familyMembers'] =
-          this.familyMembers.map((v) => v.toJson()).toList();
+          this.familyMembers!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class FamilyMembers {
-  String name;
-  String phone;
-  String relationId;
-  String relation;
+  String? name;
+  String? phone;
+  String? relationId;
+  String? relation;
 
   FamilyMembers({this.name, this.phone, this.relationId,this.relation});
 

@@ -1,5 +1,5 @@
 class ReqAddCard {
-  String token ;
+  String? token ;
 
   ReqAddCard({this.token});
 

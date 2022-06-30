@@ -32,7 +32,7 @@ class ListItem extends StatelessWidget {
               child: Container(
                 margin: const EdgeInsets.only(left: 10.0),
                 child: Text(
-                  _item.groupName,
+                  _item.groupName!,
                   style: const TextStyle(
                       color: colorBlack85, fontSize: fontSize14),
                 ),

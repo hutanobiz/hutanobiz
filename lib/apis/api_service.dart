@@ -1,4 +1,4 @@
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -7,9 +7,9 @@ import '../utils/preference_key.dart';
 import '../utils/preference_utils.dart';
 
 class ApiService {
-  Dio _dio;
+  late Dio _dio;
   String tag = "API call :";
-  CancelToken _cancelToken;
+  CancelToken? _cancelToken;
 
   ApiService() {
     _dio = initApiServiceDio();
@@ -53,17 +53,17 @@ class ApiService {
     return mDio;
   }
 
-  void cancelRequests({CancelToken cancelToken}) {
+  void cancelRequests({CancelToken? cancelToken}) {
     cancelToken == null
-        ? _cancelToken.cancel('Cancelled')
+        ? _cancelToken!.cancel('Cancelled')
         : cancelToken.cancel();
   }
 
   Future<Response> get(
     String endUrl, {
-    Map<String, dynamic> params,
-    Options options,
-    CancelToken cancelToken,
+    Map<String, dynamic>? params,
+    Options? options,
+    CancelToken? cancelToken,
   }) async {
     try {
       var isConnected = await checkInternet();
@@ -96,10 +96,10 @@ class ApiService {
 
   Future<Response> post(
     String endUrl, {
-    Map<String, dynamic> data,
-    Map<String, dynamic> params,
-    Options options,
-    CancelToken cancelToken,
+    Map<String, dynamic>? data,
+    Map<String, dynamic>? params,
+    Options? options,
+    CancelToken? cancelToken,
   }) async {
     try {
       var isConnected = await checkInternet();
@@ -123,9 +123,9 @@ class ApiService {
 
   Future<Response> multipartPost(
     String endUrl, {
-    FormData data,
-    CancelToken cancelToken,
-    Options options,
+    FormData? data,
+    CancelToken? cancelToken,
+    Options? options,
   }) async {
     try {
       return await (_dio.post(

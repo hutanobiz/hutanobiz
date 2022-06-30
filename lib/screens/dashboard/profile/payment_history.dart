@@ -7,7 +7,7 @@ import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:intl/intl.dart';
 
 class PaymentHistory extends StatefulWidget {
-  PaymentHistory({Key key}) : super(key: key);
+  PaymentHistory({Key? key}) : super(key: key);
 
   @override
   _PaymentHistoryState createState() => _PaymentHistoryState();
@@ -18,7 +18,7 @@ class _PaymentHistoryState extends State<PaymentHistory> {
 
   bool isLoading = false;
 
-  Future<List<dynamic>> paymentFuture;
+  Future<List<dynamic>>? paymentFuture;
 
   @override
   void initState() {
@@ -55,7 +55,7 @@ class _PaymentHistoryState extends State<PaymentHistory> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data == null ||
-              snapshot.data.isEmpty ||
+              snapshot.data!.isEmpty ||
               snapshot.data is String) {
             return Center(
               child: Text('No payment history.'),
@@ -68,9 +68,9 @@ class _PaymentHistoryState extends State<PaymentHistory> {
                   ),
               physics: ClampingScrollPhysics(),
               shrinkWrap: true,
-              itemCount: snapshot.data.length,
+              itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
-                return paymentHistory(snapshot.data[index]);
+                return paymentHistory(snapshot.data![index]);
               });
         } else if (snapshot.hasError) {
           return Text('No address.');
@@ -89,7 +89,7 @@ class _PaymentHistoryState extends State<PaymentHistory> {
           borderRadius: BorderRadius.all(
             Radius.circular(14.0),
           ),
-          border: Border.all(color: Colors.grey[300]),
+          border: Border.all(color: Colors.grey[300]!),
         ),
         padding: EdgeInsets.all(12),
         child: Column(

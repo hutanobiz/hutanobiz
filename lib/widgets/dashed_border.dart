@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 
 class DashedBorder extends StatelessWidget {
-  DashedBorder({Key key, @required this.onTap, @required this.child})
+  DashedBorder({Key? key, required this.onTap, required this.child})
       : super(key: key);
 
   final Function onTap;
@@ -15,7 +15,7 @@ class DashedBorder extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         splashColor: Colors.grey,
-        onTap: onTap,
+        onTap: onTap as void Function()?,
         child: DottedBorder(
           borderType: BorderType.RRect,
           radius: Radius.circular(8),

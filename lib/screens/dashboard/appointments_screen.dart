@@ -8,7 +8,7 @@ import 'package:hutano/widgets/appointment_list_widget.dart';
 import 'package:hutano/widgets/custom_loader.dart';
 
 class AppointmentsScreen extends StatefulWidget {
-  AppointmentsScreen({Key key}) : super(key: key);
+  AppointmentsScreen({Key? key}) : super(key: key);
 
   @override
   _AppointmentsScreenState createState() => _AppointmentsScreenState();
@@ -17,11 +17,11 @@ class AppointmentsScreen extends StatefulWidget {
 class _AppointmentsScreenState extends State<AppointmentsScreen> {
   ApiBaseHelper _api = ApiBaseHelper();
 
-  List<dynamic> _closedAppointmentsList = List();
-  List<dynamic> ondemandAppointmentsList = List();
-  List<dynamic> _activeAppointmentsList = List();
+  List<dynamic> _closedAppointmentsList = [];
+  List<dynamic>? ondemandAppointmentsList = [];
+  List<dynamic>? _activeAppointmentsList = [];
 
-  Future<dynamic> _requestsFuture;
+  Future<dynamic>? _requestsFuture;
 
   var _userLocation = LatLng(0.00, 0.00);
 
@@ -84,9 +84,9 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
             _closedAppointmentsList
                 .addAll(snapshot.data['onDemandPastRequest']);
 
-            if (_activeAppointmentsList.isEmpty &&
+            if (_activeAppointmentsList!.isEmpty &&
                 _closedAppointmentsList.isEmpty &&
-                ondemandAppointmentsList.isEmpty)
+                ondemandAppointmentsList!.isEmpty)
               return Center(
                 child: Text("No appointments."),
               );
@@ -97,14 +97,14 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       heading("On Demand Appointments",
-                          ondemandAppointmentsList, 0),
-                      ondemandAppointmentsList.isNotEmpty
-                          ? _listWidget(ondemandAppointmentsList, 0)
+                          ondemandAppointmentsList!, 0),
+                      ondemandAppointmentsList!.isNotEmpty
+                          ? _listWidget(ondemandAppointmentsList!, 0)
                           : Container(),
                       heading(
-                          "Active Appointments", _activeAppointmentsList, 1),
-                      _activeAppointmentsList.isNotEmpty
-                          ? _listWidget(_activeAppointmentsList, 1)
+                          "Active Appointments", _activeAppointmentsList!, 1),
+                      _activeAppointmentsList!.isNotEmpty
+                          ? _listWidget(_activeAppointmentsList!, 1)
                           : Container(),
                       heading("Past Appointments", _closedAppointmentsList, 2),
                       _closedAppointmentsList.isNotEmpty
@@ -156,10 +156,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
   }
 
   Widget _requestList(Map response, int listType) {
-    String name = "---",
-        avatar,
-        averageRating = "---",
-        professionalTitle = "---";
+    String name = "---";
+    String? avatar, averageRating = "---", professionalTitle = "---";
 
     if (response["averageRating"] != null) {
       averageRating = '${response["averageRating"]?.toStringAsFixed(1)}' +
@@ -192,9 +190,8 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         }
         if (response["doctorData"]["education"].isNotEmpty) {
           name += ' ' +
-                  response["doctorData"]["education"][0]["degree"]
-                      ?.toString() ??
-              "---";
+              (response["doctorData"]["education"][0]["degree"]?.toString() ??
+                  "---");
         }
       } else {
         if (response["doctorData"][0]["professionalTitle"] != null) {
@@ -205,9 +202,9 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
         }
         if (response["doctorData"][0]["education"].isNotEmpty) {
           name += ' ' +
-                  response["doctorData"][0]["education"][0]["degree"]
+              (response["doctorData"][0]["education"][0]["degree"]
                       ?.toString() ??
-              "---";
+                  "---");
         }
       }
     }

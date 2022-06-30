@@ -1,16 +1,16 @@
 class ResGetCard {
-  String _status;
-  Response _response;
+  String? _status;
+  Response? _response;
 
-  ResGetCard({String status, Response response}) {
+  ResGetCard({String? status, Response? response}) {
     this._status = status;
     this._response = response;
   }
 
-  String get status => _status;
-  set status(String status) => _status = status;
-  Response get response => _response;
-  set response(Response response) => _response = response;
+  String? get status => _status;
+  set status(String? status) => _status = status;
+  Response? get response => _response;
+  set response(Response? response) => _response = response;
 
   ResGetCard.fromJson(Map<String, dynamic> json) {
     _status = json['status'];
@@ -23,40 +23,40 @@ class ResGetCard {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this._status;
     if (this._response != null) {
-      data['response'] = this._response.toJson();
+      data['response'] = this._response!.toJson();
     }
     return data;
   }
 }
 
 class Response {
-  String _object;
-  List<Data> _data;
-  bool _hasMore;
-  String _url;
+  String? _object;
+  List<Data>? _data;
+  bool? _hasMore;
+  String? _url;
 
-  Response({String object, List<Data> data, bool hasMore, String url}) {
+  Response({String? object, List<Data>? data, bool? hasMore, String? url}) {
     this._object = object;
     this._data = data;
     this._hasMore = hasMore;
     this._url = url;
   }
 
-  String get object => _object;
-  set object(String object) => _object = object;
-  List<Data> get data => _data;
-  set data(List<Data> data) => _data = data;
-  bool get hasMore => _hasMore;
-  set hasMore(bool hasMore) => _hasMore = hasMore;
-  String get url => _url;
-  set url(String url) => _url = url;
+  String? get object => _object;
+  set object(String? object) => _object = object;
+  List<Data>? get data => _data;
+  set data(List<Data>? data) => _data = data;
+  bool? get hasMore => _hasMore;
+  set hasMore(bool? hasMore) => _hasMore = hasMore;
+  String? get url => _url;
+  set url(String? url) => _url = url;
 
   Response.fromJson(Map<String, dynamic> json) {
     _object = json['object'];
     if (json['data'] != null) {
-      _data = new List<Data>();
+      _data = <Data>[];
       json['data'].forEach((v) {
-        _data.add(new Data.fromJson(v));
+        _data!.add(new Data.fromJson(v));
       });
     }
     _hasMore = json['has_more'];
@@ -67,7 +67,7 @@ class Response {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['object'] = this._object;
     if (this._data != null) {
-      data['data'] = this._data.map((v) => v.toJson()).toList();
+      data['data'] = this._data!.map((v) => v.toJson()).toList();
     }
     data['has_more'] = this._hasMore;
     data['url'] = this._url;
@@ -76,24 +76,24 @@ class Response {
 }
 
 class Data {
-  String _id;
-  String _object;
-  BillingDetails _billingDetails;
-  Card _card;
-  int _created;
-  String _customer;
-  bool _livemode;
-  String _type;
+  String? _id;
+  String? _object;
+  BillingDetails? _billingDetails;
+  Card? _card;
+  int? _created;
+  String? _customer;
+  bool? _livemode;
+  String? _type;
 
   Data(
-      {String id,
-      String object,
-      BillingDetails billingDetails,
-      Card card,
-      int created,
-      String customer,
-      bool livemode,
-      String type}) {
+      {String? id,
+      String? object,
+      BillingDetails? billingDetails,
+      Card? card,
+      int? created,
+      String? customer,
+      bool? livemode,
+      String? type}) {
     this._id = id;
     this._object = object;
     this._billingDetails = billingDetails;
@@ -104,24 +104,24 @@ class Data {
     this._type = type;
   }
 
-  String get id => _id;
-  set id(String id) => _id = id;
-  String get object => _object;
-  set object(String object) => _object = object;
-  BillingDetails get billingDetails => _billingDetails;
-  set billingDetails(BillingDetails billingDetails) =>
+  String? get id => _id;
+  set id(String? id) => _id = id;
+  String? get object => _object;
+  set object(String? object) => _object = object;
+  BillingDetails? get billingDetails => _billingDetails;
+  set billingDetails(BillingDetails? billingDetails) =>
       _billingDetails = billingDetails;
-  Card get card => _card;
-  set card(Card card) => _card = card;
-  int get created => _created;
-  set created(int created) => _created = created;
-  String get customer => _customer;
-  set customer(String customer) => _customer = customer;
-  bool get livemode => _livemode;
-  set livemode(bool livemode) => _livemode = livemode;
+  Card? get card => _card;
+  set card(Card? card) => _card = card;
+  int? get created => _created;
+  set created(int? created) => _created = created;
+  String? get customer => _customer;
+  set customer(String? customer) => _customer = customer;
+  bool? get livemode => _livemode;
+  set livemode(bool? livemode) => _livemode = livemode;
 
-  String get type => _type;
-  set type(String type) => _type = type;
+  String? get type => _type;
+  set type(String? type) => _type = type;
 
   Data.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
@@ -141,10 +141,10 @@ class Data {
     data['id'] = this._id;
     data['object'] = this._object;
     if (this._billingDetails != null) {
-      data['billing_details'] = this._billingDetails.toJson();
+      data['billing_details'] = this._billingDetails!.toJson();
     }
     if (this._card != null) {
-      data['card'] = this._card.toJson();
+      data['card'] = this._card!.toJson();
     }
     data['created'] = this._created;
     data['customer'] = this._customer;
@@ -155,26 +155,26 @@ class Data {
 }
 
 class BillingDetails {
-  Address _address;
-  String _email;
-  String _name;
-  String _phone;
+  Address? _address;
+  String? _email;
+  String? _name;
+  String? _phone;
 
-  BillingDetails({Address address, String email, String name, String phone}) {
+  BillingDetails({Address? address, String? email, String? name, String? phone}) {
     this._address = address;
     this._email = email;
     this._name = name;
     this._phone = phone;
   }
 
-  Address get address => _address;
-  set address(Address address) => _address = address;
-  String get email => _email;
-  set email(String email) => _email = email;
-  String get name => _name;
-  set name(String name) => _name = name;
-  String get phone => _phone;
-  set phone(String phone) => _phone = phone;
+  Address? get address => _address;
+  set address(Address? address) => _address = address;
+  String? get email => _email;
+  set email(String? email) => _email = email;
+  String? get name => _name;
+  set name(String? name) => _name = name;
+  String? get phone => _phone;
+  set phone(String? phone) => _phone = phone;
 
   BillingDetails.fromJson(Map<String, dynamic> json) {
     _address =
@@ -187,7 +187,7 @@ class BillingDetails {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this._address != null) {
-      data['address'] = this._address.toJson();
+      data['address'] = this._address!.toJson();
     }
     data['email'] = this._email;
     data['name'] = this._name;
@@ -197,20 +197,20 @@ class BillingDetails {
 }
 
 class Address {
-  String _city;
-  String _country;
-  String _line1;
-  String _line2;
-  String _postalCode;
-  String _state;
+  String? _city;
+  String? _country;
+  String? _line1;
+  String? _line2;
+  String? _postalCode;
+  String? _state;
 
   Address(
-      {String city,
-      String country,
-      String line1,
-      String line2,
-      String postalCode,
-      String state}) {
+      {String? city,
+      String? country,
+      String? line1,
+      String? line2,
+      String? postalCode,
+      String? state}) {
     this._city = city;
     this._country = country;
     this._line1 = line1;
@@ -219,18 +219,18 @@ class Address {
     this._state = state;
   }
 
-  String get city => _city;
-  set city(String city) => _city = city;
-  String get country => _country;
-  set country(String country) => _country = country;
-  String get line1 => _line1;
-  set line1(String line1) => _line1 = line1;
-  String get line2 => _line2;
-  set line2(String line2) => _line2 = line2;
-  String get postalCode => _postalCode;
-  set postalCode(String postalCode) => _postalCode = postalCode;
-  String get state => _state;
-  set state(String state) => _state = state;
+  String? get city => _city;
+  set city(String? city) => _city = city;
+  String? get country => _country;
+  set country(String? country) => _country = country;
+  String? get line1 => _line1;
+  set line1(String? line1) => _line1 = line1;
+  String? get line2 => _line2;
+  set line2(String? line2) => _line2 = line2;
+  String? get postalCode => _postalCode;
+  set postalCode(String? postalCode) => _postalCode = postalCode;
+  String? get state => _state;
+  set state(String? state) => _state = state;
 
   Address.fromJson(Map<String, dynamic> json) {
     _city = json['city'];
@@ -254,33 +254,33 @@ class Address {
 }
 
 class Card {
-  String _brand;
-  Checks _checks;
-  String _country;
-  int _expMonth;
-  int _expYear;
-  String _fingerprint;
-  String _funding;
-  String _generatedFrom;
-  String _last4;
-  Networks _networks;
-  ThreeDSecureUsage _threeDSecureUsage;
-  String _wallet;
-  String _name;
+  String? _brand;
+  Checks? _checks;
+  String? _country;
+  int? _expMonth;
+  int? _expYear;
+  String? _fingerprint;
+  String? _funding;
+  String? _generatedFrom;
+  String? _last4;
+  Networks? _networks;
+  ThreeDSecureUsage? _threeDSecureUsage;
+  String? _wallet;
+  String? _name;
 
   Card(
-      {String brand,
-      Checks checks,
-      String country,
-      int expMonth,
-      int expYear,
-      String fingerprint,
-      String funding,
-      String generatedFrom,
-      String last4,
-      Networks networks,
-      ThreeDSecureUsage threeDSecureUsage,
-      String wallet}) {
+      {String? brand,
+      Checks? checks,
+      String? country,
+      int? expMonth,
+      int? expYear,
+      String? fingerprint,
+      String? funding,
+      String? generatedFrom,
+      String? last4,
+      Networks? networks,
+      ThreeDSecureUsage? threeDSecureUsage,
+      String? wallet}) {
     this._brand = brand;
     this._checks = checks;
     this._country = country;
@@ -295,31 +295,31 @@ class Card {
     this._wallet = wallet;
   }
 
-  String get brand => _brand;
-  set brand(String brand) => _brand = brand;
-  Checks get checks => _checks;
-  set checks(Checks checks) => _checks = checks;
-  String get country => _country;
-  set country(String country) => _country = country;
-  int get expMonth => _expMonth;
-  set expMonth(int expMonth) => _expMonth = expMonth;
-  int get expYear => _expYear;
-  set expYear(int expYear) => _expYear = expYear;
-  String get fingerprint => _fingerprint;
-  set fingerprint(String fingerprint) => _fingerprint = fingerprint;
-  String get funding => _funding;
-  set funding(String funding) => _funding = funding;
-  String get generatedFrom => _generatedFrom;
-  set generatedFrom(String generatedFrom) => _generatedFrom = generatedFrom;
-  String get last4 => _last4;
-  set last4(String last4) => _last4 = last4;
-  Networks get networks => _networks;
-  set networks(Networks networks) => _networks = networks;
-  ThreeDSecureUsage get threeDSecureUsage => _threeDSecureUsage;
-  set threeDSecureUsage(ThreeDSecureUsage threeDSecureUsage) =>
+  String? get brand => _brand;
+  set brand(String? brand) => _brand = brand;
+  Checks? get checks => _checks;
+  set checks(Checks? checks) => _checks = checks;
+  String? get country => _country;
+  set country(String? country) => _country = country;
+  int? get expMonth => _expMonth;
+  set expMonth(int? expMonth) => _expMonth = expMonth;
+  int? get expYear => _expYear;
+  set expYear(int? expYear) => _expYear = expYear;
+  String? get fingerprint => _fingerprint;
+  set fingerprint(String? fingerprint) => _fingerprint = fingerprint;
+  String? get funding => _funding;
+  set funding(String? funding) => _funding = funding;
+  String? get generatedFrom => _generatedFrom;
+  set generatedFrom(String? generatedFrom) => _generatedFrom = generatedFrom;
+  String? get last4 => _last4;
+  set last4(String? last4) => _last4 = last4;
+  Networks? get networks => _networks;
+  set networks(Networks? networks) => _networks = networks;
+  ThreeDSecureUsage? get threeDSecureUsage => _threeDSecureUsage;
+  set threeDSecureUsage(ThreeDSecureUsage? threeDSecureUsage) =>
       _threeDSecureUsage = threeDSecureUsage;
-  String get wallet => _wallet;
-  set wallet(String wallet) => _wallet = wallet;
+  String? get wallet => _wallet;
+  set wallet(String? wallet) => _wallet = wallet;
 
   Card.fromJson(Map<String, dynamic> json) {
     _brand = json['brand'];
@@ -345,7 +345,7 @@ class Card {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['brand'] = this._brand;
     if (this._checks != null) {
-      data['checks'] = this._checks.toJson();
+      data['checks'] = this._checks!.toJson();
     }
     data['country'] = this._country;
     data['exp_month'] = this._expMonth;
@@ -355,10 +355,10 @@ class Card {
     data['generated_from'] = this._generatedFrom;
     data['last4'] = this._last4;
     if (this._networks != null) {
-      data['networks'] = this._networks.toJson();
+      data['networks'] = this._networks!.toJson();
     }
     if (this._threeDSecureUsage != null) {
-      data['three_d_secure_usage'] = this._threeDSecureUsage.toJson();
+      data['three_d_secure_usage'] = this._threeDSecureUsage!.toJson();
     }
     data['wallet'] = this._wallet;
     return data;
@@ -366,27 +366,27 @@ class Card {
 }
 
 class Checks {
-  String _addressLine1Check;
-  String _addressPostalCodeCheck;
-  String _cvcCheck;
+  String? _addressLine1Check;
+  String? _addressPostalCodeCheck;
+  String? _cvcCheck;
 
   Checks(
-      {String addressLine1Check,
-      String addressPostalCodeCheck,
-      String cvcCheck}) {
+      {String? addressLine1Check,
+      String? addressPostalCodeCheck,
+      String? cvcCheck}) {
     this._addressLine1Check = addressLine1Check;
     this._addressPostalCodeCheck = addressPostalCodeCheck;
     this._cvcCheck = cvcCheck;
   }
 
-  String get addressLine1Check => _addressLine1Check;
-  set addressLine1Check(String addressLine1Check) =>
+  String? get addressLine1Check => _addressLine1Check;
+  set addressLine1Check(String? addressLine1Check) =>
       _addressLine1Check = addressLine1Check;
-  String get addressPostalCodeCheck => _addressPostalCodeCheck;
-  set addressPostalCodeCheck(String addressPostalCodeCheck) =>
+  String? get addressPostalCodeCheck => _addressPostalCodeCheck;
+  set addressPostalCodeCheck(String? addressPostalCodeCheck) =>
       _addressPostalCodeCheck = addressPostalCodeCheck;
-  String get cvcCheck => _cvcCheck;
-  set cvcCheck(String cvcCheck) => _cvcCheck = cvcCheck;
+  String? get cvcCheck => _cvcCheck;
+  set cvcCheck(String? cvcCheck) => _cvcCheck = cvcCheck;
 
   Checks.fromJson(Map<String, dynamic> json) {
     _addressLine1Check = json['address_line1_check'];
@@ -404,18 +404,18 @@ class Checks {
 }
 
 class Networks {
-  List<String> _available;
-  String _preferred;
+  List<String>? _available;
+  String? _preferred;
 
-  Networks({List<String> available, String preferred}) {
+  Networks({List<String>? available, String? preferred}) {
     this._available = available;
     this._preferred = preferred;
   }
 
-  List<String> get available => _available;
-  set available(List<String> available) => _available = available;
-  String get preferred => _preferred;
-  set preferred(String preferred) => _preferred = preferred;
+  List<String>? get available => _available;
+  set available(List<String>? available) => _available = available;
+  String? get preferred => _preferred;
+  set preferred(String? preferred) => _preferred = preferred;
 
   Networks.fromJson(Map<String, dynamic> json) {
     _available = json['available'].cast<String>();
@@ -431,14 +431,14 @@ class Networks {
 }
 
 class ThreeDSecureUsage {
-  bool _supported;
+  bool? _supported;
 
-  ThreeDSecureUsage({bool supported}) {
+  ThreeDSecureUsage({bool? supported}) {
     this._supported = supported;
   }
 
-  bool get supported => _supported;
-  set supported(bool supported) => _supported = supported;
+  bool? get supported => _supported;
+  set supported(bool? supported) => _supported = supported;
 
   ThreeDSecureUsage.fromJson(Map<String, dynamic> json) {
     _supported = json['supported'];

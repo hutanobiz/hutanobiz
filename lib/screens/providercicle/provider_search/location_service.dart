@@ -10,9 +10,9 @@ class LocationService {
   LocationService._internal();
   Location location = Location();
 
-  bool _serviceEnabled;
-  PermissionStatus _permissionGranted;
-  LocationData _locationData;
+  late bool _serviceEnabled;
+  PermissionStatus? _permissionGranted;
+  LocationData? _locationData;
 
   Future checkLocation() async {
     _serviceEnabled = await location.serviceEnabled();
@@ -40,7 +40,7 @@ class LocationService {
     }
   }
 
-  LocationData getLocationData() {
+  LocationData? getLocationData() {
     return _locationData;
   }
 }

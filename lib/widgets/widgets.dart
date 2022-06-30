@@ -11,8 +11,8 @@ import 'package:hutano/utils/extensions.dart';
 class Widgets {
   static void showSnackBar(
       GlobalKey<ScaffoldState> _scaffoldKey, Widget value, int duration) {
-    _scaffoldKey.currentState.hideCurrentSnackBar();
-    _scaffoldKey.currentState.showSnackBar(
+    _scaffoldKey.currentState!.hideCurrentSnackBar();
+    _scaffoldKey.currentState!.showSnackBar(
         SnackBar(duration: new Duration(seconds: duration), content: value));
   }
 
@@ -27,21 +27,21 @@ class Widgets {
   }
 
   static void showErrorialog({
-    @required BuildContext context,
-    String title,
-    @required String description,
-    String buttonText,
-    Function onPressed,
+    required BuildContext context,
+    String? title,
+    required String? description,
+    String? buttonText,
+    Function? onPressed,
   }) {
     showDialog(
       context: context,
       builder: (context) => Platform.isIOS
           ? CupertinoAlertDialog(
               title: Text(title ?? "Alert"),
-              content: Text(description),
+              content: Text(description!),
               actions: <Widget>[
                 CupertinoDialogAction(
-                  onPressed: onPressed ??
+                  onPressed: onPressed as void Function()? ??
                       () {
                         Navigator.of(context).pop();
                       },
@@ -57,10 +57,10 @@ class Widgets {
             )
           : AlertDialog(
               title: Text(title ?? "Error"),
-              content: Text(description),
+              content: Text(description!),
               actions: <Widget>[
                 FlatButton(
-                  onPressed: onPressed ??
+                  onPressed: onPressed as void Function()? ??
                       () {
                         Navigator.of(context).pop();
                       },
@@ -77,11 +77,11 @@ class Widgets {
   }
 
   static void showAppDialog(
-      {@required BuildContext context,
-      String title,
-      @required String description,
-      String buttonText,
-      Function onPressed,
+      {required BuildContext context,
+      String? title,
+      required String? description,
+      String? buttonText,
+      Function? onPressed,
       bool isError = false,
       bool isCongrats = false}) {
     showDialog(
@@ -159,7 +159,7 @@ class Widgets {
                       style:
                           TextStyle(fontFamily: 'Poppins', color: Colors.white),
                     ),
-                    onPressed: onPressed ??
+                    onPressed: onPressed as void Function()? ??
                         () {
                           Navigator.pop(context);
                         },
@@ -176,11 +176,11 @@ class Widgets {
   }
 
   static void showErrorDialog({
-    @required BuildContext context,
-    String title,
-    @required String description,
-    String buttonText,
-    Function onPressed,
+    required BuildContext context,
+    String? title,
+    required String description,
+    String? buttonText,
+    Function? onPressed,
   }) {
     customDialog(context, title, description, buttonText, onPressed: onPressed);
     return;
@@ -192,7 +192,7 @@ class Widgets {
               content: Text(description),
               actions: <Widget>[
                 CupertinoDialogAction(
-                  onPressed: onPressed ??
+                  onPressed: onPressed as void Function()? ??
                       () {
                         Navigator.of(context).pop();
                       },
@@ -211,7 +211,7 @@ class Widgets {
               content: Text(description),
               actions: <Widget>[
                 FlatButton(
-                  onPressed: onPressed ??
+                  onPressed: onPressed as void Function()? ??
                       () {
                         Navigator.of(context).pop();
                       },
@@ -228,13 +228,13 @@ class Widgets {
   }
 
   static void showConfirmationDialog({
-    @required BuildContext context,
-    String title,
-    @required String description,
-    String leftText,
-    Function onLeftPressed,
-    String rightText,
-    Function onRightPressed,
+    required BuildContext? context,
+    String? title,
+    required String description,
+    String? leftText,
+    Function? onLeftPressed,
+    String? rightText,
+    Function? onRightPressed,
   }) {
     customDialog(context, title ?? "Are You Sure", description, "",
         leftText: leftText,
@@ -244,14 +244,14 @@ class Widgets {
         isConfirmationDialog: true);
     return;
     showDialog(
-      context: context,
+      context: context!,
       builder: (context) => Platform.isIOS
           ? CupertinoAlertDialog(
               title: Text(title ?? ""),
               content: Text(description),
               actions: <Widget>[
                 CupertinoDialogAction(
-                  onPressed: onLeftPressed ??
+                  onPressed: onLeftPressed as void Function()? ??
                       () {
                         Navigator.of(context).pop();
                       },
@@ -264,7 +264,7 @@ class Widgets {
                   ),
                 ),
                 CupertinoDialogAction(
-                  onPressed: onRightPressed ??
+                  onPressed: onRightPressed as void Function()? ??
                       () {
                         Navigator.of(context).pop();
                       },
@@ -283,7 +283,7 @@ class Widgets {
               content: Text(description),
               actions: <Widget>[
                 FlatButton(
-                  onPressed: onLeftPressed ??
+                  onPressed: onLeftPressed as void Function()? ??
                       () {
                         Navigator.of(context).pop();
                       },
@@ -295,7 +295,7 @@ class Widgets {
                   ),
                 ),
                 FlatButton(
-                  onPressed: onRightPressed ??
+                  onPressed: onRightPressed as void Function()? ??
                       () {
                         Navigator.of(context).pop();
                       },
@@ -354,17 +354,17 @@ class Widgets {
     );
   }
 
-  static SizedBox sizedBox({@required double height}) {
+  static SizedBox sizedBox({required double height}) {
     return SizedBox(height: height);
   }
 
   static customDialog(
-      BuildContext context, String title, String description, String buttonText,
-      {Function onPressed,
-      String leftText,
-      Function onLeftPressed,
-      String rightText,
-      Function onRightPressed,
+      BuildContext? context, String? title, String description, String? buttonText,
+      {Function? onPressed,
+      String? leftText,
+      Function? onLeftPressed,
+      String? rightText,
+      Function? onRightPressed,
       bool isConfirmationDialog = false}) {
     var yyDialog = YYDialog();
     yyDialog.build(context)
@@ -413,7 +413,7 @@ class Widgets {
                                   side: BorderSide(color: AppColors.windsor)),
                               onPressed: () {
                                 yyDialog.dismiss();
-                                onLeftPressed();
+                                onLeftPressed!();
                               },
                               child: Padding(
                                 padding: EdgeInsets.all(10),
@@ -427,9 +427,9 @@ class Widgets {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   side: BorderSide(color: AppColors.windsor)),
-                              onPressed: onRightPressed ??
+                              onPressed: onRightPressed as void Function()? ??
                                   () {
-                                    Navigator.of(context).pop();
+                                    Navigator.of(context!).pop();
                                   },
                               child: Padding(
                                 padding: EdgeInsets.all(10),
@@ -446,10 +446,10 @@ class Widgets {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
                             side: BorderSide(color: AppColors.windsor)),
-                        onPressed: onPressed ??
+                        onPressed: onPressed as void Function()? ??
                             () {
                               yyDialog.dismiss();
-                              onPressed();
+                              onPressed!();
                             },
                         child: Padding(
                           padding: EdgeInsets.all(10),
@@ -467,10 +467,10 @@ class Widgets {
   }
 
   static void showCallDialog(
-      {@required BuildContext context,
-      @required Function onEnterCall,
+      {required BuildContext context,
+      required Function onEnterCall,
       onCancelCall,
-      @required bool isRejoin}) {
+      required bool isRejoin}) {
     showDialog(
         context: context,
         builder: (context) {

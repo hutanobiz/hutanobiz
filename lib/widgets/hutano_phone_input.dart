@@ -8,16 +8,16 @@ import 'package:hutano/utils/validations.dart';
 import 'package:hutano/widgets/hutano_textfield.dart';
 
 class HutanoPhoneInput extends StatelessWidget {
-  final TextEditingController controller;
-  final FocusNode focusNode;
-  final Function validationMethod;
-  final Function onValueChanged;
-  final ValueSetter<CountryCode> onCountryChanged;
-  final Function onFieldSubmitied;
-  final String intialSelection;
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final Function? validationMethod;
+  final Function? onValueChanged;
+  final ValueSetter<CountryCode>? onCountryChanged;
+  final Function? onFieldSubmitied;
+  final String? intialSelection;
 
   const HutanoPhoneInput(
-      {Key key,
+      {Key? key,
       this.controller,
       this.focusNode,
       this.validationMethod,

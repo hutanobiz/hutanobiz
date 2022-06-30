@@ -1,6 +1,6 @@
 class ResRemoveProvider {
-  String status;
-  String response;
+  String? status;
+  String? response;
 
   ResRemoveProvider({this.status, this.response});
 

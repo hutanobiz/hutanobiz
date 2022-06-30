@@ -30,7 +30,7 @@ import '../../../widgets/hutano_phone_input.dart';
 
 class LinkAccount extends StatefulWidget {
   dynamic userData;
-  LinkAccount({Key key, this.userData}) : super(key: key);
+  LinkAccount({Key? key, this.userData}) : super(key: key);
 
   @override
   _LinkAccountState createState() => _LinkAccountState();
@@ -39,8 +39,8 @@ class LinkAccount extends StatefulWidget {
 class _LinkAccountState extends State<LinkAccount> {
   final GlobalKey<FormState> _key = GlobalKey();
 
-  List<Relations> _relationList = [];
-  Relations _selectedRelation;
+  List<Relations>? _relationList = [];
+  Relations? _selectedRelation;
   @override
   void initState() {
     super.initState();
@@ -57,7 +57,7 @@ class _LinkAccountState extends State<LinkAccount> {
       });
     } on ErrorModel catch (e) {
       // ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       // ProgressDialogUtils.dismissProgressDialog();
     }
@@ -65,10 +65,10 @@ class _LinkAccountState extends State<LinkAccount> {
 
   _onSubmitClick() async {
     ProgressDialogUtils.showProgressDialog(context);
-    widget.userData['relation'] = _selectedRelation.relation;
+    widget.userData['relation'] = _selectedRelation!.relation;
     var request = {
       'phoneNumber': widget.userData['phoneNumber'].toString(),
-      'relation': _selectedRelation.relation
+      'relation': _selectedRelation!.relation
     };
     try {
       var res = await ApiManager().sendLinkAccountCode(request);
@@ -81,7 +81,7 @@ class _LinkAccountState extends State<LinkAccount> {
       }
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -119,7 +119,7 @@ class _LinkAccountState extends State<LinkAccount> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(14.0),
                         border: Border.all(
-                          color: Colors.grey[100],
+                          color: Colors.grey[100]!,
                         ),
                       ),
                       child: Row(
@@ -146,7 +146,7 @@ class _LinkAccountState extends State<LinkAccount> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(14.0),
                           border: Border.all(
-                            color: Colors.grey[100],
+                            color: Colors.grey[100]!,
                           ),
                         ),
                         child: Row(
@@ -154,7 +154,7 @@ class _LinkAccountState extends State<LinkAccount> {
                             Expanded(
                               child: Text(_selectedRelation == null
                                   ? 'Select Relation'
-                                  : _selectedRelation.relation),
+                                  : _selectedRelation!.relation!),
                             ),
                             Icon(Icons.keyboard_arrow_down_outlined)
                           ],
@@ -171,20 +171,20 @@ class _LinkAccountState extends State<LinkAccount> {
                               Expanded(
                                 child: ListView.builder(
                                   shrinkWrap: true,
-                                  itemCount: _relationList.length,
+                                  itemCount: _relationList!.length,
                                   itemBuilder: (context, pos) {
                                     return InkWell(
                                         onTap: () {
                                           setState(() {
                                             _selectedRelation =
-                                                _relationList[pos];
+                                                _relationList![pos];
                                           });
                                           Navigator.pop(context);
                                         },
                                         child: ListTile(
                                           title: Center(
                                             child: Text(
-                                                _relationList[pos].relation),
+                                                _relationList![pos].relation!),
                                           ),
                                         ));
                                   },
@@ -209,7 +209,7 @@ class _LinkAccountState extends State<LinkAccount> {
     return HutanoButton(
       margin: spacing20,
       onPressed: _selectedRelation != null ? _onSubmitClick : null,
-      label: Localization.of(context).next,
+      label: Localization.of(context)!.next,
     );
   }
 }

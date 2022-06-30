@@ -1,13 +1,13 @@
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/app_config.dart';
 
 class GoogleService {
-  Dio _dio;
+  late Dio _dio;
   String tag = "Google API :";
-  CancelToken _cancelToken;
+  CancelToken? _cancelToken;
 
   GoogleService() {
     _dio = initApiServiceDio();
@@ -49,24 +49,24 @@ class GoogleService {
     return mDio;
   }
 
-  void cancelRequests({CancelToken cancelToken}) {
+  void cancelRequests({CancelToken? cancelToken}) {
     cancelToken == null
-        ? _cancelToken.cancel('Cancelled')
+        ? _cancelToken!.cancel('Cancelled')
         : cancelToken.cancel();
   }
 
   Future<Response> get(
     String endUrl, {
-    Map<String, dynamic> params,
-    Options options,
-    CancelToken cancelToken,
+    Map<String, dynamic>? params,
+    Options? options,
+    CancelToken? cancelToken,
   }) async {
     try {
       var isConnected = await checkInternet();
       if (!isConnected) {
         return Future.error("Internet not connected");
       }
-      params['key'] = googleApiKey;
+      params!['key'] = googleApiKey;
       return await (_dio.get(
         endUrl,
         queryParameters: params,

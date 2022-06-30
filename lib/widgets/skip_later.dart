@@ -4,9 +4,9 @@ import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/constants/file_constants.dart';
 
 class SkipLater extends StatelessWidget {
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
-  const SkipLater({Key key, this.onTap}) : super(key: key);
+  const SkipLater({Key? key, this.onTap}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

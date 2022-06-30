@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class FancyBottomNavigation extends StatefulWidget {
   FancyBottomNavigation(
-      {@required this.tabs,
+      {required this.tabs,
       this.onTabChangedListener,
       this.key,
       this.initialSelection = 0,
@@ -31,29 +31,29 @@ class FancyBottomNavigation extends StatefulWidget {
         assert(tabs != null),
         assert(tabs.length > 1 && tabs.length <= 5);
 
-  final Function(int position) onTabChangedListener;
-  final Color circleColor;
-  final Color activeIconColor;
-  final Color inactiveIconColor;
+  final Function(int position)? onTabChangedListener;
+  final Color? circleColor;
+  final Color? activeIconColor;
+  final Color? inactiveIconColor;
   final TextStyle titleStyle;
-  final Gradient gradient;
-  final Color barBackgroundColor;
-  final Color shadowColor;
+  final Gradient? gradient;
+  final Color? barBackgroundColor;
+  final Color? shadowColor;
   final double shadowBlur;
   List<TabData> tabs;
   final int initialSelection;
   final int animDuration;
-  final PageController pageController;
+  final PageController? pageController;
   final double circleHeight;
   final double circleOutline;
   final double arcHeight;
   final double arcWidth;
   final double shadowAllowance;
   final double barHeight;
-  final double inactiveIconSize;
-  final double activeIconSize;
+  final double? inactiveIconSize;
+  final double? activeIconSize;
 
-  final Key key;
+  final Key? key;
 
   @override
   FancyBottomNavigationState createState() => FancyBottomNavigationState();
@@ -61,26 +61,26 @@ class FancyBottomNavigation extends StatefulWidget {
 
 class FancyBottomNavigationState extends State<FancyBottomNavigation>
     with TickerProviderStateMixin, RouteAware {
-  IconData nextIcon = Icons.search;
-  IconData activeIcon = Icons.search;
-  Widget activeIconWidget;
-  Widget nextIconWidget;
+  IconData? nextIcon = Icons.search;
+  IconData? activeIcon = Icons.search;
+  Widget? activeIconWidget;
+  Widget? nextIconWidget;
 
   int currentSelected = 0;
   double _circleAlignX = 0;
   double _circleIconAlpha = 1;
 
-  Color circleColor;
-  Color activeIconColor;
-  Color inactiveIconColor;
-  Color barBackgroundColor;
-  Gradient gradient;
-  double activeIconSize;
-  double inactiveIconSize;
-  Color shadowColor;
-  Function() _pageControllerListener;
+  Color? circleColor;
+  Color? activeIconColor;
+  Color? inactiveIconColor;
+  Color? barBackgroundColor;
+  Gradient? gradient;
+  double? activeIconSize;
+  double? inactiveIconSize;
+  Color? shadowColor;
+  late Function() _pageControllerListener;
 
-  TextStyle themedTextStyle;
+  TextStyle? themedTextStyle;
 
   @override
   void didChangeDependencies() {
@@ -105,7 +105,7 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
             : Colors.white
         : widget.barBackgroundColor;
 
-    Color textColor = (widget.titleStyle.color == null)
+    Color? textColor = (widget.titleStyle.color == null)
         ? (Theme.of(context).brightness == Brightness.dark)
             ? Colors.white
             : Colors.black54
@@ -139,8 +139,8 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
     // add listener for page swipes
     if (this.widget.pageController != null) {
       _pageControllerListener =
-          () => this.setPageOffset(this.widget.pageController.page);
-      this.widget.pageController.addListener(_pageControllerListener);
+          () => this.setPageOffset(this.widget.pageController!.page!);
+      this.widget.pageController!.addListener(_pageControllerListener);
     }
   }
 
@@ -167,7 +167,7 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
           height: widget.barHeight,
           decoration: BoxDecoration(color: barBackgroundColor, boxShadow: [
             BoxShadow(
-                color: shadowColor,
+                color: shadowColor!,
                 offset: Offset(0, -1),
                 blurRadius: widget.shadowBlur)
           ]),
@@ -212,7 +212,7 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
                 child: FractionallySizedBox(
                   widthFactor: 1 / widget.tabs.length,
                   child: GestureDetector(
-                    onTap: widget.tabs[currentSelected].onclick,
+                    onTap: widget.tabs[currentSelected].onclick as void Function()?,
                     child: Stack(
                       alignment: Alignment.center,
                       children: <Widget>[
@@ -237,7 +237,7 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
                                           shape: BoxShape.circle,
                                           boxShadow: [
                                             BoxShadow(
-                                                color: shadowColor,
+                                                color: shadowColor!,
                                                 blurRadius: 8)
                                           ])),
                                 ),
@@ -247,7 +247,7 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
                             height: widget.arcHeight,
                             width: widget.arcWidth,
                             child: CustomPaint(
-                              painter: HalfPainter(barBackgroundColor),
+                              painter: HalfPainter(barBackgroundColor!),
                             )),
                         SizedBox(
                           height: widget.circleHeight - 5,
@@ -312,22 +312,22 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
     //_setSelected(widget.tabs[page].key);
     //_initAnimationAndStart(_circleAlignX, 1);
     if (widget.pageController != null) {
-      widget.pageController.removeListener(_pageControllerListener);
-      var f = widget.pageController.animateToPage(page,
+      widget.pageController!.removeListener(_pageControllerListener);
+      var f = widget.pageController!.animateToPage(page,
           duration: Duration(milliseconds: kAnimDuration),
           curve: Curves.easeOut);
 
       f.then((v) {
         // be sure that listener is added only one time
         // ignore: INVALID_USE_OF_PROTECTED_MEMBER
-        if (!widget.pageController.hasListeners) {
-          widget.pageController.addListener(_pageControllerListener);
+        if (!widget.pageController!.hasListeners) {
+          widget.pageController!.addListener(_pageControllerListener);
         }
       });
       _setSelected(widget.tabs[page].key);
       _initAnimationAndStart(0);
     } else {
-      widget.onTabChangedListener(page);
+      widget.onTabChangedListener!(page);
       _setSelected(widget.tabs[page].key);
       _initAnimationAndStart(0);
       setState(() => currentSelected = page);
@@ -345,12 +345,12 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
 }
 
 class TabData {
-  TabData({this.iconData, this.icon, @required this.title, this.onclick})
+  TabData({this.iconData, this.icon, required this.title, this.onclick})
       : assert(iconData != null || icon != null);
 
-  IconData iconData;
-  Widget icon;
+  IconData? iconData;
+  Widget? icon;
   String title;
-  Function onclick;
+  Function? onclick;
   final UniqueKey key = UniqueKey();
 }

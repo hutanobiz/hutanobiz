@@ -1,10 +1,10 @@
 class BoneMuscleDateModel {
-  List<BodyPartWithSide> listOfBodyParts;
-  String selectedSymptom;
-  String rating;
-  String timeEffect;
-  LongTimeWithProblem longTimeWithProblem;
-  String problemTime;
+  List<BodyPartWithSide>? listOfBodyParts;
+  String? selectedSymptom;
+  String? rating;
+  String? timeEffect;
+  LongTimeWithProblem? longTimeWithProblem;
+  String? problemTime;
 }
 
 class BodyPartWithSide {

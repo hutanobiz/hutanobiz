@@ -16,7 +16,7 @@ class PinSetupSuccess extends StatelessWidget {
         buttonType: HutanoButtonType.onlyLabel,
         color: colorYellow,
         iconSize: 20,
-        label: Localization.of(context).continueLabel,
+        label: Localization.of(context)!.continueLabel,
         onPressed: () {
           _nextClick(context);
         },
@@ -36,8 +36,8 @@ class PinSetupSuccess extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               AppHeader(
-                title: Localization.of(context).newPinCreation,
-                subTitle: Localization.of(context).taskComplete,
+                title: Localization.of(context)!.newPinCreation,
+                subTitle: Localization.of(context)!.taskComplete,
               ),
               Spacer(),
               RoundSuccess(),

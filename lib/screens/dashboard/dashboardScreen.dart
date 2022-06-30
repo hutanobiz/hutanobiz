@@ -43,7 +43,7 @@ import 'package:http/http.dart' as http;
 import 'package:google_maps_webservice/places.dart';
 
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({Key key}) : super(key: key);
+  const DashboardScreen({Key? key}) : super(key: key);
 
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
@@ -54,7 +54,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   ApiBaseHelper _api = new ApiBaseHelper();
   bool isEmailVerified = false;
 
-  String _currentddress;
+  String? _currentddress;
 
   EdgeInsetsGeometry _edgeInsetsGeometry =
       const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0);
@@ -63,7 +63,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   bool _isLocLoading = false;
 
-  InheritedContainerState conatiner;
+  late InheritedContainerState conatiner;
   List _topSpecialtiesList = [];
 
   bool _isLoading = false;
@@ -74,14 +74,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
   ];
   int unreadCount = 0;
 
-  var _miles = "1000";
-  int hutanoCash = 0;
-  String token;
+  String? _miles = "1000";
+  int? hutanoCash = 0;
+  String? token;
 
-  Future<List<dynamic>> _myDoctorsFuture;
-  Future<List<dynamic>> _specialtiesFuture;
-  Future<List<dynamic>> _professionalTitleFuture;
-  Future<List<dynamic>> _ondemandDoctorsFuture;
+  Future<List<dynamic>>? _myDoctorsFuture;
+  Future<List<dynamic>>? _specialtiesFuture;
+  Future<List<dynamic>>? _professionalTitleFuture;
+  Future<List<dynamic>>? _ondemandDoctorsFuture;
 
   bool _showProviderWithInsurance = false;
 
@@ -142,8 +142,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       unreadCount = value['count'];
       _api.checkCardInsuranceAdded(context).then((value) {
         if ((value['response']['InsuranceAdded'] ?? true) ||
-                value['response']['CardAdded'] ??
-            true) {
+                (value['response']['CardAdded'] ??
+            true)) {
         } else {
           unreadCount++;
         }
@@ -270,10 +270,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     try {
       var res = await ApiManager().inviteMember();
       ProgressDialogUtils.dismissProgressDialog();
-      Share.share(res.response.url);
+      Share.share(res.response!.url!);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -289,7 +289,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }).catchError((dynamic e) {
       if (e is ErrorModel) {
         if (e.response != null) {
-          DialogUtils.showAlertDialog(context, e.response);
+          DialogUtils.showAlertDialog(context, e.response!);
         }
       }
     });
@@ -540,9 +540,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 },
                 child: Row(
                   children: <Widget>[
-                    _currentddress != null && _currentddress.length > 45
+                    _currentddress != null && _currentddress!.length > 45
                         ? Text(
-                            _currentddress,
+                            _currentddress!,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -561,7 +561,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                    _currentddress != null && _currentddress.length > 45
+                    _currentddress != null && _currentddress!.length > 45
                         ? Container()
                         : SizedBox(width: 5),
                     Text(
@@ -656,7 +656,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             width: 143,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: Colors.grey[100]),
+              border: Border.all(color: Colors.grey[100]!),
             ),
             child: ListTile(
               contentPadding: EdgeInsets.zero,
@@ -711,7 +711,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         future: _ondemandDoctorsFuture,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List _onDemandDoctorsList = snapshot.data;
+            List? _onDemandDoctorsList = snapshot.data;
 
             if (_onDemandDoctorsList == null || _onDemandDoctorsList.isEmpty) {
               return SizedBox(
@@ -754,7 +754,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         //     _onDemandDoctorsList[index]['subServices'];
                         dynamic doctorData = doctor['doctor'];
 
-                        String avatar = doctorData['avatar']?.toString();
+                        String? avatar = doctorData['avatar']?.toString();
 
                         Map _appointentTypeMap = {};
 
@@ -777,7 +777,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           width: 160,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(14),
-                            border: Border.all(color: Colors.grey[100]),
+                            border: Border.all(color: Colors.grey[100]!),
                           ),
                           child: GestureDetector(
                             child: Column(
@@ -815,7 +815,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       (doctorData['fullName']?.toString() ??
                                           '---') +
                                       Extensions.getSortProfessionTitle(
-                                          professionalTitle),
+                                          professionalTitle)!,
                                   maxLines: 1,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
@@ -825,7 +825,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                 ),
                                 Text(
-                                  professionalTitle ?? '---',
+                                  professionalTitle ,
                                   maxLines: 1,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
@@ -955,7 +955,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         future: _myDoctorsFuture,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List _myDoctorsList = snapshot.data;
+            List? _myDoctorsList = snapshot.data;
 
             if (_myDoctorsList == null || _myDoctorsList.isEmpty) {
               return SizedBox();
@@ -995,7 +995,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             _myDoctorsList[index]['subServices'];
                         dynamic doctorData = doctor['userId'];
 
-                        String avatar = doctorData['avatar']?.toString();
+                        String? avatar = doctorData['avatar']?.toString();
 
                         Map _appointentTypeMap = {};
 
@@ -1018,7 +1018,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           width: 160,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(14),
-                            border: Border.all(color: Colors.grey[100]),
+                            border: Border.all(color: Colors.grey[100]!),
                           ),
                           child: GestureDetector(
                             child: Column(
@@ -1056,7 +1056,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       (doctorData['fullName']?.toString() ??
                                           '---') +
                                       Extensions.getSortProfessionTitle(
-                                          professionalTitle),
+                                          professionalTitle)!,
                                   maxLines: 1,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
@@ -1066,7 +1066,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                 ),
                                 Text(
-                                  professionalTitle ?? '---',
+                                  professionalTitle ,
                                   maxLines: 1,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
@@ -1182,7 +1182,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       future: _professionalTitleFuture,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          List _professionalTitleList = snapshot.data;
+          List? _professionalTitleList = snapshot.data;
 
           if (_professionalTitleList == null ||
               _professionalTitleList.isEmpty) {
@@ -1229,13 +1229,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(14),
                             child: Image(
-                              image: professionalTitle['image'] == null ||
+                              image: (professionalTitle['image'] == null ||
                                       professionalTitle['image'] == 'undefined'
                                   ? AssetImage('images/dummy_title_image.png')
                                   : NetworkImage(
                                       ApiBaseHelper.imageUrl +
                                           professionalTitle['image'],
-                                    ),
+                                    )) as ImageProvider<Object>,
                               width: 132,
                               height: 94,
                               fit: BoxFit.contain,
@@ -1294,8 +1294,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         _topSpecialtiesList.clear();
 
         if (snapshot.hasData) {
-          if (snapshot.data != null && snapshot.data.length > 0) {
-            for (dynamic specialty in snapshot.data) {
+          if (snapshot.data != null && snapshot.data!.length > 0) {
+            for (dynamic specialty in snapshot.data!) {
               //TODO : TEMP COMMENT FOR FEATURED
               _topSpecialtiesList.add(specialty);
 
@@ -1356,7 +1356,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           left: 10, right: 0, top: 2, bottom: 2),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: Colors.grey[100]),
+                        border: Border.all(color: Colors.grey[100]!),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1370,12 +1370,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10)),
                               child: Image(
-                                image: specialty['image'] == null
+                                image: (specialty['image'] == null
                                     ? AssetImage('images/dummy_title_image.png')
                                     : NetworkImage(
                                         ApiBaseHelper.imageUrl +
                                             specialty['image'],
-                                      ),
+                                      )) as ImageProvider<Object>,
                                 width: 35,
                                 height: 35,
                                 fit: BoxFit.cover,
@@ -1435,7 +1435,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       arguments: _latLng,
     );
 
-    LatLng latLng = result;
+    LatLng? latLng = result as LatLng?;
 
     if (latLng != null) {
       _locationLoading(true);
@@ -1478,7 +1478,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
             log(e.code);
 
-            _location = null;
+            // _location = null;
           }
         } else {
           bool serviceStatusResult = await _location.requestService();
@@ -1511,7 +1511,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     try {
       // final coordinates = new Coordinates(latitude, longitude);
       var addresses = await Geo.placemarkFromCoordinates(latitude, longitude);
-      var first = addresses.first.locality + ' ' + addresses.first.country;
+      String? first = addresses.first.locality! + ' ' + addresses.first.country!;
       if (addresses[0].locality != null) {
         first = addresses[0].locality;
       } else {
@@ -1537,7 +1537,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       }
     } on PlatformException catch (e) {
       _locationLoading(false);
-      print(e.message.toString() ?? e.toString());
+      print(e.message.toString());
     }
   }
 

@@ -8,7 +8,7 @@ import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 
 class AllTitlesSpecialtesScreen extends StatefulWidget {
-  AllTitlesSpecialtesScreen({Key key}) : super(key: key);
+  AllTitlesSpecialtesScreen({Key? key}) : super(key: key);
 
   @override
   _AllTitlesSpecialtesScreenState createState() =>
@@ -19,9 +19,9 @@ class _AllTitlesSpecialtesScreenState extends State<AllTitlesSpecialtesScreen> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ApiBaseHelper api = new ApiBaseHelper();
 
-  Future<List<dynamic>> _titleSpecialtyFuture;
+  Future<List<dynamic>>? _titleSpecialtyFuture;
 
-  InheritedContainerState conatiner;
+  late InheritedContainerState conatiner;
 
   @override
   void initState() {
@@ -53,7 +53,7 @@ class _AllTitlesSpecialtesScreenState extends State<AllTitlesSpecialtesScreen> {
       future: _titleSpecialtyFuture,
       builder: (_, snapshot) {
         if (snapshot.hasData) {
-          List<dynamic> data = snapshot.data;
+          List<dynamic>? data = snapshot.data;
 
           if (data == null || data.length == 0) return Container();
 
@@ -128,7 +128,7 @@ class _AllTitlesSpecialtesScreenState extends State<AllTitlesSpecialtesScreen> {
                               Radius.circular(14.0),
                             ),
                             border:
-                                Border.all(color: Colors.grey[300], width: 0.5),
+                                Border.all(color: Colors.grey[300]!, width: 0.5),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,

@@ -1,7 +1,7 @@
 class ResInvite {
-  String status;
-  String response;
-  String message;
+  String? status;
+  String? response;
+  String? message;
 
   ResInvite({this.status, this.response, this.message});
 

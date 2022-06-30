@@ -1,6 +1,6 @@
 class ErrorModel {
-  String status;
-  String response;
+  String? status;
+  String? response;
 
   ErrorModel({this.status, this.response});
 

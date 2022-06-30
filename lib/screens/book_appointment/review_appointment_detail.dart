@@ -45,13 +45,13 @@ class ReviewAppointmentDetail extends StatefulWidget {
 }
 
 class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
-  InheritedContainerState _container;
-  Map _appointmentData;
-  Map _providerData, _userLocationMap;
-  String _timeHours, _timeMins;
-  DateTime _bookedDate;
-  String _bookedTime;
-  List<Services> _servicesList = new List();
+  late InheritedContainerState _container;
+  late Map _appointmentData;
+  late Map _providerData, _userLocationMap;
+  String? _timeHours, _timeMins;
+  DateTime? _bookedDate;
+  String? _bookedTime;
+  List<Services>? _servicesList = [];
   String _timezone = 'Unknown';
   final Set<Marker> _markers = {};
   final Set<Polyline> _polyline = {};
@@ -60,25 +60,25 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
   PolylinePoints _polylinePoints = PolylinePoints();
   bool _isLoading = false;
   List<LatLng> latlng = [];
-  LatLng _initialPosition, _middlePoint;
+  LatLng? _initialPosition, _middlePoint;
   LatLng _desPosition = LatLng(0, 0);
   Completer<GoogleMapController> _controller = Completer();
-  BitmapDescriptor _sourceIcon;
-  BitmapDescriptor _destinationIcon;
+  late BitmapDescriptor _sourceIcon;
+  BitmapDescriptor? _destinationIcon;
 
-  String _totalDistance = "";
+  String? _totalDistance = "";
   String _totalDuration = "";
-  Map _profileMap = new Map();
+  Map? _profileMap = new Map();
   Map _servicesMap = new Map();
-  Map<String, String> _reviewAppointmentData = Map();
-  Map _consentToTreatMap;
-  String paymentType, insuranceName, insuranceImage, insuranceId;
+  Map<String, String?> _reviewAppointmentData = Map();
+  late Map _consentToTreatMap;
+  String? paymentType, insuranceName, insuranceImage, insuranceId;
 
-  List<dynamic> _consultaceList = List();
+  List<dynamic>? _consultaceList = [];
   double _totalAmount = 0;
 
-  Future<dynamic> _profileFuture;
-  List feeList = List();
+  Future<dynamic>? _profileFuture;
+  List feeList = [];
   double totalFee = 0;
   String _appointmentStatus = "---";
 
@@ -88,7 +88,7 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
   ApiBaseHelper api = ApiBaseHelper();
   String token = '';
 
-  BitmapDescriptor sourceIcon;
+  BitmapDescriptor? sourceIcon;
 
   LatLng _userLocation = new LatLng(0.00, 0.00);
 
@@ -138,11 +138,11 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
               "0";
 
       _providerData["providerData"]["data"].map((f) {
-        _profileMap.addAll(f);
+        _profileMap!.addAll(f);
       }).toList();
     } else {
       _profileMap = _providerData["providerData"];
-      averageRating = _profileMap["averageRating"]?.toStringAsFixed(2) ?? "0";
+      averageRating = _profileMap!["averageRating"]?.toStringAsFixed(2) ?? "0";
     }
     _initialPosition = _userLocationMap["latLng"];
 
@@ -152,10 +152,10 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
           null) {
         _desPosition = LatLng(
             Provider.of<HealthConditionProvider>(context, listen: false)
-                .coordinatesDetails
+                .coordinatesDetails!
                 .longitude,
             Provider.of<HealthConditionProvider>(context, listen: false)
-                .coordinatesDetails
+                .coordinatesDetails!
                 .latitude);
       } else {
         _desPosition = LatLng(
@@ -173,33 +173,33 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
         }
       }
     } else {
-      if (_profileMap["businessLocation"] != null &&
-          _profileMap["businessLocation"]['stateCode'] != null &&
-          _profileMap["businessLocation"]['city'] != null) {
-        if (_profileMap["businessLocation"]["coordinates"].length > 0) {
+      if (_profileMap!["businessLocation"] != null &&
+          _profileMap!["businessLocation"]['stateCode'] != null &&
+          _profileMap!["businessLocation"]['city'] != null) {
+        if (_profileMap!["businessLocation"]["coordinates"].length > 0) {
           _desPosition = LatLng(
-              double.parse(
-                  _profileMap["businessLocation"]["coordinates"][1].toString()),
-              double.parse(_profileMap["businessLocation"]["coordinates"][0]
+              double.parse(_profileMap!["businessLocation"]["coordinates"][1]
+                  .toString()),
+              double.parse(_profileMap!["businessLocation"]["coordinates"][0]
                   .toString()));
         }
       } else {
-        if (_profileMap["User"][0]['location']["coordinates"].length > 0) {
+        if (_profileMap!["User"][0]['location']["coordinates"].length > 0) {
           _desPosition = LatLng(
-              double.parse(_profileMap["User"][0]['location']["coordinates"][1]
+              double.parse(_profileMap!["User"][0]['location']["coordinates"][1]
                   .toString()),
-              double.parse(_profileMap["User"][0]['location']["coordinates"][0]
+              double.parse(_profileMap!["User"][0]['location']["coordinates"][0]
                   .toString()));
         }
       }
     }
     if (_initialPosition != null) {
       _middlePoint = LatLng(
-          (_initialPosition.latitude + _desPosition.latitude) / 2,
-          (_initialPosition.longitude + _desPosition.longitude) / 2);
+          (_initialPosition!.latitude + _desPosition.latitude) / 2,
+          (_initialPosition!.longitude + _desPosition.longitude) / 2);
 
       if (_initialPosition != null) {
-        getDistanceAndTime(_initialPosition, _desPosition);
+        getDistanceAndTime(_initialPosition!, _desPosition);
       }
     }
 
@@ -210,29 +210,29 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
 
     _reviewAppointmentData["statusType"] = _servicesMap["status"].toString();
 
-    if (_servicesList.length > 0) _servicesList.clear();
+    if (_servicesList!.length > 0) _servicesList!.clear();
 
     if (_servicesMap["status"].toString() == "1") {
       if (_servicesMap["services"] != null) {
         _servicesList = _servicesMap["services"];
 
-        for (int i = 0; i < _servicesList.length; i++) {
+        for (int i = 0; i < _servicesList!.length; i++) {
           _totalAmount =
-              double.parse(_servicesList[i].amount.toString()) + _totalAmount;
+              double.parse(_servicesList![i].amount.toString()) + _totalAmount;
           _reviewAppointmentData["services[${i.toString()}][subServiceId]"] =
-              _servicesList[i].subServiceId;
+              _servicesList![i].subServiceId;
           _reviewAppointmentData["services[${i.toString()}][amount]"] =
-              _servicesList[i].amount.toString();
+              _servicesList![i].amount.toString();
         }
       }
     } else {
       _consultaceList = _servicesMap["consultaceFee"];
 
-      for (int i = 0; i < _consultaceList.length; i++) {
+      for (int i = 0; i < _consultaceList!.length; i++) {
         _totalAmount =
-            double.parse(_consultaceList[i]["fee"].toString()) + _totalAmount;
+            double.parse(_consultaceList![i]["fee"].toString()) + _totalAmount;
         _reviewAppointmentData["consultanceFee[${i.toString()}][fee]"] =
-            _consultaceList[i]["fee"].toString();
+            _consultaceList![i]["fee"].toString();
       }
     }
   }
@@ -256,13 +256,13 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
             Loc.LocationData locationData = await _location.getLocation();
 
             _initialPosition =
-                LatLng(locationData.latitude, locationData.longitude);
+                LatLng(locationData.latitude!, locationData.longitude!);
             _middlePoint = LatLng(
-                (_initialPosition.latitude + _desPosition.latitude) / 2,
-                (_initialPosition.longitude + _desPosition.longitude) / 2);
+                (_initialPosition!.latitude + _desPosition.latitude) / 2,
+                (_initialPosition!.longitude + _desPosition.longitude) / 2);
 
             if (_initialPosition != null) {
-              getDistanceAndTime(_initialPosition, _desPosition);
+              getDistanceAndTime(_initialPosition!, _desPosition);
             }
           } on PlatformException catch (e) {
             Widgets.showToast(e.message.toString());
@@ -270,7 +270,7 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
 
             log(e.code);
 
-            _location = null;
+            // _location = null;
           }
         } else {
           bool serviceStatusResult = await _location.requestService();
@@ -362,8 +362,8 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
   }
 
   List<Widget> widgetList(BuildContext context) {
-    List<Widget> _widgetList = new List();
-    String address;
+    List<Widget> _widgetList = [];
+    String? address;
 
     if (_container.projectsResponse["serviceType"].toString() == '3') {
       if (Provider.of<HealthConditionProvider>(context, listen: false)
@@ -371,21 +371,21 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
           null) {
         address = Extensions.addressFormat(
           Provider.of<HealthConditionProvider>(context, listen: false)
-              .addressDetails
+              .addressDetails!
               .address,
           Provider.of<HealthConditionProvider>(context, listen: false)
-              .addressDetails
+              .addressDetails!
               .street,
           Provider.of<HealthConditionProvider>(context, listen: false)
-              .addressDetails
+              .addressDetails!
               .city,
           Provider.of<HealthConditionProvider>(context, listen: false)
-              .addressDetails
-              .state
+              .addressDetails!
+              .state!
               .title
               .toString(),
           Provider.of<HealthConditionProvider>(context, listen: false)
-              .addressDetails
+              .addressDetails!
               .zipCode,
         );
       } else {
@@ -404,9 +404,9 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
         if (_appointmentData["selectedAddress"]["state"] is Map &&
             _appointmentData["selectedAddress"]["state"].length > 0) {
           _state = _appointmentData["selectedAddress"]["state"];
-        } else if (_profileMap['State'] != null &&
-            _profileMap["State"].length > 0) {
-          _state = _profileMap['State'][0];
+        } else if (_profileMap!['State'] != null &&
+            _profileMap!["State"].length > 0) {
+          _state = _profileMap!['State'][0];
         }
         address = Extensions.addressFormat(
           _appointmentData["selectedAddress"]["address"]?.toString(),
@@ -417,18 +417,18 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
         );
       }
     } else {
-      if (_profileMap["businessLocation"] != null &&
-          _profileMap["businessLocation"]['stateCode'] != null &&
-          _profileMap["businessLocation"]['city'] != null) {
-        dynamic business = _profileMap["businessLocation"];
+      if (_profileMap!["businessLocation"] != null &&
+          _profileMap!["businessLocation"]['stateCode'] != null &&
+          _profileMap!["businessLocation"]['city'] != null) {
+        dynamic business = _profileMap!["businessLocation"];
 
         dynamic _state;
 
         if (business["state"] is Map && business["state"].length > 0) {
           _state = business["state"];
-        } else if (_profileMap['State'] != null &&
-            _profileMap["State"].length > 0) {
-          _state = _profileMap['State'][0];
+        } else if (_profileMap!['State'] != null &&
+            _profileMap!["State"].length > 0) {
+          _state = _profileMap!['State'][0];
         }
         address = Extensions.addressFormat(
           business["address"]?.toString(),
@@ -438,24 +438,24 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
           business["zipCode"]?.toString(),
         );
       } else {
-        if (_profileMap["User"][0]['city'] != null) {
+        if (_profileMap!["User"][0]['city'] != null) {
           // dynamic business = _profileMap["businessLocation"];
 
           dynamic _state;
 
-          if (_profileMap["User"][0]["state"] is Map &&
-              _profileMap["User"][0]["state"].length > 0) {
-            _state = _profileMap["User"][0]["state"];
-          } else if (_profileMap['State'] != null &&
-              _profileMap["State"].length > 0) {
-            _state = _profileMap['State'][0];
+          if (_profileMap!["User"][0]["state"] is Map &&
+              _profileMap!["User"][0]["state"].length > 0) {
+            _state = _profileMap!["User"][0]["state"];
+          } else if (_profileMap!['State'] != null &&
+              _profileMap!["State"].length > 0) {
+            _state = _profileMap!['State'][0];
           }
           address = Extensions.addressFormat(
-            _profileMap["User"][0]["address"]?.toString(),
-            _profileMap["User"][0]["street"]?.toString(),
-            _profileMap["User"][0]["city"]?.toString(),
+            _profileMap!["User"][0]["address"]?.toString(),
+            _profileMap!["User"][0]["street"]?.toString(),
+            _profileMap!["User"][0]["city"]?.toString(),
             _state,
-            _profileMap["User"][0]["zipCode"]?.toString(),
+            _profileMap!["User"][0]["zipCode"]?.toString(),
           );
         }
       }
@@ -500,12 +500,12 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                                         .requestFocus(FocusNode());
                                     Navigator.of(context).pushNamed(
                                       Routes.providerImageScreen,
-                                      arguments: (_profileMap
+                                      arguments: (_profileMap!
                                               .containsKey('User')
                                           ? ApiBaseHelper.imageUrl +
-                                              _profileMap['User'][0]['avatar']
+                                              _profileMap!['User'][0]['avatar']
                                           : ApiBaseHelper.imageUrl +
-                                              _profileMap["userId"]["avatar"]),
+                                              _profileMap!["userId"]["avatar"]),
                                     );
                                   },
                                   child: Container(
@@ -513,30 +513,26 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                                     height: 58.0,
                                     decoration: BoxDecoration(
                                       image: DecorationImage(
-                                        image: _profileMap.containsKey('User')
-                                            ? _profileMap['User'][0]
-                                                        ['avatar'] ==
-                                                    null
-                                                ? AssetImage(FileConstants
-                                                    .icImgPlaceHolder)
-                                                : NetworkImage(
-                                                    ApiBaseHelper.imageUrl +
-                                                        _profileMap['User'][0]
-                                                            ['avatar'])
-                                            : _profileMap["userId"]["avatar"] ==
-                                                    null
-                                                ? AssetImage(FileConstants
-                                                    .icImgPlaceHolder)
-                                                : NetworkImage(
-                                                    ApiBaseHelper.imageUrl +
-                                                        _profileMap["userId"]
-                                                            ["avatar"]),
+                                        image: _profileMap!.containsKey('User')
+                                            ? (_profileMap!['User'][0]['avatar'] == null
+                                                    ? AssetImage(FileConstants
+                                                        .icImgPlaceHolder)
+                                                    : NetworkImage(
+                                                        ApiBaseHelper.imageUrl +
+                                                            _profileMap!['User']
+                                                                [0]['avatar']))
+                                                as ImageProvider<Object>
+                                            : (_profileMap!["userId"]["avatar"] == null
+                                                    ? AssetImage(FileConstants
+                                                        .icImgPlaceHolder)
+                                                    : NetworkImage(ApiBaseHelper.imageUrl + _profileMap!["userId"]["avatar"]))
+                                                as ImageProvider<Object>,
                                         fit: BoxFit.cover,
                                       ),
                                       borderRadius: new BorderRadius.all(
                                           Radius.circular(50.0)),
                                       border: new Border.all(
-                                        color: Colors.grey[300],
+                                        color: Colors.grey[300]!,
                                         width: 1.0,
                                       ),
                                     ),
@@ -553,9 +549,9 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                        _profileMap.containsKey("User")
-                                            ? "Dr. ${_profileMap['User'][0]['fullName']}"
-                                            : "Dr. ${_profileMap["userId"]["fullName"]}",
+                                        _profileMap!.containsKey("User")
+                                            ? "Dr. ${_profileMap!['User'][0]['fullName']}"
+                                            : "Dr. ${_profileMap!["userId"]["fullName"]}",
                                         style: const TextStyle(
                                             color: colorBlack,
                                             fontWeight: fontWeightSemiBold,
@@ -569,16 +565,16 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                                         padding: const EdgeInsets.all(5),
                                         height: 24,
                                         child: Text(
-                                          _profileMap.containsKey("User")
-                                              ? _profileMap['ProfessionalTitle']
+                                          _profileMap!.containsKey("User")
+                                              ? _profileMap!['ProfessionalTitle']
                                                           .length >
                                                       0
-                                                  ? _profileMap[
+                                                  ? _profileMap![
                                                           'ProfessionalTitle']
                                                       [0]['title']
                                                   : ''
-                                              : _profileMap['professionalTitle']
-                                                  ['title'],
+                                              : _profileMap![
+                                                  'professionalTitle']['title'],
                                           style: TextStyle(
                                               color: colorBlack2,
                                               fontWeight: fontWeightRegular,
@@ -628,7 +624,7 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                                   image: FileConstants.icClockTimer,
                                   label: _appointmentData["isOndemand"] == '1'
                                       ? "Ondemand Appointment"
-                                      : '${DateFormat('MMM dd,').format(_bookedDate).toString()}' +
+                                      : '${DateFormat('MMM dd,').format(_bookedDate!).toString()}' +
                                           ' ${int.parse(_appointmentData['time'].split(':')[0])}:${int.parse(_appointmentData['time'].split(':')[1])} ${int.parse(_appointmentData['time'].split(':')[0]) >= 12 ? 'PM' : 'AM'}',
                                   textStyle: TextStyle(
                                       color: colorBlack70,
@@ -692,7 +688,7 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
     _widgetList.add(Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        locationWidget(address, _desPosition, _profileMap['distance']),
+        locationWidget(address, _desPosition, _profileMap!['distance']),
         Padding(
           padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
           child: Text(
@@ -729,13 +725,13 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
 
               String doctorId = '';
 
-              if (_profileMap["userId"] != null &&
-                  _profileMap["userId"] is Map) {
-                doctorId = _profileMap["userId"]["_id"].toString();
-              } else if (_profileMap["User"] != null is Map) {
-                doctorId = _profileMap["User"][0]["_id"].toString();
+              if (_profileMap!["userId"] != null &&
+                  _profileMap!["userId"] is Map) {
+                doctorId = _profileMap!["userId"]["_id"].toString();
+              } else if (_profileMap!["User"] != null is Map) {
+                doctorId = _profileMap!["User"][0]["_id"].toString();
               }
-              List<String> medicalImages = [];
+              List<String?> medicalImages = [];
               if (Provider.of<HealthConditionProvider>(context, listen: false)
                       .medicalImagesData
                       .length >
@@ -746,7 +742,7 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                   medicalImages.add(element.sId);
                 });
               }
-              List<String> medicalDocuments = [];
+              List<String?> medicalDocuments = [];
               if (Provider.of<HealthConditionProvider>(context, listen: false)
                       .medicalDocumentsData
                       .length >
@@ -758,7 +754,7 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                 });
               }
 
-              List<String> medicalDiagnosticsTests = [];
+              List<String?> medicalDiagnosticsTests = [];
               if (Provider.of<HealthConditionProvider>(context, listen: false)
                       .medicalDiagnosticsTestsModelData
                       .length >
@@ -909,12 +905,12 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
     }
   }
 
-  String getUserAddress() {
+  String? getUserAddress() {
     if (Provider.of<HealthConditionProvider>(context, listen: false)
             .addressDetails !=
         null) {
       return Provider.of<HealthConditionProvider>(context, listen: false)
-          .addressDetails
+          .addressDetails!
           .sId;
     } else if (_consentToTreatMap["userAddress"] != null) {
       if (_consentToTreatMap["userAddress"]["_id"] != null) {
@@ -927,7 +923,7 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
     }
   }
 
-  int getPaymentMethod() {
+  dynamic getPaymentMethod() {
     if (paymentType != null) {
       if (paymentType == "3") {
         return 3;
@@ -939,7 +935,7 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
     }
   }
 
-  Widget locationWidget(String location, LatLng latLng, dynamic distance) {
+  Widget locationWidget(String? location, LatLng latLng, dynamic distance) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20.0, 16.0, 0, 10.0),
       child: Column(
@@ -949,9 +945,9 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
             _container.projectsResponse["serviceType"].toString() == '3'
                 ? getString(PreferenceKey.fullName, "").capitalizeFirstOfEach +
                     " 's Address"
-                : _profileMap.containsKey("User")
-                    ? "Dr. ${_profileMap['User'][0]['fullName']}'s Office Address"
-                    : "Dr. ${_profileMap["userId"]["fullName"]}'s Office Address",
+                : _profileMap!.containsKey("User")
+                    ? "Dr. ${_profileMap!['User'][0]['fullName']}'s Office Address"
+                    : "Dr. ${_profileMap!["userId"]["fullName"]}'s Office Address",
             style:
                 TextStyle(fontWeight: fontWeightSemiBold, fontSize: fontSize14),
           ),
@@ -969,8 +965,7 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                       location ??
                           Provider.of<HealthConditionProvider>(context,
                                   listen: false)
-                              .providerAddress ??
-                          "",
+                              .providerAddress,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -1009,7 +1004,7 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                 margin: const EdgeInsets.only(top: 11.0, right: 20),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(14.0),
-                  border: Border.all(color: Colors.grey[300]),
+                  border: Border.all(color: Colors.grey[300]!),
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(14.0),
@@ -1047,13 +1042,13 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
   String getAppointmentType(String status, BuildContext context) {
     switch (status) {
       case "1":
-        return Localization.of(context).officeAppointmentLabel;
+        return Localization.of(context)!.officeAppointmentLabel;
         break;
       case "2":
-        return Localization.of(context).videoChatLabel;
+        return Localization.of(context)!.videoChatLabel;
         break;
       case "3":
-        return Localization.of(context).onSiteLabel;
+        return Localization.of(context)!.onSiteLabel;
         break;
       default:
         return "";
@@ -1289,7 +1284,7 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
   Widget _buildCardWidget() {
     var _card;
     var title;
-    var image;
+    late var image;
     if (paymentType == "1") {
       _card = _consentToTreatMap["paymentMap"]["selectedCard"]['card'];
       title = "**** **** **** ${_card['last4']}";
@@ -1310,10 +1305,10 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 paymentType == "1"
-                    ? getCardIcon(CardType.Master)
+                    ? getCardIcon(CardType.Master)!
                     : (paymentType == "2" && insuranceImage == null)
                         ? Image.network(
-                            ApiBaseHelper.imageUrl + insuranceImage,
+                            ApiBaseHelper.imageUrl + insuranceImage!,
                             height: 42,
                             width: 42,
                             fit: BoxFit.cover,
@@ -1453,7 +1448,7 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                 )
                     .then((value) {
                   if (value != null) {
-                    Map _editDateTimeData = value;
+                    Map _editDateTimeData = value as Map<dynamic, dynamic>;
 
                     setState(() {
                       _setBookingTime(_editDateTimeData["time"]);
@@ -1466,13 +1461,13 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
           Widgets.showErrorialog(
               context: context,
               description: e.response,
-              buttonText: (e.response.contains('already') ||
-                      e.response.contains('declined'))
+              buttonText: (e.response!.contains('already') ||
+                      e.response!.contains('declined'))
                   ? 'Go to requests'
                   : 'Ok',
               onPressed: () {
-                if (e.response.contains('already') ||
-                    e.response.contains('declined')) {
+                if (e.response!.contains('already') ||
+                    e.response!.contains('declined')) {
                   _container.consentToTreatMap.clear();
                   _container.getProviderData().clear();
                   _container.appointmentData.clear();

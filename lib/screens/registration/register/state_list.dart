@@ -9,12 +9,12 @@ import '../../../widgets/list_picker.dart';
 import 'model/res_states_list.dart';
 
 class StateList extends StatefulWidget {
-  final TextEditingController controller;
-  final List<States> stateList;
-  final Function onStateSelected;
+  final TextEditingController? controller;
+  final List<States>? stateList;
+  final Function? onStateSelected;
 
   const StateList({
-    Key key,
+    Key? key,
     this.controller,
     this.stateList,
     this.onStateSelected,
@@ -28,16 +28,16 @@ class _StateListState extends State<StateList> {
     showDropDownSheet(
         list: ListView.builder(
           shrinkWrap: true,
-          itemCount: widget.stateList.length,
+          itemCount: widget.stateList!.length,
           itemBuilder: (context, pos) {
             return InkWell(
                 onTap: () {
-                  widget.onStateSelected(pos);
+                  widget.onStateSelected!(pos);
                   Navigator.pop(context);
                 },
                 child: ListTile(
                   title: Center(
-                    child: Text(widget.stateList[pos].title),
+                    child: Text(widget.stateList![pos].title!),
                   ),
                 ));
           },
@@ -58,7 +58,7 @@ class _StateListState extends State<StateList> {
           suffixheight: spacing12,
           suffixwidth: spacing12,
           isFieldEnable: false,
-          labelText: Localization.of(context).state,
+          labelText: Localization.of(context)!.state,
           textInputAction: TextInputAction.next),
     ));
   }

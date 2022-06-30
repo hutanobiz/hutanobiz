@@ -6,9 +6,9 @@ import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:photo_view/photo_view.dart';
 
 class ProviderImageScreen extends StatefulWidget {
-  ProviderImageScreen({Key key, this.avatar}) : super(key: key);
+  ProviderImageScreen({Key? key, this.avatar}) : super(key: key);
 
-  final String avatar;
+  final String? avatar;
 
   @override
   _ProviderImageScreenState createState() => _ProviderImageScreenState();
@@ -29,7 +29,7 @@ class _ProviderImageScreenState extends State<ProviderImageScreen> {
         title: "",
         color: Colors.black,
         padding: EdgeInsets.zero,
-        child: widget.avatar.toLowerCase().endsWith("pdf")
+        child: widget.avatar!.toLowerCase().endsWith("pdf")
             ? Container(
                 width: MediaQuery.of(context).size.width,
                 color: Colors.white,
@@ -47,16 +47,16 @@ class _ProviderImageScreenState extends State<ProviderImageScreen> {
                 backgroundDecoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(14),
                 ),
-                imageProvider: (widget.avatar.contains('http') ||
-                        widget.avatar.contains('https'))
+                imageProvider: ((widget.avatar!.contains('http') ||
+                        widget.avatar!.contains('https'))
                     ? NetworkImage(
-                        widget.avatar,
+                        widget.avatar!,
                       )
                     : FileImage(
                         File(
-                          widget.avatar,
+                          widget.avatar!,
                         ),
-                      ),
+                      )) as ImageProvider<Object>?,
                 loadingBuilder: (context, event) {
                   if (event == null) {
                     return const Center(
@@ -64,7 +64,7 @@ class _ProviderImageScreenState extends State<ProviderImageScreen> {
                     );
                   }
                   final value =
-                      event.cumulativeBytesLoaded / event.expectedTotalBytes;
+                      event.cumulativeBytesLoaded / event.expectedTotalBytes!;
 
                   final percentage = (100 * value).floor();
                   return Center(

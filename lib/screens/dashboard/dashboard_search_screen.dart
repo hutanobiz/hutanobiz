@@ -14,9 +14,9 @@ import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/provider_tile_widget.dart';
 
 class DashboardSearchScreen extends StatefulWidget {
-  final List topSpecialtiesList;
+  final List? topSpecialtiesList;
 
-  const DashboardSearchScreen({Key key, this.topSpecialtiesList})
+  const DashboardSearchScreen({Key? key, this.topSpecialtiesList})
       : super(key: key);
 
   @override
@@ -25,15 +25,15 @@ class DashboardSearchScreen extends StatefulWidget {
 
 class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
   String _searchText = "";
-  List<dynamic> _servicesList = List();
-  List<dynamic> _doctorList = List();
-  List<dynamic> _specialityList = List();
-  List<dynamic> _recentSearchesList = List();
+  List<dynamic> _servicesList = [];
+  List<dynamic> _doctorList = [];
+  List<dynamic>? _specialityList = [];
+  List<dynamic>? _recentSearchesList = [];
 
   ApiBaseHelper _api = ApiBaseHelper();
 
-  Future<dynamic> _searchFuture;
-  InheritedContainerState _container;
+  Future<dynamic>? _searchFuture;
+  late InheritedContainerState _container;
 
   bool _isLoading = false;
 
@@ -53,14 +53,14 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
     if (widget.topSpecialtiesList != null) {
       _specialityList = widget.topSpecialtiesList;
     } else {
-      _specialityList.clear();
+      _specialityList!.clear();
       _api.getSpecialties().then((value) {
         if (value != null) {
           if (value != null && value.length > 0) {
             for (dynamic specialty in value) {
               if (specialty['isFeatured'] != null) {
                 if (specialty['isFeatured']) {
-                  _specialityList.add(specialty);
+                  _specialityList!.add(specialty);
                 }
               }
             }
@@ -158,7 +158,7 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
         ),
         Expanded(
           child: _searchText.length < 0 || _searchText == ""
-              ? _recentSearchesList.isEmpty
+              ? _recentSearchesList!.isEmpty
                   ? Center(
                       child: Text(
                         'No recent searches',
@@ -171,11 +171,11 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
                         children: <Widget>[
                           heading(
                             "Recent Searches",
-                            _recentSearchesList,
+                            _recentSearchesList!,
                             0,
                             isAddSeeAll: false,
                           ),
-                          _recentSearchWidget(_recentSearchesList)
+                          _recentSearchWidget(_recentSearchesList!)
                         ],
                       ),
                     )
@@ -192,7 +192,7 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
         if (snapshot.hasData) {
           _servicesList.clear();
           _doctorList.clear();
-          _specialityList.clear();
+          _specialityList!.clear();
 
           if (snapshot.data["services"].length > 0) {
             for (dynamic services in snapshot.data["services"]) {
@@ -208,7 +208,7 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
           }
 
           if (snapshot.data["specialty"].length > 0) {
-            _specialityList.addAll(snapshot.data["specialty"]);
+            _specialityList!.addAll(snapshot.data["specialty"]);
           }
 
           return SingleChildScrollView(
@@ -216,9 +216,9 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  heading("Specialities", _specialityList, 1),
-                  _specialityList.isNotEmpty
-                      ? _listWidget(_specialityList, "title", false, 1)
+                  heading("Specialities", _specialityList!, 1),
+                  _specialityList!.isNotEmpty
+                      ? _listWidget(_specialityList!, "title", false, 1)
                       : Container(),
                   heading("Providers", _doctorList, 2),
                   _doctorList.isNotEmpty
@@ -303,7 +303,7 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
 
   Widget _listWidget(
       List<dynamic> _list, String searchKey, bool isDoctorList, int type) {
-    List<dynamic> tempList = List();
+    List<dynamic> tempList = [];
     String professionalTitle = "---";
 
     // if (_list.isNotEmpty)
@@ -341,13 +341,13 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
                       Extensions.getSortProfessionTitle(professionalTitle),
                   profession: professionalTitle,
                   onTap: () {
-                    if (!_recentSearchesList.contains(tempList[index])) {
-                      if (_recentSearchesList.length >= 25) {
-                        _recentSearchesList.removeAt(0);
+                    if (!_recentSearchesList!.contains(tempList[index])) {
+                      if (_recentSearchesList!.length >= 25) {
+                        _recentSearchesList!.removeAt(0);
                       }
 
                       tempList[index]['type'] = type;
-                      _recentSearchesList.add(tempList[index]);
+                      _recentSearchesList!.add(tempList[index]);
 
                       SharedPref().setValue(
                           'recentSearches', jsonEncode(_recentSearchesList));
@@ -362,13 +362,13 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
                   onTap: type == 0
                       ? null
                       : () {
-                          if (!_recentSearchesList.contains(tempList[index])) {
-                            if (_recentSearchesList.length >= 25) {
-                              _recentSearchesList.removeAt(0);
+                          if (!_recentSearchesList!.contains(tempList[index])) {
+                            if (_recentSearchesList!.length >= 25) {
+                              _recentSearchesList!.removeAt(0);
                             }
 
                             tempList[index]['type'] = type;
-                            _recentSearchesList.add(tempList[index]);
+                            _recentSearchesList!.add(tempList[index]);
                             SharedPref().setValue('recentSearches',
                                 jsonEncode(_recentSearchesList));
                           }
@@ -409,7 +409,7 @@ class _DashboardSearchScreenState extends State<DashboardSearchScreen> {
       padding: const EdgeInsets.fromLTRB(20.0, 4.0, 20.0, 0.0),
       itemCount: _list.length >= 5 ? 5 : _list.length,
       itemBuilder: (context, index) {
-        int _searchType = _list[index]['type'];
+        int? _searchType = _list[index]['type'];
         String _type = '';
 
         switch (_searchType) {

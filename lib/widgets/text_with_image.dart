@@ -3,11 +3,11 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/utils/color_utils.dart';
 
 class TextWithImage extends StatelessWidget {
-  final String image;
-  final String label;
-  final TextStyle textStyle;
+  final String? image;
+  final String? label;
+  final TextStyle? textStyle;
   final double size;
-  final double imageSpacing; //space between image and text
+  final double? imageSpacing; //space between image and text
   const TextWithImage(
       {this.image,
       this.label,
@@ -20,7 +20,7 @@ class TextWithImage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Image.asset(
-          image,
+          image!,
           height: size,
           width: size,
         ),
@@ -29,7 +29,7 @@ class TextWithImage extends StatelessWidget {
         ),
         Expanded(
           child: Text(
-            label,
+            label!,
             style:
                 textStyle ?? const TextStyle(color: colorBlack70, fontSize: 12),
             textAlign: TextAlign.start,

@@ -11,13 +11,13 @@ enum HutanoButtonType {
 }
 
 class HutanoButton extends StatelessWidget {
-  final String label;
-  final double width;
+  final String? label;
+  final double? width;
   final double height;
-  final String icon;
+  final String? icon;
   final double iconSize;
   final double buttonRadius;
-  final Function onPressed;
+  final Function? onPressed;
   final bool isIconButton;
   final HutanoButtonType buttonType;
   final Color color;
@@ -27,13 +27,13 @@ class HutanoButton extends StatelessWidget {
   final Color borderColor;
   final double borderWidth;
   final double fontSize;
-  final ShapeBorder buttonShape;
+  final ShapeBorder? buttonShape;
   final double iconPosition;
 
   const HutanoButton({
-    Key key,
+    Key? key,
     this.label,
-    @required this.onPressed,
+    required this.onPressed,
     this.icon,
     this.width,
     this.buttonRadius = 14,
@@ -69,14 +69,14 @@ class HutanoButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(buttonRadius),
         ),
         child: _buildIcon(),
-        onPressed: onPressed,
+        onPressed: onPressed as void Function()?,
       ),
     );
   }
 
   Widget _buildIcon() {
     return Image.asset(
-      icon,
+      icon!,
       width: iconSize,
       height: iconSize,
     );
@@ -93,7 +93,7 @@ class HutanoButton extends StatelessWidget {
           FlatButton(
             color: color,
             disabledColor: _disableColor,
-            onPressed: onPressed,
+            onPressed: onPressed as void Function()?,
             shape: buttonShape ??
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(buttonRadius),
@@ -115,7 +115,7 @@ class HutanoButton extends StatelessWidget {
                         child: _buildIcon(),
                       ),
                     Text(
-                      label,
+                      label!,
                       textAlign: TextAlign.center,
                       style: AppTextStyle.mediumStyle(
                         fontSize: fontSize,

@@ -7,7 +7,7 @@ import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 
 class ProfileScreen extends StatefulWidget {
-  ProfileScreen({Key key, this.profileData}) : super(key: key);
+  ProfileScreen({Key? key, this.profileData}) : super(key: key);
   var profileData;
 
   @override
@@ -19,14 +19,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   bool isLoading = false;
 
-  String name = "---", email = "---", phone = "---", avatar;
+  String name = "---", email = "---", phone = "---";
+  String? avatar;
 
   @override
   void initState() {
     super.initState();
-    name = widget.profileData['fullName'].toString() ?? "---";
-    email = widget.profileData['email'].toString() ?? "---";
-    String phoneNumber = widget.profileData['phoneNumber']?.toString();
+    name = widget.profileData['fullName'].toString() ;
+    email = widget.profileData['email'].toString() ;
+    String? phoneNumber = widget.profileData['phoneNumber']?.toString();
     if (phoneNumber != null) {
       phoneNumber = "(" +
           phoneNumber.substring(0, 3) +
@@ -77,7 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         color: Colors.grey[100],
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: Colors.grey[300],
+                          color: Colors.grey[300]!,
                         ),
                       ),
                       child: avatar == null || avatar == "null"
@@ -88,7 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             )
                           : ClipOval(
                               child: Image.network(
-                                ApiBaseHelper.imageUrl + avatar,
+                                ApiBaseHelper.imageUrl + avatar!,
                                 width: 76.0,
                                 height: 76.0,
                                 fit: BoxFit.cover,

@@ -6,26 +6,26 @@ import 'drag/drag_custom.dart' as dc;
 import 'overlay_handler.dart';
 
 class VideoOverlayWidget extends StatefulWidget {
-  final Function onClear;
+  final Function? onClear;
   final Widget widget;
 
-  VideoOverlayWidget({this.onClear, this.widget}): assert(widget != null);
+  VideoOverlayWidget({this.onClear, required this.widget}): assert(widget != null);
 
   @override
   _VideoOverlayWidgetState createState() => _VideoOverlayWidgetState();
 }
 
 class _VideoOverlayWidgetState extends State<VideoOverlayWidget> {
-  double width;
-  double oldWidth;
-  double oldHeight;
-  double height;
+  double? width;
+  double? oldWidth;
+  double? oldHeight;
+  double? height;
 
   bool isInPipMode = false;
 
   Offset offset = Offset(0, 0);
 
-  Widget player;
+  Widget? player;
 
   _onExitPipMode() {
     Future.microtask(() {
@@ -53,7 +53,7 @@ class _VideoOverlayWidgetState extends State<VideoOverlayWidget> {
         isInPipMode = true;
         width = Constants.VIDEO_HEIGHT_PIP;
         height = (Constants.VIDEO_HEIGHT_PIP/aspectRatio) + 33;
-        offset = Offset(oldWidth - width, oldHeight - height - Constants.BOTTOM_PADDING_PIP);
+        offset = Offset(oldWidth! - width!, oldHeight! - height! - Constants.BOTTOM_PADDING_PIP);
       });
     });
   }
@@ -86,9 +86,9 @@ class _VideoOverlayWidgetState extends State<VideoOverlayWidget> {
             onDragUpdate: (off) {
               if(!isInPipMode) return;
               if (off.dx >= 0 &&
-                  off.dx < (oldWidth - Constants.VIDEO_HEIGHT_PIP) &&
+                  off.dx < (oldWidth! - Constants.VIDEO_HEIGHT_PIP) &&
                   off.dy >= 48.0 &&
-                  off.dy < (oldHeight - Constants.VIDEO_HEIGHT_PIP -Constants.BOTTOM_PADDING_PIP)) {
+                  off.dy < (oldHeight! - Constants.VIDEO_HEIGHT_PIP -Constants.BOTTOM_PADDING_PIP)) {
 //            print("Inside DragUpdate If");
                 setState(() {
                   offset = off;
@@ -98,7 +98,7 @@ class _VideoOverlayWidgetState extends State<VideoOverlayWidget> {
             onDragEnd: (dc.DraggableDetails details) {
               print("onDragEnd");
               if (details.velocity.pixelsPerSecond.dx < -1000) {
-                if (widget.onClear != null) widget.onClear();
+                if (widget.onClear != null) widget.onClear!();
               }
             },
             child: AnimatedContainer(

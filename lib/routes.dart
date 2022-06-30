@@ -877,13 +877,13 @@ class Routes {
       case routeWebView:
         return MaterialPageRoute(builder: (_) => WebView());
       case routeRegister:
-        final String number = args[ArgumentConstant.number];
-        final String countryCode = args[ArgumentConstant.countryCode];
+        final String? number = args[ArgumentConstant.number];
+        final String? countryCode = args[ArgumentConstant.countryCode];
         return MaterialPageRoute(
             builder: (_) => RegisterScreen(number, countryCode));
       case routeInviteByText:
-        final String sms = args[ArgumentConstant.sms];
-        final String shareMessage = args[ArgumentConstant.shareMessage];
+        final String? sms = args[ArgumentConstant.sms];
+        final String? shareMessage = args[ArgumentConstant.shareMessage];
         return MaterialPageRoute(
             builder: (_) => InviteByTextScreen(
                   sms,
@@ -900,11 +900,11 @@ class Routes {
       case addMoreContacts:
         return MaterialPageRoute(builder: (_) => AddMoreContacts());
       case routeBoneAndMuscle:
-        String problemId = args[ArgumentConstant.problemIdKey];
-        String problemName = args[ArgumentConstant.problemNameKey];
-        String problemImage = args[ArgumentConstant.problemImageKey];
+        String? problemId = args[ArgumentConstant.problemIdKey];
+        String? problemName = args[ArgumentConstant.problemNameKey];
+        String? problemImage = args[ArgumentConstant.problemImageKey];
         dynamic problem = args[ArgumentConstant.problem];
-        String appointmentId = args[ArgumentConstant.appointmentId];
+        String? appointmentId = args[ArgumentConstant.appointmentId];
         return MaterialPageRoute(
             builder: (_) => BoneMuscleIssue(
                 problemId: problemId,
@@ -913,7 +913,7 @@ class Routes {
                 problem: problem,
                 appointmentId: appointmentId));
       case routeConditionBetterWorst:
-        String problemId = args[ArgumentConstant.problemIdKey];
+        String? problemId = args[ArgumentConstant.problemIdKey];
         return MaterialPageRoute(
             builder: (_) => MakesConditionBetterWorst(
                   problemId: problemId,
@@ -956,7 +956,7 @@ class Routes {
       case routeTestDiagnosis:
         return MaterialPageRoute(builder: (_) => TestDiagnosisScreen());
       case routeConditionTimeScreen:
-        bool isForProblem = args[ArgumentConstant.isForProblemKey];
+        bool? isForProblem = args[ArgumentConstant.isForProblemKey];
         return MaterialPageRoute(
             builder: (_) => ConditionTimeScreen(isForProblem: isForProblem));
       case routeMyMedicalHistory:
@@ -1179,24 +1179,24 @@ CupertinoPageRoute _buildRoute(RouteSettings settings, Widget builder) {
 }
 
 class RegisterArguments {
-  final String phoneNumber;
+  final String? phoneNumber;
   final bool isForgot;
-  final bool isProfileUpdate;
+  final bool? isProfileUpdate;
 
   RegisterArguments(this.phoneNumber, this.isForgot, {this.isProfileUpdate});
 }
 
 class SearchArguments {
-  final List<dynamic> list;
-  final String title;
-  final int type;
+  final List<dynamic>? list;
+  final String? title;
+  final int? type;
 
   SearchArguments({this.list, this.title, this.type});
 }
 
 class SelectDateTimeArguments {
-  final String appointmentId;
-  final int fromScreen;
+  final String? appointmentId;
+  final int? fromScreen;
 
   SelectDateTimeArguments({this.fromScreen, this.appointmentId});
 }

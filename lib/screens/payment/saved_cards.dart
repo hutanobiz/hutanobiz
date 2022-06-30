@@ -5,7 +5,7 @@ import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 
 class SavedCardsScreen extends StatefulWidget {
-  SavedCardsScreen({Key key}) : super(key: key);
+  SavedCardsScreen({Key? key}) : super(key: key);
 
   @override
   _SavedCardsScreenState createState() => _SavedCardsScreenState();
@@ -14,7 +14,7 @@ class SavedCardsScreen extends StatefulWidget {
 class _SavedCardsScreenState extends State<SavedCardsScreen> {
   ApiBaseHelper _api = ApiBaseHelper();
 
-  Future<dynamic> _requestsFuture;
+  Future<dynamic>? _requestsFuture;
 
   @override
   void initState() {
@@ -61,7 +61,7 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(14.0)),
-        border: Border.all(color: Colors.grey[100]),
+        border: Border.all(color: Colors.grey[100]!),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,7 +129,7 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
         splashColor: Colors.grey[300],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
-          side: BorderSide(width: 0.3, color: Colors.grey[300]),
+          side: BorderSide(width: 0.3, color: Colors.grey[300]!),
         ),
         child: Text(
           title,
@@ -139,7 +139,7 @@ class _SavedCardsScreenState extends State<SavedCardsScreen> {
             color: Colors.black,
           ),
         ),
-        onPressed: onPressed,
+        onPressed: onPressed as void Function()?,
       ),
     );
   }

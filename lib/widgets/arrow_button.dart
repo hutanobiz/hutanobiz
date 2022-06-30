@@ -3,16 +3,16 @@ import 'package:hutano/colors.dart';
 
 class ArrowButton extends StatelessWidget {
   ArrowButton({
-    Key key,
-    @required this.iconData,
-    @required this.onTap,
+    Key? key,
+    required this.iconData,
+    required this.onTap,
     this.buttonColor = AppColors.goldenTainoi,
     this.iconColor = Colors.black,
     this.buttonWidth = 55.0,
   }) : super(key: key);
 
   final IconData iconData;
-  final Function onTap;
+  final Function? onTap;
   final double buttonWidth;
   final Color buttonColor, iconColor;
 
@@ -26,7 +26,7 @@ class ArrowButton extends StatelessWidget {
         color: buttonColor,
         child: InkWell(
           splashColor: AppColors.accentColor,
-          onTap: onTap,
+          onTap: onTap as void Function()?,
           child: Container(
             width: buttonWidth,
             height: 55.0,

@@ -19,7 +19,7 @@ const double CAMERA_TILT = 80;
 const double CAMERA_BEARING = 30;
 
 class OfficeDirectionScreen extends StatefulWidget {
-  const OfficeDirectionScreen({Key key, this.trackOfficeModel})
+  const OfficeDirectionScreen({Key? key, this.trackOfficeModel})
       : super(key: key);
 
   final dynamic trackOfficeModel;
@@ -33,28 +33,28 @@ class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
   final Set<Polyline> _polyline = {};
   PolylinePoints polylinePoints = PolylinePoints();
   List<LatLng> _polyLineLatlngList = [];
-  LatLng _initialPosition;
-  LatLng currentPosition;
+  LatLng? _initialPosition;
+  LatLng? currentPosition;
   LatLng _desPosition = LatLng(0, 0);
 
-  GoogleMapController _googleMapController;
-  BitmapDescriptor sourceIcon;
-  BitmapDescriptor destinationIcon;
+  late GoogleMapController _googleMapController;
+  late BitmapDescriptor sourceIcon;
+  late BitmapDescriptor destinationIcon;
   ApiBaseHelper api = ApiBaseHelper();
   String _totalDistance = "";
   String _totalDuration = "";
   Map<String, String> appointmentCompleteMap = Map();
   TextEditingController textEditingController = TextEditingController();
-  PinInformation currentlySelectedPin = PinInformation(
+  PinInformation? currentlySelectedPin = PinInformation(
     pinPath: '',
     avatarPath: '',
     location: LatLng(0, 0),
   );
 
-  PinInformation sourcePinInfo, destinationPinInfo;
-  CameraPosition initialCameraPosition;
+  PinInformation? sourcePinInfo, destinationPinInfo;
+  CameraPosition? initialCameraPosition;
 
-  Loc.LocationData destinationLocation;
+  Loc.LocationData? destinationLocation;
   Loc.Location location = Loc.Location();
 
   static const String _isolateName = "LocatorIsolate";
@@ -64,7 +64,7 @@ class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
     PolylineResult polylineResult = await polylinePoints
         .getRouteBetweenCoordinates(
           Strings.kGoogleApiKey,
-          PointLatLng(_initialPosition.latitude, _initialPosition.longitude),
+          PointLatLng(_initialPosition!.latitude, _initialPosition!.longitude),
           PointLatLng(_desPosition.latitude, _desPosition.longitude),
         )
         .catchError((error) => error.toString().debugLog());
@@ -132,14 +132,14 @@ class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
   void setInitialLocation() async {
     await location.getLocation().then((Loc.LocationData value) {
       setState(() {
-        _initialPosition = LatLng(value.latitude, value.longitude);
-        currentPosition = LatLng(value.latitude, value.longitude);
+        _initialPosition = LatLng(value.latitude!, value.longitude!);
+        currentPosition = LatLng(value.latitude!, value.longitude!);
       });
 
       showPinsOnMap();
       updateAppointmentCoordinates(LatLng(
-        _initialPosition.latitude,
-        _initialPosition.longitude,
+        _initialPosition!.latitude,
+        _initialPosition!.longitude,
       ));
     });
   }
@@ -154,7 +154,7 @@ class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
     if (currentPosition != null) {
       api
           .getDistanceAndTime(
-              currentPosition, _desPosition, Strings.kGoogleApiKey)
+              currentPosition!, _desPosition, Strings.kGoogleApiKey)
           .then((value) {
         _totalDistance =
             value["rows"][0]["elements"][0]["distance"]["text"].toString();
@@ -249,7 +249,7 @@ class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
                     mapType: MapType.normal,
                     onMapCreated: _onMapCreated,
                     initialCameraPosition: CameraPosition(
-                      target: _initialPosition,
+                      target: _initialPosition!,
                       zoom: 13.0,
                     ),
                     onCameraMove: _onCameraMove,
@@ -303,7 +303,7 @@ class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
                         borderRadius: BorderRadius.all(
                           Radius.circular(14.0),
                         ),
-                        border: Border.all(color: Colors.grey[300]),
+                        border: Border.all(color: Colors.grey[300]!),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -350,7 +350,7 @@ class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
                         borderRadius: BorderRadius.all(
                           Radius.circular(14.0),
                         ),
-                        border: Border.all(color: Colors.grey[300]),
+                        border: Border.all(color: Colors.grey[300]!),
                       ),
                       height: 50,
                       child: Row(
@@ -402,7 +402,7 @@ class _OfficeDirectionScreenState extends State<OfficeDirectionScreen> {
 
   void showPinsOnMap() {
     var pinPosition =
-        LatLng(_initialPosition.latitude, _initialPosition.longitude);
+        LatLng(_initialPosition!.latitude, _initialPosition!.longitude);
 
     var destPosition = LatLng(_desPosition.latitude, _desPosition.longitude);
 

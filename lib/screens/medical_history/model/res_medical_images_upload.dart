@@ -1,7 +1,7 @@
 class ResMedicalImageUpload {
-  String status;
-  String response;
-  Data data;
+  String? status;
+  String? response;
+  Data? data;
 
   ResMedicalImageUpload({this.status, this.response, this.data});
 
@@ -16,14 +16,14 @@ class ResMedicalImageUpload {
     data['status'] = status;
     data['response'] = response;
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
 }
 
 class Data {
-  List<MedicalImages> medicalImages;
+  List<MedicalImages>? medicalImages;
 
   Data({this.medicalImages});
 
@@ -31,7 +31,7 @@ class Data {
     if (json['medicalImages'] != null) {
       medicalImages = <MedicalImages>[];
       json['medicalImages'].forEach((v) {
-        medicalImages.add(MedicalImages.fromJson(v));
+        medicalImages!.add(MedicalImages.fromJson(v));
       });
     }
   }
@@ -39,16 +39,16 @@ class Data {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     if (medicalImages != null) {
-      data['medicalImages'] = medicalImages.map((v) => v.toJson()).toList();
+      data['medicalImages'] = medicalImages!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class MedicalImages {
-  String images;
-  String name;
-  String sId;
+  String? images;
+  String? name;
+  String? sId;
 
   MedicalImages({this.images, this.name, this.sId});
 

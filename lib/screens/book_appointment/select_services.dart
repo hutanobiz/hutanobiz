@@ -16,7 +16,7 @@ import 'package:hutano/widgets/provider_list_widget.dart';
 import 'package:hutano/widgets/widgets.dart';
 
 class Customer {
-  String name;
+  String? name;
   List<Services> services;
 
   Customer(this.name, this.services);
@@ -33,16 +33,16 @@ class SelectServicesScreen extends StatefulWidget {
 }
 
 class _SelectServicesScreenState extends State<SelectServicesScreen> {
-  Map _providerData;
+  late Map _providerData;
 
-  InheritedContainerState _container;
+  late InheritedContainerState _container;
 
-  int _radioValue = 0;
-  String _selectedAppointmentType = '1', _appointmentTypeKey;
-  List<Services> servicesList;
-  Map<String, Services> _selectedServicesMap = Map();
-  List _serviceList;
-  Map profileMap = Map();
+  int? _radioValue = 0;
+  String? _selectedAppointmentType = '1', _appointmentTypeKey;
+  late List<Services> servicesList;
+  Map<String?, Services> _selectedServicesMap = Map();
+  List? _serviceList;
+  Map? profileMap = Map();
   List<Customer> groupList = [];
 
   @override
@@ -83,14 +83,14 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
     }
 
     if (_serviceList != null) {
-      _serviceList = _serviceList
+      _serviceList = _serviceList!
           .where((e) => e['serviceType'].toString() == _selectedAppointmentType)
           .toList();
 
-      servicesList = _serviceList.map((m) => Services.fromJson(m)).toList();
+      servicesList = _serviceList!.map((m) => Services.fromJson(m)).toList();
     }
 
-    var groupMap = groupBy(servicesList, (obj) => obj.serviceName);
+    var groupMap = groupBy(servicesList, (dynamic obj) => obj.serviceName);
 
     groupMap.forEach((k, v) => groupList.add(Customer(k, v)));
     super.didChangeDependencies();
@@ -135,7 +135,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
                   } else {
                     _container.setServicesData("status", "0");
                     _container.setServicesData(
-                        "consultaceFee", profileMap[_appointmentTypeKey]);
+                        "consultaceFee", profileMap![_appointmentTypeKey]);
                     Navigator.of(context).pushNamed(
                         Routes.selectAppointmentTimeScreen,
                         arguments: SelectDateTimeArguments(fromScreen: 0));
@@ -150,13 +150,13 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
   }
 
   List<Widget> widgetList() {
-    List<Widget> formWidget = new List();
+    List<Widget> formWidget = [];
     String averageRating = "0";
 
     if (_providerData["providerData"]["data"] != null) {
       if (_providerData["providerData"]["data"] is List) {
         _providerData["providerData"]["data"].map((f) {
-          profileMap.addAll(f);
+          profileMap!.addAll(f);
         }).toList();
       } else {
         profileMap = _providerData["providerData"]["data"];
@@ -167,7 +167,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
               "0";
     } else {
       profileMap = _providerData["providerData"];
-      averageRating = profileMap["averageRating"]?.toStringAsFixed(1) ?? "0";
+      averageRating = profileMap!["averageRating"]?.toStringAsFixed(1) ?? "0";
     }
 
     formWidget.add(ProviderWidget(
@@ -193,12 +193,11 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
   Widget consultancyFeeWidget() {
     String fee = "0.00", duration = "0";
 
-    if (profileMap[_appointmentTypeKey] != null &&
-        profileMap[_appointmentTypeKey].length > 0) {
-      fee = profileMap[_appointmentTypeKey][0]['fee'].toStringAsFixed(2) ??
+    if (profileMap![_appointmentTypeKey] != null &&
+        profileMap![_appointmentTypeKey].length > 0) {
+      fee = profileMap![_appointmentTypeKey][0]['fee'].toStringAsFixed(2) ??
           '0.00';
-      duration =
-          profileMap[_appointmentTypeKey][0]['duration'].toString() ?? '0';
+      duration = profileMap![_appointmentTypeKey][0]['duration'].toString();
     }
 
     return Container(
@@ -207,7 +206,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(14.0),
         border: Border.all(
-          color: Colors.grey[100],
+          color: Colors.grey[100]!,
         ),
       ),
       child: Row(
@@ -216,7 +215,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  Localization.of(context).consultationLabel,
+                  Localization.of(context)!.consultationLabel,
                   style: TextStyle(
                     fontSize: fontSize16,
                     color: colorBlack2,
@@ -239,7 +238,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
                           fontWeight: fontWeightSemiBold,
                           color: colorBlack2)),
                   TextSpan(
-                      text: Localization.of(context).durationLabel,
+                      text: Localization.of(context)!.durationLabel,
                       style: TextStyle(
                           fontSize: fontSize13,
                           fontWeight: fontWeightMedium,
@@ -278,7 +277,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(14.0),
         border: Border.all(
-          color: Colors.grey[100],
+          color: Colors.grey[100]!,
         ),
       ),
       child: Column(
@@ -303,7 +302,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
                       ),
                     ),
                     SizedBox(height: 7),
-                    Text(Localization.of(context).chooseOfferedServices,
+                    Text(Localization.of(context)!.chooseOfferedServices,
                         style: TextStyle(
                             fontSize: fontSize13,
                             fontWeight: fontWeightMedium,
@@ -340,7 +339,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
                         if (groupList != null && groupList.length > 0) {
                           return ExpansionTile(
                             title: Text(
-                              groupList[index].name,
+                              groupList[index].name!,
                               style: TextStyle(
                                 fontSize: fontSize16,
                                 color: colorBlack2,
@@ -385,7 +384,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
       value: _selectedServicesMap.containsKey(services.subServiceId),
       activeColor: AppColors.goldenTainoi,
       onChanged: (value) {
-        value
+        value!
             ? _selectedServicesMap[services.subServiceId] = services
             : _selectedServicesMap.remove(services.subServiceId);
 
@@ -445,7 +444,7 @@ class _SelectServicesScreenState extends State<SelectServicesScreen> {
     );
   }
 
-  void _handleRadioValueChange(int value) {
+  void _handleRadioValueChange(int? value) {
     setState(() => _radioValue = value);
 
     if (value == 0) {

@@ -1,8 +1,8 @@
 import 'provider_network.dart';
 
 class ResProviderGroup {
-  String status;
-  Response response;
+  String? status;
+  Response? response;
 
   ResProviderGroup({this.status, this.response});
 
@@ -17,14 +17,14 @@ class ResProviderGroup {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     if (this.response != null) {
-      data['response'] = this.response.toJson();
+      data['response'] = this.response!.toJson();
     }
     return data;
   }
 }
 
 class Response {
-  Data data;
+  Data? data;
 
   Response({this.data});
 
@@ -35,22 +35,22 @@ class Response {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
 }
 
 class Data {
-  List<ProviderNetwork> providerNetwork;
+  List<ProviderNetwork>? providerNetwork;
 
   Data({this.providerNetwork});
 
   Data.fromJson(Map<String, dynamic> json) {
     if (json['providerNetwork'] != null) {
-      providerNetwork = new List<ProviderNetwork>();
+      providerNetwork = <ProviderNetwork>[];
       json['providerNetwork'].forEach((v) {
-        providerNetwork.add(new ProviderNetwork.fromJson(v));
+        providerNetwork!.add(new ProviderNetwork.fromJson(v));
       });
     }
   }
@@ -59,7 +59,7 @@ class Data {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.providerNetwork != null) {
       data['providerNetwork'] =
-          this.providerNetwork.map((v) => v.toJson()).toList();
+          this.providerNetwork!.map((v) => v.toJson()).toList();
     }
     return data;
   }

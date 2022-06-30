@@ -1,5 +1,5 @@
 class ReqSelectConditionModel {
-  List<String> problemIds;
+  List<String?>? problemIds;
 
   ReqSelectConditionModel({this.problemIds});
 

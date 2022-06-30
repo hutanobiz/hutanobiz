@@ -10,11 +10,11 @@ import 'package:map_launcher/map_launcher.dart';
 
 class Extensions {
   static String addressFormat(
-    String address,
-    String street,
-    String city,
+    String? address,
+    String? street,
+    String? city,
     dynamic state,
-    String zipCode,
+    String? zipCode,
   ) {
     String addressName = ', ', stateCode = ', ';
 
@@ -40,7 +40,7 @@ class Extensions {
         ((addressName == null || addressName == ', ') ? "" : addressName) +
         ", " +
         (city ?? "") +
-        (stateCode ?? '') +
+        (stateCode) +
         " " +
         (zipCode ?? "");
   }
@@ -66,14 +66,14 @@ class Extensions {
     return _distance;
   }
 
-  static String getSortProfessionTitle(String professionTitle) {
+  static String? getSortProfessionTitle(String? professionTitle) {
     Map titleMap = {
       'Medical Doctor': ' MD',
       'Dentist': ' DT',
       'Chiropractor': ' CP',
       'Physical Therapist': ' PT'
     };
-    String _titleSort;
+    String? _titleSort;
     if (titleMap.containsKey(professionTitle)) {
       _titleSort = titleMap[professionTitle];
     } else {
@@ -84,7 +84,7 @@ class Extensions {
 }
 
 extension ImageIcon on String {
-  imageIcon({double height, double width, Color color}) => Image.asset(
+  imageIcon({double? height, double? width, Color? color}) => Image.asset(
         "images/$this.png",
         height: height ?? 14.0,
         width: width ?? 14.0,
@@ -97,7 +97,7 @@ extension FutureError<T> on Future<T> {
       this.timeout(const Duration(seconds: 10)).catchError(onError);
 }
 
-extension DebugLog on String {
+extension DebugLog on String? {
   debugLog() {
     return debugPrint(
       "\n******************************* DebugLog *******************************\n" +
@@ -110,9 +110,9 @@ extension DebugLog on String {
 
 extension InkWellTap on Widget {
   onClick({
-    BuildContext context,
-    String routeName,
-    Function onTap,
+    BuildContext? context,
+    String? routeName,
+    Function? onTap,
     bool roundCorners = true,
   }) {
     return Material(
@@ -150,10 +150,10 @@ extension TimeOfDayExt on String {
 }
 
 extension StringExtension on String {
-  String isValidEmail(BuildContext context) {
+  String? isValidEmail(BuildContext context) {
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    final regex = RegExp(pattern);
+    final regex = RegExp(pattern as String);
 
     if (isEmpty) {
       return Strings.msgEnterAddress;
@@ -164,7 +164,7 @@ extension StringExtension on String {
     }
   }
 
-  String isValidNumber(BuildContext context) {
+  String? isValidNumber(BuildContext context) {
     if (trim().isEmpty) {
       return Strings.msgEnterMobile;
     } else if (trim().length < 10) {
@@ -208,7 +208,7 @@ extension StringExtension on String {
     return (dur.inDays / 365).floor().toString();
   }
 
-  String isValidUSNumber(BuildContext context) {
+  String? isValidUSNumber(BuildContext context) {
     if (trim().isEmpty) {
       return Strings.msgEnterMobile;
     } else if (trim().length < 14) {
@@ -231,7 +231,7 @@ extension StringExtension on String {
     }
   }
 
-  String isValidPassword(BuildContext context) {
+  String? isValidPassword(BuildContext context) {
     if (trim().isEmpty) {
       return Strings.errorPassword;
     } else if (trim().length < 6) {
@@ -251,7 +251,7 @@ extension StringExtension on String {
     }
   }
 
-  String isBlank(BuildContext context, String msg) {
+  String? isBlank(BuildContext context, String msg) {
     return trim().isEmpty ? msg : null;
   }
 
@@ -369,7 +369,7 @@ extension NextDay on int {
 }
 
 extension FormatDate on String {
-  String formatDate({String dateFormat}) {
+  String formatDate({String? dateFormat}) {
     return DateFormat(
       dateFormat ?? Strings.datePattern,
     ).format(DateTime.parse(this).toLocal()).toString();

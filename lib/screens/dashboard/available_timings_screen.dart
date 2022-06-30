@@ -11,12 +11,12 @@ class AvailableTimingsScreen extends StatefulWidget {
 }
 
 class _AvailableTimingsScreenState extends State<AvailableTimingsScreen> {
-  Map _providerData;
-  InheritedContainerState _container;
+  late Map _providerData;
+  late InheritedContainerState _container;
 
-  Map profileMap = Map();
+  Map? profileMap = Map();
 
-  String mondayTimings,
+  String? mondayTimings,
       tuesdayTimings,
       wednesdayTimings,
       thursdayTimings,
@@ -53,7 +53,7 @@ class _AvailableTimingsScreenState extends State<AvailableTimingsScreen> {
   }
 
   List<Widget> widgetList() {
-    List<Widget> formWidget = new List();
+    List<Widget> formWidget = [];
     String averageRating = "---";
 
     if (_providerData["providerData"] != null) {
@@ -64,7 +64,7 @@ class _AvailableTimingsScreenState extends State<AvailableTimingsScreen> {
       if (_providerData["providerData"]["data"] != null) {
         if (_providerData["providerData"]["data"] is List) {
           _providerData["providerData"]["data"].map((f) {
-            profileMap.addAll(f);
+            profileMap!.addAll(f);
           }).toList();
         } else {
           profileMap = _providerData["providerData"]["data"];
@@ -72,7 +72,7 @@ class _AvailableTimingsScreenState extends State<AvailableTimingsScreen> {
       }
     }
 
-    setTimings(profileMap['schedules']);
+    setTimings(profileMap!['schedules']);
 
     formWidget.add(ProviderWidget(
       data: profileMap,
@@ -86,49 +86,49 @@ class _AvailableTimingsScreenState extends State<AvailableTimingsScreen> {
     formWidget.add(_timingWidget(
         "Monday",
         mondayTimings != null && mondayTimings != ""
-            ? mondayTimings.substring(0, mondayTimings.length - 1)
+            ? mondayTimings!.substring(0, mondayTimings!.length - 1)
             : "Unavailable"));
 
     formWidget.add(_timingWidget(
         "Tuesday",
         tuesdayTimings != null && tuesdayTimings != ""
-            ? tuesdayTimings.substring(0, tuesdayTimings.length - 1)
+            ? tuesdayTimings!.substring(0, tuesdayTimings!.length - 1)
             : "Unavailable"));
 
     formWidget.add(_timingWidget(
         "Wednesday",
         wednesdayTimings != null && wednesdayTimings != ""
-            ? wednesdayTimings.substring(0, wednesdayTimings.length - 1)
+            ? wednesdayTimings!.substring(0, wednesdayTimings!.length - 1)
             : "Unavailable"));
 
     formWidget.add(_timingWidget(
         "Thursday",
         thursdayTimings != null && thursdayTimings != ""
-            ? thursdayTimings.substring(0, thursdayTimings.length - 1)
+            ? thursdayTimings!.substring(0, thursdayTimings!.length - 1)
             : "Unavailable"));
 
     formWidget.add(_timingWidget(
         "Friday",
         fridayTimings != null && fridayTimings != ""
-            ? fridayTimings.substring(0, fridayTimings.length - 1)
+            ? fridayTimings!.substring(0, fridayTimings!.length - 1)
             : "Unavailable"));
 
     formWidget.add(_timingWidget(
         "Saturday",
         saturdayTimings != null && saturdayTimings != ""
-            ? saturdayTimings.substring(0, saturdayTimings.length - 1)
+            ? saturdayTimings!.substring(0, saturdayTimings!.length - 1)
             : "Unavailable"));
 
     formWidget.add(_timingWidget(
         "Sunday",
         sundayTimings != null && sundayTimings != ""
-            ? sundayTimings.substring(0, sundayTimings.length - 1)
+            ? sundayTimings!.substring(0, sundayTimings!.length - 1)
             : "Unavailable"));
 
     return formWidget;
   }
 
-  void setTimings(List _scheduleList) {
+  void setTimings(List? _scheduleList) {
     if (_scheduleList != null && _scheduleList.length > 0) {
       mondayTimings = "";
       tuesdayTimings = "";
@@ -174,25 +174,25 @@ class _AvailableTimingsScreenState extends State<AvailableTimingsScreen> {
 
             switch (day) {
               case "1":
-                mondayTimings = mondayTimings + from + " - " + to + "\n";
+                mondayTimings = mondayTimings! + from + " - " + to + "\n";
                 break;
               case "2":
-                tuesdayTimings = tuesdayTimings + from + " - " + to + "\n";
+                tuesdayTimings = tuesdayTimings! + from + " - " + to + "\n";
                 break;
               case "3":
-                wednesdayTimings = wednesdayTimings + from + " - " + to + "\n";
+                wednesdayTimings = wednesdayTimings! + from + " - " + to + "\n";
                 break;
               case "4":
-                thursdayTimings = thursdayTimings + from + " - " + to + "\n";
+                thursdayTimings = thursdayTimings! + from + " - " + to + "\n";
                 break;
               case "5":
-                fridayTimings = fridayTimings + from + " - " + to + "\n";
+                fridayTimings = fridayTimings! + from + " - " + to + "\n";
                 break;
               case "6":
-                saturdayTimings = saturdayTimings + from + " - " + to + "\n";
+                saturdayTimings = saturdayTimings! + from + " - " + to + "\n";
                 break;
               case "7":
-                sundayTimings = sundayTimings + from + " - " + to + "\n";
+                sundayTimings = sundayTimings! + from + " - " + to + "\n";
                 break;
             }
           }

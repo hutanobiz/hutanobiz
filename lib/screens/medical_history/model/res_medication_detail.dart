@@ -1,6 +1,6 @@
 class ResMedicationDetail {
-  String status;
-  Response response;
+  String? status;
+  Response? response;
 
   ResMedicationDetail({this.status, this.response});
 
@@ -15,24 +15,24 @@ class ResMedicationDetail {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     if (this.response != null) {
-      data['response'] = this.response.toJson();
+      data['response'] = this.response!.toJson();
     }
     return data;
   }
 }
 
 class Response {
-  String sId;
-  List<MedicationsDetail> medications;
+  String? sId;
+  List<MedicationsDetail>? medications;
 
   Response({this.sId, this.medications});
 
   Response.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     if (json['medications'] != null) {
-      medications = new List<MedicationsDetail>();
+      medications = <MedicationsDetail>[];
       json['medications'].forEach((v) {
-        medications.add(new MedicationsDetail.fromJson(v));
+        medications!.add(new MedicationsDetail.fromJson(v));
       });
     }
   }
@@ -41,18 +41,18 @@ class Response {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_id'] = this.sId;
     if (this.medications != null) {
-      data['medications'] = this.medications.map((v) => v.toJson()).toList();
+      data['medications'] = this.medications!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class MedicationsDetail {
-  String prescriptionId;
-  String name;
-  String dose;
-  String frequency;
-  String sId;
+  String? prescriptionId;
+  String? name;
+  String? dose;
+  String? frequency;
+  String? sId;
 
   MedicationsDetail(
       {this.prescriptionId, this.name, this.dose, this.frequency, this.sId});

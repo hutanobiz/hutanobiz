@@ -27,7 +27,7 @@ import 'package:provider/provider.dart';
 import '../../../routes.dart';
 
 class VitalReviews extends StatefulWidget {
-  VitalReviews({Key key, this.args}) : super(key: key);
+  VitalReviews({Key? key, this.args}) : super(key: key);
   dynamic args;
   @override
   _VitalReviewsState createState() => _VitalReviewsState();
@@ -63,8 +63,8 @@ class _VitalReviewsState extends State<VitalReviews> {
     borderRadius: BorderRadius.circular(15),
   );
   GlobalKey<FormState> _vitalFormKey = GlobalKey();
-  InheritedContainerState _container;
-  String _selectedDate = "";
+  InheritedContainerState? _container;
+  String? _selectedDate = "";
   String _selectedTime = "";
   bool isLoading = false;
 
@@ -207,14 +207,14 @@ class _VitalReviewsState extends State<VitalReviews> {
                     borderRadius: BorderRadius.all(
                       Radius.circular(14.0),
                     ),
-                    border: Border.all(width: 0.5, color: Colors.grey[300]),
+                    border: Border.all(width: 0.5, color: Colors.grey[300]!),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _commonTextFormField(
                           context,
-                          Localization.of(context).dateFieldHeader,
+                          Localization.of(context)!.dateFieldHeader,
                           _dateController,
                           _dateFocusNode,
                           AppConstants.vitalReviewsDateFormat.toLowerCase(),
@@ -224,7 +224,7 @@ class _VitalReviewsState extends State<VitalReviews> {
                           isForTime: false),
                       _commonTextFormField(
                           context,
-                          Localization.of(context).timeFieldHeader,
+                          Localization.of(context)!.timeFieldHeader,
                           _timeController,
                           _timeFocusNode,
                           "",
@@ -235,27 +235,27 @@ class _VitalReviewsState extends State<VitalReviews> {
                           isAmPMVisible: true),
                       _commonTextFormField(
                           context,
-                          Localization.of(context).bloodPressureFieldHeader,
+                          Localization.of(context)!.bloodPressureFieldHeader,
                           _sbpController,
                           _sbpFocusNode,
-                          Localization.of(context).sbpHint,
+                          Localization.of(context)!.sbpHint,
                           "/",
                           TextInputType.number,
                           isForBloodPressure: true,
                           dbpController: _dbpController,
                           dbpFocusNode: _dbpFocusNode,
-                          hint: Localization.of(context).dbpHint),
+                          hint: Localization.of(context)!.dbpHint),
                       _commonTextFormField(
                           context,
-                          Localization.of(context).heartRateFieldHeader,
+                          Localization.of(context)!.heartRateFieldHeader,
                           _heartRateController,
                           _heartRateFocusNode,
                           "",
-                          Localization.of(context).beatsPerMinuteLabel,
+                          Localization.of(context)!.beatsPerMinuteLabel,
                           TextInputType.number),
                       _commonTextFormField(
                           context,
-                          Localization.of(context).oxygenFieldHeader,
+                          Localization.of(context)!.oxygenFieldHeader,
                           _oxygenController,
                           _oxygenFocusNode,
                           "",
@@ -263,7 +263,7 @@ class _VitalReviewsState extends State<VitalReviews> {
                           TextInputType.number),
                       _commonTextFormField(
                           context,
-                          Localization.of(context).temperatureFieldHeader,
+                          Localization.of(context)!.temperatureFieldHeader,
                           _tempController,
                           _tempFocusNode,
                           "",
@@ -285,7 +285,7 @@ class _VitalReviewsState extends State<VitalReviews> {
                       borderRadius: BorderRadius.all(
                         Radius.circular(14.0),
                       ),
-                      border: Border.all(width: 0.5, color: Colors.grey[300]),
+                      border: Border.all(width: 0.5, color: Colors.grey[300]!),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -325,7 +325,7 @@ class _VitalReviewsState extends State<VitalReviews> {
                       borderRadius: BorderRadius.all(
                         Radius.circular(14.0),
                       ),
-                      border: Border.all(width: 0.5, color: Colors.grey[300]),
+                      border: Border.all(width: 0.5, color: Colors.grey[300]!),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -367,7 +367,7 @@ class _VitalReviewsState extends State<VitalReviews> {
   Widget _takeAnyMedicines(BuildContext context) => Padding(
         padding: EdgeInsets.symmetric(vertical: spacing20),
         child: Text(
-          Localization.of(context).takeVitalsHeader,
+          Localization.of(context)!.takeVitalsHeader,
           style: TextStyle(
               color: Color(0xff0e1c2a),
               fontSize: fontSize16,
@@ -384,9 +384,9 @@ class _VitalReviewsState extends State<VitalReviews> {
           String rightLabel,
           TextInputType inputType,
           {bool isForBloodPressure = false,
-          TextEditingController dbpController,
-          FocusNode dbpFocusNode,
-          String hint,
+          TextEditingController? dbpController,
+          FocusNode? dbpFocusNode,
+          String? hint,
           bool isAmPMVisible = false,
           bool isFieldEnable = true,
           bool isForTime = true,
@@ -417,7 +417,7 @@ class _VitalReviewsState extends State<VitalReviews> {
                         showTimePicker(
                           initialTime: TimeOfDay.now(),
                           context: context,
-                          builder: (BuildContext context, Widget child) {
+                          builder: (BuildContext context, Widget? child) {
                             return Theme(
                               data: ThemeData.dark().copyWith(
                                 colorScheme: ColorScheme.light(
@@ -428,7 +428,7 @@ class _VitalReviewsState extends State<VitalReviews> {
                                 ),
                                 dialogBackgroundColor: Colors.white,
                               ),
-                              child: child,
+                              child: child!,
                             );
                           },
                         ).then((value) {
@@ -517,15 +517,15 @@ class _VitalReviewsState extends State<VitalReviews> {
                     contentPadding: EdgeInsets.all(spacing8),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: Colors.grey[100]),
+                      borderSide: BorderSide(color: Colors.grey[100]!),
                     ),
                     disabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: Colors.grey[100]),
+                      borderSide: BorderSide(color: Colors.grey[100]!),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: Colors.grey[100]),
+                      borderSide: BorderSide(color: Colors.grey[100]!),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -576,11 +576,11 @@ class _VitalReviewsState extends State<VitalReviews> {
                     contentPadding: EdgeInsets.all(spacing8),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: Colors.grey[100]),
+                      borderSide: BorderSide(color: Colors.grey[100]!),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: Colors.grey[100]),
+                      borderSide: BorderSide(color: Colors.grey[100]!),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -641,15 +641,15 @@ class _VitalReviewsState extends State<VitalReviews> {
                   contentPadding: EdgeInsets.all(spacing8),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    borderSide: BorderSide(color: Colors.grey[100]),
+                    borderSide: BorderSide(color: Colors.grey[100]!),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    borderSide: BorderSide(color: Colors.grey[100]),
+                    borderSide: BorderSide(color: Colors.grey[100]!),
                   ),
                   disabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    borderSide: BorderSide(color: Colors.grey[100]),
+                    borderSide: BorderSide(color: Colors.grey[100]!),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -674,9 +674,9 @@ class _VitalReviewsState extends State<VitalReviews> {
           String hintLabel,
           String rightLabel,
           TextInputType inputType,
-          {TextEditingController dbpController,
-          FocusNode dbpFocusNode,
-          String hint,
+          {TextEditingController? dbpController,
+          FocusNode? dbpFocusNode,
+          String? hint,
           bool isFieldEnable = true,
           int maxLength = 3}) =>
       Padding(
@@ -721,11 +721,11 @@ class _VitalReviewsState extends State<VitalReviews> {
                   contentPadding: EdgeInsets.all(spacing8),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    borderSide: BorderSide(color: Colors.grey[100]),
+                    borderSide: BorderSide(color: Colors.grey[100]!),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    borderSide: BorderSide(color: Colors.grey[100]),
+                    borderSide: BorderSide(color: Colors.grey[100]!),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -767,11 +767,11 @@ class _VitalReviewsState extends State<VitalReviews> {
                   contentPadding: EdgeInsets.all(spacing8),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    borderSide: BorderSide(color: Colors.grey[100]),
+                    borderSide: BorderSide(color: Colors.grey[100]!),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    borderSide: BorderSide(color: Colors.grey[100]),
+                    borderSide: BorderSide(color: Colors.grey[100]!),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -791,7 +791,7 @@ class _VitalReviewsState extends State<VitalReviews> {
       );
 
   Widget _yesButtonWidget(BuildContext context) => HutanoButton(
-        label: Localization.of(context).amField,
+        label: Localization.of(context)!.amField,
         onPressed: () {
           setState(() {
             isSwitchSelected = true;
@@ -806,7 +806,7 @@ class _VitalReviewsState extends State<VitalReviews> {
 
   Widget _noButtonWidget(BuildContext context) => HutanoButton(
         borderColor: colorGrey,
-        label: Localization.of(context).pmField,
+        label: Localization.of(context)!.pmField,
         onPressed: () {
           setState(() {
             isSwitchSelected = false;
@@ -853,7 +853,7 @@ class _VitalReviewsState extends State<VitalReviews> {
           ? double.parse(_feetController.value.text.trim() +
               '.' +
               (_inchesController.value.text == ''
-                  ? 0
+                  ? 0 as String
                   : _inchesController.value.text.trim()))
           : null,
       weight: _weightController.value.text != ''
@@ -903,7 +903,7 @@ class _VitalReviewsState extends State<VitalReviews> {
     await ApiManager().addVital(reqModel).then(((result) {
       if (result is CommonRes) {
         ProgressDialogUtils.dismissProgressDialog();
-        Widgets.showToast(result.response);
+        Widgets.showToast(result.response!);
         Navigator.pushNamed(context, Routes.bookingSummary);
         // Navigator.of(context).pushNamed(
         //   _container.projectsResponse[ArgumentConstant.serviceTypeKey]
@@ -927,7 +927,7 @@ class NumericalRangeFormatter extends TextInputFormatter {
   final double min;
   final double max;
 
-  NumericalRangeFormatter({@required this.min, @required this.max});
+  NumericalRangeFormatter({required this.min, required this.max});
 
   @override
   TextEditingValue formatEditUpdate(

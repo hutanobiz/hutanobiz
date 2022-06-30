@@ -13,7 +13,7 @@ import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:package_info/package_info.dart';
 
 class SettingScreen extends StatefulWidget {
-  const SettingScreen({Key key}) : super(key: key);
+  const SettingScreen({Key? key}) : super(key: key);
 
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
@@ -27,7 +27,7 @@ class _SettingsScreenState extends State<SettingScreen> {
     version: 'Unknown',
     buildNumber: 'Unknown',
   );
-  String name = "---", email = "---", phone = "---", avatar;
+  String? name = "---", email = "---", phone = "---", avatar;
   var profileData;
   bool isLoading = false;
 
@@ -56,11 +56,11 @@ class _SettingsScreenState extends State<SettingScreen> {
             isLoading = false;
             if (response['response'] != null) {
               profileData = response['response'];
-              name = response['response']['fullName'].toString() ?? "---";
-              email = response['response']['email'].toString() ?? "---";
-              avatar = response['response']['avatar'].toString();
+              name = response['response']['fullName']?.toString() ?? "---";
+              email = response['response']['email']?.toString() ?? "---";
+              avatar = response['response']['avatar']?.toString();
               String phoneNumber =
-                  response['response']['phoneNumber']?.toString();
+                  (response['response']['phoneNumber']?.toString() ??'');
               phoneNumber = "(" +
                   phoneNumber.substring(0, 3) +
                   ") " +
@@ -105,7 +105,7 @@ class _SettingsScreenState extends State<SettingScreen> {
   }
 
   List<Widget> getFormWidget() {
-    List<Widget> formWidget = new List();
+    List<Widget> formWidget = [];
 
     formWidget.add(
       Padding(
@@ -127,7 +127,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                     color: Colors.grey[100],
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: Colors.grey[300],
+                      color: Colors.grey[300]!,
                     ),
                   ),
                   child: avatar == null || avatar == "null"
@@ -138,7 +138,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                         )
                       : ClipOval(
                           child: Image.network(
-                            ApiBaseHelper.imageUrl + avatar,
+                            ApiBaseHelper.imageUrl + avatar!,
                             width: 76.0,
                             height: 76.0,
                             fit: BoxFit.cover,
@@ -157,7 +157,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                       children: [
                         Expanded(
                           child: Text(
-                            name,
+                            name!,
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w600),
                           ),
@@ -201,7 +201,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                           width: 4,
                         ),
                         Expanded(
-                          child: Text(email,
+                          child: Text(email!,
                               style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w400,
@@ -222,7 +222,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                         SizedBox(
                           width: 4,
                         ),
-                        Text(phone,
+                        Text(phone!,
                             style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w400,
@@ -329,7 +329,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                         onTap: () {
                           InheritedContainerState _container =
                               InheritedContainer.of(context);
-                          _container.providerInsuranceList.clear();
+                          _container.providerInsuranceList!.clear();
                           Navigator.of(context).pushNamed(
                             Routes.paymentMethodScreen,
                             arguments: {'paymentType': 0},
@@ -536,7 +536,7 @@ class _SettingsScreenState extends State<SettingScreen> {
         decoration: BoxDecoration(
           color: AppColors.snow,
           borderRadius: BorderRadius.all(Radius.circular(14.0)),
-          border: Border.all(color: Colors.grey[300]),
+          border: Border.all(color: Colors.grey[300]!),
         ),
         child: Material(
           child: InkWell(
@@ -607,7 +607,7 @@ class _SettingsScreenState extends State<SettingScreen> {
   customListButton(String text, String image, Function onTap) {
     return Material(
       child: InkWell(
-        onTap: onTap,
+        onTap: onTap as void Function()?,
         child: Container(
           height: 52,
           child: Column(

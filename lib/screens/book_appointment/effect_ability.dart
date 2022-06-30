@@ -19,7 +19,7 @@ class EffectAbilityScreen extends StatefulWidget {
 
 class _EffectAbilityScreenState extends State<EffectAbilityScreen> {
   List<MedicineTimeModel> _activityList = [];
-  int radioVal = 1;
+  int? radioVal = 1;
   String _dailyActivity = "1";
 
   @override
@@ -27,11 +27,11 @@ class _EffectAbilityScreenState extends State<EffectAbilityScreen> {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       _activityList.add(MedicineTimeModel(
-          Localization.of(context).dayToDayActivity, false, 1));
+          Localization.of(context)!.dayToDayActivity, false, 1));
       _activityList.add(MedicineTimeModel(
-          Localization.of(context).difficultActivity, false, 2));
+          Localization.of(context)!.difficultActivity, false, 2));
       _activityList.add(MedicineTimeModel(
-          Localization.of(context).impossibleActivity, false, 3));
+          Localization.of(context)!.impossibleActivity, false, 3));
       setState(() {});
     });
   }
@@ -69,7 +69,7 @@ class _EffectAbilityScreenState extends State<EffectAbilityScreen> {
         padding:
             EdgeInsets.symmetric(vertical: spacing20, horizontal: spacing20),
         child: Text(
-          Localization.of(context).conditionAffectedHeader,
+          Localization.of(context)!.conditionAffectedHeader,
           style: TextStyle(
               color: Color(0xff0e1c2a),
               fontSize: fontSize16,
@@ -103,7 +103,7 @@ class _EffectAbilityScreenState extends State<EffectAbilityScreen> {
                       groupValue: radioVal,
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       value: _activityList[index].index,
-                      onChanged: (val) {
+                      onChanged: (dynamic val) {
                         setState(() {
                           radioVal = val;
                         });

@@ -3,10 +3,10 @@ import 'package:hutano/colors.dart';
 
 class TrackingButton extends StatelessWidget {
   TrackingButton(
-      {Key key,
-      @required this.title,
-      @required this.image,
-      @required this.onTap})
+      {Key? key,
+      required this.title,
+      required this.image,
+      required this.onTap})
       : super(key: key);
   String title, image;
   Function onTap;
@@ -14,7 +14,7 @@ class TrackingButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-        onPressed: onTap,
+        onPressed: onTap as void Function()?,
         child: Row(
           children: [
             Image.asset(

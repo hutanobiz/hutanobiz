@@ -2,27 +2,27 @@ import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
   CustomTextField(
-      {Key key,
-      @required this.labelText,
+      {Key? key,
+      required this.labelText,
       this.inputType,
       this.initialValue,
       this.maxLength,
       this.controller,
-      @required this.onChanged,
+      required this.onChanged,
       this.autoFocus,
       this.autoValidate,
       this.validator})
       : super(key: key);
 
   final String labelText;
-  final String initialValue;
-  final TextInputType inputType;
-  final int maxLength;
+  final String? initialValue;
+  final TextInputType? inputType;
+  final int? maxLength;
   final Function onChanged;
-  final TextEditingController controller;
-  final bool autoFocus;
-  final bool autoValidate;
-  final FormFieldValidator<String> validator;
+  final TextEditingController? controller;
+  final bool? autoFocus;
+  final bool? autoValidate;
+  final FormFieldValidator<String>? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +32,14 @@ class CustomTextField extends StatelessWidget {
       autofocus: autoFocus ?? false,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: validator ?? null,
-      onChanged: onChanged,
+      onChanged: onChanged as void Function(String)?,
       controller: controller ?? null,
       maxLength: maxLength ?? null,
       decoration: InputDecoration(
         labelText: labelText,
         counterText: "",
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey[300]),
+          borderSide: BorderSide(color: Colors.grey[300]!),
           borderRadius: BorderRadius.circular(12.0),
         ),
         border: OutlineInputBorder(

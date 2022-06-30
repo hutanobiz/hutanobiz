@@ -16,7 +16,7 @@ import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:intl/intl.dart';
 
 class ConsultationHistoryScreen extends StatefulWidget {
-  ConsultationHistoryScreen({Key key}) : super(key: key);
+  ConsultationHistoryScreen({Key? key}) : super(key: key);
 
   @override
   _ConsultationHistoryScreenState createState() =>
@@ -26,11 +26,11 @@ class ConsultationHistoryScreen extends StatefulWidget {
 class _ConsultationHistoryScreenState extends State<ConsultationHistoryScreen> {
   ApiBaseHelper _api = ApiBaseHelper();
 
-  List<dynamic> _closedAppointmentsList = List();
+  List<dynamic> _closedAppointmentsList = [];
   // List<dynamic> ondemandAppointmentsList = List();
   // List<dynamic> _activeAppointmentsList = List();
 
-  Future<dynamic> _requestsFuture;
+  Future<dynamic>? _requestsFuture;
 
   @override
   void initState() {
@@ -132,10 +132,8 @@ class _ConsultationHistoryScreenState extends State<ConsultationHistoryScreen> {
   }
 
   Widget _requestList(Map response) {
-    String name = "---",
-        avatar,
-        averageRating = "---",
-        professionalTitle = "---";
+    String name = "---";
+    String? avatar, averageRating = "---", professionalTitle = "---";
 
     if (response["averageRating"] != null) {
       averageRating = '${response["averageRating"]?.toStringAsFixed(1)}' +
@@ -168,9 +166,8 @@ class _ConsultationHistoryScreenState extends State<ConsultationHistoryScreen> {
         }
         if (response["doctorData"]["education"].isNotEmpty) {
           name += ' ' +
-                  response["doctorData"]["education"][0]["degree"]
-                      ?.toString() ??
-              "---";
+              (response["doctorData"]["education"][0]["degree"]?.toString() ??
+                  "---");
         }
       } else {
         if (response["doctorData"][0]["professionalTitle"] != null) {
@@ -181,9 +178,9 @@ class _ConsultationHistoryScreenState extends State<ConsultationHistoryScreen> {
         }
         if (response["doctorData"][0]["education"].isNotEmpty) {
           name += ' ' +
-                  response["doctorData"][0]["education"][0]["degree"]
+              (response["doctorData"][0]["education"][0]["degree"]
                       ?.toString() ??
-              "---";
+                  "---");
         }
       }
     }

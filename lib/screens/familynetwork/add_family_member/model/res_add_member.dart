@@ -1,7 +1,7 @@
 class ResAddMember {
-  String status;
-  String response;
-  Data data;
+  String? status;
+  String? response;
+  Data? data;
 
   ResAddMember({this.status, this.response, this.data});
 
@@ -16,15 +16,15 @@ class ResAddMember {
     data['status'] = status;
     data['response'] = response;
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
 }
 
 class Data {
-  String sId;
-  List<FamilyNetwork> familyNetwork;
+  String? sId;
+  List<FamilyNetwork>? familyNetwork;
 
   Data({this.sId, this.familyNetwork});
 
@@ -33,7 +33,7 @@ class Data {
     if (json['family_network'] != null) {
       familyNetwork = <FamilyNetwork>[];
       json['family_network'].forEach((v) {
-        familyNetwork.add(FamilyNetwork.fromJson(v));
+        familyNetwork!.add(FamilyNetwork.fromJson(v));
       });
     }
   }
@@ -43,20 +43,20 @@ class Data {
     data['_id'] = sId;
     if (familyNetwork != null) {
       data['family_network'] =
-          familyNetwork.map((v) => v.toJson()).toList();
+          familyNetwork!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class FamilyNetwork {
-  String sId;
-  String fullName;
-  String phoneNumber;
-  int userRelation;
-  List<int> userPermissions;
-  String relation;
-  String avatar;
+  String? sId;
+  String? fullName;
+  String? phoneNumber;
+  int? userRelation;
+  List<int>? userPermissions;
+  String? relation;
+  String? avatar;
   bool isSelected=false;
 
   FamilyNetwork(

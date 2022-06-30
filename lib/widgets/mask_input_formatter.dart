@@ -29,8 +29,8 @@ class CardMonthInputFormatter extends TextInputFormatter {
 
 class MaskedTextInputFormatter extends TextInputFormatter {
   MaskedTextInputFormatter({
-    @required this.mask,
-    @required this.separator,
+    required this.mask,
+    required this.separator,
   });
 
   final String mask;

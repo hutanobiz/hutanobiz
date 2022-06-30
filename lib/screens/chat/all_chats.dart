@@ -17,7 +17,7 @@ import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:intl/intl.dart';
 
 class ChatMain extends StatefulWidget {
-  ChatMain({Key key}) : super(key: key);
+  ChatMain({Key? key}) : super(key: key);
 
   @override
   _ChatMainState createState() => _ChatMainState();
@@ -28,7 +28,7 @@ class _ChatMainState extends State<ChatMain> {
   final seachAppointmentController = TextEditingController();
   final _searchDiseaseFocusNode = FocusNode();
   bool isIndicatorLoading = false;
-  List<SearchAppointment> recentChatList = [];
+  List<SearchAppointment>? recentChatList = [];
 
   @override
   void initState() {
@@ -136,13 +136,13 @@ class _ChatMainState extends State<ChatMain> {
           errorBuilder: (_, object) {
             return Container();
           },
-          itemBuilder: (context, suggestion) {
+          itemBuilder: (context, dynamic suggestion) {
             return searchChatProviderWidget(suggestion, context);
           },
           transitionBuilder: (context, suggestionsBox, controller) {
             return suggestionsBox;
           },
-          onSuggestionSelected: (suggestion) {
+          onSuggestionSelected: (dynamic suggestion) {
             seachAppointmentController.text = '';
             Navigator.pushNamed(context, Routes.chat, arguments: suggestion)
                 .then((value) {
@@ -167,7 +167,7 @@ class _ChatMainState extends State<ChatMain> {
           ),
         )
       : recentChatList == null ||
-              (recentChatList == null || recentChatList.isEmpty) &&
+              (recentChatList == null || recentChatList!.isEmpty) &&
                   !isIndicatorLoading
           ? Expanded(
               child: Center(
@@ -190,10 +190,10 @@ class _ChatMainState extends State<ChatMain> {
                       },
                       shrinkWrap: true,
                       physics: ClampingScrollPhysics(),
-                      itemCount: recentChatList.length,
+                      itemCount: recentChatList!.length,
                       itemBuilder: (context, index) {
                         return recentChatProviderWidget(
-                            recentChatList[index], context);
+                            recentChatList![index], context);
                       })),
             );
 
@@ -205,7 +205,7 @@ class _ChatMainState extends State<ChatMain> {
         borderRadius: BorderRadius.all(
           Radius.circular(14.0),
         ),
-        border: Border.all(color: Colors.grey[300]),
+        border: Border.all(color: Colors.grey[300]!),
       ),
       child: Column(
         children: <Widget>[
@@ -220,14 +220,14 @@ class _ChatMainState extends State<ChatMain> {
                       type: MaterialType.transparency,
                       child: InkWell(
                         splashColor: Colors.grey[200],
-                        onTap: chatAppointment.doctor[0].avatar != null
+                        onTap: chatAppointment.doctor![0].avatar != null
                             ? () {
                                 FocusScope.of(context)
                                     .requestFocus(FocusNode());
                                 Navigator.of(context).pushNamed(
                                   Routes.providerImageScreen,
                                   arguments: (ApiBaseHelper.imageUrl +
-                                      chatAppointment.doctor[0].avatar),
+                                      chatAppointment.doctor![0].avatar!),
                                 );
                               }
                             : null,
@@ -236,16 +236,16 @@ class _ChatMainState extends State<ChatMain> {
                           height: 80.0,
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: chatAppointment.doctor[0].avatar == null
+                              image: (chatAppointment.doctor![0].avatar == null
                                   ? AssetImage(FileConstants.icImgPlaceHolder)
                                   : NetworkImage(ApiBaseHelper.imageUrl +
-                                      chatAppointment.doctor[0].avatar),
+                                      chatAppointment.doctor![0].avatar!)) as ImageProvider<Object>,
                               fit: BoxFit.cover,
                             ),
                             borderRadius:
                                 new BorderRadius.all(Radius.circular(50.0)),
                             border: new Border.all(
-                              color: Colors.grey[300],
+                              color: Colors.grey[300]!,
                               width: 1.0,
                             ),
                           ),
@@ -272,9 +272,9 @@ class _ChatMainState extends State<ChatMain> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          chatAppointment.doctor[0].title +
+                          chatAppointment.doctor![0].title! +
                               ' ' +
-                              chatAppointment.doctor[0].fullName,
+                              chatAppointment.doctor![0].fullName!,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -300,15 +300,15 @@ class _ChatMainState extends State<ChatMain> {
                             Text(
                               DateFormat('MMM dd, hh:mm a')
                                   .format(DateTime.utc(
-                                          DateTime.parse(chatAppointment.date)
+                                          DateTime.parse(chatAppointment.date!)
                                               .year,
-                                          DateTime.parse(chatAppointment.date)
+                                          DateTime.parse(chatAppointment.date!)
                                               .month,
-                                          DateTime.parse(chatAppointment.date)
+                                          DateTime.parse(chatAppointment.date!)
                                               .day,
-                                          int.parse(chatAppointment.fromTime
+                                          int.parse(chatAppointment.fromTime!
                                               .split(':')[0]),
-                                          int.parse(chatAppointment.fromTime
+                                          int.parse(chatAppointment.fromTime!
                                               .split(':')[1]))
                                       .toLocal())
                                   .toString(),
@@ -387,13 +387,13 @@ class _ChatMainState extends State<ChatMain> {
                   type: MaterialType.transparency,
                   child: InkWell(
                     splashColor: Colors.grey[200],
-                    onTap: chatAppointment.doctor[0].avatar != null
+                    onTap: chatAppointment.doctor![0].avatar != null
                         ? () {
                             FocusScope.of(context).requestFocus(FocusNode());
                             Navigator.of(context).pushNamed(
                               Routes.providerImageScreen,
                               arguments: (ApiBaseHelper.imageUrl +
-                                  chatAppointment.doctor[0].avatar),
+                                  chatAppointment.doctor![0].avatar!),
                             );
                           }
                         : null,
@@ -402,16 +402,16 @@ class _ChatMainState extends State<ChatMain> {
                       height: 60.0,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: chatAppointment.doctor[0].avatar == null
+                          image: (chatAppointment.doctor![0].avatar == null
                               ? AssetImage(FileConstants.icImgPlaceHolder)
                               : NetworkImage(ApiBaseHelper.imageUrl +
-                                  chatAppointment.doctor[0].avatar),
+                                  chatAppointment.doctor![0].avatar!)) as ImageProvider<Object>,
                           fit: BoxFit.cover,
                         ),
                         borderRadius:
                             new BorderRadius.all(Radius.circular(50.0)),
                         border: new Border.all(
-                          color: Colors.grey[300],
+                          color: Colors.grey[300]!,
                           width: 1.0,
                         ),
                       ),
@@ -438,9 +438,9 @@ class _ChatMainState extends State<ChatMain> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      chatAppointment.doctor[0].title +
+                      chatAppointment.doctor![0].title! +
                           ' ' +
-                          chatAppointment.doctor[0].fullName,
+                          chatAppointment.doctor![0].fullName!,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(

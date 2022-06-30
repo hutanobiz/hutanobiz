@@ -9,11 +9,11 @@ import 'package:hutano/widgets/controller.dart';
 import 'model/provider_group.dart';
 
 class ExpandableHeader extends StatelessWidget {
-  final ProviderGroup providerGroup;
-  final Function onDelete;
-  final int pos;
+  final ProviderGroup? providerGroup;
+  final Function? onDelete;
+  final int? pos;
 
-  const ExpandableHeader({Key key, this.providerGroup, this.onDelete, this.pos})
+  const ExpandableHeader({Key? key, this.providerGroup, this.onDelete, this.pos})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class ExpandableHeader extends StatelessWidget {
               children: [
                 Flexible(
                   child: Text(
-                    providerGroup.groupType,
+                    providerGroup!.groupType!,
                     style: const TextStyle(
                         color: colorBlack85, fontSize: fontSize14),
                   ),
@@ -52,7 +52,7 @@ class ExpandableHeader extends StatelessWidget {
                       borderRadius: BorderRadius.circular(7),
                       color: colorYellow),
                   child: Text(
-                    providerGroup.count.toString(),
+                    providerGroup!.count.toString(),
                     style: TextStyle(fontSize: fontSize15),
                   ),
                 ),
@@ -66,7 +66,7 @@ class ExpandableHeader extends StatelessWidget {
               color: Colors.grey,
             ),
             onPressed: () {
-              onDelete(pos);
+              onDelete!(pos);
             },
           )
         ],

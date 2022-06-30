@@ -17,8 +17,8 @@ import '../../widgets/hutano_button.dart';
 import 'model/req_invite.dart';
 
 class InviteByTextScreen extends StatefulWidget {
-  String phone;
-  String shareMessage;
+  String? phone;
+  String? shareMessage;
 
   InviteByTextScreen(this.phone, {this.shareMessage});
 
@@ -47,7 +47,7 @@ class _InviteByTextScreenState extends State<InviteByTextScreen> {
     try {
       var res = await ApiManager().getInviteMessage(request);
       ProgressDialogUtils.dismissProgressDialog();
-      textMessageController.text = res.message;
+      textMessageController.text = res.message!;
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     } catch (e) {
@@ -67,7 +67,7 @@ class _InviteByTextScreenState extends State<InviteByTextScreen> {
             child: ListView(
               children: [
                 Text(
-                  Localization.of(context).text,
+                  Localization.of(context)!.text,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                       color: colorBlack85,
@@ -80,7 +80,7 @@ class _InviteByTextScreenState extends State<InviteByTextScreen> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    Localization.of(context).typeMessage,
+                    Localization.of(context)!.typeMessage,
                     style: TextStyle(
                         color: colorBlack,
                         fontWeight: fontWeightMedium,
@@ -112,7 +112,7 @@ class _InviteByTextScreenState extends State<InviteByTextScreen> {
 
   Widget _buildNextButton() {
     return HutanoButton(
-      label: Localization.of(context).next,
+      label: Localization.of(context)!.next,
       labelColor: colorWhite,
       color: colorPurple,
       onPressed: () {
@@ -137,7 +137,7 @@ class _InviteByTextScreenState extends State<InviteByTextScreen> {
         Flexible(
           flex: 1,
           child: HutanoButton(
-            label: Localization.of(context).send,
+            label: Localization.of(context)!.send,
             labelColor: colorBlack,
             onPressed: () {
               _sendButtonClick();
@@ -149,7 +149,7 @@ class _InviteByTextScreenState extends State<InviteByTextScreen> {
   }
 
   Future<void> _sendButtonClick() async {
-    if (!_key.currentState.validate()) {
+    if (!_key.currentState!.validate()) {
       return;
     }
     ProgressDialogUtils.showProgressDialog(context);
@@ -172,11 +172,11 @@ class _InviteByTextScreenState extends State<InviteByTextScreen> {
       });
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(
-          context, Localization.of(context).commonErrorMsg);
+          context, Localization.of(context)!.commonErrorMsg);
     }
   }
 
@@ -188,7 +188,7 @@ class _InviteByTextScreenState extends State<InviteByTextScreen> {
         fontSize: fontSize12,
       ),
       onChanged: (s) {
-        _key.currentState.validate();
+        _key.currentState!.validate();
       },
       validator: (email) =>
           email.toString().isBlank(context, 'Please Enter message'),
@@ -200,7 +200,7 @@ class _InviteByTextScreenState extends State<InviteByTextScreen> {
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5.0),
-          borderSide: BorderSide(color: Colors.grey[300]),
+          borderSide: BorderSide(color: Colors.grey[300]!),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(14.0)),

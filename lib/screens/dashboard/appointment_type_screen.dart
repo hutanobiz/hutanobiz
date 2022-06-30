@@ -13,31 +13,31 @@ import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/widgets.dart';
 
 class AppointmentTypeScreen extends StatefulWidget {
-  final Map appointmentTypeMap;
+  final Map? appointmentTypeMap;
 
-  AppointmentTypeScreen({Key key, this.appointmentTypeMap}) : super(key: key);
+  AppointmentTypeScreen({Key? key, this.appointmentTypeMap}) : super(key: key);
 
   @override
   _AppointmentTypeScreenState createState() => _AppointmentTypeScreenState();
 }
 
 class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
-  InheritedContainerState conatiner;
-  Map _appointentTypeMap = {};
+  late InheritedContainerState conatiner;
+  Map? _appointentTypeMap = {};
   bool isOfficeSelected = false;
   bool isVirtualSelected = false;
   bool isHomeSelected = false;
   String selectedType = "";
-  var isFirstAppointmentOnline;
+  late var isFirstAppointmentOnline;
   var totalAppointmentWithProvider;
 
   @override
   void initState() {
     super.initState();
 
-    _appointentTypeMap["isOfficeEnabled"] = true;
-    _appointentTypeMap["isVideoChatEnabled"] = true;
-    _appointentTypeMap["isOnsiteEnabled"] = true;
+    _appointentTypeMap!["isOfficeEnabled"] = true;
+    _appointentTypeMap!["isVideoChatEnabled"] = true;
+    _appointentTypeMap!["isOnsiteEnabled"] = true;
 
     if (widget.appointmentTypeMap != null) {
       _appointentTypeMap = widget.appointmentTypeMap;
@@ -63,9 +63,9 @@ class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
         addBottomArrows: true,
         onForwardTap: () {
           if (selectedType.isNotEmpty) {
-            if (widget.appointmentTypeMap['services'] != null) {
+            if (widget.appointmentTypeMap!['services'] != null) {
               List<Services> searchedSubService = [];
-              for (Services s in widget.appointmentTypeMap['services']) {
+              for (Services s in widget.appointmentTypeMap!['services']) {
                 if (s.serviceType.toString() == selectedType) {
                   searchedSubService.add(s);
                   break;
@@ -84,7 +84,7 @@ class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
               Navigator.of(context).pushNamed(Routes.selectServicesScreen);
             }
           } else {
-            Widgets.showToast(Localization.of(context).noAppointmentSelected);
+            Widgets.showToast(Localization.of(context)!.noAppointmentSelected);
           }
         },
       ),
@@ -97,7 +97,7 @@ class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(bottom: 25),
-          child: Text(Localization.of(context).appointmentTypeScreenHeader,
+          child: Text(Localization.of(context)!.appointmentTypeScreenHeader,
               style: const TextStyle(
                   color: Colors.black,
                   fontWeight: fontWeightSemiBold,
@@ -133,27 +133,27 @@ class _AppointmentTypeScreenState extends State<AppointmentTypeScreen> {
             : SizedBox(),
         cardView(
             FileConstants.icProviderOffice,
-            Localization.of(context).providerOfficeLabel,
-            Localization.of(context).providerOfficeSubLabel,
-            _appointentTypeMap[ArgumentConstant.isOfficeEnabled],
+            Localization.of(context)!.providerOfficeLabel,
+            Localization.of(context)!.providerOfficeSubLabel,
+            _appointentTypeMap![ArgumentConstant.isOfficeEnabled],
             '1',
             isOfficeSelected,
             !(isFirstAppointmentOnline && totalAppointmentWithProvider == 0)),
         SizedBox(height: 20.0),
         cardView(
             FileConstants.icVideoChatAppointment,
-            Localization.of(context).videoChatLabel,
-            Localization.of(context).videoChatSubLabel,
-            _appointentTypeMap[ArgumentConstant.isVideoChatEnabled],
+            Localization.of(context)!.videoChatLabel,
+            Localization.of(context)!.videoChatSubLabel,
+            _appointentTypeMap![ArgumentConstant.isVideoChatEnabled],
             '2',
             isVirtualSelected,
             true),
         SizedBox(height: 20.0),
         cardView(
             FileConstants.icOnSiteAppointment,
-            Localization.of(context).onSiteLabel,
-            Localization.of(context).onSiteSubLabel,
-            _appointentTypeMap[ArgumentConstant.isOnsiteEnabled],
+            Localization.of(context)!.onSiteLabel,
+            Localization.of(context)!.onSiteSubLabel,
+            _appointentTypeMap![ArgumentConstant.isOnsiteEnabled],
             '3',
             isHomeSelected,
             !(isFirstAppointmentOnline && totalAppointmentWithProvider == 0)),

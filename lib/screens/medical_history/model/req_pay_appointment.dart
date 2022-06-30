@@ -1,8 +1,8 @@
 class ReqPayAppointmnet {
-  final String appointmentId;
-  final String token;
-  final String amount;
-  final String customer;
+  final String? appointmentId;
+  final String? token;
+  final String? amount;
+  final String? customer;
   ReqPayAppointmnet({
     this.appointmentId,
     this.token,

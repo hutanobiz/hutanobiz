@@ -7,7 +7,7 @@ class CommonHeader extends StatelessWidget {
   final Color backgroundColor;
 
   const CommonHeader({
-    Key key,
+    Key? key,
     this.showBack = false,
     this.backgroundColor = Colors.transparent,
   }) : super(key: key);

@@ -8,8 +8,8 @@ import 'package:hutano/widgets/custom_loader.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 
 class VideoListScreen extends StatefulWidget {
-  VideoListScreen({Key key, this.appointmentId}) : super(key: key);
-  final String appointmentId;
+  VideoListScreen({Key? key, this.appointmentId}) : super(key: key);
+  final String? appointmentId;
 
   @override
   _VideoListScreenState createState() => _VideoListScreenState();
@@ -17,8 +17,8 @@ class VideoListScreen extends StatefulWidget {
 
 class _VideoListScreenState extends State<VideoListScreen> {
   ApiBaseHelper api = ApiBaseHelper();
-  Future<dynamic> _requestsInsurnace;
-  List<dynamic> _responseData = List();
+  Future<dynamic>? _requestsInsurnace;
+  List<dynamic>? _responseData = [];
   dynamic response;
   bool isInitialLoad = true;
   bool isLoading = false;
@@ -56,7 +56,7 @@ class _VideoListScreenState extends State<VideoListScreen> {
                 return Center(child: Text(response));
               } else {
                 _responseData = response;
-                return _listWidget(_responseData);
+                return _listWidget(_responseData!);
               }
             } else if (snapshot.hasError) {
               return Text("${snapshot.error}");
@@ -82,7 +82,7 @@ class _VideoListScreenState extends State<VideoListScreen> {
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(14.0)),
-              border: Border.all(color: Colors.grey[300])),
+              border: Border.all(color: Colors.grey[300]!)),
           child: InkWell(
             onTap: () {
               Navigator.push(

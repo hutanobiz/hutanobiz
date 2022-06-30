@@ -6,12 +6,12 @@ import 'package:hutano/widgets/custom_loader.dart';
 
 class LoadingBackground extends StatelessWidget {
   LoadingBackground(
-      {Key key,
+      {Key? key,
       this.isLoading: false,
-      @required this.title,
+      required this.title,
       this.isAddBack: true,
       this.padding,
-      @required this.child,
+      required this.child,
       this.isAddAppBar: true,
       this.addBottomArrows: false,
       this.addBackButton: false,
@@ -27,15 +27,15 @@ class LoadingBackground extends StatelessWidget {
   final Widget child;
   final bool isAddBack;
   final title;
-  final EdgeInsets padding;
+  final EdgeInsets? padding;
   final bool isAddAppBar, addBottomArrows;
   final color;
   final bool addBackButton;
-  final Function onForwardTap;
+  final Function? onForwardTap;
   final Color buttonColor;
   final bool isRightButton;
-  final Widget rightButton;
-  final Function onRightButtonTap;
+  final Widget? rightButton;
+  final Function? onRightButtonTap;
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +84,7 @@ class LoadingBackground extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(right: 20.0),
                               child: InkWell(
-                                onTap: onRightButtonTap,
+                                onTap: onRightButtonTap as void Function()?,
                                 child: rightButton ?? Container(),
                               ),
                             )

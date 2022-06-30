@@ -1,6 +1,6 @@
 class ReqAddMyInsurance {
-  final String userId;
-  final String insuranceId;
+  final String? userId;
+  final String? insuranceId;
   ReqAddMyInsurance({
     this.userId,
     this.insuranceId,

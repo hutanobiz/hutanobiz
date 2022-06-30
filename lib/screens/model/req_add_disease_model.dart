@@ -1,7 +1,7 @@
 class ReqAddDiseaseModel {
-  String medicalHistory;
-  String year;
-  String month;
+  String? medicalHistory;
+  String? year;
+  String? month;
 
   ReqAddDiseaseModel({this.medicalHistory, this.year, this.month});
 

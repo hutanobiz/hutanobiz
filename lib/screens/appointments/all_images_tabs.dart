@@ -15,13 +15,13 @@ class AllImagesTabs extends StatefulWidget {
 
 class _AllImagesTabsState extends State<AllImagesTabs>
     with SingleTickerProviderStateMixin {
-  TabController _tabController;
-  List tabs;
+  TabController? _tabController;
+  late List tabs;
   int _currentIndex = 0;
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _tabController!.dispose();
     super.dispose();
   }
 
@@ -29,12 +29,12 @@ class _AllImagesTabsState extends State<AllImagesTabs>
     super.initState();
     tabs = ['Recent', 'Archive', 'View all'];
     _tabController = TabController(length: tabs.length, vsync: this);
-    _tabController.addListener(_handleTabControllerTick);
+    _tabController!.addListener(_handleTabControllerTick);
   }
 
   void _handleTabControllerTick() {
     setState(() {
-      _currentIndex = _tabController.index;
+      _currentIndex = _tabController!.index;
     });
   }
 
@@ -91,11 +91,11 @@ class _AllImagesTabsState extends State<AllImagesTabs>
                       text,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          color: _tabController.index == index
+                          color: _tabController!.index == index
                               ? AppColors.windsor
                               : colorBlack2,
                           fontSize: fontSize14,
-                          fontWeight: _tabController.index == index
+                          fontWeight: _tabController!.index == index
                               ? fontWeightMedium
                               : fontWeightRegular),
                     )

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -18,13 +19,13 @@ import 'package:provider/provider.dart';
 import '../../../colors.dart';
 
 class MyContacts extends StatefulWidget {
-  final TextEditingController controller;
-  final List<Relations> relationList;
-  final ValueSetter<Relations> onRelationSelected;
-  final FocusNode searchFocusNode;
+  final TextEditingController? controller;
+  final List<Relations>? relationList;
+  final ValueSetter<Relations>? onRelationSelected;
+  final FocusNode? searchFocusNode;
 
   const MyContacts(
-      {Key key,
+      {Key? key,
       this.controller,
       this.relationList,
       this.onRelationSelected,
@@ -74,7 +75,7 @@ class _MyContactsState extends State<MyContacts> {
     }
   }
 
-  _openStatePicker(String name, String phone, int index, bool isSearch) {
+  _openStatePicker(String? name, String? phone, int index, bool isSearch) {
     showDropDownSheet(
         list: Column(
           children: [
@@ -85,7 +86,7 @@ class _MyContactsState extends State<MyContacts> {
             Expanded(
               child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: widget.relationList.length,
+                itemCount: widget.relationList!.length,
                 itemBuilder: (context, pos) {
                   return InkWell(
                       onTap: () {
@@ -96,8 +97,8 @@ class _MyContactsState extends State<MyContacts> {
                             name: name,
                             phone: phone,
                             relationId:
-                                widget.relationList[pos].relationId.toString(),
-                            relation: widget.relationList[pos].relation);
+                                widget.relationList![pos].relationId.toString(),
+                            relation: widget.relationList![pos].relation);
                         _finalMemberList.add(reqModel);
                         Navigator.pop(context);
                         Provider.of<FamilyProvider>(context, listen: false)
@@ -107,11 +108,11 @@ class _MyContactsState extends State<MyContacts> {
                             .removeProviderContacts(index);
                         Provider.of<FamilyProvider>(context, listen: false)
                             .removeFilteredProviderContacts(index);
-                        widget.onRelationSelected(widget.relationList[pos]);
+                        widget.onRelationSelected!(widget.relationList![pos]);
                       },
                       child: ListTile(
                         title: Center(
-                          child: Text(widget.relationList[pos].relation),
+                          child: Text(widget.relationList![pos].relation!),
                         ),
                       ));
                 },
@@ -149,7 +150,7 @@ class _MyContactsState extends State<MyContacts> {
       _contacts.retainWhere((contact) {
         String searchTerm = searchController.text.toLowerCase();
         String searchTermFlatten = flattenPhoneNumber(searchTerm);
-        String contactName = contact.displayName.toLowerCase();
+        String contactName = contact.displayName!.toLowerCase();
         bool nameMatches = contactName.contains(searchTerm);
         if (nameMatches == true) {
           return true;
@@ -159,10 +160,10 @@ class _MyContactsState extends State<MyContacts> {
           return false;
         }
 
-        var phone = contact.phones.firstWhere((phn) {
-          String phnFlattened = flattenPhoneNumber(phn.value);
+        var phone = contact.phones!.firstWhereOrNull((phn) {
+          String phnFlattened = flattenPhoneNumber(phn.value!);
           return phnFlattened.contains(searchTermFlatten);
-        }, orElse: () => null);
+        });
 
         return phone != null;
       });
@@ -258,8 +259,8 @@ class _MyContactsState extends State<MyContacts> {
                                           fontSize: 13.0),
                                     ),
                                     subtitle: Text(
-                                      contact.phones.length > 0
-                                          ? contact.phones.elementAt(0).value
+                                      contact.phones!.length > 0
+                                          ? contact.phones!.elementAt(0).value!
                                           : '',
                                       style: const TextStyle(
                                           color: colorBlack2,
@@ -271,7 +272,7 @@ class _MyContactsState extends State<MyContacts> {
                                         onTap: () async {
                                           _openStatePicker(
                                               contact.displayName,
-                                              contact.phones.elementAt(0).value,
+                                              contact.phones!.elementAt(0).value,
                                               index,
                                               isSearching);
                                           // var reqModel = FamilyMembers(name: contact.displayName,phone: contact.phones.elementAt(0).value,relationId: "1");
@@ -286,18 +287,18 @@ class _MyContactsState extends State<MyContacts> {
                                               fontWeight: fontWeightMedium),
                                         )),
                                     leading: (contact.avatar != null &&
-                                            contact.avatar.length > 0)
+                                            contact.avatar!.length > 0)
                                         ? CircleAvatar(
                                             backgroundImage:
-                                                MemoryImage(contact.avatar),
+                                                MemoryImage(contact.avatar!),
                                           )
                                         : Container(
                                             decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
                                                 gradient: LinearGradient(
                                                     colors: [
-                                                      Colors.yellow[800],
-                                                      Colors.yellow[400],
+                                                      Colors.yellow[800]!,
+                                                      Colors.yellow[400]!,
                                                     ],
                                                     begin: Alignment.bottomLeft,
                                                     end: Alignment.topRight)),

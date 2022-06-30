@@ -27,8 +27,8 @@ class InviteFamilySuccess extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               AppHeader(
-                title: Localization.of(context).inviteFamilyAndFriends,
-                subTitle: Localization.of(context).taskComplete,
+                title: Localization.of(context)!.inviteFamilyAndFriends,
+                subTitle: Localization.of(context)!.taskComplete,
               ),
               Spacer(),
               RoundSuccess(),

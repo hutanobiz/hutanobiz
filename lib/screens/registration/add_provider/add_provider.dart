@@ -43,8 +43,8 @@ class _AddProviderState extends State<AddProvider> {
               
               AppHeader(
                 progressSteps: HutanoProgressSteps.four,
-                title: Localization.of(context).addProviders,
-                subTitle: Localization.of(context).addProviderToNetwork,
+                title: Localization.of(context)!.addProviders,
+                subTitle: Localization.of(context)!.addProviderToNetwork,
               ),
               SizedBox(
                 height: spacing20,
@@ -52,7 +52,7 @@ class _AddProviderState extends State<AddProvider> {
               _buildSearchByName(context),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: spacing10),
-                child: Text(Localization.of(context).or),
+                child: Text(Localization.of(context)!.or),
               ),
               _buildSearchByPhoneNumber(context),
               SizedBox(
@@ -77,8 +77,8 @@ class _AddProviderState extends State<AddProvider> {
       child: Padding(
         padding: EdgeInsets.only(left: spacing25, right: spacing25),
         child: HutanoTextField(
-            labelText: Localization.of(context).searchByName,
-            hintText: Localization.of(context).enterProviderName,
+            labelText: Localization.of(context)!.searchByName,
+            hintText: Localization.of(context)!.enterProviderName,
             floatingBehaviour: FloatingLabelBehavior.always,
             textInputType: TextInputType.text,
             focusNode: _nameFocus,
@@ -108,8 +108,8 @@ class _AddProviderState extends State<AddProvider> {
       child: Padding(
         padding: EdgeInsets.only(left: spacing25, right: spacing25),
         child: HutanoTextField(
-            labelText: Localization.of(context).searchByNumber,
-            hintText: Localization.of(context).enterProviderNumber,
+            labelText: Localization.of(context)!.searchByNumber,
+            hintText: Localization.of(context)!.enterProviderNumber,
             floatingBehaviour: FloatingLabelBehavior.always,
             focusNode: _phoneFocus,
             controller: _phoneController,
@@ -141,7 +141,7 @@ class _AddProviderState extends State<AddProvider> {
         icon: FileConstants.icNext,
         color: colorDarkBlue,
         iconSize: 20,
-        label: Localization.of(context).next.toUpperCase(),
+        label: Localization.of(context)!.next.toUpperCase(),
         onPressed: _enableButton ? _nextScreen : null,
       ));
 
@@ -154,12 +154,12 @@ class _AddProviderState extends State<AddProvider> {
         iconSize: 20,
         color: colorYellow,
         icon: FileConstants.icSkip,
-        label: Localization.of(context).skipThisTask,
+        label: Localization.of(context)!.skipThisTask,
         onPressed: _skipTaskNow,
       ));
 
   _nextScreen() {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
 
     //TODO : TEMPORARY CODE
     //Chaning route to dashboard screen from home

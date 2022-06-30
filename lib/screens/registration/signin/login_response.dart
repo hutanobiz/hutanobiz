@@ -2,7 +2,7 @@
 import 'package:hutano/apis/error_model.dart';
 
 class ResLoginModel extends ErrorModel {
-  Data data;
+  Data? data;
   ResLoginModel({this.data});
 
   ResLoginModel.fromJson(Map<String, dynamic> json) {
@@ -13,14 +13,14 @@ class ResLoginModel extends ErrorModel {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
 }
 
 class Data {
-  String token;
+  String? token;
 
   Data({this.token});
 

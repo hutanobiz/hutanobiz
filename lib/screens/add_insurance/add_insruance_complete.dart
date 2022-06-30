@@ -26,7 +26,7 @@ class AddInsuranceComplete extends StatefulWidget {
 }
 
 class _AddInsuranceCompleteState extends State<AddInsuranceComplete> {
-  List<Insurance> insuranceList = [];
+  List<Insurance>? insuranceList = [];
 
   @override
   void initState() {
@@ -50,7 +50,7 @@ class _AddInsuranceCompleteState extends State<AddInsuranceComplete> {
       if (e is ErrorModel) {
         if (e.response != null) {
           ProgressDialogUtils.dismissProgressDialog();
-          DialogUtils.showAlertDialog(context, e.response);
+          DialogUtils.showAlertDialog(context, e.response!);
         }
       }
     });
@@ -67,8 +67,8 @@ class _AddInsuranceCompleteState extends State<AddInsuranceComplete> {
                 padding: const EdgeInsets.symmetric(horizontal: 18),
                 child: Column(children: [
                   AppHeader(
-                    title: Localization.of(context).labelInsuranceOptions,
-                    subTitle: Localization.of(context).labelInsuranceAdded,
+                    title: Localization.of(context)!.labelInsuranceOptions,
+                    subTitle: Localization.of(context)!.labelInsuranceAdded,
                   ),
                   SizedBox(
                     height: spacing40,
@@ -86,7 +86,7 @@ class _AddInsuranceCompleteState extends State<AddInsuranceComplete> {
                           fontFamily: gilroyBold,
                           fontStyle: FontStyle.normal,
                           fontSize: 14.0),
-                      label: Localization.of(context).insurance,
+                      label: Localization.of(context)!.insurance,
                       image: FileConstants.icInsuranceBlue),
                   SizedBox(
                     height: spacing10,
@@ -105,7 +105,7 @@ class _AddInsuranceCompleteState extends State<AddInsuranceComplete> {
                       });
                     },
                     child: Text(
-                        Localization.of(context)
+                        Localization.of(context)!
                             .addSecondaryInsurance
                             .toUpperCase(),
                         style: const TextStyle(
@@ -144,7 +144,7 @@ class _AddInsuranceCompleteState extends State<AddInsuranceComplete> {
           ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemCount: insuranceList.length,
+            itemCount: insuranceList!.length,
             itemBuilder: (context, index) {
               return Container(
                 child: Row(
@@ -166,7 +166,7 @@ class _AddInsuranceCompleteState extends State<AddInsuranceComplete> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            insuranceList[index].title,
+                            insuranceList![index].title!,
                             style: TextStyle(
                               fontSize: fontSize14,
                               color: colorBlack,

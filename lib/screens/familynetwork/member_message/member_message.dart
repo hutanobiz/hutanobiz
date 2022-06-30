@@ -16,11 +16,11 @@ import '../familycircle/member_profile.dart';
 import 'model/req_message_share.dart';
 
 class MemberMessage extends StatefulWidget {
-  final String message;
-  final FamilyNetwork member;
+  final String? message;
+  final FamilyNetwork? member;
 
   const MemberMessage({
-    Key key,
+    Key? key,
     this.message,
     this.member,
   }) : super(key: key);
@@ -29,7 +29,7 @@ class MemberMessage extends StatefulWidget {
 }
 
 class _MemberMessageState extends State<MemberMessage> {
-  FamilyMember _familyMember;
+  FamilyMember? _familyMember;
   FocusNode _focusNode = FocusNode();
   bool _enableButton = false;
   final controller = TextEditingController();
@@ -39,7 +39,7 @@ class _MemberMessageState extends State<MemberMessage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      controller.text = widget.message;
+      controller.text = widget.message!;
       setState(() {
         _enableButton = true;
       });
@@ -48,15 +48,15 @@ class _MemberMessageState extends State<MemberMessage> {
 
   void _onSend() async {
     final request = ReqMessageShare(
-        message: controller.text, phoneNumber: widget.member.phoneNumber);
+        message: controller.text, phoneNumber: widget.member!.phoneNumber);
     ProgressDialogUtils.showProgressDialog(context);
     try {
       var res = await ApiManager().shareMessage(request);
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, res.response);
+      DialogUtils.showAlertDialog(context, res.response!);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -76,15 +76,15 @@ class _MemberMessageState extends State<MemberMessage> {
           children: [
             MemberProfile(
               member: FamilyMember(
-                  image: widget.member.avatar,
-                  name: widget.member.fullName,
-                  relation: widget.member.relation),
+                  image: widget.member!.avatar,
+                  name: widget.member!.fullName,
+                  relation: widget.member!.relation),
             ),
             SizedBox(
               height: spacing50,
             ),
             Text(
-              Localization.of(context).typeMessage,
+              Localization.of(context)!.typeMessage,
               style: TextStyle(fontSize: fontSize15),
             ),
             SizedBox(
@@ -119,7 +119,7 @@ class _MemberMessageState extends State<MemberMessage> {
           isDense: true,
           border: border,
           focusedBorder: border,
-          hintText: Localization.of(context).typeHere,
+          hintText: Localization.of(context)!.typeHere,
         ),
       ),
     );
@@ -143,7 +143,7 @@ class _MemberMessageState extends State<MemberMessage> {
           Flexible(
             flex: 1,
             child: HutanoButton(
-              label: Localization.of(context).send,
+              label: Localization.of(context)!.send,
               labelColor: colorBlack,
               onPressed: _enableButton ? _onSend : null,
             ),

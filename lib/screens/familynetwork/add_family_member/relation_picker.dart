@@ -10,13 +10,13 @@ import '../../../widgets/list_picker.dart';
 import 'model/res_relation_list.dart';
 
 class RelationPicker extends StatefulWidget {
-  final TextEditingController controller;
-  final List<Relations> relationList;
-  final ValueSetter<Relations> onRelationSelected;
-  final FamilyMember member;
+  final TextEditingController? controller;
+  final List<Relations>? relationList;
+  final ValueSetter<Relations>? onRelationSelected;
+  final FamilyMember? member;
 
   const RelationPicker({
-    Key key,
+    Key? key,
     this.controller,
     this.relationList,
     this.onRelationSelected,
@@ -31,16 +31,16 @@ class _RelationPickerState extends State<RelationPicker> {
     showDropDownSheet(
         list: ListView.builder(
           shrinkWrap: true,
-          itemCount: widget.relationList.length,
+          itemCount: widget.relationList!.length,
           itemBuilder: (context, pos) {
             return InkWell(
                 onTap: () {
-                  widget.onRelationSelected(widget.relationList[pos]);
+                  widget.onRelationSelected!(widget.relationList![pos]);
                   Navigator.pop(context);
                 },
                 child: ListTile(
                   title: Center(
-                    child: Text(widget.relationList[pos].relation),
+                    child: Text(widget.relationList![pos].relation!),
                   ),
                 ));
           },
@@ -57,9 +57,9 @@ class _RelationPickerState extends State<RelationPicker> {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               widget.member != null
-                  ? Localization.of(context)
+                  ? Localization.of(context)!
                       .msgRelationToMember
-                      .format([widget.member.fullName])
+                      .format([widget.member!.fullName])
                   : "",
               style: TextStyle(
                 color: colorBlack2,
@@ -82,7 +82,7 @@ class _RelationPickerState extends State<RelationPicker> {
               suffixheight: spacing12,
               suffixwidth: spacing12,
               isFieldEnable: false,
-              hintText: Localization.of(context).relation,
+              hintText: Localization.of(context)!.relation,
               textInputAction: TextInputAction.next),
         )),
       ],

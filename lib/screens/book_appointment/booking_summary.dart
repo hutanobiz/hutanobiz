@@ -24,7 +24,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Bookingsummary extends StatefulWidget {
-  Bookingsummary({Key key}) : super(key: key);
+  Bookingsummary({Key? key}) : super(key: key);
 
   @override
   _BookingsummaryState createState() => _BookingsummaryState();
@@ -45,7 +45,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
     'More than one pack a day'
   ];
 
-  InheritedContainerState _container;
+  late InheritedContainerState _container;
 
   @override
   void didChangeDependencies() {
@@ -103,18 +103,18 @@ class _BookingsummaryState extends State<Bookingsummary> {
           : SizedBox(),
       socialHistoryWidget(
         Provider.of<HealthConditionProvider>(context, listen: false)
-            .socialHistory,
+            .socialHistory!,
       ),
       allergiesWidget(
-        Provider.of<HealthConditionProvider>(context, listen: false).allergies,
+        Provider.of<HealthConditionProvider>(context, listen: false).allergies!,
       ),
       Provider.of<HealthConditionProvider>(context, listen: false)
-                  .vitalsData
+                  .vitalsData!
                   .date !=
               null
           ? vitalsDetailWidgets(
               Provider.of<HealthConditionProvider>(context, listen: false)
-                  .vitalsData)
+                  .vitalsData!)
           : SizedBox(),
       Provider.of<HealthConditionProvider>(context, listen: false)
                   .medicines
@@ -129,7 +129,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
               null
           ? pharmacyWidget(
               Provider.of<HealthConditionProvider>(context, listen: false)
-                  .prefPharmacy)
+                  .prefPharmacy!)
           : SizedBox(),
       Provider.of<HealthConditionProvider>(context, listen: false)
                   .medicalImagesData
@@ -175,22 +175,22 @@ class _BookingsummaryState extends State<Bookingsummary> {
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            border: Border.all(color: Colors.grey[200]),
+            border: Border.all(color: Colors.grey[200]!),
           ),
           child: ListView(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             children: [
               Text(socialHistory.smoking != null &&
-                      socialHistory.smoking.frequency != null &&
-                      socialHistory.smoking.frequency != "0"
-                  ? 'Patient smokes ${socialHistorySmokingUsages[int.parse(socialHistory.smoking.frequency) - 1]}.'
+                      socialHistory.smoking!.frequency != null &&
+                      socialHistory.smoking!.frequency != "0"
+                  ? 'Patient smokes ${socialHistorySmokingUsages[int.parse(socialHistory.smoking!.frequency!) - 1]}.'
                   : 'Patient does not smokes.'),
               socialHistory.drinker == null
                   ? Text('Patient does not drink.')
-                  : socialHistory.drinker.frequency == "1"
+                  : socialHistory.drinker!.frequency == "1"
                       ? Text('Patient drinks Rarely.')
-                      : socialHistory.drinker.frequency == "2"
+                      : socialHistory.drinker!.frequency == "2"
                           ? Text('Patient drinks Socially.')
                           : ListView(
                               shrinkWrap: true,
@@ -198,33 +198,33 @@ class _BookingsummaryState extends State<Bookingsummary> {
                               children: [
                                   socialHistory.drinker != null &&
                                           socialHistory
-                                                  .drinker.liquorQuantity !=
+                                                  .drinker!.liquorQuantity !=
                                               null &&
                                           socialHistory
-                                                  .drinker.liquorQuantity !=
+                                                  .drinker!.liquorQuantity !=
                                               "0"
                                       ? Text(
-                                          'Patient consumes ${socialHistory.drinker.liquorQuantity == "2" ? 'more than' : 'less than'} 1pt of liquor ${socialHistoryUsages[int.parse(socialHistory.drinker.frequency) - 1]}.')
+                                          'Patient consumes ${socialHistory.drinker!.liquorQuantity == "2" ? 'more than' : 'less than'} 1pt of liquor ${socialHistoryUsages[int.parse(socialHistory.drinker!.frequency!) - 1]}.')
                                       : SizedBox(),
                                   socialHistory.drinker != null &&
-                                          socialHistory.drinker.beerQuantity !=
+                                          socialHistory.drinker!.beerQuantity !=
                                               null &&
-                                          socialHistory.drinker.beerQuantity !=
+                                          socialHistory.drinker!.beerQuantity !=
                                               "0"
                                       ? Text(
-                                          'Patient consumes ${socialHistory.drinker.beerQuantity == "2" ? 'more than' : 'less than'} 6 beer ${socialHistoryUsages[int.parse(socialHistory.drinker.frequency) - 1]}.')
+                                          'Patient consumes ${socialHistory.drinker!.beerQuantity == "2" ? 'more than' : 'less than'} 6 beer ${socialHistoryUsages[int.parse(socialHistory.drinker!.frequency!) - 1]}.')
                                       : SizedBox()
                                 ]),
               socialHistory.recreationalDrugs != null &&
                       socialHistory.recreationalDrugs is List &&
-                      socialHistory.recreationalDrugs.length > 0
+                      socialHistory.recreationalDrugs!.length > 0
                   ? ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: socialHistory.recreationalDrugs.length,
+                      itemCount: socialHistory.recreationalDrugs!.length,
                       itemBuilder: (context, index) {
                         return Text(
-                          'Patient uses ${socialHistory.recreationalDrugs[index].type} ${socialHistoryUsages[int.parse(socialHistory.recreationalDrugs[index].frequency) - 1]}.',
+                          'Patient uses ${socialHistory.recreationalDrugs![index].type} ${socialHistoryUsages[int.parse(socialHistory.recreationalDrugs![index].frequency!) - 1]}.',
                         );
                       },
                     )
@@ -275,7 +275,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(10)),
-              border: Border.all(color: Colors.grey[200]),
+              border: Border.all(color: Colors.grey[200]!),
             ),
             child: Text(allergies.length == 0
                 ? 'Patient does not have known allergies'
@@ -301,7 +301,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(10)),
-              border: Border.all(color: Colors.grey[200]),
+              border: Border.all(color: Colors.grey[200]!),
             ),
             child: ListView.separated(
               separatorBuilder: (context, index) => SizedBox(height: 2),
@@ -336,7 +336,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(10)),
-              border: Border.all(color: Colors.grey[200]),
+              border: Border.all(color: Colors.grey[200]!),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -389,7 +389,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
                       TextSpan(
                         text: vitals.temperature != null
                             ? vitals.temperature.toString().contains('.0')
-                                ? '${vitals.temperature.toInt()} \u2109 ; \t'
+                                ? '${vitals.temperature!.toInt()} \u2109 ; \t'
                                 : '${vitals.temperature} \u2109 ; \t'
                             : '',
                         style: AppTextStyle.mediumStyle(fontSize: 14),
@@ -484,7 +484,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            border: Border.all(color: Colors.grey[200]),
+            border: Border.all(color: Colors.grey[200]!),
           ),
           child: ListView.separated(
             separatorBuilder: (context, index) => SizedBox(height: 20),
@@ -504,25 +504,25 @@ class _BookingsummaryState extends State<Bookingsummary> {
                         child: ClipRRect(
                             borderRadius: BorderRadius.circular(16.0),
                             child: medicalImages[index]
-                                    .images
+                                    .images!
                                     .toLowerCase()
                                     .endsWith("pdf")
                                 ? "ic_pdf".imageIcon()
                                 : Image.network(
                                     ApiBaseHelper.imageUrl +
-                                        medicalImages[index].images,
+                                        medicalImages[index].images!,
                                     height: 80.0,
                                     width: 80.0,
                                     fit: BoxFit.cover,
                                   )),
                       )).onClick(
                     onTap: medicalImages[index]
-                            .images
+                            .images!
                             .toLowerCase()
                             .endsWith("pdf")
                         ? () async {
                             var url = ApiBaseHelper.imageUrl +
-                                medicalImages[index].images;
+                                medicalImages[index].images!;
                             if (await canLaunch(url)) {
                               await launch(url);
                             } else {
@@ -533,14 +533,14 @@ class _BookingsummaryState extends State<Bookingsummary> {
                             Navigator.of(context).pushNamed(
                               Routes.providerImageScreen,
                               arguments: ApiBaseHelper.imageUrl +
-                                  medicalImages[index].images,
+                                  medicalImages[index].images!,
                             );
                           },
                   ),
                   SizedBox(width: 8),
                   Expanded(
                     child: Text('${(index + 1)}. ' +
-                        medicalImages[index].name +
+                        medicalImages[index].name! +
                         ' taken on ' +
                         (medicalImages[index].date ?? '')),
                   ),
@@ -569,7 +569,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            border: Border.all(color: Colors.grey[200]),
+            border: Border.all(color: Colors.grey[200]!),
           ),
           child: ListView.separated(
             separatorBuilder: (context, index) => SizedBox(height: 20),
@@ -589,26 +589,26 @@ class _BookingsummaryState extends State<Bookingsummary> {
                         child: ClipRRect(
                             borderRadius: BorderRadius.circular(16.0),
                             child: medicalDocuments[index]
-                                    .medicalDocuments
+                                    .medicalDocuments!
                                     .toLowerCase()
                                     .endsWith("pdf")
                                 ? "ic_pdf".imageIcon()
                                 : Image.network(
                                     ApiBaseHelper.imageUrl +
                                         medicalDocuments[index]
-                                            .medicalDocuments,
+                                            .medicalDocuments!,
                                     height: 80.0,
                                     width: 80.0,
                                     fit: BoxFit.cover,
                                   )),
                       )).onClick(
                     onTap: medicalDocuments[index]
-                            .medicalDocuments
+                            .medicalDocuments!
                             .toLowerCase()
                             .endsWith("pdf")
                         ? () async {
                             var url = ApiBaseHelper.imageUrl +
-                                medicalDocuments[index].medicalDocuments;
+                                medicalDocuments[index].medicalDocuments!;
                             if (await canLaunch(url)) {
                               await launch(url);
                             } else {
@@ -619,18 +619,18 @@ class _BookingsummaryState extends State<Bookingsummary> {
                             Navigator.of(context).pushNamed(
                               Routes.providerImageScreen,
                               arguments: ApiBaseHelper.imageUrl +
-                                  medicalDocuments[index].medicalDocuments,
+                                  medicalDocuments[index].medicalDocuments!,
                             );
                           },
                   ),
                   SizedBox(width: 8),
                   Expanded(
                     child: Text('${(index + 1)}. ' +
-                        medicalDocuments[index].name +
+                        medicalDocuments[index].name! +
                         ' ' +
-                        medicalDocuments[index].type +
+                        medicalDocuments[index].type! +
                         ' taken on ' +
-                        medicalDocuments[index].date),
+                        medicalDocuments[index].date!),
                   ),
                 ],
               );
@@ -656,7 +656,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            border: Border.all(color: Colors.grey[200]),
+            border: Border.all(color: Colors.grey[200]!),
           ),
           child: ListView.separated(
             separatorBuilder: (context, index) => SizedBox(height: 20),
@@ -676,23 +676,23 @@ class _BookingsummaryState extends State<Bookingsummary> {
                         child: ClipRRect(
                             borderRadius: BorderRadius.circular(16.0),
                             child: dignosticTest[index]
-                                    .image
+                                    .image!
                                     .toLowerCase()
                                     .endsWith("pdf")
                                 ? "ic_pdf".imageIcon()
                                 : Image.network(
                                     ApiBaseHelper.imageUrl +
-                                        dignosticTest[index].image,
+                                        dignosticTest[index].image!,
                                     height: 80.0,
                                     width: 80.0,
                                     fit: BoxFit.cover,
                                   )),
                       )).onClick(
                     onTap:
-                        dignosticTest[index].image.toLowerCase().endsWith("pdf")
+                        dignosticTest[index].image!.toLowerCase().endsWith("pdf")
                             ? () async {
                                 var url = ApiBaseHelper.imageUrl +
-                                    dignosticTest[index].image;
+                                    dignosticTest[index].image!;
                                 if (await canLaunch(url)) {
                                   await launch(url);
                                 } else {
@@ -703,18 +703,18 @@ class _BookingsummaryState extends State<Bookingsummary> {
                                 Navigator.of(context).pushNamed(
                                   Routes.providerImageScreen,
                                   arguments: ApiBaseHelper.imageUrl +
-                                      dignosticTest[index].image,
+                                      dignosticTest[index].image!,
                                 );
                               },
                   ),
                   SizedBox(width: 8),
                   Expanded(
                     child: Text('${(index + 1)}. ' +
-                        dignosticTest[index].name +
+                        dignosticTest[index].name! +
                         ' ' +
-                        dignosticTest[index].type +
+                        dignosticTest[index].type! +
                         ' taken on ' +
-                        dignosticTest[index].date),
+                        dignosticTest[index].date!),
                   ),
                 ],
               );
@@ -725,7 +725,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
     );
   }
 
-  Column prescriptionWidget(List<ReqMedicationDetail> medications) {
+  Column prescriptionWidget(List<ReqMedicationDetail?> medications) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -739,7 +739,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            border: Border.all(color: Colors.grey[200]),
+            border: Border.all(color: Colors.grey[200]!),
           ),
           child: ListView.separated(
             separatorBuilder: (context, index) => SizedBox(height: 2),
@@ -751,11 +751,11 @@ class _BookingsummaryState extends State<Bookingsummary> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${index + 1}. ${medications[index].name}',
+                    '${index + 1}. ${medications[index]!.name}',
                     style: AppTextStyle.mediumStyle(fontSize: 14),
                   ),
                   Text(
-                    '${medications[index].dose} , ${medications[index].frequency}',
+                    '${medications[index]!.dose} , ${medications[index]!.frequency}',
                     style: AppTextStyle.regularStyle(fontSize: 14),
                   ),
                 ],
@@ -779,7 +779,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(10)),
-          border: Border.all(color: Colors.grey[200]),
+          border: Border.all(color: Colors.grey[200]!),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -789,16 +789,16 @@ class _BookingsummaryState extends State<Bookingsummary> {
               style: AppTextStyle.mediumStyle(fontSize: 14),
             ),
             Text('Address: ' +
-                pharmacy.address.address +
+                pharmacy.address!.address! +
                 ', ' +
-                pharmacy.address.city +
+                pharmacy.address!.city! +
                 ', ' +
-                pharmacy.address.state +
+                pharmacy.address!.state! +
                 ', ' +
-                pharmacy.address.zipCode +
+                pharmacy.address!.zipCode! +
                 ', '),
             Text(
-              'Phone no.: ' + pharmacy.address.phone,
+              'Phone no.: ' + pharmacy.address!.phone!,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

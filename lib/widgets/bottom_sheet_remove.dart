@@ -5,9 +5,9 @@ import 'package:hutano/utils/constants/file_constants.dart';
 import 'hutano_button.dart';
 
 Future showBottomSheetRemove({
-  BuildContext context,
-  Function onRemove,
-  Function onCancel,
+  required BuildContext context,
+  Function? onRemove,
+  Function? onCancel,
 }) {
   return showModalBottomSheet(
       backgroundColor: Colors.transparent,

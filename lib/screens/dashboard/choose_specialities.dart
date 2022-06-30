@@ -8,9 +8,9 @@ import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 
 class ChooseSpecialities extends StatefulWidget {
-  ChooseSpecialities({Key key, this.professionaltitleId}) : super(key: key);
+  ChooseSpecialities({Key? key, this.professionaltitleId}) : super(key: key);
 
-  final String professionaltitleId;
+  final String? professionaltitleId;
 
   @override
   _ChooseSpecialitiesState createState() => _ChooseSpecialitiesState();
@@ -20,9 +20,9 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ApiBaseHelper api = new ApiBaseHelper();
 
-  Future<List<dynamic>> _specialityFuture;
+  Future<List<dynamic>>? _specialityFuture;
 
-  InheritedContainerState conatiner;
+  late InheritedContainerState conatiner;
 
   @override
   void initState() {
@@ -59,7 +59,7 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
       future: _specialityFuture,
       builder: (_, snapshot) {
         if (snapshot.hasData) {
-          List<dynamic> data = snapshot.data;
+          List<dynamic>? data = snapshot.data;
 
           if (data == null || data.length == 0) return Container();
 
@@ -84,7 +84,7 @@ class _ChooseSpecialitiesState extends State<ChooseSpecialities> {
                   borderRadius: BorderRadius.all(
                     Radius.circular(14.0),
                   ),
-                  border: Border.all(color: Colors.grey[300], width: 0.5),
+                  border: Border.all(color: Colors.grey[300]!, width: 0.5),
                 ),
                 child: ListTile(
                   contentPadding: EdgeInsets.all(8.0),

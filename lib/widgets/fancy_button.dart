@@ -9,27 +9,27 @@ class FancyButton extends StatelessWidget {
   FancyButton({
     this.buttonWidth,
     this.buttonHeight = 55.0,
-    @required this.title,
+    required this.title,
     this.buttonColor,
-    @required this.onPressed,
+    required this.onPressed,
     this.icon,
     this.textColor,
     this.elevation = 0.0,
     this.buttonIcon,
   });
 
-  final VoidCallback onPressed;
-  final String title, buttonIcon;
-  final IconData icon;
-  final double buttonHeight, buttonWidth;
-  final Color buttonColor;
+  final VoidCallback? onPressed;
+  final String? title, buttonIcon;
+  final IconData? icon;
+  final double? buttonHeight, buttonWidth;
+  final Color? buttonColor;
   final textColor;
   final double elevation;
 
   @override
   Widget build(BuildContext context) {
     return ButtonTheme(
-      height: buttonHeight,
+      height: buttonHeight!,
       minWidth: buttonWidth ?? MediaQuery.of(context).size.width,
       child: RaisedButton(
         elevation: elevation,
@@ -62,7 +62,7 @@ class FancyButton extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                title,
+                title!,
                 maxLines: 1,
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.clip,

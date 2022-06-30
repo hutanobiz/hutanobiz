@@ -1,6 +1,6 @@
 class ResMessageShare {
-  String status;
-  String response;
+  String? status;
+  String? response;
 
   ResMessageShare({this.status, this.response});
 

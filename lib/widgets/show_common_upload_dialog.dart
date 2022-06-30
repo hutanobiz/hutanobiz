@@ -5,7 +5,7 @@ import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/localization/localization.dart';
 
 showCommonUploadDialog(BuildContext context, String header, String subHeader,
-    {Function onTop, Function onBottom, bool isForDocument = false}) {
+    {Function? onTop, Function? onBottom, bool isForDocument = false}) {
   var yyDialog = YYDialog();
   yyDialog.build(context)
     ..width = 300
@@ -20,7 +20,7 @@ showCommonUploadDialog(BuildContext context, String header, String subHeader,
                 horizontal: spacing20, vertical: spacing20),
             child: Column(children: [
               SizedBox(height: spacing10),
-              Text(subHeader ?? "",
+              Text(subHeader ,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       color: colorPurple100,
@@ -30,14 +30,14 @@ showCommonUploadDialog(BuildContext context, String header, String subHeader,
               Divider(),
               InkWell(
                   onTap: () {
-                    onTop();
+                    onTop!();
                   },
                   child: Padding(
                       padding: EdgeInsets.all(spacing10),
                       child: Text(
                           isForDocument
-                              ? Localization.of(context).imageLabel
-                              : Localization.of(context).camera,
+                              ? Localization.of(context)!.imageLabel
+                              : Localization.of(context)!.camera,
                           style: const TextStyle(
                               color: colorLightBlack4,
                               fontWeight: fontWeightMedium,
@@ -46,14 +46,14 @@ showCommonUploadDialog(BuildContext context, String header, String subHeader,
               SizedBox(height: spacing20),
               GestureDetector(
                   onTap: () {
-                    onBottom();
+                    onBottom!();
                   },
                   child: Padding(
                     padding: EdgeInsets.all(spacing10),
                     child: Text(
                         isForDocument
-                            ? Localization.of(context).pdfLabel
-                            : Localization.of(context).gallery,
+                            ? Localization.of(context)!.pdfLabel
+                            : Localization.of(context)!.gallery,
                         style: const TextStyle(
                             color: colorLightBlack4,
                             fontWeight: fontWeightMedium,

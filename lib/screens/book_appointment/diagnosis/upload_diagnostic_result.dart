@@ -38,12 +38,12 @@ class UploadDiagnosticResult extends StatefulWidget {
 
 class _UploadDiagnosticResultState extends State<UploadDiagnosticResult> {
   bool _indicatorLoading = true;
-  List<MedicalDocuments> medicalDocuments;
+  List<MedicalDocuments>? medicalDocuments;
   final documentTypeController = TextEditingController();
   final documentDateController = TextEditingController();
   String documentName = '';
   ApiBaseHelper _api = ApiBaseHelper();
-  String token;
+  String? token;
   List<String> _documentTypeList = [
     'X-Ray',
     'MRI',
@@ -98,17 +98,19 @@ class _UploadDiagnosticResultState extends State<UploadDiagnosticResult> {
                         },
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: medicalDocuments.length,
+                        itemCount: medicalDocuments!.length,
                         itemBuilder: (context, index) {
                           return ListTile(
                             onTap: showPickerDialog,
                             leading: Image.network(
                                 ApiBaseHelper.imageUrl +
-                                    medicalDocuments[index]?.medicalDocuments,
+                                        (medicalDocuments![index]
+                                            .medicalDocuments ??
+                                    ''),
                                 width: 50,
                                 height: 50),
                             title: Text(
-                              "Upload ${medicalDocuments[index]?.type} result",
+                              "Upload ${medicalDocuments![index].type} result",
                               style: TextStyle(
                                   fontSize: fontSize14,
                                   fontWeight: fontWeightSemiBold,
@@ -144,18 +146,18 @@ class _UploadDiagnosticResultState extends State<UploadDiagnosticResult> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(Localization.of(context).picker),
-          content: Text(Localization.of(context).selectDocPickerTypeLabel),
+          title: Text(Localization.of(context)!.picker),
+          content: Text(Localization.of(context)!.selectDocPickerTypeLabel),
           actions: <Widget>[
             FlatButton(
-              child: Text(Localization.of(context).imageLabel),
+              child: Text(Localization.of(context)!.imageLabel),
               onPressed: () {
                 Navigator.pop(context);
                 showImagePickerDialog();
               },
             ),
             FlatButton(
-              child: Text(Localization.of(context).pdfLabel),
+              child: Text(Localization.of(context)!.pdfLabel),
               onPressed: () {
                 getDocumentType();
                 Navigator.pop(context);
@@ -172,18 +174,18 @@ class _UploadDiagnosticResultState extends State<UploadDiagnosticResult> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(Localization.of(context).picker),
-          content: Text(Localization.of(context).selectImagePickerTypeLabel),
+          title: Text(Localization.of(context)!.picker),
+          content: Text(Localization.of(context)!.selectImagePickerTypeLabel),
           actions: <Widget>[
             FlatButton(
-              child: Text(Localization.of(context).camera),
+              child: Text(Localization.of(context)!.camera),
               onPressed: () {
                 getImage(1);
                 Navigator.pop(context);
               },
             ),
             FlatButton(
-              child: Text(Localization.of(context).gallery),
+              child: Text(Localization.of(context)!.gallery),
               onPressed: () {
                 getImage(2);
                 Navigator.pop(context);
@@ -198,7 +200,7 @@ class _UploadDiagnosticResultState extends State<UploadDiagnosticResult> {
   Future getImage(int source) async {
     ImagePicker _picker = ImagePicker();
 
-     XFile image = await _picker.pickImage(
+    XFile? image = await _picker.pickImage(
         imageQuality: 25,
         source: (source == 1) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
@@ -234,13 +236,13 @@ class _UploadDiagnosticResultState extends State<UploadDiagnosticResult> {
   }
 
   void getDocumentType() async {
-    FilePickerResult file = await FilePicker.platform.pickFiles(
+    FilePickerResult? file = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
     );
 
     if (file != null) {
-      uploadDocsBottomSheet(File(file.files.first.path));
+      uploadDocsBottomSheet(File(file.files.first.path!));
     }
   }
 
@@ -251,7 +253,7 @@ class _UploadDiagnosticResultState extends State<UploadDiagnosticResult> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            Localization.of(context).documentLabel,
+            Localization.of(context)!.documentLabel,
             style: TextStyle(
               color: AppColors.midnight_express,
               fontSize: 16,
@@ -282,12 +284,12 @@ class _UploadDiagnosticResultState extends State<UploadDiagnosticResult> {
           TextField(
             enabled: false,
             controller: documentTypeController,
-            decoration:
-                getInputDecoration(Localization.of(context).whatKindOfDocLabel),
+            decoration: getInputDecoration(
+                Localization.of(context)!.whatKindOfDocLabel),
           ).onClick(onTap: _documentTypeBottomDialog),
           SizedBox(height: spacing25),
           textField(
-            Localization.of(context).whatBodyPartLabel,
+            Localization.of(context)!.whatBodyPartLabel,
             (value) {
               documentName = value;
             },
@@ -318,14 +320,15 @@ class _UploadDiagnosticResultState extends State<UploadDiagnosticResult> {
               Expanded(
                 child: ButtonTheme(
                   height: 55,
-                  child:  OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        shape: new RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(14.0),
-                    ),),
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(14.0),
+                      ),
+                    ),
                     // highlightedBorderColor: AppColors.windsor,
                     child: Text(
-                      Localization.of(context).cancel,
+                      Localization.of(context)!.cancel,
                       style: TextStyle(
                           color: AppColors.windsor, fontSize: fontSize16),
                     ),
@@ -336,19 +339,19 @@ class _UploadDiagnosticResultState extends State<UploadDiagnosticResult> {
               SizedBox(width: spacing16),
               Expanded(
                 child: FancyButton(
-                  title: Localization.of(context).upload,
+                  title: Localization.of(context)!.upload,
                   buttonColor: AppColors.windsor,
                   onPressed: () async {
                     if (documentTypeController.text == null ||
                         documentTypeController.text.isEmpty) {
-                      Widgets.showToast(Localization.of(context).errDocType);
+                      Widgets.showToast(Localization.of(context)!.errDocType);
                       return;
                     } else if (documentName == null || documentName.isEmpty) {
-                      Widgets.showToast(Localization.of(context).errDocName);
+                      Widgets.showToast(Localization.of(context)!.errDocName);
                       return;
                     } else if (documentDateController.text == null ||
                         documentDateController.text.isEmpty) {
-                      Widgets.showToast(Localization.of(context).errDocDate);
+                      Widgets.showToast(Localization.of(context)!.errDocDate);
                       return;
                     } else {
                       Navigator.pop(context);
@@ -399,7 +402,7 @@ class _UploadDiagnosticResultState extends State<UploadDiagnosticResult> {
 
   Widget textField(String label, Function onChanged) {
     return TextField(
-      onChanged: onChanged,
+      onChanged: onChanged as void Function(String)?,
       decoration: getInputDecoration(label),
     );
   }
@@ -412,21 +415,21 @@ class _UploadDiagnosticResultState extends State<UploadDiagnosticResult> {
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14.0),
         borderSide: BorderSide(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
           width: 0.5,
         ),
       ),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14.0),
         borderSide: BorderSide(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
           width: 0.5,
         ),
       ),
       disabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14.0),
         borderSide: BorderSide(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
           width: 0.5,
         ),
       ),
@@ -477,7 +480,7 @@ class _UploadDiagnosticResultState extends State<UploadDiagnosticResult> {
     await ApiManager().getUploadedDiagnosticTestResults().then((result) {
       if (result is ResDiagnosticTestResult) {
         setState(() {
-          medicalDocuments = result.response[0].medicalDocuments;
+          medicalDocuments = result.response![0].medicalDocuments;
         });
       }
       setLoading(false);

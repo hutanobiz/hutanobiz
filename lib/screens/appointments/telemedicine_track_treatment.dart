@@ -16,9 +16,9 @@ import 'package:hutano/utils/extensions.dart';
 import 'package:permission_handler/permission_handler.dart' as Permission;
 
 class TelemedicineTrackTreatmentScreen extends StatefulWidget {
-  final String appointmentId;
+  final String? appointmentId;
   const TelemedicineTrackTreatmentScreen(
-      {Key key, @required this.appointmentId})
+      {Key? key, required this.appointmentId})
       : super(key: key);
   @override
   _TelemedicineTrackTreatmentScreenState createState() =>
@@ -28,7 +28,7 @@ class TelemedicineTrackTreatmentScreen extends StatefulWidget {
 class _TelemedicineTrackTreatmentScreenState
     extends State<TelemedicineTrackTreatmentScreen> {
   bool doctorBusy = false;
-  Future<dynamic> _profileFuture;
+  Future<dynamic>? _profileFuture;
   ApiBaseHelper api = ApiBaseHelper();
   CountDownController _countDownController = CountDownController();
   SimpleCountDownController _simpleCountDownController =
@@ -40,8 +40,8 @@ class _TelemedicineTrackTreatmentScreenState
   bool video = true;
   bool record = true;
   String _totalDistance = '';
-  String token = '';
-  InheritedContainerState _container;
+  String? token = '';
+  late InheritedContainerState _container;
   bool isLoading = false;
 
   @override
@@ -89,7 +89,7 @@ class _TelemedicineTrackTreatmentScreenState
                 } else if (snapshot.hasError) {
                   return new Text('Error: ${snapshot.error}');
                 } else if (snapshot.hasData) {
-                  Map profileMap = snapshot.data;
+                  Map profileMap = snapshot.data as Map;
                   _container.providerResponse.clear();
                   _container.setProviderData("providerData", profileMap);
                   return widgetList(profileMap);
@@ -170,7 +170,7 @@ class _TelemedicineTrackTreatmentScreenState
               borderRadius: BorderRadius.all(
                 Radius.circular(14.0),
               ),
-              border: Border.all(color: Colors.grey[300]),
+              border: Border.all(color: Colors.grey[300]!),
             ),
             child: Column(children: <Widget>[
               SizedBox(
@@ -214,7 +214,7 @@ class _TelemedicineTrackTreatmentScreenState
                 height: 176,
 
                 // Default Color for Countdown Timer
-                color: Colors.grey[300],
+                color: Colors.grey[300]!,
 
                 // Filling Color for Countdown Timer
                 fillColor: AppColors.windsor,
@@ -262,7 +262,7 @@ class _TelemedicineTrackTreatmentScreenState
                           borderRadius: BorderRadius.all(
                             Radius.circular(14.0),
                           ),
-                          border: Border.all(color: Colors.grey[300]),
+                          border: Border.all(color: Colors.grey[300]!),
                         ),
                         height: 55,
                         child: Center(child: Text('Detail')),
@@ -309,7 +309,7 @@ class _TelemedicineTrackTreatmentScreenState
                         borderRadius: BorderRadius.all(
                           Radius.circular(14.0),
                         ),
-                        border: Border.all(color: Colors.grey[300]),
+                        border: Border.all(color: Colors.grey[300]!),
                       ),
                       height: 55,
                       child: Row(
@@ -393,7 +393,7 @@ class _TelemedicineTrackTreatmentScreenState
             .toStringAsFixed(1)
         : "---";
 
-    String name = "---",
+    String? name = "---",
         rating = "---",
         professionalTitle = "---",
         avatar,
@@ -432,7 +432,8 @@ class _TelemedicineTrackTreatmentScreenState
 
     if (response["doctor"] != null) {
       String title = response["doctor"]["title"]?.toString() ?? "";
-      name = title + ' ' + response["doctor"]["fullName"]?.toString() ?? "---";
+      name =
+          title + ' ' + (response["doctor"]["fullName"]?.toString() ?? "---");
       avatar = response["doctor"]["avatar"];
     }
 
@@ -440,7 +441,7 @@ class _TelemedicineTrackTreatmentScreenState
       for (dynamic detail in appointment["doctorData"]) {
         if (detail["businessLocation"] != null) {
           if (detail["businessLocation"]["coordinates"] != null) {
-            List location = detail["businessLocation"]["coordinates"];
+            List? location = detail["businessLocation"]["coordinates"];
           }
         }
       }
@@ -452,7 +453,7 @@ class _TelemedicineTrackTreatmentScreenState
         borderRadius: BorderRadius.all(
           Radius.circular(14.0),
         ),
-        border: Border.all(color: Colors.grey[300]),
+        border: Border.all(color: Colors.grey[300]!),
       ),
       child: Column(
         children: <Widget>[
@@ -469,7 +470,7 @@ class _TelemedicineTrackTreatmentScreenState
                       FocusScope.of(context).requestFocus(FocusNode());
                       Navigator.of(context).pushNamed(
                         Routes.providerImageScreen,
-                        arguments: (ApiBaseHelper.imageUrl + avatar),
+                        arguments: (ApiBaseHelper.imageUrl + avatar!),
                       );
                     },
                     child: Container(
@@ -477,15 +478,17 @@ class _TelemedicineTrackTreatmentScreenState
                       height: 58.0,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: avatar == null
-                              ? AssetImage('images/profile_user.png')
-                              : NetworkImage(ApiBaseHelper.imageUrl + avatar),
+                          image: (avatar == null
+                                  ? AssetImage('images/profile_user.png')
+                                  : NetworkImage(
+                                      ApiBaseHelper.imageUrl + avatar))
+                              as ImageProvider<Object>,
                           fit: BoxFit.cover,
                         ),
                         borderRadius:
                             new BorderRadius.all(Radius.circular(50.0)),
                         border: new Border.all(
-                          color: Colors.grey[300],
+                          color: Colors.grey[300]!,
                           width: 1.0,
                         ),
                       ),
@@ -559,7 +562,7 @@ class _TelemedicineTrackTreatmentScreenState
                             SizedBox(width: 3),
                             Expanded(
                               child: Text(
-                                '\u2022 ' + professionalTitle,
+                                '\u2022 ' + professionalTitle!,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -784,7 +787,7 @@ class _TelemedicineTrackTreatmentScreenState
                             borderRadius: BorderRadius.all(
                               Radius.circular(14.0),
                             ),
-                            border: Border.all(color: Colors.grey[300]),
+                            border: Border.all(color: Colors.grey[300]!),
                           ),
                           height: 55,
                           child: Center(
@@ -917,7 +920,7 @@ class _TelemedicineTrackTreatmentScreenState
                             borderRadius: BorderRadius.all(
                               Radius.circular(14.0),
                             ),
-                            border: Border.all(color: Colors.grey[300]),
+                            border: Border.all(color: Colors.grey[300]!),
                           ),
                           height: 55,
                           child: Center(
@@ -1035,15 +1038,15 @@ class _TelemedicineTrackTreatmentScreenState
                         Permission.Permission.camera,
                         Permission.Permission.microphone
                       ].request();
-                      if ((statuses[Permission.Permission.camera].isGranted) &&
-                          (statuses[Permission.Permission.microphone]
+                      if ((statuses[Permission.Permission.camera]!.isGranted) &&
+                          (statuses[Permission.Permission.microphone]!
                               .isGranted)) {
                         Map appointment = {};
                         appointment["_appointmentStatus"] = "1";
                         appointment["_id"] = widget.appointmentId;
                         appointment['video'] = video;
                         appointment['record'] = record;
-                        return Navigator.of(context).pushNamed(
+                        Navigator.of(context).pushNamed(
                           Routes.callPage,
                           arguments: appointment,
                         );
@@ -1198,7 +1201,7 @@ class _TelemedicineTrackTreatmentScreenState
                     borderRadius: BorderRadius.all(
                       Radius.circular(14.0),
                     ),
-                    border: Border.all(color: Colors.grey[300]),
+                    border: Border.all(color: Colors.grey[300]!),
                   ),
                   height: 55,
                   width: 90,
@@ -1274,7 +1277,7 @@ class _TelemedicineTrackTreatmentScreenState
                     borderRadius: BorderRadius.all(
                       Radius.circular(14.0),
                     ),
-                    border: Border.all(color: Colors.grey[300]),
+                    border: Border.all(color: Colors.grey[300]!),
                   ),
                   height: 55,
                   width: 90,

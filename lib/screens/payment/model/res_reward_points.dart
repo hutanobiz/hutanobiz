@@ -1,6 +1,6 @@
 class ResRewardPoints {
-  String status;
-  int response;
+  String? status;
+  int? response;
 
   ResRewardPoints({this.status, this.response});
 

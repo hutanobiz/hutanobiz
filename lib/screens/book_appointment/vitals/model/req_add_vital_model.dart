@@ -1,11 +1,11 @@
 class ReqAddVitalsModel {
-  String date;
-  String time;
-  String sbp;
-  String dbp;
-  String heartRate;
-  String oxygenSaturation;
-  String temperature;
+  String? date;
+  String? time;
+  String? sbp;
+  String? dbp;
+  String? heartRate;
+  String? oxygenSaturation;
+  String? temperature;
 
   ReqAddVitalsModel(
       {this.date,

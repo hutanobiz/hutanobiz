@@ -5,13 +5,13 @@ import 'human_body.dart';
 import 'parser.dart';
 
 class PathPainter extends CustomPainter {
-  final BuildContext context;
-  final List<Path> paths;
-  final List<PathSegment> segments;
-  final List<Path> curPaths;
-  final Function(Path curPath, TapDownDetails tapDownDetails, String pathName)
+  final BuildContext? context;
+  final List<Path>? paths;
+  final List<PathSegment>? segments;
+  final List<Path>? curPaths;
+  final Function(Path curPath, TapDownDetails tapDownDetails, String? pathName)?
       onPressed;
-  final bool selectedPartWithHighlight;
+  final bool? selectedPartWithHighlight;
   PathPainter({
     this.context,
     this.paths,
@@ -40,25 +40,25 @@ class PathPainter extends CustomPainter {
     var offsetX = (size.width - scaledSvgWidth) / 2;
     var offsetY = (size.height - scaledSvgHeight) / 2;
 
-    final touchCanvas = TouchyCanvas(context, canvas);
+    final touchCanvas = TouchyCanvas(context!, canvas);
 
     final paint = Paint()
       ..style = PaintingStyle.stroke
       ..color = Colors.black
       ..strokeWidth = 1.0;
 
-    for (var i = 0; i <= paths.length - 1; i++) {
+    for (var i = 0; i <= paths!.length - 1; i++) {
       if (selectedPartWithHighlight == true) {
         paint.style =
-            curPaths.contains(paths[i]) ? PaintingStyle.fill : PaintingStyle.stroke;
+            curPaths!.contains(paths![i]) ? PaintingStyle.fill : PaintingStyle.stroke;
       }
 
       touchCanvas.drawPath(
-        paths[i].transform(matrix4.storage).shift(Offset(offsetX, offsetY)),
+        paths![i].transform(matrix4.storage).shift(Offset(offsetX, offsetY)),
         paint,
         onTapDown: (details) {
-          onPressed(paths[i], details, segments[i].pathname);
-          print(segments[i].pathname);
+          onPressed!(paths![i], details, segments![i].pathname);
+          print(segments![i].pathname);
         },
       );
     }

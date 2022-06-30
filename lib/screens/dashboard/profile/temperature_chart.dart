@@ -16,7 +16,7 @@ import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:intl/intl.dart';
 
 class TemperatureChart extends StatefulWidget {
-  TemperatureChart({Key key}) : super(key: key);
+  TemperatureChart({Key? key}) : super(key: key);
 
   @override
   State<TemperatureChart> createState() => _TemperatureChartState();
@@ -37,9 +37,9 @@ class _TemperatureChartState extends State<TemperatureChart> {
     Color(0xff23b6e6),
     Color(0xff02d39a),
   ];
-  Future<dynamic> chartFuture;
-  List<dynamic> responseData;
-  double touchedValue;
+  Future<dynamic>? chartFuture;
+  List<dynamic>? responseData;
+  double? touchedValue;
   bool isFirst = true;
 
   @override
@@ -138,19 +138,19 @@ class _TemperatureChartState extends State<TemperatureChart> {
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(10.0)),
                                     borderSide:
-                                        BorderSide(color: Colors.grey[100]),
+                                        BorderSide(color: Colors.grey[100]!),
                                   ),
                                   disabledBorder: OutlineInputBorder(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(10.0)),
                                     borderSide:
-                                        BorderSide(color: Colors.grey[100]),
+                                        BorderSide(color: Colors.grey[100]!),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(10.0)),
                                     borderSide:
-                                        BorderSide(color: Colors.grey[100]),
+                                        BorderSide(color: Colors.grey[100]!),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius:
@@ -230,19 +230,19 @@ class _TemperatureChartState extends State<TemperatureChart> {
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(10.0)),
                                   borderSide:
-                                      BorderSide(color: Colors.grey[100]),
+                                      BorderSide(color: Colors.grey[100]!),
                                 ),
                                 disabledBorder: OutlineInputBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(10.0)),
                                   borderSide:
-                                      BorderSide(color: Colors.grey[100]),
+                                      BorderSide(color: Colors.grey[100]!),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(10.0)),
                                   borderSide:
-                                      BorderSide(color: Colors.grey[100]),
+                                      BorderSide(color: Colors.grey[100]!),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius:
@@ -258,7 +258,7 @@ class _TemperatureChartState extends State<TemperatureChart> {
                       showTimePicker(
                         initialTime: TimeOfDay.now(),
                         context: context,
-                        builder: (BuildContext context, Widget child) {
+                        builder: (BuildContext context, Widget? child) {
                           return Theme(
                             data: ThemeData.dark().copyWith(
                               colorScheme: ColorScheme.light(
@@ -266,7 +266,7 @@ class _TemperatureChartState extends State<TemperatureChart> {
                               ),
                               dialogBackgroundColor: Colors.white,
                             ),
-                            child: child,
+                            child: child!,
                           );
                         },
                       ).then((value) {
@@ -323,17 +323,17 @@ class _TemperatureChartState extends State<TemperatureChart> {
                             border: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
-                              borderSide: BorderSide(color: Colors.grey[100]),
+                              borderSide: BorderSide(color: Colors.grey[100]!),
                             ),
                             disabledBorder: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
-                              borderSide: BorderSide(color: Colors.grey[100]),
+                              borderSide: BorderSide(color: Colors.grey[100]!),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
-                              borderSide: BorderSide(color: Colors.grey[100]),
+                              borderSide: BorderSide(color: Colors.grey[100]!),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius:
@@ -358,7 +358,7 @@ class _TemperatureChartState extends State<TemperatureChart> {
                                 "time": _timeController.text,
                                 "temperature": _weightController.text
                               }).then((value) {
-                                responseData.insert(0, {
+                                responseData!.insert(0, {
                                   "date": _selectedDate,
                                   "time": _timeController.text,
                                   "temperature": _weightController.text
@@ -394,7 +394,7 @@ class _TemperatureChartState extends State<TemperatureChart> {
                         isFirst = false;
                       }
 
-                      responseData.sort((a, b) {
+                      responseData!.sort((a, b) {
                         var aa = DateTime.utc(
                           DateTime.parse(a['date']).year,
                           DateTime.parse(a['date']).month,
@@ -443,14 +443,14 @@ class _TemperatureChartState extends State<TemperatureChart> {
                                       ? '---'
                                       : dateFormatter(
                                           'EEEE, MMM dd, yyyy hh:mm a',
-                                          responseData[-touchedValue.toInt()]),
+                                          responseData![-touchedValue!.toInt()]),
                                   style: AppTextStyle.semiBoldStyle(
                                       fontSize: 12))),
                           Center(
                               child: Text(
                                   touchedValue == 1
                                       ? '---'
-                                      : responseData[-touchedValue.toInt()]
+                                      : responseData![-touchedValue!.toInt()]
                                               ['temperature']
                                           .toString(),
                                   style: AppTextStyle.semiBoldStyle(
@@ -517,7 +517,7 @@ class _TemperatureChartState extends State<TemperatureChart> {
                   //   return Text('No Requests.');
                   // }
                 }
-                return null;
+                return SizedBox();
               },
             )
           ],
@@ -535,7 +535,7 @@ class _TemperatureChartState extends State<TemperatureChart> {
         lineBarsData: lineBarsData2,
         extraLinesData: ExtraLinesData(verticalLines: [
           VerticalLine(
-              x: touchedValue,
+              x: touchedValue!,
               strokeWidth: 30,
               color: Colors.white.withOpacity(.5))
         ]),
@@ -550,7 +550,7 @@ class _TemperatureChartState extends State<TemperatureChart> {
       getTouchLineEnd: (data, index) => double.infinity,
       touchSpotThreshold: double.infinity,
       handleBuiltInTouches: true,
-      touchCallback: (FlTouchEvent event, LineTouchResponse lineTouch) {
+      touchCallback: (FlTouchEvent event, LineTouchResponse? lineTouch) {
         if (!event.isInterestedForInteractions ||
             lineTouch == null ||
             lineTouch.lineBarSpots == null) {
@@ -559,7 +559,7 @@ class _TemperatureChartState extends State<TemperatureChart> {
           // });
           return;
         }
-        final value = lineTouch.lineBarSpots[0].x;
+        final value = lineTouch.lineBarSpots![0].x;
 
         if (value == 1 || value == -7) {
           // setState(() {
@@ -661,8 +661,8 @@ class _TemperatureChartState extends State<TemperatureChart> {
       getTitlesWidget: (value, mt) {
         final isTouched = value == touchedValue;
         return Text(
-            responseData.length > (-value.toInt())
-                ? dateFormatter('M/d', responseData[-value.toInt()])
+            responseData!.length > (-value.toInt())
+                ? dateFormatter('M/d', responseData![-value.toInt()])
                 : '',
             style: isTouched
                 ? TextStyle(color: Colors.black, fontSize: 14.0)
@@ -718,10 +718,10 @@ class _TemperatureChartState extends State<TemperatureChart> {
     List<FlSpot> spots = [];
 
     for (int i = 0;
-        i < (responseData.length > 7 ? 7 : responseData.length);
+        i < (responseData!.length > 7 ? 7 : responseData!.length);
         i++) {
       spots.add(FlSpot(-i.toDouble(),
-          double.parse(responseData[i]['temperature'].toString())));
+          double.parse(responseData![i]['temperature'].toString())));
     }
     return LineChartBarData(
         isCurved: true,

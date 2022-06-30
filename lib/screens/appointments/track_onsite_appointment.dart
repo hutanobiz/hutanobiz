@@ -30,18 +30,18 @@ const PROVIDER_START_DRIVING = 'providerStartDriving';
 const PROVIDER_ARRIVED = 'providerArrived';
 
 class TrackOnsiteAppointment extends StatefulWidget {
-  const TrackOnsiteAppointment({Key key, this.appointmentId}) : super(key: key);
+  const TrackOnsiteAppointment({Key? key, this.appointmentId}) : super(key: key);
 
-  final String appointmentId;
+  final String? appointmentId;
 
   @override
   _TrackOnsiteAppointmentState createState() => _TrackOnsiteAppointmentState();
 }
 
 class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
-  Future<dynamic> _profileFuture;
-  String token;
-  int _appointmentType = 0;
+  Future<dynamic>? _profileFuture;
+  String? token;
+  int? _appointmentType = 0;
   bool _isLoading = false;
 
   String _trackStatusKey = TRACK_STATUS_PROVIDER;
@@ -50,15 +50,15 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
 
   var _userLocation = LatLng(0.00, 0.00);
   ApiBaseHelper api = ApiBaseHelper();
-  String userRating;
+  String? userRating;
   dynamic appointmentResponse;
-  InheritedContainerState _container;
-  bool isProviderArrivedConfirm;
+  late InheritedContainerState _container;
+  bool? isProviderArrivedConfirm;
   SimpleCountDownController _simpleCountDownController2 =
       SimpleCountDownController();
-  var appointmentTime;
+  late var appointmentTime;
   var currentTime;
-  String name = "---", avatar;
+  String? name = "---", avatar;
   bool isEdit = false;
   ScrollController scrollController = ScrollController();
   double animateTo = 0.0;
@@ -109,8 +109,8 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
               } else if (snapshot.hasError) {
                 return new Text('Error: ${snapshot.error}');
               } else if (snapshot.hasData) {
-                appointmentResponse = snapshot.data;
-                return widgetList(snapshot.data);
+                appointmentResponse = snapshot.data as Map;
+                return widgetList(snapshot.data as Map);
               } else {
                 return Center(
                   child: new CustomLoader(),
@@ -333,7 +333,7 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                   borderRadius: BorderRadius.all(
                     Radius.circular(14.0),
                   ),
-                  border: Border.all(width: 0.5, color: Colors.grey[300]),
+                  border: Border.all(width: 0.5, color: Colors.grey[300]!),
                 ),
                 child: Theme(
                     data: Theme.of(context)
@@ -655,13 +655,13 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
     );
   }
 
-  editWidget({Function onTap, String title}) {
+  editWidget({Function? onTap, required String title}) {
     return Row(
       children: [
         Expanded(
             child: Text(title, style: AppTextStyle.mediumStyle(fontSize: 15))),
         GestureDetector(
-            onTap: onTap,
+            onTap: onTap as void Function()?,
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Image.asset('images/edit_icon.png', height: 20),
@@ -872,13 +872,13 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                                       throw 'Could not launch url';
                                     }
                                   })
-                              : index == 2 && !isProviderArrivedConfirm
+                              : index == 2 && !isProviderArrivedConfirm!
                                   ? TrackingButton(
                                       title: 'Acknowledge Arrival',
                                       image: 'images/trackArrived.png',
                                       onTap: () {
                                         onsiteChangeRequestStatus(
-                                            widget.appointmentId, "6");
+                                            widget.appointmentId!, "6");
                                       })
                                   : index == 3
                                       ? SizedBox()
@@ -1050,7 +1050,7 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                             Navigator.of(context).pop();
 
                             onsiteChangeRequestStatus(
-                                widget.appointmentId, "5");
+                                widget.appointmentId!, "5");
                           }),
                     ),
                   ],

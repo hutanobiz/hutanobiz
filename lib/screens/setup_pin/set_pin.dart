@@ -24,9 +24,9 @@ import 'package:local_auth/local_auth.dart';
 import 'package:hutano/utils/extensions.dart';
 
 class SetupPin extends StatefulWidget {
-  final SetupScreenFrom setupScreen;
+  final SetupScreenFrom? setupScreen;
 
-  const SetupPin({Key key, this.setupScreen}) : super(key: key);
+  const SetupPin({Key? key, this.setupScreen}) : super(key: key);
 
   @override
   _SetupPinState createState() => _SetupPinState();
@@ -56,7 +56,7 @@ class _SetupPinState extends State<SetupPin> {
   Future<void> _authenticate() async {
     try {
       var authenticated = await auth.authenticate(
-        localizedReason: Localization.of(context).labelAuthWithFingerPrint,
+        localizedReason: Localization.of(context)!.labelAuthWithFingerPrint,
         options: const AuthenticationOptions(
           useErrorDialogs: true,
         ),
@@ -111,7 +111,7 @@ class _SetupPinState extends State<SetupPin> {
           HutanoPinInput(
             pinCount: 4,
             controller: controller,
-            width: SizeConfig.screenWidth / 1.4,
+            width: SizeConfig.screenWidth! / 1.4,
             onChanged: function,
           )
         ],
@@ -231,11 +231,11 @@ class _SetupPinState extends State<SetupPin> {
         });
       } on ErrorModel catch (e) {
         ProgressDialogUtils.dismissProgressDialog();
-        DialogUtils.showAlertDialog(context, e.response);
+        DialogUtils.showAlertDialog(context, e.response!);
       }
     } else {
-      _scaffoldKey.currentState.showSnackBar(
-          SnackBar(content: Text(Localization.of(context).confirmPinMessage)));
+      _scaffoldKey.currentState!.showSnackBar(
+          SnackBar(content: Text(Localization.of(context)!.confirmPinMessage)));
       /* DialogUtils.showAlertDialog(
           context, Localization.of(context).confirmPinMessage);*/
     }
@@ -245,7 +245,7 @@ class _SetupPinState extends State<SetupPin> {
     return Padding(
       padding: const EdgeInsets.only(left: spacing15, right: spacing15),
       child: HutanoButton(
-        label: Localization.of(context).next,
+        label: Localization.of(context)!.next,
         margin: spacing10,
         onPressed: _enableButton ? _onUpdateClick : null,
       ),
@@ -269,15 +269,15 @@ class _SetupPinState extends State<SetupPin> {
                   ],
                 ),
                 AppHeader(
-                  title: Localization.of(context).fasterLogin,
-                  subTitle: Localization.of(context).createPin,
+                  title: Localization.of(context)!.fasterLogin,
+                  subTitle: Localization.of(context)!.createPin,
                 ),
                 SizedBox(
                   height: 50,
                 ),
-                _buildPinInput(context, Localization.of(context).newPin,
+                _buildPinInput(context, Localization.of(context)!.newPin,
                     _newPinController, _onNewPinChange),
-                _buildPinInput(context, Localization.of(context).confirmNewPin,
+                _buildPinInput(context, Localization.of(context)!.confirmNewPin,
                     _confirmPinController, _onConfirmPinChange),
                 SizedBox(
                   height: spacing20,

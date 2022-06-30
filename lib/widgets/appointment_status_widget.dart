@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hutano/colors.dart';
 
 class AppointmentStatusWidget extends StatelessWidget {
-  AppointmentStatusWidget({Key key, @required this.status}) : super(key: key);
-  int status;
+  AppointmentStatusWidget({Key? key, required this.status}) : super(key: key);
+  int? status;
   @override
   Widget build(BuildContext context) {
     return Container(

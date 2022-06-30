@@ -18,18 +18,18 @@ class CustomErrorDialog {
   }
 
   static void showCustomDialog(
-      {BuildContext context, String title, String message}) {
+      {required BuildContext context, String? title, String? message}) {
     showDialog(
       context: context,
       builder: (context) {
-        return _showMaterialAlertDialog(context, message);
+        return _showMaterialAlertDialog(context, message!);
       },
     );
   }
 
   static void showOkCancelErrorDialog({
-    BuildContext context,
-    String message,
+    required BuildContext context,
+    String? message,
   }) {
     showDialog(
       barrierDismissible: false,
@@ -37,7 +37,7 @@ class CustomErrorDialog {
       builder: (context) {
         return WillPopScope(
             onWillPop: () async => false,
-            child: _showOkCancelCupertinoAlertDialog(context, message));
+            child: _showOkCancelCupertinoAlertDialog(context, message!));
       },
     );
   }
@@ -72,15 +72,15 @@ class CustomErrorDialog {
     ];
   }
 
-  static List<Widget> _okCancelActions({
-    BuildContext context,
-    String okButtonTitle,
-    String cancelButtonTitle,
-    Function okButtonAction,
-    bool isCancelEnable,
-    Function cancelButtonAction,
+  static List<Widget?> _okCancelActions({
+    BuildContext? context,
+    String? okButtonTitle,
+    String? cancelButtonTitle,
+    Function? okButtonAction,
+    bool? isCancelEnable,
+    Function? cancelButtonAction,
   }) {
-    return <Widget>[
+    return <Widget?>[
       cancelButtonTitle != null
           ? Platform.isIOS
               ? CupertinoDialogAction(
@@ -88,10 +88,10 @@ class CustomErrorDialog {
                   child: Text(cancelButtonTitle),
                   onPressed: cancelButtonAction == null
                       ? () {
-                          Navigator.of(context).pop();
+                          Navigator.of(context!).pop();
                         }
                       : () {
-                          Navigator.of(context).pop();
+                          Navigator.of(context!).pop();
                           cancelButtonAction();
                         },
                 )
@@ -99,34 +99,34 @@ class CustomErrorDialog {
                   child: Text(cancelButtonTitle),
                   onPressed: cancelButtonAction == null
                       ? () {
-                          Navigator.of(context).pop();
+                          Navigator.of(context!).pop();
                         }
                       : () {
-                          Navigator.of(context).pop();
+                          Navigator.of(context!).pop();
                           cancelButtonAction();
                         },
                 )
           : null,
       Platform.isIOS
           ? CupertinoDialogAction(
-              child: Text(okButtonTitle),
+              child: Text(okButtonTitle!),
               onPressed: () {
-                Navigator.of(context).pop();
-                okButtonAction();
+                Navigator.of(context!).pop();
+                okButtonAction!();
               },
             )
           : FlatButton(
-              child: Text(okButtonTitle),
+              child: Text(okButtonTitle!),
               onPressed: () {
-                Navigator.of(context).pop();
-                okButtonAction();
+                Navigator.of(context!).pop();
+                okButtonAction!();
               },
             ),
     ];
   }
 
   static List<Widget> _okAction(
-      {BuildContext context, String okButtonTitle, Function okButtonAction}) {
+      {BuildContext? context, required String okButtonTitle, Function? okButtonAction}) {
     return <Widget>[
       CupertinoDialogAction(
         child: Text(
@@ -134,8 +134,8 @@ class CustomErrorDialog {
           style: TextStyle(color: colorLightGreen),
         ),
         onPressed: () {
-          Navigator.of(context).pop();
-          okButtonAction();
+          Navigator.of(context!).pop();
+          okButtonAction!();
         },
       ),
     ];

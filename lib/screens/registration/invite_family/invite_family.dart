@@ -39,8 +39,8 @@ class _InviteFamilyScreenState extends State<InviteFamilyScreen> {
                 ),
                 AppHeader(
                   progressSteps: HutanoProgressSteps.three,
-                  title: Localization.of(context).inviteFamilyAndFriends,
-                  subTitle: Localization.of(context).assignPermisstion,
+                  title: Localization.of(context)!.inviteFamilyAndFriends,
+                  subTitle: Localization.of(context)!.assignPermisstion,
                 ),
                 SizedBox(
                   height: spacing80,
@@ -98,7 +98,7 @@ class _InviteFamilyScreenState extends State<InviteFamilyScreen> {
             SizedBox(
               width: 15,
             ),
-            Text(Localization.of(context).inviteByText,
+            Text(Localization.of(context)!.inviteByText,
                 style: const TextStyle(
                     color: colorBlack2,
                     fontStyle: FontStyle.normal,

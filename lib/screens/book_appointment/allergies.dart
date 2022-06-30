@@ -23,7 +23,7 @@ import 'package:hutano/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 class AllergiesScreen extends StatefulWidget {
-  AllergiesScreen({Key key, this.args}) : super(key: key);
+  AllergiesScreen({Key? key, this.args}) : super(key: key);
   dynamic args;
 
   @override
@@ -32,13 +32,13 @@ class AllergiesScreen extends StatefulWidget {
 
 class _AllergiesScreenState extends State<AllergiesScreen> {
   ApiBaseHelper api = ApiBaseHelper();
-  List<Allergy> myAllergiesList = [];
-  List<Allergy> profileAllergiesList = [];
-  String token = '';
+  List<Allergy>? myAllergiesList = [];
+  List<Allergy>? profileAllergiesList = [];
+  String? token = '';
   bool _isLoading = false;
   final _searchDiseaseController = TextEditingController();
   final _searchDiseaseFocusNode = FocusNode();
-  InheritedContainerState _container;
+  InheritedContainerState? _container;
   bool isIndicatorLoading = false;
 
   @override
@@ -53,7 +53,7 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
       });
       if (widget.args['allergy'] != null && widget.args['allergy'].length > 0) {
         for (dynamic aa in widget.args['allergy']) {
-          myAllergiesList.add(Allergy.fromJson(aa));
+          myAllergiesList!.add(Allergy.fromJson(aa));
         }
       }
     }
@@ -158,7 +158,7 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
           errorBuilder: (_, object) {
             return Container();
           },
-          itemBuilder: (context, suggestion) {
+          itemBuilder: (context, dynamic suggestion) {
             return ListTile(
               title: Text(suggestion.name ?? ''),
             );
@@ -166,7 +166,7 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
           transitionBuilder: (context, suggestionsBox, controller) {
             return suggestionsBox;
           },
-          onSuggestionSelected: (suggestion) {
+          onSuggestionSelected: (dynamic suggestion) {
             // setState(() {
             //   // _selectedAllergy = suggestion.name;
             //   // _selectedSid = suggestion.sId;
@@ -188,7 +188,7 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
           ),
         )
       : myAllergiesList == null ||
-              (myAllergiesList == null || myAllergiesList.isEmpty) &&
+              (myAllergiesList == null || myAllergiesList!.isEmpty) &&
                   !isIndicatorLoading
           ? Expanded(
               child: Center(
@@ -213,7 +213,7 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
                       padding: EdgeInsets.only(bottom: 65),
                       shrinkWrap: true,
                       physics: ClampingScrollPhysics(),
-                      itemCount: myAllergiesList.length,
+                      itemCount: myAllergiesList!.length,
                       itemBuilder: (context, index) {
                         return PopupMenuButton(
                           offset: Offset(300, 50),
@@ -221,8 +221,8 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
                               <PopupMenuEntry<String>>[
                             _popMenuCommonItem(
                                 context,
-                                Localization.of(context).remove,
-                                FileConstants.icRemoveBlack)
+                                Localization.of(context)!.remove,
+                                FileConstants.icRemoveBlack) as PopupMenuEntry<String>
                           ],
                           child: Container(
                             padding: EdgeInsets.symmetric(horizontal: 8),
@@ -233,25 +233,25 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
                                 Radius.circular(14.0),
                               ),
                               border: Border.all(
-                                  width: 0.5, color: Colors.grey[300]),
+                                  width: 0.5, color: Colors.grey[300]!),
                             ),
                             child: ListTile(
                               contentPadding: EdgeInsets.all(0),
                               title: Text(
-                                myAllergiesList[index].name,
+                                myAllergiesList![index].name!,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               trailing: Icon(Icons.more_vert),
                             ),
                           ),
-                          onSelected: (value) {
+                          onSelected: (dynamic value) {
                             Widgets.showConfirmationDialog(
                               context: context,
                               description:
                                   "Are you sure to delete this allergy?",
                               onLeftPressed: () => _removeAllergy(
-                                  context, myAllergiesList[index]),
+                                  context, myAllergiesList![index]),
                             );
                             // _removeAllergy(context, myAllergiesList[index]);
                           },
@@ -291,21 +291,21 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
 
   void _removeAllergy(BuildContext context, Allergy allergy) {
     if (widget.args['isEdit']) {
-      if (myAllergiesList.contains(allergy)) {
+      if (myAllergiesList!.contains(allergy)) {
         setState(() {
-          myAllergiesList.remove(allergy);
+          myAllergiesList!.remove(allergy);
         });
       }
     } else {
       setLoading(true);
-      if (profileAllergiesList.contains(allergy)) {
-        profileAllergiesList.remove(allergy);
+      if (profileAllergiesList!.contains(allergy)) {
+        profileAllergiesList!.remove(allergy);
       }
       api.deletePatientAllergyHistory(token, allergy.sId).then((value) {
         setLoading(false);
         setState(() {
-          if (myAllergiesList.contains(allergy)) {
-            myAllergiesList.remove(allergy);
+          if (myAllergiesList!.contains(allergy)) {
+            myAllergiesList!.remove(allergy);
           }
         });
       }).futureError((error) {
@@ -326,7 +326,7 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
         Navigator.pop(context);
       });
     } else {
-      if (myAllergiesList.length > 0) {
+      if (myAllergiesList!.length > 0) {
         Provider.of<HealthConditionProvider>(context, listen: false)
             .updateAllergies(myAllergiesList);
         Navigator.of(context).pushNamed(Routes.medicalHistoryScreen,
@@ -379,7 +379,7 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
       //         orElse: () => null)) !=
       //     null) {
       setState(() {
-        myAllergiesList.add(allergy);
+        myAllergiesList!.add(allergy);
       });
       // }
       // else {
@@ -399,7 +399,7 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
       setLoading(true);
       try {
         await ApiManager().addPatientAllergy(allergy).then(((result) {
-          myAllergiesList
+          myAllergiesList!
               .add(Allergy.fromJson(result['response']['allergy'].last));
           setLoading(false);
         }));

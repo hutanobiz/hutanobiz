@@ -7,7 +7,7 @@ import 'package:hutano/screens/appointments/video_player.dart';
 class ImageSlider extends StatelessWidget {
   ImageSlider({this.imageVideoList});
 
-  final List imageVideoList;
+  final List? imageVideoList;
   @override
   Widget build(BuildContext context) {
     return Scaffold(body: Builder(
@@ -21,7 +21,7 @@ class ImageSlider extends StatelessWidget {
             enlargeCenterPage: false,
             // autoPlay: false,
           ),
-          items: imageVideoList
+          items: imageVideoList!
               .map((item) => Container(
                     child: Center(
                         child: item['type'] == '1'
@@ -46,7 +46,7 @@ class ImageSlider extends StatelessWidget {
                                   height: 120,
                                   width: 120,
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey[300]),
+                                    border: Border.all(color: Colors.grey[300]!),
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(10.0)),
                                   ),

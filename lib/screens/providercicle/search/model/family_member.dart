@@ -1,11 +1,11 @@
 class FamilyMember {
-  String fullName;
-  String avatar;
-  String phoneNumber;
-  String mobileCountryCode;
-  String sId;
-  String relation;
-  int userRelation;
+  String? fullName;
+  String? avatar;
+  String? phoneNumber;
+  String? mobileCountryCode;
+  String? sId;
+  String? relation;
+  int? userRelation;
 
   FamilyMember(
       {this.fullName,

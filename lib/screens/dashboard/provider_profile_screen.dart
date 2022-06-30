@@ -28,9 +28,9 @@ import 'package:intl/intl.dart';
 import 'model/res_provider_packages.dart';
 
 class ProviderProfileScreen extends StatefulWidget {
-  ProviderProfileScreen({Key key, this.providerId}) : super(key: key);
+  ProviderProfileScreen({Key? key, this.providerId}) : super(key: key);
 
-  final String providerId;
+  final String? providerId;
 
   @override
   _ProviderProfileScreenState createState() => _ProviderProfileScreenState();
@@ -38,41 +38,41 @@ class ProviderProfileScreen extends StatefulWidget {
 
 class _ProviderProfileScreenState extends State<ProviderProfileScreen>
     with SingleTickerProviderStateMixin {
-  Future<dynamic> _profileFuture;
-  InheritedContainerState _container;
-  Map profileMapResponse = Map();
-  List speaciltyList = List();
-  List reviewsList = [];
+  Future<dynamic>? _profileFuture;
+  late InheritedContainerState _container;
+  Map? profileMapResponse = Map();
+  List? speaciltyList = [];
+  List? reviewsList = [];
 
   final Set<Marker> _markers = {};
-  BitmapDescriptor sourceIcon;
+  BitmapDescriptor? sourceIcon;
   Completer<GoogleMapController> _controller = Completer();
-  List scheduleList = List();
+  List? scheduleList = [];
 
   ScrollController _scrollController = new ScrollController();
 
   final _adddressColumnKey = GlobalKey();
 
-  Office officeData, videoData, onsiteData;
+  Office? officeData, videoData, onsiteData;
 
   int _radioValue =
       0; // for radio button i concat appoinmentType and 0/1(0 for consultation 1 for service)
   int _selectedScheduleIndex = 0;
-  Map<String, Services> _selectedServicesMap = Map();
-  String mondayTimings,
+  Map<String?, Services> _selectedServicesMap = Map();
+  String? mondayTimings,
       tuesdayTimings,
       wednesdayTimings,
       thursdayTimings,
       fridayTimings,
       saturdayTimings,
       sundayTimings;
-  TabController _tabController;
+  TabController? _tabController;
   int selectedIndex = 0;
   String appointmentTypeRadioValue = '0';
-  var isFirstAppointmentOnline;
+  late var isFirstAppointmentOnline;
   var totalAppointmentWithProvider;
 
-  List<dynamic> _timings = List(7);
+  List<dynamic> _timings = List.filled(7, null, growable: false);
 
   void setSourceAndDestinationIcons() async {
     sourceIcon = await BitmapDescriptor.fromAssetImage(
@@ -136,14 +136,14 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
                   break;
                 case ConnectionState.done:
                   if (snapshot.hasData) {
-                    profileMapResponse = snapshot.data;
+                    profileMapResponse = snapshot.data as Map?;
 
-                    if (profileMapResponse.isEmpty ||
-                        profileMapResponse["data"] == null) {
+                    if (profileMapResponse!.isEmpty ||
+                        profileMapResponse!["data"] == null) {
                       return Container();
                     }
 
-                    Map _providerData = profileMapResponse["data"][0];
+                    Map _providerData = profileMapResponse!["data"][0];
                     String nameTitle = "Dr. ", name = "---";
                     if (_providerData['userId'] is Map) {
                       if (_providerData["userId"] != null) {
@@ -151,9 +151,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
                             _providerData["userId"]["title"]?.toString() ??
                                 'Dr. ';
                         name = nameTitle +
-                                _providerData["userId"]["fullName"]
-                                    ?.toString() ??
-                            "---";
+                            (_providerData["userId"]["fullName"]?.toString() ??
+                                "---");
                       }
                     } else if (_providerData["User"] != null &&
                         _providerData["User"].length > 0) {
@@ -182,12 +181,13 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
                         ? Office.fromJson(
                             _providerData['vedioConsultanceFee'][0])
                         : null;
-                    isFirstAppointmentOnline = profileMapResponse['data'][0]
+                    isFirstAppointmentOnline = profileMapResponse!['data'][0]
                             ['isFirstAppointmentOnline'] ??
                         false;
 
                     totalAppointmentWithProvider =
-                        profileMapResponse['totalAppointmentWithProvider'] ?? 0;
+                        profileMapResponse!['totalAppointmentWithProvider'] ??
+                            0;
 
                     return LoadingBackgroundNew(
                       title: name,
@@ -234,7 +234,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
                                           "Please choose at least one service");
                                     }
                                   } else {
-                                    String _appointmentTypeKey;
+                                    String? _appointmentTypeKey;
                                     switch (appointmentTypeRadioValue) {
                                       case '1':
                                         _appointmentTypeKey =
@@ -262,7 +262,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
                                   Map _appointentTypeMap = {};
 
                                   dynamic response =
-                                      profileMapResponse["data"][0];
+                                      profileMapResponse!["data"][0];
 
                                   _appointentTypeMap["isOfficeEnabled"] =
                                       response["isOfficeEnabled"];
@@ -290,7 +290,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
                   }
                   break;
               }
-              return null;
+              return SizedBox();
             }),
       ),
     );
@@ -302,8 +302,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
     if (_providerData['userId'] is Map) {
       if (_providerData["userId"] != null) {
         nameTitle = _providerData["userId"]["title"]?.toString() ?? 'Dr. ';
-        name = nameTitle + _providerData["userId"]["fullName"]?.toString() ??
-            "---";
+        name = nameTitle +
+            (_providerData["userId"]["fullName"]?.toString() ?? "---");
       }
     } else if (_providerData["User"] != null &&
         _providerData["User"].length > 0) {
@@ -319,7 +319,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
     averageRating =
         profileResponse['averageRating']?.toStringAsFixed(2) ?? "0.00";
 
-    List<Widget> formWidget = List();
+    List<Widget> formWidget = [];
 
     formWidget.add(
       Padding(
@@ -331,7 +331,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
           isOptionsShow: false,
           isProverPicShow: true,
           onLocationClick: () =>
-              Scrollable.ensureVisible(_adddressColumnKey.currentContext),
+              Scrollable.ensureVisible(_adddressColumnKey.currentContext!),
           onRatingClick: () =>
               _scrollListView(_scrollController.position.maxScrollExtent),
         ),
@@ -356,7 +356,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
         onTap: (int index) {
           setState(() {
             selectedIndex = index;
-            _tabController.animateTo(index);
+            _tabController!.animateTo(index);
           });
         },
         indicatorSize: TabBarIndicatorSize.tab,
@@ -370,7 +370,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
             child: ListView(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              children: widgetList(profileMapResponse),
+              children: widgetList(profileMapResponse!),
             ),
             visible: selectedIndex == 0,
           ),
@@ -392,8 +392,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
     return formWidget;
   }
 
-  DateTime todayFromTime;
-  DateTime todayToTime;
+  DateTime? todayFromTime;
+  DateTime? todayToTime;
 
   List<Widget> widgetList(Map profileResponse) {
     Map _providerData = profileResponse["data"][0];
@@ -401,8 +401,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
     if (_providerData['userId'] is Map) {
       if (_providerData["userId"] != null) {
         nameTitle = _providerData["userId"]["title"]?.toString() ?? 'Dr. ';
-        name = nameTitle + _providerData["userId"]["fullName"]?.toString() ??
-            "---";
+        name = nameTitle +
+            (_providerData["userId"]["fullName"]?.toString() ?? "---");
       }
     } else if (_providerData["User"] != null &&
         _providerData["User"].length > 0) {
@@ -411,10 +411,10 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
           (_providerData["User"][0]["fullName"]?.toString() ?? "---");
     }
 
-    List languagesList = List();
+    List? languagesList = [];
 
     String doctorEducation = "",
-        address,
+        address = '',
         todaysTimings = "",
         tomorrowsTimings = "",
         averageRating = "---",
@@ -450,7 +450,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
       if (boardCerfication.length > 0) {
         for (dynamic b in boardCerfication) {
           if (b != null && b is String) {
-            boardCerficationText += (b?.toString() ?? "---") + "\n\n";
+            boardCerficationText += (b.toString()) + "\n\n";
           }
         }
       }
@@ -481,36 +481,36 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
 
       int i = 0;
       int j = 0;
-      while (i < scheduleList.length) {
-        List _scheduleDaysList = scheduleList[i]["day"];
+      while (i < scheduleList!.length) {
+        List _scheduleDaysList = scheduleList![i]["day"];
         if (j < _scheduleDaysList.length) {
           String day = _scheduleDaysList[j].toString();
           var fromTime = DateTime.utc(
               DateTime.now().year,
               DateTime.now().month,
               9,
-              int.parse(scheduleList[i]['fromTime'] != null
-                  ? scheduleList[i]['fromTime'].toString().split(':')[0]
-                  : scheduleList[i]['session'][0]['fromTime']
+              int.parse(scheduleList![i]['fromTime'] != null
+                  ? scheduleList![i]['fromTime'].toString().split(':')[0]
+                  : scheduleList![i]['session'][0]['fromTime']
                       .toString()
                       .split(':')[0]),
-              int.parse(scheduleList[i]['fromTime'] != null
-                  ? scheduleList[i]['fromTime'].toString().split(':')[1]
-                  : scheduleList[i]['session'][0]['fromTime']
+              int.parse(scheduleList![i]['fromTime'] != null
+                  ? scheduleList![i]['fromTime'].toString().split(':')[1]
+                  : scheduleList![i]['session'][0]['fromTime']
                       .toString()
                       .split(':')[1]));
           var toTime = DateTime.utc(
               DateTime.now().year,
               DateTime.now().month,
               9,
-              int.parse(scheduleList[i]['toTime'] != null
-                  ? scheduleList[i]['toTime'].toString().split(':')[0]
-                  : scheduleList[i]['session'][0]['toTime']
+              int.parse(scheduleList![i]['toTime'] != null
+                  ? scheduleList![i]['toTime'].toString().split(':')[0]
+                  : scheduleList![i]['session'][0]['toTime']
                       .toString()
                       .split(':')[0]),
-              int.parse(scheduleList[i]['toTime'] != null
-                  ? scheduleList[i]['toTime'].toString().split(':')[1]
-                  : scheduleList[i]['session'][0]['toTime']
+              int.parse(scheduleList![i]['toTime'] != null
+                  ? scheduleList![i]['toTime'].toString().split(':')[1]
+                  : scheduleList![i]['session'][0]['toTime']
                       .toString()
                       .split(':')[1]));
 
@@ -559,7 +559,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
       }
     }
 
-    List<Widget> formWidget = List();
+    List<Widget> formWidget = [];
 
     formWidget.add(Padding(
       padding: const EdgeInsets.only(left: 20, top: 16, right: 20),
@@ -577,20 +577,20 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
     formWidget.add(SizedBox(height: 12.0));
 
     formWidget.add(
-      speaciltyList.length > 0
+      speaciltyList!.length > 0
           ? SizedBox(
               height: 100,
               child: ListView.builder(
                 shrinkWrap: true,
                 physics: ClampingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
-                itemCount: speaciltyList.length,
+                itemCount: speaciltyList!.length,
                 padding: const EdgeInsets.only(left: 20, bottom: 16),
                 itemBuilder: (context, index) {
-                  return specilityCard(speaciltyList[index]["image"],
-                      speaciltyList[index]["title"]?.toString() ?? "---");
-                  return _chipWidget(
-                      speaciltyList[index]["title"]?.toString() ?? "---");
+                  return specilityCard(speaciltyList![index]["image"],
+                      speaciltyList![index]["title"]?.toString() ?? "---");
+                  // return _chipWidget(
+                  //     speaciltyList[index]["title"]?.toString() ?? "---");
                 },
               ),
             )
@@ -704,7 +704,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
     );
 
     formWidget.add(
-      languagesList.length > 0
+      languagesList!.length > 0
           ? SizedBox(
               height: 50,
               child: ListView.builder(
@@ -714,7 +714,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
                 itemCount: languagesList.length,
                 padding: const EdgeInsets.only(left: 20, bottom: 16),
                 itemBuilder: (context, index) {
-                  return _chipWidget(languagesList[index]?.toString() ?? "---");
+                  return _chipWidget(
+                      languagesList![index]?.toString() ?? "---");
                 },
               ),
             )
@@ -745,7 +746,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
       ),
     );
 
-    if (scheduleList != null && scheduleList.length > 0)
+    if (scheduleList != null && scheduleList!.length > 0)
       formWidget.add(
         Padding(
             padding: const EdgeInsets.only(left: 20, top: 16, bottom: 12),
@@ -771,8 +772,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _chipWidget(
-                DateFormat('hh:mm a').format(todayFromTime.toLocal()) ?? "---"),
+            _chipWidget(DateFormat('hh:mm a').format(todayFromTime!.toLocal())),
             SizedBox(
               width: 5,
             ),
@@ -787,8 +787,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
             SizedBox(
               width: 5,
             ),
-            _chipWidget(
-                DateFormat('hh:mm a').format(todayToTime.toLocal()) ?? "---"),
+            _chipWidget(DateFormat('hh:mm a').format(todayToTime!.toLocal())),
           ],
         ),
       ));
@@ -998,7 +997,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
                   Icons.star,
                   color: Colors.amber,
                 ),
-                onRatingUpdate: null,
+                onRatingUpdate: (v) {},
               ),
             ),
           )
@@ -1007,7 +1006,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
     ));
 
     formWidget.add(
-      reviewsList == null || reviewsList.length == 0
+      reviewsList == null || reviewsList!.length == 0
           ? Padding(
               padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
               child: Text("NO reviews available yet!"),
@@ -1019,9 +1018,9 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
               padding: const EdgeInsets.only(left: 20, right: 20),
               reverse: true,
               shrinkWrap: true,
-              itemCount: reviewsList.length >= 2 ? 2 : reviewsList.length,
+              itemCount: reviewsList!.length >= 2 ? 2 : reviewsList!.length,
               itemBuilder: (context, index) {
-                dynamic response = reviewsList[index];
+                dynamic response = reviewsList![index];
 
                 return ReviewWidget(
                   reviewerName:
@@ -1044,7 +1043,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
     _reviewMap["reviewsList"] = reviewsList;
 
     formWidget.add(
-      (reviewsList != null && reviewsList.length >= 2)
+      (reviewsList != null && reviewsList!.length >= 2)
           ? Padding(
               padding: const EdgeInsets.only(top: 20, left: 20),
               child: FlatButton(
@@ -1204,7 +1203,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
         borderRadius: BorderRadius.circular(25.0),
       ),
       child: Text(
-        title ?? "---",
+        title,
         textAlign: TextAlign.center,
         style: TextStyle(
             color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
@@ -1219,7 +1218,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(14.0)),
-        border: Border.all(color: Colors.grey[100]),
+        border: Border.all(color: Colors.grey[100]!),
       ),
       child: Row(
         children: <Widget>[
@@ -1250,14 +1249,14 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
     );
   }
 
-  Widget specilityCard(String image, cardText) {
+  Widget specilityCard(String? image, cardText) {
     return Container(
       width: 160.0,
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(14.0)),
-        border: Border.all(color: Colors.grey[100]),
+        border: Border.all(color: Colors.grey[100]!),
       ),
       child: Row(
         children: <Widget>[
@@ -1294,7 +1293,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
     );
   }
 
-  Widget divider({double topPadding}) {
+  Widget divider({double? topPadding}) {
     return Padding(
       padding: EdgeInsets.only(top: topPadding ?? 0.0),
       child: Divider(
@@ -1422,7 +1421,10 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
 
   List<Widget> _widgetList() {
     var groupAppointmentTypeMap =
-        groupBy(profileMapResponse['services'], (obj) => obj['serviceType']);
+        groupBy(profileMapResponse!['services'], (obj) {
+      var a = obj as Map;
+      return a['serviceType'];
+    });
     List<Customer> groupOfficeList = [], groupOnsiteList = [];
     List<Widget> formWidget = [];
 
@@ -1460,39 +1462,51 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
     formWidget.add(officeData != null
         ? consultancyFeeWidget(
             'Office',
-            officeData.fee.toDouble(),
-            officeData.duration.toString(),
+            officeData!.fee!.toDouble(),
+            officeData!.duration.toString(),
             '1',
             !(isFirstAppointmentOnline && totalAppointmentWithProvider == 0))
         : SizedBox());
     if (groupAppointmentTypeMap.containsKey(1)) {
-      var groupOfficeMap =
-          groupBy(groupAppointmentTypeMap[1], (obj) => obj['serviceName']);
-      groupOfficeMap.forEach((k, v) => groupOfficeList
-          .add(Customer(k, v.map((m) => Services.fromJson(m)).toList())));
+      var groupOfficeMap = groupBy(groupAppointmentTypeMap[1]!, (obj) {
+        var a = obj as Map;
+        return a['serviceName'];
+      });
+      groupOfficeMap.forEach((k, v) => groupOfficeList.add(Customer(
+          k,
+          v.map((m) {
+            var a = m as Map<String, dynamic>;
+            return Services.fromJson(a);
+          }).toList())));
       formWidget.add(servicesWidget(groupOfficeList, '1',
           !(isFirstAppointmentOnline && totalAppointmentWithProvider == 0)));
       // formWidget.add(servicesExpandedWidget(groupOfficeList));
     }
 
     formWidget.add(videoData != null
-        ? consultancyFeeWidget('Telemedicine', videoData.fee.toDouble(),
-            videoData.duration.toString(), '2', true)
+        ? consultancyFeeWidget('Telemedicine', videoData!.fee!.toDouble(),
+            videoData!.duration.toString(), '2', true)
         : SizedBox());
 
     formWidget.add(onsiteData != null
         ? consultancyFeeWidget(
             'Onsite',
-            onsiteData.fee.toDouble(),
-            onsiteData.duration.toString(),
+            onsiteData!.fee!.toDouble(),
+            onsiteData!.duration.toString(),
             '3',
             !(isFirstAppointmentOnline && totalAppointmentWithProvider == 0))
         : SizedBox());
     if (groupAppointmentTypeMap.containsKey(3)) {
-      var groupOnsiteMap =
-          groupBy(groupAppointmentTypeMap[3], (obj) => obj['serviceName']);
-      groupOnsiteMap.forEach((k, v) => groupOnsiteList
-          .add(Customer(k, v.map((m) => Services.fromJson(m)).toList())));
+      var groupOnsiteMap = groupBy(groupAppointmentTypeMap[3]!, (obj) {
+        var a = obj as Map;
+        return a['serviceName'];
+      });
+      groupOnsiteMap.forEach((k, v) => groupOnsiteList.add(Customer(
+          k,
+          v.map((m) {
+            var a = m as Map<String, dynamic>;
+            return Services.fromJson(m);
+          }).toList())));
       formWidget.add(servicesWidget(groupOnsiteList, '3',
           !(isFirstAppointmentOnline && totalAppointmentWithProvider == 0)));
       // formWidget.add(servicesExpandedWidget(groupOnsiteList));
@@ -1511,7 +1525,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(14.0),
         border: Border.all(
-          color: Colors.grey[100],
+          color: Colors.grey[100]!,
         ),
       ),
       child: Column(
@@ -1538,7 +1552,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
                       ),
                     ),
                     SizedBox(height: 7),
-                    Text(Localization.of(context).chooseOfferedServices,
+                    Text(Localization.of(context)!.chooseOfferedServices,
                         style: TextStyle(
                             fontSize: fontSize13,
                             fontWeight: fontWeightMedium,
@@ -1554,7 +1568,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       value: int.parse(appointmentType + '1'),
                       onChanged: isEnabled
-                          ? (val) {
+                          ? (dynamic val) {
                               _handleRadioValueChange(1, appointmentType);
                             }
                           : null,
@@ -1581,7 +1595,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
                         if (groupList != null && groupList.length > 0) {
                           return ExpansionTile(
                             title: Text(
-                              groupList[index].name,
+                              groupList[index].name!,
                               style: TextStyle(
                                 fontSize: fontSize16,
                                 color: colorBlack2,
@@ -1666,7 +1680,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(14.0),
         border: Border.all(
-          color: Colors.grey[100],
+          color: Colors.grey[100]!,
         ),
       ),
       child: Column(
@@ -1726,7 +1740,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     value: int.parse(appointmentType + '0'),
                     onChanged: isEnabled
-                        ? (v) => _handleRadioValueChange(0, appointmentType)
+                        ? (dynamic v) =>
+                            _handleRadioValueChange(0, appointmentType)
                         : null,
                   ),
                 ),
@@ -1748,7 +1763,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
       value: _selectedServicesMap.containsKey(services.subServiceId),
       activeColor: AppColors.goldenTainoi,
       onChanged: (value) {
-        value
+        value!
             ? _selectedServicesMap[services.subServiceId] = services
             : _selectedServicesMap.remove(services.subServiceId);
 
@@ -1819,7 +1834,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
     // }
   }
 
-  void setTimings(List _scheduleList) {
+  void setTimings(List? _scheduleList) {
     if (_scheduleList != null && _scheduleList.length > 0) {
       mondayTimings = "";
       tuesdayTimings = "";

@@ -9,12 +9,12 @@ import 'family_member_model.dart';
 import 'member_profile.dart';
 
 class PermissionAccess extends StatefulWidget {
-  final CircleMember member;
-  final List<int> userPermissionsList;
-  final Function onPermissionDone;
-  final int index;
+  final CircleMember? member;
+  final List<int>? userPermissionsList;
+  final Function? onPermissionDone;
+  final int? index;
   const PermissionAccess({
-    Key key,
+    Key? key,
     this.member,
     this.userPermissionsList,
     this.onPermissionDone,
@@ -31,19 +31,19 @@ class _PermissionAccessState extends State<PermissionAccess> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      permissions.add(PermissionModel(Localization.of(context).fullAccess,
+      permissions.add(PermissionModel(Localization.of(context)!.fullAccess,
           FileConstants.icFullAccess, false, 1));
-      permissions.add(PermissionModel(Localization.of(context).appointments,
+      permissions.add(PermissionModel(Localization.of(context)!.appointments,
           FileConstants.icAppointments, false, 2));
-      permissions.add(PermissionModel(Localization.of(context).documents,
+      permissions.add(PermissionModel(Localization.of(context)!.documents,
           FileConstants.icDocuments, false, 3));
-      permissions.add(PermissionModel(Localization.of(context).notifications,
+      permissions.add(PermissionModel(Localization.of(context)!.notifications,
           FileConstants.icNotifications, false, 4));
 
       if (widget.userPermissionsList != null) {
-        for (var i = 0; i < widget.userPermissionsList.length; i++) {
+        for (var i = 0; i < widget.userPermissionsList!.length; i++) {
           var selectedIndex = permissions.indexWhere(
-              (element) => element.value == widget.userPermissionsList[i]);
+              (element) => element.value == widget.userPermissionsList![i]);
           if (selectedIndex != -1) {
             permissions[selectedIndex].isSelected = true;
           }
@@ -63,9 +63,9 @@ class _PermissionAccessState extends State<PermissionAccess> {
             padding: const EdgeInsets.all(spacing15),
             child: MemberProfile(
               member: FamilyMember(
-                  image: widget.member.name,
-                  name: widget.member.name,
-                  relation: widget.member.relationName),
+                  image: widget.member!.name,
+                  name: widget.member!.name,
+                  relation: widget.member!.relationName),
             ),
           ),
           Divider(
@@ -86,7 +86,7 @@ class _PermissionAccessState extends State<PermissionAccess> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          Localization.of(context).permissions,
+          Localization.of(context)!.permissions,
           style: const TextStyle(
               fontSize: fontSize16, fontWeight: fontWeightSemiBold),
           textAlign: TextAlign.start,
@@ -124,15 +124,15 @@ class _PermissionAccessState extends State<PermissionAccess> {
             },
             itemCount: permissions.length),
         HutanoButton(
-          label: Localization.of(context).done,
+          label: Localization.of(context)!.done,
           onPressed: () {
             var selectedPermission = <int>[];
             permissions.forEach((element) {
-              if (element.isSelected) {
+              if (element.isSelected!) {
                 selectedPermission.add(element.value);
               }
             });
-            widget.onPermissionDone(selectedPermission ,widget.index);
+            widget.onPermissionDone!(selectedPermission ,widget.index);
           },
         )
       ],
@@ -143,7 +143,7 @@ class _PermissionAccessState extends State<PermissionAccess> {
 class PermissionModel {
   final String label;
   final String icon;
-  bool isSelected;
+  bool? isSelected;
   int value;
 
   PermissionModel(this.label, this.icon, this.isSelected, this.value);

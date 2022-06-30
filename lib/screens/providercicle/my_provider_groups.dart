@@ -28,16 +28,16 @@ import 'package:hutano/widgets/widgets.dart';
 
 class MyProviderGroups extends StatefulWidget {
   MyProviderGroups(
-      {Key key,
+      {Key? key,
       this.showBack = false,
       this.doctorId,
       this.doctorName,
       this.doctorAvatar})
       : super(key: key);
-  final String doctorName;
-  final String doctorId;
-  final String doctorAvatar;
-  bool showBack;
+  final String? doctorName;
+  final String? doctorId;
+  final String? doctorAvatar;
+  bool? showBack;
 
   @override
   _MyProviderGroupsState createState() => _MyProviderGroupsState();
@@ -45,8 +45,8 @@ class MyProviderGroups extends StatefulWidget {
 
 class _MyProviderGroupsState extends State<MyProviderGroups> {
   bool isLoading = false;
-  ProviderNetwork selectedGroup;
-  List<ProviderNetwork> specialityList = <ProviderNetwork>[];
+  ProviderNetwork? selectedGroup;
+  List<ProviderNetwork>? specialityList = <ProviderNetwork>[];
   @override
   void initState() {
     super.initState();
@@ -60,14 +60,14 @@ class _MyProviderGroupsState extends State<MyProviderGroups> {
     try {
       var res = await ApiManager().getProviderGroups();
       ProgressDialogUtils.dismissProgressDialog();
-      if (res.response.data.providerNetwork != null) {
+      if (res.response!.data!.providerNetwork != null) {
         setState(() {
-          specialityList = res.response.data.providerNetwork;
+          specialityList = res.response!.data!.providerNetwork;
         });
       }
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -89,23 +89,23 @@ class _MyProviderGroupsState extends State<MyProviderGroups> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: widget.showBack ? Colors.white : AppColors.goldenTainoi,
+      backgroundColor: widget.showBack! ? Colors.white : AppColors.goldenTainoi,
       body: LoadingBackgroundNew(
         title: "Provider Network",
         padding: const EdgeInsets.all(0),
         isAddBack: widget.doctorId != null ? true : false,
-        addHeader: !widget.showBack, // !fromHome,
-        isAddAppBar: !widget.showBack, // !fromHome,
+        addHeader: !widget.showBack!, // !fromHome,
+        isAddAppBar: !widget.showBack!, // !fromHome,
         isBackRequired: widget.doctorId != null ? true : false,
-        centerTitle: !widget.showBack,
-        addTitle: !widget.showBack,
+        centerTitle: !widget.showBack!,
+        addTitle: !widget.showBack!,
         isLoading: isLoading,
 
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             children: [
-              widget.showBack
+              widget.showBack!
                   ? Row(
                       children: [
                         CustomBackButton(),
@@ -114,12 +114,12 @@ class _MyProviderGroupsState extends State<MyProviderGroups> {
                   : SizedBox.shrink(),
               Expanded(
                 child: ListView(children: [
-                  widget.showBack
+                  widget.showBack!
                       ? AppHeader(
                           progressSteps: HutanoProgressSteps.four,
                         )
                       : SizedBox(),
-                  widget.showBack
+                  widget.showBack!
                       ? Center(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -144,10 +144,10 @@ class _MyProviderGroupsState extends State<MyProviderGroups> {
                         )
                       : SizedBox.shrink(),
                   SizedBox(height: spacing25),
-                  widget.showBack
+                  widget.showBack!
                       ? SizedBox.shrink()
                       : Text(
-                          Localization.of(context).addToExistinGroup,
+                          Localization.of(context)!.addToExistinGroup,
                           style: const TextStyle(
                             color: colorBlack2,
                             fontSize: fontSize16,
@@ -166,7 +166,7 @@ class _MyProviderGroupsState extends State<MyProviderGroups> {
                       onPressed: () {
                         _addDoctorToGroup();
                       })
-                  : widget.showBack
+                  : widget.showBack!
                       ? _buildBottomButtons()
                       : SizedBox(),
               SizedBox(height: spacing10),
@@ -188,30 +188,30 @@ class _MyProviderGroupsState extends State<MyProviderGroups> {
             separatorBuilder: (_, pos) => Padding(
                   padding: EdgeInsets.symmetric(vertical: spacing10),
                 ),
-            itemCount: specialityList.length,
+            itemCount: specialityList!.length,
             itemBuilder: (context, index) {
               return InkWell(
                   onTap: widget.doctorId != null
                       ? () {
                           setState(() {
-                            selectedGroup = specialityList[index];
+                            selectedGroup = specialityList![index];
                           });
                         }
                       : () {
-                          specialityList[index].isSelected = !widget.showBack;
+                          specialityList![index].isSelected = !widget.showBack!;
                           Navigator.pushNamed(
                               context, Routes.myProviderGroupDetail,
-                              arguments: specialityList[index]);
+                              arguments: specialityList![index]);
                         },
                   child:
                       //  widget.doctorId != null
                       //     ?
-                      GroupListItem(specialityList[index], selectedGroup, () {
+                      GroupListItem(specialityList![index], selectedGroup, () {
                     Widgets.showConfirmationDialog(
                       context: context,
                       description: "Are you sure to delete this group?",
                       onLeftPressed: () => _deleteAddress(
-                        specialityList[index],
+                        specialityList![index],
                       ),
                     );
                   })
@@ -275,7 +275,7 @@ class _MyProviderGroupsState extends State<MyProviderGroups> {
     final request = ReqAddProvider(
         doctorId: widget.doctorId,
         userId: getString(PreferenceKey.id),
-        groupId: selectedGroup.sId);
+        groupId: selectedGroup!.sId);
     try {
       var res = await ApiManager().addProviderNetwork(request);
       ProgressDialogUtils.dismissProgressDialog();
@@ -289,7 +289,7 @@ class _MyProviderGroupsState extends State<MyProviderGroups> {
           });
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -318,11 +318,11 @@ class _MyProviderGroupsState extends State<MyProviderGroups> {
       var map = {'groupId': providerNetwork.sId};
       var res = await ApiManager().deleteProviderGroup(map);
       ProgressDialogUtils.dismissProgressDialog();
-      specialityList.remove(providerNetwork);
+      specialityList!.remove(providerNetwork);
       setState(() {});
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }

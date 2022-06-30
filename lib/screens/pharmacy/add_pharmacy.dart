@@ -33,7 +33,7 @@ import 'package:provider/provider.dart';
 import 'model/res_preferred_pharmacy_list.dart';
 
 class AddPharmacy extends StatefulWidget {
-  AddPharmacy({Key key, this.args}) : super(key: key);
+  AddPharmacy({Key? key, this.args}) : super(key: key);
   dynamic args;
   @override
   _AddPharmacyState createState() => _AddPharmacyState();
@@ -53,30 +53,30 @@ class _AddPharmacyState extends State<AddPharmacy> {
   final _phoneNoController = TextEditingController();
   final _nameController = TextEditingController();
 
-  String addressError;
-  String cityError;
-  String zipCodeError;
-  String phoneNoError;
-  String pharmacyError;
+  String? addressError;
+  String? cityError;
+  String? zipCodeError;
+  String? phoneNoError;
+  String? pharmacyError;
 
   final GlobalKey<FormState> _pharmacyKey = GlobalKey();
   AutovalidateMode _autoValidate = AutovalidateMode.disabled;
   final labelStyle = TextStyle(fontSize: fontSize14, color: colorGrey60);
-  List<Address> _placeList = [];
+  List<Address>? _placeList = [];
   List<States> _stateList = [];
   bool _enableButton = false;
-  String token;
+  String? token;
   bool isIndicatorLoading = false;
-  List<Pharmacy> pharmacyList = [];
-  Pharmacy selectedPharmacy;
+  List<Pharmacy>? pharmacyList = [];
+  Pharmacy? selectedPharmacy;
   bool _isLoading = false;
   bool isAdding = false;
   ApiBaseHelper api = ApiBaseHelper();
-  Pharmacy defaultPharmacy;
-  List<AddressComponents> _placeDetail = [];
-  Geometry geometry;
-  InheritedContainerState _container;
-  LatLng _userLocation;
+  Pharmacy? defaultPharmacy;
+  List<AddressComponents>? _placeDetail = [];
+  Geometry? geometry;
+  late InheritedContainerState _container;
+  LatLng? _userLocation;
 
   @override
   void dispose() {
@@ -119,12 +119,12 @@ class _AddPharmacyState extends State<AddPharmacy> {
         setState(() {
           isIndicatorLoading = false;
         });
-        if (result.response.preferredPharmacy != null) {
+        if (result.response!.preferredPharmacy != null) {
           setState(() {
-            pharmacyList = result.response.preferredPharmacy;
+            pharmacyList = result.response!.preferredPharmacy;
             if (defaultPharmacy == null) {
               if (widget.args['isEdit']) {
-                for (Pharmacy parmacy in result.response.preferredPharmacy) {
+                for (Pharmacy parmacy in result.response!.preferredPharmacy!) {
                   if (widget.args['preferredPharmacy'] != null &&
                       widget.args['preferredPharmacy']['name'] != null) {
                     if (parmacy.name ==
@@ -135,8 +135,8 @@ class _AddPharmacyState extends State<AddPharmacy> {
                   }
                 }
               } else {
-                if (result.response.preferredPharmacy.isNotEmpty) {
-                  defaultPharmacy = result.response.preferredPharmacy[0];
+                if (result.response!.preferredPharmacy!.isNotEmpty) {
+                  defaultPharmacy = result.response!.preferredPharmacy![0];
                 }
               }
             }
@@ -163,12 +163,12 @@ class _AddPharmacyState extends State<AddPharmacy> {
     api.deletePharmacy(token, pharmacy.sId).then((value) {
       setLoading(false);
       setState(() {
-        if (pharmacyList.contains(pharmacy)) {
-          pharmacyList.remove(pharmacy);
+        if (pharmacyList!.contains(pharmacy)) {
+          pharmacyList!.remove(pharmacy);
         }
-        if (pharmacy.name == defaultPharmacy.name) {
-          if (pharmacyList.isNotEmpty) {
-            defaultPharmacy = pharmacyList.first;
+        if (pharmacy.name == defaultPharmacy!.name) {
+          if (pharmacyList!.isNotEmpty) {
+            defaultPharmacy = pharmacyList!.first;
           } else {
             defaultPharmacy = null;
           }
@@ -198,7 +198,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
             ? () {
                 if (widget.args['isEdit']) {
                   PreferredPharmacy preferredPharmacy =
-                      PreferredPharmacy(pharmacyId: defaultPharmacy.sId);
+                      PreferredPharmacy(pharmacyId: defaultPharmacy!.sId);
                   Map<String, dynamic> model = {};
                   model['preferredPharmacy'] = preferredPharmacy;
                   model['appointmentId'] = widget.args['appointmentId'];
@@ -209,7 +209,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
                   });
                 } else {
                   PreferredPharmacy preferredPharmacy =
-                      PreferredPharmacy(pharmacyId: defaultPharmacy.sId);
+                      PreferredPharmacy(pharmacyId: defaultPharmacy!.sId);
                   Provider.of<HealthConditionProvider>(context, listen: false)
                       .updatePharmacy(preferredPharmacy, defaultPharmacy);
                   Navigator.of(context)
@@ -389,7 +389,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
                               )
                             : pharmacyList == null ||
                                     (pharmacyList == null ||
-                                            pharmacyList.isEmpty) &&
+                                            pharmacyList!.isEmpty) &&
                                         !isIndicatorLoading
                                 ? Text(
                                     'No pharmacy found',
@@ -405,24 +405,42 @@ class _AddPharmacyState extends State<AddPharmacy> {
                                     padding: EdgeInsets.zero,
                                     shrinkWrap: true,
                                     physics: ClampingScrollPhysics(),
-                                    itemCount: pharmacyList.length,
+                                    itemCount: pharmacyList!.length,
                                     itemBuilder: (context, index) {
                                       return PopupMenuButton(
                                         offset: Offset(300, 50),
                                         itemBuilder: (BuildContext context) =>
-                                            <PopupMenuEntry<String>>[
-                                          defaultPharmacy.sId ==
-                                                  pharmacyList[index].sId
-                                              ? null
-                                              : _popMenuCommonItem(
-                                                  context,
-                                                  'set as default',
-                                                  FileConstants.icEdit),
-                                          _popMenuCommonItem(
-                                              context,
-                                              Localization.of(context).remove,
-                                              FileConstants.icRemoveBlack)
-                                        ],
+                                            defaultPharmacy!.sId ==
+                                                    pharmacyList![index].sId
+                                                ? <PopupMenuEntry<String>>[
+                                                    _popMenuCommonItem(
+                                                            context,
+                                                            Localization.of(
+                                                                    context)!
+                                                                .remove,
+                                                            FileConstants
+                                                                .icRemoveBlack)
+                                                        as PopupMenuEntry<
+                                                            String>
+                                                  ]
+                                                : <PopupMenuEntry<String>>[
+                                                    _popMenuCommonItem(
+                                                            context,
+                                                            'set as default',
+                                                            FileConstants
+                                                                .icEdit)
+                                                        as PopupMenuEntry<
+                                                            String>,
+                                                    _popMenuCommonItem(
+                                                            context,
+                                                            Localization.of(
+                                                                    context)!
+                                                                .remove,
+                                                            FileConstants
+                                                                .icRemoveBlack)
+                                                        as PopupMenuEntry<
+                                                            String>
+                                                  ],
                                         child: Row(
                                           children: [
                                             Expanded(
@@ -435,16 +453,16 @@ class _AddPharmacyState extends State<AddPharmacy> {
                                                       Flexible(
                                                         child: Text(
                                                           'Name: ' +
-                                                              pharmacyList[
+                                                              pharmacyList![
                                                                       index]
-                                                                  .name,
+                                                                  .name!,
                                                           maxLines: 1,
                                                           overflow: TextOverflow
                                                               .ellipsis,
                                                         ),
                                                       ),
-                                                      defaultPharmacy.sId ==
-                                                              pharmacyList[
+                                                      defaultPharmacy!.sId ==
+                                                              pharmacyList![
                                                                       index]
                                                                   .sId
                                                           ? Icon(
@@ -458,27 +476,27 @@ class _AddPharmacyState extends State<AddPharmacy> {
                                                     ],
                                                   ),
                                                   Text('Address: ' +
-                                                      pharmacyList[index]
-                                                          .address
-                                                          .address +
+                                                      pharmacyList![index]
+                                                          .address!
+                                                          .address! +
                                                       ', ' +
-                                                      pharmacyList[index]
-                                                          .address
-                                                          .city +
+                                                      pharmacyList![index]
+                                                          .address!
+                                                          .city! +
                                                       ', ' +
-                                                      pharmacyList[index]
-                                                          .address
-                                                          .state +
+                                                      pharmacyList![index]
+                                                          .address!
+                                                          .state! +
                                                       ', ' +
-                                                      pharmacyList[index]
-                                                          .address
-                                                          .zipCode +
+                                                      pharmacyList![index]
+                                                          .address!
+                                                          .zipCode! +
                                                       ', '),
                                                   Text(
                                                     'Phone no.: ' +
-                                                        pharmacyList[index]
-                                                            .address
-                                                            .phone,
+                                                        pharmacyList![index]
+                                                            .address!
+                                                            .phone!,
                                                     maxLines: 1,
                                                     overflow:
                                                         TextOverflow.ellipsis,
@@ -489,10 +507,10 @@ class _AddPharmacyState extends State<AddPharmacy> {
                                             Icon(Icons.more_vert)
                                           ],
                                         ),
-                                        onSelected: (value) {
+                                        onSelected: (dynamic value) {
                                           if (value == 'set as default') {
                                             defaultPharmacy =
-                                                pharmacyList[index];
+                                                pharmacyList![index];
                                             setState(() {});
                                           } else {
                                             Widgets.showConfirmationDialog(
@@ -501,7 +519,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
                                                   "Are you sure to delete this pharmacy?",
                                               onLeftPressed: () =>
                                                   _removePharmacy(context,
-                                                      pharmacyList[index]),
+                                                      pharmacyList![index]),
                                             );
                                           }
                                         },
@@ -562,7 +580,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
             padding: const EdgeInsets.symmetric(
                 horizontal: spacing20, vertical: spacing10),
             child: Text(
-              Localization.of(context).addPharmacyLabel,
+              Localization.of(context)!.addPharmacyLabel,
               style: TextStyle(
                   fontSize: fontSize16,
                   fontWeight: fontWeightBold,
@@ -614,7 +632,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
         errorBuilder: (_, object) {
           return Container();
         },
-        itemBuilder: (context, suggestion) {
+        itemBuilder: (context, dynamic suggestion) {
           // String addressData = '';
           // if (suggestion.address != null) {
           //   if (suggestion.address.address != null) {
@@ -640,7 +658,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
         transitionBuilder: (context, suggestionsBox, controller) {
           return suggestionsBox;
         },
-        onSuggestionSelected: (suggestion) {
+        onSuggestionSelected: (dynamic suggestion) {
           // isAdding = true;
           // selectedPharmacy = suggestion;
           _nameController.text = suggestion.name;
@@ -673,7 +691,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
             onChanged: (value) {
               setState(() {
                 addressError = value.toString().isBlank(
-                    context, Localization.of(context).errorEnterAddress);
+                    context, Localization.of(context)!.errorEnterAddress);
               });
             },
             decoration: InputDecoration(
@@ -692,7 +710,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
                 //     ),
                 //   ),
                 // ),
-                labelText: Localization.of(context).address,
+                labelText: Localization.of(context)!.address,
                 hintText: "",
                 isDense: true,
                 hintStyle: TextStyle(color: colorBlack60, fontSize: fontSize14),
@@ -717,7 +735,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
         errorBuilder: (_, object) {
           return Container();
         },
-        itemBuilder: (context, suggestion) {
+        itemBuilder: (context, dynamic suggestion) {
           return ListTile(
             title: Text(suggestion.description),
           );
@@ -725,7 +743,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
         transitionBuilder: (context, suggestionsBox, controller) {
           return suggestionsBox;
         },
-        onSuggestionSelected: (suggestion) {
+        onSuggestionSelected: (dynamic suggestion) {
           _getPlaceDetail(suggestion.placeId);
         },
         hideOnError: true,
@@ -733,19 +751,19 @@ class _AddPharmacyState extends State<AddPharmacy> {
         hideOnEmpty: true,
       );
 
-  _getPlaceDetail(String placeId) async {
+  _getPlaceDetail(String? placeId) async {
     ProgressDialogUtils.showProgressDialog(context);
-    final params = <String, String>{
+    final params = <String, String?>{
       'fields': 'geometry,address_components,international_phone_number',
       'place_id': placeId
     };
 
     try {
       var res = await ApiManager().getPlaceDetail(params);
-      _placeDetail = res.result.addressComponents;
-      geometry = res.result.geometry;
-      _phoneNoController.text = res.result.international_phone_number ?? '';
-      if (_placeDetail != null && _placeDetail.length > 0) {
+      _placeDetail = res.result!.addressComponents;
+      geometry = res.result!.geometry;
+      _phoneNoController.text = res.result!.international_phone_number ?? '';
+      if (_placeDetail != null && _placeDetail!.length > 0) {
         _parseAddress();
       }
       ProgressDialogUtils.dismissProgressDialog();
@@ -775,12 +793,12 @@ class _AddPharmacyState extends State<AddPharmacy> {
 
     // setState(() {});
 
-    _addressParser.parseAddress(_placeDetail);
-    debugPrint("{${geometry.location.lat} ${geometry.location.lng}");
+    _addressParser.parseAddress(_placeDetail!);
+    debugPrint("{${geometry!.location!.lat} ${geometry!.location!.lng}");
     _addressController.text = _addressParser.address;
-    _zipCodeController.text = _addressParser.zipCode;
-    _stateController.text = _addressParser.state;
-    _cityController.text = _addressParser.city;
+    _zipCodeController.text = _addressParser.zipCode!;
+    _stateController.text = _addressParser.state!;
+    _cityController.text = _addressParser.city!;
 
     addressError = null;
     zipCodeError = null;
@@ -807,10 +825,10 @@ class _AddPharmacyState extends State<AddPharmacy> {
           setState(() {
             cityError = value
                 .toString()
-                .isBlank(context, Localization.of(context).errorEnterCity);
+                .isBlank(context, Localization.of(context)!.errorEnterCity);
           });
         },
-        labelText: Localization.of(context).name,
+        labelText: Localization.of(context)!.name,
         textInputAction: TextInputAction.next,
         onFieldSubmitted: (s) {
           FocusScope.of(context).requestFocus(_addressFocusNode);
@@ -827,14 +845,14 @@ class _AddPharmacyState extends State<AddPharmacy> {
           setState(() {
             cityError = value
                 .toString()
-                .isBlank(context, Localization.of(context).errorEnterCity);
+                .isBlank(context, Localization.of(context)!.errorEnterCity);
           });
         },
         errorText: cityError,
         onFieldTap: () {
           showError(RegisterError.address.index);
         },
-        labelText: Localization.of(context).city,
+        labelText: Localization.of(context)!.city,
         textInputAction: TextInputAction.next,
         onFieldSubmitted: (s) {
           FocusScope.of(context).requestFocus(_zipCodeFocusNode);
@@ -857,12 +875,12 @@ class _AddPharmacyState extends State<AddPharmacy> {
         setState(() {
           zipCodeError = value
               .toString()
-              .isBlank(context, Localization.of(context).errorZipCode);
+              .isBlank(context, Localization.of(context)!.errorZipCode);
         });
       },
       errorText: zipCodeError,
       textInputFormatter: [FilteringTextInputFormatter.digitsOnly],
-      labelText: Localization.of(context).zipcode,
+      labelText: Localization.of(context)!.zipcode,
       onFieldSubmitted: (s) {
         FocusScope.of(context).requestFocus(_phoneNumberFocusNode);
         showError(RegisterError.zipCode.index);
@@ -878,13 +896,13 @@ class _AddPharmacyState extends State<AddPharmacy> {
       controller: _phoneNoController,
       isFieldEnable: true,
       focusedBorderColor: colorBlack20,
-      labelText: Localization.of(context).phoneNo,
+      labelText: Localization.of(context)!.phoneNo,
       textInputType: TextInputType.number,
       onValueChanged: (value) {
         setState(() {
           phoneNoError = value
               .toString()
-              .isBlank(context, Localization.of(context).errorPhoneNo);
+              .isBlank(context, Localization.of(context)!.errorPhoneNo);
         });
       },
       errorText: phoneNoError,
@@ -898,15 +916,15 @@ class _AddPharmacyState extends State<AddPharmacy> {
       textInputAction: TextInputAction.done);
 
   _getPlaceSuggetion(String query) async {
-    final params = <String, String>{
+    final params = <String, String?>{
       'input': query,
       'types': 'address',
       'components': 'country:us'
     };
     try {
       var res = await ApiManager().getAddressSuggetion(params);
-      _placeList = res.predictions.length >= 5
-          ? res.predictions.sublist(0, 5)
+      _placeList = res.predictions!.length >= 5
+          ? res.predictions!.sublist(0, 5)
           : res.predictions;
       return _placeList;
     } on ErrorModel catch (e) {
@@ -917,18 +935,20 @@ class _AddPharmacyState extends State<AddPharmacy> {
   }
 
   _getPharmacySuggetion(String query) async {
-    var params = <String, String>{
+    var params = <String, String?>{
       'query': query,
       'type': 'pharmacy',
       'region': 'us',
     };
     if (_userLocation != null) {
       params['location'] =
-          '${_userLocation.latitude},${_userLocation.longitude}';
+          '${_userLocation!.latitude},${_userLocation!.longitude}';
     }
     try {
       var res = await ApiManager().getPlaceSuggetions(params);
-      return res.results.length >= 5 ? res.results.sublist(0, 5) : res.results;
+      return res.results!.length >= 5
+          ? res.results!.sublist(0, 5)
+          : res.results;
     } on ErrorModel catch (e) {
       print(e);
     } catch (e) {
@@ -937,8 +957,8 @@ class _AddPharmacyState extends State<AddPharmacy> {
   }
 
   void _onStateSelected(int index) {
-    FocusManager.instance.primaryFocus.unfocus();
-    _stateController.text = _stateList[index].title;
+    FocusManager.instance.primaryFocus!.unfocus();
+    _stateController.text = _stateList[index].title!;
     showError(RegisterError.city.index);
   }
 
@@ -946,25 +966,25 @@ class _AddPharmacyState extends State<AddPharmacy> {
     if (index >= 4) {
       addressError = _addressController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorEnterAddress);
+          .isBlank(context, Localization.of(context)!.errorEnterAddress);
     }
 
     if (index >= 5) {
       cityError = _cityController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorEnterCity);
+          .isBlank(context, Localization.of(context)!.errorEnterCity);
     }
 
     if (index >= 6) {
       zipCodeError = _zipCodeController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorZipCode);
+          .isBlank(context, Localization.of(context)!.errorZipCode);
     }
 
     if (index >= 7) {
       phoneNoError = _phoneNoController.text
           .toString()
-          .isBlank(context, Localization.of(context).errorPhoneNo);
+          .isBlank(context, Localization.of(context)!.errorPhoneNo);
     }
 
     setState(() {});

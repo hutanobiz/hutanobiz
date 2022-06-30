@@ -10,11 +10,11 @@ import 'model/provider_detail_model.dart';
 
 class ProviderInfo extends StatelessWidget {
   final ProviderDetail providerDetail;
-  final String icon;
-  final EdgeInsets padding;
+  final String? icon;
+  final EdgeInsets? padding;
 
   const ProviderInfo(
-      {Key key, @required this.providerDetail, this.icon, this.padding})
+      {Key? key, required this.providerDetail, this.icon, this.padding})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class ProviderInfo extends StatelessWidget {
                     radius: spacing30,
                     backgroundColor: colorPurple.withOpacity(0.3),
                     child: Text(
-                      providerDetail.name.substring(0, 1).toUpperCase(),
+                      providerDetail.name!.substring(0, 1).toUpperCase(),
                       style: TextStyle(
                           color: colorPurple,
                           fontWeight: fontWeightMedium,
@@ -62,7 +62,7 @@ class ProviderInfo extends StatelessWidget {
                       ),
                       if (icon != null)
                         Image.asset(
-                          icon,
+                          icon!,
                           height: 20,
                           width: 20,
                         )
@@ -76,7 +76,7 @@ class ProviderInfo extends StatelessWidget {
                   TextWithImage(
                       image: FileConstants.icExperience,
                       label: providerDetail.painType ??
-                          Localization.of(context)
+                          Localization.of(context)!
                               .yearsOfExpereince
                               .format([providerDetail.experience]))
                 ],

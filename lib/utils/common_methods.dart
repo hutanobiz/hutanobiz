@@ -106,17 +106,17 @@ void dentalCareNavigation(BuildContext context) {
 Future<Null> openMaterialDatePicker(
     BuildContext context, TextEditingController controller, FocusNode focusNode,
     {bool isOnlyDate = false,
-    DateTime initialDate,
-    DateTime firstDate,
-    DateTime lastDate,
-    Function onDateChanged,
+    DateTime? initialDate,
+    DateTime? firstDate,
+    DateTime? lastDate,
+    Function? onDateChanged,
     bool filledDate = false}) async {
   final pickedDate = await showDatePicker(
     context: context,
     initialDate: initialDate ?? DateTime.now(),
     firstDate: firstDate ?? DateTime(DateTime.now().year - 70),
     lastDate: lastDate ?? DateTime(DateTime.now().year + 70),
-    builder: (BuildContext context, Widget child) {
+    builder: (BuildContext context, Widget? child) {
       return Theme(
         data: ThemeData.dark().copyWith(
           colorScheme: ColorScheme.light(
@@ -127,7 +127,7 @@ Future<Null> openMaterialDatePicker(
           ),
           dialogBackgroundColor: Colors.white,
         ),
-        child: child,
+        child: child!,
       );
     },
   );
@@ -150,15 +150,15 @@ Future<Null> openMaterialDatePicker(
   }
 }
 
-Future<DateTime> openCupertinoDatePicker(
+Future<DateTime?> openCupertinoDatePicker(
     BuildContext context, TextEditingController controller, FocusNode focusNode,
     {bool isTime = false,
     bool isOnlyDate = false,
     bool filledDate = false,
-    DateTime initialDate,
-    DateTime firstDate,
-    DateTime lastDate,
-    Function onDateChanged}) {
+    DateTime? initialDate,
+    DateTime? firstDate,
+    DateTime? lastDate,
+    Function? onDateChanged}) {
   return showCupertinoModalPopup(
     context: context,
     builder: (context) => Container(
@@ -169,7 +169,7 @@ Future<DateTime> openCupertinoDatePicker(
           onDateTimeChanged: (pickedDate) {
             if (pickedDate != null) {
               if (pickedDate != null) {
-                onDateChanged(pickedDate);
+                onDateChanged!(pickedDate);
               }
               controller.text = formattedDate(
                   pickedDate, AppConstants.vitalReviewsDateFormat);

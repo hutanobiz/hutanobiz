@@ -4,52 +4,52 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/utils/color_utils.dart';
 
 class HutanoTextField extends StatefulWidget {
-  final Color suffixIconColor;
+  final Color? suffixIconColor;
   final AutovalidateMode autovalidate;
-  final Widget prefix;
+  final Widget? prefix;
   final String headerLabel;
   final String hintText;
-  final String prefixIcon;
-  final String labelText;
-  final Function prefixIconClick;
-  final String suffixIcon;
-  final Function suffixIconClick;
+  final String? prefixIcon;
+  final String? labelText;
+  final Function? prefixIconClick;
+  final String? suffixIcon;
+  final Function? suffixIconClick;
   final bool isSuffixText;
   final String suffixText;
   bool isSecureField;
-  Function passwordTap;
-  final double width;
+  Function? passwordTap;
+  final double? width;
   final bool isNumberField;
-  final TextEditingController controller;
-  final FocusNode focusNode;
-  final TextInputType textInputType;
-  final int maxLength;
-  final TextInputAction textInputAction;
-  final List<TextInputFormatter> textInputFormatter;
-  final Function validationMethod;
-  final Function onFieldSubmitted;
-  final Function onFieldTap;
-  final Function onValueChanged;
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final TextInputType? textInputType;
+  final int? maxLength;
+  final TextInputAction? textInputAction;
+  final List<TextInputFormatter>? textInputFormatter;
+  final Function? validationMethod;
+  final Function? onFieldSubmitted;
+  final Function? onFieldTap;
+  final Function? onValueChanged;
   final bool isFieldEnable;
   final int maxLines;
   final bool isCountryCodeTextField;
-  final double prefixwidth;
-  final double prefixheight;
-  final double suffixwidth;
-  final double suffixheight;
+  final double? prefixwidth;
+  final double? prefixheight;
+  final double? suffixwidth;
+  final double? suffixheight;
   final Color focusedBorderColor;
   final Color enabledBorderColor;
   final Color disableBorderColor;
   final FloatingLabelBehavior floatingBehaviour;
   final double textSize;
-  final TextStyle labelTextStyle;
-  final EdgeInsetsGeometry prefixPadding;
+  final TextStyle? labelTextStyle;
+  final EdgeInsetsGeometry? prefixPadding;
   final bool isPasswordField;
-  final InputBorder border;
-  final EdgeInsetsGeometry contentPadding;
-  final Function onSaved;
-  final String errorText;
-   bool isDense = false;
+  final InputBorder? border;
+  final EdgeInsetsGeometry? contentPadding;
+  final Function? onSaved;
+  final String? errorText;
+   bool? isDense = false;
 
   HutanoTextField(
       {this.suffixIconColor,
@@ -108,7 +108,7 @@ class _HutanoTextFieldState extends State<HutanoTextField> {
   void initState() {
     super.initState();
     if (widget.focusNode != null) {
-      widget.focusNode.addListener(() {
+      widget.focusNode!.addListener(() {
         setState(() {});
       });
     }
@@ -165,7 +165,7 @@ class _HutanoTextFieldState extends State<HutanoTextField> {
                       BorderSide(color: widget.focusedBorderColor, width: 1)),
               enabledBorder: OutlineInputBorder(
                 borderRadius: const BorderRadius.all(Radius.circular(12)),
-                borderSide: BorderSide(color: Colors.grey[300]),
+                borderSide: BorderSide(color: Colors.grey[300]!),
               ),
               disabledBorder: OutlineInputBorder(
                   borderRadius: const BorderRadius.all(Radius.circular(12)),
@@ -175,19 +175,19 @@ class _HutanoTextFieldState extends State<HutanoTextField> {
 
               prefixIcon: widget.prefixIcon != null
                   ? GestureDetector(
-                      onTap: widget.prefixIconClick,
+                      onTap: widget.prefixIconClick as void Function()?,
                       child: Padding(
                         padding: const EdgeInsets.all(14.0),
-                        child: Image.asset(widget.prefixIcon, height: 16),
+                        child: Image.asset(widget.prefixIcon!, height: 16),
                       ))
                   : null,
               suffixIcon: widget.suffixIcon != null
                   ? GestureDetector(
-                      onTap: widget.suffixIconClick,
+                      onTap: widget.suffixIconClick as void Function()?,
                       child: Padding(
                         padding: const EdgeInsets.all(14.0),
                         child: Image.asset(
-                          widget.suffixIcon,
+                          widget.suffixIcon!,
                           width: widget.suffixwidth,
                           height: widget.suffixheight,
                           color: widget.suffixIconColor,
@@ -197,7 +197,7 @@ class _HutanoTextFieldState extends State<HutanoTextField> {
                   : (widget.isPasswordField
                       ? GestureDetector(
                           onTap: () {
-                            widget.passwordTap();
+                            widget.passwordTap!();
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(5),
@@ -211,13 +211,13 @@ class _HutanoTextFieldState extends State<HutanoTextField> {
                       : null),
             ),
             obscureText: widget.isSecureField,
-            onFieldSubmitted: widget.onFieldSubmitted,
-            validator: widget.validationMethod,
+            onFieldSubmitted: widget.onFieldSubmitted as void Function(String)?,
+            validator: widget.validationMethod as String? Function(String?)?,
             inputFormatters: widget.textInputFormatter,
             keyboardType: widget.textInputType,
-            onChanged: widget.onValueChanged,
+            onChanged: widget.onValueChanged as void Function(String)?,
             onTap: () {
-              if (widget.onFieldTap != null) widget.onFieldTap();
+              if (widget.onFieldTap != null) widget.onFieldTap!();
             },
             // onSaved: widget.onSaved,
           ),
@@ -233,6 +233,6 @@ class _HutanoTextFieldState extends State<HutanoTextField> {
 
     return TextStyle(
         fontSize: 14,
-        color: widget.focusNode.hasFocus ? colorPurple : colorBlack85);
+        color: widget.focusNode!.hasFocus ? colorPurple : colorBlack85);
   }
 }

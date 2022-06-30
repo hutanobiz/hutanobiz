@@ -11,9 +11,9 @@ import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:intl/intl.dart';
 
 class TreatmentSummaryScreen extends StatefulWidget {
-  final Map appointmentMap;
+  final Map? appointmentMap;
 
-  TreatmentSummaryScreen({Key key, @required this.appointmentMap})
+  TreatmentSummaryScreen({Key? key, required this.appointmentMap})
       : super(key: key);
 
   @override
@@ -21,26 +21,26 @@ class TreatmentSummaryScreen extends StatefulWidget {
 }
 
 class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
-  Map appointmentData = Map();
+  Map? appointmentData = Map();
 
-  List<String> administrationRoute = new List();
-  List<String> recommendFollowList = new List();
-  List followUpServicesList = new List();
-  List medicalHistoryList = new List();
+  List<String> administrationRoute = [];
+  List<String> recommendFollowList = [];
+  List followUpServicesList = [];
+  List? medicalHistoryList = [];
   String drugs = "---";
-  Map userMap = Map();
+  Map? userMap = Map();
   String name = "---", type = "---", durationOfSymtoms = "---";
   String initiated = "---";
   String completed = "---";
   String serviceType = "---";
   String primaryDiagnosis = "---";
   String secondaryDiagnosis = "---";
-  String doctorName, doctorSign;
+  String? doctorName, doctorSign;
 
   Map followUpMap = Map();
 
   bool _isLoading = false;
-  int _appointmentType = 1;
+  int? _appointmentType = 1;
 
   String _trackingStatusKey = 'trackingStatus';
 
@@ -50,7 +50,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
 
     setLoading(true);
 
-    _appointmentType = widget.appointmentMap['appointmentType'];
+    _appointmentType = widget.appointmentMap!['appointmentType'];
 
     if (_appointmentType == 3) {
       _trackingStatusKey = 'trackingStatusProvider';
@@ -66,8 +66,8 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
       api
           .getAppointmentDetails(
         token,
-        widget.appointmentMap['id'],
-        widget.appointmentMap['latLng'] ?? LatLng(0.00, 0.00),
+        widget.appointmentMap!['id'],
+        widget.appointmentMap!['latLng'] ?? LatLng(0.00, 0.00),
       )
           .then((response) {
         setLoading(false);
@@ -93,7 +93,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                   providerData["followUpAppointment"][0]["services"].length >
                       0) {
                 followUpMap["status"] = "1";
-                List<Services> list = List();
+                List<Services> list = [];
                 for (dynamic subService in providerData["followUpAppointment"]
                     [0]["services"]) {
                   list.add(Services.fromJson(subService));
@@ -124,66 +124,66 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
 
           if (appointmentData != null) {
             durationOfSymtoms =
-                appointmentData["problemTimeSpan"]?.toString() ?? "---";
+                appointmentData!["problemTimeSpan"]?.toString() ?? "---";
 
-            if (appointmentData[_trackingStatusKey] != null) {
+            if (appointmentData![_trackingStatusKey] != null) {
               if (_trackingStatusKey == 'videoAppointmentStatus') {
-                if (appointmentData["videoAppointmentStatus"]
+                if (appointmentData!["videoAppointmentStatus"]
                         ["startcallTime"] !=
                     null) {
                   initiated = DateFormat('dd MMMM yyyy, hh:mm aa')
                       .format(DateTime.parse(
-                              appointmentData["videoAppointmentStatus"]
+                              appointmentData!["videoAppointmentStatus"]
                                   ["startcallTime"])
                           .toLocal())
                       .toString();
                 }
-              } else if (appointmentData[_trackingStatusKey]
+              } else if (appointmentData![_trackingStatusKey]
                           ["treatmentStarted"] !=
                       null ||
-                  appointmentData[_trackingStatusKey]["treatmentStarted"] !=
+                  appointmentData![_trackingStatusKey]["treatmentStarted"] !=
                       '') {
-                initiated = appointmentData[_trackingStatusKey]
+                initiated = appointmentData![_trackingStatusKey]
                             ["treatmentStarted"]
                         .toString()
                         .formatDate() +
                     ' on ' +
-                    appointmentData[_trackingStatusKey]["treatmentStarted"]
+                    appointmentData![_trackingStatusKey]["treatmentStarted"]
                         .toString()
                         .formatDate(dateFormat: 'hh:mm aa');
               }
               if (_trackingStatusKey == 'videoAppointmentStatus') {
-                if (appointmentData["videoAppointmentStatus"]["endcallTime"] !=
+                if (appointmentData!["videoAppointmentStatus"]["endcallTime"] !=
                     null) {
                   initiated = DateFormat('dd MMMM yyyy, hh:mm aa')
                       .format(DateTime.parse(
-                              appointmentData["videoAppointmentStatus"]
+                              appointmentData!["videoAppointmentStatus"]
                                   ["endcallTime"])
                           .toLocal())
                       .toString();
                 }
-              } else if (appointmentData[_trackingStatusKey]
+              } else if (appointmentData![_trackingStatusKey]
                           ["patientTreatmentEnded"] !=
                       null ||
-                  appointmentData[_trackingStatusKey]
+                  appointmentData![_trackingStatusKey]
                           ["patientTreatmentEnded"] !=
                       '') {
-                completed = appointmentData[_trackingStatusKey]
+                completed = appointmentData![_trackingStatusKey]
                             ["patientTreatmentEnded"]
                         .toString()
                         .formatDate() +
                     ' on ' +
-                    appointmentData[_trackingStatusKey]["patientTreatmentEnded"]
+                    appointmentData![_trackingStatusKey]["patientTreatmentEnded"]
                         .toString()
                         .formatDate(dateFormat: 'hh:mm aa');
               }
             }
 
-            if (appointmentData["pharmaceuticalsAdminstration"] != null) {
-              if (appointmentData["pharmaceuticalsAdminstration"]
+            if (appointmentData!["pharmaceuticalsAdminstration"] != null) {
+              if (appointmentData!["pharmaceuticalsAdminstration"]
                       ["administrationRoute"] !=
                   null) {
-                appointmentData["pharmaceuticalsAdminstration"]
+                appointmentData!["pharmaceuticalsAdminstration"]
                         ["administrationRoute"]
                     .toString()
                     .split(",")
@@ -191,42 +191,42 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                     .toList();
               }
 
-              drugs = appointmentData["pharmaceuticalsAdminstration"]["drugs"]
+              drugs = appointmentData!["pharmaceuticalsAdminstration"]["drugs"]
                       ?.toString() ??
                   "---";
             }
 
-            if (appointmentData["recommendedFollowUpCare"] != null) {
-              appointmentData["recommendedFollowUpCare"]
+            if (appointmentData!["recommendedFollowUpCare"] != null) {
+              appointmentData!["recommendedFollowUpCare"]
                   .toString()
                   .split(",")
                   .map((f) => recommendFollowList.add(f))
                   .toList();
             }
 
-            if (appointmentData["doctorSign"] != null) {
-              doctorSign = appointmentData["doctorSign"];
+            if (appointmentData!["doctorSign"] != null) {
+              doctorSign = appointmentData!["doctorSign"];
             }
 
-            if (appointmentData["doctor"] != null) {
+            if (appointmentData!["doctor"] != null) {
               doctorName =
-                  appointmentData["doctor"]["fullName"]?.toString() ?? "---";
+                  appointmentData!["doctor"]["fullName"]?.toString() ?? "---";
             }
 
-            if (appointmentData["user"] != null) {
-              if (appointmentData["user"] is String) {
+            if (appointmentData!["user"] != null) {
+              if (appointmentData!["user"] is String) {
               } else {
-                userMap = appointmentData["user"];
+                userMap = appointmentData!["user"];
 
-                name = userMap["fullName"]?.toString() ?? "---";
-                type = userMap["type"]?.toString() ?? "---";
+                name = userMap!["fullName"]?.toString() ?? "---";
+                type = userMap!["type"]?.toString() ?? "---";
               }
             }
-            if (appointmentData["medicalDiagnosis"] != null) {
+            if (appointmentData!["medicalDiagnosis"] != null) {
               primaryDiagnosis =
-                  appointmentData["medicalDiagnosis"]["primary"] ?? "---";
+                  appointmentData!["medicalDiagnosis"]["primary"] ?? "---";
               secondaryDiagnosis =
-                  appointmentData["medicalDiagnosis"]["secondary"] ?? "---";
+                  appointmentData!["medicalDiagnosis"]["secondary"] ?? "---";
             }
           }
         });
@@ -277,8 +277,8 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                 ),
               ),
               feeWidget(
-                name ?? "---",
-                type ?? "---",
+                name ,
+                type,
                 durationOfSymtoms,
                 "---",
               ),
@@ -292,7 +292,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                   ),
                 ),
               ),
-              medicalHistoryList == null || medicalHistoryList.isEmpty
+              medicalHistoryList == null || medicalHistoryList!.isEmpty
                   ? Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
                       child: Text("NO medical history"),
@@ -304,10 +304,10 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                           shrinkWrap: true,
                           physics: ClampingScrollPhysics(),
                           scrollDirection: Axis.horizontal,
-                          itemCount: medicalHistoryList.length,
+                          itemCount: medicalHistoryList!.length,
                           itemBuilder: (context, index) {
                             return chipWidget(
-                              medicalHistoryList[index].toString(),
+                              medicalHistoryList![index].toString(),
                             );
                           }),
                     ),
@@ -328,7 +328,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Text(
-                  appointmentData["description"]?.toString() ?? "---",
+                  appointmentData!["description"]?.toString() ?? "---",
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
@@ -371,8 +371,8 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
                 child: adverseWidget(
                   "Adverse effects",
-                  appointmentData["adverseEffectsOfTreatment"] != null
-                      ? (appointmentData["adverseEffectsOfTreatment"]
+                  appointmentData!["adverseEffectsOfTreatment"] != null
+                      ? (appointmentData!["adverseEffectsOfTreatment"]
                                   ["adverseEffects"]
                               ?.toString() ??
                           "---")
@@ -383,8 +383,8 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
                 child: adverseWidget(
                   "Action Taken",
-                  appointmentData["adverseEffectsOfTreatment"] != null
-                      ? (appointmentData["adverseEffectsOfTreatment"]
+                  appointmentData!["adverseEffectsOfTreatment"] != null
+                      ? (appointmentData!["adverseEffectsOfTreatment"]
                                   ["actionTaken"]
                               ?.toString() ??
                           "---")
@@ -581,7 +581,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
         color: AppColors.seashell,
         shape: BoxShape.rectangle,
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(width: 1.0, color: Colors.grey[300]),
+        border: Border.all(width: 1.0, color: Colors.grey[300]!),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -589,7 +589,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
           ClipRRect(
             borderRadius: BorderRadius.circular(6),
             child: Image.memory(
-              base64Decode(doctorSign),
+              base64Decode(doctorSign!),
               width: 140,
               height: 60,
               fit: BoxFit.cover,
@@ -597,7 +597,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
           ),
           SizedBox(height: 6.0),
           Text(
-            doctorName,
+            doctorName!,
             style: TextStyle(
               fontSize: 11.0,
               color: Colors.black,
@@ -680,7 +680,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14.0),
         border: Border.all(
-          color: Colors.grey[100],
+          color: Colors.grey[100]!,
         ),
       ),
       child: Column(
@@ -750,7 +750,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(19),
-        border: Border.all(color: Colors.grey[100]),
+        border: Border.all(color: Colors.grey[100]!),
       ),
       child: Text(
         title,
@@ -832,7 +832,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
     );
   }
 
-  Widget divider({double topPadding}) {
+  Widget divider({double? topPadding}) {
     return Padding(
       padding: EdgeInsets.only(top: topPadding ?? 0.0),
       child: Divider(

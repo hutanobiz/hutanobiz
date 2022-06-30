@@ -22,7 +22,7 @@ import 'model/res_documentlist.dart';
 import 'provider/appoinment_provider.dart';
 
 class TestDocumentsList extends StatefulWidget {
-  final String type;
+  final String? type;
   const TestDocumentsList({this.type});
   @override
   _TestDocumentsListState createState() => _TestDocumentsListState();
@@ -53,7 +53,7 @@ class _TestDocumentsListState extends State<TestDocumentsList> {
         ProgressDialogUtils.dismissProgressDialog();
         setState(() {
           documents = value.documents;
-          totalPages = (value.count / 5).ceil();
+          totalPages = (value.count! / 5).ceil();
         });
       },
       onError: (e) {
@@ -145,7 +145,7 @@ class _TestDocumentsListState extends State<TestDocumentsList> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    documents[index].medicalDocuments,
+                    documents[index].medicalDocuments!,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         fontSize: fontSize16, fontWeight: fontWeightMedium),
@@ -154,8 +154,8 @@ class _TestDocumentsListState extends State<TestDocumentsList> {
                     documents[index].date != null
                         ? formatDate(
                             documents[index]
-                                .date
-                                .substring(0, documents[index].date.length - 4),
+                                .date!
+                                .substring(0, documents[index].date!.length - 4),
                             inputFormat: "E, dd MMM yyyy HH:mm:ss",
                             resultFormat: "MMM d, yyyy",
                           )
@@ -275,7 +275,7 @@ class _TestDocumentsListState extends State<TestDocumentsList> {
                   color: colorGrey,
                   iconSize: 24,
                   buttonType: HutanoButtonType.onlyIcon,
-                  label: Localization.of(context).next,
+                  label: Localization.of(context)!.next,
                   icon: FileConstants.icCamera,
                   onPressed: () async {
 
@@ -292,7 +292,7 @@ class _TestDocumentsListState extends State<TestDocumentsList> {
               children: [
                 Expanded(
                   child: HutanoButton(
-                    label: Localization.of(context).skip,
+                    label: Localization.of(context)!.skip,
                     color: primaryColor,
                     onPressed: () {
                       Navigator.of(context).pushNamed( routePaymentMethods);
@@ -302,7 +302,7 @@ class _TestDocumentsListState extends State<TestDocumentsList> {
                 SizedBox(width: spacing70),
                 Expanded(
                   child: HutanoButton(
-                    label: Localization.of(context).next,
+                    label: Localization.of(context)!.next,
                     onPressed: () {
                     Navigator.of(context).pop();
                     },
@@ -325,7 +325,7 @@ class _TestDocumentsListState extends State<TestDocumentsList> {
           okButtonAction: () {
             getList(appointmentID);
           },
-          okButtonTitle: Localization.of(context).ok,
+          okButtonTitle: Localization.of(context)!.ok,
           isCancelEnable: false,
         );
       },

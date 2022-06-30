@@ -26,7 +26,7 @@ class _SetPinCompleteState extends State<SetPinComplete> {
             children: [
               AppHeader(
                 title: "Set Pin",
-                subTitle: Localization.of(context).taskComplete,
+                subTitle: Localization.of(context)!.taskComplete,
               ),
               Spacer(),
               RoundSuccess(),
@@ -48,7 +48,7 @@ class _SetPinCompleteState extends State<SetPinComplete> {
         buttonType: HutanoButtonType.onlyLabel,
         color: colorYellow,
         iconSize: 20,
-        label: Localization.of(context).next,
+        label: Localization.of(context)!.next,
         onPressed: _nextClick,
       ));
 

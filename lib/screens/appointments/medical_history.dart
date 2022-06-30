@@ -32,7 +32,7 @@ import 'package:hutano/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 class MedicalHistoryScreen extends StatefulWidget {
-  MedicalHistoryScreen({Key key, this.args}) : super(key: key);
+  MedicalHistoryScreen({Key? key, this.args}) : super(key: key);
 
   final dynamic args;
   // final bool isFromTreat;
@@ -43,17 +43,17 @@ class MedicalHistoryScreen extends StatefulWidget {
 
 class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
   ApiBaseHelper api = ApiBaseHelper();
-  List<MedicalHistory> _showDiseaseData = [];
-  List<Disease> _newDiseaseList = [];
+  List<MedicalHistory>? _showDiseaseData = [];
+  List<Disease>? _newDiseaseList = [];
   bool isBottomButtonsShow = true;
   bool isFromAppointment = false;
-  String token = '';
+  String? token = '';
   bool _isLoading = false;
   final _searchDiseaseController = TextEditingController();
   final _searchDiseaseFocusNode = FocusNode();
-  InheritedContainerState _container;
-  String _selectedDisease = "";
-  String _selectedSid = "";
+  late InheritedContainerState _container;
+  String? _selectedDisease = "";
+  String? _selectedSid = "";
   bool isIndicatorLoading = false;
 
   @override
@@ -68,7 +68,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
       if (widget.args['medicalHistory'] != null &&
           widget.args['medicalHistory'].length > 0) {
         for (dynamic aa in widget.args['medicalHistory']) {
-          _showDiseaseData.add(MedicalHistory.fromJson(aa));
+          _showDiseaseData!.add(MedicalHistory.fromJson(aa));
         }
       }
     } else {
@@ -123,7 +123,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
         child: Align(
           alignment: Alignment.topLeft,
           child: Text(
-            Localization.of(context).medicalHistoryLabel,
+            Localization.of(context)!.medicalHistoryLabel,
             style: const TextStyle(
                 color: colorDarkBlack,
                 fontWeight: fontWeightBold,
@@ -155,7 +155,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                         padding: const EdgeInsets.all(spacing8),
                         child: Image.asset(FileConstants.icSearchBlack,
                             color: colorBlack2, width: 20, height: 20))),
-                hintText: Localization.of(context).enterPastConditionHint,
+                hintText: Localization.of(context)!.enterPastConditionHint,
                 isDense: true,
                 hintStyle: TextStyle(
                     color: colorBlack2,
@@ -175,7 +175,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
           errorBuilder: (_, object) {
             return Container();
           },
-          itemBuilder: (context, suggestion) {
+          itemBuilder: (context, dynamic suggestion) {
             return ListTile(
               title: Text(suggestion.name ?? ''),
             );
@@ -183,7 +183,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
           transitionBuilder: (context, suggestionsBox, controller) {
             return suggestionsBox;
           },
-          onSuggestionSelected: (suggestion) {
+          onSuggestionSelected: (dynamic suggestion) {
             setState(() {
               _selectedDisease = suggestion.name;
               _selectedSid = suggestion.sId;
@@ -204,12 +204,12 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
           ),
         )
       : _showDiseaseData == null ||
-              (_showDiseaseData == null || _showDiseaseData.isEmpty) &&
+              (_showDiseaseData == null || _showDiseaseData!.isEmpty) &&
                   !isIndicatorLoading
           ? Expanded(
               child: Center(
                 child: Text(
-                  Localization.of(context).noMedicalHistoryFound,
+                  Localization.of(context)!.noMedicalHistoryFound,
                   style: TextStyle(
                       fontSize: 16,
                       color: colorBlack2,
@@ -228,13 +228,13 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                   children: <Widget>[
                     ListView.builder(
                         padding: EdgeInsets.only(
-                            bottom: (_showDiseaseData.contains('Others') ||
-                                    _showDiseaseData.contains('Other'))
+                            bottom: (_showDiseaseData!.contains('Others') ||
+                                    _showDiseaseData!.contains('Other'))
                                 ? 10
                                 : 65),
                         shrinkWrap: true,
                         physics: ClampingScrollPhysics(),
-                        itemCount: _showDiseaseData.length,
+                        itemCount: _showDiseaseData!.length,
                         itemBuilder: (context, index) {
                           return PopupMenuButton(
                             offset: Offset(300, 50),
@@ -243,41 +243,41 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                               if (!isFromAppointment)
                                 _popMenuCommonItem(
                                     context,
-                                    Localization.of(context).edit,
-                                    FileConstants.icEdit),
+                                    Localization.of(context)!.edit,
+                                    FileConstants.icEdit) as PopupMenuEntry<String>,
                               if (!isFromAppointment)
                                 _popMenuCommonItem(
                                     context,
-                                    Localization.of(context).remove,
-                                    FileConstants.icRemoveBlack)
+                                    Localization.of(context)!.remove,
+                                    FileConstants.icRemoveBlack) as PopupMenuEntry<String>
                             ],
                             child: ListTile(
                               contentPadding: EdgeInsets.all(0),
                               title: Text(
-                                _showDiseaseData[index].name,
+                                _showDiseaseData![index].name!,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               subtitle: Text(
-                                  "${_showDiseaseData[index].month} ${_showDiseaseData[index].year}"),
+                                  "${_showDiseaseData![index].month} ${_showDiseaseData![index].year}"),
                               trailing: Icon(Icons.more_vert),
                             ),
-                            onSelected: (value) {
-                              if (value == Localization.of(context).edit) {
+                            onSelected: (dynamic value) {
+                              if (value == Localization.of(context)!.edit) {
                                 setState(() {
                                   _selectedDisease =
-                                      _showDiseaseData[index].name;
-                                  _selectedSid = _showDiseaseData[index].sId;
+                                      _showDiseaseData![index].name;
+                                  _selectedSid = _showDiseaseData![index].sId;
                                 });
                                 showAddDiseaseDialog(context, true,
-                                    medical: _showDiseaseData[index]);
+                                    medical: _showDiseaseData![index]);
                               } else {
                                 Widgets.showConfirmationDialog(
                                   context: context,
                                   description:
                                       "Are you sure to delete this medical history?",
                                   onLeftPressed: () => _removeDisease(
-                                      context, _showDiseaseData[index]),
+                                      context, _showDiseaseData![index]),
                                 );
                                 // _removeDisease(
                                 //     context, _showDiseaseData[index]);
@@ -314,7 +314,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
       );
 
   showAddDiseaseDialog(BuildContext context, bool isForUpdate,
-      {MedicalHistory medical}) {
+      {MedicalHistory? medical}) {
     var addDiseaseDialog = YYDialog();
     addDiseaseDialog.build(context)
       ..width = (MediaQuery.of(context).size.width - 35)
@@ -351,8 +351,8 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
     api.deletePatientMedicalHistory(token, medicalHistory.sId).then((value) {
       setLoading(false);
       setState(() {
-        if (_showDiseaseData.contains(medicalHistory)) {
-          _showDiseaseData.remove(medicalHistory);
+        if (_showDiseaseData!.contains(medicalHistory)) {
+          _showDiseaseData!.remove(medicalHistory);
         }
       });
     }).futureError((error) {
@@ -365,11 +365,11 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
     if (widget.args['isEdit']) {
       List<BookedMedicalHistory> _listOfHistory = [];
 
-      if (_showDiseaseData != null && _showDiseaseData.length > 0) {
-        _showDiseaseData.forEach((element) {
+      if (_showDiseaseData != null && _showDiseaseData!.length > 0) {
+        _showDiseaseData!.forEach((element) {
           _listOfHistory.add(BookedMedicalHistory(
               name: element.name,
-              year: int.parse(element.year),
+              year: int.parse(element.year!),
               month: element.month));
         });
       }
@@ -383,19 +383,19 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
       });
     } else {
       if (_showDiseaseData != null) {
-        if (_showDiseaseData.length > 0) {
+        if (_showDiseaseData!.length > 0) {
           final _gender = getInt(PreferenceKey.gender);
           Provider.of<SymptomsInfoProvider>(context, listen: false)
               .setBodyType(_gender);
           List<BookedMedicalHistory> _listOfHistory = [];
           if (isBottomButtonsShow) {
-            if (_showDiseaseData != null && _showDiseaseData.length > 0) {
-              _showDiseaseData.forEach((element) {
+            if (_showDiseaseData != null && _showDiseaseData!.length > 0) {
+              _showDiseaseData!.forEach((element) {
                 _container.setConsentToTreatData(
                     "medicalHistory", element.name);
                 _listOfHistory.add(BookedMedicalHistory(
                     name: element.name,
-                    year: int.parse(element.year),
+                    year: int.parse(element.year!),
                     month: element.month));
               });
             }
@@ -437,9 +437,9 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
         setState(() {
           isIndicatorLoading = false;
         });
-        if (result.response.medicalHistory != null) {
+        if (result.response!.medicalHistory != null) {
           setState(() {
-            _showDiseaseData = result.response.medicalHistory;
+            _showDiseaseData = result.response!.medicalHistory;
           });
         }
         _getDiseaseList();
@@ -461,9 +461,9 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
       setState(() {
         _newDiseaseList = res.response;
       });
-      for (dynamic disease in _newDiseaseList) {
+      for (dynamic disease in _newDiseaseList!) {
         if (disease.name == "Other") {
-          _newDiseaseList.remove(disease);
+          _newDiseaseList!.remove(disease);
         }
       }
     } catch (e) {
@@ -479,9 +479,9 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
         await ApiManager()
             .updatePatientDisease(reqAddDiseaseModel)
             .then(((result) {
-          int indexToUpdate = _showDiseaseData
+          int indexToUpdate = _showDiseaseData!
               .indexWhere((disease) => disease.sId == reqAddDiseaseModel.sId);
-          _showDiseaseData[indexToUpdate] = MedicalHistory(
+          _showDiseaseData![indexToUpdate] = MedicalHistory(
               name: reqAddDiseaseModel.name,
               year: reqAddDiseaseModel.year,
               month: reqAddDiseaseModel.month,
@@ -492,7 +492,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
         await ApiManager()
             .addPatientDisease(reqAddDiseaseModel)
             .then(((result) {
-          _showDiseaseData.add(MedicalHistory.fromJson(
+          _showDiseaseData!.add(MedicalHistory.fromJson(
               result['response']['medicalHistory'].last));
           setLoading(false);
         }));
@@ -507,9 +507,9 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
   void _getUpdatedDiseaseData() async {
     await ApiManager().getMyDisease().then((result) {
       if (result is ResMedicalDocumentsModel) {
-        if (result.response.medicalHistory != null) {
+        if (result.response!.medicalHistory != null) {
           setState(() {
-            _showDiseaseData = result.response.medicalHistory;
+            _showDiseaseData = result.response!.medicalHistory;
           });
         }
         setLoading(false);

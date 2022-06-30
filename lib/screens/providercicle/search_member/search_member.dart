@@ -24,10 +24,10 @@ import '../search/item_member_detail.dart';
 import '../search/model/family_member.dart';
 
 class SearchMember extends StatefulWidget {
-  final String message;
-  final bool loadAllData;
+  final String? message;
+  final bool? loadAllData;
 
-  const SearchMember({Key key, this.message, this.loadAllData})
+  const SearchMember({Key? key, this.message, this.loadAllData})
       : super(key: key);
   @override
   _SearchScreenState createState() => _SearchScreenState();
@@ -36,13 +36,13 @@ class SearchMember extends StatefulWidget {
 class _SearchScreenState extends State<SearchMember> {
   final _searchController = TextEditingController();
   final _debouncer = Debouncer();
-  List<FamilyNetwork> _memberList = [];
+  List<FamilyNetwork>? _memberList = [];
   final int _page = 1;
 
   @override
   void initState() {
     super.initState();
-    if (widget.loadAllData) {
+    if (widget.loadAllData!) {
       WidgetsBinding.instance.addPostFrameCallback((_) => {_searchUser('')});
     }
   }
@@ -70,11 +70,11 @@ class _SearchScreenState extends State<SearchMember> {
       var res = await ApiManager().getFamilyNetowrk(request);
       ProgressDialogUtils.dismissProgressDialog();
       setState(() {
-        _memberList = res.response.familyNetwork;
+        _memberList = res.response!.familyNetwork;
       });
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -104,7 +104,7 @@ class _SearchScreenState extends State<SearchMember> {
           ),
           Expanded(
             child:
-                (_memberList.length == 0 && _searchController.text.length > 0)
+                (_memberList!.length == 0 && _searchController.text.length > 0)
                     ? Center(child: NoDataFound())
                     : ListView.separated(
                         separatorBuilder: (_, pos) {
@@ -114,22 +114,22 @@ class _SearchScreenState extends State<SearchMember> {
                             height: 25,
                           );
                         },
-                        itemCount: _memberList.length,
+                        itemCount: _memberList!.length,
                         itemBuilder: (context, pos) {
                           return RippleEffect(
                             onTap: () {
                               Navigator.of(context)
                                   .pushNamed(Routes.memberMessage, arguments: {
-                                ArgumentConstant.member: _memberList[pos],
+                                ArgumentConstant.member: _memberList![pos],
                                 ArgumentConstant.shareMessage: widget.message,
                                 ArgumentConstant.shareMessage: widget.message,
                               });
                             },
                             child: MemberDetail(
                               member: FamilyMember(
-                                  avatar: _memberList[pos].avatar,
-                                  fullName: _memberList[pos].fullName,
-                                  relation: _memberList[pos].relation),
+                                  avatar: _memberList![pos].avatar,
+                                  fullName: _memberList![pos].fullName,
+                                  relation: _memberList![pos].relation),
                               titleStyle: TextStyle(
                                   color: colorBlack,
                                   fontWeight: fontWeightSemiBold,
@@ -199,7 +199,7 @@ class _SearchScreenState extends State<SearchMember> {
         border: border,
         disabledBorder: border,
         focusedBorder: border,
-        hintText: Localization.of(context).search,
+        hintText: Localization.of(context)!.search,
       ),
     );
   }

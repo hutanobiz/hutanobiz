@@ -1,15 +1,15 @@
 class ResUserPermissionModel {
-  String status;
-  List<MemberPermission> response;
+  String? status;
+  List<MemberPermission>? response;
 
   ResUserPermissionModel({this.status, this.response});
 
   ResUserPermissionModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     if (json['response'] != null) {
-      response = new List<MemberPermission>();
+      response = <MemberPermission>[];
       json['response'].forEach((v) {
-        response.add(new MemberPermission.fromJson(v));
+        response!.add(new MemberPermission.fromJson(v));
       });
     }
   }
@@ -18,15 +18,15 @@ class ResUserPermissionModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     if (this.response != null) {
-      data['response'] = this.response.map((v) => v.toJson()).toList();
+      data['response'] = this.response!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class MemberPermission {
-  String permission;
-  String sId;
+  String? permission;
+  String? sId;
 
   MemberPermission({this.permission, this.sId});
 

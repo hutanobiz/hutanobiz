@@ -1,25 +1,25 @@
 class DoctorData {
-  String sId;
-  String userId;
-  String about;
-  BusinessLocation businessLocation;
-  String practicingSince;
-  int appointmentSetting;
-  List<ConsultanceFee> consultanceFee;
-  double distance;
-  List<FollowUpFee> followUpFee;
-  bool isLiveTrackable;
-  bool isOfficeEnabled;
-  bool isOnsiteEnabled;
-  bool isVideoChatEnabled;
-  String averageRating;
-  List<User> user;
-  List<ProfessionalTitle> professionalTitle;
-  List<Specialties> specialties;
-  List<StateData> state;
-  List<CommomnConsultanceFee> vedioConsultanceFee;
-  List<CommomnConsultanceFee> onsiteConsultanceFee;
-  List<CommomnConsultanceFee> officeConsultanceFee;
+  String? sId;
+  String? userId;
+  String? about;
+  BusinessLocation? businessLocation;
+  String? practicingSince;
+  int? appointmentSetting;
+  List<ConsultanceFee>? consultanceFee;
+  double? distance;
+  List<FollowUpFee>? followUpFee;
+  bool? isLiveTrackable;
+  bool? isOfficeEnabled;
+  bool? isOnsiteEnabled;
+  bool? isVideoChatEnabled;
+  String? averageRating;
+  List<User>? user;
+  List<ProfessionalTitle>? professionalTitle;
+  List<Specialties>? specialties;
+  List<StateData>? state;
+  List<CommomnConsultanceFee>? vedioConsultanceFee;
+  List<CommomnConsultanceFee>? onsiteConsultanceFee;
+  List<CommomnConsultanceFee>? officeConsultanceFee;
 
   DoctorData(
       {this.sId,
@@ -54,35 +54,35 @@ class DoctorData {
     practicingSince = json['practicingSince'];
     appointmentSetting = json['appointmentSetting'];
     if (json['consultanceFee'] != null) {
-      consultanceFee = new List<ConsultanceFee>();
+      consultanceFee = <ConsultanceFee>[];
       json['consultanceFee'].forEach((v) {
-        consultanceFee.add(new ConsultanceFee.fromJson(v));
+        consultanceFee!.add(new ConsultanceFee.fromJson(v));
       });
     }
     distance = json['distance'];
     averageRating = json['averageRating'].toString();
     if (json['followUpFee'] != null) {
-      followUpFee = new List<FollowUpFee>();
+      followUpFee = <FollowUpFee>[];
       json['followUpFee'].forEach((v) {
-        followUpFee.add(new FollowUpFee.fromJson(v));
+        followUpFee!.add(new FollowUpFee.fromJson(v));
       });
     }
     if (json['officeConsultanceFee'] != null) {
-      officeConsultanceFee = new List<CommomnConsultanceFee>();
+      officeConsultanceFee = <CommomnConsultanceFee>[];
       json['officeConsultanceFee'].forEach((v) {
-        officeConsultanceFee.add(new CommomnConsultanceFee.fromJson(v));
+        officeConsultanceFee!.add(new CommomnConsultanceFee.fromJson(v));
       });
     }
     if (json['onsiteConsultanceFee'] != null) {
-      onsiteConsultanceFee = new List<CommomnConsultanceFee>();
+      onsiteConsultanceFee = <CommomnConsultanceFee>[];
       json['onsiteConsultanceFee'].forEach((v) {
-        onsiteConsultanceFee.add(new CommomnConsultanceFee.fromJson(v));
+        onsiteConsultanceFee!.add(new CommomnConsultanceFee.fromJson(v));
       });
     }
     if (json['vedioConsultanceFee'] != null) {
-      vedioConsultanceFee = new List<CommomnConsultanceFee>();
+      vedioConsultanceFee = <CommomnConsultanceFee>[];
       json['vedioConsultanceFee'].forEach((v) {
-        vedioConsultanceFee.add(new CommomnConsultanceFee.fromJson(v));
+        vedioConsultanceFee!.add(new CommomnConsultanceFee.fromJson(v));
       });
     }
     isLiveTrackable = json['isLiveTrackable'];
@@ -90,27 +90,27 @@ class DoctorData {
     isOnsiteEnabled = json['isOnsiteEnabled'];
     isVideoChatEnabled = json['isVideoChatEnabled'];
     if (json['User'] != null) {
-      user = new List<User>();
+      user = <User>[];
       json['User'].forEach((v) {
-        user.add(new User.fromJson(v));
+        user!.add(new User.fromJson(v));
       });
     }
     if (json['ProfessionalTitle'] != null) {
-      professionalTitle = new List<ProfessionalTitle>();
+      professionalTitle = <ProfessionalTitle>[];
       json['ProfessionalTitle'].forEach((v) {
-        professionalTitle.add(new ProfessionalTitle.fromJson(v));
+        professionalTitle!.add(new ProfessionalTitle.fromJson(v));
       });
     }
     if (json['Specialties'] != null) {
-      specialties = new List<Specialties>();
+      specialties = <Specialties>[];
       json['Specialties'].forEach((v) {
-        specialties.add(new Specialties.fromJson(v));
+        specialties!.add(new Specialties.fromJson(v));
       });
     }
     if (json['State'] != null) {
-      state = new List<StateData>();
+      state = <StateData>[];
       json['State'].forEach((v) {
-        state.add(new StateData.fromJson(v));
+        state!.add(new StateData.fromJson(v));
       });
     }
   }
@@ -121,61 +121,61 @@ class DoctorData {
     data['userId'] = this.userId;
     data['about'] = this.about;
     if (this.businessLocation != null) {
-      data['businessLocation'] = this.businessLocation.toJson();
+      data['businessLocation'] = this.businessLocation!.toJson();
     }
     data['practicingSince'] = this.practicingSince;
     data['averageRating'] = this.averageRating;
     data['appointmentSetting'] = this.appointmentSetting;
     if (this.consultanceFee != null) {
       data['consultanceFee'] =
-          this.consultanceFee.map((v) => v.toJson()).toList();
+          this.consultanceFee!.map((v) => v.toJson()).toList();
     }
     if (this.officeConsultanceFee != null) {
       data['officeConsultanceFee'] =
-          this.officeConsultanceFee.map((v) => v.toJson()).toList();
+          this.officeConsultanceFee!.map((v) => v.toJson()).toList();
     }
     if (this.onsiteConsultanceFee != null) {
       data['onsiteConsultanceFee'] =
-          this.onsiteConsultanceFee.map((v) => v.toJson()).toList();
+          this.onsiteConsultanceFee!.map((v) => v.toJson()).toList();
     }
     if (this.vedioConsultanceFee != null) {
       data['vedioConsultanceFee'] =
-          this.vedioConsultanceFee.map((v) => v.toJson()).toList();
+          this.vedioConsultanceFee!.map((v) => v.toJson()).toList();
     }
     data['distance'] = this.distance;
     if (this.followUpFee != null) {
-      data['followUpFee'] = this.followUpFee.map((v) => v.toJson()).toList();
+      data['followUpFee'] = this.followUpFee!.map((v) => v.toJson()).toList();
     }
     data['isLiveTrackable'] = this.isLiveTrackable;
     data['isOfficeEnabled'] = this.isOfficeEnabled;
     data['isOnsiteEnabled'] = this.isOnsiteEnabled;
     data['isVideoChatEnabled'] = this.isVideoChatEnabled;
     if (this.user != null) {
-      data['User'] = this.user.map((v) => v.toJson()).toList();
+      data['User'] = this.user!.map((v) => v.toJson()).toList();
     }
     if (this.professionalTitle != null) {
       data['ProfessionalTitle'] =
-          this.professionalTitle.map((v) => v.toJson()).toList();
+          this.professionalTitle!.map((v) => v.toJson()).toList();
     }
     if (this.specialties != null) {
-      data['Specialties'] = this.specialties.map((v) => v.toJson()).toList();
+      data['Specialties'] = this.specialties!.map((v) => v.toJson()).toList();
     }
     if (this.state != null) {
-      data['StateData'] = this.state.map((v) => v.toJson()).toList();
+      data['StateData'] = this.state!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class BusinessLocation {
-  String address;
-  String street;
-  String city;
-  String state;
-  String stateCode;
-  String zipCode;
-  String type;
-  List<double> coordinates;
+  String? address;
+  String? street;
+  String? city;
+  String? state;
+  String? stateCode;
+  String? zipCode;
+  String? type;
+  List<double>? coordinates;
 
   BusinessLocation(
       {this.address,
@@ -213,8 +213,8 @@ class BusinessLocation {
 }
 
 class ConsultanceFee {
-  int fee;
-  int duration;
+  int? fee;
+  int? duration;
 
   ConsultanceFee({this.fee, this.duration});
 
@@ -232,30 +232,30 @@ class ConsultanceFee {
 }
 
 class User {
-  String sId;
-  Location location;
-  String fullName;
-  String firstName;
-  String lastName;
-  String dob;
-  String address;
-  String city;
-  String state;
-  String avatar;
-  int zipCode;
-  String phoneNumber;
-  int gender;
-  List<String> language;
-  String email;
-  bool isAbleTOReceiveOffersAndPromotions;
-  bool isAgreeTermsAndCondition;
-  String mobileCountryCode;
-  String verificationCodeSendAt;
-  String verificationCode;
-  bool isContactInformationVerified;
-  bool isEmailVerified;
-  int status;
-  int type;
+  String? sId;
+  Location? location;
+  String? fullName;
+  String? firstName;
+  String? lastName;
+  String? dob;
+  String? address;
+  String? city;
+  String? state;
+  String? avatar;
+  int? zipCode;
+  String? phoneNumber;
+  int? gender;
+  List<String>? language;
+  String? email;
+  bool? isAbleTOReceiveOffersAndPromotions;
+  bool? isAgreeTermsAndCondition;
+  String? mobileCountryCode;
+  String? verificationCodeSendAt;
+  String? verificationCode;
+  bool? isContactInformationVerified;
+  bool? isEmailVerified;
+  int? status;
+  int? type;
 
   User(
       {this.sId,
@@ -317,7 +317,7 @@ class User {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_id'] = this.sId;
     if (this.location != null) {
-      data['location'] = this.location.toJson();
+      data['location'] = this.location!.toJson();
     }
     data['fullName'] = this.fullName;
     data['firstName'] = this.firstName;
@@ -347,8 +347,8 @@ class User {
 }
 
 class Location {
-  String type;
-  List<int> coordinates;
+  String? type;
+  List<int>? coordinates;
 
   Location({this.type, this.coordinates});
 
@@ -366,10 +366,10 @@ class Location {
 }
 
 class ProfessionalTitle {
-  String sId;
-  String title;
-  String image;
-  int status;
+  String? sId;
+  String? title;
+  String? image;
+  int? status;
 
   ProfessionalTitle({this.sId, this.title, this.image, this.status});
 
@@ -391,12 +391,12 @@ class ProfessionalTitle {
 }
 
 class Specialties {
-  String sId;
-  String title;
-  String image;
-  String cover;
-  bool isFeatured;
-  int status;
+  String? sId;
+  String? title;
+  String? image;
+  String? cover;
+  bool? isFeatured;
+  int? status;
 
   Specialties(
       {this.sId,
@@ -428,9 +428,9 @@ class Specialties {
 }
 
 class StateData {
-  String sId;
-  String title;
-  String stateCode;
+  String? sId;
+  String? title;
+  String? stateCode;
 
   StateData({this.sId, this.title, this.stateCode});
 
@@ -450,8 +450,8 @@ class StateData {
 }
 
 class FollowUpFee {
-  int fee;
-  int duration;
+  int? fee;
+  int? duration;
 
   FollowUpFee({this.fee, this.duration});
 
@@ -469,9 +469,9 @@ class FollowUpFee {
 }
 
 class CommomnConsultanceFee {
-  int fee;
-  int duration;
-  String sId;
+  int? fee;
+  int? duration;
+  String? sId;
 
   CommomnConsultanceFee({this.fee, this.duration, this.sId});
 

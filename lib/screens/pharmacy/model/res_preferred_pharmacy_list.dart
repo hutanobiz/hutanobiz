@@ -1,6 +1,6 @@
 class ResPreferredPharmacyList {
-  String status;
-  List<Pharmacy> response;
+  String? status;
+  List<Pharmacy>? response;
 
   ResPreferredPharmacyList({this.status, this.response});
 
@@ -9,7 +9,7 @@ class ResPreferredPharmacyList {
     if (json['response'] != null) {
       response = <Pharmacy>[];
       json['response'].forEach((v) {
-        response.add(new Pharmacy.fromJson(v));
+        response!.add(new Pharmacy.fromJson(v));
       });
     }
   }
@@ -18,19 +18,19 @@ class ResPreferredPharmacyList {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     if (this.response != null) {
-      data['response'] = this.response.map((v) => v.toJson()).toList();
+      data['response'] = this.response!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Pharmacy {
-  String sId;
-  String name;
-  String createdAt;
-  String updatedAt;
-  int iV;
-  AddressPharmacy address;
+  String? sId;
+  String? name;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
+  AddressPharmacy? address;
 
   Pharmacy(
       {this.sId,
@@ -66,19 +66,19 @@ class Pharmacy {
     data['updatedAt'] = this.updatedAt;
     data['__v'] = this.iV;
     if (this.address != null) {
-      data['address'] = this.address.toJson();
+      data['address'] = this.address!.toJson();
     }
     return data;
   }
 }
 
 class AddressPharmacy {
-  String address;
-  String city;
-  String phone;
-  String state;
-  String zipCode;
-  String sId;
+  String? address;
+  String? city;
+  String? phone;
+  String? state;
+  String? zipCode;
+  String? sId;
 
   AddressPharmacy(
       {this.address,

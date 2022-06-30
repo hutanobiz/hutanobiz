@@ -6,10 +6,10 @@ import 'package:hutano/screens/appointments/upload_images.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 
 class ViewMedicalHistoryScreen extends StatefulWidget {
-  ViewMedicalHistoryScreen({Key key, this.isBottomButtonsShow})
+  ViewMedicalHistoryScreen({Key? key, this.isBottomButtonsShow})
       : super(key: key);
 
-  final Map isBottomButtonsShow;
+  final Map? isBottomButtonsShow;
 
   @override
   _ViewMedicalHistoryScreenState createState() =>
@@ -18,8 +18,8 @@ class ViewMedicalHistoryScreen extends StatefulWidget {
 
 class _ViewMedicalHistoryScreenState extends State<ViewMedicalHistoryScreen>
     with SingleTickerProviderStateMixin {
-  TabController _controller;
-  Map _map = {};
+  TabController? _controller;
+  Map? _map = {};
 
   List<Widget> _children = [];
 
@@ -30,7 +30,7 @@ class _ViewMedicalHistoryScreenState extends State<ViewMedicalHistoryScreen>
     if (widget.isBottomButtonsShow != null) {
       _map = widget.isBottomButtonsShow;
     } else {
-      _map['isBottomButtonsShow'] = false;
+      _map!['isBottomButtonsShow'] = false;
     }
 
     _children = [
@@ -67,7 +67,7 @@ class _ViewMedicalHistoryScreenState extends State<ViewMedicalHistoryScreen>
             decoration: BoxDecoration(
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.circular(14.0),
-                border: Border.all(color: Colors.grey[300])),
+                border: Border.all(color: Colors.grey[300]!)),
             child: TabBar(
               controller: _controller,
               labelPadding: EdgeInsets.all(0),

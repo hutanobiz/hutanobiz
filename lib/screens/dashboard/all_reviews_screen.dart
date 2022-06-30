@@ -6,9 +6,9 @@ import 'package:hutano/widgets/review_widget.dart';
 import 'package:intl/intl.dart';
 
 class AllReviewsScreen extends StatefulWidget {
-  final Map reviewMap;
+  final Map? reviewMap;
 
-  const AllReviewsScreen({Key key, this.reviewMap}) : super(key: key);
+  const AllReviewsScreen({Key? key, this.reviewMap}) : super(key: key);
 
   @override
   _AllReviewsScreenState createState() => _AllReviewsScreenState();
@@ -45,7 +45,7 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
                         children: <TextSpan>[
                           TextSpan(text: 'Overall Rating '),
                           TextSpan(
-                              text: widget.reviewMap['averageRating'],
+                              text: widget.reviewMap!['averageRating'],
                               style: TextStyle(
                                 fontSize: 15,
                                 color: AppColors.goldenTainoi,
@@ -58,7 +58,7 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
                       alignment: Alignment.centerRight,
                       child: RatingBar.builder(
                         initialRating:
-                            double.parse(widget.reviewMap['averageRating']),
+                            double.parse(widget.reviewMap!['averageRating']),
                         itemSize: 20.0,
                         minRating: 1,
                         direction: Axis.horizontal,
@@ -69,7 +69,7 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
                           Icons.star,
                           color: Colors.amber,
                         ),
-                        onRatingUpdate: null,
+                        onRatingUpdate: (v){},
                       ),
                     ),
                   )
@@ -80,10 +80,10 @@ class _AllReviewsScreenState extends State<AllReviewsScreen> {
               child: ListView.separated(
                 separatorBuilder: (BuildContext context, int index) =>
                     SizedBox(height: 20),
-                itemCount: widget.reviewMap['reviewsList'].length,
+                itemCount: widget.reviewMap!['reviewsList'].length,
                 padding: const EdgeInsets.only(left: 20, right: 20, bottom: 90),
                 itemBuilder: (context, index) {
-                  dynamic response = widget.reviewMap['reviewsList'][index];
+                  dynamic response = widget.reviewMap!['reviewsList'][index];
 
                   return ReviewWidget(
                     reviewerName:

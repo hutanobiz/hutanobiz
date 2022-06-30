@@ -49,7 +49,7 @@ class _SignInScreenState extends State<SignInScreen> {
   String selectedCountry = "+1";
   bool isRememberMe = false;
   bool isSecureField = true;
-  String deviceToken;
+  String? deviceToken;
 
   @override
   void initState() {
@@ -57,7 +57,7 @@ class _SignInScreenState extends State<SignInScreen> {
     //TODO
     final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-    _firebaseMessaging.getToken().then((String token) {
+    _firebaseMessaging.getToken().then((String? token) {
       deviceToken = token;
       SharedPref().setValue("deviceToken", token);
       print(token);
@@ -137,7 +137,7 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget _getSignInTextField() => Container(
         padding: const EdgeInsets.only(
             left: spacing20, right: spacing20, top: spacing10),
-        child: Text(Localization.of(context).signInTitle,
+        child: Text(Localization.of(context)!.signInTitle,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: fontSize14,
@@ -160,7 +160,7 @@ class _SignInScreenState extends State<SignInScreen> {
             },
             onValueChanged: (value) {
               setState(() {
-                _keyPhone.currentState.validate();
+                _keyPhone.currentState!.validate();
               });
             },
             onCountryChanged: (cc) {
@@ -184,7 +184,7 @@ class _SignInScreenState extends State<SignInScreen> {
               });
         },
         child: Text(
-          Localization.of(context).forgotPassword,
+          Localization.of(context)!.forgotPassword,
           style: TextStyle(
               fontSize: fontSize12,
               color: colorPurple,
@@ -193,7 +193,7 @@ class _SignInScreenState extends State<SignInScreen> {
       );
 
   Widget _getRememberMeButton() => Container(
-        width: SizeConfig.screenWidth / 2,
+        width: SizeConfig.screenWidth! / 2,
         child: Row(
           children: <Widget>[
             CustomCheckBox(
@@ -222,14 +222,14 @@ class _SignInScreenState extends State<SignInScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                Localization.of(context).signIn,
+                Localization.of(context)!.signIn,
                 style: TextStyle(
                     fontSize: fontSize14,
                     color: Colors.black,
                     fontWeight: fontWeightRegular),
               ),
               Text(
-                Localization.of(context).register,
+                Localization.of(context)!.register,
                 style: TextStyle(
                     fontSize: fontSize14,
                     color: colorYellow,
@@ -244,7 +244,7 @@ class _SignInScreenState extends State<SignInScreen> {
         key: _keyPassword,
         autovalidateMode: AutovalidateMode.disabled,
         child: HutanoTextField(
-            labelText: Localization.of(context).password,
+            labelText: Localization.of(context)!.password,
             isPasswordField: true,
             textInputAction: TextInputAction.done,
             prefixIcon: FileConstants.icLock,
@@ -256,8 +256,8 @@ class _SignInScreenState extends State<SignInScreen> {
             prefixwidth: 15,
             onValueChanged: (value) {
               setState(() {
-                _enableButton = _keyPhone.currentState.validate() &&
-                    _keyPassword.currentState.validate();
+                _enableButton = _keyPhone.currentState!.validate() &&
+                    _keyPassword.currentState!.validate();
               });
             },
             passwordTap: () {
@@ -278,7 +278,7 @@ class _SignInScreenState extends State<SignInScreen> {
       child: Align(
           alignment: Alignment.topRight,
           child: HutanoButton(
-            label: Localization.of(context).logIn,
+            label: Localization.of(context)!.logIn,
             onPressed: _enableButton ? _onLoginClick : null,
           )));
 
@@ -287,8 +287,8 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Future<void> _onLoginClick() async {
-    if (_keyPhone.currentState.validate() &&
-        _keyPassword.currentState.validate()) {
+    if (_keyPhone.currentState!.validate() &&
+        _keyPassword.currentState!.validate()) {
       ProgressDialogUtils.showProgressDialog(context);
       var phonenumber = "${_phoneController.text.substring(1, 4)}"
           "${_phoneController.text.substring(6, 9)}"
@@ -315,21 +315,21 @@ class _SignInScreenState extends State<SignInScreen> {
 
           setBool(PreferenceKey.perFormedSteps, true);
           setBool(
-              PreferenceKey.isEmailVerified, value.response.isEmailVerified);
-          setString(PreferenceKey.fullName, value.response.fullName);
-          setString(PreferenceKey.id, value.response.sId);
-          setString(PreferenceKey.tokens, value.response.token);
-          setString(PreferenceKey.phone, value.response.phoneNumber.toString());
-          setInt(PreferenceKey.gender, value.response.gender);
+              PreferenceKey.isEmailVerified, value.response!.isEmailVerified!);
+          setString(PreferenceKey.fullName, value.response!.fullName!);
+          setString(PreferenceKey.id, value.response!.sId!);
+          setString(PreferenceKey.tokens, value.response!.token!);
+          setString(PreferenceKey.phone, value.response!.phoneNumber.toString());
+          setInt(PreferenceKey.gender, value.response!.gender!);
           setString('patientSocialHistory',
-              jsonEncode(value.response.patientSocialHistory));
+              jsonEncode(value.response!.patientSocialHistory));
           setString('primaryUser', jsonEncode(value.response));
-          setString('primaryUserToken', value.response.token);
+          setString('primaryUserToken', value.response!.token!);
           setString('selectedAccount', jsonEncode(value.response));
           setBool(PreferenceKey.intro, true);
           // //TODO
           // //Note : Duplication of pref code
-          SharedPref().saveToken(value.response.token);
+          SharedPref().saveToken(value.response!.token);
           // SharedPref().setValue("fullName", value.response.fullName);
           // // SharedPref().setValue("isEmailVerified", value.response.isEmailVerified);
 
@@ -337,7 +337,7 @@ class _SignInScreenState extends State<SignInScreen> {
           // //Note : Duplication of pref code
 
           // //TODO : change route to Dashboard
-          if (value.response.pin == null && value.response.isEmailVerified) {
+          if (value.response!.pin == null && value.response!.isEmailVerified!) {
             Navigator.of(context).pushNamed(Routes.setupPin, arguments: {
               ArgumentConstant.setPinScreen: SetupScreenFrom.login
             });
@@ -348,18 +348,18 @@ class _SignInScreenState extends State<SignInScreen> {
             );
             // Navigator.of(context)
             //     .pushReplacementNamed(Routes.dashboardScreen, arguments: 0);
-            if (value.response.pin != null) {
+            if (value.response!.pin != null) {
               setBool(PreferenceKey.setPin, true);
             }
           }
         });
       } on ErrorModel catch (e) {
         ProgressDialogUtils.dismissProgressDialog();
-        DialogUtils.showAlertDialog(context, e.response);
+        DialogUtils.showAlertDialog(context, e.response!);
       } catch (e) {
         ProgressDialogUtils.dismissProgressDialog();
         DialogUtils.showAlertDialog(
-            context, Localization.of(context).commonErrorMsg);
+            context, Localization.of(context)!.commonErrorMsg);
         print(e);
       }
     }

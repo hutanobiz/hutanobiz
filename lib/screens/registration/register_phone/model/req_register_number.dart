@@ -1,11 +1,11 @@
 class ReqRegsiterNumber {
-  int type;
-  String fullName;
-  int isAgreeTermsAndCondition;
-  String phoneNumber;
-  int step;
-  String verificationCode;
-  String mobileCountryCode;
+  int? type;
+  String? fullName;
+  int? isAgreeTermsAndCondition;
+  String? phoneNumber;
+  int? step;
+  String? verificationCode;
+  String? mobileCountryCode;
   ReqRegsiterNumber({
     this.type,
     this.fullName,

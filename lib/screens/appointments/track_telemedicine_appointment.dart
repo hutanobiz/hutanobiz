@@ -32,8 +32,8 @@ const PROVIDER_START_DRIVING = 'providerStartDriving';
 const PROVIDER_ARRIVED = 'providerArrived';
 
 class TrackTelemedicineAppointment extends StatefulWidget {
-  TrackTelemedicineAppointment({Key key, this.appointmentId}) : super(key: key);
-  String appointmentId;
+  TrackTelemedicineAppointment({Key? key, this.appointmentId}) : super(key: key);
+  String? appointmentId;
 
   @override
   _TrackTelemedicineAppointmentState createState() =>
@@ -42,23 +42,23 @@ class TrackTelemedicineAppointment extends StatefulWidget {
 
 class _TrackTelemedicineAppointmentState
     extends State<TrackTelemedicineAppointment> {
-  Future<dynamic> _profileFuture;
-  String token;
-  int _appointmentType = 0;
+  Future<dynamic>? _profileFuture;
+  String? token;
+  int? _appointmentType = 0;
   bool _isLoading = false;
   String _trackStatusKey = TRACK_STATUS_PROVIDER;
 
   var _userLocation = LatLng(0.00, 0.00);
   ApiBaseHelper api = ApiBaseHelper();
-  String userRating;
+  String? userRating;
   dynamic appointmentResponse;
-  InheritedContainerState _container;
-  bool isProviderArrivedConfirm;
+  late InheritedContainerState _container;
+  bool? isProviderArrivedConfirm;
   SimpleCountDownController _simpleCountDownController2 =
       SimpleCountDownController();
-  var appointmentTime;
+  late var appointmentTime;
   var currentTime;
-  String name = "---", avatar;
+  String? name = "---", avatar;
   bool isEdit = false;
   ScrollController scrollController = ScrollController();
   double animateTo = 0.0;
@@ -120,8 +120,8 @@ class _TrackTelemedicineAppointmentState
                   } else if (snapshot.hasError) {
                     return new Text('Error: ${snapshot.error}');
                   } else if (snapshot.hasData) {
-                    appointmentResponse = snapshot.data;
-                    return widgetList(snapshot.data);
+                    appointmentResponse = snapshot.data as Map;
+                    return widgetList(snapshot.data as Map);
                   } else {
                     return Center(
                       child: new CustomLoader(),
@@ -295,7 +295,7 @@ class _TrackTelemedicineAppointmentState
                   borderRadius: BorderRadius.all(
                     Radius.circular(14.0),
                   ),
-                  border: Border.all(width: 0.5, color: Colors.grey[300]),
+                  border: Border.all(width: 0.5, color: Colors.grey[300]!),
                 ),
                 child: Theme(
                     data: Theme.of(context)
@@ -617,13 +617,13 @@ class _TrackTelemedicineAppointmentState
     );
   }
 
-  editWidget({Function onTap, String title}) {
+  editWidget({Function? onTap, required String title}) {
     return Row(
       children: [
         Expanded(
             child: Text(title, style: AppTextStyle.mediumStyle(fontSize: 15))),
         GestureDetector(
-            onTap: onTap,
+            onTap: onTap as void Function()?,
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Image.asset('images/edit_icon.png', height: 20),
@@ -660,8 +660,8 @@ class _TrackTelemedicineAppointmentState
   }
 
   Widget timingSubWidget(
-      String title, int index, int status, bool isUserJoin, bool isDoctorJoin,
-      {bool isRated}) {
+      String title, int index, int status, bool? isUserJoin, bool? isDoctorJoin,
+      {bool? isRated}) {
     return Consumer<OverlayHandlerProvider>(
         builder: (context, overlayProvider, _) {
       return Row(
@@ -681,14 +681,14 @@ class _TrackTelemedicineAppointmentState
                                 : 'images/trackCheckedCurrent.png'
                             : 'images/trackUnchecked.png'
                         : index == 1
-                            ? isDoctorJoin
+                            ? isDoctorJoin!
                                 ? status == 4 || status == 3
                                     ? 'images/trackChecked.png'
                                     : 'images/trackCheckedCurrent.png'
                                 : 'images/trackUnchecked.png'
                             : index < 0
                                 ? 'images/trackChecked.png'
-                                : isDoctorJoin
+                                : isDoctorJoin!
                                     ? 'images/trackChecked.png'
                                     : 'images/trackCheckedCurrent.png',
                 height: 24,
@@ -717,7 +717,7 @@ class _TrackTelemedicineAppointmentState
                                   width: 1,
                                   color: Colors.green,
                                 )
-                              : isDoctorJoin
+                              : isDoctorJoin!
                                   ? Container(
                                       height: 45,
                                       width: 1,
@@ -763,9 +763,9 @@ class _TrackTelemedicineAppointmentState
                             : index == 1
                                 ? status == 4 || status == 3
                                     ? SizedBox()
-                                    : !isDoctorJoin
+                                    : !isDoctorJoin!
                                         ? SizedBox()
-                                        : !isUserJoin
+                                        : !isUserJoin!
                                             ? TrackingButton(
                                                 title: 'I am ready',
                                                 image: 'images/watch.png',
@@ -790,7 +790,7 @@ class _TrackTelemedicineAppointmentState
                                             : overlayProvider.overlayEntry !=
                                                         null &&
                                                     overlayProvider
-                                                        .overlayEntry.mounted
+                                                        .overlayEntry!.mounted
                                                 ? SizedBox()
                                                 : TrackingButton(
                                                     title: 'Join Call',
@@ -824,11 +824,11 @@ class _TrackTelemedicineAppointmentState
                                                             ].request();
                                                             if ((statuses[Permission
                                                                         .Permission
-                                                                        .camera]
+                                                                        .camera]!
                                                                     .isGranted) &&
                                                                 (statuses[Permission
                                                                         .Permission
-                                                                        .microphone]
+                                                                        .microphone]!
                                                                     .isGranted)) {
                                                               Map appointment =
                                                                   {};
@@ -868,7 +868,7 @@ class _TrackTelemedicineAppointmentState
                                                     })
                                 : Row(
                                     children: [
-                                      isUserJoin || isDoctorJoin
+                                      isUserJoin! || isDoctorJoin!
                                           ? SizedBox()
                                           : appointmentTime
                                                       .difference(currentTime)
@@ -957,7 +957,7 @@ class _TrackTelemedicineAppointmentState
                                                             'data']['_id'];
                                                   })
                                               : SizedBox(),
-                                      isUserJoin || isDoctorJoin
+                                      isUserJoin || isDoctorJoin!
                                           ? SizedBox()
                                           : appointmentTime
                                                       .difference(currentTime)
@@ -969,7 +969,7 @@ class _TrackTelemedicineAppointmentState
                                                   color: Colors.grey[300],
                                                 )
                                               : SizedBox(),
-                                      isDoctorJoin
+                                      isDoctorJoin!
                                           ? SizedBox()
                                           : !isUserJoin
                                               ? TrackingButton(
@@ -1198,7 +1198,7 @@ class _TrackTelemedicineAppointmentState
                             Navigator.of(context).pop();
 
                             onsiteChangeRequestStatus(
-                                widget.appointmentId, "5");
+                                widget.appointmentId!, "5");
                           }),
                     ),
                   ],

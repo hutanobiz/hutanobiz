@@ -1,8 +1,8 @@
 class ReqAddCurrentMedicalHistory {
-  String description;
-  List<String> chiefComplaint;
-  String problem;
-  String rateDiscomfort;
+  String? description;
+  List<String?>? chiefComplaint;
+  String? problem;
+  String? rateDiscomfort;
 
   ReqAddCurrentMedicalHistory(
       {this.description,

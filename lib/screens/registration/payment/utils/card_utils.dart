@@ -4,20 +4,20 @@ import 'package:flutter/material.dart';
 import '../../../../utils/constants/file_constants.dart';
 import '../../../../utils/localization/localization.dart';
 
-String validateCVV(String value, BuildContext context) {
+String? validateCVV(String value, BuildContext context) {
   if (value.isEmpty) {
-    return Localization.of(context).errorEnterField;
+    return Localization.of(context)!.errorEnterField;
   }
 
   if (value.length < 3 || value.length > 4) {
-    return Localization.of(context).msgCVV;
+    return Localization.of(context)!.msgCVV;
   }
   return null;
 }
 
-String validateDate(String value, BuildContext context) {
+String? validateDate(String value, BuildContext context) {
   if (value.isEmpty) {
-    return Localization.of(context).errorEnterField;
+    return Localization.of(context)!.errorEnterField;
   }
 
   int year;
@@ -32,16 +32,16 @@ String validateDate(String value, BuildContext context) {
   }
 
   if ((month < 1) || (month > 12)) {
-    return Localization.of(context).msgMonth;
+    return Localization.of(context)!.msgMonth;
   }
 
   var fourDigitsYear = convertYearTo4Digits(year);
   if ((fourDigitsYear < 1) || (fourDigitsYear > 2099)) {
-    return Localization.of(context).msgYear;
+    return Localization.of(context)!.msgYear;
   }
 
   if (!hasDateExpired(month, year)) {
-    return Localization.of(context).cardExpired;
+    return Localization.of(context)!.cardExpired;
   }
   return null;
 }
@@ -95,10 +95,10 @@ enum CardType {
   Invalid
 }
 
-CardType getBrandType(String brand) {
-  if (brand?.toLowerCase() == "Visa"?.toLowerCase()) {
+CardType getBrandType(String? brand) {
+  if (brand?.toLowerCase() == "Visa".toLowerCase()) {
     return CardType.Visa;
-  } else if (brand?.toLowerCase() == "Master"?.toLowerCase()) {
+  } else if (brand?.toLowerCase() == "Master".toLowerCase()) {
     return CardType.Master;
   } else if (brand?.toLowerCase() == "Verve".toLowerCase()) {
     return CardType.Verve;
@@ -144,20 +144,20 @@ String getCardNumber(String text) {
   return text.replaceAll(RegExp('[^0-9]+'), '');
 }
 
-String validateCardNumber(String input, BuildContext context) {
+String? validateCardNumber(String input, BuildContext context) {
   RegExp _creditCard = RegExp(
       r'^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$');
   if (input.isEmpty) {
-    return Localization.of(context).errorEnterField;
+    return Localization.of(context)!.errorEnterField;
   }
 
   String number = getCleanedNumber(input);
   if (!_creditCard.hasMatch(number)) {
-    return Localization.of(context).invalidCard;
+    return Localization.of(context)!.invalidCard;
   }
 
   if (number.length < 8) {
-    return Localization.of(context).invalidCard;
+    return Localization.of(context)!.invalidCard;
   }
 
   int sum = 0;
@@ -176,16 +176,16 @@ String validateCardNumber(String input, BuildContext context) {
     return null;
   }
 
-  return Localization.of(context).invalidCard;
+  return Localization.of(context)!.invalidCard;
 }
 
 String getCleanedNumber(String text) {
   return text.replaceAll(RegExp('[^0-9]+'), '');
 }
 
-Widget getCardIcon(CardType cardType) {
+Widget? getCardIcon(CardType cardType) {
   String img = "";
-  Icon icon;
+  Icon? icon;
   switch (cardType) {
     case CardType.Master:
       img = FileConstants.icMasterCard;
@@ -223,7 +223,7 @@ Widget getCardIcon(CardType cardType) {
       );
       break;
   }
-  Widget widget;
+  Widget? widget;
   if (img.isNotEmpty) {
     widget = Image.asset(
       img,

@@ -3,11 +3,11 @@ import 'package:hutano/colors.dart';
 
 class AppointmentTypeChipWidget extends StatelessWidget {
   const AppointmentTypeChipWidget({
-    Key key,
-    @required this.appointmentType,
+    Key? key,
+    required this.appointmentType,
   }) : super(key: key);
 
-  final int appointmentType;
+  final int? appointmentType;
 
   @override
   Widget build(BuildContext context) {

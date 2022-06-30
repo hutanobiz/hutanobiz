@@ -29,8 +29,8 @@ const PATIENT_START_DRIVING = 'patientStartDriving';
 const PATIENT_ARRIVED = 'patientArrived';
 
 class TrackOfficeAppointment extends StatefulWidget {
-  final String appointmentId;
-  TrackOfficeAppointment({Key key, @required this.appointmentId})
+  final String? appointmentId;
+  TrackOfficeAppointment({Key? key, required this.appointmentId})
       : super(key: key);
 
   @override
@@ -39,21 +39,21 @@ class TrackOfficeAppointment extends StatefulWidget {
 
 class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
   bool _isLoading = false;
-  String token;
+  String? token;
   ApiBaseHelper api = ApiBaseHelper();
-  Future<dynamic> _profileFuture;
+  Future<dynamic>? _profileFuture;
   LatLng _userLocation = LatLng(0.00, 0.00);
   dynamic appointmentResponse;
   String _trackStatusKey = TRACK_STATUS;
   String _startDrivingStatusKey = PATIENT_START_DRIVING;
   String _arrivedStatusKey = PATIENT_ARRIVED;
-  String userRating;
-  InheritedContainerState _container;
+  String? userRating;
+  late InheritedContainerState _container;
   SimpleCountDownController _simpleCountDownController2 =
       SimpleCountDownController();
-  var appointmentTime;
+  late var appointmentTime;
   var currentTime;
-  String name = '', avatar;
+  String? name = '', avatar;
   bool isEdit = false;
   ScrollController scrollController = ScrollController();
   double animateTo = 0.0;
@@ -342,7 +342,7 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                   borderRadius: BorderRadius.all(
                     Radius.circular(14.0),
                   ),
-                  border: Border.all(width: 0.5, color: Colors.grey[300]),
+                  border: Border.all(width: 0.5, color: Colors.grey[300]!),
                 ),
                 child: Theme(
                     data: Theme.of(context)
@@ -664,13 +664,13 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
     );
   }
 
-  editWidget({Function onTap, String title}) {
+  editWidget({Function? onTap, required String title}) {
     return Row(
       children: [
         Expanded(
             child: Text(title, style: AppTextStyle.mediumStyle(fontSize: 15))),
         GestureDetector(
-            onTap: onTap,
+            onTap: onTap as void Function()?,
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Image.asset('images/edit_icon.png', height: 20),
@@ -989,14 +989,14 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
     );
   }
 
-  changeRequestStatus(String id, String status) {
+  changeRequestStatus(String? id, String status) {
     setState(() {
       _isLoading = true;
     });
     Map map = Map();
     map["trackingStatus.status"] = status;
     SharedPref().getToken().then((token) {
-      api.appointmentTrackingStatus(token, map, id).then((value) {
+      api.appointmentTrackingStatus(token, map, id!).then((value) {
         if (status == '5') {
           setState(() {
             _isLoading = false;

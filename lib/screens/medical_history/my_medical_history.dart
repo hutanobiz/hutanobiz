@@ -42,7 +42,7 @@ class _MyMedicalHistoryState extends State<MyMedicalHistory> {
     }, onError: (e) {
       ProgressDialogUtils.dismissProgressDialog();
       if (e is ErrorModel) {
-        DialogUtils.showAlertDialog(context, e.response);
+        DialogUtils.showAlertDialog(context, e.response!);
       }
     });
   }
@@ -58,7 +58,7 @@ class _MyMedicalHistoryState extends State<MyMedicalHistory> {
             Padding(
               padding: EdgeInsets.all(spacing20),
               child: HutanoButton(
-                  label: Localization.of(context).next,
+                  label: Localization.of(context)!.next,
                   onPressed: () {
                     var list = diseaselist
                         .where((element) => element.isChecked == true)
@@ -91,7 +91,7 @@ class _MyMedicalHistoryState extends State<MyMedicalHistory> {
               Padding(
                 padding: const EdgeInsets.only(top: spacing20),
                 child: Text(
-                  Localization.of(context).myMedicalHistory,
+                  Localization.of(context)!.myMedicalHistory,
                   style: TextStyle(
                       fontSize: fontSize18,
                       fontWeight: fontWeightMedium,
@@ -116,7 +116,7 @@ class _MyMedicalHistoryState extends State<MyMedicalHistory> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            diseaselist[index].disease,
+            diseaselist[index].disease!,
             style: TextStyle(
               fontSize: fontSize14,
               fontWeight: fontWeightMedium,

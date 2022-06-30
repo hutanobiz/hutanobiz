@@ -5,10 +5,10 @@ class AppTextStyle {
   const AppTextStyle._();
 
   static TextStyle heading1Style({
-    Color color,
-    double fontSize,
-    FontWeight fontWeight,
-    TextDecoration decoration,
+    Color? color,
+    double? fontSize,
+    FontWeight? fontWeight,
+    TextDecoration? decoration,
   }) {
     return _textStyle(
       color: color,
@@ -19,10 +19,10 @@ class AppTextStyle {
   }
 
   static TextStyle heading2Style({
-    Color color,
-    double fontSize,
-    FontWeight fontWeight,
-    TextDecoration decoration,
+    Color? color,
+    double? fontSize,
+    FontWeight? fontWeight,
+    TextDecoration? decoration,
   }) {
     return _textStyle(
       color: color,
@@ -33,10 +33,10 @@ class AppTextStyle {
   }
 
   static TextStyle mediumStyle({
-    Color color,
-    double fontSize,
-    FontWeight fontWeight,
-    TextDecoration decoration,
+    Color? color,
+    double? fontSize,
+    FontWeight? fontWeight,
+    TextDecoration? decoration,
   }) {
     return _textStyle(
       color: color,
@@ -47,10 +47,10 @@ class AppTextStyle {
   }
 
   static TextStyle semiBoldStyle({
-    Color color,
-    double fontSize,
-    FontWeight fontWeight,
-    TextDecoration decoration,
+    Color? color,
+    double? fontSize,
+    FontWeight? fontWeight,
+    TextDecoration? decoration,
   }) {
     return _textStyle(
       color: color,
@@ -61,10 +61,10 @@ class AppTextStyle {
   }
 
   static TextStyle boldStyle({
-    Color color,
-    double fontSize,
-    FontWeight fontWeight,
-    TextDecoration decoration,
+    Color? color,
+    double? fontSize,
+    FontWeight? fontWeight,
+    TextDecoration? decoration,
   }) {
     return _textStyle(
       color: color,
@@ -75,10 +75,10 @@ class AppTextStyle {
   }
 
   static TextStyle regularStyle({
-    Color color,
-    double fontSize,
-    FontWeight fontWeight,
-    TextDecoration decoration,
+    Color? color,
+    double? fontSize,
+    FontWeight? fontWeight,
+    TextDecoration? decoration,
   }) {
     return _textStyle(
       color: color,
@@ -89,10 +89,10 @@ class AppTextStyle {
   }
 
   static TextStyle buttonTextStyle({
-    Color color,
-    double fontSize,
-    FontWeight fontWeight,
-    TextDecoration decoration,
+    Color? color,
+    double? fontSize,
+    FontWeight? fontWeight,
+    TextDecoration? decoration,
   }) {
     return _textStyle(
       color: color,
@@ -105,10 +105,10 @@ class AppTextStyle {
 
 TextStyle _textStyle({
   String fontFamily: 'Poppins',
-  Color color: Colors.black,
-  @required double fontSize,
-  FontWeight fontWeight,
-  TextDecoration decoration,
+  Color? color: Colors.black,
+  required double fontSize,
+  FontWeight? fontWeight,
+  TextDecoration? decoration,
 }) {
   return TextStyle(
     fontFamily: fontFamily,

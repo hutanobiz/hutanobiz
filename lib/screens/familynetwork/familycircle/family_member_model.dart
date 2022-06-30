@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 class FamilyMember {
-  final String name;
-  final String relation;
-  final String image;
+  final String? name;
+  final String? relation;
+  final String? image;
   FamilyMember({
     this.name,
     this.relation,
@@ -11,9 +11,9 @@ class FamilyMember {
   });
   bool isSelected = false;
   FamilyMember copyWith({
-    String name,
-    String relation,
-    String image,
+    String? name,
+    String? relation,
+    String? image,
   }) {
     return FamilyMember(
       name: name ?? this.name,
@@ -31,7 +31,7 @@ class FamilyMember {
   }
 
   factory FamilyMember.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
+  
 
     return FamilyMember(
       name: map['name'],

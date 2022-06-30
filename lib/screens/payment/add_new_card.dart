@@ -14,7 +14,7 @@ import 'package:hutano/widgets/mask_input_formatter.dart';
 import 'package:hutano/widgets/widgets.dart';
 
 class AddNewCardScreen extends StatefulWidget {
-  AddNewCardScreen({Key key}) : super(key: key);
+  AddNewCardScreen({Key? key}) : super(key: key);
 
   @override
   _AddNewCardScreenState createState() => _AddNewCardScreenState();
@@ -33,7 +33,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
   final _expiryController = TextEditingController();
   final _nameController = TextEditingController();
   final _cardController = TextEditingController();
-  Future<dynamic> _profileFuture;
+  Future<dynamic>? _profileFuture;
   int count = 0;
   bool isInitialLoad = true;
   bool _isLoading = false;
@@ -101,7 +101,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                             decoration: BoxDecoration(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(14.0)),
-                                border: Border.all(color: Colors.grey[300])),
+                                border: Border.all(color: Colors.grey[300]!)),
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(
                                   16.0, 20.0, 16.0, 20.0),
@@ -126,7 +126,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                         labelText: "Credit Card Number",
                                         enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
-                                                color: Colors.grey[300]),
+                                                color: Colors.grey[300]!),
                                             borderRadius:
                                                 BorderRadius.circular(5.0)),
                                         border: OutlineInputBorder(
@@ -148,7 +148,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                         labelText: "Name On Card",
                                         enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
-                                                color: Colors.grey[300]),
+                                                color: Colors.grey[300]!),
                                             borderRadius:
                                                 BorderRadius.circular(5.0)),
                                         border: OutlineInputBorder(
@@ -188,7 +188,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                               ),
                                               enabledBorder: OutlineInputBorder(
                                                   borderSide: BorderSide(
-                                                      color: Colors.grey[300]),
+                                                      color: Colors.grey[300]!),
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           5.0)),
@@ -223,7 +223,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                               labelText: "CVV",
                                               enabledBorder: OutlineInputBorder(
                                                   borderSide: BorderSide(
-                                                      color: Colors.grey[300]),
+                                                      color: Colors.grey[300]!),
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           5.0)),
@@ -333,7 +333,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
       );
       return false;
     } else if (_cardNumberKey.currentState == null ||
-        !_cardNumberKey.currentState.validate()) {
+        !_cardNumberKey.currentState!.validate()) {
       Widgets.showErrorialog(
         context: context,
         description: 'Please enter a valid card number',
@@ -346,7 +346,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
       );
       return false;
     } else if (_cardNameKey.currentState == null ||
-        !_cardNameKey.currentState.validate()) {
+        !_cardNameKey.currentState!.validate()) {
       Widgets.showErrorialog(
         context: context,
         description: "Card holder name can't be empty",
@@ -359,7 +359,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
       );
       return false;
     } else if (_expiryDateKey.currentState == null ||
-        !_expiryDateKey.currentState.validate()) {
+        !_expiryDateKey.currentState!.validate()) {
       Widgets.showErrorialog(
         context: context,
         description: 'Please enter the valid expiry date',
@@ -372,7 +372,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
       );
       return false;
     } else if (_cvvKey.currentState == null ||
-        !_cvvKey.currentState.validate()) {
+        !_cvvKey.currentState!.validate()) {
       Widgets.showErrorialog(
         context: context,
         description: 'Please enter a valid CVV',

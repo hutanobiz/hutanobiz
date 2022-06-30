@@ -14,26 +14,26 @@ import 'package:hutano/screens/pharmacy/model/res_preferred_pharmacy_list.dart';
 
 class HealthConditionProvider extends ChangeNotifier {
   List<int> healthConditions = [];
-  Vitals vitalsData;
-  PreferredPharmacy preferredPharmacyData;
+  Vitals? vitalsData;
+  PreferredPharmacy? preferredPharmacyData;
   List<DiagnosticTest> medicalDiagnosticsTestsModelData = [];
   List<DocImg.MedicalDocuments> medicalDocumentsData = [];
   List<DocImg.MedicalImages> medicalImagesData = [];
   String providerId = "";
-  String officeId = "";
+  String? officeId = "";
   List<BookedMedicalHistory> medicalHistoryData = [];
   List<String> medicationData = [];
-  LatLng coordinatesDetails;
-  ResponseDetailsDetails addressDetails;
+  LatLng? coordinatesDetails;
+  ResponseDetailsDetails? addressDetails;
   List<SelectionHealthIssueModel> listOfSelectedHealthIssues = [];
   int currentIndexOfIssue = 0;
   List<Problems> allHealthIssuesData = [];
   String providerAddress = "";
   List<Medications> medicationModelData = [];
-  SocialHistory socialHistory;
-  List<Allergy> allergies = [];
-  List<ReqMedicationDetail> medicines = [];
-  Pharmacy prefPharmacy;
+  SocialHistory? socialHistory;
+  List<Allergy>? allergies = [];
+  List<ReqMedicationDetail?> medicines = [];
+  Pharmacy? prefPharmacy;
   dynamic previousAppointment;
 
   void updateHealthConditions(List<int> list) {
@@ -47,7 +47,7 @@ class HealthConditionProvider extends ChangeNotifier {
   }
 
   void setMedicineDetails({
-    ReqMedicationDetail medicine,
+    ReqMedicationDetail? medicine,
   }) {
     medicines.add(medicine);
     notifyListeners();
@@ -58,7 +58,7 @@ class HealthConditionProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updatePharmacy(PreferredPharmacy preferredPharmacy, Pharmacy pharmacy) {
+  void updatePharmacy(PreferredPharmacy preferredPharmacy, Pharmacy? pharmacy) {
     preferredPharmacyData = preferredPharmacy;
     prefPharmacy = pharmacy;
     notifyListeners();
@@ -89,7 +89,7 @@ class HealthConditionProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateOfficeId(String offId) {
+  void updateOfficeId(String? offId) {
     officeId = offId;
     notifyListeners();
   }
@@ -109,7 +109,7 @@ class HealthConditionProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateAllergies(List<Allergy> allergiesData) {
+  void updateAllergies(List<Allergy>? allergiesData) {
     allergies = allergiesData;
     notifyListeners();
   }

@@ -9,9 +9,9 @@ class BlueButton extends StatelessWidget {
   final VoidCallback onPress;
 
   const BlueButton({
-    Key key,
-    @required this.title,
-    @required this.onPress,
+    Key? key,
+    required this.title,
+    required this.onPress,
   }) : super(key: key);
 
   @override

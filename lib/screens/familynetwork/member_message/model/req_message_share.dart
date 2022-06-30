@@ -1,6 +1,6 @@
 class ReqMessageShare {
-  final String phoneNumber;
-  final String message;
+  final String? phoneNumber;
+  final String? message;
   ReqMessageShare({
     this.phoneNumber,
     this.message,

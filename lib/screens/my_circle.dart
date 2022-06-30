@@ -16,13 +16,13 @@ class MyCircle extends StatefulWidget {
 
 class _MyCircleState extends State<MyCircle>
     with SingleTickerProviderStateMixin {
-  TabController _tabController;
-  List tabs;
+  TabController? _tabController;
+  late List tabs;
   int _currentIndex = 0;
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _tabController!.dispose();
     super.dispose();
   }
 
@@ -30,12 +30,12 @@ class _MyCircleState extends State<MyCircle>
     super.initState();
     tabs = ['Providers', 'Family'];
     _tabController = TabController(length: tabs.length, vsync: this);
-    _tabController.addListener(_handleTabControllerTick);
+    _tabController!.addListener(_handleTabControllerTick);
   }
 
   void _handleTabControllerTick() {
     setState(() {
-      _currentIndex = _tabController.index;
+      _currentIndex = _tabController!.index;
     });
   }
 
@@ -45,7 +45,7 @@ class _MyCircleState extends State<MyCircle>
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackgroundNew(
-        title: Localization.of(context).appointments,
+        title: Localization.of(context)!.appointments,
         isAddBack: false,
         padding: EdgeInsets.all(0),
         addHeader: true,
@@ -104,11 +104,11 @@ class _MyCircleState extends State<MyCircle>
                       text,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          color: _tabController.index == index
+                          color: _tabController!.index == index
                               ? AppColors.windsor
                               : colorBlack2,
                           fontSize: fontSize14,
-                          fontWeight: _tabController.index == index
+                          fontWeight: _tabController!.index == index
                               ? fontWeightMedium
                               : fontWeightRegular),
                     )

@@ -9,21 +9,21 @@ import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/widgets.dart';
 
 class InsuranceListScreen extends StatefulWidget {
-  final Map insuranceMap;
-  InsuranceListScreen({Key key, this.insuranceMap}) : super(key: key);
+  final Map? insuranceMap;
+  InsuranceListScreen({Key? key, this.insuranceMap}) : super(key: key);
 
   @override
   _InsuranceListScreenState createState() => _InsuranceListScreenState();
 }
 
 class _InsuranceListScreenState extends State<InsuranceListScreen> {
-  int _radioValue;
+  int? _radioValue;
 
-  Future<List<dynamic>> _insuranceFuture;
+  Future<List<dynamic>>? _insuranceFuture;
   ApiBaseHelper _api = ApiBaseHelper();
-  InheritedContainerState _container;
+  late InheritedContainerState _container;
   Map _insuranceViewMap = {};
-  List _providerInsuranceList = [];
+  List? _providerInsuranceList = [];
   List _alreadyAddedInsuranceList = [];
   List _notAcceptednsuranceList = [];
   List<dynamic> searchList = [];
@@ -31,24 +31,24 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
   String _searchText = '';
   dynamic selectedInsurance;
 
-  bool isFromRegister = false;
+  bool? isFromRegister = false;
 
   @override
   void initState() {
     super.initState();
 
-    if (widget.insuranceMap['isFromRegister'] != null) {
-      isFromRegister = widget.insuranceMap['isFromRegister'];
+    if (widget.insuranceMap!['isFromRegister'] != null) {
+      isFromRegister = widget.insuranceMap!['isFromRegister'];
     }
 
     _insuranceViewMap['isFromRegister'] = isFromRegister;
 
-    _insuranceViewMap['isPayment'] = widget.insuranceMap['isPayment'];
+    _insuranceViewMap['isPayment'] = widget.insuranceMap!['isPayment'];
     _insuranceViewMap['isViewDetail'] = false;
 
-    if (widget.insuranceMap['insuranceList'] != null &&
-        widget.insuranceMap['insuranceList'].isNotEmpty) {
-      for (dynamic insurance in widget.insuranceMap['insuranceList']) {
+    if (widget.insuranceMap!['insuranceList'] != null &&
+        widget.insuranceMap!['insuranceList'].isNotEmpty) {
+      for (dynamic insurance in widget.insuranceMap!['insuranceList']) {
         _alreadyAddedInsuranceList.add(insurance['insuranceId'].toString());
       }
     }
@@ -90,13 +90,13 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
       backgroundColor: AppColors.goldenTainoi,
       body: LoadingBackgroundNew(
         addHeader: true,
-        title: !_insuranceViewMap['isPayment'] && isFromRegister
+        title: !_insuranceViewMap['isPayment'] && isFromRegister!
             ? 'Add Insurance'
             : "Insurances",
         color: Colors.white,
         padding: EdgeInsets.zero,
         rightButtonText: 'Skip',
-        onRightButtonTap: !_insuranceViewMap['isPayment'] && isFromRegister
+        onRightButtonTap: !_insuranceViewMap['isPayment'] && isFromRegister!
             ? () {
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     Routes.dashboardScreen, (Route<dynamic> route) => false,
@@ -196,7 +196,7 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
 
           for (dynamic insurance in snapshot.data) {
             if (_insuranceViewMap['isPayment']) {
-              if (_providerInsuranceList
+              if (_providerInsuranceList!
                   .contains(insurance['_id'].toString())) {
                 insuranceList.add(insurance);
               } else {
@@ -304,7 +304,7 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
   }
 
   Widget insuranceWidget(dynamic insurance, int index,
-      {bool isAcceptedByProvider}) {
+      {required bool isAcceptedByProvider}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -343,7 +343,9 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
               ? insuranceList.indexOf(selectedInsurance)
               : searchList.indexOf(selectedInsurance),
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          onChanged: _insuranceAlreadyAdded(insurance),
+          onChanged: (v) {
+            _insuranceAlreadyAdded(insurance);
+          },
         ),
       );
 

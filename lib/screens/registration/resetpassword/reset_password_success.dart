@@ -17,7 +17,7 @@ class ResetPasswordSuccess extends StatelessWidget {
         buttonType: HutanoButtonType.onlyLabel,
         color: colorYellow,
         iconSize: 20,
-        label: Localization.of(context).logIn,
+        label: Localization.of(context)!.logIn,
         onPressed: () {
           _nextClick(context);
         },
@@ -41,8 +41,8 @@ class ResetPasswordSuccess extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               AppHeader(
-                title: Localization.of(context).passwordReset,
-                subTitle: Localization.of(context).taskComplete,
+                title: Localization.of(context)!.passwordReset,
+                subTitle: Localization.of(context)!.taskComplete,
               ),
               Spacer(),
               RoundSuccess(),

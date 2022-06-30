@@ -1,7 +1,7 @@
 class ResDocumentList {
   List<Document> documents = [];
-  int count;
-  ResDocumentList.fromJson(Map<String, dynamic> json) {
+  int? count;
+  ResDocumentList.fromJson(Map<String, dynamic>? json) {
     if (json != null) {
       count = json['count'];
       json['data'][0]['medicalDocuments'].forEach((element) {
@@ -12,11 +12,11 @@ class ResDocumentList {
 }
 
 class Document {
-  String id;
-  String medicalDocuments;
-  String type;
-  String name;
-  String date;
+  String? id;
+  String? medicalDocuments;
+  String? type;
+  String? name;
+  String? date;
   Document.fromJson(Map<String, dynamic> json) {
     if (json != null){
       medicalDocuments = json['medicalDocuments'];

@@ -16,14 +16,14 @@ class EmailTextField extends StatelessWidget {
     this.autoValidate,
   });
 
-  final TextStyle style;
-  final TextEditingController emailController;
-  final Widget suffixIcon;
-  final Widget prefixIcon;
-  final GlobalKey<FormFieldState> emailKey;
+  final TextStyle? style;
+  final TextEditingController? emailController;
+  final Widget? suffixIcon;
+  final Widget? prefixIcon;
+  final GlobalKey<FormFieldState>? emailKey;
   final bool isEnabled, autofocus;
-  final String initialValue;
-  final AutovalidateMode autoValidate;
+  final String? initialValue;
+  final AutovalidateMode? autoValidate;
 
   @override
   Widget build(BuildContext context) {
@@ -41,14 +41,14 @@ class EmailTextField extends StatelessWidget {
       decoration: InputDecoration(
         labelStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
         labelText: Strings.emailText,
-        suffixIcon: emailController.text.isNotEmpty &&
-                emailKey.currentState != null &&
-                emailKey.currentState.validate()
+        suffixIcon: emailController!.text.isNotEmpty &&
+                emailKey!.currentState != null &&
+                emailKey!.currentState!.validate()
             ? suffixIcon
             : null,
         prefixIcon: prefixIcon != null ? prefixIcon : null,
         enabledBorder:
-            OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300])),
+            OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300]!)),
         border: OutlineInputBorder(),
       ),
     );

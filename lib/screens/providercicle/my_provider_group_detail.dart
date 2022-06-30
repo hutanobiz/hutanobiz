@@ -40,17 +40,17 @@ import 'provider_search/location_service.dart';
 import '../../utils/extensions.dart';
 
 class MyProviderGroupDetail extends StatefulWidget {
-  MyProviderGroupDetail({Key key, this.providerGroup}) : super(key: key);
-  ProviderNetwork providerGroup;
+  MyProviderGroupDetail({Key? key, this.providerGroup}) : super(key: key);
+  ProviderNetwork? providerGroup;
   @override
   _MyProviderGroupDetailState createState() => _MyProviderGroupDetailState();
 }
 
 class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
-  ProviderGroupList _providerGroup;
-  List<FamilyNetwork> _memberList = [];
-  ReqRemoveProvider _removeProvider;
-  String _shareMessage;
+  late ProviderGroupList _providerGroup;
+  List<FamilyNetwork>? _memberList = [];
+  late ReqRemoveProvider _removeProvider;
+  String? _shareMessage;
   bool fromHome = true;
   bool isInitlized = false;
   var locationData;
@@ -60,7 +60,7 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
   @override
   void initState() {
     super.initState();
-    fromHome = widget.providerGroup.isSelected;
+    fromHome = widget.providerGroup!.isSelected;
     locationData = LocationService().getLocationData();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _getMyProviderGroupList();
@@ -74,7 +74,7 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
     try {
       var res = await ApiManager().getFamilyNetowrk(request);
       setState(() {
-        _memberList = res.response.familyNetwork;
+        _memberList = res.response!.familyNetwork;
       });
     } on ErrorModel catch (e) {
       print(e.response);
@@ -93,7 +93,7 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
 
   onShare(int index, int subIndex) async {
     ProgressDialogUtils.showProgressDialog(context);
-    final id = _providerGroup.doctor[subIndex].sId;
+    final id = _providerGroup.doctor![subIndex].sId;
     // _providerGroup.providerNetwork.doctorId[subIndex];
     final request = ReqShareProvider(doctorId: id);
     try {
@@ -103,7 +103,7 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
       _onShareClick();
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -112,14 +112,14 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
   onRemove(int index, int subIndex) async {
     _removeProvider = ReqRemoveProvider(
         doctorId: _providerGroup
-            .doctor[subIndex].sId, // .providerNetwork.doctorId[subIndex],
-        groupId: _providerGroup.providerNetwork.sId,
+            .doctor![subIndex].sId, // .providerNetwork.doctorId[subIndex],
+        groupId: _providerGroup.providerNetwork!.sId,
         userId: getString(PreferenceKey.id));
 
-    var name = _providerGroup.doctor[0].fullName;
+    var name = _providerGroup.doctor![0].fullName;
 
     Widgets.showConfirmationDialog(
-        context: navigatorKey.currentState.overlay.context,
+        context: navigatorKey.currentState!.overlay!.context,
         description: "Are you sure you want to remove \n Dr. ${name} ?",
         title: "",
         leftText: "Remove",
@@ -129,7 +129,7 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
 
   onMakeAppointment(int index, int subIndex) {
     Navigator.of(context).pushNamed(Routes.providerProfileScreen,
-        arguments: _providerGroup.doctor[subIndex]
+        arguments: _providerGroup.doctor![subIndex]
             .sId); // _providerGroup.providerNetwork.doctorId[subIndex]);
   }
 
@@ -137,13 +137,13 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
     ProgressDialogUtils.showProgressDialog(context);
     try {
       var res = await ApiManager().removeProvider(_removeProvider);
-      _providerGroup.docInfo.removeAt(subIndex);
-      _providerGroup.doctor.removeAt(subIndex);
+      _providerGroup.docInfo!.removeAt(subIndex);
+      _providerGroup.doctor!.removeAt(subIndex);
       setState(() {});
       ProgressDialogUtils.dismissProgressDialog();
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -158,8 +158,8 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
       ProgressDialogUtils.dismissProgressDialog();
       isInitlized = true;
       setState(() {
-        for (var ii in res.response.data) {
-          if (ii.providerNetwork.sId == widget.providerGroup.sId) {
+        for (var ii in res.response!.data!) {
+          if (ii.providerNetwork!.sId == widget.providerGroup!.sId) {
             _providerGroup = ii;
             break;
           }
@@ -167,7 +167,7 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
       });
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -191,7 +191,7 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
     return Scaffold(
         backgroundColor: fromHome ? AppColors.goldenTainoi : Colors.white,
         body: LoadingBackgroundNew(
-          title: widget.providerGroup.groupName,
+          title: widget.providerGroup!.groupName,
           padding: EdgeInsets.all(0),
           isAddBack: fromHome,
           addHeader: fromHome, // !fromHome,
@@ -256,7 +256,7 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
                       return SizedBox(height: spacing15);
                     },
                     shrinkWrap: true,
-                    itemCount: _providerGroup.docInfo.length,
+                    itemCount: _providerGroup.docInfo!.length,
                     itemBuilder: (_, position) {
                       return Provider.ItemProviderDetail(
                           providerDetail: _getProviderDetail(0, position),
@@ -274,8 +274,8 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
   }
 
   _getProviderDetail(index, subIndex) {
-    final doctorData = _providerGroup.doctor[subIndex];
-    final doctorProfessionInfo = _providerGroup.docInfo[subIndex];
+    final doctorData = _providerGroup.doctor![subIndex];
+    final doctorProfessionInfo = _providerGroup.docInfo![subIndex];
 
     final avatar = doctorData.avatar ?? "";
     final rating = doctorProfessionInfo.averageRating;
@@ -284,7 +284,7 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
     var name = doctorData.fullName ?? "";
     // name = '$name , ${occupation.getInitials()}';
 
-    final experience = doctorProfessionInfo.practicingSince.getYearCount();
+    final experience = doctorProfessionInfo.practicingSince!.getYearCount();
 
     return ProviderDetail(
         image: avatar,
@@ -304,7 +304,7 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
       _onShareClick();
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -373,7 +373,7 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
           errorBuilder: (_, object) {
             return Container();
           },
-          itemBuilder: (context, suggestion) {
+          itemBuilder: (context, dynamic suggestion) {
             return ItemProviderDetail(
               providerDetail: suggestion,
               
@@ -382,7 +382,7 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
           transitionBuilder: (context, suggestionsBox, controller) {
             return suggestionsBox;
           },
-          onSuggestionSelected: (suggestion) {
+          onSuggestionSelected: (dynamic suggestion) {
             seachProviderController.text = "";
             _addGroup(suggestion.userId);
           },
@@ -400,7 +400,7 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
     }
 
     var res = await ApiManager().searchProvider(param);
-    return res.response.doctorData;
+    return res.response!.doctorData!;
   }
 
   void _addGroup(doctorId) async {
@@ -408,7 +408,7 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
     final request = ReqAddProvider(
         doctorId: doctorId,
         userId: getString(PreferenceKey.id),
-        groupId: widget.providerGroup.sId);
+        groupId: widget.providerGroup!.sId);
     try {
       var res = await ApiManager().addProviderNetwork(request);
       ProgressDialogUtils.dismissProgressDialog();
@@ -421,7 +421,7 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
           });
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }

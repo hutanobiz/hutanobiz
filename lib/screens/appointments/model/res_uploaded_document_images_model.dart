@@ -1,6 +1,6 @@
 class ResUploadedDocumentImagesModel {
-  String status;
-  Response response;
+  String? status;
+  Response? response;
 
   ResUploadedDocumentImagesModel({this.status, this.response});
 
@@ -15,26 +15,26 @@ class ResUploadedDocumentImagesModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     if (this.response != null) {
-      data['response'] = this.response.toJson();
+      data['response'] = this.response!.toJson();
     }
     return data;
   }
 }
 
 class Response {
-  int otherMedicalHistory;
-  String sId;
-  List<String> medicalHistory;
-  String userId;
-  List<UserAddress> userAddress;
-  List<MedicalImages> medicalImages;
-  List<MedicalDocuments> medicalDocuments;
-  String createdAt;
-  String updatedAt;
-  int iV;
-  List<Medications> medications;
-  List<String> medicalDiagnostics;
-  List<String> preferredPharmacy;
+  int? otherMedicalHistory;
+  String? sId;
+  List<String>? medicalHistory;
+  String? userId;
+  List<UserAddress>? userAddress;
+  List<MedicalImages>? medicalImages;
+  List<MedicalDocuments>? medicalDocuments;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
+  List<Medications>? medications;
+  List<String>? medicalDiagnostics;
+  List<String>? preferredPharmacy;
 
   Response(
       {this.otherMedicalHistory,
@@ -57,30 +57,30 @@ class Response {
     medicalHistory = json['medicalHistory'].cast<String>();
     userId = json['userId'];
     if (json['userAddress'] != null) {
-      userAddress = new List<UserAddress>();
+      userAddress = <UserAddress>[];
       json['userAddress'].forEach((v) {
-        userAddress.add(new UserAddress.fromJson(v));
+        userAddress!.add(new UserAddress.fromJson(v));
       });
     }
     if (json['medicalImages'] != null) {
-      medicalImages = new List<MedicalImages>();
+      medicalImages = <MedicalImages>[];
       json['medicalImages'].forEach((v) {
-        medicalImages.add(new MedicalImages.fromJson(v));
+        medicalImages!.add(new MedicalImages.fromJson(v));
       });
     }
     if (json['medicalDocuments'] != null) {
-      medicalDocuments = new List<MedicalDocuments>();
+      medicalDocuments = <MedicalDocuments>[];
       json['medicalDocuments'].forEach((v) {
-        medicalDocuments.add(new MedicalDocuments.fromJson(v));
+        medicalDocuments!.add(new MedicalDocuments.fromJson(v));
       });
     }
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     iV = json['__v'];
     if (json['medications'] != null) {
-      medications = new List<Medications>();
+      medications = <Medications>[];
       json['medications'].forEach((v) {
-        medications.add(new Medications.fromJson(v));
+        medications!.add(new Medications.fromJson(v));
       });
     }
     medicalDiagnostics = json['medicalDiagnostics'].cast<String>();
@@ -94,21 +94,21 @@ class Response {
     data['medicalHistory'] = this.medicalHistory;
     data['userId'] = this.userId;
     if (this.userAddress != null) {
-      data['userAddress'] = this.userAddress.map((v) => v.toJson()).toList();
+      data['userAddress'] = this.userAddress!.map((v) => v.toJson()).toList();
     }
     if (this.medicalImages != null) {
       data['medicalImages'] =
-          this.medicalImages.map((v) => v.toJson()).toList();
+          this.medicalImages!.map((v) => v.toJson()).toList();
     }
     if (this.medicalDocuments != null) {
       data['medicalDocuments'] =
-          this.medicalDocuments.map((v) => v.toJson()).toList();
+          this.medicalDocuments!.map((v) => v.toJson()).toList();
     }
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
     data['__v'] = this.iV;
     if (this.medications != null) {
-      data['medications'] = this.medications.map((v) => v.toJson()).toList();
+      data['medications'] = this.medications!.map((v) => v.toJson()).toList();
     }
     data['medicalDiagnostics'] = this.medicalDiagnostics;
     data['preferredPharmacy'] = this.preferredPharmacy;
@@ -117,19 +117,19 @@ class Response {
 }
 
 class UserAddress {
-  String title;
-  int addresstype;
-  String address;
-  String street;
-  String city;
-  String state;
-  String stateCode;
-  String zipCode;
-  String type;
-  List<int> coordinates;
-  String sId;
-  String number;
-  String securityGate;
+  String? title;
+  int? addresstype;
+  String? address;
+  String? street;
+  String? city;
+  String? state;
+  String? stateCode;
+  String? zipCode;
+  String? type;
+  List<int>? coordinates;
+  String? sId;
+  String? number;
+  String? securityGate;
 
   UserAddress(
       {this.title,
@@ -182,10 +182,10 @@ class UserAddress {
 }
 
 class MedicalImages {
-  String images;
-  String name;
-  String date;
-  String sId;
+  String? images;
+  String? name;
+  String? date;
+  String? sId;
 
   MedicalImages({this.images, this.name, this.date, this.sId});
 
@@ -207,11 +207,11 @@ class MedicalImages {
 }
 
 class MedicalDocuments {
-  String medicalDocuments;
-  String type;
-  String name;
-  String date;
-  String sId;
+  String? medicalDocuments;
+  String? type;
+  String? name;
+  String? date;
+  String? sId;
 
   MedicalDocuments(
       {this.medicalDocuments, this.type, this.name, this.date, this.sId});
@@ -236,11 +236,11 @@ class MedicalDocuments {
 }
 
 class Medications {
-  String prescriptionId;
-  String name;
-  String dose;
-  String frequency;
-  String sId;
+  String? prescriptionId;
+  String? name;
+  String? dose;
+  String? frequency;
+  String? sId;
 
   Medications(
       {this.prescriptionId, this.name, this.dose, this.frequency, this.sId});

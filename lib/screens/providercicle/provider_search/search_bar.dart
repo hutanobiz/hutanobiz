@@ -5,9 +5,9 @@ import 'package:hutano/utils/constants/file_constants.dart';
 import 'package:hutano/utils/localization/localization.dart';
 
 class SearchBar extends StatelessWidget {
-  final TextEditingController controller;
-  final Function onSearch;
-  SearchBar({Key key, this.controller, this.onSearch}) : super(key: key);
+  final TextEditingController? controller;
+  final Function? onSearch;
+  SearchBar({Key? key, this.controller, this.onSearch}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class SearchBar extends StatelessWidget {
                   padding: const EdgeInsets.all(spacing8),
                   child: Image.asset(FileConstants.icSearchBlack,
                       color: colorBlack2, width: 20, height: 20))),
-          hintText: Localization.of(context).search,
+          hintText: Localization.of(context)!.search,
           isDense: true,
           hintStyle: TextStyle(
               color: colorBlack2,
@@ -50,12 +50,12 @@ class SearchBar extends StatelessWidget {
         ),
         onChanged: (val) {
           // if (val.length > 0) {
-          onSearch();
+          onSearch!();
           // }
         },
         onFieldSubmitted: (val) {
-          FocusManager.instance.primaryFocus.unfocus();
-          onSearch();
+          FocusManager.instance.primaryFocus!.unfocus();
+          onSearch!();
         },
       ),
     );

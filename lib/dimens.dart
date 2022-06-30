@@ -14,7 +14,7 @@
 
 import 'package:flutter/material.dart';
 
-Size screenSize;
+late Size screenSize;
 const spacing2 = 2.0;
 const spacing4 = 4.0;
 const spacing5 = 5.0;

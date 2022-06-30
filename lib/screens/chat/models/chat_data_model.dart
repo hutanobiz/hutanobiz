@@ -1,15 +1,15 @@
 class MessagesData {
-  String status;
-  List<Message> response;
+  String? status;
+  List<Message>? response;
 
   MessagesData({this.status, this.response});
 
   MessagesData.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     if (json['response'] != null) {
-      response = new List<Message>();
+      response = <Message>[];
       json['response'].forEach((v) {
-        response.add(new Message.fromJson(v));
+        response!.add(new Message.fromJson(v));
       });
     }
   }
@@ -18,21 +18,21 @@ class MessagesData {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     if (this.response != null) {
-      data['response'] = this.response.map((v) => v.toJson()).toList();
+      data['response'] = this.response!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Message {
-  String message;
-  String sId;
-  String sender;
-  String receiver;
-  String appointmentId;
-  String createdAt;
-  String updatedAt;
-  int iV;
+  String? message;
+  String? sId;
+  String? sender;
+  String? receiver;
+  String? appointmentId;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
 
   Message(
       {this.message,

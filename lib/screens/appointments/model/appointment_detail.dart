@@ -1,8 +1,8 @@
 class AppointmentData {
-  List<Medications> medications;
-  PreferredPhramacy pharmacy;
-  List<AppointmentProblems> appointmentProblems;
-  List<DoctorFeedback> doctorFeedback;
+  List<Medications>? medications;
+  PreferredPhramacy? pharmacy;
+  List<AppointmentProblems>? appointmentProblems;
+  List<DoctorFeedback>? doctorFeedback;
 
   AppointmentData(
       {this.pharmacy,
@@ -16,21 +16,21 @@ class AppointmentData {
         : null;
 
     if (json['medications'] != null) {
-      medications = new List<Medications>();
+      medications = [];
       json['medications'].forEach((v) {
-        medications.add(new Medications.fromJson(v));
+        medications!.add(new Medications.fromJson(v));
       });
     }
     if (json['appointmentProblems'] != null) {
-      appointmentProblems = new List<AppointmentProblems>();
+      appointmentProblems = [];
       json['appointmentProblems'].forEach((v) {
-        appointmentProblems.add(new AppointmentProblems.fromJson(v));
+        appointmentProblems!.add(new AppointmentProblems.fromJson(v));
       });
     }
     if (json['doctorFeedBack'] != null) {
-      doctorFeedback = new List<DoctorFeedback>();
+      doctorFeedback = <DoctorFeedback>[];
       json['doctorFeedBack'].forEach((v) {
-        doctorFeedback.add(new DoctorFeedback.fromJson(v));
+        doctorFeedback!.add(new DoctorFeedback.fromJson(v));
       });
     }
   }
@@ -39,15 +39,15 @@ class AppointmentData {
     final Map<String, dynamic> data = new Map<String, dynamic>();
 
     if (this.pharmacy != null) {
-      data['pharmacy'] = this.pharmacy.toJson();
+      data['pharmacy'] = this.pharmacy!.toJson();
     }
 
     if (this.medications != null) {
-      data['medications'] = this.medications.map((v) => v.toJson()).toList();
+      data['medications'] = this.medications!.map((v) => v.toJson()).toList();
     }
     if (this.appointmentProblems != null) {
       data['appointmentProblems'] =
-          this.appointmentProblems.map((v) => v.toJson()).toList();
+          this.appointmentProblems!.map((v) => v.toJson()).toList();
     }
     // if (this.doctorFeedback != null) {
     //   data['doctorFeedback'] = this.doctorFeedback.toJson();
@@ -58,11 +58,11 @@ class AppointmentData {
 }
 
 class Medications {
-  String prescriptionId;
-  String name;
-  String dose;
-  String frequency;
-  String sId;
+  String? prescriptionId;
+  String? name;
+  String? dose;
+  String? frequency;
+  String? sId;
 
   Medications(
       {this.prescriptionId, this.name, this.dose, this.frequency, this.sId});
@@ -87,11 +87,11 @@ class Medications {
 }
 
 class Address {
-  String address;
-  String city;
-  String phone;
-  String state;
-  String zipCode;
+  String? address;
+  String? city;
+  String? phone;
+  String? state;
+  String? zipCode;
 
   Address({this.address, this.city, this.phone, this.state, this.zipCode});
 
@@ -115,26 +115,26 @@ class Address {
 }
 
 class AppointmentProblems {
-  String sId;
-  String name;
-  String image;
-  List<String> symptoms;
+  String? sId;
+  String? name;
+  String? image;
+  List<String>? symptoms;
   // List<Null> problemBetter;
   // List<Null> problemWorst;
-  int problemRating;
-  String dailyActivity;
+  int? problemRating;
+  String? dailyActivity;
   // Null isProblemImproving;
   // Null isTreatmentReceived;
-  String description;
-  String problemId;
-  List<BodyPart> bodyPart;
-  ProblemFacingTimeSpan problemFacingTimeSpan;
-  TreatmentReceived treatmentReceived;
-  String userId;
-  String appointmentId;
-  String createdAt;
-  String updatedAt;
-  int iV;
+  String? description;
+  String? problemId;
+  List<BodyPart>? bodyPart;
+  ProblemFacingTimeSpan? problemFacingTimeSpan;
+  TreatmentReceived? treatmentReceived;
+  String? userId;
+  String? appointmentId;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
 
   AppointmentProblems(
       {this.sId,
@@ -182,9 +182,9 @@ class AppointmentProblems {
     description = json['description'];
     problemId = json['problemId'];
     if (json['bodyPart'] != null) {
-      bodyPart = new List<BodyPart>();
+      bodyPart = <BodyPart>[];
       json['bodyPart'].forEach((v) {
-        bodyPart.add(new BodyPart.fromJson(v));
+        bodyPart!.add(new BodyPart.fromJson(v));
       });
     }
     problemFacingTimeSpan = json['problemFacingTimeSpan'] != null
@@ -220,13 +220,13 @@ class AppointmentProblems {
     data['description'] = this.description;
     data['problemId'] = this.problemId;
     if (this.bodyPart != null) {
-      data['bodyPart'] = this.bodyPart.map((v) => v.toJson()).toList();
+      data['bodyPart'] = this.bodyPart!.map((v) => v.toJson()).toList();
     }
     if (this.problemFacingTimeSpan != null) {
-      data['problemFacingTimeSpan'] = this.problemFacingTimeSpan.toJson();
+      data['problemFacingTimeSpan'] = this.problemFacingTimeSpan!.toJson();
     }
     if (this.treatmentReceived != null) {
-      data['treatmentReceived'] = this.treatmentReceived.toJson();
+      data['treatmentReceived'] = this.treatmentReceived!.toJson();
     }
     data['userId'] = this.userId;
     data['appointmentId'] = this.appointmentId;
@@ -238,9 +238,9 @@ class AppointmentProblems {
 }
 
 class BodyPart {
-  String name;
-  List<int> sides;
-  String sId;
+  String? name;
+  List<int>? sides;
+  String? sId;
 
   BodyPart({this.name, this.sides, this.sId});
 
@@ -260,8 +260,8 @@ class BodyPart {
 }
 
 class ProblemFacingTimeSpan {
-  String type;
-  String period;
+  String? type;
+  String? period;
 
   ProblemFacingTimeSpan({this.type, this.period});
 
@@ -279,9 +279,9 @@ class ProblemFacingTimeSpan {
 }
 
 class TreatmentReceived {
-  String type;
-  String period;
-  String typeOfCare;
+  String? type;
+  String? period;
+  String? typeOfCare;
 
   TreatmentReceived({this.type, this.period, this.typeOfCare});
 
@@ -301,27 +301,27 @@ class TreatmentReceived {
 }
 
 class DoctorFeedback {
-  String sId;
-  ImagingDetails imagingDetails;
-  LabDetails labDetails;
-  PrescriptionDetails prescriptionDetails;
-  Vitals vitals;
-  HeartAndLungs heartAndLungs;
-  Neurological neurological;
-  Musculoskeletal musculoskeletal;
-  SpecialTests specialTests;
-  AnthropometricMeasurements anthropometricMeasurements;
-  TherapeuticIntervention therapeuticIntervention;
-  String otherComments;
-  String appointmentId;
-  String doctorId;
-  ExerciseDetails exerciseDetails;
-  List<Education> education;
-  Integumentary integumentary;
-  Gait gait;
-  String createdAt;
-  String updatedAt;
-  int iV;
+  String? sId;
+  ImagingDetails? imagingDetails;
+  LabDetails? labDetails;
+  PrescriptionDetails? prescriptionDetails;
+  Vitals? vitals;
+  HeartAndLungs? heartAndLungs;
+  Neurological? neurological;
+  Musculoskeletal? musculoskeletal;
+  SpecialTests? specialTests;
+  AnthropometricMeasurements? anthropometricMeasurements;
+  TherapeuticIntervention? therapeuticIntervention;
+  String? otherComments;
+  String? appointmentId;
+  String? doctorId;
+  ExerciseDetails? exerciseDetails;
+  List<Education>? education;
+  Integumentary? integumentary;
+  Gait? gait;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
 
   DoctorFeedback(
       {this.sId,
@@ -386,9 +386,9 @@ class DoctorFeedback {
         : null;
 
     if (json['education'] != null) {
-      education = new List<Education>();
+      education = <Education>[];
       json['education'].forEach((v) {
-        education.add(new Education.fromJson(v));
+        education!.add(new Education.fromJson(v));
       });
     }
     integumentary = json['integumentary'] != null
@@ -405,51 +405,51 @@ class DoctorFeedback {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_id'] = this.sId;
     if (this.imagingDetails != null) {
-      data['imagingDetails'] = this.imagingDetails.toJson();
+      data['imagingDetails'] = this.imagingDetails!.toJson();
     }
     if (this.labDetails != null) {
-      data['labDetails'] = this.labDetails.toJson();
+      data['labDetails'] = this.labDetails!.toJson();
     }
     if (this.prescriptionDetails != null) {
-      data['prescriptionDetails'] = this.prescriptionDetails.toJson();
+      data['prescriptionDetails'] = this.prescriptionDetails!.toJson();
     }
     if (this.vitals != null) {
-      data['vitals'] = this.vitals.toJson();
+      data['vitals'] = this.vitals!.toJson();
     }
     if (this.heartAndLungs != null) {
-      data['heartAndLungs'] = this.heartAndLungs.toJson();
+      data['heartAndLungs'] = this.heartAndLungs!.toJson();
     }
     if (this.neurological != null) {
-      data['neurological'] = this.neurological.toJson();
+      data['neurological'] = this.neurological!.toJson();
     }
     if (this.musculoskeletal != null) {
-      data['musculoskeletal'] = this.musculoskeletal.toJson();
+      data['musculoskeletal'] = this.musculoskeletal!.toJson();
     }
     if (this.specialTests != null) {
-      data['specialTests'] = this.specialTests.toJson();
+      data['specialTests'] = this.specialTests!.toJson();
     }
     if (this.anthropometricMeasurements != null) {
       data['anthropometricMeasurements'] =
-          this.anthropometricMeasurements.toJson();
+          this.anthropometricMeasurements!.toJson();
     }
     if (this.therapeuticIntervention != null) {
-      data['therapeuticIntervention'] = this.therapeuticIntervention.toJson();
+      data['therapeuticIntervention'] = this.therapeuticIntervention!.toJson();
     }
     data['otherComments'] = this.otherComments;
     data['appointmentId'] = this.appointmentId;
     data['doctorId'] = this.doctorId;
     if (this.exerciseDetails != null) {
-      data['exerciseDetails'] = this.exerciseDetails.toJson();
+      data['exerciseDetails'] = this.exerciseDetails!.toJson();
     }
 
     if (this.education != null) {
-      data['education'] = this.education.map((v) => v.toJson()).toList();
+      data['education'] = this.education!.map((v) => v.toJson()).toList();
     }
     if (this.integumentary != null) {
-      data['integumentary'] = this.integumentary.toJson();
+      data['integumentary'] = this.integumentary!.toJson();
     }
     if (this.gait != null) {
-      data['gait'] = this.gait.toJson();
+      data['gait'] = this.gait!.toJson();
     }
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
@@ -459,9 +459,9 @@ class DoctorFeedback {
 }
 
 class ImagingDetails {
-  PreferredImagingCenters preferredImagingCenters;
-  String imagingInstructions;
-  List<Imagings> imagings;
+  PreferredImagingCenters? preferredImagingCenters;
+  String? imagingInstructions;
+  List<Imagings>? imagings;
 
   ImagingDetails(
       {this.preferredImagingCenters, this.imagingInstructions, this.imagings});
@@ -472,9 +472,9 @@ class ImagingDetails {
         : null;
     imagingInstructions = json['imagingInstructions'];
     if (json['imagings'] != null) {
-      imagings = new List<Imagings>();
+      imagings = <Imagings>[];
       json['imagings'].forEach((v) {
-        imagings.add(new Imagings.fromJson(v));
+        imagings!.add(new Imagings.fromJson(v));
       });
     }
   }
@@ -482,19 +482,19 @@ class ImagingDetails {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.preferredImagingCenters != null) {
-      data['preferredImagingCenters'] = this.preferredImagingCenters.toJson();
+      data['preferredImagingCenters'] = this.preferredImagingCenters!.toJson();
     }
     data['imagingInstructions'] = this.imagingInstructions;
     if (this.imagings != null) {
-      data['imagings'] = this.imagings.map((v) => v.toJson()).toList();
+      data['imagings'] = this.imagings!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class PreferredImagingCenters {
-  PreferredImagingCentersAddress address;
-  String name;
+  PreferredImagingCentersAddress? address;
+  String? name;
 
   PreferredImagingCenters({this.address, this.name});
 
@@ -508,7 +508,7 @@ class PreferredImagingCenters {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.address != null) {
-      data['address'] = this.address.toJson();
+      data['address'] = this.address!.toJson();
     }
     data['name'] = this.name;
     return data;
@@ -516,11 +516,11 @@ class PreferredImagingCenters {
 }
 
 class PreferredImagingCentersAddress {
-  String address;
-  String city;
-  String phone;
-  String state;
-  String zipCode;
+  String? address;
+  String? city;
+  String? phone;
+  String? state;
+  String? zipCode;
 
   PreferredImagingCentersAddress(
       {this.address, this.city, this.phone, this.state, this.zipCode});
@@ -545,8 +545,8 @@ class PreferredImagingCentersAddress {
 }
 
 class Imagings {
-  String name;
-  String sId;
+  String? name;
+  String? sId;
 
   Imagings({this.name, this.sId});
 
@@ -564,9 +564,9 @@ class Imagings {
 }
 
 class LabDetails {
-  PreferredLabs preferredLabs;
-  String labTestInstructions;
-  List<LabTests> labTests;
+  PreferredLabs? preferredLabs;
+  String? labTestInstructions;
+  List<LabTests>? labTests;
 
   LabDetails({this.preferredLabs, this.labTestInstructions, this.labTests});
 
@@ -576,9 +576,9 @@ class LabDetails {
         : null;
     labTestInstructions = json['labTestInstructions'];
     if (json['labTests'] != null) {
-      labTests = new List<LabTests>();
+      labTests = <LabTests>[];
       json['labTests'].forEach((v) {
-        labTests.add(new LabTests.fromJson(v));
+        labTests!.add(new LabTests.fromJson(v));
       });
     }
   }
@@ -586,19 +586,19 @@ class LabDetails {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.preferredLabs != null) {
-      data['preferredLabs'] = this.preferredLabs.toJson();
+      data['preferredLabs'] = this.preferredLabs!.toJson();
     }
     data['labTestInstructions'] = this.labTestInstructions;
     if (this.labTests != null) {
-      data['labTests'] = this.labTests.map((v) => v.toJson()).toList();
+      data['labTests'] = this.labTests!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class LabTests {
-  String name;
-  String sId;
+  String? name;
+  String? sId;
 
   LabTests({this.name, this.sId});
 
@@ -616,9 +616,9 @@ class LabTests {
 }
 
 class PreferredLabs {
-  Address address;
-  String labId;
-  String name;
+  Address? address;
+  String? labId;
+  String? name;
 
   PreferredLabs({this.address, this.labId, this.name});
 
@@ -632,7 +632,7 @@ class PreferredLabs {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.address != null) {
-      data['address'] = this.address.toJson();
+      data['address'] = this.address!.toJson();
     }
     data['labId'] = this.labId;
     data['name'] = this.name;
@@ -641,7 +641,7 @@ class PreferredLabs {
 }
 
 class PrescriptionDetails {
-  Pharmacy preferredPharmacy;
+  Pharmacy? preferredPharmacy;
   // List<Null> prescriptionDetails;
 
   PrescriptionDetails({
@@ -664,7 +664,7 @@ class PrescriptionDetails {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.preferredPharmacy != null) {
-      data['preferredPharmacy'] = this.preferredPharmacy.toJson();
+      data['preferredPharmacy'] = this.preferredPharmacy!.toJson();
     }
     // if (this.prescriptionDetails != null) {
     //   data['prescriptionDetails'] =
@@ -675,8 +675,8 @@ class PrescriptionDetails {
 }
 
 class Pharmacy {
-  PharmacyAddress address;
-  String name;
+  PharmacyAddress? address;
+  String? name;
 
   Pharmacy({this.address, this.name});
 
@@ -690,7 +690,7 @@ class Pharmacy {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.address != null) {
-      data['address'] = this.address.toJson();
+      data['address'] = this.address!.toJson();
     }
     data['name'] = this.name;
     return data;
@@ -698,11 +698,11 @@ class Pharmacy {
 }
 
 class PharmacyAddress {
-  String address;
-  String city;
-  String phone;
-  String state;
-  String zipCode;
+  String? address;
+  String? city;
+  String? phone;
+  String? state;
+  String? zipCode;
 
   PharmacyAddress(
       {this.address, this.city, this.phone, this.state, this.zipCode});
@@ -727,23 +727,23 @@ class PharmacyAddress {
 }
 
 class Vitals {
-  BloodPressureSummaryCompleted bloodPressureSummary;
-  BloodPressureSummaryCompleted heartRateSummary;
-  BloodPressureSummaryCompleted oxygenSaturationSummary;
-  BloodPressureSummaryCompleted temperatureSummary;
-  BloodPressureSummaryCompleted painSummary;
-  String bloodPressureDbp;
-  String bloodPressureSbp;
-  String date;
-  String heartRate;
-  String oxygenSaturation;
-  String temperature;
-  String height;
-  String weight;
-  String bmi;
-  String bloodGlucose;
-  String time;
-  String pain;
+  BloodPressureSummaryCompleted? bloodPressureSummary;
+  BloodPressureSummaryCompleted? heartRateSummary;
+  BloodPressureSummaryCompleted? oxygenSaturationSummary;
+  BloodPressureSummaryCompleted? temperatureSummary;
+  BloodPressureSummaryCompleted? painSummary;
+  String? bloodPressureDbp;
+  String? bloodPressureSbp;
+  String? date;
+  String? heartRate;
+  String? oxygenSaturation;
+  String? temperature;
+  String? height;
+  String? weight;
+  String? bmi;
+  String? bloodGlucose;
+  String? time;
+  String? pain;
 
   Vitals(
       {this.bloodPressureSummary,
@@ -799,19 +799,19 @@ class Vitals {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.bloodPressureSummary != null) {
-      data['bloodPressureSummary'] = this.bloodPressureSummary.toJson();
+      data['bloodPressureSummary'] = this.bloodPressureSummary!.toJson();
     }
     if (this.heartRateSummary != null) {
-      data['heartRateSummary'] = this.heartRateSummary.toJson();
+      data['heartRateSummary'] = this.heartRateSummary!.toJson();
     }
     if (this.oxygenSaturationSummary != null) {
-      data['oxygenSaturationSummary'] = this.oxygenSaturationSummary.toJson();
+      data['oxygenSaturationSummary'] = this.oxygenSaturationSummary!.toJson();
     }
     if (this.temperatureSummary != null) {
-      data['temperatureSummary'] = this.temperatureSummary.toJson();
+      data['temperatureSummary'] = this.temperatureSummary!.toJson();
     }
     if (this.painSummary != null) {
-      data['painSummary'] = this.painSummary.toJson();
+      data['painSummary'] = this.painSummary!.toJson();
     }
     data['bloodPressureDbp'] = this.bloodPressureDbp;
     data['bloodPressureSbp'] = this.bloodPressureSbp;
@@ -830,9 +830,9 @@ class Vitals {
 }
 
 class BloodPressureSummaryCompleted {
-  List<String> clinicalConcern;
-  List<String> treatment;
-  List<String> icd;
+  List<String>? clinicalConcern;
+  List<String>? treatment;
+  List<String>? icd;
 
   BloodPressureSummaryCompleted(
       {this.clinicalConcern, this.treatment, this.icd});
@@ -865,9 +865,9 @@ class BloodPressureSummaryCompleted {
 }
 
 class HeartAndLungs {
-  Heart heart;
-  Lung lung;
-  String discomfort;
+  Heart? heart;
+  Lung? lung;
+  String? discomfort;
 
   HeartAndLungs({this.heart, this.lung, this.discomfort});
 
@@ -880,10 +880,10 @@ class HeartAndLungs {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.heart != null) {
-      data['heart'] = this.heart.toJson();
+      data['heart'] = this.heart!.toJson();
     }
     if (this.lung != null) {
-      data['lung'] = this.lung.toJson();
+      data['lung'] = this.lung!.toJson();
     }
     data['discomfort'] = this.discomfort;
     return data;
@@ -891,11 +891,11 @@ class HeartAndLungs {
 }
 
 class Heart {
-  List<String> sound;
-  String type;
-  List<String> clinicalConcern;
-  List<String> treatment;
-  List<String> icd;
+  List<String?>? sound;
+  String? type;
+  List<String>? clinicalConcern;
+  List<String>? treatment;
+  List<String>? icd;
 
   Heart(
       {this.sound, this.type, this.clinicalConcern, this.treatment, this.icd});
@@ -932,10 +932,10 @@ class Heart {
 }
 
 class Lung {
-  List<String> clinicalConcern;
-  List<String> treatment;
-  List<String> icd;
-  List<Summary> summary;
+  List<String>? clinicalConcern;
+  List<String>? treatment;
+  List<String>? icd;
+  List<Summary>? summary;
 
   Lung({this.clinicalConcern, this.treatment, this.icd, this.summary});
 
@@ -956,9 +956,9 @@ class Lung {
       icd = [];
     }
     if (json['summary'] != null) {
-      summary = new List<Summary>();
+      summary = <Summary>[];
       json['summary'].forEach((v) {
-        summary.add(new Summary.fromJson(v));
+        summary!.add(new Summary.fromJson(v));
       });
     }
   }
@@ -969,16 +969,16 @@ class Lung {
     data['treatment'] = this.treatment;
     data['icd'] = this.icd;
     if (this.summary != null) {
-      data['summary'] = this.summary.map((v) => v.toJson()).toList();
+      data['summary'] = this.summary!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Summary {
-  String sound;
-  String type;
-  String sId;
+  String? sound;
+  String? type;
+  String? sId;
 
   Summary({this.sound, this.type, this.sId});
 
@@ -998,14 +998,14 @@ class Summary {
 }
 
 class Neurological {
-  List<String> clinicalConcern;
-  List<String> treatment;
-  List<String> icd;
-  List<SensoryDeficits> sensoryDeficits;
-  List<SensoryDeficits> dtrDeficits;
-  List<SensoryDeficits> strengthDeficits;
-  List<SensoryDeficits> romDeficits;
-  List<SensoryDeficits> positiveTests;
+  List<String>? clinicalConcern;
+  List<String>? treatment;
+  List<String>? icd;
+  List<SensoryDeficits>? sensoryDeficits;
+  List<SensoryDeficits>? dtrDeficits;
+  List<SensoryDeficits>? strengthDeficits;
+  List<SensoryDeficits>? romDeficits;
+  List<SensoryDeficits>? positiveTests;
 
   Neurological(
       {this.clinicalConcern,
@@ -1034,33 +1034,33 @@ class Neurological {
       icd = [];
     }
     if (json['sensoryDeficits'] != null) {
-      sensoryDeficits = new List<SensoryDeficits>();
+      sensoryDeficits = <SensoryDeficits>[];
       json['sensoryDeficits'].forEach((v) {
-        sensoryDeficits.add(new SensoryDeficits.fromJson(v));
+        sensoryDeficits!.add(new SensoryDeficits.fromJson(v));
       });
     }
     if (json['dtrDeficits'] != null) {
-      dtrDeficits = new List<SensoryDeficits>();
+      dtrDeficits = <SensoryDeficits>[];
       json['dtrDeficits'].forEach((v) {
-        dtrDeficits.add(new SensoryDeficits.fromJson(v));
+        dtrDeficits!.add(new SensoryDeficits.fromJson(v));
       });
     }
     if (json['strengthDeficits'] != null) {
-      strengthDeficits = new List<SensoryDeficits>();
+      strengthDeficits = <SensoryDeficits>[];
       json['strengthDeficits'].forEach((v) {
-        strengthDeficits.add(new SensoryDeficits.fromJson(v));
+        strengthDeficits!.add(new SensoryDeficits.fromJson(v));
       });
     }
     if (json['romDeficits'] != null) {
-      romDeficits = new List<SensoryDeficits>();
+      romDeficits = <SensoryDeficits>[];
       json['romDeficits'].forEach((v) {
-        romDeficits.add(new SensoryDeficits.fromJson(v));
+        romDeficits!.add(new SensoryDeficits.fromJson(v));
       });
     }
     if (json['positiveTests'] != null) {
-      positiveTests = new List<SensoryDeficits>();
+      positiveTests = <SensoryDeficits>[];
       json['positiveTests'].forEach((v) {
-        positiveTests.add(new SensoryDeficits.fromJson(v));
+        positiveTests!.add(new SensoryDeficits.fromJson(v));
       });
     }
   }
@@ -1072,30 +1072,30 @@ class Neurological {
     data['icd'] = this.icd;
     if (this.sensoryDeficits != null) {
       data['sensoryDeficits'] =
-          this.sensoryDeficits.map((v) => v.toJson()).toList();
+          this.sensoryDeficits!.map((v) => v.toJson()).toList();
     }
     if (this.dtrDeficits != null) {
-      data['dtrDeficits'] = this.dtrDeficits.map((v) => v.toJson()).toList();
+      data['dtrDeficits'] = this.dtrDeficits!.map((v) => v.toJson()).toList();
     }
     if (this.strengthDeficits != null) {
       data['strengthDeficits'] =
-          this.strengthDeficits.map((v) => v.toJson()).toList();
+          this.strengthDeficits!.map((v) => v.toJson()).toList();
     }
     if (this.romDeficits != null) {
-      data['romDeficits'] = this.romDeficits.map((v) => v.toJson()).toList();
+      data['romDeficits'] = this.romDeficits!.map((v) => v.toJson()).toList();
     }
     if (this.positiveTests != null) {
       data['positiveTests'] =
-          this.positiveTests.map((v) => v.toJson()).toList();
+          this.positiveTests!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class SensoryDeficits {
-  String type;
-  String deficits;
-  String sId;
+  String? type;
+  String? deficits;
+  String? sId;
 
   SensoryDeficits({this.type, this.deficits, this.sId});
 
@@ -1115,11 +1115,11 @@ class SensoryDeficits {
 }
 
 class Musculoskeletal {
-  List<String> clinicalConcern;
-  List<String> treatment;
-  List<String> icd;
-  List<Muscle> muscle;
-  List<Joint> joint;
+  List<String>? clinicalConcern;
+  List<String>? treatment;
+  List<String>? icd;
+  List<Muscle>? muscle;
+  List<Joint>? joint;
 
   Musculoskeletal(
       {this.clinicalConcern,
@@ -1145,15 +1145,15 @@ class Musculoskeletal {
       icd = [];
     }
     if (json['muscle'] != null) {
-      muscle = new List<Muscle>();
+      muscle = <Muscle>[];
       json['muscle'].forEach((v) {
-        muscle.add(new Muscle.fromJson(v));
+        muscle!.add(new Muscle.fromJson(v));
       });
     }
     if (json['joint'] != null) {
-      joint = new List<Joint>();
+      joint = <Joint>[];
       json['joint'].forEach((v) {
-        joint.add(new Joint.fromJson(v));
+        joint!.add(new Joint.fromJson(v));
       });
     }
   }
@@ -1164,21 +1164,21 @@ class Musculoskeletal {
     data['treatment'] = this.treatment;
     data['icd'] = this.icd;
     if (this.muscle != null) {
-      data['muscle'] = this.muscle.map((v) => v.toJson()).toList();
+      data['muscle'] = this.muscle!.map((v) => v.toJson()).toList();
     }
     if (this.joint != null) {
-      data['joint'] = this.joint.map((v) => v.toJson()).toList();
+      data['joint'] = this.joint!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Muscle {
-  String name;
-  String type;
-  String strength;
-  String functionalStrength;
-  String sId;
+  String? name;
+  String? type;
+  String? strength;
+  String? functionalStrength;
+  String? sId;
 
   Muscle(
       {this.name, this.type, this.strength, this.functionalStrength, this.sId});
@@ -1203,11 +1203,11 @@ class Muscle {
 }
 
 class Joint {
-  String name;
-  String type;
-  String rangeOfMotion;
-  String functionalRangeOfMotion;
-  String sId;
+  String? name;
+  String? type;
+  String? rangeOfMotion;
+  String? functionalRangeOfMotion;
+  String? sId;
 
   Joint(
       {this.name,
@@ -1236,10 +1236,10 @@ class Joint {
 }
 
 class SpecialTests {
-  List<String> clinicalConcern;
-  List<String> treatment;
-  List<String> icd;
-  List<TestsCompleted> tests;
+  List<String>? clinicalConcern;
+  List<String>? treatment;
+  List<String>? icd;
+  List<TestsCompleted>? tests;
 
   SpecialTests({this.clinicalConcern, this.treatment, this.icd, this.tests});
 
@@ -1260,9 +1260,9 @@ class SpecialTests {
       icd = [];
     }
     if (json['tests'] != null) {
-      tests = new List<TestsCompleted>();
+      tests = <TestsCompleted>[];
       json['tests'].forEach((v) {
-        tests.add(new TestsCompleted.fromJson(v));
+        tests!.add(new TestsCompleted.fromJson(v));
       });
     }
   }
@@ -1273,16 +1273,16 @@ class SpecialTests {
     data['treatment'] = this.treatment;
     data['icd'] = this.icd;
     if (this.tests != null) {
-      data['tests'] = this.tests.map((v) => v.toJson()).toList();
+      data['tests'] = this.tests!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class TestsCompleted {
-  String name;
-  String type;
-  String sId;
+  String? name;
+  String? type;
+  String? sId;
 
   TestsCompleted({this.name, this.type, this.sId});
 
@@ -1302,13 +1302,13 @@ class TestsCompleted {
 }
 
 class AnthropometricMeasurements {
-  Weight weight;
-  Height height;
-  Weight hip;
-  Weight waist;
-  Weight calf;
-  Weight arm;
-  String bmi;
+  Weight? weight;
+  Height? height;
+  Weight? hip;
+  Weight? waist;
+  Weight? calf;
+  Weight? arm;
+  String? bmi;
 
   AnthropometricMeasurements(
       {this.weight,
@@ -1334,22 +1334,22 @@ class AnthropometricMeasurements {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.weight != null) {
-      data['weight'] = this.weight.toJson();
+      data['weight'] = this.weight!.toJson();
     }
     if (this.height != null) {
-      data['height'] = this.height.toJson();
+      data['height'] = this.height!.toJson();
     }
     if (this.hip != null) {
-      data['hip'] = this.hip.toJson();
+      data['hip'] = this.hip!.toJson();
     }
     if (this.waist != null) {
-      data['waist'] = this.waist.toJson();
+      data['waist'] = this.waist!.toJson();
     }
     if (this.calf != null) {
-      data['calf'] = this.calf.toJson();
+      data['calf'] = this.calf!.toJson();
     }
     if (this.arm != null) {
-      data['arm'] = this.arm.toJson();
+      data['arm'] = this.arm!.toJson();
     }
     data['bmi'] = this.bmi;
     return data;
@@ -1357,8 +1357,8 @@ class AnthropometricMeasurements {
 }
 
 class Weight {
-  Goal goal;
-  String current;
+  Goal? goal;
+  String? current;
 
   Weight({this.goal, this.current});
 
@@ -1370,7 +1370,7 @@ class Weight {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.goal != null) {
-      data['goal'] = this.goal.toJson();
+      data['goal'] = this.goal!.toJson();
     }
     data['current'] = this.current;
     return data;
@@ -1378,11 +1378,11 @@ class Weight {
 }
 
 class Goal {
-  String achieve;
-  String unit;
-  String timeFrame;
-  String timeUnit;
-  List<String> improvements = [];
+  String? achieve;
+  String? unit;
+  String? timeFrame;
+  String? timeUnit;
+  List<String>? improvements = [];
 
   Goal(
       {this.achieve,
@@ -1413,8 +1413,8 @@ class Goal {
 }
 
 class Height {
-  String feet;
-  String inches;
+  String? feet;
+  String? inches;
 
   Height({this.feet, this.inches});
 
@@ -1432,10 +1432,10 @@ class Height {
 }
 
 class TherapeuticIntervention {
-  List<String> clinicalConcern;
-  List<String> treatment;
-  List<String> icd;
-  List<Intervention> intervention;
+  List<String>? clinicalConcern;
+  List<String>? treatment;
+  List<String>? icd;
+  List<Intervention>? intervention;
 
   TherapeuticIntervention(
       {this.clinicalConcern, this.treatment, this.icd, this.intervention});
@@ -1457,9 +1457,9 @@ class TherapeuticIntervention {
       icd = [];
     }
     if (json['intervention'] != null) {
-      intervention = new List<Intervention>();
+      intervention = <Intervention>[];
       json['intervention'].forEach((v) {
-        intervention.add(new Intervention.fromJson(v));
+        intervention!.add(new Intervention.fromJson(v));
       });
     }
   }
@@ -1470,19 +1470,19 @@ class TherapeuticIntervention {
     data['treatment'] = this.treatment;
     data['icd'] = this.icd;
     if (this.intervention != null) {
-      data['intervention'] = this.intervention.map((v) => v.toJson()).toList();
+      data['intervention'] = this.intervention!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Intervention {
-  String name;
-  String reason;
-  String time;
-  String patientResponse;
-  String bodyPart;
-  String sId;
+  String? name;
+  String? reason;
+  String? time;
+  String? patientResponse;
+  String? bodyPart;
+  String? sId;
 
   Intervention(
       {this.name,
@@ -1514,15 +1514,15 @@ class Intervention {
 }
 
 class ExerciseDetails {
-  List<Exercises> exercises;
+  List<Exercises>? exercises;
 
   ExerciseDetails({this.exercises});
 
   ExerciseDetails.fromJson(Map<String, dynamic> json) {
     if (json['exercises'] != null) {
-      exercises = new List<Exercises>();
+      exercises = <Exercises>[];
       json['exercises'].forEach((v) {
-        exercises.add(new Exercises.fromJson(v));
+        exercises!.add(new Exercises.fromJson(v));
       });
     }
   }
@@ -1530,21 +1530,21 @@ class ExerciseDetails {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.exercises != null) {
-      data['exercises'] = this.exercises.map((v) => v.toJson()).toList();
+      data['exercises'] = this.exercises!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Exercises {
-  String frequency;
-  String name;
-  String sets;
-  String times;
-  String instructions;
-  String video;
-  List<String> images;
-  String sId;
+  String? frequency;
+  String? name;
+  String? sets;
+  String? times;
+  String? instructions;
+  String? video;
+  List<String>? images;
+  String? sId;
 
   Exercises(
       {this.frequency,
@@ -1582,12 +1582,12 @@ class Exercises {
 }
 
 class Education {
-  String id;
-  String category;
-  String name;
-  String reference;
-  String comments;
-  String sId;
+  String? id;
+  String? category;
+  String? name;
+  String? reference;
+  String? comments;
+  String? sId;
 
   Education(
       {this.id,
@@ -1619,13 +1619,13 @@ class Education {
 }
 
 class PreferredPhramacy {
-  String sId;
-  String name;
-  String createdAt;
-  String updatedAt;
-  int iV;
-  List<PhaAddress> address;
-  String pharmacyId;
+  String? sId;
+  String? name;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
+  List<PhaAddress>? address;
+  String? pharmacyId;
 
   PreferredPhramacy(
       {this.sId,
@@ -1643,13 +1643,13 @@ class PreferredPhramacy {
     updatedAt = json['updatedAt'];
     iV = json['__v'];
     if (json['address'] != null) {
-      address = new List<PhaAddress>();
+      address = <PhaAddress>[];
       if (json['address'] is List) {
         json['address'].forEach((v) {
-          address.add(new PhaAddress.fromJson(v));
+          address!.add(new PhaAddress.fromJson(v));
         });
       } else {
-        address.add(new PhaAddress.fromJson(json['address']));
+        address!.add(new PhaAddress.fromJson(json['address']));
       }
     }
     pharmacyId = json['pharmacyId'];
@@ -1663,7 +1663,7 @@ class PreferredPhramacy {
     data['updatedAt'] = this.updatedAt;
     data['__v'] = this.iV;
     if (this.address != null) {
-      data['address'] = this.address.map((v) => v.toJson()).toList();
+      data['address'] = this.address!.map((v) => v.toJson()).toList();
     }
     data['pharmacyId'] = this.pharmacyId;
     return data;
@@ -1671,15 +1671,15 @@ class PreferredPhramacy {
 }
 
 class PhaAddress {
-  String address;
-  String city;
-  String phone;
-  String phoneNumber;
-  String state;
-  String zipCode;
-  String sId;
-  String pharmacyId;
-  String name;
+  String? address;
+  String? city;
+  String? phone;
+  String? phoneNumber;
+  String? state;
+  String? zipCode;
+  String? sId;
+  String? pharmacyId;
+  String? name;
 
   PhaAddress(
       {this.address,
@@ -1720,9 +1720,9 @@ class PhaAddress {
 }
 
 class Integumentary {
-  WoundCareSummary woundCareSummary;
-  PainSummary painSummary;
-  List<IntegumentarySummary> summary;
+  WoundCareSummary? woundCareSummary;
+  PainSummary? painSummary;
+  List<IntegumentarySummary>? summary;
 
   Integumentary({this.woundCareSummary, this.painSummary, this.summary});
 
@@ -1736,7 +1736,7 @@ class Integumentary {
     if (json['summary'] != null) {
       summary = <IntegumentarySummary>[];
       json['summary'].forEach((v) {
-        summary.add(new IntegumentarySummary.fromJson(v));
+        summary!.add(new IntegumentarySummary.fromJson(v));
       });
     }
   }
@@ -1744,22 +1744,22 @@ class Integumentary {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.woundCareSummary != null) {
-      data['woundCareSummary'] = this.woundCareSummary.toJson();
+      data['woundCareSummary'] = this.woundCareSummary!.toJson();
     }
     if (this.painSummary != null) {
-      data['painSummary'] = this.painSummary.toJson();
+      data['painSummary'] = this.painSummary!.toJson();
     }
     if (this.summary != null) {
-      data['summary'] = this.summary.map((v) => v.toJson()).toList();
+      data['summary'] = this.summary!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class WoundCareSummary {
-  List<String> clinicalConcern;
-  List<String> treatment;
-  List<String> icd;
+  List<String>? clinicalConcern;
+  List<String>? treatment;
+  List<String>? icd;
 
   WoundCareSummary({this.clinicalConcern, this.treatment, this.icd});
 
@@ -1779,9 +1779,9 @@ class WoundCareSummary {
 }
 
 class PainSummary {
-  List<String> clinicalConcern;
-  List<String> treatment;
-  List<String> icd;
+  List<String>? clinicalConcern;
+  List<String>? treatment;
+  List<String>? icd;
 
   PainSummary({this.clinicalConcern, this.treatment, this.icd});
 
@@ -1801,24 +1801,24 @@ class PainSummary {
 }
 
 class IntegumentarySummary {
-  String location;
-  String type;
-  String staging;
-  String mechanismOfInjury;
-  String pain;
-  String notes;
-  String image;
-  List<String> periwound;
-  String sId;
-  Weight length;
-  Weight width;
-  Weight depth;
-  Weight granulation;
-  Weight slough;
-  Weight necrosis;
-  Weight drainageType;
-  Weight drainageAmount;
-  Weight odor;
+  String? location;
+  String? type;
+  String? staging;
+  String? mechanismOfInjury;
+  String? pain;
+  String? notes;
+  String? image;
+  List<String>? periwound;
+  String? sId;
+  Weight? length;
+  Weight? width;
+  Weight? depth;
+  Weight? granulation;
+  Weight? slough;
+  Weight? necrosis;
+  Weight? drainageType;
+  Weight? drainageAmount;
+  Weight? odor;
 
   IntegumentarySummary(
       {this.location,
@@ -1882,39 +1882,39 @@ class IntegumentarySummary {
     data['periwound'] = this.periwound;
     data['_id'] = this.sId;
     if (this.length != null) {
-      data['length'] = this.length.toJson();
+      data['length'] = this.length!.toJson();
     }
     if (this.width != null) {
-      data['width'] = this.width.toJson();
+      data['width'] = this.width!.toJson();
     }
     if (this.depth != null) {
-      data['depth'] = this.depth.toJson();
+      data['depth'] = this.depth!.toJson();
     }
     if (this.granulation != null) {
-      data['granulation'] = this.granulation.toJson();
+      data['granulation'] = this.granulation!.toJson();
     }
     if (this.slough != null) {
-      data['slough'] = this.slough.toJson();
+      data['slough'] = this.slough!.toJson();
     }
     if (this.necrosis != null) {
-      data['necrosis'] = this.necrosis.toJson();
+      data['necrosis'] = this.necrosis!.toJson();
     }
     if (this.drainageType != null) {
-      data['drainageType'] = this.drainageType.toJson();
+      data['drainageType'] = this.drainageType!.toJson();
     }
     if (this.drainageAmount != null) {
-      data['drainageAmount'] = this.drainageAmount.toJson();
+      data['drainageAmount'] = this.drainageAmount!.toJson();
     }
     if (this.odor != null) {
-      data['odor'] = this.odor.toJson();
+      data['odor'] = this.odor!.toJson();
     }
     return data;
   }
 }
 
 class Gait {
-  GaitSummary gaitSummary;
-  List<GaitData> summary;
+  GaitSummary? gaitSummary;
+  List<GaitData>? summary;
 
   Gait({this.gaitSummary, this.summary});
 
@@ -1925,7 +1925,7 @@ class Gait {
     if (json['summary'] != null) {
       summary = <GaitData>[];
       json['summary'].forEach((v) {
-        summary.add(new GaitData.fromJson(v));
+        summary!.add(new GaitData.fromJson(v));
       });
     }
   }
@@ -1933,19 +1933,19 @@ class Gait {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.gaitSummary != null) {
-      data['gaitSummary'] = this.gaitSummary.toJson();
+      data['gaitSummary'] = this.gaitSummary!.toJson();
     }
     if (this.summary != null) {
-      data['summary'] = this.summary.map((v) => v.toJson()).toList();
+      data['summary'] = this.summary!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class GaitSummary {
-  List<String> clinicalConcern;
-  List<String> treatment;
-  List<String> icd;
+  List<String>? clinicalConcern;
+  List<String>? treatment;
+  List<String>? icd;
 
   GaitSummary({this.clinicalConcern, this.treatment, this.icd});
 
@@ -1965,17 +1965,17 @@ class GaitSummary {
 }
 
 class GaitData {
-  Weight gaitType;
-  Weight distance;
-  Weight assistance;
-  Weight assistiveDevice;
-  Weight cuing;
-  String terraine;
-  String ambulationTrainer;
-  String time;
-  String patientResponse;
-  String notes;
-  String sId;
+  Weight? gaitType;
+  Weight? distance;
+  Weight? assistance;
+  Weight? assistiveDevice;
+  Weight? cuing;
+  String? terraine;
+  String? ambulationTrainer;
+  String? time;
+  String? patientResponse;
+  String? notes;
+  String? sId;
 
   GaitData(
       {this.gaitType,
@@ -2018,19 +2018,19 @@ class GaitData {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.gaitType != null) {
-      data['gaitType'] = this.gaitType.toJson();
+      data['gaitType'] = this.gaitType!.toJson();
     }
     if (this.distance != null) {
-      data['distance'] = this.distance.toJson();
+      data['distance'] = this.distance!.toJson();
     }
     if (this.assistance != null) {
-      data['assistance'] = this.assistance.toJson();
+      data['assistance'] = this.assistance!.toJson();
     }
     if (this.assistiveDevice != null) {
-      data['assistiveDevice'] = this.assistiveDevice.toJson();
+      data['assistiveDevice'] = this.assistiveDevice!.toJson();
     }
     if (this.cuing != null) {
-      data['cuing'] = this.cuing.toJson();
+      data['cuing'] = this.cuing!.toJson();
     }
     // data['gaitType'] = this.gaitType;
     // data['distance'] = this.distance;

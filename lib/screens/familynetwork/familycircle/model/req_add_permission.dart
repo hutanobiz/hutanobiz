@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 class ReqAddPermission {
-  final String id;
-  final String userId;
-  final int userRelation;
-  final int step;
-  final List<int> userPermissions;
+  final String? id;
+  final String? userId;
+  final int? userRelation;
+  final int? step;
+  final List<int>? userPermissions;
   ReqAddPermission({
     this.id,
     this.userId,
@@ -25,7 +25,7 @@ class ReqAddPermission {
   }
 
   factory ReqAddPermission.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
+  
 
     return ReqAddPermission(
       id: map['_id'],

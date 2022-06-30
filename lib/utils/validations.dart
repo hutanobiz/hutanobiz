@@ -3,34 +3,34 @@ import 'package:flutter/services.dart';
 import 'package:hutano/strings.dart';
 
 class Validations {
-  static String validateEmpty(String value) {
-    if (value.isEmpty) {
+  static String? validateEmpty(String? value) {
+    if (value!.isEmpty) {
       return "Field Can't be empty";
     } else
       return null;
   }
 
-  static String requiredValue(String value) {
-    if (value.trim().isEmpty) {
+  static String? requiredValue(String? value) {
+    if (value!.trim().isEmpty) {
       return "";
     } else
       return null;
   }
 
-  static String validateEmail(String value) {
-    if (value.isEmpty) {
+  static String? validateEmail(String? value) {
+    if (value!.isEmpty) {
       return '';
     }
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
+    RegExp regex = new RegExp(pattern as String);
     if (!regex.hasMatch(value))
       return Strings.enterValidEmail;
     else
       return null;
   }
 
-  static String validatePassword(String value) {
+  static String? validatePassword(String value) {
     if (value.isEmpty) {
       return '';
     } else if (value.length < 6)
@@ -39,7 +39,7 @@ class Validations {
       return null;
   }
 
-  static String validateLoginPassword(String value) {
+  static String? validateLoginPassword(String value) {
     if (value.isEmpty) {
       return null;
     } else if (value.length < 6)
@@ -48,7 +48,7 @@ class Validations {
       return null;
   }
 
-  static String validatePhone(String value) {
+  static String? validatePhone(String value) {
     if (value.isEmpty) {
       return null;
     } else if (getCleanedNumber(value).length < 10)
@@ -61,8 +61,8 @@ class Validations {
     return text.replaceAll(RegExp('[^0-9]+'), '');
   }
 
-  static String validateCardNumber(String input) {
-    if (input.isEmpty) {
+  static String? validateCardNumber(String? input) {
+    if (input!.isEmpty) {
       return null;
     }
 
@@ -94,8 +94,8 @@ class Validations {
     return "Invalid Card. Please enter a valid card";
   }
 
-  static String validateCVV(String value) {
-    if (value.isEmpty) {
+  static String? validateCVV(String? value) {
+    if (value!.isEmpty) {
       return null;
     }
 
@@ -105,8 +105,8 @@ class Validations {
     return null;
   }
 
-  static String validateDate(String value) {
-    if (value.isEmpty) {
+  static String? validateDate(String? value) {
+    if (value!.isEmpty) {
       return null;
     }
 

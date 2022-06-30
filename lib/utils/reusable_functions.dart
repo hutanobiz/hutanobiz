@@ -6,9 +6,9 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'permission_utils.dart';
 
-Future<File> getImageByCamera(BuildContext context) async {
+Future<File?> getImageByCamera(BuildContext context) async {
   var isGranted = true;
-  await PermissionUtils.requestPermission([Permission.camera], context,
+   PermissionUtils.requestPermission([Permission.camera], context,
       isOpenSettings: true, permissionGrant: () async {}, permissionDenied: () {
     isGranted = false;
   });
@@ -19,9 +19,9 @@ Future<File> getImageByCamera(BuildContext context) async {
   }
 }
 
-Future<File> getImageByGallery(BuildContext context) async {
+Future<File?> getImageByGallery(BuildContext context) async {
   var isGranted = true;
-  await PermissionUtils.requestPermission(
+  PermissionUtils.requestPermission(
       Platform.isAndroid ? [Permission.storage] : [Permission.photos], context,
       isOpenSettings: true, permissionGrant: () async {}, permissionDenied: () {
     isGranted = false;
@@ -33,7 +33,7 @@ Future<File> getImageByGallery(BuildContext context) async {
   }
 }
 
-Future<File> getImage(BuildContext context, ImageSource source) async {
+Future<File?> getImage(BuildContext context, ImageSource source) async {
   final _picker = ImagePicker();
   var pickedfile = await _picker.pickImage(source: source, imageQuality: 10);
   return pickedfile != null ? File(pickedfile.path) : null;

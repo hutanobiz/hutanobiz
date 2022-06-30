@@ -10,14 +10,14 @@ import 'model/provider_group.dart';
 import 'model/res_my_provider_network.dart';
 
 class ListSpeciality extends StatefulWidget {
-  final List<ProviderGroupList> providerGroupList;
-  final Function onShare;
-  final Function onRemove;
-  final Function onMakeAppointment;
-  final Function onGroupDelete;
+  final List<ProviderGroupList>? providerGroupList;
+  final Function? onShare;
+  final Function? onRemove;
+  final Function? onMakeAppointment;
+  final Function? onGroupDelete;
 
   const ListSpeciality(
-      {Key key,
+      {Key? key,
       this.providerGroupList,
       this.onShare,
       this.onRemove,
@@ -36,7 +36,7 @@ class _ListSpecialityState extends State<ListSpeciality> {
           return SizedBox(height: spacing15);
         },
         shrinkWrap: true,
-        itemCount: widget.providerGroupList.length,
+        itemCount: widget.providerGroupList!.length,
         itemBuilder: (_, pos) {
           return Container(
             padding: EdgeInsets.symmetric(horizontal: spacing10),
@@ -72,7 +72,7 @@ class _ListSpecialityState extends State<ListSpeciality> {
                       },
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: widget.providerGroupList[pos].doctor.length,
+                      itemCount: widget.providerGroupList![pos].doctor!.length,
                       itemBuilder: (_, position) {
                         return ItemProviderDetail(
                             providerDetail: _getProviderDetail(pos, position),
@@ -84,16 +84,16 @@ class _ListSpecialityState extends State<ListSpeciality> {
                       }),
                   SizedBox(height: spacing15),
                 ],
-              ),
+              ), collapsed: SizedBox(),
             ),
           );
         });
   }
 
   _getProviderDetail(index, subIndex) {
-    final doctorData = widget.providerGroupList[index].doctor[subIndex];
+    final doctorData = widget.providerGroupList![index].doctor![subIndex];
     final doctorProfessionInfo =
-        widget.providerGroupList[index].docInfo[subIndex];
+        widget.providerGroupList![index].docInfo![subIndex];
 
     final avatar = doctorData.avatar ?? "";
     final rating = "4";
@@ -102,7 +102,7 @@ class _ListSpecialityState extends State<ListSpeciality> {
     var name = doctorData.fullName ?? "";
     name = '$name , ${occupation.getInitials()}';
 
-    final experience = doctorProfessionInfo.practicingSince.getYearCount();
+    final experience = doctorProfessionInfo.practicingSince!.getYearCount();
 
     return ProviderDetail(
         image: avatar,
@@ -114,9 +114,9 @@ class _ListSpecialityState extends State<ListSpeciality> {
 
   _getProviderGroup(index) {
     return ProviderGroup(
-      count: widget.providerGroupList[index].doctor.length,
+      count: widget.providerGroupList![index].doctor!.length,
       image: " ",
-      groupType: widget.providerGroupList[index].providerNetwork.groupName,
+      groupType: widget.providerGroupList![index].providerNetwork!.groupName,
     );
   }
 }

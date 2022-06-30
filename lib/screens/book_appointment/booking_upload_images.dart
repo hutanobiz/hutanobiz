@@ -34,36 +34,36 @@ import 'package:url_launcher/url_launcher.dart';
 
 class BookingUploadImages extends StatefulWidget {
   dynamic args;
-  BookingUploadImages({Key key, this.args}) : super(key: key);
+  BookingUploadImages({Key? key, this.args}) : super(key: key);
   @override
   _BookingUploadImagesState createState() => _BookingUploadImagesState();
 }
 
 class _BookingUploadImagesState extends State<BookingUploadImages>
     with SingleTickerProviderStateMixin {
-  TabController _tabController;
-  List tabs;
+  TabController? _tabController;
+  late List tabs;
   int _currentIndex = 0;
-  List<Map> imagesList = List();
-  List<Map> filteredImagesList = List();
+  List<Map?> imagesList = [];
+  List<Map?> filteredImagesList = [];
 
   bool _isLoading = false;
   ApiBaseHelper _api = ApiBaseHelper();
 
-  String token;
+  String? token;
 
-  String imageName = '';
+  String? imageName = '';
   bool isBottomButtonsShow = true;
   bool isFromAppointment = false;
 
-  List<Map> _selectedImagesList = [];
+  List<Map?> _selectedImagesList = [];
   TextEditingController _imageDateController = TextEditingController();
-  String defaultBodyPart;
+  String? defaultBodyPart;
   Map sidesMap = {1: "Left", 2: "Right", 3: "Top", 4: "Bottom", 5: "All Over"};
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _tabController!.dispose();
     _imageDateController.dispose();
     super.dispose();
   }
@@ -96,13 +96,13 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
                   }
                   for (dynamic images in value['medicalImages']) {
                     if ((imagesList.singleWhere(
-                            (img) => img['_id'] == images['_id'],
+                            (img) => img!['_id'] == images['_id'],
                             orElse: () => null)) !=
                         null) {
                       imagesList.removeWhere(
-                          (element) => element['_id'] == images['_id']);
+                          (element) => element!['_id'] == images['_id']);
                       _selectedImagesList.removeWhere(
-                          (element) => element['_id'] == images['_id']);
+                          (element) => element!['_id'] == images['_id']);
                       images['isArchive'] = false;
                       _selectedImagesList.add(images);
                       imagesList.add(images);
@@ -130,7 +130,7 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
     });
     tabs = ['Recent', 'Archive', 'View all'];
     _tabController = TabController(length: tabs.length, vsync: this);
-    _tabController.addListener(_handleTabControllerTick);
+    _tabController!.addListener(_handleTabControllerTick);
 
     if (Provider.of<HealthConditionProvider>(context, listen: false)
                 .allHealthIssuesData !=
@@ -145,18 +145,18 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
               null &&
           Provider.of<HealthConditionProvider>(context, listen: false)
                   .allHealthIssuesData[0]
-                  .bodyPart
+                  .bodyPart!
                   .length >
               0) {
         var part = Provider.of<HealthConditionProvider>(context, listen: false)
             .allHealthIssuesData[0]
-            .bodyPart[0]
+            .bodyPart![0]
             .name;
         var side = sidesMap[int.parse(
             Provider.of<HealthConditionProvider>(context, listen: false)
                 .allHealthIssuesData[0]
-                .bodyPart[0]
-                .sides[0])];
+                .bodyPart![0]
+                .sides![0])];
 
         defaultBodyPart = side + ' ' + part;
       }
@@ -175,7 +175,7 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
 
   void _handleTabControllerTick() {
     setState(() {
-      _currentIndex = _tabController.index;
+      _currentIndex = _tabController!.index;
     });
   }
 
@@ -203,10 +203,10 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
         },
         onForwardTap: () {
           if (widget.args['isEdit']) {
-            List<String> selectedImagesId = [];
+            List<String?> selectedImagesId = [];
             if (_selectedImagesList != null && _selectedImagesList.length > 0) {
               _selectedImagesList.forEach((element) {
-                selectedImagesId.add(MedicalImages.fromJson(element).sId);
+                selectedImagesId.add(MedicalImages.fromJson(element as Map<String, dynamic>).sId);
               });
             }
             Map<String, dynamic> model = {};
@@ -221,7 +221,7 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
             List<MedicalImages> _selectedMedicalImages = [];
             if (_selectedImagesList != null && _selectedImagesList.length > 0) {
               _selectedImagesList.forEach((element) {
-                _selectedMedicalImages.add(MedicalImages.fromJson(element));
+                _selectedMedicalImages.add(MedicalImages.fromJson(element as Map<String, dynamic>));
               });
               Provider.of<HealthConditionProvider>(context, listen: false)
                   .updateImages(_selectedMedicalImages);
@@ -284,11 +284,11 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
                       text,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          color: _tabController.index == index
+                          color: _tabController!.index == index
                               ? AppColors.windsor
                               : colorBlack2,
                           fontSize: fontSize14,
-                          fontWeight: _tabController.index == index
+                          fontWeight: _tabController!.index == index
                               ? fontWeightMedium
                               : fontWeightRegular),
                     )
@@ -326,13 +326,13 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
       ),
       shrinkWrap: true,
       itemBuilder: (BuildContext context, int index) {
-        String imageFile =
-            filteredImagesList[index][ArgumentConstant.imagesKey];
-        if (!filteredImagesList[index][ArgumentConstant.imagesKey]
+        String? imageFile =
+            filteredImagesList[index]![ArgumentConstant.imagesKey];
+        if (!filteredImagesList[index]![ArgumentConstant.imagesKey]
             .toString()
             .contains('image_cropper')) {
           imageFile = ApiBaseHelper.imageUrl +
-              filteredImagesList[index][ArgumentConstant.imagesKey];
+              filteredImagesList[index]![ArgumentConstant.imagesKey];
         }
         return Padding(
           padding: const EdgeInsets.all(spacing5),
@@ -345,7 +345,7 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
               children: <Widget>[
                 ClipRRect(
                     borderRadius: BorderRadius.circular(16.0),
-                    child: imageFile.contains('http') ||
+                    child: imageFile!.contains('http') ||
                             imageFile.contains('https')
                         ? Image.network(imageFile, fit: BoxFit.cover)
                         : Image.file(File(imageFile), fit: BoxFit.cover)),
@@ -390,7 +390,7 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
                           Align(
                               alignment: Alignment.topLeft,
                               child: Text(
-                                  filteredImagesList[index]
+                                  filteredImagesList[index]!
                                           [ArgumentConstant.nameKey] ??
                                       '---+---',
                                   overflow: TextOverflow.ellipsis,
@@ -401,7 +401,7 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
                           Align(
                               alignment: Alignment.topLeft,
                               child: Text(
-                                  filteredImagesList[index]
+                                  filteredImagesList[index]!
                                           [ArgumentConstant.dateKey] ??
                                       '---+---',
                                   overflow: TextOverflow.ellipsis,
@@ -427,7 +427,7 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
             ).onClick(
               onTap: imageFile.toLowerCase().endsWith("pdf")
                   ? () async {
-                      var url = imageFile;
+                      var url = imageFile!;
                       if (await canLaunch(url)) {
                         await launch(url);
                       } else {
@@ -463,14 +463,14 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
           title: ListTile(
             contentPadding: EdgeInsets.all(0),
             title: Text(
-              Localization.of(context).uploadMedicalImagesLabel,
+              Localization.of(context)!.uploadMedicalImagesLabel,
               style: TextStyle(
                   fontSize: fontSize15,
                   fontWeight: fontWeightSemiBold,
                   color: Colors.black),
             ),
             subtitle: Text(
-              Localization.of(context).uploadMedicalImagesSubLabel,
+              Localization.of(context)!.uploadMedicalImagesSubLabel,
               style: TextStyle(
                   fontSize: fontSize12,
                   fontWeight: fontWeightRegular,
@@ -484,7 +484,7 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
   Future getImage(int source) async {
     ImagePicker _picker = ImagePicker();
 
-    XFile image = await _picker.pickImage(
+    XFile? image = await _picker.pickImage(
         imageQuality: 25,
         source: (source == 1) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
@@ -557,14 +557,14 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14.0),
                 borderSide: BorderSide(
-                  color: Colors.grey[300],
+                  color: Colors.grey[300]!,
                   width: 0.5,
                 ),
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14.0),
                 borderSide: BorderSide(
-                  color: Colors.grey[300],
+                  color: Colors.grey[300]!,
                   width: 0.5,
                 ),
               ),
@@ -620,15 +620,15 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
                   title: 'Upload',
                   buttonColor: AppColors.windsor,
                   onPressed: () async {
-                    if (imageName == null || imageName.isEmpty) {
+                    if (imageName == null || imageName!.isEmpty) {
                       Widgets.showToast("Image name can't be empty");
                     } else if (_imageDateController.text == null ||
                         _imageDateController.text.isEmpty) {
-                      Widgets.showToast(Localization.of(context).errImageDate);
+                      Widgets.showToast(Localization.of(context)!.errImageDate);
                       return;
                     } else {
                       Map<String, String> fileMap = {};
-                      fileMap[ArgumentConstant.nameKey] = imageName;
+                      fileMap[ArgumentConstant.nameKey] = imageName!;
                       fileMap[ArgumentConstant.dateKey] =
                           _imageDateController.text;
                       Navigator.pop(context);
@@ -700,21 +700,21 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14.0),
         borderSide: BorderSide(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
           width: 0.5,
         ),
       ),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14.0),
         borderSide: BorderSide(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
           width: 0.5,
         ),
       ),
       disabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14.0),
         borderSide: BorderSide(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
           width: 0.5,
         ),
       ),
@@ -724,8 +724,8 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
   void showPickerDialog() {
     showCommonUploadDialog(
       context,
-      Localization.of(context).picker,
-      Localization.of(context).uploadPhoto,
+      Localization.of(context)!.picker,
+      Localization.of(context)!.uploadPhoto,
       onTop: () {
         getImage(1);
         Navigator.pop(context);

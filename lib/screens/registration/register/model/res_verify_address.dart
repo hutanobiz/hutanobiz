@@ -1,6 +1,6 @@
 class ResVerifyAddress {
-  String status;
-  Response response;
+  String? status;
+  Response? response;
 
   ResVerifyAddress({this.status, this.response});
 
@@ -15,28 +15,28 @@ class ResVerifyAddress {
     final data = <String, dynamic>{};
     data['status'] = status;
     if (response != null) {
-      data['response'] = response.toJson();
+      data['response'] = response!.toJson();
     }
     return data;
   }
 }
 
 class Response {
-  String street1;
-  String street2;
-  String city;
-  String zip;
-  String state;
-  String zip4;
-  String deliveryPoint;
-  String carrierRoute;
-  String footnotes;
-  String dpvConfirmation;
-  String dpvcmra;
-  String dpvFootnotes;
-  String business;
-  String centralDeliveryPoint;
-  String vacant;
+  String? street1;
+  String? street2;
+  String? city;
+  String? zip;
+  String? state;
+  String? zip4;
+  String? deliveryPoint;
+  String? carrierRoute;
+  String? footnotes;
+  String? dpvConfirmation;
+  String? dpvcmra;
+  String? dpvFootnotes;
+  String? business;
+  String? centralDeliveryPoint;
+  String? vacant;
 
   Response(
       {this.street1,

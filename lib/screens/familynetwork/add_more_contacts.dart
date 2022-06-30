@@ -12,7 +12,7 @@ import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:provider/provider.dart';
 
 class AddMoreContacts extends StatefulWidget {
-  AddMoreContacts({Key key}) : super(key: key);
+  AddMoreContacts({Key? key}) : super(key: key);
 
   @override
   State<AddMoreContacts> createState() => _AddMoreContactsState();
@@ -21,7 +21,7 @@ class AddMoreContacts extends StatefulWidget {
 class _AddMoreContactsState extends State<AddMoreContacts> {
   final _relationCotnroller = TextEditingController();
   FocusNode searchFocus = FocusNode();
-  List<Relations> _relationList = [];
+  List<Relations>? _relationList = [];
 
   @override
   void initState() {
@@ -57,7 +57,7 @@ class _AddMoreContactsState extends State<AddMoreContacts> {
       ProgressDialogUtils.dismissProgressDialog();
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -65,7 +65,7 @@ class _AddMoreContactsState extends State<AddMoreContacts> {
 
   _onRelationSelected(Relations relation) {
     // _selectedRelation = relation;
-    _relationCotnroller.text = relation.relation;
+    _relationCotnroller.text = relation.relation!;
     _addFamilyMemberApiCall(context);
   }
 
@@ -91,7 +91,7 @@ class _AddMoreContactsState extends State<AddMoreContacts> {
       if (e.hashCode == 422 && e.response == "Family member already exist") {
         // Navigator.of(context).pushNamed(Routes.familyCircle,arguments: widget.isOnboarding);
       } else {
-        DialogUtils.showAlertDialog(context, e.response);
+        DialogUtils.showAlertDialog(context, e.response!);
       }
     }
   }

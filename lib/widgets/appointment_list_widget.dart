@@ -9,22 +9,22 @@ import 'package:hutano/utils/extensions.dart';
 
 class AppointmentListWidget extends StatelessWidget {
   const AppointmentListWidget({
-    Key key,
-    @required this.context,
-    @required this.response,
-    @required this.avatar,
-    @required this.name,
-    @required this.averageRating,
-    @required this.professionalTitle,
-    @required this.onTap,
+    Key? key,
+    required this.context,
+    required this.response,
+    required this.avatar,
+    required this.name,
+    required this.averageRating,
+    required this.professionalTitle,
+    required this.onTap,
   }) : super(key: key);
 
   final BuildContext context;
   final Map response;
-  final String avatar;
-  final String name;
-  final String averageRating;
-  final String professionalTitle;
+  final String? avatar;
+  final String? name;
+  final String? averageRating;
+  final String? professionalTitle;
   final Function onTap;
 
   @override
@@ -37,7 +37,7 @@ class AppointmentListWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(14.0),
-            border: Border.all(color: Colors.grey[300]),
+            border: Border.all(color: Colors.grey[300]!),
           ),
           child: Material(
             type: MaterialType.transparency,
@@ -60,16 +60,16 @@ class AppointmentListWidget extends StatelessWidget {
                           height: 64.0,
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: avatar == null
+                              image: (avatar == null
                                   ? AssetImage('images/profile_user.png')
                                   : NetworkImage(
-                                      ApiBaseHelper.imageUrl + avatar),
+                                      ApiBaseHelper.imageUrl + avatar!)) as ImageProvider<Object>,
                               fit: BoxFit.cover,
                             ),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(32.0)),
                             border: Border.all(
-                              color: Colors.grey[300],
+                              color: Colors.grey[300]!,
                               width: 1.0,
                             ),
                           ),
@@ -112,7 +112,7 @@ class AppointmentListWidget extends StatelessWidget {
                                   height: 3.0,
                                 ),
                                 Text(
-                                  name,
+                                  name!,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                   style: TextStyle(
@@ -123,7 +123,7 @@ class AppointmentListWidget extends StatelessWidget {
                                 Row(
                                   children: [
                                     Text(
-                                      professionalTitle,
+                                      professionalTitle!,
                                       style: TextStyle(
                                           fontSize: 13.0,
                                           color: Colors.black.withOpacity(0.7),
@@ -182,7 +182,7 @@ class AppointmentListWidget extends StatelessWidget {
                   width: 3,
                 ),
                 Text(
-                  " " + averageRating,
+                  " " + averageRating!,
                   // "4.5",
                   style: TextStyle(
                       fontSize: 12.0,

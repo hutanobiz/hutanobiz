@@ -115,7 +115,7 @@ class ApiManager {
       );
       return ResLogin.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -124,7 +124,7 @@ class ApiManager {
       final response = await _apiService.get(getNewDiseaseEndPoint);
       return ResDiseaseModel.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -132,9 +132,9 @@ class ApiManager {
     try {
       final response = await _apiService
           .get('api/search-medical-history?searchString=$searchString');
-      return ResDiseaseModel.fromJson(response.data).response;
+      return ResDiseaseModel.fromJson(response.data).response!;
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -142,9 +142,9 @@ class ApiManager {
     try {
       final response =
           await _apiService.get('api/search-allergy?search=$searchString');
-      return AllergiesData.fromJson(response.data).response;
+      return AllergiesData.fromJson(response.data).response!;
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -153,9 +153,9 @@ class ApiManager {
       final response = await _apiService.get(
           'api/patient/search-doctor-appointment-list?searchString=$searchString');
       var aa = SearchAppointmentData.fromJson(response.data).response;
-      return aa;
+      return aa!;
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -165,17 +165,17 @@ class ApiManager {
       var aa = RecentChatData.fromJson(response.data);
       return aa;
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
-  Future<List<dynamic>> getPatientDoctorAppointmentList() async {
+  Future<List<dynamic>?> getPatientDoctorAppointmentList() async {
     try {
       final response =
           await _apiService.get('api/patient/doctor-appointment-list');
       return response.data['response'];
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -185,7 +185,7 @@ class ApiManager {
           .get('api/patient/chat-details?appointmentId=$appointmentId');
       return MessagesData.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -194,7 +194,7 @@ class ApiManager {
       final response = await _apiService.get('api/patient/preferred-Pharmacy');
       return PreferredPharmacyData.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -204,7 +204,7 @@ class ApiManager {
           data: pharmacyModel.toJson());
       return response.data;
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -213,16 +213,16 @@ class ApiManager {
       final response = await _apiService.get('api/patient/medical-history');
       return ResMedicalDocumentsModel.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
-  Future<List<Allergy>> getMyAllergies() async {
+  Future<List<Allergy>?> getMyAllergies() async {
     try {
       final response = await _apiService.get('api/patient/medical-allergy');
-      return MyAllergiesData.fromJson(response.data).response[0].allergy;
+      return MyAllergiesData.fromJson(response.data).response![0].allergy;
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -231,7 +231,7 @@ class ApiManager {
       final response = await _apiService.get(getCommunicationReasonEndPoint);
       return ResCommunicationReasonModel.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -242,7 +242,7 @@ class ApiManager {
           data: reqCommunicationReasonModel.toJson());
       return CommonRes.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -254,7 +254,7 @@ class ApiManager {
           data: reqAddDiseaseModel.toJson());
       return response.data;
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -265,7 +265,7 @@ class ApiManager {
           data: {'medicalHistory': reqAddDiseaseModel.toJson()});
       return response.data;
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -275,7 +275,7 @@ class ApiManager {
           data: allergyModel.toJson());
       return response.data;
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -285,7 +285,7 @@ class ApiManager {
           data: reqAddPharmacyModel.toJson());
       return CommonRes.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -295,7 +295,7 @@ class ApiManager {
           data: reqAddVitalsModel.toJson());
       return CommonRes.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -306,7 +306,7 @@ class ApiManager {
           data: reqAddDiagnosticTestModel.toJson());
       return CommonRes.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -317,7 +317,7 @@ class ApiManager {
           data: reqTreatedConditionTimeModel.toJson());
       return CommonRes.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -328,7 +328,7 @@ class ApiManager {
           data: reqAddCurrentMedicalHistory.toJson());
       return CommonRes.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -339,7 +339,7 @@ class ApiManager {
           await _apiService.get(getPatientUploadedDocumentsImagesEndPoint);
       return ResUploadedDocumentImagesModel.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -348,7 +348,7 @@ class ApiManager {
       final response = await _apiService.get(getDiagnosticTestEndPoint);
       return ResDiagnosticTestResult.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -357,18 +357,18 @@ class ApiManager {
       final response = await _apiService.get(getBodyPartEndPoint);
       return ResBodyPartModel.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
-  Future<dynamic> searchMedicine(String search) async {
+  Future<dynamic> searchMedicine(String? search) async {
     try {
       final response = await ApiService().get(
         "api/search-prescription?searchString=$search",
       );
       return response.data['response'];
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -379,7 +379,7 @@ class ApiManager {
           data: reqMedicationDetail.toJson());
       return response.data['response'];
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -389,20 +389,20 @@ class ApiManager {
           .post('api/patient/delete-medications', data: {'id': medicationId});
       return CommonRes.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
   // https://dev.hutano.com/api/patient/delete-medications
 
-  Future<PatientMedicationResponse> getMedicationDetails(
-      String patientId, int page, String search, filters) async {
+  Future<PatientMedicationResponse?> getMedicationDetails(
+      String? patientId, int? page, String search, filters) async {
     try {
       final response = await _apiService.get(
           'api/user/patient/medication-timeline?user=$patientId&page=$page&search=$search$filters');
       return PatientMedicationResponseData.fromJson(response.data).response;
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -438,7 +438,7 @@ class ApiManager {
       final response = await _apiService.get(getMoreConditionEndPoint);
       return ResMoreConditionModel.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -449,7 +449,7 @@ class ApiManager {
           data: reqSelectConditionModel.toJson());
       return ResSelectConditionModel.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -458,17 +458,17 @@ class ApiManager {
       final response = await _apiService.get(getDiagnosticTestFromApiEndPoint);
       return ResDiagnositcTestModel.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
-  Future<List<Pha.Pharmacy>> getPreferredPharmacyList(String input) async {
+  Future<List<Pha.Pharmacy>?> getPreferredPharmacyList(String input) async {
     try {
       final response =
           await _apiService.get("api/search-pharmacy?searchString=$input");
       return Pha.ResPreferredPharmacyList.fromJson(response.data).response;
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -491,7 +491,7 @@ class ApiManager {
       );
       return CommonRes.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -503,7 +503,7 @@ class ApiManager {
       );
       return response.data;
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -515,7 +515,7 @@ class ApiManager {
       );
       return CommonRes.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -527,7 +527,7 @@ class ApiManager {
       );
       return ResResetPassword.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -539,7 +539,7 @@ class ApiManager {
       );
       return ResReset.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -551,7 +551,7 @@ class ApiManager {
       );
       return ResResetPassword.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -563,7 +563,7 @@ class ApiManager {
       );
       return response.data;
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -575,7 +575,7 @@ class ApiManager {
       );
       return ResRegisterNumber.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -587,7 +587,7 @@ class ApiManager {
       );
       return ResReset.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -598,7 +598,7 @@ class ApiManager {
       );
       return response.data;
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
     // Map<String, String> headers = {
     //   HttpHeaders.authorizationHeader: token,
@@ -621,7 +621,7 @@ class ApiManager {
       );
       return ResAddCard.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -632,7 +632,7 @@ class ApiManager {
       );
       return ResGetCard.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -645,7 +645,7 @@ class ApiManager {
       );
       return ResRegisterNumber.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -658,7 +658,7 @@ class ApiManager {
       );
       return ResRegisterNumber.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -670,7 +670,7 @@ class ApiManager {
       );
       return ResRegisterNumber.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -682,7 +682,7 @@ class ApiManager {
       );
       return CommonRes.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -694,7 +694,7 @@ class ApiManager {
       );
       return CommonRes.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -706,7 +706,7 @@ class ApiManager {
       );
       return ResLoginPin.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -718,7 +718,7 @@ class ApiManager {
       );
       return ResSearchNumber.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -729,7 +729,7 @@ class ApiManager {
       );
       return ResRelationList.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -739,7 +739,7 @@ class ApiManager {
           await _apiService.post(patient + apiAddMember, data: model.toJson());
       return ResAddMember.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -749,7 +749,7 @@ class ApiManager {
           await _apiService.post(api + apiCheckEmailExist, data: request);
       return ResCheckEmail.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -758,7 +758,7 @@ class ApiManager {
       final response = await _apiService.get(api + apiGetInsurance);
       return ResInsuranceList.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -767,7 +767,7 @@ class ApiManager {
       final response = await _apiService.get(api + apiGetStates);
       return ResStatesList.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -779,7 +779,7 @@ class ApiManager {
       );
       return ResVerifyAddress.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -787,11 +787,11 @@ class ApiManager {
     try {
       final response = await _apiService.post(
         patient + apiGetFamilyNetwork,
-        data: model.toMap(),
+        data: model.toMap() as Map<String, dynamic>?,
       );
       return ResFamilyNetwork.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -803,7 +803,7 @@ class ApiManager {
       );
       return ResFamilyCircle.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -815,11 +815,11 @@ class ApiManager {
       );
       return ResUserPermissionModel.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
-  Future<ResRegister> registerUser(ReqRegister request, File profile) async {
+  Future<ResRegister> registerUser(ReqRegister request, File? profile) async {
     try {
       var formData = FormData.fromMap(request.toMap());
       if (profile != null) {
@@ -836,11 +836,11 @@ class ApiManager {
       );
       return ResRegister.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
-  Future<dynamic> addAccount(ReqRegister request, File profile) async {
+  Future<dynamic> addAccount(ReqRegister request, File? profile) async {
     try {
       var formData = FormData.fromMap(request.toMap());
       if (profile != null) {
@@ -862,7 +862,7 @@ class ApiManager {
       );
       return response.data['response'];
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -872,7 +872,7 @@ class ApiManager {
           await _apiService.post(patient + apiAddMember, data: model.toMap());
       return ResAddMember.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -883,7 +883,7 @@ class ApiManager {
           .post(patient + apiAddPermission + memberId, data: model.toJson());
       return CommonRes.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -893,7 +893,7 @@ class ApiManager {
           await _apiService.get(api + apiGetProviders, params: search);
       return ResProviderSearch.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -913,7 +913,7 @@ class ApiManager {
       final response = await _apiService.get(api + apiGetProvidersGroups);
       return ResProviderGroup.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -923,17 +923,17 @@ class ApiManager {
           await _apiService.post(api + apiAddProviders, data: model.toMap());
       return ResAddProvider.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
   Future<CommonRes> deleteProviderGroup(Map model) async {
     try {
       final response = await _apiService
-          .post('api/patient/delete-provider-group', data: model);
+          .post('api/patient/delete-provider-group', data: model as Map<String, dynamic>?);
       return CommonRes.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -942,7 +942,7 @@ class ApiManager {
       final response = await _apiService.get(api + apiMyProviderNetwork);
       return ResMyProviderNetwork.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -952,7 +952,7 @@ class ApiManager {
           await _apiService.post(api + apiRemoveProvider, data: model.toMap());
       return ResRemoveProvider.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -962,7 +962,7 @@ class ApiManager {
           data: model.toMap());
       return ResShareProvider.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -972,7 +972,7 @@ class ApiManager {
           data: model.toMap());
       return ResShareProvider.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -982,7 +982,7 @@ class ApiManager {
           data: model.toMap());
       return ResMessageShare.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -994,7 +994,7 @@ class ApiManager {
       );
       return CommonRes.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -1005,7 +1005,7 @@ class ApiManager {
       );
       return ResRewardPoints.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -1016,7 +1016,7 @@ class ApiManager {
       );
       return ResInviteFriends.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -1048,7 +1048,7 @@ class ApiManager {
       );
       return ResMedicalImageUpload.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -1059,7 +1059,7 @@ class ApiManager {
           data: model.toMap());
       return ResMedicalImageUpload.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -1069,7 +1069,7 @@ class ApiManager {
           data: model.toMap());
       return CommonRes.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -1079,7 +1079,7 @@ class ApiManager {
           data: model.toMap());
       return CommonRes.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -1090,13 +1090,13 @@ class ApiManager {
           await _apiService.post(patient + apiMyInsurance, data: model);
       return ResMyInsuranceList.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
   Future<CommonRes> uploadInsuranceDoc(
       File frontImage, ReqUploadInsuranceDocuments model,
-      {File backImage}) async {
+      {File? backImage}) async {
     try {
       var formData = FormData.fromMap(model.toMap());
       final fileName = frontImage.path.split('/').last;
@@ -1117,12 +1117,12 @@ class ApiManager {
       );
       return CommonRes.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
   Future<CommonRes> addInsuranceDoc(File frontImage, ReqAddInsurance model,
-      {File backImage}) async {
+      {File? backImage}) async {
     try {
       var formData = FormData.fromMap(model.toMap());
       final fileName = frontImage.path.split('/').last;
@@ -1143,7 +1143,7 @@ class ApiManager {
       );
       return CommonRes.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -1153,7 +1153,7 @@ class ApiManager {
           await _apiService.get(patient + apiGetInviteMessage, params: model);
       return ResInvite.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -1164,7 +1164,7 @@ class ApiManager {
           await _googleService.get(googlePlaceSuggetion, params: model);
       return ResGooglePlaceSuggetions.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -1175,7 +1175,7 @@ class ApiManager {
           await _googleService.get(googlePlaceDetail, params: model);
       return ResGooglePlaceDetail.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -1186,7 +1186,7 @@ class ApiManager {
           await _googleService.get(googlePlaceDetail, params: model);
       return ResGooglePlaceDetailPharmacy.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -1197,7 +1197,7 @@ class ApiManager {
           await _googleService.get(googleAddressSuggetion, params: model);
       return ResGoogleAddressSuggetion.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -1208,7 +1208,7 @@ class ApiManager {
       );
       return ResGetMyInsurance.fromJson(response.data);
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -1219,7 +1219,7 @@ class ApiManager {
           data: reqBookingAppointmentModel.toJson());
       return response;
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -1229,7 +1229,7 @@ class ApiManager {
           await _apiService.post(updatePaymentMethodEndPoint, data: map);
       return response;
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -1239,7 +1239,7 @@ class ApiManager {
           .get('api/account-by-phone', params: {'phoneNumber': phoneNumber});
       return response.data['response'];
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -1249,7 +1249,7 @@ class ApiManager {
           .post('api/send-link-account-verification-code', data: map);
       return response.data['response'];
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 
@@ -1264,7 +1264,7 @@ class ApiManager {
           data: map);
       return response;
     } on DioError catch (error) {
-      throw ErrorModel.fromJson(error.response.data);
+      throw ErrorModel.fromJson(error.response!.data);
     }
   }
 

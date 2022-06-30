@@ -23,12 +23,12 @@ import 'model/provider_network.dart';
 import 'model/req_add_provider.dart';
 
 class ProivderAddNetwork extends StatefulWidget {
-  final String doctorName;
-  final String doctorId;
-  final String doctorAvatar;
+  final String? doctorName;
+  final String? doctorId;
+  final String? doctorAvatar;
 
   const ProivderAddNetwork({
-    Key key,
+    Key? key,
     this.doctorName,
     this.doctorId,
     this.doctorAvatar,
@@ -40,7 +40,7 @@ class ProivderAddNetwork extends StatefulWidget {
 class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
   bool _enableButton = false;
   int _index = -1; //selected group index
-  List<ProviderNetwork> specialityList = <ProviderNetwork>[];
+  List<ProviderNetwork>? specialityList = <ProviderNetwork>[];
   @override
   void initState() {
     super.initState();
@@ -54,21 +54,21 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
     try {
       var res = await ApiManager().getProviderGroups();
       ProgressDialogUtils.dismissProgressDialog();
-      if (res.response.data.providerNetwork != null) {
+      if (res.response!.data!.providerNetwork != null) {
         setState(() {
-          specialityList = res.response.data.providerNetwork;
+          specialityList = res.response!.data!.providerNetwork;
         });
       }
-      if (specialityList.length > 0) {
-        _index = specialityList.length - 1;
+      if (specialityList!.length > 0) {
+        _index = specialityList!.length - 1;
         setState(() {
-          specialityList[specialityList.length - 1].isSelected = true;
+          specialityList![specialityList!.length - 1].isSelected = true;
           _enableButton = true;
         });
       }
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -80,13 +80,13 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
     final request = ReqAddProvider(
         doctorId: widget.doctorId,
         userId: getString(PreferenceKey.id),
-        groupId: specialityList[_index].sId);
+        groupId: specialityList![_index].sId);
     try {
       var res = await ApiManager().addProviderNetwork(request);
       ProgressDialogUtils.dismissProgressDialog();
       Widgets.showAlertDialog(
         context,
-        Localization.of(context).appName,
+        Localization.of(context)!.appName,
         res.response.toString(),
         () {
           Navigator.of(context).pop();
@@ -105,7 +105,7 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
       //     });
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -135,7 +135,7 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
               _buildHeader(),
               SizedBox(height: spacing25),
               Text(
-                Localization.of(context).addToExistinGroup,
+                Localization.of(context)!.addToExistinGroup,
                 style: const TextStyle(
                   color: colorBlack2,
                   fontSize: fontSize16,
@@ -152,7 +152,7 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
                 color: colorPurple,
                 icon: FileConstants.icAddGroup,
                 buttonType: HutanoButtonType.withPrefixIcon,
-                label: Localization.of(context).addCreateGroup,
+                label: Localization.of(context)!.addCreateGroup,
               ),
               SizedBox(height: spacing5),
               _buildBottomButtons(),
@@ -171,18 +171,18 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
                 padding: EdgeInsets.symmetric(vertical: spacing10),
               ),
           shrinkWrap: true,
-          itemCount: specialityList.length,
+          itemCount: specialityList!.length,
           itemBuilder: (context, index) {
             return InkWell(
               onTap: () {
-                specialityList.forEach((element) => element.isSelected = false);
+                specialityList!.forEach((element) => element.isSelected = false);
                 _index = index;
                 setState(() {
-                  specialityList[index].isSelected = true;
+                  specialityList![index].isSelected = true;
                   _enableButton = true;
                 });
               },
-              child: ListItem(specialityList[index]),
+              child: ListItem(specialityList![index]),
             );
           }),
     );
@@ -205,7 +205,7 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
         ),
         Flexible(
           child: Text(
-            Localization.of(context)
+            Localization.of(context)!
                 .addDoctorNetwork
                 .format([widget.doctorName]),
             softWrap: true,
@@ -225,7 +225,7 @@ class _ProivderAddNetworkState extends State<ProivderAddNetwork> {
           Flexible(
             flex: 1,
             child: HutanoButton(
-              label: Localization.of(context).add,
+              label: Localization.of(context)!.add,
               labelColor: colorBlack,
               onPressed: _enableButton ? _addGroup : null,
             ),

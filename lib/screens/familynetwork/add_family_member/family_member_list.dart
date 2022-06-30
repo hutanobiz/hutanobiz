@@ -16,9 +16,9 @@ import 'package:hutano/utils/extensions.dart';
 import 'model/res_add_member.dart';
 
 class FamilyMemberList extends StatelessWidget {
-  final List<FamilyNetwork> memberList;
+  final List<FamilyNetwork>? memberList;
 
-  const FamilyMemberList({Key key, this.memberList}) : super(key: key);
+  const FamilyMemberList({Key? key, this.memberList}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -41,7 +41,7 @@ class FamilyMemberList extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25),
             child: Text(
-              Localization.of(context).myFamilyNetwork,
+              Localization.of(context)!.myFamilyNetwork,
               style: TextStyle(
                   fontSize: fontSize14,
                   fontWeight: FontWeight.w600,
@@ -52,28 +52,28 @@ class FamilyMemberList extends StatelessWidget {
           Container(
             height: 150,
             padding: EdgeInsets.only(left: spacing20, top: spacing20),
-            child: (memberList.length == 0)
+            child: (memberList!.length == 0)
                 ? Center(
                     child: NoDataFound(
-                    msg: Localization.of(context).noMemberFound,
+                    msg: Localization.of(context)!.noMemberFound,
                   ))
                 : ListView.separated(
                     separatorBuilder: (_, pos) {
-                      return SizedBox(width: SizeConfig.screenWidth / 5);
+                      return SizedBox(width: SizeConfig.screenWidth! / 5);
                     },
                     shrinkWrap: true,
                     primary: false,
                     scrollDirection: Axis.horizontal,
-                    itemCount: memberList.length + 1,
+                    itemCount: memberList!.length + 1,
                     itemBuilder: (context, pos) {
-                      if (pos == memberList.length) {
+                      if (pos == memberList!.length) {
                         return AddMore();
                       }
                       return ItemFamilyMember(
                           member: FamilyMember(
-                        avatar: memberList[pos].avatar,
-                        fullName: memberList[pos].fullName,
-                        relation: memberList[pos].relation,
+                        avatar: memberList![pos].avatar,
+                        fullName: memberList![pos].fullName,
+                        relation: memberList![pos].relation,
                       ));
                     },
                   ),
@@ -82,7 +82,7 @@ class FamilyMemberList extends StatelessWidget {
             height: 2,
             thickness: 1,
           ),
-          if ((memberList.length != 0))
+          if ((memberList!.length != 0))
             GestureDetector(
               onTap: () {
                 Navigator.of(context).pushNamed(Routes.familyCircle);
@@ -152,12 +152,12 @@ class AddMore extends StatelessWidget {
 }
 
 class ItemFamilyMember extends StatelessWidget {
-  final FamilyMember member;
+  final FamilyMember? member;
   final int memberIndex;
-  final Contact contact;
+  final Contact? contact;
 
   const ItemFamilyMember(
-      {Key key, this.member, this.memberIndex = 0, this.contact})
+      {Key? key, this.member, this.memberIndex = 0, this.contact})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -166,12 +166,12 @@ class ItemFamilyMember extends StatelessWidget {
       children: [
         Stack(
           children: [
-            member.avatar != null
+            member!.avatar != null
                 ? CircleAvatar(
                     radius: spacing30,
                     backgroundColor: colorPurple.withOpacity(0.3),
                     child: Text(
-                      member.fullName.substring(0, 1).toUpperCase(),
+                      member!.fullName!.substring(0, 1).toUpperCase(),
                       style: TextStyle(
                           color: colorPurple,
                           fontWeight: fontWeightMedium,
@@ -190,13 +190,13 @@ class ItemFamilyMember extends StatelessWidget {
                       .removeRedProviderMember(memberIndex);
                   Iterable<Item> v = [];
                   List<Item> c = [];
-                  c.add(Item(label: "mobile", value: member.phoneNumber));
+                  c.add(Item(label: "mobile", value: member!.phoneNumber));
                   Provider.of<FamilyProvider>(context, listen: false)
                       .addProviderContacts(
-                          Contact(displayName: member.fullName, phones: c));
+                          Contact(displayName: member!.fullName, phones: c));
                   Provider.of<FamilyProvider>(context, listen: false)
                       .addFilteredProviderContacts(
-                          Contact(displayName: member.fullName, phones: c));
+                          Contact(displayName: member!.fullName, phones: c));
                   Provider.of<FamilyProvider>(context, listen: false)
                       .providerMembers
                       .toString()
@@ -220,7 +220,7 @@ class ItemFamilyMember extends StatelessWidget {
         ),
         SizedBox(height: spacing10),
         Text(
-          member.fullName,
+          member!.fullName!,
           style: TextStyle(
             fontSize: fontSize13,
             color: colorBlack2,
@@ -230,7 +230,7 @@ class ItemFamilyMember extends StatelessWidget {
         ),
         SizedBox(height: spacing5),
         Text(
-          member.relation,
+          member!.relation!,
           style: TextStyle(
             fontSize: fontSize13,
             color: colorBlack2,

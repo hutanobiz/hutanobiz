@@ -1,6 +1,6 @@
 class ReqRemoveMedicalImages {
-  final String appointmentId;
-  final String imageId;
+  final String? appointmentId;
+  final String? imageId;
   ReqRemoveMedicalImages({
     this.appointmentId,
     this.imageId,

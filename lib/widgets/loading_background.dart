@@ -6,12 +6,12 @@ import 'package:hutano/widgets/circular_loader.dart';
 
 class LoadingBackground extends StatelessWidget {
   LoadingBackground({
-    Key key,
+    Key? key,
     this.isLoading: false,
-    @required this.title,
+    required this.title,
     this.isAddBack: true,
     this.padding,
-    @required this.child,
+    required this.child,
     this.isAddAppBar: true,
     this.addBottomArrows: false,
     this.addBackButton: false,
@@ -25,14 +25,14 @@ class LoadingBackground extends StatelessWidget {
   final bool isLoading;
   final Widget child;
   final bool isAddBack;
-  final String title, rightButtonText;
-  final EdgeInsets padding;
+  final String? title, rightButtonText;
+  final EdgeInsets? padding;
   final bool isAddAppBar, addBottomArrows;
   final color;
   final bool addBackButton;
-  final Function onForwardTap;
+  final Function? onForwardTap;
   final Color buttonColor;
-  final Function onRightButtonTap;
+  final Function? onRightButtonTap;
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +71,7 @@ class LoadingBackground extends StatelessWidget {
                           isAddBack ? SizedBox(width: 10.0) : Container(),
                           Expanded(
                             child: Text(
-                              title,
+                              title!,
                               style: TextStyle(
                                 fontSize: 18.0,
                                 color: Colors.black,
@@ -82,8 +82,8 @@ class LoadingBackground extends StatelessWidget {
                           if (rightButtonText != null &&
                               onRightButtonTap != null)
                             InkWell(
-                              onTap: onRightButtonTap,
-                              child: rightButtonText.contains('Skip')
+                              onTap: onRightButtonTap as void Function()?,
+                              child: rightButtonText!.contains('Skip')
                                   ? Container(
                                       margin: EdgeInsets.only(right: 10),
                                       decoration: BoxDecoration(
@@ -94,7 +94,7 @@ class LoadingBackground extends StatelessWidget {
                                       ),
                                       padding: EdgeInsets.all(10),
                                       child: Text(
-                                        rightButtonText,
+                                        rightButtonText!,
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w400,
@@ -105,7 +105,7 @@ class LoadingBackground extends StatelessWidget {
                                   : Padding(
                                       padding: const EdgeInsets.all(10),
                                       child: Text(
-                                        rightButtonText,
+                                        rightButtonText!,
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.w400,

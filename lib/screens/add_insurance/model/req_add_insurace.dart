@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 class ReqAddInsurance {
-  String insuranceCompany;
-  String insuranceMember;
-  String memberId;
-  String healthPlan;
-  String groupNumber;
-  String effectiveDate;
-  bool isPrimary;
+  String? insuranceCompany;
+  String? insuranceMember;
+  String? memberId;
+  String? healthPlan;
+  String? groupNumber;
+  String? effectiveDate;
+  bool? isPrimary;
   ReqAddInsurance({
     this.insuranceCompany,
     this.insuranceMember,
@@ -31,7 +31,7 @@ class ReqAddInsurance {
   }
 
   factory ReqAddInsurance.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
+  
 
     return ReqAddInsurance(
       insuranceCompany: map['insuranceCompany'],

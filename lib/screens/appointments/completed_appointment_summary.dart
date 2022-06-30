@@ -24,8 +24,8 @@ import 'package:hutano/widgets/problem_widget.dart';
 import 'package:intl/intl.dart';
 
 class CompletedAppointmentSummary extends StatefulWidget {
-  CompletedAppointmentSummary({Key key, this.appointmentId}) : super(key: key);
-  String appointmentId;
+  CompletedAppointmentSummary({Key? key, this.appointmentId}) : super(key: key);
+  String? appointmentId;
 
   @override
   _CompletedAppointmentSummaryState createState() =>
@@ -34,9 +34,9 @@ class CompletedAppointmentSummary extends StatefulWidget {
 
 class _CompletedAppointmentSummaryState
     extends State<CompletedAppointmentSummary> {
-  Future<dynamic> appointmentDetailFuture;
-  Future<PatientMedicationResponse> medicationChangesFuture;
-  Map profileMap = {};
+  Future<dynamic>? appointmentDetailFuture;
+  Future<PatientMedicationResponse?>? medicationChangesFuture;
+  Map? profileMap = {};
 
   Map<int, String> followUpType = {
     1: "Office appointment",
@@ -47,7 +47,7 @@ class _CompletedAppointmentSummaryState
 
   ApiBaseHelper _api = ApiBaseHelper();
   String token = '';
-  List<Data> appointmentMedication = [];
+  List<Data>? appointmentMedication = [];
 
   @override
   void initState() {
@@ -83,8 +83,8 @@ class _CompletedAppointmentSummaryState
             future: appointmentDetailFuture,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                profileMap = snapshot.data;
-                return profileWidget(profileMap);
+                profileMap = snapshot.data as Map?;
+                return profileWidget(profileMap!);
               } else if (snapshot.hasError) {
                 return Text("${snapshot.error}");
               }
@@ -101,10 +101,10 @@ class _CompletedAppointmentSummaryState
   Widget profileWidget(Map appointmentData) {
     String age = "---";
     String sex = '';
-    String mrn = '';
+    String? mrn = '';
     String license = '';
     String encounterDate = '';
-    String professionalTitle = '';
+    String? professionalTitle = '';
     if (appointmentData['doctorData'] != null &&
         appointmentData['doctorData'].isNotEmpty) {
       if (appointmentData['doctorData'][0]['licenseDetails'] != null &&
@@ -149,10 +149,10 @@ class _CompletedAppointmentSummaryState
         physics: NeverScrollableScrollPhysics(),
         children: [
           Text(
-                  "Encounter Summary",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-                ),
-                SizedBox(height:16),
+            "Encounter Summary",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+          ),
+          SizedBox(height: 16),
           SummaryHeaderWidget(
             context: context,
             appointmentType: appointmentData['data']['type'] == 1
@@ -198,7 +198,7 @@ class _CompletedAppointmentSummaryState
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(10)),
-              border: Border.all(color: Colors.grey[200]),
+              border: Border.all(color: Colors.grey[200]!),
             ),
             child: Row(
               children: [
@@ -242,7 +242,7 @@ class _CompletedAppointmentSummaryState
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(10)),
-              border: Border.all(color: Colors.grey[200]),
+              border: Border.all(color: Colors.grey[200]!),
             ),
             child: Row(
               children: [
@@ -261,244 +261,246 @@ class _CompletedAppointmentSummaryState
           SizedBox(
             height: 14,
           ),
-          AppointmentData.fromJson(appointmentData).doctorFeedback[0].vitals !=
+          AppointmentData.fromJson(appointmentData as Map<String, dynamic>)
+                          .doctorFeedback![0]
+                          .vitals !=
                       null &&
                   (AppointmentData.fromJson(appointmentData)
-                              .doctorFeedback[0]
-                              .vitals
+                              .doctorFeedback![0]
+                              .vitals!
                               .bloodPressureSbp !=
                           null ||
                       AppointmentData.fromJson(appointmentData)
-                              .doctorFeedback[0]
-                              .vitals
+                              .doctorFeedback![0]
+                              .vitals!
                               .temperature !=
                           null)
               ? VitalsCompleteWidget(
                   vitals: AppointmentData.fromJson(appointmentData)
-                      .doctorFeedback[0]
+                      .doctorFeedback![0]
                       .vitals,
                 )
               : SizedBox(),
           AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
+                          .doctorFeedback![0]
                           .heartAndLungs !=
                       null &&
                   ((AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
-                                  .heartAndLungs
+                                  .doctorFeedback![0]
+                                  .heartAndLungs!
                                   .heart !=
                               null &&
                           AppointmentData.fromJson(appointmentData)
-                              .doctorFeedback[0]
-                              .heartAndLungs
-                              .heart
-                              .sound
+                              .doctorFeedback![0]
+                              .heartAndLungs!
+                              .heart!
+                              .sound!
                               .isNotEmpty) ||
                       (AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
-                                  .heartAndLungs
+                                  .doctorFeedback![0]
+                                  .heartAndLungs!
                                   .lung !=
                               null &&
                           AppointmentData.fromJson(appointmentData)
-                              .doctorFeedback[0]
-                              .heartAndLungs
-                              .lung
-                              .summary
+                              .doctorFeedback![0]
+                              .heartAndLungs!
+                              .lung!
+                              .summary!
                               .isNotEmpty))
               ? HeartLungsCompleteWidget(
                   heartAndLungs: AppointmentData.fromJson(appointmentData)
-                      .doctorFeedback[0]
+                      .doctorFeedback![0]
                       .heartAndLungs)
               : SizedBox(),
           AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
+                          .doctorFeedback![0]
                           .neurological !=
                       null &&
                   (AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
-                          .neurological
-                          .sensoryDeficits
+                          .doctorFeedback![0]
+                          .neurological!
+                          .sensoryDeficits!
                           .isNotEmpty ||
                       AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
-                          .neurological
-                          .dtrDeficits
+                          .doctorFeedback![0]
+                          .neurological!
+                          .dtrDeficits!
                           .isNotEmpty ||
                       AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
-                          .neurological
-                          .strengthDeficits
+                          .doctorFeedback![0]
+                          .neurological!
+                          .strengthDeficits!
                           .isNotEmpty ||
                       AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
-                          .neurological
-                          .romDeficits
+                          .doctorFeedback![0]
+                          .neurological!
+                          .romDeficits!
                           .isNotEmpty ||
                       AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
-                          .neurological
-                          .positiveTests
+                          .doctorFeedback![0]
+                          .neurological!
+                          .positiveTests!
                           .isNotEmpty)
               ? NeurologicalCompleteWidget(
                   sensoryDeficts: AppointmentData.fromJson(appointmentData)
-                      .doctorFeedback[0]
-                      .neurological
+                      .doctorFeedback![0]
+                      .neurological!
                       .sensoryDeficits,
                   dtrDeficts: AppointmentData.fromJson(appointmentData)
-                      .doctorFeedback[0]
-                      .neurological
+                      .doctorFeedback![0]
+                      .neurological!
                       .dtrDeficits,
                   strengthDeficts: AppointmentData.fromJson(appointmentData)
-                      .doctorFeedback[0]
-                      .neurological
+                      .doctorFeedback![0]
+                      .neurological!
                       .strengthDeficits,
                   romDeficts: AppointmentData.fromJson(appointmentData)
-                      .doctorFeedback[0]
-                      .neurological
+                      .doctorFeedback![0]
+                      .neurological!
                       .romDeficits,
                   positiveTestDeficts: AppointmentData.fromJson(appointmentData)
-                      .doctorFeedback[0]
-                      .neurological
+                      .doctorFeedback![0]
+                      .neurological!
                       .positiveTests,
                   neurologicalConcernList:
                       AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
-                          .neurological
+                          .doctorFeedback![0]
+                          .neurological!
                           .clinicalConcern,
                   neurologicalTreatmentlist:
                       AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
-                          .neurological
+                          .doctorFeedback![0]
+                          .neurological!
                           .treatment,
                   neurologicalDiagnosisList:
                       AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
-                          .neurological
+                          .doctorFeedback![0]
+                          .neurological!
                           .icd)
               : SizedBox(),
           AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
+                          .doctorFeedback![0]
                           .specialTests !=
                       null &&
                   AppointmentData.fromJson(appointmentData)
-                      .doctorFeedback[0]
-                      .specialTests
-                      .tests
+                      .doctorFeedback![0]
+                      .specialTests!
+                      .tests!
                       .isNotEmpty
               ? SpecialTestCompleteWidget(
                   specialTests: AppointmentData.fromJson(appointmentData)
-                      .doctorFeedback[0]
-                      .specialTests
+                      .doctorFeedback![0]
+                      .specialTests!
                       .tests,
                   specialTestsConcernList:
                       AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
-                          .specialTests
+                          .doctorFeedback![0]
+                          .specialTests!
                           .clinicalConcern,
                   specialTestsTreatmentlist:
                       AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
-                          .specialTests
+                          .doctorFeedback![0]
+                          .specialTests!
                           .treatment,
                   specialTestsDiagnosisList:
                       AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
-                          .specialTests
+                          .doctorFeedback![0]
+                          .specialTests!
                           .icd)
               : SizedBox(),
           AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
+                          .doctorFeedback![0]
                           .musculoskeletal !=
                       null &&
                   (AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
-                          .musculoskeletal
-                          .muscle
+                          .doctorFeedback![0]
+                          .musculoskeletal!
+                          .muscle!
                           .isNotEmpty ||
                       AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
-                          .musculoskeletal
-                          .joint
+                          .doctorFeedback![0]
+                          .musculoskeletal!
+                          .joint!
                           .isNotEmpty)
               ? MuscleJointCompleteWidget(
                   muscleList: AppointmentData.fromJson(appointmentData)
-                      .doctorFeedback[0]
-                      .musculoskeletal
+                      .doctorFeedback![0]
+                      .musculoskeletal!
                       .muscle,
                   jointList: AppointmentData.fromJson(appointmentData)
-                      .doctorFeedback[0]
-                      .musculoskeletal
+                      .doctorFeedback![0]
+                      .musculoskeletal!
                       .joint,
                   masculoskeletonConcernList:
                       AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
-                          .musculoskeletal
+                          .doctorFeedback![0]
+                          .musculoskeletal!
                           .clinicalConcern,
                   masculoskeletonTreatmentlist:
                       AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
-                          .musculoskeletal
+                          .doctorFeedback![0]
+                          .musculoskeletal!
                           .treatment,
                   masculoskeletonDiagnosisList:
                       AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
-                          .musculoskeletal
+                          .doctorFeedback![0]
+                          .musculoskeletal!
                           .icd)
               : SizedBox(),
           AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
+                          .doctorFeedback![0]
                           .anthropometricMeasurements !=
                       null &&
                   AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
-                          .anthropometricMeasurements
+                          .doctorFeedback![0]
+                          .anthropometricMeasurements!
                           .weight !=
                       null &&
                   AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
-                          .anthropometricMeasurements
-                          .weight
+                          .doctorFeedback![0]
+                          .anthropometricMeasurements!
+                          .weight!
                           .current !=
                       null &&
                   AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
-                          .anthropometricMeasurements
-                          .weight
+                          .doctorFeedback![0]
+                          .anthropometricMeasurements!
+                          .weight!
                           .current !=
                       ''
               ? AnthopometricCompletedSummaryWidget(
                   anthropometricMeasurements:
                       AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
+                          .doctorFeedback![0]
                           .anthropometricMeasurements)
               : SizedBox(),
           AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
+                          .doctorFeedback![0]
                           .integumentary !=
                       null &&
                   AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
-                          .integumentary
-                          .summary
+                          .doctorFeedback![0]
+                          .integumentary!
+                          .summary!
                           .length >
                       0
               ? IntegumentryCompletedWidget(
                   integumentry: AppointmentData.fromJson(appointmentData)
-                      .doctorFeedback[0]
+                      .doctorFeedback![0]
                       .integumentary,
                 )
               : SizedBox(),
-          AppointmentData.fromJson(appointmentData).doctorFeedback[0].gait !=
+          AppointmentData.fromJson(appointmentData).doctorFeedback![0].gait !=
                       null &&
                   AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
-                          .gait
-                          .summary
+                          .doctorFeedback![0]
+                          .gait!
+                          .summary!
                           .length >
                       0
               ? GaitCompletedWidget(
                   gait: AppointmentData.fromJson(appointmentData)
-                      .doctorFeedback[0]
+                      .doctorFeedback![0]
                       .gait)
               : SizedBox(),
         ],
@@ -512,7 +514,7 @@ class _CompletedAppointmentSummaryState
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(10)),
-              border: Border.all(color: Colors.grey[200]),
+              border: Border.all(color: Colors.grey[200]!),
             ),
             child: Row(
               children: [
@@ -535,207 +537,207 @@ class _CompletedAppointmentSummaryState
               padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
-                border: Border.all(color: Colors.grey[200]),
+                border: Border.all(color: Colors.grey[200]!),
               ),
               child: ListView(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 children: [
                   AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
+                                  .doctorFeedback![0]
                                   .education !=
                               null &&
                           AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
-                                  .education
+                                  .doctorFeedback![0]
+                                  .education!
                                   .length >
                               0
                       ? educationCategoriesWidget(
                           AppointmentData.fromJson(appointmentData)
-                              .doctorFeedback[0]
-                              .education)
+                              .doctorFeedback![0]
+                              .education!)
                       : SizedBox(),
                   AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
+                                  .doctorFeedback![0]
                                   .labDetails !=
                               null &&
                           AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
-                                  .labDetails
-                                  .labTests
+                                  .doctorFeedback![0]
+                                  .labDetails!
+                                  .labTests!
                                   .length >
                               0
                       ? testsWidget(AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
-                          .labDetails
-                          .labTests)
+                          .doctorFeedback![0]
+                          .labDetails!
+                          .labTests!)
                       : SizedBox(),
                   AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
+                                  .doctorFeedback![0]
                                   .labDetails !=
                               null &&
                           AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
-                                  .labDetails
+                                  .doctorFeedback![0]
+                                  .labDetails!
                                   .preferredLabs !=
                               null &&
                           AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
-                                  .labDetails
-                                  .preferredLabs
+                                  .doctorFeedback![0]
+                                  .labDetails!
+                                  .preferredLabs!
                                   .name !=
                               null &&
                           AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
-                                  .labDetails
-                                  .preferredLabs
+                                  .doctorFeedback![0]
+                                  .labDetails!
+                                  .preferredLabs!
                                   .name !=
                               ''
                       ? prefferedLabWidget(
                           AppointmentData.fromJson(appointmentData)
-                              .doctorFeedback[0]
-                              .labDetails
-                              .preferredLabs)
+                              .doctorFeedback![0]
+                              .labDetails!
+                              .preferredLabs!)
                       : SizedBox(),
                   AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
+                                  .doctorFeedback![0]
                                   .labDetails !=
                               null &&
                           AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
-                                  .labDetails
+                                  .doctorFeedback![0]
+                                  .labDetails!
                                   .labTestInstructions !=
                               null &&
                           AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
-                                  .labDetails
+                                  .doctorFeedback![0]
+                                  .labDetails!
                                   .labTestInstructions !=
                               ''
                       ? InstructionWidget(
                           title: 'Labs Instructions',
                           text: AppointmentData.fromJson(appointmentData)
-                              .doctorFeedback[0]
-                              .labDetails
+                              .doctorFeedback![0]
+                              .labDetails!
                               .labTestInstructions)
                       : SizedBox(),
                   AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
+                                  .doctorFeedback![0]
                                   .imagingDetails !=
                               null &&
                           AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
-                                  .imagingDetails
-                                  .imagings
+                                  .doctorFeedback![0]
+                                  .imagingDetails!
+                                  .imagings!
                                   .length >
                               0
                       ? imagingWidget(AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
-                          .imagingDetails
-                          .imagings)
+                          .doctorFeedback![0]
+                          .imagingDetails!
+                          .imagings!)
                       : SizedBox(),
                   AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
+                                  .doctorFeedback![0]
                                   .imagingDetails !=
                               null &&
                           AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
-                                  .imagingDetails
+                                  .doctorFeedback![0]
+                                  .imagingDetails!
                                   .preferredImagingCenters !=
                               null &&
                           AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
-                                  .imagingDetails
-                                  .preferredImagingCenters
+                                  .doctorFeedback![0]
+                                  .imagingDetails!
+                                  .preferredImagingCenters!
                                   .name !=
                               null &&
                           AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
-                                  .imagingDetails
-                                  .preferredImagingCenters
+                                  .doctorFeedback![0]
+                                  .imagingDetails!
+                                  .preferredImagingCenters!
                                   .name !=
                               ''
                       ? preferredImagingWidget(
                           AppointmentData.fromJson(appointmentData)
-                              .doctorFeedback[0]
-                              .imagingDetails
-                              .preferredImagingCenters)
+                              .doctorFeedback![0]
+                              .imagingDetails!
+                              .preferredImagingCenters!)
                       : SizedBox(),
                   AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
+                                  .doctorFeedback![0]
                                   .imagingDetails !=
                               null &&
                           AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
-                                  .imagingDetails
+                                  .doctorFeedback![0]
+                                  .imagingDetails!
                                   .imagingInstructions !=
                               null &&
                           AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
-                                  .imagingDetails
+                                  .doctorFeedback![0]
+                                  .imagingDetails!
                                   .imagingInstructions !=
                               ''
                       ? InstructionWidget(
                           title: 'Imaging Instructions',
                           text: AppointmentData.fromJson(appointmentData)
-                              .doctorFeedback[0]
-                              .imagingDetails
+                              .doctorFeedback![0]
+                              .imagingDetails!
                               .imagingInstructions)
                       : SizedBox(),
                   AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
+                                  .doctorFeedback![0]
                                   .exerciseDetails !=
                               null &&
                           AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
-                                  .exerciseDetails
-                                  .exercises
+                                  .doctorFeedback![0]
+                                  .exerciseDetails!
+                                  .exercises!
                                   .length >
                               0
                       ? exerciseWidget(AppointmentData.fromJson(appointmentData)
-                          .doctorFeedback[0]
-                          .exerciseDetails
-                          .exercises)
+                          .doctorFeedback![0]
+                          .exerciseDetails!
+                          .exercises!)
                       : SizedBox(),
                   prescriptionWidget(),
                   AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
+                                  .doctorFeedback![0]
                                   .prescriptionDetails !=
                               null &&
                           AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
-                                  .prescriptionDetails
+                                  .doctorFeedback![0]
+                                  .prescriptionDetails!
                                   .preferredPharmacy !=
                               null &&
                           AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
-                                  .prescriptionDetails
-                                  .preferredPharmacy
+                                  .doctorFeedback![0]
+                                  .prescriptionDetails!
+                                  .preferredPharmacy!
                                   .name !=
                               null
                       ? preffredPharmacyWidget(
                           AppointmentData.fromJson(appointmentData)
-                              .doctorFeedback[0]
-                              .prescriptionDetails
-                              .preferredPharmacy)
+                              .doctorFeedback![0]
+                              .prescriptionDetails!
+                              .preferredPharmacy!)
                       : SizedBox(),
                   AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
+                                  .doctorFeedback![0]
                                   .therapeuticIntervention !=
                               null &&
                           AppointmentData.fromJson(appointmentData)
-                                  .doctorFeedback[0]
-                                  .therapeuticIntervention
-                                  .intervention
+                                  .doctorFeedback![0]
+                                  .therapeuticIntervention!
+                                  .intervention!
                                   .length >
                               0
                       ? therapyWidget(
                           AppointmentData.fromJson(appointmentData)
-                              .doctorFeedback[0]
-                              .therapeuticIntervention
-                              .intervention,
+                              .doctorFeedback![0]
+                              .therapeuticIntervention!
+                              .intervention!,
                           AppointmentData.fromJson(appointmentData)
-                              .doctorFeedback[0]
-                              .therapeuticIntervention)
+                              .doctorFeedback![0]
+                              .therapeuticIntervention!)
                       : SizedBox(),
                   appointmentData['followUpAppointment'].length > 0
                       ? followUpWidget(appointmentData['followUpAppointment'])
@@ -749,7 +751,7 @@ class _CompletedAppointmentSummaryState
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(16.0)),
                       border: Border.all(
-                        color: Colors.grey[300],
+                        color: Colors.grey[300]!,
                         width: 1.0,
                       ),
                     ),
@@ -778,18 +780,18 @@ class _CompletedAppointmentSummaryState
         ),
         SizedBox(height: 4),
         Text(
-          preferredPhramacy.name,
+          preferredPhramacy.name!,
           style: AppTextStyle.mediumStyle(fontSize: 14),
         ),
         Text(
           preferredPhramacy.address != null
-              ? ((preferredPhramacy.address.address ?? '') +
+              ? ((preferredPhramacy.address!.address ?? '') +
                   ', ' +
-                  (preferredPhramacy.address.city ?? '') +
+                  (preferredPhramacy.address!.city ?? '') +
                   ', ' +
-                  (preferredPhramacy.address.state ?? '') +
+                  (preferredPhramacy.address!.state ?? '') +
                   ', ' +
-                  (preferredPhramacy.address.zipCode ?? ''))
+                  (preferredPhramacy.address!.zipCode ?? ''))
               : '---',
           style: AppTextStyle.regularStyle(fontSize: 14),
         )
@@ -812,7 +814,7 @@ class _CompletedAppointmentSummaryState
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            border: Border.all(color: Colors.grey[200]),
+            border: Border.all(color: Colors.grey[200]!),
           ),
           child: ListView.separated(
             separatorBuilder: (context, index) => SizedBox(height: 2),
@@ -848,15 +850,15 @@ class _CompletedAppointmentSummaryState
             },
           ),
         ),
-        therapeuticIntervention.clinicalConcern.isNotEmpty
+        therapeuticIntervention.clinicalConcern!.isNotEmpty
             ? EmrCompleteConcernListWidget(
                 clinicalList: therapeuticIntervention.clinicalConcern)
             : SizedBox(),
-        therapeuticIntervention.treatment.isNotEmpty
+        therapeuticIntervention.treatment!.isNotEmpty
             ? EmrCompleteTreatmentListWidget(
                 treatmentList: therapeuticIntervention.treatment)
             : SizedBox(),
-        therapeuticIntervention.icd.isNotEmpty
+        therapeuticIntervention.icd!.isNotEmpty
             ? EmrCompleteDiagnosisListWidget(
                 diagnosisList: therapeuticIntervention.icd)
             : SizedBox(),
@@ -878,7 +880,7 @@ class _CompletedAppointmentSummaryState
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            border: Border.all(color: Colors.grey[200]),
+            border: Border.all(color: Colors.grey[200]!),
           ),
           child: ListView.separated(
             separatorBuilder: (context, index) => SizedBox(height: 8),
@@ -948,7 +950,7 @@ class _CompletedAppointmentSummaryState
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            border: Border.all(color: Colors.grey[200]),
+            border: Border.all(color: Colors.grey[200]!),
           ),
           child: ListView.separated(
             separatorBuilder: (context, index) => SizedBox(height: 8),
@@ -978,18 +980,18 @@ class _CompletedAppointmentSummaryState
         ),
         SizedBox(height: 4),
         Text(
-          preferredLabs.name,
+          preferredLabs.name!,
           style: AppTextStyle.mediumStyle(fontSize: 14),
         ),
         Text(
           preferredLabs.address != null
-              ? ((preferredLabs.address.address ?? '') +
+              ? ((preferredLabs.address!.address ?? '') +
                   ', ' +
-                  (preferredLabs.address.city ?? '') +
+                  (preferredLabs.address!.city ?? '') +
                   ', ' +
-                  (preferredLabs.address.state ?? '') +
+                  (preferredLabs.address!.state ?? '') +
                   ', ' +
-                  (preferredLabs.address.zipCode ?? ''))
+                  (preferredLabs.address!.zipCode ?? ''))
               : '---',
           style: AppTextStyle.regularStyle(fontSize: 14),
         )
@@ -1008,19 +1010,19 @@ class _CompletedAppointmentSummaryState
         ),
         SizedBox(height: 4),
         Text(
-          preferredImaging.name,
+          preferredImaging.name!,
           style: AppTextStyle.mediumStyle(fontSize: 14),
         ),
         Text(
           preferredImaging.address != null
-              ? ((preferredImaging.address.address ??
+              ? preferredImaging.address!.address ??
                   '' +
                       ', ' +
-                      (preferredImaging.address.city ?? '') +
+                      (preferredImaging.address!.city ?? '') +
                       ', ' +
-                      (preferredImaging.address.state ?? '') +
+                      (preferredImaging.address!.state ?? '') +
                       ', ' +
-                      (preferredImaging.address.zipCode ?? '')))
+                      (preferredImaging.address!.zipCode ?? '')
               : '---',
           style: AppTextStyle.regularStyle(fontSize: 14),
         )
@@ -1042,7 +1044,7 @@ class _CompletedAppointmentSummaryState
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            border: Border.all(color: Colors.grey[200]),
+            border: Border.all(color: Colors.grey[200]!),
           ),
           child: ListView.separated(
             separatorBuilder: (context, index) => SizedBox(height: 8),
@@ -1075,7 +1077,7 @@ class _CompletedAppointmentSummaryState
           padding: EdgeInsets.all(4),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            border: Border.all(color: Colors.grey[200]),
+            border: Border.all(color: Colors.grey[200]!),
           ),
           child: ListView.separated(
             separatorBuilder: (context, index) => SizedBox(height: 8),
@@ -1085,7 +1087,7 @@ class _CompletedAppointmentSummaryState
             itemBuilder: (context, index) {
               List<dynamic> imageVideo = [];
               if (exercise[index].images != null) {
-                for (dynamic img in exercise[index].images) {
+                for (dynamic img in exercise[index].images!) {
                   imageVideo.add({'type': '1', 'url': img});
                 }
               }
@@ -1133,7 +1135,7 @@ class _CompletedAppointmentSummaryState
                                           height: 60,
                                           decoration: BoxDecoration(
                                             border: Border.all(
-                                                color: Colors.grey[300]),
+                                                color: Colors.grey[300]!),
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(10.0)),
                                           ),
@@ -1198,9 +1200,9 @@ class _CompletedAppointmentSummaryState
       future: medicationChangesFuture,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          appointmentMedication = snapshot.data.data;
-
-          return appointmentMedication.length > 0
+          var map = snapshot.data as PatientMedicationResponse;
+          appointmentMedication = map.data;
+          return appointmentMedication!.length > 0
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -1214,31 +1216,31 @@ class _CompletedAppointmentSummaryState
                       padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
-                        border: Border.all(color: Colors.grey[200]),
+                        border: Border.all(color: Colors.grey[200]!),
                       ),
                       child: ListView.separated(
                         separatorBuilder: (context, index) =>
                             SizedBox(height: 2),
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: appointmentMedication.length,
+                        itemCount: appointmentMedication!.length,
                         itemBuilder: (context, index) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '\u2022  ${appointmentMedication[index].name} ${medChangeString[appointmentMedication[index].status]}',
+                                '\u2022  ${appointmentMedication![index].name} ${medChangeString[appointmentMedication![index].status!]}',
                                 style: AppTextStyle.mediumStyle(fontSize: 14),
                               ),
-                              appointmentMedication[index].status == 2
+                              appointmentMedication![index].status == 2
                                   ? SizedBox()
                                   : Text(
-                                      '${appointmentMedication[index].dose} , ${appointmentMedication[index].frequency}',
+                                      '${appointmentMedication![index].dose} , ${appointmentMedication![index].frequency}',
                                       style: AppTextStyle.regularStyle(
                                           fontSize: 14),
                                     ),
                               Text(
-                                'Because ${appointmentMedication[index].providerReason}',
+                                'Because ${appointmentMedication![index].providerReason}',
                                 style: AppTextStyle.regularStyle(fontSize: 14),
                               )
                             ],

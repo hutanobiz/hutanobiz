@@ -1,8 +1,8 @@
 
 
 class TrackOfficeModelData {
-  String status;
-  TrackOfficeModel response;
+  String? status;
+  TrackOfficeModel? response;
 
   TrackOfficeModelData({this.status, this.response});
 
@@ -17,24 +17,24 @@ class TrackOfficeModelData {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     if (this.response != null) {
-      data['response'] = this.response.toJson();
+      data['response'] = this.response!.toJson();
     }
     return data;
   }
 }
 
 class TrackOfficeModel {
-  String currentDate;
-  Data data;
-  List<AppointmentProblems> appointmentProblems;
-  List<DoctorFeedBack> doctorFeedBack;
-  List<DoctorData> doctorData;
-  int averageRating;
-  List<Reason> reason;
-  MedicalHistory medicalHistory;
-  double distance;
-  Degree degree;
-  DoctorConfigration doctorConfigration;
+  String? currentDate;
+  Data? data;
+  List<AppointmentProblems>? appointmentProblems;
+  List<DoctorFeedBack>? doctorFeedBack;
+  List<DoctorData>? doctorData;
+  int? averageRating;
+  List<Reason>? reason;
+  MedicalHistory? medicalHistory;
+  double? distance;
+  Degree? degree;
+  DoctorConfigration? doctorConfigration;
 
   TrackOfficeModel(
       {this.currentDate,
@@ -54,23 +54,23 @@ class TrackOfficeModel {
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
 
     if (json['appointmentProblems'] != null) {
-      appointmentProblems = new List<AppointmentProblems>();
+      appointmentProblems = <AppointmentProblems>[];
       json['appointmentProblems'].forEach((v) {
-        appointmentProblems.add(new AppointmentProblems.fromJson(v));
+        appointmentProblems!.add(new AppointmentProblems.fromJson(v));
       });
     }
     if (json['doctorFeedBack'] != null) {
-      doctorFeedBack = new List<DoctorFeedBack>();
+      doctorFeedBack = <DoctorFeedBack>[];
       json['doctorFeedBack'].forEach((v) {
-        doctorFeedBack.add(new DoctorFeedBack.fromJson(v));
+        doctorFeedBack!.add(new DoctorFeedBack.fromJson(v));
       });
     }
 
      averageRating = json['averageRating'];
     if (json['reason'] != null) {
-      reason = new List<Reason>();
+      reason = <Reason>[];
       json['reason'].forEach((v) {
-        reason.add(new Reason.fromJson(v));
+        reason!.add(new Reason.fromJson(v));
       });
     }
 
@@ -89,83 +89,83 @@ class TrackOfficeModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['currentDate'] = this.currentDate;
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
 
     if (this.appointmentProblems != null) {
       data['appointmentProblems'] =
-          this.appointmentProblems.map((v) => v.toJson()).toList();
+          this.appointmentProblems!.map((v) => v.toJson()).toList();
     }
     if (this.doctorFeedBack != null) {
       data['doctorFeedBack'] =
-          this.doctorFeedBack.map((v) => v.toJson()).toList();
+          this.doctorFeedBack!.map((v) => v.toJson()).toList();
     }
     if (this.doctorData != null) {
-      data['doctorData'] = this.doctorData.map((v) => v.toJson()).toList();
+      data['doctorData'] = this.doctorData!.map((v) => v.toJson()).toList();
     }
     data['averageRating'] = this.averageRating;
     if (this.reason != null) {
-      data['reason'] = this.reason.map((v) => v.toJson()).toList();
+      data['reason'] = this.reason!.map((v) => v.toJson()).toList();
     }
 
     if (this.medicalHistory != null) {
-      data['medicalHistory'] = this.medicalHistory.toJson();
+      data['medicalHistory'] = this.medicalHistory!.toJson();
     }
     data['distance'] = this.distance;
     if (this.degree != null) {
-      data['degree'] = this.degree.toJson();
+      data['degree'] = this.degree!.toJson();
     }
     if (this.doctorConfigration != null) {
-      data['doctorConfigration'] = this.doctorConfigration.toJson();
+      data['doctorConfigration'] = this.doctorConfigration!.toJson();
     }
     return data;
   }
 }
 
 class Data {
-  DoctorAddress doctorAddress;
-  Location location;
-  TrackingStatus trackingStatus;
-  Pharmacy pharmacy;
-  int count;
-  String officeId;
-  String doctorName;
-  int type;
-  bool isFollowUp;
-  String date;
-  String fromTime;
-  String toTime;
-  bool consentToTreat;
-  bool isProblemImproving;
-  bool isTreatmentReceived;
-  int paymentStatus;
-  String doctorSign;
-  int status;
-  int paymentMethod;
-  int fees;
-  double providerFees;
-  double applicationFees;
-  String paymentIntentId;
-  String timeZonePlace;
-  int feeType;
-  int providerSubscriptionType;
-  bool isUserJoin;
-  bool isDoctorJoin;
-  bool isRefund;
-  bool isUserWantRejoin;
-  bool isDoctorWantRejoin;
-  bool isOndemand;
-  bool isOndemandExpire;
-  String sId;
-  User user;
-  Doctor doctor;
-  CardDetails cardDetails;
-  List<MedicalHistory> medicalHistory;
-  List<Medications> medications;
-  String referenceId;
-  String createdAt;
-  String updatedAt;
-  int iV;
+  DoctorAddress? doctorAddress;
+  Location? location;
+  TrackingStatus? trackingStatus;
+  Pharmacy? pharmacy;
+  int? count;
+  String? officeId;
+  String? doctorName;
+  int? type;
+  bool? isFollowUp;
+  String? date;
+  String? fromTime;
+  String? toTime;
+  bool? consentToTreat;
+  bool? isProblemImproving;
+  bool? isTreatmentReceived;
+  int? paymentStatus;
+  String? doctorSign;
+  int? status;
+  int? paymentMethod;
+  int? fees;
+  double? providerFees;
+  double? applicationFees;
+  String? paymentIntentId;
+  String? timeZonePlace;
+  int? feeType;
+  int? providerSubscriptionType;
+  bool? isUserJoin;
+  bool? isDoctorJoin;
+  bool? isRefund;
+  bool? isUserWantRejoin;
+  bool? isDoctorWantRejoin;
+  bool? isOndemand;
+  bool? isOndemandExpire;
+  String? sId;
+  User? user;
+  Doctor? doctor;
+  CardDetails? cardDetails;
+  List<MedicalHistory>? medicalHistory;
+  List<Medications>? medications;
+  String? referenceId;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
 
   Data(
       {this.doctorAddress,
@@ -264,15 +264,15 @@ class Data {
         ? new CardDetails.fromJson(json['cardDetails'])
         : null;
     if (json['medicalHistory'] != null) {
-      medicalHistory = new List<MedicalHistory>();
+      medicalHistory = <MedicalHistory>[];
       json['medicalHistory'].forEach((v) {
-        medicalHistory.add(new MedicalHistory.fromJson(v));
+        medicalHistory!.add(new MedicalHistory.fromJson(v));
       });
     }
     if (json['medications'] != null) {
-      medications = new List<Medications>();
+      medications = <Medications>[];
       json['medications'].forEach((v) {
-        medications.add(new Medications.fromJson(v));
+        medications!.add(new Medications.fromJson(v));
       });
     }
     referenceId = json['referenceId'];
@@ -284,17 +284,17 @@ class Data {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.doctorAddress != null) {
-      data['doctorAddress'] = this.doctorAddress.toJson();
+      data['doctorAddress'] = this.doctorAddress!.toJson();
     }
     if (this.location != null) {
-      data['location'] = this.location.toJson();
+      data['location'] = this.location!.toJson();
     }
 
     if (this.trackingStatus != null) {
-      data['trackingStatus'] = this.trackingStatus.toJson();
+      data['trackingStatus'] = this.trackingStatus!.toJson();
     }
     if (this.pharmacy != null) {
-      data['pharmacy'] = this.pharmacy.toJson();
+      data['pharmacy'] = this.pharmacy!.toJson();
     }
 
     data['count'] = this.count;
@@ -328,20 +328,20 @@ class Data {
     data['isOndemandExpire'] = this.isOndemandExpire;
     data['_id'] = this.sId;
     if (this.user != null) {
-      data['user'] = this.user.toJson();
+      data['user'] = this.user!.toJson();
     }
     if (this.doctor != null) {
-      data['doctor'] = this.doctor.toJson();
+      data['doctor'] = this.doctor!.toJson();
     }
     if (this.cardDetails != null) {
-      data['cardDetails'] = this.cardDetails.toJson();
+      data['cardDetails'] = this.cardDetails!.toJson();
     }
     if (this.medicalHistory != null) {
       data['medicalHistory'] =
-          this.medicalHistory.map((v) => v.toJson()).toList();
+          this.medicalHistory!.map((v) => v.toJson()).toList();
     }
     if (this.medications != null) {
-      data['medications'] = this.medications.map((v) => v.toJson()).toList();
+      data['medications'] = this.medications!.map((v) => v.toJson()).toList();
     }
     data['referenceId'] = this.referenceId;
 
@@ -353,13 +353,13 @@ class Data {
 }
 
 class DoctorAddress {
-  String address;
-  String street;
-  String city;
-  String state;
-  String zipCode;
-  String type;
-  List<double> coordinates;
+  String? address;
+  String? street;
+  String? city;
+  String? state;
+  String? zipCode;
+  String? type;
+  List<double>? coordinates;
 
   DoctorAddress(
       {this.address,
@@ -394,8 +394,8 @@ class DoctorAddress {
 }
 
 class Location {
-  String type;
-  List<int> coordinates;
+  String? type;
+  List<int>? coordinates;
 
   Location({this.type, this.coordinates});
 
@@ -413,12 +413,12 @@ class Location {
 }
 
 class TrackingStatus {
-  int status;
-  String patientStartDriving;
-  String patientArrived;
-  String treatmentStarted;
-  String providerTreatmentEnded;
-  String patientTreatmentEnded;
+  int? status;
+  String? patientStartDriving;
+  String? patientArrived;
+  String? treatmentStarted;
+  String? providerTreatmentEnded;
+  String? patientTreatmentEnded;
 
   TrackingStatus(
       {this.status,
@@ -450,8 +450,8 @@ class TrackingStatus {
 }
 
 class Pharmacy {
-  Address address;
-  String name;
+  Address? address;
+  String? name;
 
   Pharmacy({this.address, this.name});
 
@@ -464,7 +464,7 @@ class Pharmacy {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.address != null) {
-      data['address'] = this.address.toJson();
+      data['address'] = this.address!.toJson();
     }
     data['name'] = this.name;
     return data;
@@ -472,11 +472,11 @@ class Pharmacy {
 }
 
 class Address {
-  String address;
-  String city;
-  String phone;
-  String state;
-  String zipCode;
+  String? address;
+  String? city;
+  String? phone;
+  String? state;
+  String? zipCode;
 
   Address({this.address, this.city, this.phone, this.state, this.zipCode});
 
@@ -500,41 +500,41 @@ class Address {
 }
 
 class User {
-  Location location;
-  String fullName;
-  String firstName;
-  String lastName;
-  String dob;
-  String address;
-  String city;
-  String state;
-  String avatar;
-  int zipCode;
-  int phoneNumber;
-  int gender;
-  String email;
-  String password;
-  bool isAbleTOReceiveOffersAndPromotions;
-  bool isAgreeTermsAndCondition;
-  String mobileCountryCode;
-  String verificationCodeSendAt;
-  String verificationCode;
-  bool isContactInformationVerified;
-  bool isEmailVerified;
-  int status;
-  int type;
-  bool isResetPasswordOTPVerified;
-  String stripeCustomerId;
-  bool isStripeAcoountVerified;
-  bool isOtpValid;
-  int wallet;
-  bool isResetPinOTPVerified;
-  String sId;
-  List<Tokens> tokens;
+  Location? location;
+  String? fullName;
+  String? firstName;
+  String? lastName;
+  String? dob;
+  String? address;
+  String? city;
+  String? state;
+  String? avatar;
+  int? zipCode;
+  int? phoneNumber;
+  int? gender;
+  String? email;
+  String? password;
+  bool? isAbleTOReceiveOffersAndPromotions;
+  bool? isAgreeTermsAndCondition;
+  String? mobileCountryCode;
+  String? verificationCodeSendAt;
+  String? verificationCode;
+  bool? isContactInformationVerified;
+  bool? isEmailVerified;
+  int? status;
+  int? type;
+  bool? isResetPasswordOTPVerified;
+  String? stripeCustomerId;
+  bool? isStripeAcoountVerified;
+  bool? isOtpValid;
+  int? wallet;
+  bool? isResetPinOTPVerified;
+  String? sId;
+  List<Tokens>? tokens;
 
-  String createdAt;
-  String updatedAt;
-  int iV;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
 
   User(
       {this.location,
@@ -610,9 +610,9 @@ class User {
     sId = json['_id'];
 
     if (json['tokens'] != null) {
-      tokens = new List<Tokens>();
+      tokens = <Tokens>[];
       json['tokens'].forEach((v) {
-        tokens.add(new Tokens.fromJson(v));
+        tokens!.add(new Tokens.fromJson(v));
       });
     }
 
@@ -624,7 +624,7 @@ class User {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.location != null) {
-      data['location'] = this.location.toJson();
+      data['location'] = this.location!.toJson();
     }
     // data['title'] = this.title;
     data['fullName'] = this.fullName;
@@ -660,7 +660,7 @@ class User {
     data['_id'] = this.sId;
 
     if (this.tokens != null) {
-      data['tokens'] = this.tokens.map((v) => v.toJson()).toList();
+      data['tokens'] = this.tokens!.map((v) => v.toJson()).toList();
     }
 
     data['createdAt'] = this.createdAt;
@@ -671,9 +671,9 @@ class User {
 }
 
 class Tokens {
-  String sId;
-  String access;
-  String token;
+  String? sId;
+  String? access;
+  String? token;
 
   Tokens({this.sId, this.access, this.token});
 
@@ -693,44 +693,44 @@ class Tokens {
 }
 
 class Doctor {
-  Location location;
-  String title;
-  String fullName;
-  String firstName;
-  String lastName;
-  String dob;
-  String address;
-  String addressNumber;
-  String city;
-  String state;
-  String avatar;
-  int zipCode;
-  int phoneNumber;
-  int gender;
-  List<String> language;
-  String email;
-  String password;
-  bool isAbleTOReceiveOffersAndPromotions;
-  bool isAgreeTermsAndCondition;
-  String verificationCodeSendAt;
-  bool isContactInformationVerified;
-  bool isEmailVerified;
-  int status;
-  int type;
-  bool isResetPasswordOTPVerified;
-  String stripeCustomerId;
-  String stripeConnectAccount;
-  bool isStripeAcoountVerified;
-  String ssn;
-  bool isOtpValid;
-  int wallet;
-  bool isResetPinOTPVerified;
-  String sId;
-  List<Tokens> tokens;
-  String createdAt;
-  String updatedAt;
-  int iV;
-  String webhookTest;
+  Location? location;
+  String? title;
+  String? fullName;
+  String? firstName;
+  String? lastName;
+  String? dob;
+  String? address;
+  String? addressNumber;
+  String? city;
+  String? state;
+  String? avatar;
+  int? zipCode;
+  int? phoneNumber;
+  int? gender;
+  List<String>? language;
+  String? email;
+  String? password;
+  bool? isAbleTOReceiveOffersAndPromotions;
+  bool? isAgreeTermsAndCondition;
+  String? verificationCodeSendAt;
+  bool? isContactInformationVerified;
+  bool? isEmailVerified;
+  int? status;
+  int? type;
+  bool? isResetPasswordOTPVerified;
+  String? stripeCustomerId;
+  String? stripeConnectAccount;
+  bool? isStripeAcoountVerified;
+  String? ssn;
+  bool? isOtpValid;
+  int? wallet;
+  bool? isResetPinOTPVerified;
+  String? sId;
+  List<Tokens>? tokens;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
+  String? webhookTest;
 
   Doctor(
       {this.location,
@@ -811,9 +811,9 @@ class Doctor {
     sId = json['_id'];
 
     if (json['tokens'] != null) {
-      tokens = new List<Tokens>();
+      tokens = <Tokens>[];
       json['tokens'].forEach((v) {
-        tokens.add(new Tokens.fromJson(v));
+        tokens!.add(new Tokens.fromJson(v));
       });
     }
 
@@ -827,7 +827,7 @@ class Doctor {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.location != null) {
-      data['location'] = this.location.toJson();
+      data['location'] = this.location!.toJson();
     }
     data['title'] = this.title;
     data['fullName'] = this.fullName;
@@ -863,7 +863,7 @@ class Doctor {
     data['isResetPinOTPVerified'] = this.isResetPinOTPVerified;
     data['_id'] = this.sId;
     if (this.tokens != null) {
-      data['tokens'] = this.tokens.map((v) => v.toJson()).toList();
+      data['tokens'] = this.tokens!.map((v) => v.toJson()).toList();
     }
 
     data['createdAt'] = this.createdAt;
@@ -876,14 +876,14 @@ class Doctor {
 }
 
 class CardDetails {
-  String id;
-  String object;
-  BillingDetails billingDetails;
-  Card card;
-  int created;
-  String customer;
-  bool livemode;
-  String type;
+  String? id;
+  String? object;
+  BillingDetails? billingDetails;
+  Card? card;
+  int? created;
+  String? customer;
+  bool? livemode;
+  String? type;
 
   CardDetails(
       {this.id,
@@ -913,10 +913,10 @@ class CardDetails {
     data['id'] = this.id;
     data['object'] = this.object;
     if (this.billingDetails != null) {
-      data['billing_details'] = this.billingDetails.toJson();
+      data['billing_details'] = this.billingDetails!.toJson();
     }
     if (this.card != null) {
-      data['card'] = this.card.toJson();
+      data['card'] = this.card!.toJson();
     }
     data['created'] = this.created;
     data['customer'] = this.customer;
@@ -927,7 +927,7 @@ class CardDetails {
 }
 
 class BillingDetails {
-  Address address;
+  Address? address;
 
   BillingDetails({this.address});
 
@@ -939,7 +939,7 @@ class BillingDetails {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.address != null) {
-      data['address'] = this.address.toJson();
+      data['address'] = this.address!.toJson();
     }
 
     return data;
@@ -947,13 +947,13 @@ class BillingDetails {
 }
 
 class Card {
-  String brand;
-  String country;
-  int expMonth;
-  int expYear;
-  String fingerprint;
-  String funding;
-  String last4;
+  String? brand;
+  String? country;
+  int? expMonth;
+  int? expYear;
+  String? fingerprint;
+  String? funding;
+  String? last4;
 
   Card(
       {this.brand,
@@ -990,10 +990,10 @@ class Card {
 }
 
 class MedicalHistory {
-  String name;
-  String year;
-  String month;
-  String sId;
+  String? name;
+  String? year;
+  String? month;
+  String? sId;
 
   MedicalHistory({this.name, this.year, this.month, this.sId});
 
@@ -1015,11 +1015,11 @@ class MedicalHistory {
 }
 
 class Medications {
-  String prescriptionId;
-  String name;
-  String dose;
-  String frequency;
-  String sId;
+  String? prescriptionId;
+  String? name;
+  String? dose;
+  String? frequency;
+  String? sId;
 
   Medications(
       {this.prescriptionId, this.name, this.dose, this.frequency, this.sId});
@@ -1044,25 +1044,25 @@ class Medications {
 }
 
 class AppointmentProblems {
-  String name;
-  String image;
-  List<String> symptoms;
-  List<String> problemBetter;
-  List<String> problemWorst;
-  int problemRating;
-  String dailyActivity;
-  int isProblemImproving;
-  int isTreatmentReceived;
-  String sId;
-  List<BodyPart> bodyPart;
-  ProblemFacingTimeSpan problemFacingTimeSpan;
-  String problemId;
-  ProblemFacingTimeSpan treatmentReceived;
-  String userId;
-  String appointmentId;
-  String createdAt;
-  String updatedAt;
-  int iV;
+  String? name;
+  String? image;
+  List<String>? symptoms;
+  List<String>? problemBetter;
+  List<String>? problemWorst;
+  int? problemRating;
+  String? dailyActivity;
+  int? isProblemImproving;
+  int? isTreatmentReceived;
+  String? sId;
+  List<BodyPart>? bodyPart;
+  ProblemFacingTimeSpan? problemFacingTimeSpan;
+  String? problemId;
+  ProblemFacingTimeSpan? treatmentReceived;
+  String? userId;
+  String? appointmentId;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
 
   AppointmentProblems(
       {this.name,
@@ -1097,9 +1097,9 @@ class AppointmentProblems {
     isTreatmentReceived = json['isTreatmentReceived'];
     sId = json['_id'];
     if (json['bodyPart'] != null) {
-      bodyPart = new List<BodyPart>();
+      bodyPart = <BodyPart>[];
       json['bodyPart'].forEach((v) {
-        bodyPart.add(new BodyPart.fromJson(v));
+        bodyPart!.add(new BodyPart.fromJson(v));
       });
     }
     problemFacingTimeSpan = json['problemFacingTimeSpan'] != null
@@ -1129,14 +1129,14 @@ class AppointmentProblems {
     data['isTreatmentReceived'] = this.isTreatmentReceived;
     data['_id'] = this.sId;
     if (this.bodyPart != null) {
-      data['bodyPart'] = this.bodyPart.map((v) => v.toJson()).toList();
+      data['bodyPart'] = this.bodyPart!.map((v) => v.toJson()).toList();
     }
     if (this.problemFacingTimeSpan != null) {
-      data['problemFacingTimeSpan'] = this.problemFacingTimeSpan.toJson();
+      data['problemFacingTimeSpan'] = this.problemFacingTimeSpan!.toJson();
     }
     data['problemId'] = this.problemId;
     if (this.treatmentReceived != null) {
-      data['treatmentReceived'] = this.treatmentReceived.toJson();
+      data['treatmentReceived'] = this.treatmentReceived!.toJson();
     }
     data['userId'] = this.userId;
     data['appointmentId'] = this.appointmentId;
@@ -1148,9 +1148,9 @@ class AppointmentProblems {
 }
 
 class BodyPart {
-  String name;
-  List<int> sides;
-  String sId;
+  String? name;
+  List<int>? sides;
+  String? sId;
 
   BodyPart({this.name, this.sides, this.sId});
 
@@ -1170,8 +1170,8 @@ class BodyPart {
 }
 
 class ProblemFacingTimeSpan {
-  String type;
-  String period;
+  String? type;
+  String? period;
 
   ProblemFacingTimeSpan({this.type, this.period});
 
@@ -1189,12 +1189,12 @@ class ProblemFacingTimeSpan {
 }
 
 class DoctorFeedBack {
-  String sId;
-  String appointmentId;
-  String doctorId;
-  String createdAt;
-  String updatedAt;
-  int iV;
+  String? sId;
+  String? appointmentId;
+  String? doctorId;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
 
   DoctorFeedBack(
       {this.sId,
@@ -1227,28 +1227,28 @@ class DoctorFeedBack {
 }
 
 class DoctorData {
-  BusinessLocation businessLocation;
-  PaymentMethod paymentMethod;
-  bool isLiveTrackable;
-  ProfessionalTitle professionalTitle;
-  String practicingSince;
-  List<Specialties> specialties;
-  bool isOfficeEnabled;
-  bool isVideoChatEnabled;
-  bool isOnsiteEnabled;
-  String about;
-  int appointmentSetting;
-  int status;
-  String sId;
-  String userId;
-  int iV;
-  String createdAt;
-  String updatedAt;
-  List<Education> education;
-  List<LicenseDetails> licenseDetails;
+  BusinessLocation? businessLocation;
+  PaymentMethod? paymentMethod;
+  bool? isLiveTrackable;
+  ProfessionalTitle? professionalTitle;
+  String? practicingSince;
+  List<Specialties>? specialties;
+  bool? isOfficeEnabled;
+  bool? isVideoChatEnabled;
+  bool? isOnsiteEnabled;
+  String? about;
+  int? appointmentSetting;
+  int? status;
+  String? sId;
+  String? userId;
+  int? iV;
+  String? createdAt;
+  String? updatedAt;
+  List<Education>? education;
+  List<LicenseDetails>? licenseDetails;
 
-  List<OfficeConsultanceFee> officeConsultanceFee;
-  List<Schedules> schedules;
+  List<OfficeConsultanceFee>? officeConsultanceFee;
+  List<Schedules>? schedules;
 
   DoctorData(
       {this.businessLocation,
@@ -1287,9 +1287,9 @@ class DoctorData {
         : null;
     practicingSince = json['practicingSince'];
     if (json['specialties'] != null) {
-      specialties = new List<Specialties>();
+      specialties = <Specialties>[];
       json['specialties'].forEach((v) {
-        specialties.add(new Specialties.fromJson(v));
+        specialties!.add(new Specialties.fromJson(v));
       });
     }
     isOfficeEnabled = json['isOfficeEnabled'];
@@ -1305,29 +1305,29 @@ class DoctorData {
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     if (json['education'] != null) {
-      education = new List<Education>();
+      education = <Education>[];
       json['education'].forEach((v) {
-        education.add(new Education.fromJson(v));
+        education!.add(new Education.fromJson(v));
       });
     }
     if (json['licenseDetails'] != null) {
-      licenseDetails = new List<LicenseDetails>();
+      licenseDetails = <LicenseDetails>[];
       json['licenseDetails'].forEach((v) {
-        licenseDetails.add(new LicenseDetails.fromJson(v));
+        licenseDetails!.add(new LicenseDetails.fromJson(v));
       });
     }
 
     if (json['officeConsultanceFee'] != null) {
-      officeConsultanceFee = new List<OfficeConsultanceFee>();
+      officeConsultanceFee = <OfficeConsultanceFee>[];
       json['officeConsultanceFee'].forEach((v) {
-        officeConsultanceFee.add(new OfficeConsultanceFee.fromJson(v));
+        officeConsultanceFee!.add(new OfficeConsultanceFee.fromJson(v));
       });
     }
 
     if (json['schedules'] != null) {
-      schedules = new List<Schedules>();
+      schedules = <Schedules>[];
       json['schedules'].forEach((v) {
-        schedules.add(new Schedules.fromJson(v));
+        schedules!.add(new Schedules.fromJson(v));
       });
     }
   }
@@ -1336,18 +1336,18 @@ class DoctorData {
     final Map<String, dynamic> data = new Map<String, dynamic>();
 
     if (this.businessLocation != null) {
-      data['businessLocation'] = this.businessLocation.toJson();
+      data['businessLocation'] = this.businessLocation!.toJson();
     }
     if (this.paymentMethod != null) {
-      data['paymentMethod'] = this.paymentMethod.toJson();
+      data['paymentMethod'] = this.paymentMethod!.toJson();
     }
     data['isLiveTrackable'] = this.isLiveTrackable;
     if (this.professionalTitle != null) {
-      data['professionalTitle'] = this.professionalTitle.toJson();
+      data['professionalTitle'] = this.professionalTitle!.toJson();
     }
     data['practicingSince'] = this.practicingSince;
     if (this.specialties != null) {
-      data['specialties'] = this.specialties.map((v) => v.toJson()).toList();
+      data['specialties'] = this.specialties!.map((v) => v.toJson()).toList();
     }
     data['isOfficeEnabled'] = this.isOfficeEnabled;
     data['isVideoChatEnabled'] = this.isVideoChatEnabled;
@@ -1362,20 +1362,20 @@ class DoctorData {
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
     if (this.education != null) {
-      data['education'] = this.education.map((v) => v.toJson()).toList();
+      data['education'] = this.education!.map((v) => v.toJson()).toList();
     }
     if (this.licenseDetails != null) {
       data['licenseDetails'] =
-          this.licenseDetails.map((v) => v.toJson()).toList();
+          this.licenseDetails!.map((v) => v.toJson()).toList();
     }
 
     if (this.officeConsultanceFee != null) {
       data['officeConsultanceFee'] =
-          this.officeConsultanceFee.map((v) => v.toJson()).toList();
+          this.officeConsultanceFee!.map((v) => v.toJson()).toList();
     }
 
     if (this.schedules != null) {
-      data['schedules'] = this.schedules.map((v) => v.toJson()).toList();
+      data['schedules'] = this.schedules!.map((v) => v.toJson()).toList();
     }
 
     return data;
@@ -1383,15 +1383,15 @@ class DoctorData {
 }
 
 class BusinessLocation {
-  String address;
-  String street;
-  String city;
+  String? address;
+  String? street;
+  String? city;
   // State state;
-  String zipCode;
-  String type;
-  List<double> coordinates;
-  String suite;
-  String saveAs;
+  String? zipCode;
+  String? type;
+  List<double>? coordinates;
+  String? suite;
+  String? saveAs;
 
   BusinessLocation(
       {this.address,
@@ -1471,8 +1471,8 @@ class BusinessLocation {
 // }
 
 class PaymentMethod {
-  int cardPayment;
-  int cashPayment;
+  int? cardPayment;
+  int? cashPayment;
 
   PaymentMethod({this.cardPayment, this.cashPayment});
 
@@ -1490,12 +1490,12 @@ class PaymentMethod {
 }
 
 class ProfessionalTitle {
-  String title;
-  int status;
-  String sId;
-  String createdAt;
-  String updatedAt;
-  int iV;
+  String? title;
+  int? status;
+  String? sId;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
 
   ProfessionalTitle(
       {this.title,
@@ -1527,13 +1527,13 @@ class ProfessionalTitle {
 }
 
 class Specialties {
-  String title;
-  String image;
-  int status;
-  String sId;
-  String createdAt;
-  String updatedAt;
-  int iV;
+  String? title;
+  String? image;
+  int? status;
+  String? sId;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
 
   Specialties(
       {this.title,
@@ -1568,9 +1568,9 @@ class Specialties {
 }
 
 class Education {
-  String degree;
-  String year;
-  String institute;
+  String? degree;
+  String? year;
+  String? institute;
 
   Education({this.degree, this.year, this.institute});
 
@@ -1590,14 +1590,14 @@ class Education {
 }
 
 class LicenseDetails {
-  String licenseNumber;
-  String licenseState;
-  String expirationDate;
-  int restriction;
-  String licenseImageFront;
-  String npiNumber;
-  String deaNumber;
-  String sId;
+  String? licenseNumber;
+  String? licenseState;
+  String? expirationDate;
+  int? restriction;
+  String? licenseImageFront;
+  String? npiNumber;
+  String? deaNumber;
+  String? sId;
 
   LicenseDetails(
       {this.licenseNumber,
@@ -1635,9 +1635,9 @@ class LicenseDetails {
 }
 
 class OfficeConsultanceFee {
-  int fee;
-  int duration;
-  String sId;
+  int? fee;
+  int? duration;
+  String? sId;
 
   OfficeConsultanceFee({this.fee, this.duration, this.sId});
 
@@ -1657,13 +1657,13 @@ class OfficeConsultanceFee {
 }
 
 class Schedules {
-  int scheduleType;
-  int scheduleAppointmentType;
-  String addressId;
-  List<int> day;
-  bool isEveryYear;
-  String sId;
-  List<Session> session;
+  int? scheduleType;
+  int? scheduleAppointmentType;
+  String? addressId;
+  List<int>? day;
+  bool? isEveryYear;
+  String? sId;
+  List<Session>? session;
 
   Schedules(
       {this.scheduleType,
@@ -1682,9 +1682,9 @@ class Schedules {
     isEveryYear = json['isEveryYear'];
     sId = json['_id'];
     if (json['session'] != null) {
-      session = new List<Session>();
+      session = <Session>[];
       json['session'].forEach((v) {
-        session.add(new Session.fromJson(v));
+        session!.add(new Session.fromJson(v));
       });
     }
   }
@@ -1698,16 +1698,16 @@ class Schedules {
     data['isEveryYear'] = this.isEveryYear;
     data['_id'] = this.sId;
     if (this.session != null) {
-      data['session'] = this.session.map((v) => v.toJson()).toList();
+      data['session'] = this.session!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Session {
-  String fromTime;
-  String toTime;
-  String sId;
+  String? fromTime;
+  String? toTime;
+  String? sId;
 
   Session({this.fromTime, this.toTime, this.sId});
 
@@ -1727,16 +1727,16 @@ class Session {
 }
 
 class Reason {
-  String appointment;
-  User user;
-  int userType;
-  int rating;
-  List<String> reason;
-  String review;
-  String sId;
-  String createdAt;
-  String updatedAt;
-  int iV;
+  String? appointment;
+  User? user;
+  int? userType;
+  int? rating;
+  List<String>? reason;
+  String? review;
+  String? sId;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
 
   Reason(
       {this.appointment,
@@ -1767,7 +1767,7 @@ class Reason {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['appointment'] = this.appointment;
     if (this.user != null) {
-      data['user'] = this.user.toJson();
+      data['user'] = this.user!.toJson();
     }
     data['userType'] = this.userType;
     data['rating'] = this.rating;
@@ -1782,10 +1782,10 @@ class Reason {
 }
 
 class MedicalImages {
-  String images;
-  String name;
-  String date;
-  String sId;
+  String? images;
+  String? name;
+  String? date;
+  String? sId;
 
   MedicalImages({this.images, this.name, this.date, this.sId});
 
@@ -1807,12 +1807,12 @@ class MedicalImages {
 }
 
 class MedicalDocuments {
-  String medicalDocuments;
-  String type;
-  String name;
-  String date;
+  String? medicalDocuments;
+  String? type;
+  String? name;
+  String? date;
   Null size;
-  String sId;
+  String? sId;
 
   MedicalDocuments(
       {this.medicalDocuments,
@@ -1844,11 +1844,11 @@ class MedicalDocuments {
 }
 
 class MedicalDiagnostics {
-  String image;
-  String type;
-  String name;
-  String date;
-  String sId;
+  String? image;
+  String? type;
+  String? name;
+  String? date;
+  String? sId;
 
   MedicalDiagnostics({this.image, this.type, this.name, this.date, this.sId});
 
@@ -1872,9 +1872,9 @@ class MedicalDiagnostics {
 }
 
 class PreferredPharmacy {
-  Address address;
-  String name;
-  String sId;
+  Address? address;
+  String? name;
+  String? sId;
 
   PreferredPharmacy({this.address, this.name, this.sId});
 
@@ -1888,7 +1888,7 @@ class PreferredPharmacy {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.address != null) {
-      data['address'] = this.address.toJson();
+      data['address'] = this.address!.toJson();
     }
     data['name'] = this.name;
     data['_id'] = this.sId;
@@ -1897,13 +1897,13 @@ class PreferredPharmacy {
 }
 
 class Degree {
-  String s1;
-  String s2;
-  String s3;
-  String s4;
-  String s5;
-  String s6;
-  String s7;
+  String? s1;
+  String? s2;
+  String? s3;
+  String? s4;
+  String? s5;
+  String? s6;
+  String? s7;
 
   Degree({this.s1, this.s2, this.s3, this.s4, this.s5, this.s6, this.s7});
 
@@ -1931,11 +1931,11 @@ class Degree {
 }
 
 class DoctorConfigration {
-  String s1;
-  String s2;
-  String s3;
-  String s4;
-  String s5;
+  String? s1;
+  String? s2;
+  String? s3;
+  String? s4;
+  String? s5;
 
   DoctorConfigration({this.s1, this.s2, this.s3, this.s4, this.s5});
 

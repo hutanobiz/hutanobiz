@@ -28,10 +28,10 @@ import 'search_bar.dart';
 
 class ProviderSearch extends StatefulWidget {
   bool showSkip = true;
-  final bool isOnBoarding;
+  final bool? isOnBoarding;
 
   ProviderSearch({
-    Key key,
+    Key? key,
     this.isOnBoarding,
   }) : super(key: key);
   @override
@@ -46,7 +46,7 @@ class _ProviderSearchState extends State<ProviderSearch> {
   //     PagingController(firstPageKey: 1);
   int current_page = 1, last_page = 1;
   ScrollController scrollController = ScrollController();
-  List<DoctorData> appointmentMedication = [];
+  List<DoctorData>? appointmentMedication = [];
 
   @override
   void initState() {
@@ -79,17 +79,17 @@ class _ProviderSearchState extends State<ProviderSearch> {
     }
     try {
       var res = await ApiManager().searchProvider(param);
-      last_page = (res.response.count / res.response.limit).ceil();
+      last_page = (res.response!.count! / res.response!.limit!).ceil();
       if (page == 1) {
-        appointmentMedication = res.response.doctorData;
+        appointmentMedication = res.response!.doctorData;
       } else {
-        appointmentMedication.addAll(res.response.doctorData);
+        appointmentMedication!.addAll(res.response!.doctorData!);
       }
       setLoading(false);
     } on ErrorModel catch (e) {
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
-      debugPrint(e);
+      debugPrint(e.toString());
     }
   }
 
@@ -104,7 +104,7 @@ class _ProviderSearchState extends State<ProviderSearch> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor:
-          widget.isOnBoarding ? AppColors.snow : AppColors.goldenTainoi,
+          widget.isOnBoarding! ? AppColors.snow : AppColors.goldenTainoi,
       body: LoadingBackgroundNew(
         isAddBack: widget.isOnBoarding,
         addHeader: widget.isOnBoarding,
@@ -117,15 +117,15 @@ class _ProviderSearchState extends State<ProviderSearch> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (widget.isOnBoarding)
+            if (widget.isOnBoarding!)
               AppHeader(
                   progressSteps: HutanoProgressSteps.four,
-                  title: Localization.of(context).addProviders,
-                  subTitle: Localization.of(context).addProviderToNetwork,
-                  isFromTab: !widget.isOnBoarding,
+                  title: Localization.of(context)!.addProviders,
+                  subTitle: Localization.of(context)!.addProviderToNetwork,
+                  isFromTab: !widget.isOnBoarding!,
                   isAppLogoVisible: widget.isOnBoarding),
             SizedBox(
-              height: widget.isOnBoarding ? 10 : 10,
+              height: widget.isOnBoarding! ? 10 : 10,
             ),
             SearchBar(
                 controller: controller,
@@ -141,27 +141,27 @@ class _ProviderSearchState extends State<ProviderSearch> {
                 controller: scrollController,
                 separatorBuilder: (BuildContext context, int index) =>
                     SizedBox(height: 10),
-                itemCount: appointmentMedication.length,
+                itemCount: appointmentMedication!.length,
                 itemBuilder: (context, index) {
                   return ItemProviderDetail(
-                    providerDetail: appointmentMedication[index],
+                    providerDetail: appointmentMedication![index],
                     isOnBoarding: widget.isOnBoarding,
                     onAddPressed: () {
                       controller.text = '';
-                      final user = appointmentMedication[index].user[0];
+                      final user = appointmentMedication![index].user![0];
                       var occupation = "";
-                      if (appointmentMedication[index]?.professionalTitle !=
+                      if (appointmentMedication![index].professionalTitle !=
                               null &&
-                          appointmentMedication[index]
-                                  .professionalTitle
+                          appointmentMedication![index]
+                                  .professionalTitle!
                                   .length >
                               0) {
-                        occupation = appointmentMedication[index]
-                                ?.professionalTitle[0]
-                                ?.title ??
+                        occupation = appointmentMedication![index]
+                                .professionalTitle![0]
+                                .title ??
                             "";
                       }
-                      var name = user?.fullName ?? "";
+                      var name = user.fullName ?? "";
                       if (occupation.isNotEmpty) {
                         name = 'Dr. $name , ${occupation.getInitials()}';
                       }
@@ -169,14 +169,14 @@ class _ProviderSearchState extends State<ProviderSearch> {
                       Navigator.of(context)
                           .pushNamed(Routes.providerAddToNetwork, arguments: {
                         ArgumentConstant.doctorId:
-                            appointmentMedication[index].userId,
+                            appointmentMedication![index].userId,
                         ArgumentConstant.doctorName: name,
                         ArgumentConstant.doctorAvatar:
-                            appointmentMedication[index].user[0].avatar,
+                            appointmentMedication![index].user![0].avatar,
                         'isOnBoarding': widget.isOnBoarding
                       }).then((value) {
                         _searchProvider(1);
-                        if (value != null && value) {
+                        if (value != null && value as bool) {
                           setState(() {
                             isShowNext = true;
                           });
@@ -187,7 +187,7 @@ class _ProviderSearchState extends State<ProviderSearch> {
                 },
               ),
             ),
-            if (widget.isOnBoarding)
+            if (widget.isOnBoarding!)
               Padding(
                 padding: const EdgeInsets.all(7),
                 child: Row(

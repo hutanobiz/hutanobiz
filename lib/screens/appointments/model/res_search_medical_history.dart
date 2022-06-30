@@ -1,15 +1,15 @@
 class ResSearchMedicalHistory {
-  String status;
-  List<SearchMedicalHistory> response;
+  String? status;
+  List<SearchMedicalHistory>? response;
 
   ResSearchMedicalHistory({this.status, this.response});
 
   ResSearchMedicalHistory.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     if (json['response'] != null) {
-      response = new List<SearchMedicalHistory>();
+      response = <SearchMedicalHistory>[];
       json['response'].forEach((v) {
-        response.add(new SearchMedicalHistory.fromJson(v));
+        response!.add(new SearchMedicalHistory.fromJson(v));
       });
     }
   }
@@ -18,19 +18,19 @@ class ResSearchMedicalHistory {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     if (this.response != null) {
-      data['response'] = this.response.map((v) => v.toJson()).toList();
+      data['response'] = this.response!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class SearchMedicalHistory {
-  int status;
-  String sId;
-  String name;
-  String createdAt;
-  String updatedAt;
-  int iV;
+  int? status;
+  String? sId;
+  String? name;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
 
   SearchMedicalHistory(
       {this.status,

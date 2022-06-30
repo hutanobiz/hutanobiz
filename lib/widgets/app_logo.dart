@@ -4,7 +4,7 @@ import 'package:hutano/utils/constants/file_constants.dart';
 class AppLogo extends StatelessWidget {
   const AppLogo({this.appLogoText});
 
-  final String appLogoText;
+  final String? appLogoText;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class AppLogo extends StatelessWidget {
           height: 43.0,
         ),
         SizedBox(height: appLogoText != null ? 12.0 : 4),
-        appLogoText != null ? Text(appLogoText) : Container()
+        appLogoText != null ? Text(appLogoText!) : Container()
       ],
     );
   }

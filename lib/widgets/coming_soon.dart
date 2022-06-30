@@ -22,7 +22,7 @@ class ComingSoon extends StatelessWidget {
         color: Colors.white,
         child: Center(
           child: Text(
-            Localization.of(context).comingSoonLabel,
+            Localization.of(context)!.comingSoonLabel,
             style: TextStyle(
                 color: primaryColor,
                 fontSize: fontSize18,

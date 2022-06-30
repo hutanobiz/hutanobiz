@@ -1,15 +1,15 @@
 class ResBodyPartModel {
-  String status;
-  List<BodyPart> response;
+  String? status;
+  List<BodyPart>? response;
 
   ResBodyPartModel({this.status, this.response});
 
   ResBodyPartModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     if (json['response'] != null) {
-      response = new List<BodyPart>();
+      response = <BodyPart>[];
       json['response'].forEach((v) {
-        response.add(new BodyPart.fromJson(v));
+        response!.add(new BodyPart.fromJson(v));
       });
     }
   }
@@ -18,15 +18,15 @@ class ResBodyPartModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     if (this.response != null) {
-      data['response'] = this.response.map((v) => v.toJson()).toList();
+      data['response'] = this.response!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class BodyPart {
-  String name;
-  String sId;
+  String? name;
+  String? sId;
 
   BodyPart({this.name, this.sId});
 

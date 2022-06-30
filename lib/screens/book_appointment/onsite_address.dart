@@ -20,7 +20,7 @@ import 'package:provider/provider.dart';
 import 'morecondition/providers/health_condition_provider.dart';
 
 class OnsiteAddresses extends StatefulWidget {
-  OnsiteAddresses({Key key, this.isBookAppointment = false}) : super(key: key);
+  OnsiteAddresses({Key? key, this.isBookAppointment = false}) : super(key: key);
   final dynamic isBookAppointment;
 
   @override
@@ -32,15 +32,15 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
 
   bool isLoading = false;
 
-  Future<List<dynamic>> _addressesFuture;
+  Future<List<dynamic>>? _addressesFuture;
 
-  String _token;
-  List addressList = [];
+  String? _token;
+  List? addressList = [];
   String state = '---';
 
-  int _radioValue;
+  int? _radioValue;
 
-  InheritedContainerState _container;
+  late InheritedContainerState _container;
   dynamic _selectedAddress;
 
   bool isAddressAdded = false;
@@ -138,7 +138,7 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
           alignment: Alignment.topLeft,
           child: Text(
             widget.isBookAppointment
-                ? Localization.of(context).treatmentLocationLabel
+                ? Localization.of(context)!.treatmentLocationLabel
                 : 'Addresses',
             style: TextStyle(
                 fontSize: fontSize18,
@@ -156,7 +156,7 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
           child: TextWithImage(
             imageSpacing: spacing10,
             image: FileConstants.icLocationPin,
-            label: Localization.of(context).addNewAddressLabel,
+            label: Localization.of(context)!.addNewAddressLabel,
             size: 18,
             textStyle: TextStyle(
                 color: AppColors.windsor,
@@ -169,7 +169,7 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
           context,
           Routes.onsiteEditAddress,
         ).then((value) {
-          if (value != null && value) {
+          if (value != null && value as bool) {
             setState(() {
               _addressesFuture = api.getAddress(_token);
               isAddressAdded = true;
@@ -184,7 +184,7 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data == null ||
-              snapshot.data.isEmpty ||
+              snapshot.data!.isEmpty ||
               snapshot.data is String) {
             return Center(
               child: Text('No address.'),
@@ -200,19 +200,19 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
                   ),
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: addressList.length,
+              itemCount: addressList!.length,
               itemBuilder: (context, index) {
                 Future.delayed(Duration(milliseconds: 500)).whenComplete(() {
                   if (isAddressAdded) {
-                    _radioValue = addressList.length - 1;
-                    _selectedAddress = addressList[addressList.length - 1];
+                    _radioValue = addressList!.length - 1;
+                    _selectedAddress = addressList![addressList!.length - 1];
                     setState(() {});
                   }
 
                   isAddressAdded = false;
                 });
 
-                dynamic address = addressList[index];
+                dynamic address = addressList![index];
                 return addressWidget(address, index);
               });
         } else if (snapshot.hasError) {
@@ -273,9 +273,10 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
         offset: Offset(300, 50),
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
           _popMenuCommonItem(
-              context, Localization.of(context).edit, FileConstants.icEdit),
-          _popMenuCommonItem(context, Localization.of(context).remove,
-              FileConstants.icRemoveBlack)
+                  context, Localization.of(context)!.edit, FileConstants.icEdit)
+              as PopupMenuEntry<String>,
+          _popMenuCommonItem(context, Localization.of(context)!.remove,
+              FileConstants.icRemoveBlack) as PopupMenuEntry<String>
         ],
         child: Container(
           child: ListTile(
@@ -286,7 +287,9 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
                     value: index,
                     groupValue: _radioValue,
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    onChanged: _selectAddress(address),
+                    onChanged: (v) {
+                      _selectAddress(address);
+                    },
                   )
                 : null,
             title: Column(
@@ -306,7 +309,7 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
                 _addresstype == '1' ? Container() : SizedBox(height: spacing10),
                 _addresstype == '1'
                     ? Container()
-                    : Text(_roomNumb?.toString() ?? '---', style: style),
+                    : Text(_roomNumb.toString(), style: style),
                 SizedBox(height: spacing10),
                 Text(address['street']?.toString() ?? '---', style: style),
                 SizedBox(height: spacing10),
@@ -325,14 +328,14 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
             trailing: Icon(Icons.more_vert),
           ),
         ),
-        onSelected: (value) {
-          if (value == Localization.of(context).edit) {
+        onSelected: (dynamic value) {
+          if (value == Localization.of(context)!.edit) {
             Navigator.pushNamed(
               context,
               Routes.onsiteEditAddress,
               arguments: address,
             ).then((value) {
-              if (value != null && value) {
+              if (value != null && value as bool) {
                 setState(() {
                   _addressesFuture = api.getAddress(_token);
                 });
@@ -562,7 +565,7 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
 
       if (_selectedAddress['_id'].toString() == id) _selectedAddress = null;
 
-      addressList.removeWhere((element) => element['_id'].toString() == id);
+      addressList!.removeWhere((element) => element['_id'].toString() == id);
       setState(() {});
     }).futureError((e) {
       setLoading(false);

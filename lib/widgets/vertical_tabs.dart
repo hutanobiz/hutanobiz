@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class VerticalTabs extends StatefulWidget {
-  final Key key;
+  final Key? key;
   final double tabsWidth;
   final List<Tab> tabs;
   final List<Widget> contents;
@@ -12,12 +12,12 @@ class VerticalTabs extends StatefulWidget {
   final TextStyle tabTextStyle;
   final Duration changePageDuration;
   final Curve changePageCurve;
-  final Function(int tabIndex) onSelect;
+  final Function(int? tabIndex)? onSelect;
 
   VerticalTabs({
     this.key,
-    @required this.tabs,
-    @required this.contents,
+    required this.tabs,
+    required this.contents,
     this.tabsWidth = 0,
     this.disabledChangePageFromContentView = false,
     this.contentScrollAxis = Axis.horizontal,
@@ -37,12 +37,12 @@ class VerticalTabs extends StatefulWidget {
 
 class _VerticalTabsState extends State<VerticalTabs>
     with TickerProviderStateMixin {
-  int _selectedIndex;
-  bool _changePageByTapView;
+  int? _selectedIndex;
+  bool? _changePageByTapView;
 
-  AnimationController animationController;
-  Animation<double> animation;
-  Animation<RelativeRect> rectAnimation;
+  AnimationController? animationController;
+  Animation<double>? animation;
+  Animation<RelativeRect>? rectAnimation;
 
   PageController pageController = PageController();
 
@@ -167,7 +167,7 @@ class _VerticalTabsState extends State<VerticalTabs>
     animationControllers[index].forward();
 
     if (widget.onSelect != null) {
-      widget.onSelect(_selectedIndex);
+      widget.onSelect!(_selectedIndex);
     }
   }
 }

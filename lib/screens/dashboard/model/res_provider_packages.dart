@@ -1,6 +1,6 @@
 class ResProviderPacakges {
-  String status;
-  Response response;
+  String? status;
+  Response? response;
 
   ResProviderPacakges({this.status, this.response});
 
@@ -15,14 +15,14 @@ class ResProviderPacakges {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     if (this.response != null) {
-      data['response'] = this.response.toJson();
+      data['response'] = this.response!.toJson();
     }
     return data;
   }
 }
 
 class Response {
-  Consultation consultation;
+  Consultation? consultation;
 
   Response({this.consultation});
 
@@ -35,16 +35,16 @@ class Response {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.consultation != null) {
-      data['consultation'] = this.consultation.toJson();
+      data['consultation'] = this.consultation!.toJson();
     }
     return data;
   }
 }
 
 class Consultation {
-  Office office;
-  Office onSite;
-  Office video;
+  Office? office;
+  Office? onSite;
+  Office? video;
 
   Consultation({this.office, this.onSite, this.video});
 
@@ -59,23 +59,23 @@ class Consultation {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.office != null) {
-      data['office'] = this.office.toJson();
+      data['office'] = this.office!.toJson();
     }
     if (this.onSite != null) {
-      data['onSite'] = this.onSite.toJson();
+      data['onSite'] = this.onSite!.toJson();
     }
     if (this.video != null) {
-      data['video'] = this.video.toJson();
+      data['video'] = this.video!.toJson();
     }
     return data;
   }
 }
 
 class Office {
-  int fee;
-  int duration;
-  String sId;
-  List<ServiceData> services;
+  int? fee;
+  int? duration;
+  String? sId;
+  List<ServiceData>? services;
 
   Office({this.fee, this.duration, this.sId, this.services});
 
@@ -84,9 +84,9 @@ class Office {
     duration = json['duration'];
     sId = json['_id'];
     if (json['services'] != null) {
-      services = new List<ServiceData>();
+      services = <ServiceData>[];
       json['services'].forEach((v) {
-        services.add(new ServiceData.fromJson(v));
+        services!.add(new ServiceData.fromJson(v));
       });
     }
   }
@@ -97,18 +97,18 @@ class Office {
     data['duration'] = this.duration;
     data['_id'] = this.sId;
     if (this.services != null) {
-      data['services'] = this.services.map((v) => v.toJson()).toList();
+      data['services'] = this.services!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class ServiceData {
-  int duration;
-  int amount;
-  int serviceType;
-  String subServiceId;
-  String subServiceTitle;
+  int? duration;
+  int? amount;
+  int? serviceType;
+  String? subServiceId;
+  String? subServiceTitle;
 
   ServiceData(
       {this.duration,

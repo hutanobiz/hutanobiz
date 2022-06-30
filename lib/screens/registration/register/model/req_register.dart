@@ -1,31 +1,31 @@
 class ReqRegister {
-  String password;
-  String firstName;
-  String lastName;
-  String address;
-  String email;
-  String zipCode;
-  String state;
-  String dob;
-  String city;
-  String insuranceId;
-  String mobileCountryCode;
-  int isAgreeTermsAndCondition;
-  String phoneNumber;
-  String referedBy;
-  int type;
-  int step;
-  String deviceToken;
-  int gender;
-  int genderType;
-  String fullName;
-  bool haveHealthInsurance;
-  String latitude;
-  String longitude;
-  int whom;
-  String relation;
-  String deviceId;
-  String fcmId;
+  String? password;
+  String? firstName;
+  String? lastName;
+  String? address;
+  String? email;
+  String? zipCode;
+  String? state;
+  String? dob;
+  String? city;
+  String? insuranceId;
+  String? mobileCountryCode;
+  int? isAgreeTermsAndCondition;
+  String? phoneNumber;
+  String? referedBy;
+  int? type;
+  int? step;
+  String? deviceToken;
+  int? gender;
+  int? genderType;
+  String? fullName;
+  bool? haveHealthInsurance;
+  String? latitude;
+  String? longitude;
+  int? whom;
+  String? relation;
+  String? deviceId;
+  String? fcmId;
 
   ReqRegister(
       {this.password,
@@ -89,7 +89,7 @@ class ReqRegister {
   }
 
   factory ReqRegister.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
+   
 
     return ReqRegister(
         password: map['password'],

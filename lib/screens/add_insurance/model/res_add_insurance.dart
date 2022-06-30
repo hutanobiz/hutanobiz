@@ -1,15 +1,15 @@
 class ResAddInsurance {
-  String status;
-  List<Response> response;
+  String? status;
+  List<Response>? response;
 
   ResAddInsurance({this.status, this.response});
 
   ResAddInsurance.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     if (json['response'] != null) {
-      response = new List<Response>();
+      response = [];
       json['response'].forEach((v) {
-        response.add(new Response.fromJson(v));
+        response!.add(new Response.fromJson(v));
       });
     }
   }
@@ -18,16 +18,16 @@ class ResAddInsurance {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     if (this.response != null) {
-      data['response'] = this.response.map((v) => v.toJson()).toList();
+      data['response'] = this.response!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Response {
-  String location;
-  String param;
-  String msg;
+  String? location;
+  String? param;
+  String? msg;
 
   Response({this.location, this.param, this.msg});
 

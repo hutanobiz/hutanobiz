@@ -50,7 +50,7 @@ class _LinkNumberState extends State<LinkNumber> {
       Navigator.pushNamed(context, Routes.linkAccount,arguments: res);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -58,7 +58,7 @@ class _LinkNumberState extends State<LinkNumber> {
 
   void enableButton() {
     setState(() {
-      _enableButton = _key.currentState.validate();
+      _enableButton = _key.currentState!.validate();
     });
   }
 
@@ -100,7 +100,7 @@ class _LinkNumberState extends State<LinkNumber> {
     return HutanoButton(
       margin: spacing20,
       onPressed: _enableButton ? _onSubmitClick : null,
-      label: Localization.of(context).next,
+      label: Localization.of(context)!.next,
     );
   }
 

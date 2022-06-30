@@ -3,7 +3,7 @@ import 'package:hutano/colors.dart';
 import 'package:hutano/utils/color_utils.dart';
 
 Future showBottomSheet(
-    {BuildContext context, Widget child, Color color = colorWhite}) {
+    {required BuildContext context, Widget? child, Color color = colorWhite}) {
   return showModalBottomSheet(
       context: context,
       backgroundColor: color,
@@ -23,7 +23,7 @@ Future showBottomSheet(
                 decoration: BoxDecoration(
                     color: colorGrey, borderRadius: BorderRadius.circular(10)),
               ),
-              child
+              child!
             ],
           ));
 }

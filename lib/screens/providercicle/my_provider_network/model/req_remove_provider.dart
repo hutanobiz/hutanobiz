@@ -1,7 +1,7 @@
 class ReqRemoveProvider {
-  final String groupId;
-  final String doctorId;
-  final String userId;
+  final String? groupId;
+  final String? doctorId;
+  final String? userId;
   ReqRemoveProvider({
     this.groupId,
     this.doctorId,
@@ -17,8 +17,7 @@ class ReqRemoveProvider {
   }
 
   factory ReqRemoveProvider.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
-
+ 
     return ReqRemoveProvider(
       groupId: map['groupId'],
       doctorId: map['doctorId'],

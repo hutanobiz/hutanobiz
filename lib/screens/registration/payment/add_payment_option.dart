@@ -110,10 +110,10 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
                   ),
                   AppHeader(
                     progressSteps: HutanoProgressSteps.two,
-                    title: Localization.of(context).paymentOptions,
+                    title: Localization.of(context)!.paymentOptions,
                     subTitle: _isPaymentComplete
-                        ? Localization.of(context).complete
-                        : Localization.of(context).addCreditCard,
+                        ? Localization.of(context)!.complete
+                        : Localization.of(context)!.addCreditCard,
                   ),
                   SizedBox(
                     height: spacing10,
@@ -323,10 +323,10 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
         ],
         validationMethod: (value) {
           if (value.isEmpty) {
-            return Localization.of(context).errorEnterField;
+            return Localization.of(context)!.errorEnterField;
           }
         },
-        labelText: Localization.of(context).nameOnCard,
+        labelText: Localization.of(context)!.nameOnCard,
         contentPadding: EdgeInsets.all(10),
       )),
     );
@@ -338,10 +338,10 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
       textInputType: TextInputType.text,
       textSize: fontSize12,
       isFieldEnable: false,
-      controller: TextEditingController()..text = mainList[index].nameOnCard,
+      controller: TextEditingController()..text = mainList[index].nameOnCard!,
       floatingBehaviour: FloatingLabelBehavior.always,
       focusedBorderColor: colorGrey20,
-      labelText: Localization.of(context).nameOnCard,
+      labelText: Localization.of(context)!.nameOnCard,
       contentPadding: EdgeInsets.all(10),
     ));
   }
@@ -363,7 +363,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
           FilteringTextInputFormatter.deny(RegExp('[\\.]')),
           LengthLimitingTextInputFormatter(19),
         ],
-        labelText: Localization.of(context).cardNumber,
+        labelText: Localization.of(context)!.cardNumber,
         contentPadding: EdgeInsets.all(10),
         validationMethod: (number) {
           return validateCardNumber(number, context);
@@ -381,7 +381,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
       textInputType: TextInputType.number,
       floatingBehaviour: FloatingLabelBehavior.always,
       focusedBorderColor: colorGrey20,
-      labelText: Localization.of(context).cardNumber,
+      labelText: Localization.of(context)!.cardNumber,
       contentPadding: EdgeInsets.all(10),
     ));
   }
@@ -391,7 +391,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _keyCVV,
       child: HutanoTextField(
-        width: SizeConfig.screenWidth / 2.6,
+        width: SizeConfig.screenWidth! / 2.6,
         controller: _cvvController,
         isSecureField: true,
         textInputType: TextInputType.number,
@@ -408,7 +408,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
         onValueChanged: (s) {
           setState(() {});
         },
-        labelText: Localization.of(context).cvv,
+        labelText: Localization.of(context)!.cvv,
         contentPadding: EdgeInsets.all(10),
       ),
     );
@@ -423,10 +423,10 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
             left: spacing20,
           ),
           child: HutanoTextField(
-            controller: TextEditingController()..text = mainList[index].cvv,
+            controller: TextEditingController()..text = mainList[index].cvv!,
             floatingBehaviour: FloatingLabelBehavior.always,
             focusedBorderColor: colorGrey20,
-            labelText: Localization.of(context).cvv,
+            labelText: Localization.of(context)!.cvv,
             contentPadding: EdgeInsets.all(10),
           )),
     );
@@ -434,14 +434,14 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
 
   Widget _displayExpiary(int index) {
     return Container(
-        width: SizeConfig.screenWidth / 1.8,
+        width: SizeConfig.screenWidth! / 1.8,
         child: HutanoTextField(
           isFieldEnable: false,
           controller: TextEditingController()
-            ..text = mainList[index].expiryDate,
+            ..text = mainList[index].expiryDate!,
           floatingBehaviour: FloatingLabelBehavior.always,
           focusedBorderColor: colorGrey20,
-          labelText: Localization.of(context).expiaryDate,
+          labelText: Localization.of(context)!.expiaryDate,
           contentPadding: EdgeInsets.all(10),
         ));
   }
@@ -453,7 +453,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
       ),
       child: RichText(
           text: TextSpan(
-              text: Localization.of(context).paymentTermsAndCondition,
+              text: Localization.of(context)!.paymentTermsAndCondition,
               style: TextStyle(
                   color: colorBlack85,
                   fontSize: fontSize12,
@@ -471,13 +471,13 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _keyExpiary,
       child: Container(
-          width: SizeConfig.screenWidth / 2.6,
+          width: SizeConfig.screenWidth! / 2.6,
           child: HutanoTextField(
             controller: _expiryController,
             textInputAction: TextInputAction.next,
             floatingBehaviour: FloatingLabelBehavior.always,
             focusedBorderColor: colorGrey20,
-            labelText: Localization.of(context).expiaryDate,
+            labelText: Localization.of(context)!.expiaryDate,
             contentPadding: EdgeInsets.all(10),
             hintText: "mm/yy",
             textInputType: TextInputType.number,
@@ -499,7 +499,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
         icon: FileConstants.icNext,
         color: colorPurple100,
         iconSize: 20,
-        label: Localization.of(context).addCard.toUpperCase(),
+        label: Localization.of(context)!.addCard.toUpperCase(),
         onPressed: _enableButton
             ? () => setState(() {
                   _saveCard();
@@ -512,7 +512,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
       Navigator.of(context).pushReplacementNamed(Routes.inviteFamilyMember);
     } else {
       DialogUtils.showAlertDialog(
-          context, Localization.of(context).addCardDetails.toUpperCase());
+          context, Localization.of(context)!.addCardDetails.toUpperCase());
     }
   }
 
@@ -522,15 +522,15 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
         ProgressDialogUtils.dismissProgressDialog();
         var response = value.response;
         List<MyCreditCard> list = [];
-        for (var i = 0; i < value.response.data.length; i++) {
+        for (var i = 0; i < value.response!.data!.length; i++) {
           list.add(MyCreditCard(
-              nameOnCard: response.data[i].billingDetails.name,
-              cardNumber: "**** **** ****" + response.data[i].card.last4,
-              expiryDate: response.data[i].card.expMonth.toString() +
+              nameOnCard: response!.data![i].billingDetails!.name,
+              cardNumber: "**** **** ****" + response.data![i].card!.last4!,
+              expiryDate: response.data![i].card!.expMonth.toString() +
                   "/" +
-                  response.data[i].card.expYear.toString(),
+                  response.data![i].card!.expYear.toString(),
               cvv: "",
-              type: getBrandType(response.data[i].card.brand)));
+              type: getBrandType(response.data![i].card!.brand)));
         }
         setState(() {
           mainList = list;
@@ -544,19 +544,19 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
       if (e is ErrorModel) {
         if (e.response != null) {
           ProgressDialogUtils.dismissProgressDialog();
-          DialogUtils.showAlertDialog(context, e.response);
+          DialogUtils.showAlertDialog(context, e.response!);
         }
       }
     });
   }
 
   void _saveCard() {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
 
-    if (_keyExpiary.currentState.validate() &&
-        _keyName.currentState.validate() &&
-        _keyNumber.currentState.validate() &&
-        _keyCVV.currentState.validate()) {
+    if (_keyExpiary.currentState!.validate() &&
+        _keyName.currentState!.validate() &&
+        _keyNumber.currentState!.validate() &&
+        _keyCVV.currentState!.validate()) {
       ProgressDialogUtils.showProgressDialog(context);
       var _apiService = ApiServiceStripe();
       ReqCreateCardToken card;
@@ -607,7 +607,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
         if (e is ErrorModelStripe) {
           if (e.error != null) {
             ProgressDialogUtils.dismissProgressDialog();
-            DialogUtils.showAlertDialog(context, e.error.message);
+            DialogUtils.showAlertDialog(context, e.error!.message!);
           }
         }
       });
@@ -648,7 +648,7 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
     } else {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(
-          context, Localization.of(context).addCardErrorMsg);
+          context, Localization.of(context)!.addCardErrorMsg);
     }
   }
 

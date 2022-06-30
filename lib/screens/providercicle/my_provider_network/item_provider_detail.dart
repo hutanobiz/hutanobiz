@@ -11,15 +11,15 @@ import '../provider_search/model/provider_detail_model.dart';
 import '../provider_search/provider_info.dart';
 
 class ItemProviderDetail extends StatelessWidget {
-  final ProviderDetail providerDetail;
-  final int index;
-  final int subIndex;
-  final Function onShare;
-  final Function onRemove;
-  final Function onMakeAppointment;
+  final ProviderDetail? providerDetail;
+  final int? index;
+  final int? subIndex;
+  final Function? onShare;
+  final Function? onRemove;
+  final Function? onMakeAppointment;
 
   const ItemProviderDetail(
-      {Key key,
+      {Key? key,
       this.providerDetail,
       this.index,
       this.subIndex,
@@ -49,16 +49,16 @@ class ItemProviderDetail extends StatelessWidget {
                     child: ProviderInfo(
                       padding: EdgeInsets.all(0),
                       providerDetail: ProviderDetail(
-                          name: providerDetail.name,
-                          rating: providerDetail.rating,
-                          experience: providerDetail.experience,
-                          image: providerDetail.image,
-                          occupation: providerDetail.occupation),
+                          name: providerDetail!.name,
+                          rating: providerDetail!.rating,
+                          experience: providerDetail!.experience,
+                          image: providerDetail!.image,
+                          occupation: providerDetail!.occupation),
                     ),
                   ),
                   RippleEffect(
                     onTap: () {
-                      onShare(index, subIndex);
+                      onShare!(index, subIndex);
                     },
                     child: Container(
                         padding: EdgeInsets.all(10),
@@ -94,12 +94,12 @@ class ItemProviderDetail extends StatelessWidget {
         Spacer(),
         RippleEffect(
           onTap: () {
-            onRemove(index, subIndex);
+            onRemove!(index, subIndex);
           },
           child: IntrinsicWidth(
               child: TextWithImage(
             image: FileConstants.icRemoveBlack,
-            label: Localization.of(context).remove,
+            label: Localization.of(context)!.remove,
             textStyle: TextStyle(
                 color: colorBlack2.withOpacity(0.85), fontSize: fontSize12),
           )),
@@ -111,14 +111,14 @@ class ItemProviderDetail extends StatelessWidget {
             ? SizedBox()
             : RippleEffect(
                 onTap: () {
-                  onMakeAppointment(index, subIndex);
+                  onMakeAppointment!(index, subIndex);
                 },
                 child: IntrinsicWidth(
                   child: TextWithImage(
                       textStyle: TextStyle(
                           color: colorPurple100, fontSize: fontSize12),
                       image: FileConstants.icAppointmentBlue,
-                      label: Localization.of(context).makeAppointment),
+                      label: Localization.of(context)!.makeAppointment),
                 ),
               ),
       ],

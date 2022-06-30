@@ -1,6 +1,6 @@
 class ResCheckEmail {
-  String status;
-  String response;
+  String? status;
+  String? response;
 
   ResCheckEmail({this.status, this.response});
 

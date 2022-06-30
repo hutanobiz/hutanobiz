@@ -34,20 +34,20 @@ import 'model/req_family_network.dart';
 import 'permission_access.dart';
 
 class FamilyCircle extends StatefulWidget {
-  final bool isOnboarding;
+  final bool? isOnboarding;
 
-  const FamilyCircle({Key key, this.isOnboarding}) : super(key: key);
+  const FamilyCircle({Key? key, this.isOnboarding}) : super(key: key);
   @override
   _FamilyCircleState createState() => _FamilyCircleState();
 }
 
 class _FamilyCircleState extends State<FamilyCircle>
     with AutomaticKeepAliveClientMixin {
-  List<CircleMember> list = [];
+  List<CircleMember>? list = [];
   List<MemberPermissionModel> permissionList = [];
   bool _enableButton = false;
   final int _page = 1;
-  List<Relations> _relationList = [];
+  List<Relations>? _relationList = [];
 
   @override
   void initState() {
@@ -72,16 +72,16 @@ class _FamilyCircleState extends State<FamilyCircle>
       });
     } on ErrorModel catch (e) {
       // ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       // ProgressDialogUtils.dismissProgressDialog();
     }
   }
 
   _openStatePicker(BuildContext context, int index) {
-    var relationName = '';
-    for (Relations r in _relationList) {
-      if (r.relationId == list[index].relationId) {
+    String? relationName = '';
+    for (Relations r in _relationList!) {
+      if (r.relationId == list![index].relationId) {
         relationName = r.relation;
         break;
       }
@@ -101,8 +101,8 @@ class _FamilyCircleState extends State<FamilyCircle>
               children: [
                 MemberProfile(
                   member: FamilyMember(
-                    image: list[index].name,
-                    name: list[index].name,
+                    image: list![index].name,
+                    name: list![index].name,
                     relation: relationName,
                   ),
                 ),
@@ -110,13 +110,13 @@ class _FamilyCircleState extends State<FamilyCircle>
                   padding: const EdgeInsets.symmetric(vertical: 15.0),
                   child: Align(
                     alignment: Alignment.topLeft,
-                    child: Text(Localization.of(context).permissionsLabel,
+                    child: Text(Localization.of(context)!.permissionsLabel,
                         style: TextStyle(
                             fontSize: 14, fontWeight: fontWeightSemiBold)),
                   ),
                 ),
                 _feedbackSuggestListWidget(
-                    context, list[index].userPermissions),
+                    context, list![index].userPermissions),
                 _buildNextButton(context, index),
               ],
             ),
@@ -141,22 +141,22 @@ class _FamilyCircleState extends State<FamilyCircle>
               children: [
                 MemberProfile(
                   member: FamilyMember(
-                    image: list[index].name,
-                    name: list[index].name,
-                    relation: list[index].relationName,
+                    image: list![index].name,
+                    name: list![index].name,
+                    relation: list![index].relationName,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 15.0),
                   child: Align(
                     alignment: Alignment.topLeft,
-                    child: Text(Localization.of(context).permissionsLabel,
+                    child: Text(Localization.of(context)!.permissionsLabel,
                         style: TextStyle(
                             fontSize: 14, fontWeight: fontWeightSemiBold)),
                   ),
                 ),
                 _updateFeedbackSuggestListWidget(
-                    context, list[index].userPermissions),
+                    context, list![index].userPermissions),
                 _buildNextButton(context, index),
               ],
             ),
@@ -166,7 +166,7 @@ class _FamilyCircleState extends State<FamilyCircle>
   }
 
   Widget _feedbackSuggestListWidget(
-      BuildContext context, List<UserPermissions> userPermission) {
+      BuildContext context, List<UserPermissions>? userPermission) {
     permissionList.forEach((element) {
       element.isSelected = false;
     });
@@ -205,14 +205,14 @@ class _FamilyCircleState extends State<FamilyCircle>
   }
 
   Widget _updateFeedbackSuggestListWidget(
-      BuildContext context, List<UserPermissions> userPermission) {
+      BuildContext context, List<UserPermissions>? userPermission) {
     setState(() {
       permissionList.forEach((element) {
         element.isSelected = false;
       });
     });
     setState(() {
-      for (var i = 0; i < userPermission.length; i++) {
+      for (var i = 0; i < userPermission!.length; i++) {
         for (var j = 0; j < permissionList.length; j++) {
           if (permissionList[j].reasonId == userPermission[i].sId) {
             permissionList[j].isSelected = true;
@@ -273,7 +273,7 @@ class _FamilyCircleState extends State<FamilyCircle>
       if (!isFromAlert) {
         ProgressDialogUtils.dismissProgressDialog();
       }
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -293,7 +293,7 @@ class _FamilyCircleState extends State<FamilyCircle>
         FileConstants.icDocuments,
         FileConstants.icNotifications
       ];
-      res.response.forEach((e) {
+      res.response!.forEach((e) {
         permissionList.add(
             MemberPermissionModel(e.permission, false, imagesList[i], e.sId));
         i++;
@@ -301,28 +301,28 @@ class _FamilyCircleState extends State<FamilyCircle>
       setState(() {});
     } on ErrorModel catch (e) {
       // ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       // ProgressDialogUtils.dismissProgressDialog();
     }
   }
 
   void _onEditClick() {
-    list.forEach((element) => element.isSelected = false);
+    list!.forEach((element) => element.isSelected = false);
     setState(() {
       _enableButton = !_enableButton;
     });
   }
 
   void _openPermissionSheet() {
-    var index = list.indexWhere((element) => element.isSelected);
+    var index = list!.indexWhere((element) => element.isSelected);
     if (index == -1) return;
     permissionsheet.showBottomSheet(
         context: context,
         child: StatefulBuilder(
           builder: (BuildContext context, StateSetter changeState) {
             return PermissionAccess(
-              member: list[index],
+              member: list![index],
               index: index,
               // userPermissionsList: list[index].userPermissions,
               onPermissionDone: onPermissionDone,
@@ -337,23 +337,23 @@ class _FamilyCircleState extends State<FamilyCircle>
         buttonType: HutanoButtonType.onlyLabel,
         color: colorYellow,
         iconSize: 20,
-        label: Localization.of(context).saveLabel,
+        label: Localization.of(context)!.saveLabel,
         onPressed: () {
-          List<String> checkPermissions = [];
+          List<String?> checkPermissions = [];
           permissionList.forEach((element) {
             if (element.isSelected) {
               debugPrint("${element.reasonId}");
               checkPermissions.add(element.reasonId);
             }
           });
-          onAddPermissionDone(checkPermissions, list[index].sId, context);
+          onAddPermissionDone(checkPermissions, list![index].sId, context);
         },
       ));
 
   void onPermissionDone(List<int> checkedPermission, int index) async {
     Navigator.pop(context);
     ProgressDialogUtils.showProgressDialog(context);
-    var member = list[index];
+    var member = list![index];
     final request = ReqAddPermission(
         id: getString(PreferenceKey.id, ""),
         userId: member.sId,
@@ -366,15 +366,15 @@ class _FamilyCircleState extends State<FamilyCircle>
       if (res.data != null) {
         // list[index].userPermissions = checkedPermission;
         setState(() {});
-        DialogUtils.showAlertDialog(context, res.response);
+        DialogUtils.showAlertDialog(context, res.response!);
       }
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     }
   }
 
-  void onAddPermissionDone(List<String> checkedPermission, String memberId,
+  void onAddPermissionDone(List<String?> checkedPermission, String? memberId,
       BuildContext context) async {
     Navigator.pop(context);
     ProgressDialogUtils.showProgressDialog(context);
@@ -386,12 +386,12 @@ class _FamilyCircleState extends State<FamilyCircle>
           .setSpecificMemberPermission(request, memberId ?? "");
       ProgressDialogUtils.dismissProgressDialog();
       if (res.response != null) {
-        DialogUtils.showAlertDialog(context, res.response);
+        DialogUtils.showAlertDialog(context, res.response!);
         _getFamilyNetwork(isFromAlert: true);
       }
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     }
   }
 
@@ -427,15 +427,15 @@ class _FamilyCircleState extends State<FamilyCircle>
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widget.isOnboarding ? _backButton() : SizedBox(),
-            widget.isOnboarding ? _buildHeader(context) : SizedBox(),
-            widget.isOnboarding
+            widget.isOnboarding! ? _backButton() : SizedBox(),
+            widget.isOnboarding! ? _buildHeader(context) : SizedBox(),
+            widget.isOnboarding!
                 ? SizedBox(
                     height: spacing20,
                   )
                 : SizedBox(),
             _buildList(),
-            widget.isOnboarding
+            widget.isOnboarding!
                 ? SizedBox()
                 : Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -515,8 +515,8 @@ class _FamilyCircleState extends State<FamilyCircle>
       children: [
         AppHeader(
           margin: 20,
-          title: Localization.of(context).labelMyFamilyCircle,
-          subTitle: Localization.of(context).assignPermisstion,
+          title: Localization.of(context)!.labelMyFamilyCircle,
+          subTitle: Localization.of(context)!.assignPermisstion,
         ),
         SizedBox(height: spacing15),
       ],
@@ -535,11 +535,11 @@ class _FamilyCircleState extends State<FamilyCircle>
             thickness: 0.5,
           );
         },
-        itemCount: list.length,
+        itemCount: list!.length,
         itemBuilder: (context, i) {
-          var relationName = '';
-          for (Relations r in _relationList) {
-            if (r.relationId == list[i].relationId) {
+          String? relationName = '';
+          for (Relations r in _relationList!) {
+            if (r.relationId == list![i].relationId) {
               relationName = r.relation;
               break;
             }
@@ -566,7 +566,7 @@ class _FamilyCircleState extends State<FamilyCircle>
                     SizedBox(
                       width: 5,
                     ),
-                    Text(Localization.of(context).managePermissionsLabel),
+                    Text(Localization.of(context)!.managePermissionsLabel),
                   ],
                 ),
               ),
@@ -589,7 +589,7 @@ class _FamilyCircleState extends State<FamilyCircle>
                     SizedBox(
                       width: 5,
                     ),
-                    Text(Localization.of(context).remove)
+                    Text(Localization.of(context)!.remove)
                   ],
                 ),
               ),
@@ -598,16 +598,16 @@ class _FamilyCircleState extends State<FamilyCircle>
               contentPadding: EdgeInsets.all(0),
               title: MemberProfile(
                 member: FamilyMember(
-                  image: list[i].name,
-                  name: list[i].name,
+                  image: list![i].name,
+                  name: list![i].name,
                   relation: relationName,
                 ),
               ),
               trailing: Icon(Icons.more_vert),
             ),
-            onSelected: (value) {
+            onSelected: (dynamic value) {
               if (value == "Value1") {
-                if (list[i].userPermissions.length > 0) {
+                if (list![i].userPermissions!.length > 0) {
                   _openEditPermissionPicker(context, i);
                 } else {
                   setState(() {
@@ -620,9 +620,9 @@ class _FamilyCircleState extends State<FamilyCircle>
                   ReqRemoveFamilyMember removeFamilyMember =
                       ReqRemoveFamilyMember(
                           sId: value.toString(),
-                          userId: list[i].sId.toString());
+                          userId: list![i].sId.toString());
                   setState(() {
-                    list.remove(list[i]);
+                    list!.remove(list![i]);
                   });
                   _removeFamilyNetworkMember(context, removeFamilyMember);
                 });
@@ -640,7 +640,7 @@ class _FamilyCircleState extends State<FamilyCircle>
     await ApiManager().removeFamilyNetwork(model).then((result) {
       if (result is CommonRes) {
         ProgressDialogUtils.dismissProgressDialog();
-        Widgets.showToast(result.response);
+        Widgets.showToast(result.response!);
         _getFamilyNetwork();
       }
     }).catchError((dynamic e) {
@@ -653,6 +653,6 @@ class _FamilyCircleState extends State<FamilyCircle>
 
   @override
   bool get wantKeepAlive {
-    return !widget.isOnboarding ? true : false;
+    return !widget.isOnboarding! ? true : false;
   }
 }

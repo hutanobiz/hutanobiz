@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class OverlayHandlerProvider with ChangeNotifier {
-  OverlayEntry overlayEntry;
+  OverlayEntry? overlayEntry;
   double _aspectRatio = 1.77;
   bool inPipMode = false;
   bool isHidden = false;
-  BuildContext videCallContext;
+  late BuildContext videCallContext;
 
   updateVideoCallContext(BuildContext context) {
     videCallContext = context;

@@ -4,9 +4,9 @@ import 'package:hutano/screens/registration/payment/utils/card_utils.dart';
 class LinkedAccountProvider extends ChangeNotifier {
   LinkedAccountProvider();
 
-  List<dynamic> linkedAccounts = [];
+  List<dynamic>? linkedAccounts = [];
 
-  void add(List<dynamic> accounts) {
+  void add(List<dynamic>? accounts) {
     linkedAccounts = accounts;
     notifyListeners();
   }

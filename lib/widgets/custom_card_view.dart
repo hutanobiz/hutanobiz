@@ -6,16 +6,16 @@ import 'package:hutano/utils/constants/constants.dart';
 
 class CustomCardView extends StatelessWidget {
   CustomCardView(
-      {Key key,
-      @required this.onTap,
-      @required this.image,
-      @required this.cardText,
-      @required this.cardSubText,
+      {Key? key,
+      required this.onTap,
+      required this.image,
+      required this.cardText,
+      required this.cardSubText,
       this.isSelected = false,
       this.isEnabled = true})
       : super(key: key);
 
-  final Function onTap;
+  final Function? onTap;
   final String image, cardText, cardSubText;
   final bool isSelected, isEnabled;
 
@@ -30,11 +30,11 @@ class CustomCardView extends StatelessWidget {
             ,
         borderRadius: BorderRadius.all(Radius.circular(14.0)),
         border:
-             Border.all(color: isEnabled?Colors.grey[200]:Colors.grey[50]),
+             Border.all(color: isEnabled?Colors.grey[200]!:Colors.grey[50]!),
       ),
       child: InkWell(
         splashColor: Colors.grey,
-        onTap: onTap,
+        onTap: onTap as void Function()?,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[

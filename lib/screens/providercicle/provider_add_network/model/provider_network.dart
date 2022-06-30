@@ -1,7 +1,7 @@
 class ProviderNetwork {
-  String groupName;
-  List<String> doctorId;
-  String sId;
+  String? groupName;
+  List<String>? doctorId;
+  String? sId;
   bool isSelected=false;
 
   ProviderNetwork({this.groupName, this.doctorId, this.sId});

@@ -1,15 +1,15 @@
 class ReqTreatedConditionTimeModel {
-  String flag;
-  List<LongAgo> longAgo;
+  String? flag;
+  List<LongAgo>? longAgo;
 
   ReqTreatedConditionTimeModel({this.flag, this.longAgo});
 
   ReqTreatedConditionTimeModel.fromJson(Map<String, dynamic> json) {
     flag = json['flag'];
     if (json['longAgo'] != null) {
-      longAgo = new List<LongAgo>();
+      longAgo = <LongAgo>[];
       json['longAgo'].forEach((v) {
-        longAgo.add(new LongAgo.fromJson(v));
+        longAgo!.add(new LongAgo.fromJson(v));
       });
     }
   }
@@ -18,18 +18,18 @@ class ReqTreatedConditionTimeModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['flag'] = this.flag;
     if (this.longAgo != null) {
-      data['longAgo'] = this.longAgo.map((v) => v.toJson()).toList();
+      data['longAgo'] = this.longAgo!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class LongAgo {
-  String hour;
-  String day;
-  String week;
-  String month;
-  String year;
+  String? hour;
+  String? day;
+  String? week;
+  String? month;
+  String? year;
 
   LongAgo({this.hour, this.day, this.month, this.week, this.year});
 

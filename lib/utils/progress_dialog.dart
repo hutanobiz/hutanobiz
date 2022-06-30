@@ -11,7 +11,7 @@ class ProgressDialogUtils {
 
   factory ProgressDialogUtils() => _instance;
 
-  static BuildContext _context;
+  static late BuildContext _context;
 
   static void dismissProgressDialog() {
     if (_isLoading) {

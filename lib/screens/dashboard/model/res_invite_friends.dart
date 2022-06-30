@@ -1,6 +1,6 @@
 class ResInviteFriends {
-  String status;
-  Response response;
+  String? status;
+  Response? response;
 
   ResInviteFriends({this.status, this.response});
 
@@ -15,15 +15,15 @@ class ResInviteFriends {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     if (this.response != null) {
-      data['response'] = this.response.toJson();
+      data['response'] = this.response!.toJson();
     }
     return data;
   }
 }
 
 class Response {
-  String message;
-  String url;
+  String? message;
+  String? url;
 
   Response({this.message, this.url});
 

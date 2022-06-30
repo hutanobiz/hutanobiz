@@ -8,8 +8,8 @@ import 'package:hutano/colors.dart';
 class Widgets {
   static void showSnackBar(
       GlobalKey<ScaffoldState> _scaffoldKey, Widget value, int duration) {
-    _scaffoldKey.currentState.hideCurrentSnackBar();
-    _scaffoldKey.currentState.showSnackBar(
+    _scaffoldKey.currentState!.hideCurrentSnackBar();
+    _scaffoldKey.currentState!.showSnackBar(
         SnackBar(duration: new Duration(seconds: duration), content: value));
   }
 
@@ -24,11 +24,11 @@ class Widgets {
   }
 
   static void showErrorialog({
-    @required BuildContext context,
-    String title,
-    @required String description,
-    String buttonText,
-    Function onPressed,
+    required BuildContext context,
+    String? title,
+    required String description,
+    String? buttonText,
+    Function? onPressed,
   }) {
     showDialog(
       context: context,
@@ -38,7 +38,7 @@ class Widgets {
               content: Text(description),
               actions: <Widget>[
                 CupertinoDialogAction(
-                  onPressed: onPressed ??
+                  onPressed: onPressed as void Function()? ??
                       () {
                         Navigator.of(context).pop();
                       },
@@ -57,7 +57,7 @@ class Widgets {
               content: Text(description),
               actions: <Widget>[
                 FlatButton(
-                  onPressed: onPressed ??
+                  onPressed: onPressed as void Function()? ??
                       () {
                         Navigator.of(context).pop();
                       },
@@ -74,11 +74,11 @@ class Widgets {
   }
 
   static void showAppDialog(
-      {@required BuildContext context,
-      String title,
-      @required String description,
-      String buttonText,
-      Function onPressed,
+      {required BuildContext context,
+      String? title,
+      required String description,
+      String? buttonText,
+      Function? onPressed,
       bool isError = false,
       bool isCongrats = false}) {
     showDialog(
@@ -133,7 +133,7 @@ class Widgets {
                   ),
                   Expanded(
                       child: Text(
-                    description ?? 'Description',
+                    description,
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       color: Colors.black,
@@ -158,7 +158,7 @@ class Widgets {
                       style:
                           TextStyle(fontFamily: 'Poppins', color: Colors.white),
                     ),
-                    onPressed: onPressed ??
+                    onPressed: onPressed as void Function()? ??
                         () {
                           Navigator.pop(context);
                         },
@@ -175,8 +175,8 @@ class Widgets {
   }
 
   static void showAccountAddedDialog({
-    @required BuildContext context,
-    Function onPressed,
+    required BuildContext context,
+    Function? onPressed,
   }) {
     showDialog(
       context: context,
@@ -229,7 +229,7 @@ class Widgets {
                       style:
                           TextStyle(fontFamily: 'Poppins', color: Colors.white),
                     ),
-                    onPressed: onPressed ??
+                    onPressed: onPressed as void Function()? ??
                         () {
                           Navigator.pop(context);
                         },
@@ -246,13 +246,13 @@ class Widgets {
   }
 
   static void showConfirmationDialog({
-    @required BuildContext context,
-    String title,
-    @required String description,
-    String leftText,
-    Function onLeftPressed,
-    String rightText,
-    Function onRightPressed,
+    required BuildContext context,
+    String? title,
+    required String description,
+    String? leftText,
+    Function? onLeftPressed,
+    String? rightText,
+    Function? onRightPressed,
   }) {
     showDialog(
       context: context,
@@ -262,7 +262,7 @@ class Widgets {
               content: Text(description),
               actions: <Widget>[
                 CupertinoDialogAction(
-                  onPressed: onLeftPressed ??
+                  onPressed: onLeftPressed as void Function()? ??
                       () {
                         Navigator.of(context).pop();
                       },
@@ -275,7 +275,7 @@ class Widgets {
                   ),
                 ),
                 CupertinoDialogAction(
-                  onPressed: onRightPressed ??
+                  onPressed: onRightPressed as void Function()? ??
                       () {
                         Navigator.of(context).pop();
                       },
@@ -294,7 +294,7 @@ class Widgets {
               content: Text(description),
               actions: <Widget>[
                 FlatButton(
-                  onPressed: onLeftPressed ??
+                  onPressed: onLeftPressed as void Function()? ??
                       () {
                         Navigator.of(context).pop();
                       },
@@ -306,7 +306,7 @@ class Widgets {
                   ),
                 ),
                 FlatButton(
-                  onPressed: onRightPressed ??
+                  onPressed: onRightPressed as void Function()? ??
                       () {
                         Navigator.of(context).pop();
                       },
@@ -359,7 +359,7 @@ class Widgets {
     );
   }
 
-  static SizedBox sizedBox({@required double height}) {
+  static SizedBox sizedBox({required double height}) {
     return SizedBox(height: height);
   }
 

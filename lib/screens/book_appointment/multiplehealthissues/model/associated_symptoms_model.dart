@@ -1,4 +1,4 @@
 class AssociatedSymptomsModel {
-  String symptom;
+  String? symptom;
   AssociatedSymptomsModel(this.symptom);
 }

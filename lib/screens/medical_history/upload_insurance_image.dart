@@ -17,15 +17,15 @@ import 'model/req_upload_insurance_document.dart';
 import 'provider/appoinment_provider.dart';
 
 class UploadInsuranceImage extends StatefulWidget {
-  final String insuranceId;
+  final String? insuranceId;
   const UploadInsuranceImage({this.insuranceId});
   @override
   _UploadInsuranceImageState createState() => _UploadInsuranceImageState();
 }
 
 class _UploadInsuranceImageState extends State<UploadInsuranceImage> {
-  File _frontImage;
-  File _backImage;
+  File? _frontImage;
+  File? _backImage;
   @override
   void initState() {
     super.initState();
@@ -69,7 +69,7 @@ class _UploadInsuranceImageState extends State<UploadInsuranceImage> {
                         height: screenSize.width / 3,
                         padding: EdgeInsets.all(spacing10),
                         child: _frontImage != null
-                            ? Image.file(_frontImage)
+                            ? Image.file(_frontImage!)
                             : Center(
                                 child: Text(
                                   "Front",
@@ -100,7 +100,7 @@ class _UploadInsuranceImageState extends State<UploadInsuranceImage> {
                         height: screenSize.width / 3,
                         padding: EdgeInsets.all(spacing10),
                         child: _backImage != null
-                            ? Image.file(_backImage)
+                            ? Image.file(_backImage!)
                             : Center(
                                 child: Text(
                                   "Back",
@@ -166,7 +166,7 @@ class _UploadInsuranceImageState extends State<UploadInsuranceImage> {
           appointmentId: appoinmentId, insuranceId: widget.insuranceId);
       ProgressDialogUtils.showProgressDialog(context);
       ApiManager()
-          .uploadInsuranceDoc(_frontImage, req, backImage: _backImage)
+          .uploadInsuranceDoc(_frontImage!, req, backImage: _backImage)
           .then((value) {
         ProgressDialogUtils.dismissProgressDialog();
         DialogUtils.showOkCancelAlertDialog(

@@ -11,7 +11,7 @@ import 'package:hutano/widgets/loading_background_new.dart';
 
 class RateDoctorScreen extends StatefulWidget {
   final dynamic rateFromAppointmentId;
-  RateDoctorScreen({Key key, this.rateFromAppointmentId}) : super(key: key);
+  RateDoctorScreen({Key? key, this.rateFromAppointmentId}) : super(key: key);
 
   @override
   _RateDoctorScreenState createState() => _RateDoctorScreenState();
@@ -19,7 +19,7 @@ class RateDoctorScreen extends StatefulWidget {
 
 class _RateDoctorScreenState extends State<RateDoctorScreen> {
   double _rating = 0;
-  String _ratingText, _name, avatar;
+  String? _ratingText, _name, avatar;
   ApiBaseHelper api = ApiBaseHelper();
 
   Image selected = Image.asset(
@@ -30,18 +30,18 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
     'images/unselectedStar.png',
     height: 40,
   );
-  Image img1;
-  Image img2;
-  Image img3;
-  Image img4;
-  Image img5;
+  late Image img1;
+  late Image img2;
+  late Image img3;
+  late Image img4;
+  late Image img5;
   int count = 0;
-  List<bool> star = [false, false, false, false, false];
+  List<bool?> star = [false, false, false, false, false];
   final TextEditingController _reviewController = TextEditingController();
   Map rateMap = Map();
   bool _isLoading = false;
   final reviewText = TextEditingController();
-  Future<List<dynamic>> _reasonsFuture;
+  Future<List<dynamic>>? _reasonsFuture;
   List _reasonList = [];
 
   @override
@@ -115,7 +115,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                                     fit: BoxFit.fill,
                                   )
                                 : Image.network(
-                                    ApiBaseHelper.image_base_url + avatar,
+                                    ApiBaseHelper.image_base_url + avatar!,
                                     height: 70,
                                     width: 70,
                                     fit: BoxFit.fill,
@@ -175,7 +175,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                         future: _reasonsFuture,
                         builder: (_, snapshot) {
                           if (snapshot.hasData) {
-                            List<dynamic> data = snapshot.data;
+                            List<dynamic>? data = snapshot.data;
                             if (data == null || data.length == 0)
                               return Container();
                             return ListView.builder(
@@ -282,7 +282,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
     );
   }
 
-  void changeStar(bool value, reason) {
+  void changeStar(bool? value, reason) {
     if (value == true) {
       count++;
       _reasonList.add(reason);
@@ -441,14 +441,14 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
               height: 62.0,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: avatar == null
+                  image: (avatar == null
                       ? AssetImage('images/profile_user.png')
-                      : NetworkImage(ApiBaseHelper.imageUrl + avatar),
+                      : NetworkImage(ApiBaseHelper.imageUrl + avatar!)) as ImageProvider<Object>,
                   fit: BoxFit.cover,
                 ),
                 borderRadius: BorderRadius.all(Radius.circular(50.0)),
                 border: Border.all(
-                  color: Colors.grey[300],
+                  color: Colors.grey[300]!,
                   width: 1.0,
                 ),
               ),
@@ -460,7 +460,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    _name,
+                    _name!,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 14.0,
@@ -511,7 +511,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
         borderRadius: BorderRadius.all(
           Radius.circular(14.0),
         ),
-        border: Border.all(color: Colors.grey[300], width: 0.5),
+        border: Border.all(color: Colors.grey[300]!, width: 0.5),
       ),
       child: Column(
         children: <Widget>[
@@ -530,7 +530,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                               : Container(),
           _rating.round() >= 1 ? SizedBox(height: 21.0) : Container(),
           Text(
-            _ratingText,
+            _ratingText!,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontWeight:
@@ -600,13 +600,13 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
         borderRadius: BorderRadius.all(
           Radius.circular(14.0),
         ),
-        border: Border.all(color: Colors.grey[300], width: 0.5),
+        border: Border.all(color: Colors.grey[300]!, width: 0.5),
       ),
       child: FutureBuilder<List<dynamic>>(
         future: _reasonsFuture,
         builder: (_, snapshot) {
           if (snapshot.hasData) {
-            List<dynamic> data = snapshot.data;
+            List<dynamic>? data = snapshot.data;
 
             if (data == null || data.length == 0) return Container();
 
@@ -625,7 +625,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                   child: CheckboxListTile(
                     title: Text(reason['reason']),
                     onChanged: (value) {
-                      if (value &&
+                      if (value! &&
                           !_reasonList.contains(reason['_id'].toString())) {
                         _reasonList.add(reason['_id'].toString());
                       } else {

@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 class Member {
-  final String name;
-  final String relation;
-  final String image;
-  final String number;
+  final String? name;
+  final String? relation;
+  final String? image;
+  final String? number;
   Member({
     this.name,
     this.relation,
@@ -22,7 +22,7 @@ class Member {
   }
 
   factory Member.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
+  
 
     return Member(
       name: map['name'],

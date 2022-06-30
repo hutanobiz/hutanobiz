@@ -1,9 +1,9 @@
 class ReqCreateCardToken{
-  String card_number;
-  String card_exp_month;
-  String card_exp_year;
-  String card_cvc;
-  String card_name;
+  String? card_number;
+  String? card_exp_month;
+  String? card_exp_year;
+  String? card_cvc;
+  String? card_name;
 
 
   ReqCreateCardToken({this.card_number,this.card_exp_month,this.card_exp_year,this.card_cvc,this.card_name});

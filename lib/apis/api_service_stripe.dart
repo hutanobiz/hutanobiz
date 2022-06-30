@@ -7,9 +7,9 @@ import 'package:hutano/screens/registration/payment/model/res_create_card_token.
 import 'api_constants.dart';
 
 class ApiServiceStripe {
-  Dio _dio;
+  late Dio _dio;
   String tag = "API call :";
-  CancelToken _cancelToken;
+  CancelToken? _cancelToken;
 
   ApiServiceStripe() {
     _dio = initApiServiceDio();
@@ -52,9 +52,9 @@ class ApiServiceStripe {
     return mDio;
   }
 
-  void cancelRequests({CancelToken cancelToken}) {
+  void cancelRequests({CancelToken? cancelToken}) {
     cancelToken == null
-        ? _cancelToken.cancel('Cancelled')
+        ? _cancelToken!.cancel('Cancelled')
         : cancelToken.cancel();
   }
 
@@ -67,7 +67,7 @@ class ApiServiceStripe {
       return ResCreateCardToken.fromJsonMap(response.data);
     } on DioError catch (error) {
       debugPrint("$tag ${error.response.toString()}");
-      throw ErrorModelStripe.fromJson(error.response.data);
+      throw ErrorModelStripe.fromJson(error.response!.data);
     }
   }
 
@@ -78,16 +78,16 @@ class ApiServiceStripe {
       return response.data;
     } on DioError catch (error) {
       debugPrint("$tag ${error.response.toString()}");
-      throw ErrorModelStripe.fromJson(error.response.data);
+      throw ErrorModelStripe.fromJson(error.response!.data);
     }
   }
 
   Future<Response> post(
     String endUrl, {
-    Map<String, dynamic> data,
-    Map<String, dynamic> params,
-    Options options,
-    CancelToken cancelToken,
+    Map<String, dynamic>? data,
+    Map<String, dynamic>? params,
+    Options? options,
+    CancelToken? cancelToken,
   }) async {
     try {
       return await (_dio.post(

@@ -25,19 +25,19 @@ class LocationDialog {
   LocationDialog._internal();
 
   final _addressController = TextEditingController();
-  String _sessionToken;
-  List<dynamic> _placeList = [];
+  String? _sessionToken;
+  List<dynamic>? _placeList = [];
   List<String> radiusList = ['1', '2', '5', '10', '20', '50', '100', '1000'];
   bool isShowList = false;
   bool isShowRadiusList = false;
   Completer<GoogleMapController> _controller = Completer();
-  PlacesDetailsResponse detail;
+  late PlacesDetailsResponse detail;
   final radiuscontroller = TextEditingController();
-  CameraPosition _myLocation;
-  GoogleMapController controller;
+  CameraPosition? _myLocation;
+  GoogleMapController? controller;
   GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: googleApiKey);
-  String _currentddress = "";
-  Loc.LocationData geoLocation;
+  String? _currentddress = "";
+  Loc.LocationData? geoLocation;
   var uuid = new Uuid();
 
   EdgeInsetsGeometry _edgeInsetsGeometry =
@@ -47,35 +47,35 @@ class LocationDialog {
 
   bool _isLocLoading = false;
 
-  InheritedContainerState conatiner;
+  InheritedContainerState? conatiner;
   Map typeMap = Map();
   Map placesMap = Map();
   Map insuranceMap = Map();
   String selectedType = '1', selectedPlace = '1', selectedInsurance = '1';
-  String avatar;
+  String? avatar;
 
-  String radius = '---';
+  String? radius = '---';
   bool _isLoading = false;
 
   init() async {
-    _currentddress = await SharedPref().getValue('address');
+    _currentddress = await (SharedPref().getValue('address') as FutureOr<String?>);
     if (_currentddress == null) {
       _currentddress = "";
     }
-    radius = await SharedPref().getValue('radius');
+    radius = await (SharedPref().getValue('radius') as FutureOr<String?>);
 
     if (radius == null) {
       radius = "10";
     } else {
-      radiuscontroller.text = radius + ' Miles';
+      radiuscontroller.text = radius! + ' Miles';
     }
   }
 
   getLocation() async {
     var lat = await SharedPref().getValue('lat');
     var lng = await SharedPref().getValue('lng');
-    _currentddress = await SharedPref().getValue('address');
-    radius = await SharedPref().getValue('radius');
+    _currentddress = await (SharedPref().getValue('address') as FutureOr<String?>);
+    radius = await (SharedPref().getValue('radius') as FutureOr<String?>);
 
     _myLocation = CameraPosition(
       target: LatLng(lat ?? 0.00, lng ?? 0.00),
@@ -153,7 +153,7 @@ class LocationDialog {
                                 labelText: "Address",
                                 enabledBorder: OutlineInputBorder(
                                     borderSide:
-                                        BorderSide(color: Colors.grey[300]),
+                                        BorderSide(color: Colors.grey[300]!),
                                     borderRadius: BorderRadius.circular(5.0)),
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(5.0))),
@@ -200,7 +200,7 @@ class LocationDialog {
                           SizedBox(height: 20),
                           Expanded(
                             child: GoogleMap(
-                              initialCameraPosition: _myLocation,
+                              initialCameraPosition: _myLocation!,
                               onMapCreated: ((controller) {
                                 _onMapCreated(controller, setModalState);
                               }),
@@ -241,9 +241,9 @@ class LocationDialog {
                                   );
                                 } else {
                                   await SharedPref().setDoubleValue(
-                                      'lat', _myLocation.target.latitude);
+                                      'lat', _myLocation!.target.latitude);
                                   await SharedPref().setDoubleValue(
-                                      'lng', _myLocation.target.longitude);
+                                      'lng', _myLocation!.target.longitude);
                                   await SharedPref().setValue(
                                       'address', _addressController.text);
                                   await SharedPref().setValue('radius',
@@ -252,18 +252,18 @@ class LocationDialog {
                                   Navigator.pop(context, true);
                                   return;
                                   if (isFilter) {
-                                    conatiner.setUserLocation(
+                                    conatiner!.setUserLocation(
                                         "latLng",
-                                        LatLng(_myLocation.target.latitude,
-                                            _myLocation.target.longitude));
-                                    conatiner.setUserLocation(
+                                        LatLng(_myLocation!.target.latitude,
+                                            _myLocation!.target.longitude));
+                                    conatiner!.setUserLocation(
                                         "userAddress", _addressController.text);
-                                    conatiner.setProjectsResponse(
+                                    conatiner!.setProjectsResponse(
                                         "serviceType", selectedType);
-                                    conatiner.setProjectsResponse(
+                                    conatiner!.setProjectsResponse(
                                         "insuranceType",
                                         selectedInsurance == '2' ? '1' : '0');
-                                    conatiner.setProjectsResponse(
+                                    conatiner!.setProjectsResponse(
                                         "maximumDistance",
                                         radiuscontroller.text.split(' ')[0]);
                                     // Navigator.pushNamed(context,
@@ -288,19 +288,19 @@ class LocationDialog {
                                     color: Colors.white,
                                     child: ListView.builder(
                                       shrinkWrap: true,
-                                      itemCount: _placeList.length,
+                                      itemCount: _placeList!.length,
                                       itemBuilder: (context, index) {
                                         return ListTile(
                                           tileColor: Colors.white,
                                           onTap: () async {
                                             detail = await _places
                                                 .getDetailsByPlaceId(
-                                                    _placeList[index]
+                                                    _placeList![index]
                                                         ["place_id"]);
                                             final lat = detail
-                                                .result.geometry.location.lat;
+                                                .result.geometry!.location.lat;
                                             final lng = detail
-                                                .result.geometry.location.lng;
+                                                .result.geometry!.location.lng;
                                             _myLocation = CameraPosition(
                                               bearing: 0,
                                               target: LatLng(lat, lng),
@@ -318,16 +318,16 @@ class LocationDialog {
                                               controller =
                                                   await _controller.future;
                                             }
-                                            controller.animateCamera(
+                                            controller!.animateCamera(
                                                 CameraUpdate.newCameraPosition(
-                                              _myLocation,
+                                              _myLocation!,
                                             ));
                                             setModalState(() {
                                               isShowList = false;
                                             });
                                           },
                                           title: Text(
-                                              _placeList[index]["description"]),
+                                              _placeList![index]["description"]),
                                         );
                                       },
                                     ),
@@ -382,7 +382,7 @@ class LocationDialog {
       _controller.complete(controller);
     }
     if ([_myLocation] != null) {
-      LatLng position = _myLocation.target;
+      LatLng position = _myLocation!.target;
 
       Future.delayed(Duration(seconds: 0), () async {
         if (!_controller.isCompleted) {
@@ -403,14 +403,14 @@ class LocationDialog {
   }
 
   void getSuggestion(String input, StateSetter setModalState) async {
-    String kPLACES_API_KEY = googleApiKey;
+    String? kPLACES_API_KEY = googleApiKey;
     String type = '(cities)';
     String baseURL =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json';
     String request;
     if (geoLocation != null) {
       request =
-          '$baseURL?input=$input&radius=5000&location=${geoLocation.latitude},${geoLocation.longitude}&key=$kPLACES_API_KEY&sessiontoken=$_sessionToken';
+          '$baseURL?input=$input&radius=5000&location=${geoLocation!.latitude},${geoLocation!.longitude}&key=$kPLACES_API_KEY&sessiontoken=$_sessionToken';
     } else {
       request =
           '$baseURL?input=$input&key=$kPLACES_API_KEY&sessiontoken=$_sessionToken';

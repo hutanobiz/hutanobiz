@@ -1,6 +1,6 @@
 class ResTrackingAppointment {
-  String status;
-  Response response;
+  String? status;
+  Response? response;
 
   ResTrackingAppointment({this.status, this.response});
 
@@ -15,17 +15,17 @@ class ResTrackingAppointment {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     if (this.response != null) {
-      data['response'] = this.response.toJson();
+      data['response'] = this.response!.toJson();
     }
     return data;
   }
 }
 
 class Response {
-  ProviderData providerData;
-  String appointmentDate;
-  String appointmentFromTime;
-  AppointmentTrackData appointmentTrackData;
+  ProviderData? providerData;
+  String? appointmentDate;
+  String? appointmentFromTime;
+  AppointmentTrackData? appointmentTrackData;
 
   Response(
       {this.providerData,
@@ -47,25 +47,25 @@ class Response {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.providerData != null) {
-      data['providerData'] = this.providerData.toJson();
+      data['providerData'] = this.providerData!.toJson();
     }
     data['appointmentDate'] = this.appointmentDate;
     data['appointmentFromTime'] = this.appointmentFromTime;
     if (this.appointmentTrackData != null) {
-      data['appointmentTrackData'] = this.appointmentTrackData.toJson();
+      data['appointmentTrackData'] = this.appointmentTrackData!.toJson();
     }
     return data;
   }
 }
 
 class ProviderData {
-  String sId;
-  String firstName;
-  String lastName;
-  String avatar;
-  List<DoctorDegree> doctorDegree;
-  List<double> doctorLocation;
-  String averageRating;
+  String? sId;
+  String? firstName;
+  String? lastName;
+  String? avatar;
+  List<DoctorDegree>? doctorDegree;
+  List<double>? doctorLocation;
+  String? averageRating;
 
   ProviderData(
       {this.sId,
@@ -82,9 +82,9 @@ class ProviderData {
     lastName = json['lastName'];
     avatar = json['avatar'];
     if (json['doctorDegree'] != null) {
-      doctorDegree = new List<DoctorDegree>();
+      doctorDegree = <DoctorDegree>[];
       json['doctorDegree'].forEach((v) {
-        doctorDegree.add(new DoctorDegree.fromJson(v));
+        doctorDegree!.add(new DoctorDegree.fromJson(v));
       });
     }
     doctorLocation = json['doctorLocation'].cast<double>();
@@ -98,7 +98,7 @@ class ProviderData {
     data['lastName'] = this.lastName;
     data['avatar'] = this.avatar;
     if (this.doctorDegree != null) {
-      data['doctorDegree'] = this.doctorDegree.map((v) => v.toJson()).toList();
+      data['doctorDegree'] = this.doctorDegree!.map((v) => v.toJson()).toList();
     }
     data['doctorLocation'] = this.doctorLocation;
     data['averageRating'] = this.averageRating;
@@ -107,10 +107,10 @@ class ProviderData {
 }
 
 class DoctorDegree {
-  String degree;
-  String year;
-  String institute;
-  String nId;
+  String? degree;
+  String? year;
+  String? institute;
+  String? nId;
 
   DoctorDegree({this.degree, this.year, this.institute, this.nId});
 
@@ -132,14 +132,14 @@ class DoctorDegree {
 }
 
 class AppointmentTrackData {
-  String appointmentAccepted;
-  String providerOfficeReady;
-  String patientStartDriving;
-  String patientArrived;
-  String treatmentStarted;
-  String providerTreatmentEnded;
-  String patientTreatmentEnded;
-  String feedback;
+  String? appointmentAccepted;
+  String? providerOfficeReady;
+  String? patientStartDriving;
+  String? patientArrived;
+  String? treatmentStarted;
+  String? providerTreatmentEnded;
+  String? patientTreatmentEnded;
+  String? feedback;
 
   AppointmentTrackData(
       {this.appointmentAccepted,

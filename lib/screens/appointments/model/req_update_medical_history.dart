@@ -1,8 +1,8 @@
 class ReqUpdateMedicalHistory {
-  String medicalHistoryId;
-  String name;
-  String year;
-  String month;
+  String? medicalHistoryId;
+  String? name;
+  String? year;
+  String? month;
 
   ReqUpdateMedicalHistory(
       {this.medicalHistoryId, this.name, this.year, this.month});

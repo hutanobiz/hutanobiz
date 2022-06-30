@@ -23,8 +23,8 @@ import 'package:wakelock/wakelock.dart';
 const APP_ID = 'c7630b5181e74c63b20d6584988781b4';
 
 class CallPage extends StatefulWidget {
-  final Map channelName;
-  CallPage({Key key, this.channelName}) : super(key: key);
+  final Map? channelName;
+  CallPage({Key? key, this.channelName}) : super(key: key);
 
   @override
   _CallPageState createState() => _CallPageState();
@@ -34,7 +34,7 @@ class _CallPageState extends State<CallPage> {
   bool muted = false;
   bool mutedVideo = false;
   bool isLoading = false;
-  RtcEngine _engine;
+  late RtcEngine _engine;
   final _users = <int>[];
   final _infoStrings = <String>[];
   ClientRole role = ClientRole.Broadcaster;
@@ -42,9 +42,9 @@ class _CallPageState extends State<CallPage> {
   int userId = 456;
   var resourceId = '';
   var sid = '';
-  var token = '';
+  String? token = '';
   var appid = 'c7630b5181e74c63b20d6584988781b4';
-  dynamic appointmentResponse;
+  late dynamic appointmentResponse;
   bool remoteAudio = true, remoteVideo = true;
 
   @override
@@ -83,7 +83,7 @@ class _CallPageState extends State<CallPage> {
       api
           .getAppointmentDetails(
         token,
-        widget.channelName['_id'],
+        widget.channelName!['_id'],
         LatLng(0, 0),
       )
           .then((value) {
@@ -91,7 +91,7 @@ class _CallPageState extends State<CallPage> {
       });
     });
 
-    mutedVideo = !widget.channelName['video'];
+    mutedVideo = !widget.channelName!['video'];
     // String plainCredentials =
     //     "a6ec51f4c7484224a81195e695a3ca17:5c927e729da145d98121b6abbbfe8317";
     // token = base64.encode(utf8.encode(plainCredentials));
@@ -132,7 +132,7 @@ class _CallPageState extends State<CallPage> {
     _engine.muteLocalVideoStream(mutedVideo);
     _engine.enableLocalVideo(!mutedVideo);
     _engine
-        .joinChannel(null, widget.channelName['_id'], null, userId)
+        .joinChannel(null, widget.channelName!['_id'], null, userId)
         .then((value) async {
       if (PlatformCheck.isAndroid) {
         await FlutterBackground.enableBackgroundExecution();
@@ -142,7 +142,7 @@ class _CallPageState extends State<CallPage> {
 
   startCall() {
     var startMap = {};
-    startMap['appointmentId'] = widget.channelName['_id'];
+    startMap['appointmentId'] = widget.channelName!['_id'];
     startMap['appid'] = appid;
     api.startVideoCall(context, token, startMap).then((value) {
       print(value.toString());
@@ -208,7 +208,7 @@ class _CallPageState extends State<CallPage> {
             _onCallEnd(context);
           }, () {
             Map<String, String> map = {};
-            map['appointmentId'] = widget.channelName['_id'].toString();
+            map['appointmentId'] = widget.channelName!['_id'].toString();
             api.cancelCallEndNotification(token, map).then((value) {});
             Provider.of<OverlayHandlerProvider>(context, listen: false)
                 .unHideOverlay();
@@ -232,12 +232,12 @@ class _CallPageState extends State<CallPage> {
     setLoading(true);
     var stopMap = {};
     stopMap['appid'] = appid;
-    stopMap['appointmentId'] = widget.channelName['_id'];
+    stopMap['appointmentId'] = widget.channelName!['_id'];
     api.stopVideoCall(context, token, stopMap).then((value) async {
       setLoading(false);
       var appointmentCompleteMap = {};
       appointmentCompleteMap['type'] = '2';
-      appointmentCompleteMap['appointmentId'] = widget.channelName['_id'];
+      appointmentCompleteMap['appointmentId'] = widget.channelName!['_id'];
       appointmentCompleteMap['name'] = appointmentResponse["data"]['doctor']
               ['title'] +
           ' ' +
@@ -394,7 +394,7 @@ class _CallPageState extends State<CallPage> {
                                                       'type'] = '2';
                                                   appointmentCompleteMap[
                                                           'appointmentId'] =
-                                                      widget.channelName['_id'];
+                                                      widget.channelName!['_id'];
                                                   appointmentCompleteMap[
                                                           'name'] =
                                                       appointmentResponse[
@@ -625,7 +625,7 @@ class _CallPageState extends State<CallPage> {
     // }
     _users.forEach((int uid) => list.add(RtcRemoteView.SurfaceView(
           uid: uid,
-          channelId: widget.channelName['_id'],
+          channelId: widget.channelName!['_id'],
         )));
     return list;
   }
@@ -715,55 +715,7 @@ class _CallPageState extends State<CallPage> {
     );
   }
 
-  /// Info panel to show logs
-  Widget _panel() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 48),
-      alignment: Alignment.bottomCenter,
-      child: FractionallySizedBox(
-        heightFactor: 0.5,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 48),
-          child: ListView.builder(
-            reverse: true,
-            itemCount: _infoStrings.length,
-            itemBuilder: (BuildContext context, int index) {
-              if (_infoStrings.isEmpty) {
-                return null;
-              }
-              return Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 3,
-                  horizontal: 10,
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Flexible(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 2,
-                          horizontal: 5,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.yellowAccent,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Text(
-                          _infoStrings[index],
-                          style: TextStyle(color: Colors.blueGrey),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
+
 
   void showConfirmDialog(Function onConfirmPressed, Function onCancelPressed) {
     showDialog(
@@ -825,7 +777,7 @@ class _CallPageState extends State<CallPage> {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        onPressed: onCancelPressed),
+                        onPressed: onCancelPressed as void Function()?),
                     Spacer(),
                     FlatButton(
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -843,7 +795,7 @@ class _CallPageState extends State<CallPage> {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        onPressed: onConfirmPressed),
+                        onPressed: onConfirmPressed as void Function()?),
                     Spacer(),
                   ],
                 )

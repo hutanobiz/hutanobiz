@@ -1,10 +1,10 @@
 class ReqResetPassword {
-  String phoneNumber;
-  int step;
-  String email;
-  String verificationCode;
-  String password;
-  String pin;
+  String? phoneNumber;
+  int? step;
+  String? email;
+  String? verificationCode;
+  String? password;
+  String? pin;
 
   ReqResetPassword({
     this.phoneNumber,
@@ -15,8 +15,8 @@ class ReqResetPassword {
     this.pin,
   });
 
-  Map<String, String> toMap() {
-    Map<String, String> map = {};
+  Map<String, String?> toMap() {
+    Map<String, String?> map = {};
     if (phoneNumber != null) {
       map['phoneNumber'] = phoneNumber;
     }
@@ -39,7 +39,7 @@ class ReqResetPassword {
   }
 
   factory ReqResetPassword.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
+ 
 
     return ReqResetPassword(
       phoneNumber: map['phoneNumber'],

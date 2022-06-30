@@ -26,9 +26,9 @@ import 'model/res_add_member.dart';
 import 'model/res_relation_list.dart';
 
 class AddFamilyMember extends StatefulWidget {
-  final FamilyMember member;
+  final FamilyMember? member;
   final bool isOnboarding;
-  const AddFamilyMember({Key key, this.isOnboarding = true, this.member})
+  const AddFamilyMember({Key? key, this.isOnboarding = true, this.member})
       : super(key: key);
 
   @override
@@ -38,10 +38,10 @@ class AddFamilyMember extends StatefulWidget {
 class _AddFamilyMemberState extends State<AddFamilyMember> {
   final _relationCotnroller = TextEditingController();
   FocusNode searchFocus = FocusNode();
-  List<Relations> _relationList = [];
+  List<Relations>? _relationList = [];
   List<FamilyNetwork> _memberList = [];
-  Relations _selectedRelation;
-  FamilyMember member;
+  Relations? _selectedRelation;
+  FamilyMember? member;
 
   @override
   void initState() {
@@ -87,7 +87,7 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
       ProgressDialogUtils.dismissProgressDialog();
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     }
@@ -95,7 +95,7 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
 
   _onRelationSelected(Relations relation) {
     _selectedRelation = relation;
-    _relationCotnroller.text = relation.relation;
+    _relationCotnroller.text = relation.relation!;
   }
 
   _onAddMore() async {
@@ -116,7 +116,7 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
   _onAdd(FamilyMember member) async {
     if (_relationCotnroller.text.isEmpty) {
       DialogUtils.showAlertDialog(
-          context, Localization.of(context).errorSelectRelation);
+          context, Localization.of(context)!.errorSelectRelation);
       return;
     }
     ProgressDialogUtils.showProgressDialog(context);
@@ -136,7 +136,7 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
       // ProgressDialogUtils.dismissProgressDialog();
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     }
   }
 
@@ -201,7 +201,7 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 25),
                           child: Text(
-                            Localization.of(context).myFamilyNetwork,
+                            Localization.of(context)!.myFamilyNetwork,
                             style: TextStyle(
                                 fontSize: fontSize14,
                                 fontWeight: FontWeight.w600,
@@ -216,12 +216,12 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
                           child: (familyProvider.providerMembers.length == 0)
                               ? Center(
                                   child: NoDataFound(
-                                  msg: Localization.of(context).noMemberFound,
+                                  msg: Localization.of(context)!.noMemberFound,
                                 ))
                               : ListView.separated(
                                   separatorBuilder: (_, pos) {
                                     return SizedBox(
-                                        width: SizeConfig.screenWidth / 8);
+                                        width: SizeConfig.screenWidth! / 8);
                                   },
                                   shrinkWrap: true,
                                   primary: false,
@@ -307,8 +307,8 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
       children: [
         AppHeader(
           progressSteps: HutanoProgressSteps.three,
-          title: Localization.of(context).inviteFamilyAndFriends,
-          subTitle: Localization.of(context).searchPhoneContacts,
+          title: Localization.of(context)!.inviteFamilyAndFriends,
+          subTitle: Localization.of(context)!.searchPhoneContacts,
         ),
         SizedBox(height: spacing15),
       ],
@@ -356,7 +356,7 @@ class _AddFamilyMemberState extends State<AddFamilyMember> {
       if (e.hashCode == 422 && e.response == "Family member already exist") {
         Navigator.of(context).pushNamed(Routes.familyCircle,arguments: widget.isOnboarding);
       } else {
-        DialogUtils.showAlertDialog(context, e.response);
+        DialogUtils.showAlertDialog(context, e.response!);
       }
     }
   }

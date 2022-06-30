@@ -5,7 +5,7 @@ class AppTheme {
   static ThemeData get theme {
     final themeData = ThemeData.light();
     final textTheme = themeData.textTheme;
-    final body1 = textTheme.bodyText2.copyWith(
+    final body1 = textTheme.bodyText2!.copyWith(
       decorationColor: Colors.transparent,
       fontFamily: 'Poppins',
     );
@@ -34,7 +34,7 @@ class AppTheme {
           ),
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: Colors.grey[300],
+              color: Colors.grey[300]!,
             ),
           ),
           border: OutlineInputBorder(

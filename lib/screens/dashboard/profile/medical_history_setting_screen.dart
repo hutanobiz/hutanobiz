@@ -32,10 +32,10 @@ import 'package:hutano/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 class MedicalHistorySettingScreen extends StatefulWidget {
-  MedicalHistorySettingScreen({Key key, this.isBottomButtonsShow})
+  MedicalHistorySettingScreen({Key? key, this.isBottomButtonsShow})
       : super(key: key);
 
-  final Map isBottomButtonsShow;
+  final Map? isBottomButtonsShow;
 
   @override
   _MedicalHistorySettingScreenState createState() =>
@@ -45,28 +45,28 @@ class MedicalHistorySettingScreen extends StatefulWidget {
 class _MedicalHistorySettingScreenState
     extends State<MedicalHistorySettingScreen> {
   ApiBaseHelper api = ApiBaseHelper();
-  List<MedicalHistory> _showDiseaseData = [];
-  List<Disease> _newDiseaseList = [];
-  bool isBottomButtonsShow = true;
-  bool isFromAppointment = false;
-  String token = '';
+  List<MedicalHistory>? _showDiseaseData = [];
+  List<Disease>? _newDiseaseList = [];
+  bool? isBottomButtonsShow = true;
+  bool? isFromAppointment = false;
+  String? token = '';
   bool _isLoading = false;
   final _searchDiseaseController = TextEditingController();
   final _searchDiseaseFocusNode = FocusNode();
-  InheritedContainerState _container;
-  String _selectedDisease = "";
-  String _selectedSid = "";
+  late InheritedContainerState _container;
+  String? _selectedDisease = "";
+  String? _selectedSid = "";
   bool isIndicatorLoading = false;
 
   @override
   void initState() {
     super.initState();
     if (widget.isBottomButtonsShow != null) {
-      if (widget.isBottomButtonsShow['isBottomButtonsShow'] != null) {
-        isBottomButtonsShow = widget.isBottomButtonsShow['isBottomButtonsShow'];
+      if (widget.isBottomButtonsShow!['isBottomButtonsShow'] != null) {
+        isBottomButtonsShow = widget.isBottomButtonsShow!['isBottomButtonsShow'];
       }
-      if (widget.isBottomButtonsShow['isFromAppointment'] != null) {
-        isFromAppointment = widget.isBottomButtonsShow['isFromAppointment'];
+      if (widget.isBottomButtonsShow!['isFromAppointment'] != null) {
+        isFromAppointment = widget.isBottomButtonsShow!['isFromAppointment'];
       }
     }
     // if (!isFromAppointment) {
@@ -94,11 +94,11 @@ class _MedicalHistorySettingScreenState
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor:
-          isBottomButtonsShow ? AppColors.goldenTainoi : Colors.white,
+          isBottomButtonsShow! ? AppColors.goldenTainoi : Colors.white,
       body: LoadingBackgroundNew(
         title: "",
         addHeader: isBottomButtonsShow,
-        addTitle: !isBottomButtonsShow,
+        addTitle: !isBottomButtonsShow!,
         isAddBack: false,
         addBackButton: false,
         isLoading: _isLoading,
@@ -109,8 +109,8 @@ class _MedicalHistorySettingScreenState
         padding: const EdgeInsets.all(spacing5),
         child: Column(
           children: <Widget>[
-            if (!isFromAppointment) _medicalHistoryHeader(context),
-            if (!isFromAppointment) _buildSearchPastConditions(context),
+            if (!isFromAppointment!) _medicalHistoryHeader(context),
+            if (!isFromAppointment!) _buildSearchPastConditions(context),
             _currentDiseaseList(context),
           ],
         ),
@@ -123,7 +123,7 @@ class _MedicalHistorySettingScreenState
         child: Align(
           alignment: Alignment.topLeft,
           child: Text(
-            Localization.of(context).medicalHistoryLabel,
+            Localization.of(context)!.medicalHistoryLabel,
             style: const TextStyle(
                 color: colorDarkBlack,
                 fontWeight: fontWeightBold,
@@ -155,7 +155,7 @@ class _MedicalHistorySettingScreenState
                         padding: const EdgeInsets.all(spacing8),
                         child: Image.asset(FileConstants.icSearchBlack,
                             color: colorBlack2, width: 20, height: 20))),
-                hintText: Localization.of(context).enterPastConditionHint,
+                hintText: Localization.of(context)!.enterPastConditionHint,
                 isDense: true,
                 hintStyle: TextStyle(
                     color: colorBlack2,
@@ -175,7 +175,7 @@ class _MedicalHistorySettingScreenState
           errorBuilder: (_, object) {
             return Container();
           },
-          itemBuilder: (context, suggestion) {
+          itemBuilder: (context, dynamic suggestion) {
             return ListTile(
               title: Text(suggestion.name ?? ''),
             );
@@ -183,7 +183,7 @@ class _MedicalHistorySettingScreenState
           transitionBuilder: (context, suggestionsBox, controller) {
             return suggestionsBox;
           },
-          onSuggestionSelected: (suggestion) {
+          onSuggestionSelected: (dynamic suggestion) {
             setState(() {
               _selectedDisease = suggestion.name;
               _selectedSid = suggestion.sId;
@@ -204,12 +204,12 @@ class _MedicalHistorySettingScreenState
           ),
         )
       : _showDiseaseData == null ||
-              (_showDiseaseData == null || _showDiseaseData.isEmpty) &&
+              (_showDiseaseData == null || _showDiseaseData!.isEmpty) &&
                   !isIndicatorLoading
           ? Expanded(
               child: Center(
                 child: Text(
-                  Localization.of(context).noMedicalHistoryFound,
+                  Localization.of(context)!.noMedicalHistoryFound,
                   style: TextStyle(
                       fontSize: 16,
                       color: colorBlack2,
@@ -228,49 +228,49 @@ class _MedicalHistorySettingScreenState
                   children: <Widget>[
                     ListView.builder(
                         padding: EdgeInsets.only(
-                            bottom: (_showDiseaseData.contains('Others') ||
-                                    _showDiseaseData.contains('Other'))
+                            bottom: (_showDiseaseData!.contains('Others') ||
+                                    _showDiseaseData!.contains('Other'))
                                 ? 10
                                 : 65),
                         shrinkWrap: true,
                         physics: ClampingScrollPhysics(),
-                        itemCount: _showDiseaseData.length,
+                        itemCount: _showDiseaseData!.length,
                         itemBuilder: (context, index) {
                           return PopupMenuButton(
                             offset: Offset(300, 50),
                             itemBuilder: (BuildContext context) =>
                                 <PopupMenuEntry<String>>[
-                              if (!isFromAppointment)
+                              if (!isFromAppointment!)
                                 _popMenuCommonItem(
                                     context,
-                                    Localization.of(context).edit,
-                                    FileConstants.icEdit),
-                              if (!isFromAppointment)
+                                    Localization.of(context)!.edit,
+                                    FileConstants.icEdit) as PopupMenuEntry<String>,
+                              if (!isFromAppointment!)
                                 _popMenuCommonItem(
                                     context,
-                                    Localization.of(context).remove,
-                                    FileConstants.icRemoveBlack)
+                                    Localization.of(context)!.remove,
+                                    FileConstants.icRemoveBlack) as PopupMenuEntry<String>
                             ],
                             child: ListTile(
                               contentPadding: EdgeInsets.all(0),
                               title: Text(
-                                _showDiseaseData[index].name,
+                                _showDiseaseData![index].name!,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               subtitle: Text(
-                                  "${_showDiseaseData[index].month} ${_showDiseaseData[index].year}"),
+                                  "${_showDiseaseData![index].month} ${_showDiseaseData![index].year}"),
                               trailing: Icon(Icons.more_vert),
                             ),
-                            onSelected: (value) {
-                              if (value == Localization.of(context).edit) {
+                            onSelected: (dynamic value) {
+                              if (value == Localization.of(context)!.edit) {
                                 setState(() {
                                   _selectedDisease =
-                                      _showDiseaseData[index].name;
-                                  _selectedSid = _showDiseaseData[index].sId;
+                                      _showDiseaseData![index].name;
+                                  _selectedSid = _showDiseaseData![index].sId;
                                 });
                                 showAddDiseaseDialog(context, true,
-                                    medical: _showDiseaseData[index]);
+                                    medical: _showDiseaseData![index]);
                               } else {
                                 Widgets.showConfirmationDialog(
                                     context: context,
@@ -278,7 +278,7 @@ class _MedicalHistorySettingScreenState
                                         "Are you sure to delete this medical history?",
                                     onLeftPressed: () {
                                       _removeDisease(
-                                          context, _showDiseaseData[index]);
+                                          context, _showDiseaseData![index]);
                                     });
                               }
                             },
@@ -313,7 +313,7 @@ class _MedicalHistorySettingScreenState
       );
 
   showAddDiseaseDialog(BuildContext context, bool isForUpdate,
-      {MedicalHistory medical}) {
+      {MedicalHistory? medical}) {
     var addDiseaseDialog = YYDialog();
     addDiseaseDialog.build(context)
       ..width = (MediaQuery.of(context).size.width - 35)
@@ -350,8 +350,8 @@ class _MedicalHistorySettingScreenState
     api.deletePatientMedicalHistory(token, medicalHistory.sId).then((value) {
       setLoading(false);
       setState(() {
-        if (_showDiseaseData.contains(medicalHistory)) {
-          _showDiseaseData.remove(medicalHistory);
+        if (_showDiseaseData!.contains(medicalHistory)) {
+          _showDiseaseData!.remove(medicalHistory);
         }
       });
     }).futureError((error) {
@@ -362,18 +362,18 @@ class _MedicalHistorySettingScreenState
 
   void saveMedicalHistory() {
     if (_showDiseaseData != null) {
-      if (_showDiseaseData.length > 0) {
+      if (_showDiseaseData!.length > 0) {
         final _gender = getInt(PreferenceKey.gender);
         Provider.of<SymptomsInfoProvider>(context, listen: false)
             .setBodyType(_gender);
         List<BookedMedicalHistory> _listOfHistory = [];
-        if (isBottomButtonsShow) {
-          if (_showDiseaseData != null && _showDiseaseData.length > 0) {
-            _showDiseaseData.forEach((element) {
+        if (isBottomButtonsShow!) {
+          if (_showDiseaseData != null && _showDiseaseData!.length > 0) {
+            _showDiseaseData!.forEach((element) {
               _container.setConsentToTreatData("medicalHistory", element.name);
               _listOfHistory.add(BookedMedicalHistory(
                   name: element.name,
-                  year: int.parse(element.year),
+                  year: int.parse(element.year!),
                   month: element.month));
             });
           }
@@ -414,9 +414,9 @@ class _MedicalHistorySettingScreenState
         setState(() {
           isIndicatorLoading = false;
         });
-        if (result.response.medicalHistory != null) {
+        if (result.response!.medicalHistory != null) {
           setState(() {
-            _showDiseaseData = result.response.medicalHistory;
+            _showDiseaseData = result.response!.medicalHistory;
           });
         }
         _getDiseaseList();
@@ -438,9 +438,9 @@ class _MedicalHistorySettingScreenState
       setState(() {
         _newDiseaseList = res.response;
       });
-      for (dynamic disease in _newDiseaseList) {
+      for (dynamic disease in _newDiseaseList!) {
         if (disease.name == "Other") {
-          _newDiseaseList.remove(disease);
+          _newDiseaseList!.remove(disease);
         }
       }
     } catch (e) {
@@ -480,9 +480,9 @@ class _MedicalHistorySettingScreenState
   void _getUpdatedDiseaseData() async {
     await ApiManager().getMyDisease().then((result) {
       if (result is ResMedicalDocumentsModel) {
-        if (result.response.medicalHistory != null) {
+        if (result.response!.medicalHistory != null) {
           setState(() {
-            _showDiseaseData = result.response.medicalHistory;
+            _showDiseaseData = result.response!.medicalHistory;
           });
         }
         setLoading(false);

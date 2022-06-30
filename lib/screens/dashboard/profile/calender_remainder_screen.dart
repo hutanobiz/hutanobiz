@@ -16,7 +16,7 @@ import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarReminderScreen extends StatefulWidget {
-  CalendarReminderScreen({Key key, this.profileData}) : super(key: key);
+  CalendarReminderScreen({Key? key, this.profileData}) : super(key: key);
   var profileData;
 
   @override
@@ -27,19 +27,19 @@ class _CalendarReminderScreenState extends State<CalendarReminderScreen> {
   ApiBaseHelper api = new ApiBaseHelper();
 
   bool isLoading = false;
-  ValueNotifier<List<dynamic>> _selectedEvents;
+  late ValueNotifier<List<dynamic>> _selectedEvents;
   CalendarFormat _calendarFormat = CalendarFormat.month;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
       .toggledOff; // Can be toggled on/off by longpressing a date
   DateTime _focusedDay = DateTime.now();
-  DateTime _selectedDay;
-  DateTime _rangeStart;
-  DateTime _rangeEnd;
-  Future<dynamic> _requestsFuture;
+  DateTime? _selectedDay;
+  DateTime? _rangeStart;
+  DateTime? _rangeEnd;
+  Future<dynamic>? _requestsFuture;
   ApiBaseHelper _api = ApiBaseHelper();
-  var kEvents;
+  late var kEvents;
   var _activeAppointmentsList = [];
-  var newMap;
+  late var newMap;
   bool isInitialLoad = true;
 
   void appointmentsFuture() {
@@ -62,7 +62,7 @@ class _CalendarReminderScreenState extends State<CalendarReminderScreen> {
     super.dispose();
   }
 
-  List<dynamic> _getEventsForDay(DateTime day) {
+  List<dynamic> _getEventsForDay(DateTime? day) {
     // Implementation example
     return kEvents[day] ?? [];
   }
@@ -76,7 +76,7 @@ class _CalendarReminderScreenState extends State<CalendarReminderScreen> {
     ];
   }
 
-  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+  void _onDaySelected(DateTime? selectedDay, DateTime focusedDay) {
     if (!isSameDay(_selectedDay, selectedDay)) {
       setState(() {
         _selectedDay = selectedDay;
@@ -90,7 +90,7 @@ class _CalendarReminderScreenState extends State<CalendarReminderScreen> {
     }
   }
 
-  void _onRangeSelected(DateTime start, DateTime end, DateTime focusedDay) {
+  void _onRangeSelected(DateTime? start, DateTime? end, DateTime focusedDay) {
     setState(() {
       _selectedDay = null;
       _focusedDay = focusedDay;
@@ -189,10 +189,10 @@ class _CalendarReminderScreenState extends State<CalendarReminderScreen> {
                           onHeaderTapped: (focusedDay) {
                             showDatePicker(
                                 context: context,
-                                initialDate: _selectedDay,
+                                initialDate: _selectedDay!,
                                 firstDate: kFirstDay,
                                 lastDate: kLastDay,
-                                builder: (BuildContext context, Widget child) {
+                                builder: (BuildContext context, Widget? child) {
                                   return Theme(
                                       data: ThemeData.dark().copyWith(
                                         colorScheme: ColorScheme.light(
@@ -203,7 +203,7 @@ class _CalendarReminderScreenState extends State<CalendarReminderScreen> {
                                         ),
                                         dialogBackgroundColor: Colors.white,
                                       ),
-                                      child: child);
+                                      child: child!);
                                 }).then((value) {
                               _onDaySelected(value, _focusedDay);
                             });
@@ -352,10 +352,8 @@ class _CalendarReminderScreenState extends State<CalendarReminderScreen> {
   }
 
   Widget _requestList(Map response, int listType) {
-    String name = "---",
-        avatar,
-        averageRating = "---",
-        professionalTitle = "---";
+    String name = "---";
+    String? avatar, averageRating = "---", professionalTitle = "---";
 
     if (response["averageRating"] != null) {
       averageRating = '${response["averageRating"]?.toStringAsFixed(1)}' +
@@ -388,9 +386,8 @@ class _CalendarReminderScreenState extends State<CalendarReminderScreen> {
         }
         if (response["doctorData"]["education"].isNotEmpty) {
           name += ' ' +
-                  response["doctorData"]["education"][0]["degree"]
-                      ?.toString() ??
-              "---";
+              (response["doctorData"]["education"][0]["degree"]?.toString() ??
+                  "---");
         }
       } else {
         if (response["doctorData"][0]["professionalTitle"] != null) {
@@ -401,9 +398,9 @@ class _CalendarReminderScreenState extends State<CalendarReminderScreen> {
         }
         if (response["doctorData"][0]["education"].isNotEmpty) {
           name += ' ' +
-                  response["doctorData"][0]["education"][0]["degree"]
+              (response["doctorData"][0]["education"][0]["degree"]
                       ?.toString() ??
-              "---";
+                  "---");
         }
       }
     }

@@ -1,5 +1,5 @@
 class ReqAddUserPermissionModel {
-  List<String> userPermissions;
+  List<String?>? userPermissions;
 
   ReqAddUserPermissionModel({this.userPermissions});
 

@@ -1,6 +1,6 @@
 class ResStatesList {
-  String status;
-  List<States> response;
+  String? status;
+  List<States>? response;
 
   ResStatesList({this.status, this.response});
 
@@ -9,7 +9,7 @@ class ResStatesList {
     if (json['response'] != null) {
       response = <States>[];
       json['response'].forEach((v) {
-        response.add(States.fromJson(v));
+        response!.add(States.fromJson(v));
       });
     }
   }
@@ -18,18 +18,18 @@ class ResStatesList {
     final data = <String, dynamic>{};
     data['status'] = status;
     if (response != null) {
-      data['response'] = response.map((v) => v.toJson()).toList();
+      data['response'] = response!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class States {
-  String title;
-  String stateCode;
-  int status;
-  String sId;
-  int iV;
+  String? title;
+  String? stateCode;
+  int? status;
+  String? sId;
+  int? iV;
 
   States({this.title, this.stateCode, this.status, this.sId, this.iV});
 

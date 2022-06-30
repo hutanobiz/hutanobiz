@@ -7,12 +7,12 @@ import '../../../utils/localization/localization.dart';
 import '../../../widgets/hutano_textfield.dart';
 
 class DateOfBirth extends StatelessWidget {
-  final Function onDateSelected;
-  final TextEditingController controller;
-  int beforeYear;
+  final Function? onDateSelected;
+  final TextEditingController? controller;
+  int? beforeYear;
 
   DateOfBirth(
-      {Key key, this.onDateSelected, this.controller, this.beforeYear})
+      {Key? key, this.onDateSelected, this.controller, this.beforeYear})
       : super(key: key);
 
   @override
@@ -22,18 +22,18 @@ class DateOfBirth extends StatelessWidget {
         var selectedDate = await showCustomDatePicker(
             context: context,
             firstDate: DateTime(1900),
-            lastDate: DateTime(DateTime.now().year - beforeYear,
+            lastDate: DateTime(DateTime.now().year - beforeYear!,
                 DateTime.now().month, DateTime.now().day));
         if (selectedDate != null) {
           var date = formattedDate(selectedDate, ddMMMMyyyy);
-          onDateSelected(date);
+          onDateSelected!(date);
         }
       },
       child: Container(
         margin: EdgeInsets.only(top: spacing15),
         child: HutanoTextField(
             focusNode: FocusNode(),
-            labelText: Localization.of(context).dob,
+            labelText: Localization.of(context)!.dob,
             controller: controller,
             suffixIcon: FileConstants.icDob,
             isFieldEnable: false,

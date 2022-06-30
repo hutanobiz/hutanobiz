@@ -1,9 +1,9 @@
 class ReqVerifyAddress {
-  final String street1;
-  final String street2;
-  final String city;
-  final String state;
-  final String zip;
+  final String? street1;
+  final String? street2;
+  final String? city;
+  final String? state;
+  final String? zip;
   ReqVerifyAddress({
     this.street1,
     this.street2,
@@ -23,8 +23,7 @@ class ReqVerifyAddress {
   }
 
   factory ReqVerifyAddress.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
-
+  
     return ReqVerifyAddress(
       street1: map['street1'],
       street2: map['street2'],

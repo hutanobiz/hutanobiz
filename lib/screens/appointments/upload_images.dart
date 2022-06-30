@@ -32,27 +32,27 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UploadImagesScreen extends StatefulWidget {
-  UploadImagesScreen({Key key, this.isBottomButtonsShow}) : super(key: key);
+  UploadImagesScreen({Key? key, this.isBottomButtonsShow}) : super(key: key);
 
-  final Map isBottomButtonsShow;
+  final Map? isBottomButtonsShow;
 
   @override
   _UploadImagesScreenState createState() => _UploadImagesScreenState();
 }
 
 class _UploadImagesScreenState extends State<UploadImagesScreen> {
-  List<Map> imagesList = List();
+  List<Map?> imagesList = [];
 
   bool _isLoading = false;
   ApiBaseHelper _api = ApiBaseHelper();
 
-  String token;
+  String? token;
 
-  String imageName = '';
-  bool isBottomButtonsShow = true;
-  bool isFromAppointment = false;
+  String? imageName = '';
+  bool? isBottomButtonsShow = true;
+  bool? isFromAppointment = false;
 
-  List<Map> _selectedImagesList = [];
+  List<Map?> _selectedImagesList = [];
   TextEditingController _imageDateController = TextEditingController();
 
   @override
@@ -62,24 +62,24 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
       setState(() {});
     });
     if (widget.isBottomButtonsShow != null) {
-      if (widget.isBottomButtonsShow['isBottomButtonsShow'] != null) {
-        isBottomButtonsShow = widget.isBottomButtonsShow['isBottomButtonsShow'];
+      if (widget.isBottomButtonsShow!['isBottomButtonsShow'] != null) {
+        isBottomButtonsShow = widget.isBottomButtonsShow!['isBottomButtonsShow'];
       }
-      if (widget.isBottomButtonsShow['isFromAppointment'] != null) {
-        isFromAppointment = widget.isBottomButtonsShow['isFromAppointment'];
+      if (widget.isBottomButtonsShow!['isFromAppointment'] != null) {
+        isFromAppointment = widget.isBottomButtonsShow!['isFromAppointment'];
       }
 
-      if (isFromAppointment) {
-        if (widget.isBottomButtonsShow['medicalImages'] != null &&
-            widget.isBottomButtonsShow['medicalImages'].length > 0) {
-          for (dynamic images in widget.isBottomButtonsShow['medicalImages']) {
+      if (isFromAppointment!) {
+        if (widget.isBottomButtonsShow!['medicalImages'] != null &&
+            widget.isBottomButtonsShow!['medicalImages'].length > 0) {
+          for (dynamic images in widget.isBottomButtonsShow!['medicalImages']) {
             imagesList.add(images);
           }
         }
       }
     }
 
-    if (!isFromAppointment) {
+    if (!isFromAppointment!) {
       setLoading(true);
       imagesList.clear();
 
@@ -128,7 +128,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor:
-          isBottomButtonsShow ? AppColors.goldenTainoi : Colors.white,
+          isBottomButtonsShow! ? AppColors.goldenTainoi : Colors.white,
       body: LoadingBackgroundNew(
         title: "Images",
         isLoading: _isLoading,
@@ -147,7 +147,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
           List<MedicalImages> _selectedMedicalImages = [];
           if (_selectedImagesList != null && _selectedImagesList.length > 0) {
             _selectedImagesList.forEach((element) {
-              _selectedMedicalImages.add(MedicalImages.fromJson(element));
+              _selectedMedicalImages.add(MedicalImages.fromJson(element as Map<String, dynamic>));
             });
             Provider.of<HealthConditionProvider>(context, listen: false)
                 .updateImages(_selectedMedicalImages);
@@ -155,7 +155,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
           Navigator.of(context).pushNamed(Routes.allDocumentsTabsScreen);
         },
         padding: EdgeInsets.fromLTRB(
-            0, 0, 0, isBottomButtonsShow ? spacing70 : spacing20),
+            0, 0, 0, isBottomButtonsShow! ? spacing70 : spacing20),
         child: ListView(
           children: widgetList(context),
         ),
@@ -164,7 +164,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
   }
 
   List<Widget> widgetList(BuildContext context) {
-    List<Widget> formWidget = List();
+    List<Widget> formWidget = [];
     formWidget.add(SizedBox(height: spacing10));
     formWidget.add(_uploadImagesBanner(context));
     formWidget.add(SizedBox(height: spacing30));
@@ -180,12 +180,12 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
-          String imageFile = imagesList[index][ArgumentConstant.imagesKey];
-          if (!imagesList[index][ArgumentConstant.imagesKey]
+          String? imageFile = imagesList[index]![ArgumentConstant.imagesKey];
+          if (!imagesList[index]![ArgumentConstant.imagesKey]
               .toString()
               .contains('image_cropper')) {
             imageFile = ApiBaseHelper.imageUrl +
-                imagesList[index][ArgumentConstant.imagesKey];
+                imagesList[index]![ArgumentConstant.imagesKey];
           }
           return Padding(
             padding: const EdgeInsets.all(spacing5),
@@ -198,11 +198,11 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                 children: <Widget>[
                   ClipRRect(
                       borderRadius: BorderRadius.circular(16.0),
-                      child: imageFile.contains('http') ||
+                      child: imageFile!.contains('http') ||
                               imageFile.contains('https')
                           ? Image.network(imageFile, fit: BoxFit.cover)
                           : Image.file(File(imageFile), fit: BoxFit.cover)),
-                  isBottomButtonsShow
+                  isBottomButtonsShow!
                       ? Padding(
                           padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
                           child: Align(
@@ -229,7 +229,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                                           });
                                         }
                                       }))))
-                      : isFromAppointment
+                      : isFromAppointment!
                           ? Container()
                           : Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -249,7 +249,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                                                 _api
                                                     .deletePatientImage(
                                                   token,
-                                                  imagesList[index]
+                                                  imagesList[index]!
                                                       [ArgumentConstant.idKey],
                                                 )
                                                     .whenComplete(() {
@@ -289,7 +289,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                             Align(
                                 alignment: Alignment.topLeft,
                                 child: Text(
-                                    imagesList[index]
+                                    imagesList[index]!
                                             [ArgumentConstant.nameKey] ??
                                         '---+---',
                                     overflow: TextOverflow.ellipsis,
@@ -300,7 +300,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                             Align(
                                 alignment: Alignment.topLeft,
                                 child: Text(
-                                    imagesList[index]
+                                    imagesList[index]!
                                             [ArgumentConstant.dateKey] ??
                                         '---+---',
                                     overflow: TextOverflow.ellipsis,
@@ -325,7 +325,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
               ).onClick(
                 onTap: imageFile.toLowerCase().endsWith("pdf")
                     ? () async {
-                        var url = imageFile;
+                        var url = imageFile!;
                         if (await canLaunch(url)) {
                           await launch(url);
                         } else {
@@ -344,7 +344,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
         },
       );
 
-  Widget _uploadImagesBanner(BuildContext context) => (!isFromAppointment)
+  Widget _uploadImagesBanner(BuildContext context) => (!isFromAppointment!)
       ? ListTile(
           onTap: showPickerDialog,
           leading: CircleAvatar(
@@ -360,14 +360,14 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
           title: ListTile(
             contentPadding: EdgeInsets.all(0),
             title: Text(
-              Localization.of(context).uploadMedicalImagesLabel,
+              Localization.of(context)!.uploadMedicalImagesLabel,
               style: TextStyle(
                   fontSize: fontSize15,
                   fontWeight: fontWeightSemiBold,
                   color: Colors.black),
             ),
             subtitle: Text(
-              Localization.of(context).uploadMedicalImagesSubLabel,
+              Localization.of(context)!.uploadMedicalImagesSubLabel,
               style: TextStyle(
                   fontSize: fontSize12,
                   fontWeight: fontWeightRegular,
@@ -381,7 +381,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
   Future getImage(int source) async {
     ImagePicker _picker = ImagePicker();
 
-     XFile image = await _picker.pickImage(
+     XFile? image = await _picker.pickImage(
         imageQuality: 25,
         source: (source == 1) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
@@ -452,14 +452,14 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14.0),
                 borderSide: BorderSide(
-                  color: Colors.grey[300],
+                  color: Colors.grey[300]!,
                   width: 0.5,
                 ),
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14.0),
                 borderSide: BorderSide(
-                  color: Colors.grey[300],
+                  color: Colors.grey[300]!,
                   width: 0.5,
                 ),
               ),
@@ -514,15 +514,15 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                   title: 'Upload',
                   buttonColor: AppColors.windsor,
                   onPressed: () async {
-                    if (imageName == null || imageName.isEmpty) {
+                    if (imageName == null || imageName!.isEmpty) {
                       Widgets.showToast("Image name can't be empty");
                     } else if (_imageDateController.text == null ||
                         _imageDateController.text.isEmpty) {
-                      Widgets.showToast(Localization.of(context).errImageDate);
+                      Widgets.showToast(Localization.of(context)!.errImageDate);
                       return;
                     } else {
                       Map<String, String> fileMap = {};
-                      fileMap[ArgumentConstant.nameKey] = imageName;
+                      fileMap[ArgumentConstant.nameKey] = imageName!;
                       fileMap[ArgumentConstant.dateKey] =
                           _imageDateController.text;
                       Navigator.pop(context);
@@ -559,7 +559,7 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
                                     imagesList.add(value['medicalImages'].last);
                                   }
 
-                                  if (isBottomButtonsShow) {
+                                  if (isBottomButtonsShow!) {
                                     setState(() {
                                       _selectedImagesList.add(imagesList.last);
                                     });
@@ -592,21 +592,21 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14.0),
         borderSide: BorderSide(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
           width: 0.5,
         ),
       ),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14.0),
         borderSide: BorderSide(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
           width: 0.5,
         ),
       ),
       disabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14.0),
         borderSide: BorderSide(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
           width: 0.5,
         ),
       ),
@@ -616,8 +616,8 @@ class _UploadImagesScreenState extends State<UploadImagesScreen> {
   void showPickerDialog() {
     showCommonUploadDialog(
       context,
-      Localization.of(context).picker,
-      Localization.of(context).uploadPhoto,
+      Localization.of(context)!.picker,
+      Localization.of(context)!.uploadPhoto,
       onTop: () {
         getImage(1);
         Navigator.pop(context);

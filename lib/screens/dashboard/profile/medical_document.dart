@@ -15,7 +15,7 @@ import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:intl/intl.dart';
 
 class MedicalDocumentsScreen extends StatefulWidget {
-  MedicalDocumentsScreen({Key key}) : super(key: key);
+  MedicalDocumentsScreen({Key? key}) : super(key: key);
 
   @override
   _MedicalDocumentsScreenState createState() => _MedicalDocumentsScreenState();
@@ -24,11 +24,11 @@ class MedicalDocumentsScreen extends StatefulWidget {
 class _MedicalDocumentsScreenState extends State<MedicalDocumentsScreen> {
   ApiBaseHelper _api = ApiBaseHelper();
 
-  List<dynamic> _closedAppointmentsList = List();
+  List<dynamic> _closedAppointmentsList = [];
   // List<dynamic> ondemandAppointmentsList = List();
   // List<dynamic> _activeAppointmentsList = List();
 
-  Future<dynamic> _requestsFuture;
+  Future<dynamic>? _requestsFuture;
 
   @override
   void initState() {
@@ -148,7 +148,7 @@ class _MedicalDocumentsScreenState extends State<MedicalDocumentsScreen> {
 
   Widget _requestList(Map response) {
     String name = "---",
-        avatar,
+        avatar = '',
         averageRating = "---",
         professionalTitle = "---";
 
@@ -183,9 +183,9 @@ class _MedicalDocumentsScreenState extends State<MedicalDocumentsScreen> {
         }
         if (response["doctorData"]["education"].isNotEmpty) {
           name += ' ' +
-                  response["doctorData"]["education"][0]["degree"]
+                  (response["doctorData"]["education"][0]["degree"]
                       ?.toString() ??
-              "---";
+              "---");
         }
       } else {
         if (response["doctorData"][0]["professionalTitle"] != null) {
@@ -196,9 +196,9 @@ class _MedicalDocumentsScreenState extends State<MedicalDocumentsScreen> {
         }
         if (response["doctorData"][0]["education"].isNotEmpty) {
           name += ' ' +
-                  response["doctorData"][0]["education"][0]["degree"]
+                  (response["doctorData"][0]["education"][0]["degree"]
                       ?.toString() ??
-              "---";
+              "---");
         }
       }
     }
@@ -271,7 +271,7 @@ class _MedicalDocumentsScreenState extends State<MedicalDocumentsScreen> {
             // _popMenuCommonItem(context, Localization.of(context).remove,
             // FileConstants.icRemoveBlack)
           ],
-          onSelected: (value) {
+          onSelected: (dynamic value) {
             if (value == "view") {
               Navigator.pushNamed(context, Routes.completedAppointmentSummary,
                   arguments: response["_id"]);
@@ -320,7 +320,7 @@ class _MedicalDocumentsScreenState extends State<MedicalDocumentsScreen> {
             ],
           ),
         ),
-        collapsed: null,
+        collapsed: SizedBox(),
       ),
     );
   }

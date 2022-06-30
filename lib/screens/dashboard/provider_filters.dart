@@ -9,29 +9,29 @@ import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/round_corner_checkbox.dart';
 
 class ProviderFiltersScreen extends StatefulWidget {
-  ProviderFiltersScreen({Key key, this.filterMap}) : super(key: key);
+  ProviderFiltersScreen({Key? key, this.filterMap}) : super(key: key);
 
-  final Map filterMap;
+  final Map? filterMap;
 
   @override
   _ProviderFiltersScreenState createState() => _ProviderFiltersScreenState();
 }
 
 class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
-  List<dynamic> _filtersList = List();
+  List<dynamic> _filtersList = [];
 
-  List<RadioModel> _filterOptionsList = new List<RadioModel>();
-  Map _filtersMap = Map();
+  List<RadioModel> _filterOptionsList = <RadioModel>[];
+  Map? _filtersMap = Map();
   ApiBaseHelper _api = ApiBaseHelper();
 
   int filterListIndex = 0;
-  String filterMapKey;
+  String? filterMapKey;
 
   double experienceMinValue = 0,
       experienceMaxValue = 50,
       distanceMinValue = 0,
       distanceMaxValue = 100;
-  String insuranceType = '0';
+  String? insuranceType = '0';
 
   bool _isLoading = false;
 
@@ -60,43 +60,43 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
     professionalTitleMap.clear();
     specialitiesMap.clear();
 
-    professionalTitleMap.addAll(widget.filterMap);
-    specialitiesMap.addAll(widget.filterMap);
+    professionalTitleMap.addAll(widget.filterMap!);
+    specialitiesMap.addAll(widget.filterMap!);
 
     professionalTitleMap
         .removeWhere((key, value) => !key.contains('professionalTitleId'));
 
     specialitiesMap.removeWhere((key, value) => !key.contains('specialtyId'));
 
-    if (_filtersMap['experience'] != null) {
-      int index = _filtersMap['experience'].toString().indexOf('-');
+    if (_filtersMap!['experience'] != null) {
+      int index = _filtersMap!['experience'].toString().indexOf('-');
 
       setState(() {
         _experienceRangeValues = RangeValues(
           double.parse(
-            _filtersMap['experience'].toString().substring(0, index),
+            _filtersMap!['experience'].toString().substring(0, index),
           ),
           double.parse(
-            _filtersMap['experience'].toString().substring(
-                index + 1, _filtersMap['experience'].toString().length),
+            _filtersMap!['experience'].toString().substring(
+                index + 1, _filtersMap!['experience'].toString().length),
           ),
         );
       });
     }
 
-    if (_filtersMap['insuranceType'] != null) {
-      insuranceType = _filtersMap['insuranceType'];
+    if (_filtersMap!['insuranceType'] != null) {
+      insuranceType = _filtersMap!['insuranceType'];
     }
 
-    if (_filtersMap['minimumDistance'] != null &&
-        _filtersMap['maximumDistance'] != null) {
+    if (_filtersMap!['minimumDistance'] != null &&
+        _filtersMap!['maximumDistance'] != null) {
       setState(() {
         _distanceRangeValues = RangeValues(
           double.parse(
-            _filtersMap['minimumDistance'].toString(),
+            _filtersMap!['minimumDistance'].toString(),
           ),
           double.parse(
-            _filtersMap['maximumDistance'].toString(),
+            _filtersMap!['maximumDistance'].toString(),
           ),
         );
       });
@@ -180,7 +180,7 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
                             setState(() {
                               _experienceRangeValues = newValues;
 
-                              _filtersMap['experience'] = _experienceRangeValues
+                              _filtersMap!['experience'] = _experienceRangeValues
                                       .start
                                       .toStringAsFixed(0) +
                                   "-" +
@@ -200,11 +200,11 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
                                 setState(() {
                                   _distanceRangeValues = newValues;
 
-                                  _filtersMap['minimumDistance'] =
+                                  _filtersMap!['minimumDistance'] =
                                       _distanceRangeValues.start
                                           .toStringAsFixed(0);
 
-                                  _filtersMap['maximumDistance'] =
+                                  _filtersMap!['maximumDistance'] =
                                       _distanceRangeValues.end
                                           .toStringAsFixed(0);
                                 });
@@ -221,10 +221,10 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
                                         activeColor: AppColors.windsor,
                                         value: '0',
                                         groupValue: insuranceType,
-                                        onChanged: (value) {
+                                        onChanged: (dynamic value) {
                                           setState(() {
                                             insuranceType = value;
-                                            _filtersMap['insuranceType'] =
+                                            _filtersMap!['insuranceType'] =
                                                 value;
                                           });
                                         },
@@ -237,10 +237,10 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
                                         activeColor: AppColors.windsor,
                                         value: '1',
                                         groupValue: insuranceType,
-                                        onChanged: (value) {
+                                        onChanged: (dynamic value) {
                                           setState(() {
                                             insuranceType = value;
-                                            _filtersMap['insuranceType'] =
+                                            _filtersMap!['insuranceType'] =
                                                 value;
                                           });
                                         },
@@ -274,7 +274,7 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
                                           fontWeight: FontWeight.w400,
                                           color: Colors.black.withOpacity(0.85),
                                         ),
-                                        value: _filtersMap.containsValue(
+                                        value: _filtersMap!.containsValue(
                                             _filterTitle[filterListIndex == 3
                                                 ? 'title'
                                                 : '_id']),
@@ -282,19 +282,19 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
                                           setState(() {
                                             if (filterListIndex == 3) {
                                               value
-                                                  ? _filtersMap[
+                                                  ? _filtersMap![
                                                           "$filterMapKey[${index.toString()}]"] =
                                                       _filterTitle["title"]
                                                           .toString()
-                                                  : _filtersMap.remove(
+                                                  : _filtersMap!.remove(
                                                       "$filterMapKey[${index.toString()}]");
                                             } else {
                                               value
-                                                  ? _filtersMap[
+                                                  ? _filtersMap![
                                                           "$filterMapKey[${index.toString()}]"] =
                                                       _filterTitle["_id"]
                                                           .toString()
-                                                  : _filtersMap.remove(
+                                                  : _filtersMap!.remove(
                                                       "$filterMapKey[${index.toString()}]");
                                             }
 
@@ -363,7 +363,7 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
                 ),
                 color: Colors.grey[100],
                 shape: RoundedRectangleBorder(
-                  side: BorderSide(color: Colors.grey[300], width: 0.5),
+                  side: BorderSide(color: Colors.grey[300]!, width: 0.5),
                   borderRadius: BorderRadius.circular(
                     Dimens.buttonCornerRadius,
                   ),
@@ -442,7 +442,7 @@ class _ProviderFiltersScreenState extends State<ProviderFiltersScreen> {
                   : experienceMaxValue,
               activeColor: AppColors.goldenTainoi,
               values: rangeValues,
-              onChanged: onChanged,
+              onChanged: onChanged as void Function(RangeValues)?,
             ),
           )
         ],

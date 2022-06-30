@@ -53,7 +53,7 @@ class _InviteByEmailScreenState extends State<InviteByEmailScreen> {
     try {
       var res = await ApiManager().getInviteMessage(request);
       ProgressDialogUtils.dismissProgressDialog();
-      textMessageController.text = res.message;
+      textMessageController.text = res.message!;
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
     } catch (e) {
@@ -73,8 +73,8 @@ class _InviteByEmailScreenState extends State<InviteByEmailScreen> {
               height: spacing50,
             ),
             HutanoHeaderInfo(
-              title: Localization.of(context).inviteByEmail,
-              subTitle: Localization.of(context).addMoreRecipients,
+              title: Localization.of(context)!.inviteByEmail,
+              subTitle: Localization.of(context)!.addMoreRecipients,
               subTitleFontSize: fontSize11,
             ),
             SizedBox(
@@ -108,7 +108,7 @@ class _InviteByEmailScreenState extends State<InviteByEmailScreen> {
 
   Widget _buildNextButton() {
     return HutanoButton(
-      label: Localization.of(context).next,
+      label: Localization.of(context)!.next,
       labelColor: colorWhite,
       color: colorPurple,
       onPressed: () {
@@ -134,12 +134,12 @@ class _InviteByEmailScreenState extends State<InviteByEmailScreen> {
         Padding(
           padding: const EdgeInsets.only(top: spacing10),
           child: HutanoTextField(
-            hintText: Localization.of(context).nameOfRecipient,
+            hintText: Localization.of(context)!.nameOfRecipient,
             textSize: fontSize12,
             textInputType: TextInputType.name,
             focusNode: list[index].nameFocus,
             floatingBehaviour: FloatingLabelBehavior.never,
-            width: SizeConfig.screenWidth / 2.8,
+            width: SizeConfig.screenWidth! / 2.8,
             focusedBorderColor: colorGrey20,
             onValueChanged: (value) {
               list[index].nameOfRecipient = value.toString();
@@ -150,14 +150,14 @@ class _InviteByEmailScreenState extends State<InviteByEmailScreen> {
         Padding(
           padding: const EdgeInsets.only(left: spacing10, top: spacing10),
           child: HutanoTextField(
-            hintText: Localization.of(context).emailAddress,
+            hintText: Localization.of(context)!.emailAddress,
             controller: TextEditingController()
               ..text = list[index].emailAddress,
             textSize: fontSize12,
             focusNode: list[index].emailFocus,
             textInputType: TextInputType.emailAddress,
             floatingBehaviour: FloatingLabelBehavior.never,
-            width: SizeConfig.screenWidth / 2,
+            width: SizeConfig.screenWidth! / 2,
             focusedBorderColor: colorGrey20,
             contentPadding: EdgeInsets.all(8),
             onValueChanged: (value) {
@@ -187,7 +187,7 @@ class _InviteByEmailScreenState extends State<InviteByEmailScreen> {
           Flexible(
             flex: 1,
             child: HutanoButton(
-              label: Localization.of(context).send,
+              label: Localization.of(context)!.send,
               labelColor: colorBlack,
               onPressed: () {
                 _sendButtonClick();
@@ -233,16 +233,16 @@ class _InviteByEmailScreenState extends State<InviteByEmailScreen> {
         });
       } on ErrorModel catch (e) {
         ProgressDialogUtils.dismissProgressDialog();
-        DialogUtils.showAlertDialog(context, e.response);
+        DialogUtils.showAlertDialog(context, e.response!);
       } catch (e) {
         ProgressDialogUtils.dismissProgressDialog();
         DialogUtils.showAlertDialog(
-            context, Localization.of(context).commonErrorMsg);
+            context, Localization.of(context)!.commonErrorMsg);
       }
     } else {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(
-          context, Localization.of(context).errorMsgInviteEmail);
+          context, Localization.of(context)!.errorMsgInviteEmail);
     }
   }
 
@@ -259,7 +259,7 @@ class _InviteByEmailScreenState extends State<InviteByEmailScreen> {
             ),
           ),
           Text(
-            Localization.of(context).addRecipients,
+            Localization.of(context)!.addRecipients,
             style: TextStyle(color: colorBlack85, fontSize: fontSize14),
           )
         ],
@@ -287,7 +287,7 @@ class _InviteByEmailScreenState extends State<InviteByEmailScreen> {
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(5.0),
-            borderSide: BorderSide(color: Colors.grey[300]),
+            borderSide: BorderSide(color: Colors.grey[300]!),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(14.0)),

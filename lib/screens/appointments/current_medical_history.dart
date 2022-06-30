@@ -13,10 +13,10 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:hutano/utils/extensions.dart';
 
 class CurrentAppointmentMedicalHistory extends StatefulWidget {
-  CurrentAppointmentMedicalHistory({Key key, this.isBottomButtonsShow})
+  CurrentAppointmentMedicalHistory({Key? key, this.isBottomButtonsShow})
       : super(key: key);
 
-  final Map isBottomButtonsShow;
+  final Map? isBottomButtonsShow;
 
   @override
   _CurrentAppointmentMedicalHistoryState createState() =>
@@ -37,7 +37,7 @@ class _CurrentAppointmentMedicalHistoryState
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: ListView(
         children: <Widget>[
-          widget.isBottomButtonsShow['appointmentProblems'].length > 0
+          widget.isBottomButtonsShow!['appointmentProblems'].length > 0
               ? Padding(
                   padding: const EdgeInsets.only(bottom: 20.0),
                   child: Text(
@@ -51,56 +51,56 @@ class _CurrentAppointmentMedicalHistoryState
             separatorBuilder: (context, index) => SizedBox(height: 20),
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemCount: widget.isBottomButtonsShow['appointmentProblems'].length,
+            itemCount: widget.isBottomButtonsShow!['appointmentProblems'].length,
             itemBuilder: (context, index) {
               return ProblemWidget(
                 dob: getString(AppPreference.dobKey),
                 gender: getInt(PreferenceKey.gender),
                 appointmentProblem:
-                    widget.isBottomButtonsShow['appointmentProblems'][index],
+                    widget.isBottomButtonsShow!['appointmentProblems'][index],
               );
             },
           ),
-          widget.isBottomButtonsShow['medicalHistory'].length > 0
+          widget.isBottomButtonsShow!['medicalHistory'].length > 0
               ? medicalHistoryDetail(
-                  widget.isBottomButtonsShow['medicalHistory'])
+                  widget.isBottomButtonsShow!['medicalHistory'])
               : SizedBox(),
           socialHistoryWidget(
-            widget.isBottomButtonsShow['socialHistory'],
+            widget.isBottomButtonsShow!['socialHistory'],
           ),
           allergiesWidget(
-            widget.isBottomButtonsShow['allergies'] ?? [],
+            widget.isBottomButtonsShow!['allergies'] ?? [],
           ),
-          ((widget.isBottomButtonsShow['vitals']['oxygenSaturation'] != null &&
-                      widget.isBottomButtonsShow['vitals']
+          ((widget.isBottomButtonsShow!['vitals']['oxygenSaturation'] != null &&
+                      widget.isBottomButtonsShow!['vitals']
                               ['oxygenSaturation'] !=
                           '') ||
-                  (widget.isBottomButtonsShow['vitals']['heartRate'] != null &&
-                      widget.isBottomButtonsShow['vitals']['heartRate'] !=
+                  (widget.isBottomButtonsShow!['vitals']['heartRate'] != null &&
+                      widget.isBottomButtonsShow!['vitals']['heartRate'] !=
                           '') ||
-                  (widget.isBottomButtonsShow['vitals']['temperature'] !=
+                  (widget.isBottomButtonsShow!['vitals']['temperature'] !=
                           null &&
-                      widget.isBottomButtonsShow['vitals']
+                      widget.isBottomButtonsShow!['vitals']
                               ['temperature'] !=
                           '') ||
-                  (widget.isBottomButtonsShow['vitals']['bloodPressureSbp'] !=
+                  (widget.isBottomButtonsShow!['vitals']['bloodPressureSbp'] !=
                           null &&
-                      widget.isBottomButtonsShow['vitals']
+                      widget.isBottomButtonsShow!['vitals']
                               ['bloodPressureSbp'] !=
                           '') ||
-                  (widget.isBottomButtonsShow['vitals']['bloodPressureDbp'] !=
+                  (widget.isBottomButtonsShow!['vitals']['bloodPressureDbp'] !=
                           null &&
-                      widget.isBottomButtonsShow['vitals']
+                      widget.isBottomButtonsShow!['vitals']
                               ['bloodPressureDbp'] !=
                           ''))
-              ? vitalsDetail(widget.isBottomButtonsShow['vitals'])
+              ? vitalsDetail(widget.isBottomButtonsShow!['vitals'])
               : SizedBox(),
-          widget.isBottomButtonsShow['medications'].length > 0
-              ? medicationDetail(widget.isBottomButtonsShow['medications'])
+          widget.isBottomButtonsShow!['medications'].length > 0
+              ? medicationDetail(widget.isBottomButtonsShow!['medications'])
               : SizedBox(),
-          widget.isBottomButtonsShow['medicalDiagnostics'].length > 0
+          widget.isBottomButtonsShow!['medicalDiagnostics'].length > 0
               ? dianosticTestDetail(
-                  widget.isBottomButtonsShow['medicalDiagnostics'])
+                  widget.isBottomButtonsShow!['medicalDiagnostics'])
               : SizedBox(),
           SizedBox(height: 20),
         ],
@@ -127,7 +127,7 @@ class _CurrentAppointmentMedicalHistoryState
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            border: Border.all(color: Colors.grey[200]),
+            border: Border.all(color: Colors.grey[200]!),
           ),
           child: ListView(
             shrinkWrap: true,
@@ -247,7 +247,7 @@ class _CurrentAppointmentMedicalHistoryState
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(10)),
-              border: Border.all(color: Colors.grey[200]),
+              border: Border.all(color: Colors.grey[200]!),
             ),
             child: Text(allergies.length == 0
                 ? 'Patient does not have known allergies'
@@ -271,7 +271,7 @@ class _CurrentAppointmentMedicalHistoryState
           shape: BoxShape.rectangle,
           color: Colors.white,
           borderRadius: BorderRadius.circular(14.0),
-          border: Border.all(color: Colors.grey[200])),
+          border: Border.all(color: Colors.grey[200]!)),
       padding: EdgeInsets.all(12),
       child: Column(
         children: [
@@ -357,7 +357,7 @@ class _CurrentAppointmentMedicalHistoryState
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(10)),
-          border: Border.all(color: Colors.grey[200]),
+          border: Border.all(color: Colors.grey[200]!),
         ),
         child: ListView.separated(
             separatorBuilder: (context, index) => SizedBox(height: 10),
@@ -381,7 +381,7 @@ class _CurrentAppointmentMedicalHistoryState
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(10)),
-          border: Border.all(color: Colors.grey[200]),
+          border: Border.all(color: Colors.grey[200]!),
         ),
         child: ListView.separated(
             separatorBuilder: (context, index) => SizedBox(height: 10),
@@ -476,7 +476,7 @@ class _CurrentAppointmentMedicalHistoryState
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(10)),
-          border: Border.all(color: Colors.grey[200]),
+          border: Border.all(color: Colors.grey[200]!),
         ),
         child: ListView.separated(
             separatorBuilder: (context, index) => SizedBox(height: 10),
@@ -509,7 +509,7 @@ Widget vitalWidget(BuildContext context, Map<String, dynamic> vitals) {
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(10)),
-        border: Border.all(color: Colors.grey[200]),
+        border: Border.all(color: Colors.grey[200]!),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

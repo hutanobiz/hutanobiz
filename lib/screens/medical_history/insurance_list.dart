@@ -21,8 +21,8 @@ class InsuranceList extends StatefulWidget {
 }
 
 class _InsuranceListState extends State<InsuranceList> {
-  List<Insurance> _insuranceList = [];
-  int _selectedCardIndex = 0;
+  List<Insurance>? _insuranceList = [];
+  int? _selectedCardIndex = 0;
 
   @override
   void initState() {
@@ -45,7 +45,7 @@ class _InsuranceListState extends State<InsuranceList> {
 
   _addInsurance() async {
     Navigator.of(context).pop(
-        {ArgumentConstant.member: _insuranceList[_selectedCardIndex]});
+        {ArgumentConstant.member: _insuranceList![_selectedCardIndex!]});
     return;
     // ProgressDialogUtils.showProgressDialog(context);
     // final request = ReqAddMyInsurance(
@@ -83,7 +83,7 @@ class _InsuranceListState extends State<InsuranceList> {
   Widget _addButton() {
     return HutanoButton(
       onPressed: _addInsurance,
-      label: Localization.of(context).add,
+      label: Localization.of(context)!.add,
     );
   }
 
@@ -91,7 +91,7 @@ class _InsuranceListState extends State<InsuranceList> {
     return ListView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      itemCount: _insuranceList.length,
+      itemCount: _insuranceList!.length,
       itemBuilder: (context, index) {
         return Container(
           height: 80,
@@ -106,7 +106,7 @@ class _InsuranceListState extends State<InsuranceList> {
               SizedBox(width: spacing15),
               Expanded(
                 child: Text(
-                  _insuranceList[index].title,
+                  _insuranceList![index].title!,
                   style: TextStyle(
                     fontSize: fontSize14,
                     fontWeight: fontWeightMedium,
@@ -116,7 +116,7 @@ class _InsuranceListState extends State<InsuranceList> {
               Radio(
                   value: index,
                   groupValue: _selectedCardIndex,
-                  onChanged: (newvalue) {
+                  onChanged: (dynamic newvalue) {
                     setState(() {
                       _selectedCardIndex = newvalue;
                       setState(() {});

@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 class InheritedContainer extends StatefulWidget {
   final Widget child;
-  final String data;
+  final String? data;
 
-  InheritedContainer({@required this.child, this.data});
+  InheritedContainer({required this.child, this.data});
 
   static InheritedContainerState of(BuildContext context) {
     return (context
-        .dependOnInheritedWidgetOfExactType<InheritedStateContainer>()
+        .dependOnInheritedWidgetOfExactType<InheritedStateContainer>()!
         .data);
   }
 
@@ -27,9 +27,9 @@ class InheritedContainerState extends State<InheritedContainer> {
   Map selectServiceMap = Map();
   Map insuranceDataMap = Map();
   Map filterDataMap = Map();
-  List providerInsuranceList = List();
+  List? providerInsuranceList = [];
 
-  void setProjectsResponse(String key, String data) {
+  void setProjectsResponse(String key, String? data) {
     projectsResponse[key] = data;
   }
 
@@ -69,7 +69,7 @@ class InheritedContainerState extends State<InheritedContainer> {
     selectServiceMap[key] = data;
   }
 
-  void setProviderInsuranceMap(List providerInsuranceList) {
+  void setProviderInsuranceMap(List? providerInsuranceList) {
     this.providerInsuranceList = providerInsuranceList;
   }
 
@@ -94,9 +94,9 @@ class InheritedStateContainer extends InheritedWidget {
   final InheritedContainerState data;
 
   InheritedStateContainer({
-    Key key,
-    @required this.data,
-    @required Widget child,
+    Key? key,
+    required this.data,
+    required Widget child,
   }) : super(key: key, child: child);
 
   @override

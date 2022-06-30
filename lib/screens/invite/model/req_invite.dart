@@ -1,9 +1,9 @@
 
 class ReqInvite {
-  String phoneNumber;
+  String? phoneNumber;
   String mobileCountryCode;
   String message;
-  List emailList;
+  List? emailList;
 
   ReqInvite(
   {this.phoneNumber, this.mobileCountryCode="", this.message="", this.emailList});

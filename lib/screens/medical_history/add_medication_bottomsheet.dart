@@ -20,15 +20,15 @@ import 'package:provider/provider.dart';
 
 class AddMedicationBottomSheet extends StatefulWidget {
   AddMedicationBottomSheet(
-      {Key key,
+      {Key? key,
       this.user,
       this.appointment,
       this.status,
       this.id,
       this.current})
       : super(key: key);
-  String user, appointment, status, id;
-  Data current;
+  String? user, appointment, status, id;
+  Data? current;
 
   @override
   State<AddMedicationBottomSheet> createState() => _AddMedicationBottomState();
@@ -38,8 +38,8 @@ class _AddMedicationBottomState extends State<AddMedicationBottomSheet> {
   dynamic currentPrescriptions;
   bool isLoading = false;
   ApiBaseHelper api = ApiBaseHelper();
-  String selectedDose;
-  String selectedFrequency;
+  String? selectedDose;
+  String? selectedFrequency;
   List<String> doses = [
     "Once a day",
     "Twice a Day",
@@ -53,11 +53,11 @@ class _AddMedicationBottomState extends State<AddMedicationBottomSheet> {
     super.initState();
     if (widget.current != null) {
       isLoading = true;
-      searchPrescription(widget.current.name).then((value) {
+      searchPrescription(widget.current!.name!).then((value) {
         currentPrescriptions = value[0];
         try {
-          selectedDose = widget.current.dose;
-          selectedFrequency = widget.current.frequency;
+          selectedDose = widget.current!.dose;
+          selectedFrequency = widget.current!.frequency;
         } catch (e) {}
 
         setLoading(false);
@@ -98,7 +98,7 @@ class _AddMedicationBottomState extends State<AddMedicationBottomSheet> {
                       decoration: BoxDecoration(
                           color: colorBlack2.withOpacity(0.06),
                           border: Border.all(
-                            color: Colors.grey[300],
+                            color: Colors.grey[300]!,
                             width: 1.0,
                           ),
                           borderRadius: BorderRadius.all(Radius.circular(8))),
@@ -152,12 +152,12 @@ class _AddMedicationBottomState extends State<AddMedicationBottomSheet> {
                             ),
                           );
                         },
-                        itemBuilder: (context, suggestion) {
+                        itemBuilder: (context, dynamic suggestion) {
                           return ListTile(
                             title: Text(suggestion['name']),
                           );
                         },
-                        onSuggestionSelected: (suggestion) {
+                        onSuggestionSelected: (dynamic suggestion) {
                           searchController.text = '';
                           currentPrescriptions = suggestion;
                           setState(() {});
@@ -172,7 +172,7 @@ class _AddMedicationBottomState extends State<AddMedicationBottomSheet> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(14.0),
-                        border: Border.all(color: Colors.grey[300]),
+                        border: Border.all(color: Colors.grey[300]!),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -222,7 +222,7 @@ class _AddMedicationBottomState extends State<AddMedicationBottomSheet> {
                                   ],
                                 )
                               : Text(
-                                  '${currentPrescriptions['name']} ${widget.current.dose} ${widget.current.frequency}'),
+                                  '${currentPrescriptions['name']} ${widget.current!.dose} ${widget.current!.frequency}'),
                           widget.status == '2'
                               ? SizedBox()
                               : SizedBox(height: 10),
@@ -322,7 +322,7 @@ class _AddMedicationBottomState extends State<AddMedicationBottomSheet> {
                                             value: doses[index],
                                             groupValue: selectedFrequency,
                                             activeColor: AppColors.windsor,
-                                            onChanged: (val) {
+                                            onChanged: (dynamic val) {
                                               setState(() {
                                                 selectedFrequency = val;
                                               });

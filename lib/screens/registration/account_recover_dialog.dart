@@ -7,8 +7,8 @@ import 'package:hutano/utils/color_utils.dart';
 showacountRecoverDialog(
   BuildContext context,
   String email, {
-  Function onRecover,
-  Function onCancel,
+  Function? onRecover,
+  Function? onCancel,
 }) {
   var yyDialog = YYDialog();
   yyDialog.build(context)
@@ -70,7 +70,7 @@ showacountRecoverDialog(
                       borderRadius: BorderRadius.circular(10.0),
                       side: BorderSide(color: colorPurple100)),
                   onPressed: () {
-                    onRecover();
+                    onRecover!();
                   },
                   child: Padding(
                     padding: EdgeInsets.all(10),
@@ -85,7 +85,7 @@ showacountRecoverDialog(
               ),
               GestureDetector(
                 onTap: () {
-                  onCancel();
+                  onCancel!();
                   yyDialog.dismiss();
                 },
                 child: Text("Cancel",

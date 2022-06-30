@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 class RoundCornerCheckBox extends StatelessWidget {
   final bool value;
   final ValueChanged<bool> onCheck;
-  final String title;
-  final TextStyle textStyle;
+  final String? title;
+  final TextStyle? textStyle;
   final double textPadding;
   final MainAxisAlignment mainAxisAlignment;
 
   RoundCornerCheckBox(
-      {Key key,
-      @required this.value,
-      @required this.onCheck,
+      {Key? key,
+      required this.value,
+      required this.onCheck,
       this.title,
       this.textStyle,
       this.textPadding = 10,
@@ -41,7 +41,7 @@ class RoundCornerCheckBox extends StatelessWidget {
               ? Container()
               : Flexible(
                   child: Text(
-                    title,
+                    title!,
                     style: textStyle ??
                         TextStyle(
                           fontSize: 16.0,

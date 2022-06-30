@@ -6,11 +6,11 @@ import 'package:hutano/text_style.dart';
 
 class AnthopometricCompletedSummaryWidget extends StatelessWidget {
   AnthopometricCompletedSummaryWidget({
-    Key key,
-    @required this.anthropometricMeasurements,
+    Key? key,
+    required this.anthropometricMeasurements,
   }) : super(key: key);
 
-  final AnthropometricMeasurements anthropometricMeasurements;
+  final AnthropometricMeasurements? anthropometricMeasurements;
 
   @override
   Widget build(BuildContext context) {
@@ -52,98 +52,98 @@ class AnthopometricCompletedSummaryWidget extends StatelessWidget {
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 children: [
-                  anthropometricMeasurements.height != null &&
-                          anthropometricMeasurements.height.feet != null &&
-                          anthropometricMeasurements.height.inches != null &&
-                          anthropometricMeasurements.height.feet != '' &&
-                          anthropometricMeasurements.height.inches != ''
+                  anthropometricMeasurements!.height != null &&
+                          anthropometricMeasurements!.height!.feet != null &&
+                          anthropometricMeasurements!.height!.inches != null &&
+                          anthropometricMeasurements!.height!.feet != '' &&
+                          anthropometricMeasurements!.height!.inches != ''
                       ? Text(
-                          'Height: ${anthropometricMeasurements.height.feet}.${anthropometricMeasurements.height.inches} feet',
+                          'Height: ${anthropometricMeasurements!.height!.feet}.${anthropometricMeasurements!.height!.inches} feet',
                           style: AppTextStyle.mediumStyle(fontSize: 14),
                         )
                       : SizedBox(),
-                  anthropometricMeasurements.weight != null &&
-                          anthropometricMeasurements.weight.current != null
+                  anthropometricMeasurements!.weight != null &&
+                          anthropometricMeasurements!.weight!.current != null
                       ? Padding(
                           padding: EdgeInsets.only(top: 16.0),
                           child: Text(
-                            'Weight: ${anthropometricMeasurements.weight.current} lbs',
+                            'Weight: ${anthropometricMeasurements!.weight!.current} lbs',
                             style: AppTextStyle.mediumStyle(fontSize: 14),
                           ),
                         )
                       : SizedBox(),
-                  anthropometricMeasurements.weight.goal != null
+                  anthropometricMeasurements!.weight!.goal != null
                       ? GoalWidget(
-                          goal: anthropometricMeasurements.weight.goal,
+                          goal: anthropometricMeasurements!.weight!.goal,
                           unit: 'lbs')
                       : SizedBox(),
-                  anthropometricMeasurements.bmi != null
+                  anthropometricMeasurements!.bmi != null
                       ? Padding(
                           padding: EdgeInsets.only(top: 16.0),
                           child: Text(
-                            'Bmi: ${anthropometricMeasurements.bmi}',
+                            'Bmi: ${anthropometricMeasurements!.bmi}',
                             style: AppTextStyle.mediumStyle(fontSize: 14),
                           ),
                         )
                       : SizedBox(),
-                  anthropometricMeasurements.hip != null &&
-                          anthropometricMeasurements.hip.current != null
+                  anthropometricMeasurements!.hip != null &&
+                          anthropometricMeasurements!.hip!.current != null
                       ? Padding(
                           padding: EdgeInsets.only(top: 16.0),
                           child: Text(
-                            'Hip Circumference: ${anthropometricMeasurements.hip.current} inches',
+                            'Hip Circumference: ${anthropometricMeasurements!.hip!.current} inches',
                             style: AppTextStyle.mediumStyle(fontSize: 14),
                           ),
                         )
                       : SizedBox(),
-                  anthropometricMeasurements.hip.goal != null
+                  anthropometricMeasurements!.hip!.goal != null
                       ? GoalWidget(
-                          goal: anthropometricMeasurements.hip.goal,
+                          goal: anthropometricMeasurements!.hip!.goal,
                           unit: 'inches')
                       : SizedBox(),
-                  anthropometricMeasurements.waist != null &&
-                          anthropometricMeasurements.waist.current != null
+                  anthropometricMeasurements!.waist != null &&
+                          anthropometricMeasurements!.waist!.current != null
                       ? Padding(
                           padding: EdgeInsets.only(top: 16.0),
                           child: Text(
-                            'Waist Cicumference: ${anthropometricMeasurements.waist.current} inches',
+                            'Waist Cicumference: ${anthropometricMeasurements!.waist!.current} inches',
                             style: AppTextStyle.mediumStyle(fontSize: 14),
                           ),
                         )
                       : SizedBox(),
-                  anthropometricMeasurements.waist.goal != null
+                  anthropometricMeasurements!.waist!.goal != null
                       ? GoalWidget(
-                          goal: anthropometricMeasurements.waist.goal,
+                          goal: anthropometricMeasurements!.waist!.goal,
                           unit: 'inches')
                       : SizedBox(),
-                  anthropometricMeasurements.calf != null &&
-                          anthropometricMeasurements.calf.current != null
+                  anthropometricMeasurements!.calf != null &&
+                          anthropometricMeasurements!.calf!.current != null
                       ? Padding(
                           padding: EdgeInsets.only(top: 16.0),
                           child: Text(
-                            'Calf Cicumference: ${anthropometricMeasurements.calf.current} inches',
+                            'Calf Cicumference: ${anthropometricMeasurements!.calf!.current} inches',
                             style: AppTextStyle.mediumStyle(fontSize: 14),
                           ),
                         )
                       : SizedBox(),
-                  anthropometricMeasurements.calf.goal != null
+                  anthropometricMeasurements!.calf!.goal != null
                       ? GoalWidget(
-                          goal: anthropometricMeasurements.calf.goal,
+                          goal: anthropometricMeasurements!.calf!.goal,
                           unit: 'inches')
                       : SizedBox(),
-                  anthropometricMeasurements.arm != null &&
-                          anthropometricMeasurements.arm.current != null
+                  anthropometricMeasurements!.arm != null &&
+                          anthropometricMeasurements!.arm!.current != null
                       ? Padding(
                           padding: EdgeInsets.only(top: 16.0),
                           child: Text(
-                            'Arm Cicumference: ${anthropometricMeasurements.arm.current} inches',
+                            'Arm Cicumference: ${anthropometricMeasurements!.arm!.current} inches',
                             style: AppTextStyle.mediumStyle(fontSize: 14),
                           ),
                         )
                       : SizedBox(),
-                  anthropometricMeasurements.arm.goal != null
+                  anthropometricMeasurements!.arm!.goal != null
                       ? GoalWidget(
-                          goal: anthropometricMeasurements.arm.goal,
+                          goal: anthropometricMeasurements!.arm!.goal,
                           unit: 'inches')
                       : SizedBox(),
                 ],
@@ -156,12 +156,12 @@ class AnthopometricCompletedSummaryWidget extends StatelessWidget {
 
 class GoalWidget extends StatelessWidget {
   GoalWidget({
-    Key key,
-    @required this.goal,
-    @required this.unit,
+    Key? key,
+    required this.goal,
+    required this.unit,
   }) : super(key: key);
 
-  final Goal goal;
+  final Goal? goal;
   final String unit;
   Map<String, String> timeSpanConfig = {
     "1": "Hours",
@@ -173,16 +173,16 @@ class GoalWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      goal.achieve != null
-          ? Text('Goal: ${goal.achieve} $unit',
+      goal!.achieve != null
+          ? Text('Goal: ${goal!.achieve} $unit',
               style: AppTextStyle.mediumStyle(fontSize: 14))
           : SizedBox(),
-      goal.timeFrame != null
+      goal!.timeFrame != null
           ? Text(
-              'Timeframe: ${goal.timeFrame} ${timeSpanConfig[goal.timeUnit]}',
+              'Timeframe: ${goal!.timeFrame} ${timeSpanConfig[goal!.timeUnit!]}',
               style: AppTextStyle.mediumStyle(fontSize: 14))
           : SizedBox(),
-      goal.improvements != null && goal.improvements.length > 0
+      goal!.improvements != null && goal!.improvements!.length > 0
           ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
                 'Treatment options: ',
@@ -191,10 +191,10 @@ class GoalWidget extends StatelessWidget {
               ListView.builder(
                   shrinkWrap: true,
                   physics: ClampingScrollPhysics(),
-                  itemCount: goal.improvements.length,
+                  itemCount: goal!.improvements!.length,
                   itemBuilder: (context, index) {
                     return Text(
-                      goal.improvements[index],
+                      goal!.improvements![index],
                       style: AppTextStyle.mediumStyle(fontSize: 14),
                     );
                   })

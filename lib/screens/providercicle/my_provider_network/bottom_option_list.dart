@@ -8,26 +8,26 @@ import 'package:hutano/utils/localization/localization.dart';
 import 'package:hutano/widgets/ripple_effect.dart';
 
 class BottomOptionList extends StatelessWidget {
-  final String shareMessage;
+  final String? shareMessage;
   final List<Option> optionList = [];
 
-  BottomOptionList({Key key, this.shareMessage}) : super(key: key);
+  BottomOptionList({Key? key, this.shareMessage}) : super(key: key);
 
-  Future<void> _initList(context) {
+  Future<void>? _initList(context) {
     optionList.add(Option(
-        label: Localization.of(context).searchByNetwork,
+        label: Localization.of(context)!.searchByNetwork,
         icon: FileConstants.icNetworkPurple,
         route: Routes.searchMember));
     optionList.add(Option(
-        label: Localization.of(context).searchByName,
+        label: Localization.of(context)!.searchByName,
         icon: FileConstants.icAvatarPurple,
         route: Routes.searchMember));
     optionList.add(Option(
-        label: Localization.of(context).searchByNumber,
+        label: Localization.of(context)!.searchByNumber,
         icon: FileConstants.icCallPurple,
         route: Routes.searchMember));
     optionList.add(Option(
-        label: Localization.of(context).inviteByPhone,
+        label: Localization.of(context)!.inviteByPhone,
         icon: FileConstants.icSendPurple,
         route: Routes.routeInviteByText));
     return null;
@@ -36,7 +36,7 @@ class BottomOptionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Object>(
-        future: _initList(context),
+        future: _initList(context)?.then((value) => value as Object),
         builder: (context, snapshot) {
           return ListView.separated(
               shrinkWrap: true,
@@ -51,13 +51,13 @@ class BottomOptionList extends StatelessWidget {
                   onTap: () {
                     if (pos == 3) {
                       Navigator.of(context)
-                          .pushNamed(optionList[pos].route, arguments: {
+                          .pushNamed(optionList[pos].route!, arguments: {
                         ArgumentConstant.shareMessage: shareMessage,
                         ArgumentConstant.loadAllData: pos == 0 ? true : false,
                       });
                     } else {
                       Navigator.of(context)
-                          .pushNamed(optionList[pos].route, arguments: {
+                          .pushNamed(optionList[pos].route!, arguments: {
                         ArgumentConstant.shareMessage: shareMessage,
                       });
                     }
@@ -69,14 +69,14 @@ class BottomOptionList extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            optionList[pos].label,
+                            optionList[pos].label!,
                             style: TextStyle(
                               fontSize: fontSize15,
                             ),
                           ),
                         ),
                         Image.asset(
-                          optionList[pos].icon,
+                          optionList[pos].icon!,
                           height: 15,
                           width: 15,
                         )
@@ -93,9 +93,9 @@ class BottomOptionList extends StatelessWidget {
 }
 
 class Option {
-  final String label;
-  final String icon;
-  final String route;
+  final String? label;
+  final String? icon;
+  final String? route;
 
   Option({
     this.label,

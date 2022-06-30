@@ -1,6 +1,6 @@
 class CommonRes {
-  String status;
-  String response;
+  String? status;
+  String? response;
 
   CommonRes({this.status, this.response});
 

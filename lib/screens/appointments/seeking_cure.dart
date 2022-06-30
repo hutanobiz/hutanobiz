@@ -10,7 +10,7 @@ import 'package:hutano/widgets/widgets.dart';
 import 'package:hutano/widgets/yes_no_check.dart';
 
 class SeekingCureScreen extends StatefulWidget {
-  SeekingCureScreen({Key key}) : super(key: key);
+  SeekingCureScreen({Key? key}) : super(key: key);
 
   @override
   _SeekingCureScreenState createState() => _SeekingCureScreenState();
@@ -25,7 +25,7 @@ class _SeekingCureScreenState extends State<SeekingCureScreen> {
       isWeeksSelect = false,
       isMonthsSelect = false;
 
-  InheritedContainerState _container;
+  late InheritedContainerState _container;
 
   @override
   void didChangeDependencies() {
@@ -98,7 +98,7 @@ class _SeekingCureScreenState extends State<SeekingCureScreen> {
   }
 
   List<Widget> widgetList() {
-    List<Widget> _widgetList = new List();
+    List<Widget> _widgetList = [];
 
     _widgetList.add(Text(
       "Brief description of your symptoms",
@@ -125,14 +125,14 @@ class _SeekingCureScreenState extends State<SeekingCureScreen> {
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14.0),
             borderSide: BorderSide(
-              color: Colors.grey[300],
+              color: Colors.grey[300]!,
               width: 0.5,
             ),
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14.0),
             borderSide: BorderSide(
-              color: Colors.grey[300],
+              color: Colors.grey[300]!,
               width: 0.5,
             ),
           ),
@@ -253,7 +253,7 @@ class _SeekingCureScreenState extends State<SeekingCureScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(6.0)),
         border: Border.all(
-            color: isSelected ? AppColors.goldenTainoi : Colors.grey[100]),
+            color: isSelected ? AppColors.goldenTainoi : Colors.grey[100]!),
       ),
       child: Center(
         child: Text(

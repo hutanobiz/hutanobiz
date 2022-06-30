@@ -22,9 +22,9 @@ import '../otp_verification/model/verification_model.dart';
 import 'model/req_reset_password.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
-  final VerificationScreen verificationScreen;
+  final VerificationScreen? verificationScreen;
 
-  const ForgotPasswordScreen(this.verificationScreen, {Key key})
+  const ForgotPasswordScreen(this.verificationScreen, {Key? key})
       : super(key: key);
   @override
   _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
@@ -77,7 +77,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           .pushNamed(Routes.routePinVerification, arguments: args);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     }
   }
 
@@ -99,7 +99,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           .pushNamed(Routes.routePinVerification, arguments: args);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     }
   }
 
@@ -134,7 +134,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       height: 25,
                       child: Center(
                         child: Text(
-                          Localization.of(context).or,
+                          Localization.of(context)!.or,
                         ),
                       ),
                     ),
@@ -176,7 +176,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             width: spacing7,
           ),
           Text(
-            Localization.of(context).msgReturnLogin,
+            Localization.of(context)!.msgReturnLogin,
             style: const TextStyle(
               fontSize: fontSize14,
               color: colorPurple,
@@ -190,16 +190,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget _buildEmailField(BuildContext context) {
     return HutanoTextField(
         width: SizeConfig.screenWidth,
-        labelText: Localization.of(context).emailAddress,
+        labelText: Localization.of(context)!.emailAddress,
         prefixIcon: FileConstants.icMail,
         prefixwidth: spacing20,
         prefixheight: spacing20,
         focusNode: _emailFocus,
         controller: _emailController,
         onValueChanged: (value) {
-          _numberKey.currentState.reset();
+          _numberKey.currentState!.reset();
           _phoneController.text = "";
-          final _validate = _emailKey.currentState.validate();
+          final _validate = _emailKey.currentState!.validate();
           setState(() {
             _enableButton = _validate;
           });
@@ -211,7 +211,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return HutanoButton(
       width: SizeConfig.screenWidth,
       onPressed: _enableButton ? _onSubmitClick : null,
-      label: Localization.of(context).confirm,
+      label: Localization.of(context)!.confirm,
     );
   }
 
@@ -223,10 +223,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           _countryCode = code.toString();
         },
         onValueChanged: (text) {
-          _emailKey.currentState.reset();
+          _emailKey.currentState!.reset();
           _emailController.text = "";
           setState(() {
-            _enableButton = _numberKey.currentState.validate();
+            _enableButton = _numberKey.currentState!.validate();
           });
         },
         validationMethod: (number) =>
@@ -235,13 +235,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   _getTitle() {
     return widget.verificationScreen == VerificationScreen.resetPassword
-        ? Localization.of(context).forgotPassword
-        : Localization.of(context).forgotPin;
+        ? Localization.of(context)!.forgotPassword
+        : Localization.of(context)!.forgotPin;
   }
 
   _getSubTitle() {
     return widget.verificationScreen == VerificationScreen.resetPassword
-        ? Localization.of(context).msgForgotPin.format(["Password"])
-        : Localization.of(context).msgForgotPin.format(["PIN"]);
+        ? Localization.of(context)!.msgForgotPin.format(["Password"])
+        : Localization.of(context)!.msgForgotPin.format(["PIN"]);
   }
 }

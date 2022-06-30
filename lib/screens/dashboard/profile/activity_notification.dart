@@ -14,11 +14,11 @@ class ActivityNotifications extends StatefulWidget {
 }
 
 class _ActivityNotificationsState extends State<ActivityNotifications> {
-  List<dynamic> appointmentNotification = List();
+  List<dynamic> appointmentNotification = [];
   ApiBaseHelper api = new ApiBaseHelper();
-  Future<Map> _requestsFuture;
-  bool cardAdded = true;
-  bool insuranceAdded = true;
+  Future<Map>? _requestsFuture;
+  bool? cardAdded = true;
+  bool? insuranceAdded = true;
 
   void initState() {
     _requestsFuture = api.getAllNotifications(context);
@@ -67,12 +67,12 @@ class _ActivityNotificationsState extends State<ActivityNotifications> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       SizedBox(height: 16.0),
-                      !cardAdded && !insuranceAdded
+                      !cardAdded! && !insuranceAdded!
                           ? InkWell(
                               onTap: () {
                                 InheritedContainerState _container =
                                     InheritedContainer.of(context);
-                                _container.providerInsuranceList.clear();
+                                _container.providerInsuranceList!.clear();
                                 Navigator.of(context).pushNamed(
                                   Routes.paymentMethodScreen,
                                   arguments: {'paymentType': 0},
@@ -84,7 +84,7 @@ class _ActivityNotificationsState extends State<ActivityNotifications> {
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(14.0),
-                                  border: Border.all(color: Colors.grey[300]),
+                                  border: Border.all(color: Colors.grey[300]!),
                                 ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -102,7 +102,7 @@ class _ActivityNotificationsState extends State<ActivityNotifications> {
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(50.0)),
                                         border: Border.all(
-                                          color: Colors.grey[300],
+                                          color: Colors.grey[300]!,
                                           width: 1.0,
                                         ),
                                       ),
@@ -157,7 +157,7 @@ class _ActivityNotificationsState extends State<ActivityNotifications> {
       userImage = ApiBaseHelper.image_base_url + response["doctor"]["avatar"];
     }
 
-    String capitalize() {
+    String? capitalize() {
       return response["message"];
     }
 
@@ -181,7 +181,7 @@ class _ActivityNotificationsState extends State<ActivityNotifications> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(14.0),
-            border: Border.all(color: Colors.grey[300]),
+            border: Border.all(color: Colors.grey[300]!),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -194,14 +194,14 @@ class _ActivityNotificationsState extends State<ActivityNotifications> {
                     top: 10.0, bottom: 10, left: 5, right: 5),
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: userImage == ''
+                    image: (userImage == ''
                         ? AssetImage('images/ic_profile.png')
-                        : NetworkImage(userImage),
+                        : NetworkImage(userImage)) as ImageProvider<Object>,
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.all(Radius.circular(50.0)),
                   border: Border.all(
-                    color: Colors.grey[300],
+                    color: Colors.grey[300]!,
                     width: 1.0,
                   ),
                 ),

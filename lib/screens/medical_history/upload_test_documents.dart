@@ -60,11 +60,11 @@ class UploadTestDocuments extends StatefulWidget {
 }
 
 class _UploadTestDocumentsState extends State<UploadTestDocuments> {
-  List<MedicalDocuments> _allDocuments = List();
+  List<MedicalDocuments>? _allDocuments = [];
   bool _getData = false;
   bool _indicatorLoading = true;
   ApiBaseHelper _api = ApiBaseHelper();
-  String token;
+  String? token;
   final documentTypeController = TextEditingController();
   final documentDateController = TextEditingController();
   String documentName = '';
@@ -77,7 +77,7 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
     'EKG',
     'Other',
   ];
-  InheritedContainerState _container;
+  InheritedContainerState? _container;
 
   @override
   void initState() {
@@ -129,7 +129,7 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
         child: Align(
           alignment: Alignment.topLeft,
           child: Text(
-            Localization.of(context).myDocumentsHeader,
+            Localization.of(context)!.myDocumentsHeader,
             style: TextStyle(
                 fontSize: fontSize16,
                 fontWeight: fontWeightBold,
@@ -143,7 +143,7 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
         child: Align(
           alignment: Alignment.topLeft,
           child: Text(
-            Localization.of(context).myDocumentsSubHeader,
+            Localization.of(context)!.myDocumentsSubHeader,
             style: TextStyle(
                 fontSize: fontSize12,
                 fontWeight: fontWeightRegular,
@@ -157,7 +157,7 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
         child: Align(
           alignment: Alignment.topLeft,
           child: Text(
-            Localization.of(context).uploadFilesHeader,
+            Localization.of(context)!.uploadFilesHeader,
             style: TextStyle(
                 fontSize: fontSize14,
                 fontWeight: fontWeightMedium,
@@ -176,7 +176,7 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
           ? Expanded(
               child: Center(
                 child: Text(
-                  Localization.of(context).noMedicalDocumentsFound,
+                  Localization.of(context)!.noMedicalDocumentsFound,
                   style: TextStyle(
                       fontSize: fontSize16,
                       color: colorBlack2,
@@ -196,7 +196,7 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
                     child: ListView.builder(
                         shrinkWrap: true,
                         physics: ClampingScrollPhysics(),
-                        itemCount: _allDocuments.length,
+                        itemCount: _allDocuments!.length,
                         itemBuilder: (context, index) {
                           return PopupMenuButton(
                             offset: Offset(300, 50),
@@ -204,21 +204,21 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
                                 <PopupMenuEntry<String>>[
                               _popMenuCommonItem(
                                   context,
-                                  Localization.of(context).view,
-                                  FileConstants.icView),
+                                  Localization.of(context)!.view,
+                                  FileConstants.icView) as PopupMenuEntry<String>,
                               _popMenuCommonItem(
                                   context,
-                                  Localization.of(context).remove,
-                                  FileConstants.icRemoveBlack)
+                                  Localization.of(context)!.remove,
+                                  FileConstants.icRemoveBlack) as PopupMenuEntry<String>
                             ],
                             child: ListTile(
                               contentPadding: EdgeInsets.all(0),
                               leading: Image.network(
                                   ApiBaseHelper.imageUrl +
-                                      _allDocuments[index].medicalDocuments,
+                                      _allDocuments![index].medicalDocuments!,
                                   width: 40,
                                   height: 35),
-                              title: Text(_allDocuments[index].name,
+                              title: Text(_allDocuments![index].name!,
                                   style: TextStyle(
                                       fontWeight: fontWeightSemiBold,
                                       fontSize: fontSize14,
@@ -231,7 +231,7 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
                                       color: colorBlack2)),
                               trailing: Icon(Icons.more_vert),
                             ),
-                            onSelected: (value) {
+                            onSelected: (dynamic value) {
                               debugPrint("${value.runtimeType}");
                               _popUpMenuSelected(context, value, index);
                             },
@@ -254,7 +254,7 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: Text(
-                      Localization.of(context).uploadFileLowerLabel,
+                      Localization.of(context)!.uploadFileLowerLabel,
                       style: TextStyle(
                           fontSize: fontSize12,
                           fontWeight: fontWeightRegular,
@@ -289,22 +289,22 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
       );
 
   void _popUpMenuSelected(BuildContext context, dynamic value, int index) {
-    if (value == Localization.of(context).view) {
+    if (value == Localization.of(context)!.view) {
       Navigator.of(context).pushNamed(
         Routes.providerImageScreen,
         arguments:
-            ApiBaseHelper.imageUrl + _allDocuments[index].medicalDocuments,
+            ApiBaseHelper.imageUrl + _allDocuments![index].medicalDocuments!,
       );
     } else {
       setLoading(true);
       _api
           .deletePatientMedicalDocs(
         token,
-        _allDocuments[index].sId,
+        _allDocuments![index].sId,
       )
           .whenComplete(() {
         setLoading(false);
-        setState(() => _allDocuments.remove(_allDocuments[index]));
+        setState(() => _allDocuments!.remove(_allDocuments![index]));
       }).futureError((error) {
         setLoading(false);
         error.toString().debugLog();
@@ -317,7 +317,7 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
           child: TextWithImage(
             imageSpacing: spacing10,
             image: FileConstants.icUploadDocs,
-            label: Localization.of(context).uploadDocumentsLabel,
+            label: Localization.of(context)!.uploadDocumentsLabel,
             size: 18,
             textStyle: TextStyle(
                 color: AppColors.windsor,
@@ -332,18 +332,18 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(Localization.of(context).picker),
-          content: Text(Localization.of(context).selectDocPickerTypeLabel),
+          title: Text(Localization.of(context)!.picker),
+          content: Text(Localization.of(context)!.selectDocPickerTypeLabel),
           actions: <Widget>[
             FlatButton(
-              child: Text(Localization.of(context).imageLabel),
+              child: Text(Localization.of(context)!.imageLabel),
               onPressed: () {
                 Navigator.pop(context);
                 showImagePickerDialog();
               },
             ),
             FlatButton(
-              child: Text(Localization.of(context).pdfLabel),
+              child: Text(Localization.of(context)!.pdfLabel),
               onPressed: () {
                 getDocumentType();
                 Navigator.pop(context);
@@ -360,18 +360,18 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(Localization.of(context).picker),
-          content: Text(Localization.of(context).selectImagePickerTypeLabel),
+          title: Text(Localization.of(context)!.picker),
+          content: Text(Localization.of(context)!.selectImagePickerTypeLabel),
           actions: <Widget>[
             FlatButton(
-              child: Text(Localization.of(context).camera),
+              child: Text(Localization.of(context)!.camera),
               onPressed: () {
                 getImage(1);
                 Navigator.pop(context);
               },
             ),
             FlatButton(
-              child: Text(Localization.of(context).gallery),
+              child: Text(Localization.of(context)!.gallery),
               onPressed: () {
                 getImage(2);
                 Navigator.pop(context);
@@ -386,7 +386,7 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
   Future getImage(int source) async {
     ImagePicker _picker = ImagePicker();
 
-     XFile image = await _picker.pickImage(
+     XFile? image = await _picker.pickImage(
         imageQuality: 25,
         source: (source == 1) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
@@ -422,13 +422,13 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
   }
 
   void getDocumentType() async {
-    FilePickerResult file = await FilePicker.platform.pickFiles(
+    FilePickerResult? file = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
     );
 
     if (file != null) {
-      uploadDocsBottomSheet(File(file.files.first.path));
+      uploadDocsBottomSheet(File(file.files.first.path!));
     }
   }
 
@@ -439,7 +439,7 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            Localization.of(context).documentLabel,
+            Localization.of(context)!.documentLabel,
             style: TextStyle(
               color: AppColors.midnight_express,
               fontSize: 16,
@@ -471,11 +471,11 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
             enabled: false,
             controller: documentTypeController,
             decoration:
-                getInputDecoration(Localization.of(context).whatKindOfDocLabel),
+                getInputDecoration(Localization.of(context)!.whatKindOfDocLabel),
           ).onClick(onTap: _documentTypeBottomDialog),
           SizedBox(height: spacing25),
           textField(
-            Localization.of(context).whatBodyPartLabel,
+            Localization.of(context)!.whatBodyPartLabel,
             (value) {
               documentName = value;
             },
@@ -513,7 +513,7 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
                     ),),
                     // highlightedBorderColor: AppColors.windsor,
                     child: Text(
-                      Localization.of(context).cancel,
+                      Localization.of(context)!.cancel,
                       style: TextStyle(
                           color: AppColors.windsor, fontSize: fontSize16),
                     ),
@@ -524,19 +524,19 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
               SizedBox(width: spacing16),
               Expanded(
                 child: FancyButton(
-                  title: Localization.of(context).upload,
+                  title: Localization.of(context)!.upload,
                   buttonColor: AppColors.windsor,
                   onPressed: () async {
                     if (documentTypeController.text == null ||
                         documentTypeController.text.isEmpty) {
-                      Widgets.showToast(Localization.of(context).errDocType);
+                      Widgets.showToast(Localization.of(context)!.errDocType);
                       return;
                     } else if (documentName == null || documentName.isEmpty) {
-                      Widgets.showToast(Localization.of(context).errDocName);
+                      Widgets.showToast(Localization.of(context)!.errDocName);
                       return;
                     } else if (documentDateController.text == null ||
                         documentDateController.text.isEmpty) {
-                      Widgets.showToast(Localization.of(context).errDocDate);
+                      Widgets.showToast(Localization.of(context)!.errDocDate);
                       return;
                     } else {
                       setLoading(true);
@@ -587,7 +587,7 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
 
   Widget textField(String label, Function onChanged) {
     return TextField(
-      onChanged: onChanged,
+      onChanged: onChanged as void Function(String)?,
       decoration: getInputDecoration(label),
     );
   }
@@ -601,9 +601,9 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
     await ApiManager().getPatientUploadedDocumentImages().then((result) {
       if (result is ResUploadedDocumentImagesModel) {
         setState(() {
-          _allDocuments = result.response.medicalDocuments;
+          _allDocuments = result.response!.medicalDocuments;
         });
-        _getData = _allDocuments.isNotEmpty;
+        _getData = _allDocuments!.isNotEmpty;
       }
       setLoading(false);
     }).catchError((dynamic e) {
@@ -622,21 +622,21 @@ class _UploadTestDocumentsState extends State<UploadTestDocuments> {
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14.0),
         borderSide: BorderSide(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
           width: 0.5,
         ),
       ),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14.0),
         borderSide: BorderSide(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
           width: 0.5,
         ),
       ),
       disabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14.0),
         borderSide: BorderSide(
-          color: Colors.grey[300],
+          color: Colors.grey[300]!,
           width: 0.5,
         ),
       ),

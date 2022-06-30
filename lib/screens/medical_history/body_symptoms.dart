@@ -21,7 +21,7 @@ class BodySymptoms extends StatefulWidget {
 
 class _BodySymptomsState extends State<BodySymptoms> {
   GlobalKey silderKey = GlobalKey();
-  String _selectedBodyPart;
+  String? _selectedBodyPart;
   bool resetState = false;
 
   @override
@@ -54,7 +54,7 @@ class _BodySymptomsState extends State<BodySymptoms> {
               Padding(
                 padding: const EdgeInsets.only(left: 15, right: 15),
                 child: Text(
-                  Localization.of(context).selectBodyPart,
+                  Localization.of(context)!.selectBodyPart,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: colorBlack85,
@@ -96,13 +96,13 @@ class _BodySymptomsState extends State<BodySymptoms> {
             padding: EdgeInsets.all(spacing20),
             child: Row(
               children: [
-                _buildBodyTypeButton(0, Localization.of(context).back),
+                _buildBodyTypeButton(0, Localization.of(context)!.back),
                 SizedBox(width: spacing15),
-                _buildBodyTypeButton(1, Localization.of(context).front),
+                _buildBodyTypeButton(1, Localization.of(context)!.front),
                 SizedBox(width: spacing15),
-                _buildBodyTypeButton(2, Localization.of(context).side),
+                _buildBodyTypeButton(2, Localization.of(context)!.side),
                 SizedBox(width: spacing15),
-                _buildBodyTypeButton(3, Localization.of(context).allOver),
+                _buildBodyTypeButton(3, Localization.of(context)!.allOver),
               ],
             ),
           ),
@@ -112,7 +112,7 @@ class _BodySymptomsState extends State<BodySymptoms> {
               children: [
                 Expanded(
                   child: HutanoButton(
-                    label: Localization.of(context).skip,
+                    label: Localization.of(context)!.skip,
                     color: primaryColor,
                     onPressed: () {
                       Navigator.of(context).pushNamed( routeMedicineInformation);
@@ -122,11 +122,11 @@ class _BodySymptomsState extends State<BodySymptoms> {
                 SizedBox(width: spacing70),
                 Expanded(
                   child: HutanoButton(
-                    label: Localization.of(context).next,
+                    label: Localization.of(context)!.next,
                     onPressed: () {
                       if (_selectedBodyPart == null) {
                         DialogUtils.showAlertDialog(context,
-                            Localization.of(context).errorBodyPartSelect);
+                            Localization.of(context)!.errorBodyPartSelect);
                         return;
                       }
                       var symtomsType = Provider.of<SymptomsInfoProvider>(
@@ -227,7 +227,7 @@ class _BodySymptomsState extends State<BodySymptoms> {
         child: Row(
           children: [
             _buildHeaderButton(0, FileConstants.icCreateFolder,
-                Localization.of(context).painSymptoms),
+                Localization.of(context)!.painSymptoms),
             Container(
               width: 0.5,
               margin: EdgeInsets.symmetric(vertical: 20),
@@ -235,7 +235,7 @@ class _BodySymptomsState extends State<BodySymptoms> {
               color: Colors.black,
             ),
             _buildHeaderButton(1, FileConstants.icSadFace,
-                Localization.of(context).generalizedSymptoms)
+                Localization.of(context)!.generalizedSymptoms)
           ],
         ),
       );

@@ -8,16 +8,16 @@ import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 
 class Prefrence {
-  int id;
-  String name;
-  int type;
-  String description;
-  String image;
-  int status;
-  String sId;
-  int iV;
-  bool isChecked;
-  String route;
+  int? id;
+  String? name;
+  int? type;
+  String? description;
+  String? image;
+  int? status;
+  String? sId;
+  int? iV;
+  bool? isChecked;
+  String? route;
 
   Prefrence(
       {this.id,
@@ -59,7 +59,7 @@ class Prefrence {
 }
 
 class HealthMonitoringScreen extends StatefulWidget {
-  HealthMonitoringScreen({Key key, this.profileData}) : super(key: key);
+  HealthMonitoringScreen({Key? key, this.profileData}) : super(key: key);
   var profileData;
 
   @override
@@ -138,7 +138,7 @@ class _HealthMonitoringScreenState extends State<HealthMonitoringScreen> {
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, healthMonitoring[index].route);
+                    Navigator.pushNamed(context, healthMonitoring[index].route!);
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -159,13 +159,13 @@ class _HealthMonitoringScreenState extends State<HealthMonitoringScreen> {
                       children: [
                         ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child: Image.asset(healthMonitoring[index].image,
+                            child: Image.asset(healthMonitoring[index].image!,
                                 height: 50, width: 50)),
                         SizedBox(
                           height: 14,
                         ),
                         Text(
-                          healthMonitoring[index].name,
+                          healthMonitoring[index].name!,
                           style: AppTextStyle.semiBoldStyle(fontSize: 14),
                         ),
                         Text(

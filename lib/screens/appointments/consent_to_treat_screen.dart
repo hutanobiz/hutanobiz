@@ -15,7 +15,7 @@ import 'package:hutano/widgets/round_corner_checkbox.dart';
 import 'package:hutano/widgets/widgets.dart';
 
 class ConsentToTreatScreen extends StatefulWidget {
-  ConsentToTreatScreen({Key key}) : super(key: key);
+  ConsentToTreatScreen({Key? key}) : super(key: key);
 
   @override
   _ConsentToTreatScreenState createState() => _ConsentToTreatScreenState();
@@ -27,12 +27,12 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
 
   dynamic _responseData;
   ApiBaseHelper api = ApiBaseHelper();
-  Future<dynamic> _requestsConsent;
+  Future<dynamic>? _requestsConsent;
   dynamic response;
   bool isInitialLoad = false;
   bool isLoading = false;
-  String userId;
-  String name, nameTitle;
+  String? userId;
+  String? name, nameTitle;
 
   @override
   void initState() {
@@ -58,10 +58,10 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
       nameTitle = _container.providerResponse['providerData']["userId"]["title"]
               ?.toString() ??
           'Dr. ';
-      name = nameTitle +
-              _container.providerResponse['providerData']["userId"]["fullName"]
+      name = nameTitle! +
+              (_container.providerResponse['providerData']["userId"]["fullName"]
                   ?.toString() ??
-          "---";
+          "---");
     } else if (_container.providerResponse['providerData']['data'][0]["User"] !=
         null is Map) {
       nameTitle = (_container.providerResponse['providerData']['data'][0]
@@ -143,7 +143,7 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
   List<Widget> widgetList() {
     // String text =
     //     _responseData['textString'].toString().replaceAll("\$_name", _name);
-    List<Widget> formWidget = new List();
+    List<Widget> formWidget = [];
 
     formWidget.add(Column(
       children: <Widget>[],
@@ -162,7 +162,7 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
 
     formWidget.add(Center(
       child: RoundCornerCheckBox(
-        title: Localization.of(context).iAgreeLabel,
+        title: Localization.of(context)!.iAgreeLabel,
         value: isAgree,
         onCheck: (value) => setState(() => isAgree = !isAgree),
       ),
@@ -174,7 +174,7 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
   Widget _consentToTreatHeader(BuildContext context) => Padding(
         padding: EdgeInsets.symmetric(vertical: spacing20),
         child: Text(
-          Localization.of(context).consentToTreatHeader,
+          Localization.of(context)!.consentToTreatHeader,
           style: TextStyle(
               color: Color(0xff0e1c2a),
               fontSize: fontSize16,

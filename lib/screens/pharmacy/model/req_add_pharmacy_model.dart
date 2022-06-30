@@ -1,10 +1,10 @@
 class ReqAddPharmacyModel {
-  String name;
-  String address;
-  String city;
-  String state;
-  int zipCode;
-  String phoneNumber;
+  String? name;
+  String? address;
+  String? city;
+  String? state;
+  int? zipCode;
+  String? phoneNumber;
 
   ReqAddPharmacyModel(
       {this.name,

@@ -38,7 +38,7 @@ class _UploadSymptomsImagesState extends State<UploadSymptomsImages> {
   _uploadImages() async {
     if (_images.length == 0) {
       DialogUtils.showAlertDialog(
-              context, Localization.of(context).selecteOnImage);
+              context, Localization.of(context)!.selecteOnImage);
       return;
     }
     var appointmentId =
@@ -55,16 +55,16 @@ class _UploadSymptomsImagesState extends State<UploadSymptomsImages> {
         final request =
             ReqUploadImage(name: _imagesNames[i], appointmentId: appointmentId);
         var res = await ApiManager().uploadPainImages(request, _imageFile[i]);
-        if (res.data.medicalImages.length == _imageFile.length) {
+        if (res.data!.medicalImages!.length == _imageFile.length) {
           ProgressDialogUtils.dismissProgressDialog();
-          _sortList(res.data.medicalImages);
+          _sortList(res.data!.medicalImages);
           // DialogUtils.showAlertDialog(
           //     context, Localization.of(context).imagesUploaded);
           Navigator.of(context).pushNamed( routeUploadTestDocuments);
         }
       } on ErrorModel catch (e) {
         ProgressDialogUtils.dismissProgressDialog();
-        DialogUtils.showAlertDialog(context, e.response);
+        DialogUtils.showAlertDialog(context, e.response!);
       } catch (e) {
         ProgressDialogUtils.dismissProgressDialog();
         print(e);
@@ -100,11 +100,11 @@ class _UploadSymptomsImagesState extends State<UploadSymptomsImages> {
           imageId: imageId, appointmentId: appointmentId);
       var res = await ApiManager().removeMedicalImages(request);
       ProgressDialogUtils.dismissProgressDialog();
-      _sortList(res.data.medicalImages);
+      _sortList(res.data!.medicalImages);
       Navigator.of(context).pushNamed( routeUploadTestDocuments);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
-      DialogUtils.showAlertDialog(context, e.response);
+      DialogUtils.showAlertDialog(context, e.response!);
     } catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       print(e);
@@ -276,7 +276,7 @@ class _UploadSymptomsImagesState extends State<UploadSymptomsImages> {
               children: [
                 Expanded(
                   child: HutanoButton(
-                    label: Localization.of(context).skip,
+                    label: Localization.of(context)!.skip,
                     color: primaryColor,
                     onPressed: () {
                       Navigator.of(context).pushNamed( routeUploadTestDocuments);
@@ -286,7 +286,7 @@ class _UploadSymptomsImagesState extends State<UploadSymptomsImages> {
                 SizedBox(width: spacing70),
                 Expanded(
                   child: HutanoButton(
-                    label: Localization.of(context).next,
+                    label: Localization.of(context)!.next,
                     // onPressed: () {
                     //   Navigator.of(context).pushNamed( routeUploadTestDocuments);
                     // },
@@ -340,7 +340,7 @@ class _UploadSymptomsImagesState extends State<UploadSymptomsImages> {
                       label: "Camera",
                       color: primaryColor,
                       onPressed: () async {
-                        if (_key.currentState.validate()) {
+                        if (_key.currentState!.validate()) {
                           var file = await getImageByCamera(context);
                           print(file?.path);
                           if (file != null) {
@@ -358,7 +358,7 @@ class _UploadSymptomsImagesState extends State<UploadSymptomsImages> {
                       label: "Gallery",
                       color: primaryColor,
                       onPressed: () async {
-                        if (_key.currentState.validate()) {
+                        if (_key.currentState!.validate()) {
                           var file = await getImageByGallery(context);
                           print(file?.path);
                           if (file != null) {

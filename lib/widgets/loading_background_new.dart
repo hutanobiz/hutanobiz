@@ -28,12 +28,12 @@ import 'package:provider/provider.dart';
 
 class LoadingBackgroundNew extends StatelessWidget {
   LoadingBackgroundNew(
-      {Key key,
+      {Key? key,
       this.isLoading: false,
-      @required this.title,
+      required this.title,
       this.isAddBack: true,
       this.padding,
-      @required this.child,
+      required this.child,
       this.isAddAppBar: true,
       this.addBottomArrows: false,
       this.addBackButton: false,
@@ -59,27 +59,27 @@ class LoadingBackgroundNew extends StatelessWidget {
 
   final bool isLoading;
   final Widget child;
-  final bool addHeader;
+  final bool? addHeader;
   final bool addTitle;
-  final bool isAddBack;
-  final String title, rightButtonText;
-  final EdgeInsets padding;
-  final bool isAddAppBar, addBottomArrows;
+  final bool? isAddBack;
+  final String? title, rightButtonText;
+  final EdgeInsets? padding;
+  final bool? isAddAppBar, addBottomArrows;
   final color;
-  final bool addBackButton;
-  final Function onForwardTap;
+  final bool? addBackButton;
+  final Function? onForwardTap;
   final Color buttonColor;
-  final Function onRightButtonTap;
+  final Function? onRightButtonTap;
   final bool rightButton;
-  final Function onRButtonTap;
-  final bool isBackRequired;
+  final Function? onRButtonTap;
+  final bool? isBackRequired;
   final bool centerTitle;
   final bool isSkipLater;
-  final Function onSkipForTap;
-  final int notificationCount;
+  final Function? onSkipForTap;
+  final int? notificationCount;
   final bool isCameraVisible;
-  final Function onCameraForTap;
-  final Function onUpperBackTap;
+  final Function? onCameraForTap;
+  final Function? onUpperBackTap;
   final bool showUserPicture;
 
   @override
@@ -91,7 +91,7 @@ class LoadingBackgroundNew extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              if (addHeader)
+              if (addHeader!)
                 Container(
                   padding: EdgeInsets.symmetric(
                       horizontal: 15, vertical: showUserPicture ? 11 : 20),
@@ -116,7 +116,7 @@ class LoadingBackgroundNew extends StatelessWidget {
                             ),
                           ),
                         ),
-                      if (isBackRequired)
+                      if (isBackRequired!)
                         CustomBackButton(
                           margin: const EdgeInsets.all(0),
                           size: 26,
@@ -133,7 +133,7 @@ class LoadingBackgroundNew extends StatelessWidget {
                         centerTitle ? Spacer() : SizedBox(),
                         Padding(
                           padding: const EdgeInsets.only(left: 12),
-                          child: Text(title,
+                          child: Text(title!,
                               style: const TextStyle(
                                   color: colorBlack2,
                                   fontWeight: fontWeightBold,
@@ -145,7 +145,7 @@ class LoadingBackgroundNew extends StatelessWidget {
                       rightButton
                           ? InkWell(
                               onTap:
-                                  onRButtonTap != null ? onRButtonTap : () {},
+                                  onRButtonTap != null ? onRButtonTap as void Function()? : () {},
                               child: Icon(Icons.add))
                           : InkWell(
                               onTap: () {
@@ -191,9 +191,9 @@ class LoadingBackgroundNew extends StatelessWidget {
                     ],
                   ),
                 ),
-              (isAddAppBar && !addHeader)
+              (isAddAppBar! && !addHeader!)
                   ? Padding(
-                      padding: isAddBack
+                      padding: isAddBack!
                           ? const EdgeInsets.fromLTRB(11.0, 17.0, 0.0, 17.0)
                           : (rightButtonText != null &&
                                   onRightButtonTap != null)
@@ -202,17 +202,17 @@ class LoadingBackgroundNew extends StatelessWidget {
                                   21.0, 27.0, 0.0, 27.0),
                       child: Row(
                         children: <Widget>[
-                          isAddBack
+                          isAddBack!
                               ? InkWell(
                                   child: Image.asset(
                                       "assets/images/ic_back_arrow.png"),
                                   onTap: () => Navigator.pop(context),
                                 )
                               : Container(),
-                          isAddBack ? SizedBox(width: 10.0) : Container(),
+                          isAddBack! ? SizedBox(width: 10.0) : Container(),
                           Expanded(
                             child: Text(
-                              title,
+                              title!,
                               style: TextStyle(
                                 fontSize: 18.0,
                                 color: Colors.black,
@@ -223,8 +223,8 @@ class LoadingBackgroundNew extends StatelessWidget {
                           if (rightButtonText != null &&
                               onRightButtonTap != null)
                             InkWell(
-                              onTap: onRightButtonTap,
-                              child: rightButtonText.contains('do not')
+                              onTap: onRightButtonTap as void Function()?,
+                              child: rightButtonText!.contains('do not')
                                   ? Container(
                                       margin: EdgeInsets.only(right: 10),
                                       decoration: BoxDecoration(
@@ -235,7 +235,7 @@ class LoadingBackgroundNew extends StatelessWidget {
                                       ),
                                       padding: EdgeInsets.all(10),
                                       child: Text(
-                                        rightButtonText,
+                                        rightButtonText!,
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w400,
@@ -246,7 +246,7 @@ class LoadingBackgroundNew extends StatelessWidget {
                                   : Padding(
                                       padding: const EdgeInsets.all(10),
                                       child: Text(
-                                        rightButtonText,
+                                        rightButtonText!,
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.w400,
@@ -272,7 +272,7 @@ class LoadingBackgroundNew extends StatelessWidget {
             ],
           ),
           isLoading ? CircularLoader() : Container(),
-          addBackButton
+          addBackButton!
               ? Align(
                   alignment: FractionalOffset.bottomLeft,
                   child: Padding(
@@ -285,7 +285,7 @@ class LoadingBackgroundNew extends StatelessWidget {
                   ),
                 )
               : Container(),
-          addBottomArrows
+          addBottomArrows!
               ? Padding(
                   padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 20.0),
                   child: BottomArrows(
@@ -395,7 +395,7 @@ class LoadingBackgroundNew extends StatelessWidget {
                                             child: FancyButton(
                                                 title: 'New Account',
                                                 onPressed: () {
-                                                  return Navigator.pushNamed(
+                                                   Navigator.pushNamed(
                                                       context,
                                                       Routes.addNewUserType);
                                                 }),
@@ -432,12 +432,12 @@ class LoadingBackgroundNew extends StatelessWidget {
                                                 ? Provider.of<LinkedAccountProvider>(
                                                             context,
                                                             listen: false)
-                                                        .linkedAccounts[index]
+                                                        .linkedAccounts![index]
                                                     ['avatar']
                                                 : Provider.of<LinkedAccountProvider>(
                                                                     context,
                                                                     listen: false)
-                                                                .linkedAccounts[
+                                                                .linkedAccounts![
                                                             index]['linkToAccount']
                                                         ['avatar'] ??
                                                     ''),
@@ -459,11 +459,11 @@ class LoadingBackgroundNew extends StatelessWidget {
                                           ? Provider.of<LinkedAccountProvider>(
                                                   context,
                                                   listen: false)
-                                              .linkedAccounts[index]['fullName']
+                                              .linkedAccounts![index]['fullName']
                                           : Provider.of<LinkedAccountProvider>(
                                                       context,
                                                       listen: false)
-                                                  .linkedAccounts[index]
+                                                  .linkedAccounts![index]
                                               ['linkToAccount']['fullName']),
                                       style: AppTextStyle.mediumStyle(
                                           fontSize: 16,
@@ -511,17 +511,17 @@ class LoadingBackgroundNew extends StatelessWidget {
                               if (index != 0 &&
                                   Provider.of<LinkedAccountProvider>(context,
                                               listen: false)
-                                          .linkedAccounts[index]['whom'] ==
+                                          .linkedAccounts![index]['whom'] ==
                                       2 &&
                                   (Provider.of<LinkedAccountProvider>(context,
                                                       listen: false)
-                                                  .linkedAccounts[index]
+                                                  .linkedAccounts![index]
                                               ['isOtpVerified'] ==
                                           null ||
                                       Provider.of<LinkedAccountProvider>(
                                                       context,
                                                       listen: false)
-                                                  .linkedAccounts[index]
+                                                  .linkedAccounts![index]
                                               ['isOtpVerified'] !=
                                           1)) {
                                 var request = {
@@ -529,13 +529,13 @@ class LoadingBackgroundNew extends StatelessWidget {
                                       Provider.of<LinkedAccountProvider>(
                                               context,
                                               listen: false)
-                                          .linkedAccounts[index]['phoneNumber']
+                                          .linkedAccounts![index]['phoneNumber']
                                           .toString(),
                                   'relation':
                                       Provider.of<LinkedAccountProvider>(
                                               context,
                                               listen: false)
-                                          .linkedAccounts[index]['relation']
+                                          .linkedAccounts![index]['relation']
                                 };
                                 ProgressDialogUtils.showProgressDialog(context);
                                 try {
@@ -553,7 +553,7 @@ class LoadingBackgroundNew extends StatelessWidget {
                                 } on ErrorModel catch (e) {
                                   ProgressDialogUtils.dismissProgressDialog();
                                   DialogUtils.showAlertDialog(
-                                      context, e.response);
+                                      context, e.response!);
                                 } catch (e) {
                                   ProgressDialogUtils.dismissProgressDialog();
                                 }
@@ -564,11 +564,11 @@ class LoadingBackgroundNew extends StatelessWidget {
                                       ? Provider.of<LinkedAccountProvider>(
                                               context,
                                               listen: false)
-                                          .linkedAccounts[index]
+                                          .linkedAccounts![index]
                                       : Provider.of<LinkedAccountProvider>(
                                                   context,
                                                   listen: false)
-                                              .linkedAccounts[index]
+                                              .linkedAccounts![index]
                                           ['linkToAccount'],
                                 );
                               }
@@ -587,7 +587,7 @@ class LoadingBackgroundNew extends StatelessWidget {
   updateUser(context, dynamic value) async {
     ProgressDialogUtils.showProgressDialog(context);
     var fcmId = await SharedPref().getValue('deviceToken');
-    var deviceId = '';
+    String? deviceId = '';
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     if (Platform.isAndroid) {
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;

@@ -17,20 +17,20 @@ import 'path_painter.dart';
 
 class HumanBody extends StatefulWidget {
   final bool isClickable;
-  final Function(String bodyPart) bodyPartSelected;
-  final bool selectedPartWithHighlight;
-  final String highlightPart;
+  final Function(String? bodyPart)? bodyPartSelected;
+  final bool? selectedPartWithHighlight;
+  final String? highlightPart;
   final int bodyImage;
-  bool resetStae = false;
-  bool initialData = false;
+  bool? resetStae = false;
+  bool? initialData = false;
 
   HumanBody(
-      {Key key,
-      @required this.isClickable,
+      {Key? key,
+      required this.isClickable,
       this.bodyPartSelected,
       this.selectedPartWithHighlight,
       this.highlightPart,
-      @required this.bodyImage,
+      required this.bodyImage,
       this.resetStae,
       this.initialData})
       : super(key: key);
@@ -48,18 +48,18 @@ class _HumanBodyState extends State<HumanBody> {
   List<Path> paths = [];
   List<PathSegment> pathsegments = [];
 
-  Offset touchPosition;
+  Offset? touchPosition;
 
   final GlobalKey _key = GlobalKey();
 
-  String bodyPart;
-  String selectedBodyPart;
+  String? bodyPart;
+  String? selectedBodyPart;
 
   @override
   void didUpdateWidget(HumanBody oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.resetStae != null && widget.resetStae) {
+    if (widget.resetStae != null && widget.resetStae!) {
       touchPosition = null;
       _selectPaths = [];
       svgPath = "";
@@ -149,7 +149,7 @@ class _HumanBodyState extends State<HumanBody> {
                         selectedBodyPart = null;
                       });
 
-                      widget.bodyPartSelected(bodyPart);
+                      widget.bodyPartSelected!(bodyPart);
                       setState(() {
                         selectedBodyPart = bodyPart;
                       });
@@ -166,19 +166,19 @@ class _HumanBodyState extends State<HumanBody> {
             Builder(builder: (context) {
               var alignment = CrossAxisAlignment.start;
               var direction = VerticalDirection.down;
-              var box = _key.currentContext.findRenderObject() as RenderBox;
+              var box = _key.currentContext!.findRenderObject() as RenderBox?;
               var width;
               var height;
-              var xpos = touchPosition.dx;
-              var ypos = touchPosition.dy;
+              var xpos = touchPosition!.dx;
+              var ypos = touchPosition!.dy;
               if (box != null) {
                 width = box.size.width;
                 height = box.size.height;
-                if ((90 + touchPosition.dx) > width) {
+                if ((90 + touchPosition!.dx) > width) {
                   xpos = xpos - 90 + 15;
                   alignment = CrossAxisAlignment.end;
                 }
-                if ((40 + touchPosition.dy) > height) {
+                if ((40 + touchPosition!.dy) > height) {
                   ypos = ypos - 40 + 15;
                   direction = VerticalDirection.up;
                 }
@@ -205,14 +205,14 @@ class _HumanBodyState extends State<HumanBody> {
                       SizedBox(height: 2),
                       InkWell(
                         onTap: () {
-                          widget.bodyPartSelected(bodyPart);
+                          widget.bodyPartSelected!(bodyPart);
                           setState(() {
                             selectedBodyPart = bodyPart;
                           });
                         },
                         child: Container(
                           child: Text(
-                            bodyPart == null ? '' : bodyPart.toUpperCase(),
+                            bodyPart == null ? '' : bodyPart!.toUpperCase(),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
