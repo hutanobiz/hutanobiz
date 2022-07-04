@@ -132,7 +132,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             Navigator.of(context).pop(
                                 {ArgumentConstant.member: _memberList![pos]});
                           } else {
-                            Navigator.of(context).pushReplacementNamed(
+                            Navigator.of(context).pushNamed(
                                 Routes.addFamilyMember,
                                 arguments: {
                                   ArgumentConstant.member: _memberList![pos]

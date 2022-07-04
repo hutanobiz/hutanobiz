@@ -225,7 +225,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   _completeTaskNow() async {
     setBool(PreferenceKey.perFormedSteps, true);
-    Navigator.of(context).pushNamed(Routes.verifyEmailOtpRoute);
+    Navigator.of(context).pushReplacementNamed(Routes.verifyEmailOtpRoute);
 
     _sendCode();
   }

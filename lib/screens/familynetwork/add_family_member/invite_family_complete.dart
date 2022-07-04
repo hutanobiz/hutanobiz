@@ -53,7 +53,8 @@ class _InviteFamilyCompleteState extends State<InviteFamilyComplete> {
           buttonType: HutanoButtonType.onlyIcon,
           icon: FileConstants.icForward,
           onPressed: () async {
-            Navigator.of(context).pushNamed(Routes.myProviderNetwork ,arguments: true);
+            Navigator.of(context).pushReplacementNamed(Routes.myProviderNetwork,
+                arguments: true);
           },
         ),
       ),

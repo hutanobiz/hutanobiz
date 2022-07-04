@@ -58,11 +58,11 @@ class LocationDialog {
   bool _isLoading = false;
 
   init() async {
-    _currentddress = await (SharedPref().getValue('address') as FutureOr<String?>);
+    _currentddress = await (SharedPref().getValue('address'));
     if (_currentddress == null) {
       _currentddress = "";
     }
-    radius = await (SharedPref().getValue('radius') as FutureOr<String?>);
+    radius = await (SharedPref().getValue('radius'));
 
     if (radius == null) {
       radius = "10";
@@ -74,8 +74,8 @@ class LocationDialog {
   getLocation() async {
     var lat = await SharedPref().getValue('lat');
     var lng = await SharedPref().getValue('lng');
-    _currentddress = await (SharedPref().getValue('address') as FutureOr<String?>);
-    radius = await (SharedPref().getValue('radius') as FutureOr<String?>);
+    _currentddress = await (SharedPref().getValue('address'));
+    radius = await (SharedPref().getValue('radius'));
 
     _myLocation = CameraPosition(
       target: LatLng(lat ?? 0.00, lng ?? 0.00),
@@ -326,8 +326,8 @@ class LocationDialog {
                                               isShowList = false;
                                             });
                                           },
-                                          title: Text(
-                                              _placeList![index]["description"]),
+                                          title: Text(_placeList![index]
+                                              ["description"]),
                                         );
                                       },
                                     ),

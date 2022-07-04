@@ -48,7 +48,7 @@ class _InviteFamilyScreenState extends State<InviteFamilyScreen> {
                 GestureDetector(
                     onTap: () {
                       Navigator.of(context)
-                          .pushReplacementNamed(Routes.addFamilyMember);
+                          .pushNamed(Routes.addFamilyMember);
                     },
                     child: _buildInviteText()),
                 Spacer(),
@@ -130,6 +130,6 @@ class _InviteFamilyScreenState extends State<InviteFamilyScreen> {
 
   _skipTaskNow() {
     Navigator.of(context)
-        .pushReplacementNamed(Routes.myProviderNetwork, arguments: true);
+        .pushNamed(Routes.myProviderNetwork, arguments: true);
   }
 }
