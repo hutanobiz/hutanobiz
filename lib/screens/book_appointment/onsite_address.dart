@@ -44,7 +44,7 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
   dynamic _selectedAddress;
 
   bool isAddressAdded = false;
-
+  bool isfirstLoad = true;
   @override
   void initState() {
     super.initState();
@@ -206,10 +206,15 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
                   if (isAddressAdded) {
                     _radioValue = addressList!.length - 1;
                     _selectedAddress = addressList![addressList!.length - 1];
+                    isAddressAdded = false;
                     setState(() {});
                   }
-
-                  isAddressAdded = false;
+                  if (isfirstLoad) {
+                    _radioValue = 0;
+                    _selectedAddress = addressList![0];
+                    isfirstLoad = false;
+                    setState(() {});
+                  }
                 });
 
                 dynamic address = addressList![index];
@@ -552,7 +557,7 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
   }
 
   void _deleteAddress(String id) {
-    Navigator.pop(context);
+    // Navigator.pop(context);
 
     setLoading(true);
     api.deleteAddress(_token, id).whenComplete(() {
