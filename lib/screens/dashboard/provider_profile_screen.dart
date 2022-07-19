@@ -224,7 +224,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
                                       _container.setServicesData("status", "1");
                                       _container.setServicesData("services",
                                           _selectedServicesMap.values.toList());
-
+                                      _container.setProviderData(
+                                          "providerData", profileMapResponse);
                                       Navigator.of(context).pushNamed(
                                           Routes.selectAppointmentTimeScreen,
                                           arguments: SelectDateTimeArguments(
@@ -253,6 +254,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen>
                                     _container.setServicesData("status", "0");
                                     _container.setServicesData("consultaceFee",
                                         _providerData[_appointmentTypeKey]);
+                                    _container.setProviderData(
+                                        "providerData", profileMapResponse);
                                     Navigator.of(context).pushNamed(
                                         Routes.selectAppointmentTimeScreen,
                                         arguments: SelectDateTimeArguments(

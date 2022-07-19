@@ -32,7 +32,6 @@ import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 
-
 final navigatorKey = GlobalKey<NavigatorState>();
 final navigatorContext = navigatorKey.currentContext;
 
