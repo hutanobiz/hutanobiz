@@ -42,7 +42,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   bool _isLoading = false;
   Map? providerMap;
   String? name, avatar, cashPayment = "0";
-  double? totalFee = 0.0;
+  double totalFee = 0.0;
 
   Map<String, dynamic>? _profileMap = {};
 
@@ -104,9 +104,15 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
       if (_servicesMap["status"].toString() == "1") {
         if (_servicesMap["services"] != null) {
           List<Services> _servicesList = _servicesMap["services"];
+          totalFee = 0.0;
+          for (Services s in _servicesList) {
+            totalFee += double.parse(s.amount.toString());
+          }
 
-          totalFee = _servicesList.fold(
-              0, ((sum, item) => sum + double.parse(item.amount.toString())) as double? Function(double?, Services));
+          // totalFee = _servicesList.fold(
+          //     0,
+          //     ((sum, item) => sum + double.parse(item.amount.toString()))
+          //         as double? Function(double?, Services));
         }
       } else if (_servicesMap["status"].toString() == "2") {
       } else {
@@ -293,7 +299,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
     _widgetList.add(Text(
       isPayment == 0 &&
-              (_providerInsuranceList == null || _providerInsuranceList!.isEmpty)
+              (_providerInsuranceList == null ||
+                  _providerInsuranceList!.isEmpty)
           ? 'Insurance'
           : "Your Insurance",
       style: TextStyle(
@@ -536,10 +543,12 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
                       insuranceId = _insuranceList![_insuranceList!.length - 1]
                           ["insuranceId"];
-                      insuranceName = _insuranceList![_insuranceList!.length - 1]
-                          ["insuranceName"];
-                      insuranceImage = _insuranceList![_insuranceList!.length - 1]
-                          ["insuranceDocumentFront"];
+                      insuranceName =
+                          _insuranceList![_insuranceList!.length - 1]
+                              ["insuranceName"];
+                      insuranceImage =
+                          _insuranceList![_insuranceList!.length - 1]
+                              ["insuranceDocumentFront"];
                     }
 
                     insuranceAdded = false;
