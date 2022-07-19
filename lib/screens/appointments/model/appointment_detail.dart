@@ -18,19 +18,20 @@ class AppointmentData {
     if (json['medications'] != null) {
       medications = [];
       json['medications'].forEach((v) {
-        medications!.add(new Medications.fromJson(v));
+        if (v != null) medications!.add(new Medications.fromJson(v));
       });
     }
     if (json['appointmentProblems'] != null) {
       appointmentProblems = [];
       json['appointmentProblems'].forEach((v) {
-        appointmentProblems!.add(new AppointmentProblems.fromJson(v));
+        if (v != null)
+          appointmentProblems!.add(new AppointmentProblems.fromJson(v));
       });
     }
     if (json['doctorFeedBack'] != null) {
       doctorFeedback = <DoctorFeedback>[];
       json['doctorFeedBack'].forEach((v) {
-        doctorFeedback!.add(new DoctorFeedback.fromJson(v));
+        if (v != null) doctorFeedback!.add(new DoctorFeedback.fromJson(v));
       });
     }
   }
@@ -184,7 +185,7 @@ class AppointmentProblems {
     if (json['bodyPart'] != null) {
       bodyPart = <BodyPart>[];
       json['bodyPart'].forEach((v) {
-        bodyPart!.add(new BodyPart.fromJson(v));
+        if (v != null) bodyPart!.add(new BodyPart.fromJson(v));
       });
     }
     problemFacingTimeSpan = json['problemFacingTimeSpan'] != null
@@ -388,7 +389,7 @@ class DoctorFeedback {
     if (json['education'] != null) {
       education = <Education>[];
       json['education'].forEach((v) {
-        education!.add(new Education.fromJson(v));
+        if (v != null) education!.add(new Education.fromJson(v));
       });
     }
     integumentary = json['integumentary'] != null
@@ -474,7 +475,9 @@ class ImagingDetails {
     if (json['imagings'] != null) {
       imagings = <Imagings>[];
       json['imagings'].forEach((v) {
-        imagings!.add(new Imagings.fromJson(v));
+        if (v != null) {
+          imagings!.add(new Imagings.fromJson(v));
+        }
       });
     }
   }
@@ -578,7 +581,9 @@ class LabDetails {
     if (json['labTests'] != null) {
       labTests = <LabTests>[];
       json['labTests'].forEach((v) {
-        labTests!.add(new LabTests.fromJson(v));
+        if (v != null) {
+          labTests!.add(new LabTests.fromJson(v));
+        }
       });
     }
   }
@@ -838,20 +843,29 @@ class BloodPressureSummaryCompleted {
       {this.clinicalConcern, this.treatment, this.icd});
 
   BloodPressureSummaryCompleted.fromJson(Map<String, dynamic> json) {
+    clinicalConcern = [];
     if (json['clinicalConcern'] != null) {
-      clinicalConcern = json['clinicalConcern'].cast<String>();
-    } else {
-      clinicalConcern = [];
+      json['clinicalConcern'].forEach((v) {
+        if (v != null) {
+          clinicalConcern!.add(v);
+        }
+      });
     }
+    treatment = [];
     if (json['treatment'] != null) {
-      treatment = json['treatment'].cast<String>();
-    } else {
-      treatment = [];
+      json['treatment'].forEach((v) {
+        if (v != null) {
+          treatment!.add(v);
+        }
+      });
     }
+    icd = [];
     if (json['icd'] != null) {
-      icd = json['icd'].cast<String>();
-    } else {
-      icd = [];
+      json['icd'].forEach((v) {
+        if (v != null) {
+          icd!.add(v);
+        }
+      });
     }
   }
 
@@ -891,7 +905,7 @@ class HeartAndLungs {
 }
 
 class Heart {
-  List<String?>? sound;
+  List<String>? sound;
   String? type;
   List<String>? clinicalConcern;
   List<String>? treatment;
@@ -901,22 +915,37 @@ class Heart {
       {this.sound, this.type, this.clinicalConcern, this.treatment, this.icd});
 
   Heart.fromJson(Map<String, dynamic> json) {
-    sound = json['sound'].cast<String>();
+    sound = [];
+    if (json['sound'] != null) {
+      json['sound'].forEach((v) {
+        if (v != null) sound!.add(v);
+      });
+    }
+
     type = json['type'];
+    clinicalConcern = [];
     if (json['clinicalConcern'] != null) {
-      clinicalConcern = json['clinicalConcern'].cast<String>();
-    } else {
-      clinicalConcern = [];
+      json['clinicalConcern'].forEach((v) {
+        if (v != null) {
+          clinicalConcern!.add(v);
+        }
+      });
     }
+    treatment = [];
     if (json['treatment'] != null) {
-      treatment = json['treatment'].cast<String>();
-    } else {
-      treatment = [];
+      json['treatment'].forEach((v) {
+        if (v != null) {
+          treatment!.add(v);
+        }
+      });
     }
+    icd = [];
     if (json['icd'] != null) {
-      icd = json['icd'].cast<String>();
-    } else {
-      icd = [];
+      json['icd'].forEach((v) {
+        if (v != null) {
+          icd!.add(v);
+        }
+      });
     }
   }
 
@@ -940,20 +969,29 @@ class Lung {
   Lung({this.clinicalConcern, this.treatment, this.icd, this.summary});
 
   Lung.fromJson(Map<String, dynamic> json) {
+    clinicalConcern = [];
     if (json['clinicalConcern'] != null) {
-      clinicalConcern = json['clinicalConcern'].cast<String>();
-    } else {
-      clinicalConcern = [];
+      json['clinicalConcern'].forEach((v) {
+        if (v != null) {
+          clinicalConcern!.add(v);
+        }
+      });
     }
+    treatment = [];
     if (json['treatment'] != null) {
-      treatment = json['treatment'].cast<String>();
-    } else {
-      treatment = [];
+      json['treatment'].forEach((v) {
+        if (v != null) {
+          treatment!.add(v);
+        }
+      });
     }
+    icd = [];
     if (json['icd'] != null) {
-      icd = json['icd'].cast<String>();
-    } else {
-      icd = [];
+      json['icd'].forEach((v) {
+        if (v != null) {
+          icd!.add(v);
+        }
+      });
     }
     if (json['summary'] != null) {
       summary = <Summary>[];
@@ -1018,49 +1056,58 @@ class Neurological {
       this.positiveTests});
 
   Neurological.fromJson(Map<String, dynamic> json) {
+    clinicalConcern = [];
     if (json['clinicalConcern'] != null) {
-      clinicalConcern = json['clinicalConcern'].cast<String>();
-    } else {
-      clinicalConcern = [];
+      json['clinicalConcern'].forEach((v) {
+        if (v != null) {
+          clinicalConcern!.add(v);
+        }
+      });
     }
+    treatment = [];
     if (json['treatment'] != null) {
-      treatment = json['treatment'].cast<String>();
-    } else {
-      treatment = [];
+      json['treatment'].forEach((v) {
+        if (v != null) {
+          treatment!.add(v);
+        }
+      });
     }
+    icd = [];
     if (json['icd'] != null) {
-      icd = json['icd'].cast<String>();
-    } else {
-      icd = [];
+      json['icd'].forEach((v) {
+        if (v != null) {
+          icd!.add(v);
+        }
+      });
     }
     if (json['sensoryDeficits'] != null) {
       sensoryDeficits = <SensoryDeficits>[];
       json['sensoryDeficits'].forEach((v) {
-        sensoryDeficits!.add(new SensoryDeficits.fromJson(v));
+        if (v != null) sensoryDeficits!.add(SensoryDeficits.fromJson(v));
       });
     }
     if (json['dtrDeficits'] != null) {
       dtrDeficits = <SensoryDeficits>[];
       json['dtrDeficits'].forEach((v) {
-        dtrDeficits!.add(new SensoryDeficits.fromJson(v));
+        if (v != null) dtrDeficits!.add(new SensoryDeficits.fromJson(v));
       });
     }
     if (json['strengthDeficits'] != null) {
       strengthDeficits = <SensoryDeficits>[];
       json['strengthDeficits'].forEach((v) {
-        strengthDeficits!.add(new SensoryDeficits.fromJson(v));
+        if (v != null) strengthDeficits!.add(new SensoryDeficits.fromJson(v));
       });
     }
     if (json['romDeficits'] != null) {
       romDeficits = <SensoryDeficits>[];
       json['romDeficits'].forEach((v) {
-        romDeficits!.add(new SensoryDeficits.fromJson(v));
+        if (v != null) romDeficits!.add(new SensoryDeficits.fromJson(v));
       });
     }
     if (json['positiveTests'] != null) {
       positiveTests = <SensoryDeficits>[];
       json['positiveTests'].forEach((v) {
-        positiveTests!.add(new SensoryDeficits.fromJson(v));
+        if (v != null) positiveTests!.add(new SensoryDeficits.fromJson(v));
       });
     }
   }
@@ -1129,31 +1176,40 @@ class Musculoskeletal {
       this.joint});
 
   Musculoskeletal.fromJson(Map<String, dynamic> json) {
+    clinicalConcern = [];
     if (json['clinicalConcern'] != null) {
-      clinicalConcern = json['clinicalConcern'].cast<String>();
-    } else {
-      clinicalConcern = [];
+      json['clinicalConcern'].forEach((v) {
+        if (v != null) {
+          clinicalConcern!.add(v);
+        }
+      });
     }
+    treatment = [];
     if (json['treatment'] != null) {
-      treatment = json['treatment'].cast<String>();
-    } else {
-      treatment = [];
+      json['treatment'].forEach((v) {
+        if (v != null) {
+          treatment!.add(v);
+        }
+      });
     }
+    icd = [];
     if (json['icd'] != null) {
-      icd = json['icd'].cast<String>();
-    } else {
-      icd = [];
+      json['icd'].forEach((v) {
+        if (v != null) {
+          icd!.add(v);
+        }
+      });
     }
     if (json['muscle'] != null) {
       muscle = <Muscle>[];
       json['muscle'].forEach((v) {
-        muscle!.add(new Muscle.fromJson(v));
+        if (v != null) muscle!.add(new Muscle.fromJson(v));
       });
     }
     if (json['joint'] != null) {
       joint = <Joint>[];
       json['joint'].forEach((v) {
-        joint!.add(new Joint.fromJson(v));
+        if (v != null) joint!.add(new Joint.fromJson(v));
       });
     }
   }
@@ -1244,20 +1300,29 @@ class SpecialTests {
   SpecialTests({this.clinicalConcern, this.treatment, this.icd, this.tests});
 
   SpecialTests.fromJson(Map<String, dynamic> json) {
+    clinicalConcern = [];
     if (json['clinicalConcern'] != null) {
-      clinicalConcern = json['clinicalConcern'].cast<String>();
-    } else {
-      clinicalConcern = [];
+      json['clinicalConcern'].forEach((v) {
+        if (v != null) {
+          clinicalConcern!.add(v);
+        }
+      });
     }
+    treatment = [];
     if (json['treatment'] != null) {
-      treatment = json['treatment'].cast<String>();
-    } else {
-      treatment = [];
+      json['treatment'].forEach((v) {
+        if (v != null) {
+          treatment!.add(v);
+        }
+      });
     }
+    icd = [];
     if (json['icd'] != null) {
-      icd = json['icd'].cast<String>();
-    } else {
-      icd = [];
+      json['icd'].forEach((v) {
+        if (v != null) {
+          icd!.add(v);
+        }
+      });
     }
     if (json['tests'] != null) {
       tests = <TestsCompleted>[];
@@ -1441,20 +1506,29 @@ class TherapeuticIntervention {
       {this.clinicalConcern, this.treatment, this.icd, this.intervention});
 
   TherapeuticIntervention.fromJson(Map<String, dynamic> json) {
+    clinicalConcern = [];
     if (json['clinicalConcern'] != null) {
-      clinicalConcern = json['clinicalConcern'].cast<String>();
-    } else {
-      clinicalConcern = [];
+      json['clinicalConcern'].forEach((v) {
+        if (v != null) {
+          clinicalConcern!.add(v);
+        }
+      });
     }
+    treatment = [];
     if (json['treatment'] != null) {
-      treatment = json['treatment'].cast<String>();
-    } else {
-      treatment = [];
+      json['treatment'].forEach((v) {
+        if (v != null) {
+          treatment!.add(v);
+        }
+      });
     }
+    icd = [];
     if (json['icd'] != null) {
-      icd = json['icd'].cast<String>();
-    } else {
-      icd = [];
+      json['icd'].forEach((v) {
+        if (v != null) {
+          icd!.add(v);
+        }
+      });
     }
     if (json['intervention'] != null) {
       intervention = <Intervention>[];
@@ -1522,7 +1596,7 @@ class ExerciseDetails {
     if (json['exercises'] != null) {
       exercises = <Exercises>[];
       json['exercises'].forEach((v) {
-        exercises!.add(new Exercises.fromJson(v));
+        if (v != null) exercises!.add(new Exercises.fromJson(v));
       });
     }
   }
@@ -1736,7 +1810,7 @@ class Integumentary {
     if (json['summary'] != null) {
       summary = <IntegumentarySummary>[];
       json['summary'].forEach((v) {
-        summary!.add(new IntegumentarySummary.fromJson(v));
+        if (v != null) summary!.add(new IntegumentarySummary.fromJson(v));
       });
     }
   }
@@ -1764,9 +1838,30 @@ class WoundCareSummary {
   WoundCareSummary({this.clinicalConcern, this.treatment, this.icd});
 
   WoundCareSummary.fromJson(Map<String, dynamic> json) {
-    clinicalConcern = json['clinicalConcern'].cast<String>();
-    treatment = json['treatment'].cast<String>();
-    icd = json['icd'].cast<String>();
+    clinicalConcern = [];
+    if (json['clinicalConcern'] != null) {
+      json['clinicalConcern'].forEach((v) {
+        if (v != null) {
+          clinicalConcern!.add(v);
+        }
+      });
+    }
+    treatment = [];
+    if (json['treatment'] != null) {
+      json['treatment'].forEach((v) {
+        if (v != null) {
+          treatment!.add(v);
+        }
+      });
+    }
+    icd = [];
+    if (json['icd'] != null) {
+      json['icd'].forEach((v) {
+        if (v != null) {
+          icd!.add(v);
+        }
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -1786,9 +1881,30 @@ class PainSummary {
   PainSummary({this.clinicalConcern, this.treatment, this.icd});
 
   PainSummary.fromJson(Map<String, dynamic> json) {
-    clinicalConcern = json['clinicalConcern'].cast<String>();
-    treatment = json['treatment'].cast<String>();
-    icd = json['icd'].cast<String>();
+    clinicalConcern = [];
+    if (json['clinicalConcern'] != null) {
+      json['clinicalConcern'].forEach((v) {
+        if (v != null) {
+          clinicalConcern!.add(v);
+        }
+      });
+    }
+    treatment = [];
+    if (json['treatment'] != null) {
+      json['treatment'].forEach((v) {
+        if (v != null) {
+          treatment!.add(v);
+        }
+      });
+    }
+    icd = [];
+    if (json['icd'] != null) {
+      json['icd'].forEach((v) {
+        if (v != null) {
+          icd!.add(v);
+        }
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -1925,7 +2041,7 @@ class Gait {
     if (json['summary'] != null) {
       summary = <GaitData>[];
       json['summary'].forEach((v) {
-        summary!.add(new GaitData.fromJson(v));
+        if (v != null) summary!.add(new GaitData.fromJson(v));
       });
     }
   }
@@ -1950,9 +2066,30 @@ class GaitSummary {
   GaitSummary({this.clinicalConcern, this.treatment, this.icd});
 
   GaitSummary.fromJson(Map<String, dynamic> json) {
-    clinicalConcern = json['clinicalConcern'].cast<String>();
-    treatment = json['treatment'].cast<String>();
-    icd = json['icd'].cast<String>();
+    clinicalConcern = [];
+    if (json['clinicalConcern'] != null) {
+      json['clinicalConcern'].forEach((v) {
+        if (v != null) {
+          clinicalConcern!.add(v);
+        }
+      });
+    }
+    treatment = [];
+    if (json['treatment'] != null) {
+      json['treatment'].forEach((v) {
+        if (v != null) {
+          treatment!.add(v);
+        }
+      });
+    }
+    icd = [];
+    if (json['icd'] != null) {
+      json['icd'].forEach((v) {
+        if (v != null) {
+          icd!.add(v);
+        }
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {

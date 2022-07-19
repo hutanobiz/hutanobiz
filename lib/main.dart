@@ -162,8 +162,9 @@ void main() async {
         ListenableProvider(create: (_) => HealthConditionProvider()),
         ListenableProvider(create: (_) => ChatProvider()),
         ChangeNotifierProvider(create: (_) => LinkedAccountProvider()),
-         ChangeNotifierProvider<OverlayHandlerProvider>(
-          create: (_) => OverlayHandlerProvider(),)
+        ChangeNotifierProvider<OverlayHandlerProvider>(
+          create: (_) => OverlayHandlerProvider(),
+        )
       ],
       child: InheritedContainer(
         child: MaterialApp(

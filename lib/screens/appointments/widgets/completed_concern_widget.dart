@@ -98,13 +98,15 @@ class EmrCompleteConcernListWidget extends StatelessWidget {
           physics: NeverScrollableScrollPhysics(),
           itemCount: clinicalList!.length,
           itemBuilder: (BuildContext context, int index) {
-            return Padding(
-              padding: EdgeInsets.symmetric(vertical: 5),
-              child: Text(
-                "\u2022 " + (clinicalList![index] ?? ''),
-                style: AppTextStyle.mediumStyle(fontSize: 14),
-              ),
-            );
+            return clinicalList?[index] == null
+                ? SizedBox()
+                : Padding(
+                    padding: EdgeInsets.symmetric(vertical: 5),
+                    child: Text(
+                      "\u2022 " + (clinicalList![index] ?? ''),
+                      style: AppTextStyle.mediumStyle(fontSize: 14),
+                    ),
+                  );
           },
         ),
       ],

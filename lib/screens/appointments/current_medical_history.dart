@@ -51,7 +51,8 @@ class _CurrentAppointmentMedicalHistoryState
             separatorBuilder: (context, index) => SizedBox(height: 20),
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemCount: widget.isBottomButtonsShow!['appointmentProblems'].length,
+            itemCount:
+                widget.isBottomButtonsShow!['appointmentProblems'].length,
             itemBuilder: (context, index) {
               return ProblemWidget(
                 dob: getString(AppPreference.dobKey),
@@ -80,8 +81,7 @@ class _CurrentAppointmentMedicalHistoryState
                           '') ||
                   (widget.isBottomButtonsShow!['vitals']['temperature'] !=
                           null &&
-                      widget.isBottomButtonsShow!['vitals']
-                              ['temperature'] !=
+                      widget.isBottomButtonsShow!['vitals']['temperature'] !=
                           '') ||
                   (widget.isBottomButtonsShow!['vitals']['bloodPressureSbp'] !=
                           null &&
@@ -328,7 +328,7 @@ class _CurrentAppointmentMedicalHistoryState
       children: [
         SizedBox(height: 20),
         Text(
-          "Diagnostic tests",
+          "Vaccination documents",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
         ),
         SizedBox(height: 14),
@@ -448,11 +448,11 @@ class _CurrentAppointmentMedicalHistoryState
                         ),
                         // Expanded(
                         //   child:
-                        Text(medicalDiagnostics[index]['name'] +
-                            ' ' +
-                            medicalDiagnostics[index]['type'] +
-                            ' taken on ' +
-                            (medicalDiagnostics[index]['date'])),
+                        Text(
+                            // medicalDiagnostics[index]['name'] +
+                            //   ' ' +
+                            //   medicalDiagnostics[index]['type'] +
+                            'taken on ' + (medicalDiagnostics[index]['date'])),
                         // ),
                       ],
                     ),

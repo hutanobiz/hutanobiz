@@ -30,7 +30,8 @@ const PROVIDER_START_DRIVING = 'providerStartDriving';
 const PROVIDER_ARRIVED = 'providerArrived';
 
 class TrackOnsiteAppointment extends StatefulWidget {
-  const TrackOnsiteAppointment({Key? key, this.appointmentId}) : super(key: key);
+  const TrackOnsiteAppointment({Key? key, this.appointmentId})
+      : super(key: key);
 
   final String? appointmentId;
 
@@ -486,7 +487,7 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                                 });
                               });
                             },
-                            title: 'Diagnostic tests'),
+                            title: 'Vaccination documents'),
                         editWidget(
                             onTap: () {
                               animateTo = scrollController.position.pixels;

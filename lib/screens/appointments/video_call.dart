@@ -251,7 +251,9 @@ class _CallPageState extends State<CallPage> {
           .unHideOverlay();
       Provider.of<OverlayHandlerProvider>(context, listen: false)
           .removeOverlay(context);
-      await FlutterBackground.disableBackgroundExecution();
+      // if (FlutterBackground.isBackgroundExecutionEnabled) {
+      //   await FlutterBackground.disableBackgroundExecution();
+      // }
 
       Navigator.of(context).pushReplacementNamed(
         Routes.appointmentCompleteConfirmation,
@@ -385,8 +387,11 @@ class _CallPageState extends State<CallPage> {
                                                           context,
                                                           listen: false)
                                                       .removeOverlay(context);
-                                                  await FlutterBackground
-                                                      .disableBackgroundExecution();
+                                                  // if (FlutterBackground
+                                                  //     .isBackgroundExecutionEnabled) {
+                                                  //   await FlutterBackground
+                                                  //       .disableBackgroundExecution();
+                                                  // }
                                                   // Navigator.pop(context);
                                                   var appointmentCompleteMap =
                                                       {};
@@ -394,7 +399,8 @@ class _CallPageState extends State<CallPage> {
                                                       'type'] = '2';
                                                   appointmentCompleteMap[
                                                           'appointmentId'] =
-                                                      widget.channelName!['_id'];
+                                                      widget
+                                                          .channelName!['_id'];
                                                   appointmentCompleteMap[
                                                           'name'] =
                                                       appointmentResponse[
@@ -714,8 +720,6 @@ class _CallPageState extends State<CallPage> {
       ),
     );
   }
-
-
 
   void showConfirmDialog(Function onConfirmPressed, Function onCancelPressed) {
     showDialog(

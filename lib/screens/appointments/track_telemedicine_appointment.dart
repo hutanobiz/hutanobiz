@@ -32,7 +32,8 @@ const PROVIDER_START_DRIVING = 'providerStartDriving';
 const PROVIDER_ARRIVED = 'providerArrived';
 
 class TrackTelemedicineAppointment extends StatefulWidget {
-  TrackTelemedicineAppointment({Key? key, this.appointmentId}) : super(key: key);
+  TrackTelemedicineAppointment({Key? key, this.appointmentId})
+      : super(key: key);
   String? appointmentId;
 
   @override
@@ -448,7 +449,7 @@ class _TrackTelemedicineAppointmentState
                                 });
                               });
                             },
-                            title: 'Diagnostic tests'),
+                            title: 'Vaccination documents'),
                         editWidget(
                             onTap: () {
                               animateTo = scrollController.position.pixels;
@@ -842,11 +843,12 @@ class _TrackTelemedicineAppointmentState
                                                               appointment[
                                                                       'record'] =
                                                                   record;
-                                                              OverlayService().addVideosOverlay(
-                                                                  context,
-                                                                  CallPage(
-                                                                      channelName:
-                                                                          appointment));
+                                                              OverlayService()
+                                                                  .addVideosOverlay(
+                                                                      context,
+                                                                      CallPage(
+                                                                          channelName:
+                                                                              appointment));
                                                               //     .then(
                                                               //         (value) {
                                                               //   _profileFuture =

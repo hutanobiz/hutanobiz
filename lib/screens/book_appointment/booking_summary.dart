@@ -648,7 +648,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
       children: [
         SizedBox(height: 20),
         Text(
-          "Diagnostic tests",
+          "Vaccination documents",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
         ),
         SizedBox(height: 20),
@@ -688,32 +688,34 @@ class _BookingsummaryState extends State<Bookingsummary> {
                                     fit: BoxFit.cover,
                                   )),
                       )).onClick(
-                    onTap:
-                        dignosticTest[index].image!.toLowerCase().endsWith("pdf")
-                            ? () async {
-                                var url = ApiBaseHelper.imageUrl +
-                                    dignosticTest[index].image!;
-                                if (await canLaunch(url)) {
-                                  await launch(url);
-                                } else {
-                                  throw 'Could not launch $url';
-                                }
-                              }
-                            : () {
-                                Navigator.of(context).pushNamed(
-                                  Routes.providerImageScreen,
-                                  arguments: ApiBaseHelper.imageUrl +
-                                      dignosticTest[index].image!,
-                                );
-                              },
+                    onTap: dignosticTest[index]
+                            .image!
+                            .toLowerCase()
+                            .endsWith("pdf")
+                        ? () async {
+                            var url = ApiBaseHelper.imageUrl +
+                                dignosticTest[index].image!;
+                            if (await canLaunch(url)) {
+                              await launch(url);
+                            } else {
+                              throw 'Could not launch $url';
+                            }
+                          }
+                        : () {
+                            Navigator.of(context).pushNamed(
+                              Routes.providerImageScreen,
+                              arguments: ApiBaseHelper.imageUrl +
+                                  dignosticTest[index].image!,
+                            );
+                          },
                   ),
                   SizedBox(width: 8),
                   Expanded(
                     child: Text('${(index + 1)}. ' +
-                        dignosticTest[index].name! +
-                        ' ' +
+                        // dignosticTest[index].name! +
+                        // ' ' +
                         dignosticTest[index].type! +
-                        ' taken on ' +
+                        'taken on ' +
                         dignosticTest[index].date!),
                   ),
                 ],

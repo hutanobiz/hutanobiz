@@ -193,7 +193,8 @@ class VitalsCompleteWidget extends StatelessWidget {
                           : SizedBox(),
                       vitals!.heartRateSummary!.treatment!.isNotEmpty
                           ? EmrCompleteTreatmentListWidget(
-                              treatmentList: vitals!.heartRateSummary!.treatment)
+                              treatmentList:
+                                  vitals!.heartRateSummary!.treatment)
                           : SizedBox(),
                       vitals!.heartRateSummary!.icd!.isNotEmpty
                           ? EmrCompleteDiagnosisListWidget(
@@ -235,7 +236,8 @@ class VitalsCompleteWidget extends StatelessWidget {
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     children: [
-                      vitals!.oxygenSaturationSummary!.clinicalConcern!.isNotEmpty
+                      vitals!.oxygenSaturationSummary!.clinicalConcern!
+                              .isNotEmpty
                           ? EmrCompleteConcernListWidget(
                               clinicalList: vitals!
                                   .oxygenSaturationSummary!.clinicalConcern)
@@ -247,7 +249,8 @@ class VitalsCompleteWidget extends StatelessWidget {
                           : SizedBox(),
                       vitals!.oxygenSaturationSummary!.icd!.isNotEmpty
                           ? EmrCompleteDiagnosisListWidget(
-                              diagnosisList: vitals!.oxygenSaturationSummary!.icd)
+                              diagnosisList:
+                                  vitals!.oxygenSaturationSummary!.icd)
                           : SizedBox(),
                     ]))
             : SizedBox(),
@@ -337,7 +340,8 @@ class VitalsCompleteWidget extends StatelessWidget {
                     children: [
                       vitals!.painSummary!.clinicalConcern!.isNotEmpty
                           ? EmrCompleteConcernListWidget(
-                              clinicalList: vitals!.painSummary!.clinicalConcern)
+                              clinicalList:
+                                  vitals!.painSummary!.clinicalConcern)
                           : SizedBox(),
                       vitals!.painSummary!.treatment!.isNotEmpty
                           ? EmrCompleteTreatmentListWidget(
@@ -417,8 +421,9 @@ class HeartLungsCompleteWidget extends StatelessWidget {
                             padding: EdgeInsets.symmetric(vertical: 5),
                             child: Text(
                               "\u2022 " +
-                                  (heartAndLungs!.heart!.sound![index] 
-                                      ?? ''),
+                                  (heartAndLungs!.heart!.sound != null
+                                      ? heartAndLungs!.heart!.sound![index]
+                                      : ''),
                               style: AppTextStyle.mediumStyle(fontSize: 14),
                             ),
                           );
@@ -426,7 +431,8 @@ class HeartLungsCompleteWidget extends StatelessWidget {
                       ),
                       heartAndLungs!.heart!.clinicalConcern!.isNotEmpty
                           ? EmrCompleteConcernListWidget(
-                              clinicalList: heartAndLungs!.heart!.clinicalConcern)
+                              clinicalList:
+                                  heartAndLungs!.heart!.clinicalConcern)
                           : SizedBox(),
                       heartAndLungs!.heart!.treatment!.isNotEmpty
                           ? EmrCompleteTreatmentListWidget(

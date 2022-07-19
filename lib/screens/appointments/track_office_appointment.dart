@@ -495,7 +495,7 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                                 });
                               });
                             },
-                            title: 'Diagnostic tests'),
+                            title: 'Vaccination documents'),
                         editWidget(
                             onTap: () {
                               animateTo = scrollController.position.pixels;
@@ -808,115 +808,115 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                       })
                   : status == index
                       ? index == 0
-                          ? Row(
-                              children: [
-                                appointmentTime
-                                            .difference(currentTime)
-                                            .inSeconds >
-                                        86400
-                                    ? TrackingButton(
-                                        title: 'Reschedule',
-                                        image: 'images/trackReschedule.png',
-                                        onTap: () {
-                                          var locMap = {};
-                                          locMap['lattitude'] = 0;
-                                          locMap['longitude'] = 0;
-                                          setState(() {
-                                            _isLoading = true;
-                                          });
-                                          api
-                                              .getProviderProfile(
-                                                  appointmentResponse['data']
-                                                      ['doctor']['_id'],
-                                                  locMap)
-                                              .then((value) {
-                                            _container.setProviderData(
-                                                "providerData", value);
-
-                                            _container.setProjectsResponse(
-                                                'serviceType',
-                                                appointmentResponse['data']
-                                                        ['type']
-                                                    .toString());
+                          ? Container(
+                              height: 50,
+                              child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: [
+                                  appointmentTime
+                                              .difference(currentTime)
+                                              .inSeconds >
+                                          86400
+                                      ? TrackingButton(
+                                          title: 'Reschedule',
+                                          image: 'images/trackReschedule.png',
+                                          onTap: () {
+                                            var locMap = {};
+                                            locMap['lattitude'] = 0;
+                                            locMap['longitude'] = 0;
                                             setState(() {
-                                              _isLoading = false;
+                                              _isLoading = true;
                                             });
-                                            if (appointmentResponse[
-                                                        'subServices']
-                                                    .length >
-                                                0) {
-                                              _container.setServicesData(
-                                                  "status", "1");
-                                              _container.setServicesData(
-                                                  "services",
-                                                  appointmentResponse[
-                                                      'subServices']);
+                                            api
+                                                .getProviderProfile(
+                                                    appointmentResponse['data']
+                                                        ['doctor']['_id'],
+                                                    locMap)
+                                                .then((value) {
+                                              _container.setProviderData(
+                                                  "providerData", value);
 
-                                              Navigator.of(context).pushNamed(
-                                                  Routes
-                                                      .selectAppointmentTimeScreen,
-                                                  arguments:
-                                                      SelectDateTimeArguments(
-                                                          fromScreen: 2,
-                                                          appointmentId: widget
-                                                              .appointmentId));
-                                            } else {
-                                              _container.setServicesData(
-                                                  "status", "0");
-                                              _container.setServicesData(
-                                                  "consultaceFee", '10');
-                                              Navigator.of(context).pushNamed(
-                                                  Routes
-                                                      .selectAppointmentTimeScreen,
-                                                  arguments:
-                                                      SelectDateTimeArguments(
-                                                          fromScreen: 2,
-                                                          appointmentId: widget
-                                                              .appointmentId));
-                                            }
-                                          });
+                                              _container.setProjectsResponse(
+                                                  'serviceType',
+                                                  appointmentResponse['data']
+                                                          ['type']
+                                                      .toString());
+                                              setState(() {
+                                                _isLoading = false;
+                                              });
+                                              if (appointmentResponse[
+                                                          'subServices']
+                                                      .length >
+                                                  0) {
+                                                _container.setServicesData(
+                                                    "status", "1");
+                                                _container.setServicesData(
+                                                    "services",
+                                                    appointmentResponse[
+                                                        'subServices']);
 
-                                          var map = {};
-                                          map['appointmentId'] =
-                                              appointmentResponse['data']
-                                                  ['_id'];
-                                        })
-                                    : SizedBox(),
-                                appointmentTime
-                                            .difference(currentTime)
-                                            .inSeconds >
-                                        86400
-                                    ? Container(
-                                        height: 20,
-                                        width: 1,
-                                        color: Colors.grey[300],
-                                      )
-                                    : SizedBox(),
-                                Row(
-                                  children: [
-                                    TrackingButton(
-                                        title: 'Start driving',
-                                        image: 'images/trackStartDriving.png',
-                                        onTap: () {
-                                          changeRequestStatus(
-                                              widget.appointmentId, "1");
-                                        }),
-                                    TrackingButton(
-                                        title: 'Directions',
-                                        image:
-                                            'assets/images/ic_navigation_blue.png',
-                                        onTap: () {
-                                          Navigator.pushNamed(context,
-                                              Routes.officeDirectionScreen,
-                                              arguments:
-                                                  // TrackOfficeModel.fromJson(
-                                                  appointmentResponse
-                                              // )
-                                              );
-                                        }),
-                                  ],
-                                )
-                              ],
+                                                Navigator.of(context).pushNamed(
+                                                    Routes
+                                                        .selectAppointmentTimeScreen,
+                                                    arguments:
+                                                        SelectDateTimeArguments(
+                                                            fromScreen: 2,
+                                                            appointmentId: widget
+                                                                .appointmentId));
+                                              } else {
+                                                _container.setServicesData(
+                                                    "status", "0");
+                                                _container.setServicesData(
+                                                    "consultaceFee", '10');
+                                                Navigator.of(context).pushNamed(
+                                                    Routes
+                                                        .selectAppointmentTimeScreen,
+                                                    arguments:
+                                                        SelectDateTimeArguments(
+                                                            fromScreen: 2,
+                                                            appointmentId: widget
+                                                                .appointmentId));
+                                              }
+                                            });
+
+                                            var map = {};
+                                            map['appointmentId'] =
+                                                appointmentResponse['data']
+                                                    ['_id'];
+                                          })
+                                      : SizedBox(),
+                                  appointmentTime
+                                              .difference(currentTime)
+                                              .inSeconds >
+                                          86400
+                                      ? Container(
+                                          height: 20,
+                                          width: 1,
+                                          color: Colors.grey[300],
+                                        )
+                                      : SizedBox(),
+                                  TrackingButton(
+                                      title: 'Start driving',
+                                      image: 'images/trackStartDriving.png',
+                                      onTap: () {
+                                        changeRequestStatus(
+                                            widget.appointmentId, "1");
+                                      }),
+                                  TrackingButton(
+                                      title: 'Directions',
+                                      image:
+                                          'assets/images/ic_navigation_blue.png',
+                                      onTap: () {
+                                        Navigator.pushNamed(context,
+                                            Routes.officeDirectionScreen,
+                                            arguments:
+                                                // TrackOfficeModel.fromJson(
+                                                appointmentResponse
+                                            // )
+                                            );
+                                      }),
+                                ],
+                              ),
                             )
                           : index == 1
                               ? Row(

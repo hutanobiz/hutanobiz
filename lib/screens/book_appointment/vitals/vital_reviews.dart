@@ -120,8 +120,6 @@ class _VitalReviewsState extends State<VitalReviews> {
         }
       }
 
-      _dateController.text = widget.args['vitals'][''];
-
       _sbpController.text = widget.args['vitals']['bloodPressureSbp'] ?? '';
       _dbpController.text = widget.args['vitals']['bloodPressureDbp'] ?? '';
       _heartRateController.text = widget.args['vitals']['heartRate'] ?? '';

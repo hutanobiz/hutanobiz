@@ -65,12 +65,7 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
   String? documentName = '';
   List<Map?> filteredImagesList = [];
   List<String> _documentTypeList = [
-    'X-Ray',
-    'MRI',
-    'CAT Scan',
-    'Labs',
-    'Ultrasound',
-    'EKG',
+    'Covid',
     'Other',
   ];
   InheritedContainerState? _container;
@@ -230,7 +225,7 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
         onForwardTap: () {
           _forwardButtonPressed(context);
         },
-        padding: EdgeInsets.only(left: spacing20, right: spacing20, bottom: 60),
+        padding: EdgeInsets.only(left: 0, right: 0, bottom: 60),
         child: Column(
           children: <Widget>[
             TabBar(
@@ -339,14 +334,14 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
         title: ListTile(
           contentPadding: EdgeInsets.all(0),
           title: Text(
-            'Upload other medical documents',
+            'Upload Vaccination Documents',
             style: TextStyle(
                 fontSize: fontSize15,
                 fontWeight: fontWeightSemiBold,
                 color: Colors.black),
           ),
           subtitle: Text(
-            Localization.of(context)!.uploadFileLowerLabel,
+            'like covid vaccinaion',
             style: TextStyle(
                 fontSize: fontSize12,
                 fontWeight: fontWeightRegular,
@@ -506,7 +501,7 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    height: spacing70,
+                    height: spacing60,
                     padding: EdgeInsets.symmetric(
                         horizontal: spacing10, vertical: 5),
                     alignment: Alignment.center,
@@ -517,8 +512,8 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              filteredImagesList[index]!
-                                  [ArgumentConstant.nameKey],
+                              filteredImagesList[index]![
+                                  ArgumentConstant.typeKey],
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   fontSize: fontSize14,
@@ -526,23 +521,23 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
                                   color: Color(0xff1b1200)),
                             ),
                           ),
+                          // Align(
+                          //   alignment: Alignment.topLeft,
+                          //   child: Text(
+                          //     filteredImagesList[index]![
+                          //         ArgumentConstant.typeKey],
+                          //     overflow: TextOverflow.ellipsis,
+                          //     style: TextStyle(
+                          //         fontSize: fontSize12,
+                          //         fontWeight: fontWeightRegular,
+                          //         color: Colors.black),
+                          //   ),
+                          // ),
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              filteredImagesList[index]!
-                                  [ArgumentConstant.typeKey],
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  fontSize: fontSize12,
-                                  fontWeight: fontWeightRegular,
-                                  color: Colors.black),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              filteredImagesList[index]!
-                                  [ArgumentConstant.dateKey],
+                              filteredImagesList[index]![
+                                  ArgumentConstant.dateKey],
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   fontSize: fontSize12,
@@ -718,7 +713,8 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            Localization.of(context)!.documentLabel,
+            'Vaccination',
+            // Localization.of(context)!.documentLabel,
             style: TextStyle(
               color: AppColors.midnight_express,
               fontSize: 16,
@@ -749,18 +745,19 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
           TextField(
             enabled: false,
             controller: documentTypeController,
-            decoration:
-                getInputDecoration(Localization.of(context)!.whatKindOfDocLabel),
+            decoration: getInputDecoration('What type of vaccination?'
+                // Localization.of(context)!.whatKindOfDocLabel
+                ),
           ).onClick(onTap: _documentTypeBottomDialog),
           SizedBox(height: spacing25),
-          textField(
-            Localization.of(context)!.whatBodyPartLabel,
-            documentName ?? '',
-            (value) {
-              documentName = value;
-            },
-          ),
-          SizedBox(height: spacing25),
+          // textField(
+          //   Localization.of(context)!.whatBodyPartLabel,
+          //   documentName ?? '',
+          //   (value) {
+          //     documentName = value;
+          //   },
+          // ),
+          // SizedBox(height: spacing25),
           TextField(
             enabled: false,
             controller: documentDateController,
@@ -948,7 +945,8 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
       List<String?> selectedTestsId = [];
       if (_selectedDocsList != null && _selectedDocsList.length > 0) {
         _selectedDocsList.forEach((element) {
-          selectedTestsId.add(MedicalImages.fromJson(element as Map<String, dynamic>).sId);
+          selectedTestsId
+              .add(MedicalImages.fromJson(element as Map<String, dynamic>).sId);
         });
       }
       Map<String, dynamic> model = {};
@@ -963,7 +961,8 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
       List<DiagnosticTest> selectedTestsModel = [];
       if (_selectedDocsList != null && _selectedDocsList.length > 0) {
         _selectedDocsList.forEach((element) {
-          selectedTestsModel.add(DiagnosticTest.fromJson(element as Map<String, dynamic>));
+          selectedTestsModel
+              .add(DiagnosticTest.fromJson(element as Map<String, dynamic>));
         });
       }
 
@@ -975,7 +974,7 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
   }
 
   void _getTestDiagnostics(BuildContext context) async {
-    await ApiManager().getDiagnosticTestTypeList().then((result) {
+    await ApiManager().getVaccinationTypeList().then((result) {
       if (result is ResDiagnositcTestModel) {
         setState(() {
           _finalTestList = result.response;

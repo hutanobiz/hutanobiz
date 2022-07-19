@@ -268,7 +268,9 @@ class _MedicineInformationState extends State<MedicineInformation>
                         child: Image.network(
                             ApiBaseHelper.image_base_url +
                                 (appointmentMedication![index].doctor == null
-                                    ? appointmentMedication![index].user!.avatar!
+                                    ? appointmentMedication![index]
+                                        .user!
+                                        .avatar!
                                     : appointmentMedication![index]
                                         .doctor!
                                         .avatar!),
@@ -308,7 +310,7 @@ class _MedicineInformationState extends State<MedicineInformation>
                             )
                           ],
                         ),
-                        appointmentMedication![index].doctor == null
+                        appointmentMedication![index].providerReason == null
                             ? SizedBox()
                             : Text(
                                 appointmentMedication![index].providerReason ??
@@ -359,12 +361,12 @@ class CircleTabIndicator extends Decoration {
 
   CircleTabIndicator({required Color color, required double radius})
       : _painter = _CirclePainter(color, radius);
-      
-        @override
-        BoxPainter createBoxPainter([VoidCallback? onChanged]) {
-          // TODO: implement createBoxPainter
-          throw UnimplementedError();
-        }
+
+  @override
+  BoxPainter createBoxPainter([VoidCallback? onChanged]) {
+    // TODO: implement createBoxPainter
+    throw UnimplementedError();
+  }
 
   // @override
   // BoxPainter createBoxPainter([onChanged]) => _painter;

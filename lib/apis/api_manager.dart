@@ -462,6 +462,16 @@ class ApiManager {
     }
   }
 
+
+  Future<ResDiagnositcTestModel> getVaccinationTypeList() async {
+    try {
+      final response = await _apiService.get('api/patient/vaccination-list');
+      return ResDiagnositcTestModel.fromJson(response.data);
+    } on DioError catch (error) {
+      throw ErrorModel.fromJson(error.response!.data);
+    }
+  }
+
   Future<List<Pha.Pharmacy>?> getPreferredPharmacyList(String input) async {
     try {
       final response =

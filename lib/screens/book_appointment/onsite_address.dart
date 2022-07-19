@@ -38,7 +38,7 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
   List? addressList = [];
   String state = '---';
 
-  int? _radioValue;
+  int _radioValue = 0;
 
   late InheritedContainerState _container;
   dynamic _selectedAddress;
@@ -287,8 +287,13 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
                     value: index,
                     groupValue: _radioValue,
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    onChanged: (v) {
-                      _selectAddress(address);
+                    onChanged: (int? v) {
+                      setState(
+                        () {
+                          _radioValue = v!;
+                          _selectedAddress = address;
+                        },
+                      );
                     },
                   )
                 : null,
@@ -544,16 +549,6 @@ class _OnsiteAddressesState extends State<OnsiteAddresses> {
         address['_id'].toString(),
       ),
     );
-  }
-
-  Function _selectAddress(dynamic address) {
-    return (value) {
-      setState(
-        () => _radioValue = value,
-      );
-
-      _selectedAddress = address;
-    };
   }
 
   void _deleteAddress(String id) {
