@@ -640,19 +640,19 @@ class Strings {
 
   static const String providerOfficeLabel = "At the provider's office";
 
-  static const String videoChatLabel = "Telemedicine Appointment";
+  static const String videoChatLabel = "Virtually by video";
 
-  static const String onSiteLabel = "Onsite Appointment";
+  static const String onSiteLabel = "Onsite";
 
   //TODO Same Values In Below Three Strings For Now , Will Change After Client Feedback.
   static const String providerOfficeSubLabel =
       "Schedule an in-office appointment.";
 
-  static const String videoChatSubLabel = "Schedule an in-office appointment.";
+  static const String videoChatSubLabel = "Schedule an in-clinic appointment.";
 
-  static const String onSiteSubLabel = "Schedule an in-office appointment.";
+  static const String onSiteSubLabel = "Schedule an in-clinic appointment.";
 
-  static const String selectTimeSlot = "Select time slot";
+  static const String selectTimeSlot = "Select a time slot";
 
   static const String onDemandServiceLabel = "On Demand Service";
 
@@ -667,17 +667,17 @@ class Strings {
   static const String communicationCenterHeader = "Communication Center";
 
   static const String communicationCenterSubHeader =
-      "Sorry to hear there was a problem";
+      "Sorry you experienced a problem";
 
   static const String whatHappenedHeader = "What Happened?";
 
   static const String describeProblemHint = "Describe Problem";
 
-  static const String selectYearHint = "Select Year";
+  static const String selectYearHint = "Year";
 
-  static const String selectMonthHint = "Select Month";
+  static const String selectMonthHint = "Month";
 
-  static const String selectYearError = "Please select year";
+  static const String selectYearError = "Year";
 
   static const String selectMonthError = "Please select month";
 
@@ -775,7 +775,7 @@ class Strings {
 
   static const String uploadMedicalImagesSubLabel = "to support your condition";
 
-  static const String errImageDate = "Image date can't be empty";
+  static const String errImageDate = "Enter image date";
 
   static const String noMedicalImagesFound = "No medical images found";
 
@@ -791,7 +791,7 @@ class Strings {
   static const String view = "View";
 
   static const String uploadFileLowerLabel =
-      "File should be pdf, docx, jpeg, png";
+      "Accepted file formats: pdf, docx, jpeg,and png";
 
   static const String uploadDocumentsLabel = "Upload documents";
 
@@ -807,13 +807,13 @@ class Strings {
 
   static const String whatKindOfDocLabel = "What kind of document is this?";
 
-  static const String whatBodyPartLabel = 'What is the body part';
+  static const String whatBodyPartLabel = 'Body part';
 
-  static const String errDocType = "Document type can't be empty";
+  static const String errDocType = "Enter document type";
 
-  static const String errDocName = "Document name can't be empty";
+  static const String errDocName = "Enter document name";
 
-  static const String errDocDate = "Document date can't be empty";
+  static const String errDocDate = "Enter document date";
 
   static const String onceADayDoseTime = "Once a day";
 
@@ -823,15 +823,15 @@ class Strings {
 
   static const String asNeededDoseTime = "As needed (PRN)";
 
-  static const String addMedicationMsg = "Please add medication";
+  static const String addMedicationMsg = "Add medication";
 
   static const String doYouTakeMedication = "Do you take any medications?";
 
   static const String searchAndAddMedication = "Search and add medications";
 
-  static const String doseOfMedicine = "Dose of medicine.";
+  static const String doseOfMedicine = "Medicine dose";
 
-  static const String frequencyOfDosage = "Frequency of dosage. ";
+  static const String frequencyOfDosage = "How often? ";
 
   static const String clearAllLabel = "Clear all";
 
@@ -873,7 +873,7 @@ class Strings {
   static const String uploadTypeOfDocLabel =
       "upload pdf, docx, jpeg, jpg or png files";
 
-  static const String myHutanoLibLabel = "Browse my Hutano library";
+  static const String myHutanoLibLabel = "Browse my Hutano files";
 
   static const String iAgreeLabel = "I Agree";
 
@@ -883,7 +883,7 @@ class Strings {
 
   static const String durationLabel = 'Duration ';
 
-  static const String chooseOfferedServices = "Choose offered services";
+  static const String chooseOfferedServices = "Other services";
 
   static const String treatedForCondition =
       "Have you been treated for this condition before?";
@@ -900,23 +900,23 @@ class Strings {
 
   static const String yearsLabel = "Years";
 
-  static const String fillEmptyFields = "Please fill empty fields";
+  static const String fillEmptyFields = "Please complete all fields";
 
   static const String currentMedicalHistoryHeader = "Current Medical History";
 
-  static const String chiefComplaintHeader = "Where is your chief complaint?";
+  static const String chiefComplaintHeader = "What is the problem?";
 
   static const String howLongHeader = "How long have you had this problem.";
 
-  static const String bodyPartHint = "body part";
+  static const String bodyPartHint = "what body part hurts";
 
   static const String rateYourDiscomfort = "Rate your discomfort";
 
-  static const String tellUsAboutCare = "Tell us why you are seeking care..";
+  static const String tellUsAboutCare = "Tell us why you are seeking care.";
 
   static const String tellUsAboutMore = "Tell us more about your condition.";
 
-  static const String searchForProblem = "Search for problems...";
+  static const String searchForProblem = "Search for problems.";
 
   static const String welcomeBackHeader = "Welcome Back";
 
@@ -934,7 +934,7 @@ class Strings {
 
   static const String rateYourPainHeader = "Rate your pain";
 
-  static const String searchForBodyPart = "Search for body part";
+  static const String searchForBodyPart = "Which body part hurts?";
 
   static const String selectSideLabel = "Select Side";
   static const String stepOne = "1";
