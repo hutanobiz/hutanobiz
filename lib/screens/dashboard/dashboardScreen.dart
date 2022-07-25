@@ -1461,7 +1461,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         print("Service status: $serviceStatus");
 
         if (serviceStatus) {
-          Widgets.showToast("Getting Location. Please wait..");
+          Widgets.showToast("Getting Location. Please wait.");
 
           try {
             LocationData locationData = await _location.getLocation();
