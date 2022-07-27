@@ -6,7 +6,7 @@ class Strings {
   static const String enterPassword = "Please enter password";
   static const String enterValidEmail = "Enter a valid email address";
   static const String enterValidPassword =
-      "Password should be more than 6 characters";
+      "Password should at least 6 characters";
   static const String noInternet = "No Internet connection. Please try again";
   static const String loggedIn = "Logged in successfully";
   static const String datePattern = 'MMMM dd, yyyy';
@@ -171,7 +171,7 @@ class Strings {
   static const String errorEnterAddress = "Please enter address";
 
   static const String errorShortPassword =
-      "Password should be more than 6 characters";
+      "Password should be at least 6 characters";
 
   static const String errorZipCode = "Please enter zip code";
 
@@ -180,9 +180,9 @@ class Strings {
   static const String errorPassword = "Please enter Password";
 
   static const String errorValidPassword =
-      "Password should be more than 5 characters";
+      "Password should be at least 6 characters";
 
-  static const String accNowActive = "Your account is now active.";
+  static const String accNowActive = "A few more steps to go.";
 
   static const String activateEmail = "Activate your email.";
 
@@ -334,7 +334,7 @@ class Strings {
 
   static const String privacyPolicyLabel = "Privacy Policy";
 
-  static const String privacyPolicy = "I agree to Hutano ";
+  static const String privacyPolicy = "I agree to ";
 
   static const String dataSecurityStatement = "Hutano data security statement";
 
@@ -566,9 +566,9 @@ class Strings {
 
   static const String searchPhoneContacts = "Search my phone contacts";
 
-  static const String createPin = "Create a PIN";
+  static const String createPin = "Create a PIN to unlock the app";
 
-  static const String fasterLogin = "Faster Login";
+  static const String fasterLogin = "Enhanced Security";
 
   static const String addToExistinGroup = "Add providers to a network";
 
