@@ -63,7 +63,7 @@ class _MyProvidersState extends State<MyProviders> {
               snapshot.data!.isEmpty ||
               snapshot.data is String) {
             return Center(
-              child: Text('No providers.'),
+              child: Text('No Providers Added in Your Network.'),
             );
           }
 
@@ -78,7 +78,7 @@ class _MyProvidersState extends State<MyProviders> {
                 return providerWidget(context, snapshot.data![index]);
               });
         } else if (snapshot.hasError) {
-          return Text('No providers.');
+          return Text('You Have Not Added Providers Yet.');
         }
         return Center(
           child: CustomLoader(),

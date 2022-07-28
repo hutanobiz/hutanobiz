@@ -95,7 +95,7 @@ class _MedicalDocumentsScreenState extends State<MedicalDocumentsScreen> {
 
                     if (_closedAppointmentsList.isEmpty)
                       return Center(
-                        child: Text("No documents."),
+                        child: Text("No Documents Uploaded Yet."),
                       );
                     else
                       return Column(

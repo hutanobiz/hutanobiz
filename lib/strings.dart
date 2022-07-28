@@ -194,11 +194,11 @@ class Strings {
   static const String addFamilyDesc =
       "To collaborate with your family and friends.";
 
-  static const String addPaymentDesc = "For efficient checkout.";
+  static const String addPaymentDesc = "For Efficient Checkout.";
 
-  static const String addPaymentOption = "Add payment options.";
+  static const String addPaymentOption = "Add Payment Options.";
 
-  static const String addProvider = "Add providers to my network.";
+  static const String addProvider = "Add Providers to My Network.";
 
   static const String addProviderDesc =
       "To access your health team in one place.";
@@ -356,7 +356,7 @@ class Strings {
 
   static const String add = "Add";
 
-  static const String addCreateGroup = "Create new group";
+  static const String addCreateGroup = "Create New group";
 
   static const String addDoctorNetwork =
       "Add {{doctor}} to your Provider Network.";
@@ -371,13 +371,13 @@ class Strings {
 
   static const String onSite = "Onsite";
 
-  static const String videoChat = "Video Chat";
+  static const String videoChat = "Virtual Care";
 
   static const String upComing = "Upcoming";
 
   static const String reviewChart = "Review Chart";
 
-  static const String textPatient = "Text Patient";
+  static const String textPatient = "Message Patient";
 
   static const String callPatient = "Call Patient";
 
@@ -389,13 +389,13 @@ class Strings {
 
   static const String addProviders = "Add Providers";
 
-  static const String enterProviderName = "enter provider’s name";
+  static const String enterProviderName = "Enter Provider’s Name";
 
-  static const String enterProviderNumber = "enter provider’s phone number";
+  static const String enterProviderNumber = "Enter Provider’s Phone Number";
 
-  static const String searchByName = "Search by name";
+  static const String searchByName = "Search by Name";
 
-  static const String searchByNumber = "Search by phone number";
+  static const String searchByNumber = "Search by Phone Number";
 
   static const String skipThisTask = "SKIP THIS TASK";
 
@@ -407,7 +407,7 @@ class Strings {
 
   static const String continueLabel = "Continue";
 
-  static const String inviteByNumber = "invite by phone number";
+  static const String inviteByNumber = "Invite By Phone Number";
 
   static const String msgEnterPhoneNumber =
       "Enter the phone number used to create \nthe hutano profile.";
@@ -570,7 +570,7 @@ class Strings {
 
   static const String fasterLogin = "Enhanced Security";
 
-  static const String addToExistinGroup = "Add providers to a network";
+  static const String addToExistinGroup = "Add Provider a Group";
 
   static const String errorHealthInsurance = "Please select health insurance";
 
@@ -638,9 +638,9 @@ class Strings {
   static const String noAppointmentSelected =
       "Please select an appointment type";
 
-  static const String providerOfficeLabel = "At the provider's office";
+  static const String providerOfficeLabel = "At The Provider's Office";
 
-  static const String videoChatLabel = "Virtually by video";
+  static const String videoChatLabel = "Virtually by Video";
 
   static const String onSiteLabel = "Onsite";
 

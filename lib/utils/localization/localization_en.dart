@@ -463,7 +463,7 @@ class LocalizationEN implements Localization {
   String get add => "Add";
 
   @override
-  String get addCreateGroup => "Create new group";
+  String get addCreateGroup => "Create New group";
 
   @override
   String get addDoctorNetwork => "Add {{doctor}} to your Provider Network.";
@@ -647,7 +647,7 @@ class LocalizationEN implements Localization {
   String get msgYear => "Expiry year is invalid";
 
   @override
-  String get addProviderToNetwork => "Add Providers to Network";
+  String get addProviderToNetwork => "Add Providers to My Network";
 
   @override
   String get home => "Home";

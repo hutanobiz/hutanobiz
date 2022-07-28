@@ -124,11 +124,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     _professionalTitleFuture = _api.getProfessionalTitle();
     _specialtiesFuture = _api.getSpecialties();
-    typeMap['1'] = "At the provider's office";
-    typeMap['2'] = 'Virtually by telemedicine';
-    typeMap['3'] = 'In your home or office';
+    typeMap['1'] = "At The Provider's Office";
+    typeMap['2'] = 'Virtually by Telemedicine';
+    typeMap['3'] = 'Onsite';
     insuranceMap['1'] = 'All Providers';
-    insuranceMap['2'] = 'Provider who take my insurance';
+    insuranceMap['2'] = 'Providers who take my insurance';
     placesMap['1'] = 'Providers near me';
     placesMap['2'] = 'Type City or Zip Code';
     _typeContoller.text = typeMap[selectedType];

@@ -58,7 +58,7 @@ class _PaymentHistoryState extends State<PaymentHistory> {
               snapshot.data!.isEmpty ||
               snapshot.data is String) {
             return Center(
-              child: Text('No payment history.'),
+              child: Text('No payments have been made yet.'),
             );
           }
 

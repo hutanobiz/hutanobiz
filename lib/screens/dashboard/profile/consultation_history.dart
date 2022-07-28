@@ -87,7 +87,7 @@ class _ConsultationHistoryScreenState extends State<ConsultationHistoryScreen> {
 
                     if (_closedAppointmentsList.isEmpty)
                       return Center(
-                        child: Text("No documents."),
+                        child: Text("No Document Uploaded Yet."),
                       );
                     else
                       return Column(

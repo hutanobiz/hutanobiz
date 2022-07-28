@@ -29,7 +29,7 @@ class AddProviderCompleteState extends State<AddProviderComplete> {
               AppHeader(
                 progressSteps: HutanoProgressSteps.four,
                 title: "My Providers",
-                subTitle: "Proivders added",
+                subTitle: "New Providers Added",
               ),
               Spacer(),
               RoundSuccess(),
