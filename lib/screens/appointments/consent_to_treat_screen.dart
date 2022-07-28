@@ -105,7 +105,7 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
                   'isEdit': false,
                   'socialHistory': jsonDecode(getString('patientSocialHistory'))
                 })
-              : Widgets.showToast("Please agree to continue");
+              : Widgets.showToast("Agree to Continue");
         },
         color: Colors.white,
         child: FutureBuilder<dynamic>(

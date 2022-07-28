@@ -427,7 +427,7 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                                 });
                               });
                             },
-                            title: 'Medical history'),
+                            title: 'Medical History'),
                         editWidget(
                             onTap: () {
                               animateTo = scrollController.position.pixels;
@@ -653,7 +653,7 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                                   "Please select any health condition");
                             }
                           },
-                          title: 'Problems',
+                          title: 'Complaint Summary',
                         )
                       ],
                     )

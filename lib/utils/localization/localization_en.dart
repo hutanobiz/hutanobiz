@@ -1187,7 +1187,7 @@ class LocalizationEN implements Localization {
   String get doYouTakeMedication => "Do you take any medications?";
 
   @override
-  String get searchAndAddMedication => "Add medications";
+  String get searchAndAddMedication => "New Medication";
 
   @override
   String get doseOfMedicine => "Medication Dose.";
@@ -1341,13 +1341,13 @@ class LocalizationEN implements Localization {
   String get boneAndMuscleIssueHeader => "Bone and Muscle Issue";
 
   @override
-  String get describeSymptomsHeader => "Describe symptoms.";
+  String get describeSymptomsHeader => "Describe the Symptoms.";
 
   @override
-  String get rateYourPainHeader => "Rate your pain";
+  String get rateYourPainHeader => "Rate your pain 0-10";
 
   @override
-  String get searchForBodyPart => "Body part. eg hip.";
+  String get searchForBodyPart => "Body Part. eg hip.";
 
   @override
   String get selectSideLabel => "Which Side?";
@@ -1356,7 +1356,7 @@ class LocalizationEN implements Localization {
   String get breathingIssueLabel => "Breathing Issue";
 
   @override
-  String get searchAssociatedSymptomsLabel => "Select associated symptoms";
+  String get searchAssociatedSymptomsLabel => "Associated Symptoms";
 
   @override
   String get lowLabel => "Low";
@@ -1413,19 +1413,19 @@ class LocalizationEN implements Localization {
   String get haveYouHadVaccineLabel => "Have you had this vaccine before?";
 
   @override
-  String get dayToDayActivity => "No effects on my day-to-day function";
+  String get dayToDayActivity => "No effect! I can manage daily activities";
 
   @override
   String get difficultActivity =>
-      "It is difficult to perform daily activities.";
+      "Challenging! Makes daily activities hard.";
 
   @override
   String get impossibleActivity =>
-      "It is impossible to perform daily activities.";
+      "Debilitating! Impossible to perform daily activities.";
 
   @override
   String get conditionAffectedHeader =>
-      "How is this condition affecting your ability to perform daily activities?";
+      "What it the impact on performing daily activities?";
 
   @override
   String get hearingAndSightHeader => "Hearing and Sight";
@@ -1440,7 +1440,7 @@ class LocalizationEN implements Localization {
   String get howLongHadProblemHeader => "How long have you had this problem?";
 
   @override
-  String get theProblemIsHeader => "The problem is";
+  String get theProblemIsHeader => "Over time, is the problem";
 
   @override
   String get uploadDocument => "Upload Document";
@@ -1461,15 +1461,15 @@ class LocalizationEN implements Localization {
   String get noAddress => "No Address";
 
   @override
-  String get makesYourProblemBetter => "What makes your problem better?";
+  String get makesYourProblemBetter => "What Makes Your Symptoms Better?";
 
   @override
   String get actuallyMakesYourProblemBetter =>
-      "Activity that makes your problem better";
+      "What Makes your Symptoms Better?";
 
   @override
   String get actuallyMakesYourProblemWorst =>
-      "Activity that makes your problem worse";
+      "What Makes Your Symptoms Worse";
 
   @override
   String get improvingProblem => "Improving";

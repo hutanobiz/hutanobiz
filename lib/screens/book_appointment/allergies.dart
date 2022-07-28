@@ -138,7 +138,7 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
                         padding: const EdgeInsets.all(spacing8),
                         child: Image.asset(FileConstants.icSearchBlack,
                             color: colorBlack2, width: 20, height: 20))),
-                hintText: 'Search Allergies',
+                hintText: 'Allergy. eg morphine',
                 isDense: true,
                 hintStyle: TextStyle(
                     color: colorBlack2,
@@ -193,7 +193,7 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
           ? Expanded(
               child: Center(
                 child: Text(
-                  'No allergy added',
+                  'Add Allergies',
                   style: TextStyle(
                       fontSize: 16,
                       color: colorBlack2,

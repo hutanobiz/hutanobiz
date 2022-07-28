@@ -652,17 +652,17 @@ class Strings {
 
   static const String onSiteSubLabel = "Schedule an in-clinic appointment.";
 
-  static const String selectTimeSlot = "Select a time slot";
+  static const String selectTimeSlot = "Select a Time Slot";
 
   static const String onDemandServiceLabel = "On Demand Service";
 
   static const String activeLabel = "ACTIVE";
 
-  static const String instantAppointmentLabel = "Instant appointment";
+  static const String instantAppointmentLabel = "Instant Appointment";
 
   static const String medicalHistoryLabel = "Medical History";
 
-  static const String enterPastConditionHint = "Enter past conditions";
+  static const String enterPastConditionHint = "Past Medical History. Eg. Heart Disease";
 
   static const String communicationCenterHeader = "Communication Center";
 
@@ -681,7 +681,7 @@ class Strings {
 
   static const String selectMonthError = "Please select month";
 
-  static const String whenLabel = "When?";
+  static const String whenLabel = "When were you diagnosed?";
 
   static const String healthMonitoringHeader = "Health Monitoring";
 
@@ -711,9 +711,9 @@ class Strings {
 
   static const String bmrSubLabel = "Weight control";
 
-  static const String addPharmacyLabel = "Add a preferred pharmacy";
+  static const String addPharmacyLabel = "Your Pharmacy Is..";
 
-  static const String noMedicalHistoryFound = "No medical history found";
+  static const String noMedicalHistoryFound = "Add Medical History";
 
   static const String healthMonitoringLabel = "Health monitoring";
 
@@ -766,14 +766,14 @@ class Strings {
 
   static const String parkingInstHeader = "Parking Instructions";
 
-  static const String uploadMedicalDocsLabel = "Upload Medical Documents";
+  static const String uploadMedicalDocsLabel = "Imaging or Lab Reports?";
 
   static const String uploadMedicalDocsSubLabel =
-      "like labs and imaging reports";
+      "Upload Any Medical Documents";
 
-  static const String uploadMedicalImagesLabel = "Upload images";
+  static const String uploadMedicalImagesLabel = "Images are worth a thousand words!";
 
-  static const String uploadMedicalImagesSubLabel = "to support your condition";
+  static const String uploadMedicalImagesSubLabel = "Upload images to Support your Condition";
 
   static const String errImageDate = "Enter image date";
 
@@ -805,7 +805,7 @@ class Strings {
 
   static const String documentLabel = "Document";
 
-  static const String whatKindOfDocLabel = "What kind of document is this?";
+  static const String whatKindOfDocLabel = "Type of Document?";
 
   static const String whatBodyPartLabel = 'Body part';
 
@@ -823,25 +823,25 @@ class Strings {
 
   static const String asNeededDoseTime = "As needed (PRN)";
 
-  static const String addMedicationMsg = "Add medication";
+  static const String addMedicationMsg = "Add Medication";
 
   static const String doYouTakeMedication = "Do you take any medications?";
 
-  static const String searchAndAddMedication = "Search and add medications";
+  static const String searchAndAddMedication = "Search and Add Medications";
 
   static const String doseOfMedicine = "Medicine dose";
 
   static const String frequencyOfDosage = "How often? ";
 
-  static const String clearAllLabel = "Clear all";
+  static const String clearAllLabel = "Clear All";
 
   static const String seeAllNotifications = "See all Notifications";
 
   static const String verificationFailed = "Verification failed";
 
-  static const String noNotificationsFound = "No notifications found";
+  static const String noNotificationsFound = "No Notifications";
 
-  static const String takeVitalsHeader = "Have you taken vitals recently? ";
+  static const String takeVitalsHeader = "Have You Taken Vitals Recently? ";
 
   static const String dateFieldHeader = "Date:";
 
@@ -916,7 +916,7 @@ class Strings {
 
   static const String tellUsAboutMore = "Tell us more about your condition.";
 
-  static const String searchForProblem = "Search for problems.";
+  static const String searchForProblem = "Health Issue.";
 
   static const String welcomeBackHeader = "Welcome Back";
 
@@ -924,19 +924,19 @@ class Strings {
 
   static const String newEpisodeHeader = "This is a new episode of care.";
 
-  static const String followUpAppointmentHeader = "Follow Up Appointment";
+  static const String followUpAppointmentHeader = "Follow Up Care";
 
-  static const String followUpHeader = "This is a follow up on a previous care";
+  static const String followUpHeader = "Follow up on previous care";
 
   static const String boneAndMuscleIssueHeader = "Bone and Muscle Issue";
 
-  static const String describeSymptomsHeader = "Describe symptoms.";
+  static const String describeSymptomsHeader = "Describe the Symptoms.";
 
-  static const String rateYourPainHeader = "Rate your pain";
+  static const String rateYourPainHeader = "Rate Your Pain 0-10";
 
-  static const String searchForBodyPart = "Which body part hurts?";
+  static const String searchForBodyPart = "Which Body Part Hurts?";
 
-  static const String selectSideLabel = "Select Side";
+  static const String selectSideLabel = "Which Side";
   static const String stepOne = "1";
   static const String stepTwo = "2";
   static const String stepThree = "3";

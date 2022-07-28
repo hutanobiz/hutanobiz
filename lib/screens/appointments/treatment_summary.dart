@@ -295,7 +295,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
               medicalHistoryList == null || medicalHistoryList!.isEmpty
                   ? Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-                      child: Text("NO medical history"),
+                      child: Text("NO medical History"),
                     )
                   : Container(
                       height: 40,

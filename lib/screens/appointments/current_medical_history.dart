@@ -311,7 +311,7 @@ class _CurrentAppointmentMedicalHistoryState
       children: [
         SizedBox(height: 20),
         Text(
-          "Medical history",
+          "Medical History",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
         ),
         SizedBox(

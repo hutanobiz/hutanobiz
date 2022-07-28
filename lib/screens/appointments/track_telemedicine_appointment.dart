@@ -381,7 +381,7 @@ class _TrackTelemedicineAppointmentState
                                 });
                               });
                             },
-                            title: 'Medical history'),
+                            title: 'Medical History'),
                         editWidget(
                             onTap: () {
                               animateTo = scrollController.position.pixels;
