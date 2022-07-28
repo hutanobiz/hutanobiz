@@ -275,7 +275,7 @@ class _MedicalHistorySettingScreenState
                                 Widgets.showConfirmationDialog(
                                     context: context,
                                     description:
-                                        "Are you sure to delete this medical history?",
+                                        "Are you sure to delete this history item?",
                                     onLeftPressed: () {
                                       _removeDisease(
                                           context, _showDiseaseData![index]);

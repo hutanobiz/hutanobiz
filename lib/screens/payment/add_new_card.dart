@@ -329,40 +329,40 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
     if (_cardController.text.isEmpty) {
       Widgets.showErrorialog(
         context: context,
-        description: 'Please enter the Card number',
+        description: 'Enter Credit Card Number',
       );
       return false;
     } else if (_cardNumberKey.currentState == null ||
         !_cardNumberKey.currentState!.validate()) {
       Widgets.showErrorialog(
         context: context,
-        description: 'Please enter a valid card number',
+        description: 'Credit Card Number',
       );
       return false;
     } else if (_nameController.text.isEmpty) {
       Widgets.showErrorialog(
         context: context,
-        description: 'Please enter the Card holder name',
+        description: 'Card Holder Name',
       );
       return false;
     } else if (_cardNameKey.currentState == null ||
         !_cardNameKey.currentState!.validate()) {
       Widgets.showErrorialog(
         context: context,
-        description: "Card holder name can't be empty",
+        description: "Enter Card Holder Name",
       );
       return false;
     } else if (_expiryController.text.isEmpty) {
       Widgets.showErrorialog(
         context: context,
-        description: 'Please enter the Card expiry date',
+        description: 'Expiration date',
       );
       return false;
     } else if (_expiryDateKey.currentState == null ||
         !_expiryDateKey.currentState!.validate()) {
       Widgets.showErrorialog(
         context: context,
-        description: 'Please enter the valid expiry date',
+        description: 'Expiration date',
       );
       return false;
     } else if (_cvvController.text.isEmpty) {
@@ -375,7 +375,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
         !_cvvKey.currentState!.validate()) {
       Widgets.showErrorialog(
         context: context,
-        description: 'Please enter a valid CVV',
+        description: 'Enter a valid CVV',
       );
       return false;
     } else {

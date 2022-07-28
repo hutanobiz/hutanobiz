@@ -112,7 +112,7 @@ class _ActivityNotificationsState extends State<ActivityNotifications> {
                                     ),
                                     Expanded(
                                       child: Text(
-                                        'Please add a payment method i.e card, insurance.',
+                                        'Add a Payment Method.',
                                         overflow: TextOverflow.ellipsis,
                                         softWrap: false,
                                         maxLines: 4,

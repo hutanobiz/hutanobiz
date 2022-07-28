@@ -111,7 +111,7 @@ class _ChatMainState extends State<ChatMain> {
                     ),
                   ),
                 ),
-                hintText: 'Search by provider name',
+                hintText: 'Search provider by name',
                 isDense: true,
                 hintStyle: TextStyle(
                     color: colorBlack2,

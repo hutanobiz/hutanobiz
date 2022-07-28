@@ -310,7 +310,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                         widget.problemName ?? "Health Issue",
                         widget.problemImage),
                     hasBodyParts == 1
-                        ? _commonHeaderText(context, "1. Search for body part",
+                        ? _commonHeaderText(context, "1. What Hurts?",
                             _listOfSelectedDisease.length > 0)
                         : SizedBox(),
 
@@ -321,7 +321,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
 //  if (_listOfSelectedDisease[index].hasInternalPart)
 //               if (!_listOfSelectedDisease[index].isItClicked)
                     hasBodyParts == 1
-                        ? _commonHeaderText(context, "2. Which Side hurts?",
+                        ? _commonHeaderText(context, "2. Which Side Hurts?",
                             _listOfSelectedDisease.length > 0)
                         : SizedBox(),
                     hasBodyParts == 1

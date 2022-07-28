@@ -147,7 +147,7 @@ class _MedicineInformationState extends State<MedicineInformation>
                             }
                           });
                         },
-                        child: Text('Add Medication',
+                        child: Text('New Medication',
                             style: TextStyle(color: AppColors.windsor)))
                   ],
                 ),

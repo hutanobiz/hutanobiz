@@ -152,7 +152,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
       body: LoadingBackgroundNew(
         addHeader: true,
         isLoading: _isLoading,
-        title: isPayment != 0 ? "Select Payment Methods" : "Payment Methods",
+        title: isPayment != 0 ? "Select a Payment Method" : "Payment Method",
         isAddBack: isPayment == 0,
         color: Colors.white,
         child: Stack(
@@ -234,7 +234,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                   .pushNamed(Routes.appointmentConfirmation);
                             }
                           } else {
-                            Widgets.showToast("Please select a payment method");
+                            Widgets.showToast("Select a Payment Method");
                           }
                         },
                       ),
@@ -377,7 +377,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
               if (snapshot.data == null) {
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                  child: Text("NO saved insurance available"),
+                  child: Text("No insurance info on file"),
                 );
               }
               List? _cardList = snapshot.data['data'];
@@ -385,7 +385,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
               if (_cardList == null || _cardList.isEmpty) {
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                  child: Text("NO saved Card available"),
+                  child: Text("No Credit Card on File"),
                 );
               } else {
                 return ListView.separated(

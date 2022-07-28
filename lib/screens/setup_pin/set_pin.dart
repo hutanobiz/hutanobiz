@@ -160,7 +160,7 @@ class _SetupPinState extends State<SetupPin> {
             ),
             Align(
               alignment: Alignment.center,
-              child: Text('SETUP FINGER PRINT LOGIN',
+              child: Text('Biometric Login',
                   style: TextStyle(
                     color: colorBlack2,
                     fontSize: fontSize17,
@@ -185,7 +185,7 @@ class _SetupPinState extends State<SetupPin> {
             ),
             Align(
               alignment: Alignment.center,
-              child: Text('Touch your finger print sensor',
+              child: Text('Use Fingerprint Sensor',
                   style: TextStyle(
                     color: colorBlack2.withOpacity(0.7),
                     fontSize: fontSize12,

@@ -28,7 +28,7 @@ class _CurrentAppointmentMedicalHistoryState
   List<String> socialHistoryUsages = ['Rarely', 'Socially', 'Daily'];
   List<String> socialHistorySmokingUsages = [
     '1-10 cigarettes per day',
-    'a Pack a day',
+    'One Pack a day',
     'More than one pack a day'
   ];
   @override
@@ -311,7 +311,7 @@ class _CurrentAppointmentMedicalHistoryState
       children: [
         SizedBox(height: 20),
         Text(
-          "Medical history",
+          "Medical History",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
         ),
         SizedBox(

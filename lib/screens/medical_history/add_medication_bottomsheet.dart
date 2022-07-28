@@ -86,7 +86,7 @@ class _AddMedicationBottomState extends State<AddMedicationBottomSheet> {
             children: [
               Text(
                   widget.status == '0'
-                      ? "Add medication"
+                      ? "New Medication"
                       : widget.status == '1'
                           ? "Review"
                           : "Discontinue",
@@ -110,7 +110,7 @@ class _AddMedicationBottomState extends State<AddMedicationBottomSheet> {
                               filled: true,
                               fillColor: AppColors.mineShaft.withOpacity(0.06),
                               contentPadding: EdgeInsets.all(10),
-                              hintText: 'Search Prescription',
+                              hintText: 'Medication. Eg. Aspirin',
                               prefixIconConstraints: BoxConstraints(),
                               prefixIcon: GestureDetector(
                                   onTap: () {},
@@ -338,7 +338,7 @@ class _AddMedicationBottomState extends State<AddMedicationBottomSheet> {
                               buttonColor: AppColors.windsor,
                               buttonHeight: 55,
                               title: widget.status == '0'
-                                  ? "Add medication"
+                                  ? "Add Medication"
                                   : widget.status == '1'
                                       ? "Review medication"
                                       : "Discontinue medication",

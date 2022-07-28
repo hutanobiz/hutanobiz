@@ -158,7 +158,7 @@ class _ProviderListScreenState extends State<ProviderListScreen> {
           isDense: true,
           fillColor: Colors.grey[100],
           labelStyle: TextStyle(fontSize: 13.0, color: Colors.grey),
-          labelText: "Search for providers",
+          labelText: "Search providers",
           hintStyle: TextStyle(
               color: colorBlack2,
               fontSize: fontSize13,

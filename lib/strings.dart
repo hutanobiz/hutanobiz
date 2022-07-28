@@ -6,7 +6,7 @@ class Strings {
   static const String enterPassword = "Please enter password";
   static const String enterValidEmail = "Enter a valid email address";
   static const String enterValidPassword =
-      "Password should be more than 6 characters";
+      "Password should at least 6 characters";
   static const String noInternet = "No Internet connection. Please try again";
   static const String loggedIn = "Logged in successfully";
   static const String datePattern = 'MMMM dd, yyyy';
@@ -171,7 +171,7 @@ class Strings {
   static const String errorEnterAddress = "Please enter address";
 
   static const String errorShortPassword =
-      "Password should be more than 6 characters";
+      "Password should be at least 6 characters";
 
   static const String errorZipCode = "Please enter zip code";
 
@@ -180,9 +180,9 @@ class Strings {
   static const String errorPassword = "Please enter Password";
 
   static const String errorValidPassword =
-      "Password should be more than 5 characters";
+      "Password should be at least 6 characters";
 
-  static const String accNowActive = "Your account is now active.";
+  static const String accNowActive = "A few more steps to go.";
 
   static const String activateEmail = "Activate your email.";
 
@@ -194,11 +194,11 @@ class Strings {
   static const String addFamilyDesc =
       "To collaborate with your family and friends.";
 
-  static const String addPaymentDesc = "For efficient checkout.";
+  static const String addPaymentDesc = "For Efficient Checkout.";
 
-  static const String addPaymentOption = "Add payment options.";
+  static const String addPaymentOption = "Add Payment Options.";
 
-  static const String addProvider = "Add providers to my network.";
+  static const String addProvider = "Add Providers to My Network.";
 
   static const String addProviderDesc =
       "To access your health team in one place.";
@@ -334,7 +334,7 @@ class Strings {
 
   static const String privacyPolicyLabel = "Privacy Policy";
 
-  static const String privacyPolicy = "I agree to Hutano ";
+  static const String privacyPolicy = "I agree to ";
 
   static const String dataSecurityStatement = "Hutano data security statement";
 
@@ -356,7 +356,7 @@ class Strings {
 
   static const String add = "Add";
 
-  static const String addCreateGroup = "Create new group";
+  static const String addCreateGroup = "Create New group";
 
   static const String addDoctorNetwork =
       "Add {{doctor}} to your Provider Network.";
@@ -371,13 +371,13 @@ class Strings {
 
   static const String onSite = "Onsite";
 
-  static const String videoChat = "Video Chat";
+  static const String videoChat = "Virtual Care";
 
   static const String upComing = "Upcoming";
 
   static const String reviewChart = "Review Chart";
 
-  static const String textPatient = "Text Patient";
+  static const String textPatient = "Message Patient";
 
   static const String callPatient = "Call Patient";
 
@@ -389,13 +389,13 @@ class Strings {
 
   static const String addProviders = "Add Providers";
 
-  static const String enterProviderName = "enter provider’s name";
+  static const String enterProviderName = "Enter Provider’s Name";
 
-  static const String enterProviderNumber = "enter provider’s phone number";
+  static const String enterProviderNumber = "Enter Provider’s Phone Number";
 
-  static const String searchByName = "Search by name";
+  static const String searchByName = "Search by Name";
 
-  static const String searchByNumber = "Search by phone number";
+  static const String searchByNumber = "Search by Phone Number";
 
   static const String skipThisTask = "SKIP THIS TASK";
 
@@ -407,7 +407,7 @@ class Strings {
 
   static const String continueLabel = "Continue";
 
-  static const String inviteByNumber = "invite by phone number";
+  static const String inviteByNumber = "Invite By Phone Number";
 
   static const String msgEnterPhoneNumber =
       "Enter the phone number used to create \nthe hutano profile.";
@@ -566,11 +566,11 @@ class Strings {
 
   static const String searchPhoneContacts = "Search my phone contacts";
 
-  static const String createPin = "Create a PIN";
+  static const String createPin = "Create a PIN to unlock the app";
 
-  static const String fasterLogin = "Faster Login";
+  static const String fasterLogin = "Enhanced Security";
 
-  static const String addToExistinGroup = "Add providers to a network";
+  static const String addToExistinGroup = "Add Provider a Group";
 
   static const String errorHealthInsurance = "Please select health insurance";
 
@@ -638,50 +638,50 @@ class Strings {
   static const String noAppointmentSelected =
       "Please select an appointment type";
 
-  static const String providerOfficeLabel = "At the provider's office";
+  static const String providerOfficeLabel = "At The Provider's Office";
 
-  static const String videoChatLabel = "Telemedicine Appointment";
+  static const String videoChatLabel = "Virtually by Video";
 
-  static const String onSiteLabel = "Onsite Appointment";
+  static const String onSiteLabel = "Onsite";
 
   //TODO Same Values In Below Three Strings For Now , Will Change After Client Feedback.
   static const String providerOfficeSubLabel =
       "Schedule an in-office appointment.";
 
-  static const String videoChatSubLabel = "Schedule an in-office appointment.";
+  static const String videoChatSubLabel = "Schedule an in-clinic appointment.";
 
-  static const String onSiteSubLabel = "Schedule an in-office appointment.";
+  static const String onSiteSubLabel = "Schedule an in-clinic appointment.";
 
-  static const String selectTimeSlot = "Select time slot";
+  static const String selectTimeSlot = "Select a Time Slot";
 
   static const String onDemandServiceLabel = "On Demand Service";
 
   static const String activeLabel = "ACTIVE";
 
-  static const String instantAppointmentLabel = "Instant appointment";
+  static const String instantAppointmentLabel = "Instant Appointment";
 
   static const String medicalHistoryLabel = "Medical History";
 
-  static const String enterPastConditionHint = "Enter past conditions";
+  static const String enterPastConditionHint = "Past Medical History. Eg. Heart Disease";
 
   static const String communicationCenterHeader = "Communication Center";
 
   static const String communicationCenterSubHeader =
-      "Sorry to hear there was a problem";
+      "Sorry you experienced a problem";
 
   static const String whatHappenedHeader = "What Happened?";
 
   static const String describeProblemHint = "Describe Problem";
 
-  static const String selectYearHint = "Select Year";
+  static const String selectYearHint = "Year";
 
-  static const String selectMonthHint = "Select Month";
+  static const String selectMonthHint = "Month";
 
-  static const String selectYearError = "Please select year";
+  static const String selectYearError = "Year";
 
   static const String selectMonthError = "Please select month";
 
-  static const String whenLabel = "When?";
+  static const String whenLabel = "When were you diagnosed?";
 
   static const String healthMonitoringHeader = "Health Monitoring";
 
@@ -711,9 +711,9 @@ class Strings {
 
   static const String bmrSubLabel = "Weight control";
 
-  static const String addPharmacyLabel = "Add a preferred pharmacy";
+  static const String addPharmacyLabel = "Your Pharmacy Is..";
 
-  static const String noMedicalHistoryFound = "No medical history found";
+  static const String noMedicalHistoryFound = "Add Medical History";
 
   static const String healthMonitoringLabel = "Health monitoring";
 
@@ -766,16 +766,16 @@ class Strings {
 
   static const String parkingInstHeader = "Parking Instructions";
 
-  static const String uploadMedicalDocsLabel = "Upload Medical Documents";
+  static const String uploadMedicalDocsLabel = "Imaging or Lab Reports?";
 
   static const String uploadMedicalDocsSubLabel =
-      "like labs and imaging reports";
+      "Upload Any Medical Documents";
 
-  static const String uploadMedicalImagesLabel = "Upload images";
+  static const String uploadMedicalImagesLabel = "Images are worth a thousand words!";
 
-  static const String uploadMedicalImagesSubLabel = "to support your condition";
+  static const String uploadMedicalImagesSubLabel = "Upload images to Support your Condition";
 
-  static const String errImageDate = "Image date can't be empty";
+  static const String errImageDate = "Enter image date";
 
   static const String noMedicalImagesFound = "No medical images found";
 
@@ -791,7 +791,7 @@ class Strings {
   static const String view = "View";
 
   static const String uploadFileLowerLabel =
-      "File should be pdf, docx, jpeg, png";
+      "Accepted file formats: pdf, docx, jpeg,and png";
 
   static const String uploadDocumentsLabel = "Upload documents";
 
@@ -805,15 +805,15 @@ class Strings {
 
   static const String documentLabel = "Document";
 
-  static const String whatKindOfDocLabel = "What kind of document is this?";
+  static const String whatKindOfDocLabel = "Type of Document?";
 
-  static const String whatBodyPartLabel = 'What is the body part';
+  static const String whatBodyPartLabel = 'Body part';
 
-  static const String errDocType = "Document type can't be empty";
+  static const String errDocType = "Enter document type";
 
-  static const String errDocName = "Document name can't be empty";
+  static const String errDocName = "Enter document name";
 
-  static const String errDocDate = "Document date can't be empty";
+  static const String errDocDate = "Enter document date";
 
   static const String onceADayDoseTime = "Once a day";
 
@@ -823,25 +823,25 @@ class Strings {
 
   static const String asNeededDoseTime = "As needed (PRN)";
 
-  static const String addMedicationMsg = "Please add medication";
+  static const String addMedicationMsg = "Add Medication";
 
   static const String doYouTakeMedication = "Do you take any medications?";
 
-  static const String searchAndAddMedication = "Search and add medications";
+  static const String searchAndAddMedication = "Search and Add Medications";
 
-  static const String doseOfMedicine = "Dose of medicine.";
+  static const String doseOfMedicine = "Medicine dose";
 
-  static const String frequencyOfDosage = "Frequency of dosage. ";
+  static const String frequencyOfDosage = "How often? ";
 
-  static const String clearAllLabel = "Clear all";
+  static const String clearAllLabel = "Clear All";
 
   static const String seeAllNotifications = "See all Notifications";
 
   static const String verificationFailed = "Verification failed";
 
-  static const String noNotificationsFound = "No notifications found";
+  static const String noNotificationsFound = "No Notifications";
 
-  static const String takeVitalsHeader = "Have you taken vitals recently? ";
+  static const String takeVitalsHeader = "Have You Taken Vitals Recently? ";
 
   static const String dateFieldHeader = "Date:";
 
@@ -873,7 +873,7 @@ class Strings {
   static const String uploadTypeOfDocLabel =
       "upload pdf, docx, jpeg, jpg or png files";
 
-  static const String myHutanoLibLabel = "Browse my Hutano library";
+  static const String myHutanoLibLabel = "Browse my Hutano files";
 
   static const String iAgreeLabel = "I Agree";
 
@@ -883,7 +883,7 @@ class Strings {
 
   static const String durationLabel = 'Duration ';
 
-  static const String chooseOfferedServices = "Choose offered services";
+  static const String chooseOfferedServices = "Other services";
 
   static const String treatedForCondition =
       "Have you been treated for this condition before?";
@@ -900,23 +900,23 @@ class Strings {
 
   static const String yearsLabel = "Years";
 
-  static const String fillEmptyFields = "Please fill empty fields";
+  static const String fillEmptyFields = "Please complete all fields";
 
   static const String currentMedicalHistoryHeader = "Current Medical History";
 
-  static const String chiefComplaintHeader = "Where is your chief complaint?";
+  static const String chiefComplaintHeader = "What is the problem?";
 
   static const String howLongHeader = "How long have you had this problem.";
 
-  static const String bodyPartHint = "body part";
+  static const String bodyPartHint = "what body part hurts";
 
   static const String rateYourDiscomfort = "Rate your discomfort";
 
-  static const String tellUsAboutCare = "Tell us why you are seeking care..";
+  static const String tellUsAboutCare = "Tell us why you are seeking care.";
 
   static const String tellUsAboutMore = "Tell us more about your condition.";
 
-  static const String searchForProblem = "Search for problems...";
+  static const String searchForProblem = "Health Issue.";
 
   static const String welcomeBackHeader = "Welcome Back";
 
@@ -924,19 +924,19 @@ class Strings {
 
   static const String newEpisodeHeader = "This is a new episode of care.";
 
-  static const String followUpAppointmentHeader = "Follow Up Appointment";
+  static const String followUpAppointmentHeader = "Follow Up Care";
 
-  static const String followUpHeader = "This is a follow up on a previous care";
+  static const String followUpHeader = "Follow up on previous care";
 
   static const String boneAndMuscleIssueHeader = "Bone and Muscle Issue";
 
-  static const String describeSymptomsHeader = "Describe symptoms.";
+  static const String describeSymptomsHeader = "Describe the Symptoms.";
 
-  static const String rateYourPainHeader = "Rate your pain";
+  static const String rateYourPainHeader = "Rate Your Pain 0-10";
 
-  static const String searchForBodyPart = "Search for body part";
+  static const String searchForBodyPart = "Which Body Part Hurts?";
 
-  static const String selectSideLabel = "Select Side";
+  static const String selectSideLabel = "Which Side";
   static const String stepOne = "1";
   static const String stepTwo = "2";
   static const String stepThree = "3";

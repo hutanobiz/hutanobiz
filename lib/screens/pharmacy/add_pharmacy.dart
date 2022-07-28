@@ -612,7 +612,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
                       padding: const EdgeInsets.all(spacing8),
                       child: Image.asset(FileConstants.icSearchBlack,
                           color: colorBlack2, width: 20, height: 20))),
-              hintText: 'Pharmacy Name',
+              hintText: 'Pharmacy. Eg. Walgreens',
               isDense: true,
               hintStyle: TextStyle(
                   color: colorBlack2,
