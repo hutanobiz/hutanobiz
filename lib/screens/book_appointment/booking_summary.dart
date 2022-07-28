@@ -41,7 +41,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
   List<String> socialHistoryUsages = ['Rarely', 'Socially', 'Daily'];
   List<String> socialHistorySmokingUsages = [
     '1-10 cigarettes per day',
-    'a Pack a day',
+    'One Pack a day',
     'More than one pack a day'
   ];
 

@@ -1033,7 +1033,7 @@ class _ConfirmBookAppointmentScreenState
           ),
           SizedBox(height: 5),
           Text(
-            "You will only be charged when the request has been accepted.",
+            "You will be charged when your request is accepted.",
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w500,

@@ -524,8 +524,8 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
               suffixheight: spacing12,
               suffixwidth: spacing12,
               isFieldEnable: false,
-              labelText: 'Location and type of care',
-              hintText: 'Location and type of care',
+              labelText: 'Where were you treated?',
+              hintText: 'Where were you treated?',
               textInputAction: TextInputAction.done),
         ));
   }

@@ -692,7 +692,7 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
         Padding(
           padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
           child: Text(
-            "Payment will be processed and disbursed to the provider after the appointment.",
+            "Note: You Payment will be disbursed to the provider after the appointment.",
             style: TextStyle(
                 color: colorBlack.withOpacity(0.9),
                 fontWeight: fontWeightRegular,

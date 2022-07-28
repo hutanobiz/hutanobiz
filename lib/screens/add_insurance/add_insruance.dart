@@ -180,7 +180,7 @@ class _AddInsuranceState extends State<AddInsurance> {
 
   void uploadInsuranceData() {
     if (_frontImage == null) {
-      DialogUtils.showAlertDialog(context, "Please select front image");
+      DialogUtils.showAlertDialog(context, "Insurance Card Front Image");
     } else {
       _addInsuranceModel.isPrimary =
           (widget.insuranceType == InsuranceType.primary);
