@@ -56,9 +56,9 @@ class ApiBaseHelper {
   // static const String base_u = "hutano.appening.xyz";
   // static const String base_url = "https://hutano.appening.xyz/";
   // static const String socket_url = "https://hutano.appening.xyz";
-  // static const String base_url = "https://dev.hutano.com/";
-  // static const String base_u = "dev.hutano.com";
-  // static const String socket_url = "https://dev.hutano.com";
+  static const String base_url = "https://dev.hutano.com/";
+  static const String base_u = "dev.hutano.com";
+  static const String socket_url = "https://dev.hutano.com";
 
   // static const String base_u = "staging.hutano.com";
   // static const String base_url = "https://staging.hutano.com/";
@@ -66,9 +66,9 @@ class ApiBaseHelper {
   // static const String base_u = "production.hutano.com/";
   // static const String base_url = "https://production.hutano.com/";
   // static const String socket_url = "https://production.hutano.com";
-  static const String base_u = "www.hutano.com/";
-  static const String base_url = "https://www.hutano.com/";
-  static const String socket_url = "https://www.hutano.com";
+  // static const String base_u = "www.hutano.com/";
+  // static const String base_url = "https://www.hutano.com/";
+  // static const String socket_url = "https://www.hutano.com";
 
   static const String image_base_url =
       "https://hutano-assets.s3.amazonaws.com/";
@@ -621,6 +621,18 @@ class ApiBaseHelper {
     });
   }
 
+   Future<dynamic> patientHoldResumeCall(String? token, Map map) {
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: token!,
+    };
+
+    return _netUtil
+        .post(base_url + "api/patient/hold-resume-call",
+            body: map, headers: headers)
+        .then((res) {
+      return res["response"];
+    });
+  }
   Future<dynamic> cancelRequest(String? token, Map rateDoctorData) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token!,

@@ -161,6 +161,8 @@ class _SignInScreenState extends State<SignInScreen> {
             onValueChanged: (value) {
               setState(() {
                 _keyPhone.currentState!.validate();
+                _enableButton = _keyPhone.currentState!.validate() &&
+                    _keyPassword.currentState!.validate();
               });
             },
             onCountryChanged: (cc) {
@@ -319,7 +321,8 @@ class _SignInScreenState extends State<SignInScreen> {
           setString(PreferenceKey.fullName, value.response!.fullName!);
           setString(PreferenceKey.id, value.response!.sId!);
           setString(PreferenceKey.tokens, value.response!.token!);
-          setString(PreferenceKey.phone, value.response!.phoneNumber.toString());
+          setString(
+              PreferenceKey.phone, value.response!.phoneNumber.toString());
           setInt(PreferenceKey.gender, value.response!.gender!);
           setString('patientSocialHistory',
               jsonEncode(value.response!.patientSocialHistory));

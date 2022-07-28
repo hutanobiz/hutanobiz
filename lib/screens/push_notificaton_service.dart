@@ -94,6 +94,18 @@ class PushNotificationService {
                 });
 
             break;
+            case 'hold_and_resume':
+            if (!isCurrent(Routes.trackTelemedicineAppointment,
+                message.data['appointmentId'])) {
+              showNotification(message);
+            } else {
+              Navigator.of(navigatorContext!).pushReplacementNamed(
+                Routes.trackTelemedicineAppointment,
+                arguments: message.data['appointmentId'],
+              );
+              showNotification(message);
+            }
+            break;
           case 'ready_to_join':
             if (message.data['isUserJoin'] == "true") {
               if (!isCurrent(Routes.trackTelemedicineAppointment,
@@ -303,6 +315,21 @@ class PushNotificationService {
           Routes.appointmentDetailScreen,
           arguments: message.data['appointmentId'],
         );
+        break;
+         case 'hold_and_resume':
+        if (!isCurrent(Routes.trackTelemedicineAppointment,
+            message.data['appointmentId'])) {
+          Navigator.pushNamed(
+            navigatorContext!,
+            Routes.trackTelemedicineAppointment,
+            arguments: message.data['appointmentId'],
+          );
+        } else {
+          Navigator.of(navigatorContext!).pushReplacementNamed(
+            Routes.trackTelemedicineAppointment,
+            arguments: message.data['appointmentId'],
+          );
+        }
         break;
       case 'ready_to_join':
         Navigator.pushNamed(

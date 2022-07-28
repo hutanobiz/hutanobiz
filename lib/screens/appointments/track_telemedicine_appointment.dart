@@ -220,37 +220,6 @@ class _TrackTelemedicineAppointmentState
     );
   }
 
-  Widget _onsiteButton(dynamic response) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: FancyButton(
-        buttonHeight: 55,
-        title: response[TRACK_STATUS_PROVIDER]["status"] == 5
-            ? "Treatment Summary"
-            : "Confirm Treatment End",
-        onPressed: () {
-          int status = response[TRACK_STATUS_PROVIDER]["status"] ?? 0;
-          switch (status) {
-            case 4:
-              showConfirmTreatmentDialog();
-              break;
-            case 5:
-              Map _map = {};
-              _map['id'] = widget.appointmentId;
-              _map['appointmentType'] = _appointmentType;
-              _map['latLng'] = _userLocation;
-
-              Navigator.of(context).pushNamed(
-                Routes.treatmentSummaryScreen,
-                arguments: _map,
-              );
-              break;
-          }
-        },
-      ),
-    );
-  }
-
 // 0:"status" -> 0
 // 1:"startcallTime" -> null
 // 2:"endcallTime" -> null
@@ -273,7 +242,7 @@ class _TrackTelemedicineAppointmentState
             response['isDoctorJoin']),
         timingSubWidget("Appointment Accepted", 0, status,
             response['isUserJoin'], response['isDoctorJoin']),
-        timingSubWidget('Provider Ready', 1, status, response['isUserJoin'],
+        timingSubWidget(response['isDoctorOnHold'] ? 'Provider on hold' :'Provider Ready', 1, status, response['isUserJoin'],
             response['isDoctorJoin']),
         timingSubWidget('Consult Complete', 2, status, response['isUserJoin'],
             response['isDoctorJoin']),
@@ -793,81 +762,115 @@ class _TrackTelemedicineAppointmentState
                                                     overlayProvider
                                                         .overlayEntry!.mounted
                                                 ? SizedBox()
-                                                : TrackingButton(
-                                                    title: 'Join Call',
-                                                    image:
-                                                        'images/ic_video_app.png',
-                                                    onTap: () async {
-                                                      Widgets.showCallDialog(
-                                                          context: context,
-                                                          isRejoin: false,
-                                                          onEnterCall: (bool
-                                                                  record,
-                                                              bool
-                                                                  video) async {
-                                                            Navigator.pop(
-                                                                context);
-                                                            print(
-                                                                '$record $video');
-                                                            Map<
-                                                                    Permission
-                                                                        .Permission,
-                                                                    Permission
-                                                                        .PermissionStatus>
-                                                                statuses =
-                                                                await [
-                                                              Permission
-                                                                  .Permission
-                                                                  .camera,
-                                                              Permission
-                                                                  .Permission
-                                                                  .microphone
-                                                            ].request();
-                                                            if ((statuses[Permission
-                                                                        .Permission
-                                                                        .camera]!
-                                                                    .isGranted) &&
-                                                                (statuses[Permission
-                                                                        .Permission
-                                                                        .microphone]!
-                                                                    .isGranted)) {
-                                                              Map appointment =
-                                                                  {};
-                                                              appointment[
-                                                                      "_id"] =
-                                                                  widget
-                                                                      .appointmentId;
-                                                              appointment[
-                                                                      'video'] =
-                                                                  video;
-                                                              appointment[
-                                                                      'record'] =
-                                                                  record;
-                                                              OverlayService()
-                                                                  .addVideosOverlay(
-                                                                      context,
-                                                                      CallPage(
-                                                                          channelName:
-                                                                              appointment));
-                                                              //     .then(
-                                                              //         (value) {
-                                                              //   _profileFuture =
-                                                              //       api.getAppointmentDetails(
-                                                              //           token,
-                                                              //           widget
-                                                              //               .appointmentId,
-                                                              //           _userLocation);
-                                                              //   setState(() {});
-                                                              // });
-                                                            } else {
-                                                              Widgets.showErrorialog(
+                                                : appointmentResponse['data']
+                                                        ['isPatientOnHold']
+                                                    ? TrackingButton(
+                                                        title: appointmentResponse[
+                                                                    'data'][
+                                                                'isPatientOnHold']
+                                                            ? 'Resume'
+                                                            : 'Pause',
+                                                        image:
+                                                            'images/watch.png',
+                                                        onTap: () {
+                                                          var appointmentId = {
+                                                            'appointmentId': widget
+                                                                .appointmentId,
+                                                            'isHold': appointmentResponse[
+                                                                        'data'][
+                                                                    'isPatientOnHold']
+                                                                ? 'false'
+                                                                : 'true'
+                                                          };
+
+                                                          api
+                                                              .patientHoldResumeCall(
+                                                                  token,
+                                                                  appointmentId)
+                                                              .then((value) {
+                                                            _profileFuture = api
+                                                                .getAppointmentDetails(
+                                                                    token,
+                                                                    widget
+                                                                        .appointmentId,
+                                                                    _userLocation);
+                                                            setState(() {});
+                                                          });
+                                                        })
+                                                    : appointmentResponse['data']
+                                                        ['isDoctorOnHold']
+                                                    ? SizedBox()
+                                                    : TrackingButton(
+                                                        title: 'Join Call',
+                                                        image:
+                                                            'images/ic_video_app.png',
+                                                        onTap: () async {
+                                                          Widgets
+                                                              .showCallDialog(
                                                                   context:
                                                                       context,
-                                                                  description:
-                                                                      'Camera & Microphone permission Requied');
-                                                            }
-                                                          });
-                                                    })
+                                                                  isRejoin:
+                                                                      false,
+                                                                  onEnterCall: (bool
+                                                                          record,
+                                                                      bool
+                                                                          video) async {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                    print(
+                                                                        '$record $video');
+                                                                    Map<
+                                                                            Permission
+                                                                                .Permission,
+                                                                            Permission.PermissionStatus>
+                                                                        statuses =
+                                                                        await [
+                                                                      Permission
+                                                                          .Permission
+                                                                          .camera,
+                                                                      Permission
+                                                                          .Permission
+                                                                          .microphone
+                                                                    ].request();
+                                                                    if ((statuses[Permission.Permission.camera]!
+                                                                            .isGranted) &&
+                                                                        (statuses[Permission.Permission.microphone]!
+                                                                            .isGranted)) {
+                                                                      Map appointment =
+                                                                          {};
+                                                                      appointment[
+                                                                              "_id"] =
+                                                                          widget
+                                                                              .appointmentId;
+                                                                      appointment[
+                                                                              'video'] =
+                                                                          video;
+                                                                      appointment[
+                                                                              'record'] =
+                                                                          record;
+                                                                      OverlayService().addVideosOverlay(
+                                                                          context,
+                                                                          CallPage(
+                                                                              channelName: appointment));
+                                                                      //     .then(
+                                                                      //         (value) {
+                                                                      //   _profileFuture =
+                                                                      //       api.getAppointmentDetails(
+                                                                      //           token,
+                                                                      //           widget
+                                                                      //               .appointmentId,
+                                                                      //           _userLocation);
+                                                                      //   setState(() {});
+                                                                      // });
+                                                                    } else {
+                                                                      Widgets.showErrorialog(
+                                                                          context:
+                                                                              context,
+                                                                          description:
+                                                                              'Camera & Microphone permission Requied');
+                                                                    }
+                                                                  });
+                                                        })
                                 : Row(
                                     children: [
                                       isUserJoin! || isDoctorJoin!
@@ -996,7 +999,38 @@ class _TrackTelemedicineAppointmentState
                                                       setState(() {});
                                                     });
                                                   })
-                                              : SizedBox()
+                                              : TrackingButton(
+                                                  title: appointmentResponse[
+                                                              'data']
+                                                          ['isPatientOnHold']
+                                                      ? 'Resume'
+                                                      : 'Pause',
+                                                  image: 'images/watch.png',
+                                                  onTap: () {
+                                                    var appointmentId = {
+                                                      'appointmentId':
+                                                          widget.appointmentId,
+                                                      'isHold': appointmentResponse[
+                                                                  'data'][
+                                                              'isPatientOnHold']
+                                                          ? 'false'
+                                                          : 'true'
+                                                    };
+
+                                                    api
+                                                        .patientHoldResumeCall(
+                                                            token,
+                                                            appointmentId)
+                                                        .then((value) {
+                                                      _profileFuture = api
+                                                          .getAppointmentDetails(
+                                                              token,
+                                                              widget
+                                                                  .appointmentId,
+                                                              _userLocation);
+                                                      setState(() {});
+                                                    });
+                                                  })
                                     ],
                                   )
               ],
@@ -1070,146 +1104,6 @@ class _TrackTelemedicineAppointmentState
           color: Colors.grey,
         ),
       ],
-    );
-  }
-
-  onsiteChangeRequestStatus(String id, String status) {
-    Map map = Map();
-    map["trackingStatusProvider.status"] = status;
-    api.onsiteAppointmentTrackingStatus(token, map, id).then((value) {
-      if (status == '5') {
-        setState(() {
-          _isLoading = false;
-        });
-        var appointmentCompleteMap = {};
-        appointmentCompleteMap['appointmentId'] = widget.appointmentId;
-        appointmentCompleteMap['type'] =
-            appointmentResponse['data']['type'].toString();
-        appointmentCompleteMap['name'] = name;
-        appointmentCompleteMap['avatar'] = avatar;
-        appointmentCompleteMap["dateTime"] =
-            DateFormat('dd MMM yyyy, HH:mm').format(DateTime.now());
-
-        Navigator.of(context)
-            .pushNamed(
-          Routes.appointmentCompleteConfirmation,
-          arguments: appointmentCompleteMap,
-        )
-            .then((value) {
-          _profileFuture = api.getAppointmentDetails(token, id, _userLocation);
-        });
-      } else {
-        if (mounted) {
-          setState(() {
-            _profileFuture =
-                api.getAppointmentDetails(token, id, _userLocation);
-          });
-          value.toString().debugLog();
-        }
-      }
-    }).futureError((error) {
-      Widgets.showToast(error.toString());
-      error.toString().debugLog();
-    });
-  }
-
-  void showConfirmTreatmentDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(14.0),
-            ),
-          ),
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(
-                14.0,
-              ),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text(
-                  "The treatment is complete",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black,
-                  ),
-                ),
-                SizedBox(height: 20),
-                Text(
-                  "Please select confirm to complete treatment.",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black,
-                  ),
-                ),
-                SizedBox(height: 26),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: FlatButton(
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10.0),
-                          ),
-                          side:
-                              BorderSide(width: 0.3, color: AppColors.windsor),
-                        ),
-                        child: Text(
-                          "Cancel",
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: AppColors.windsor,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        onPressed: () => Navigator.of(context).pop(),
-                      ),
-                    ),
-                    SizedBox(width: 20),
-                    Expanded(
-                      child: FlatButton(
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
-                          color: AppColors.windsor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10.0),
-                            ),
-                          ),
-                          child: Text(
-                            "Confirm",
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-
-                            onsiteChangeRequestStatus(
-                                widget.appointmentId!, "5");
-                          }),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 }
