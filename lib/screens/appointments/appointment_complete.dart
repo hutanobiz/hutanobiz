@@ -17,7 +17,7 @@ class AppointmentCompleteConfirmation extends StatelessWidget {
           children: <Widget>[
             SizedBox(height: 40),
             Center(
-              child: Text("Appointment Completed!!",
+              child: Text("Appointment Completed.",
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -97,7 +97,7 @@ class AppointmentCompleteConfirmation extends StatelessWidget {
                       ),
                     ),
                     label: Text(
-                      "Rate provider",
+                      "Rate Provider",
                       style: TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.w500,

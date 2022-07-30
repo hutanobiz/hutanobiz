@@ -159,7 +159,7 @@ class SummaryHeaderWidget extends StatelessWidget {
           value: mrn,
         ),
         RichTextWidget(
-          keyText: 'Service Location',
+          keyText: 'Service Type',
           value: appointmentType,
         )
 

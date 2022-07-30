@@ -185,7 +185,7 @@ class GoalWidget extends StatelessWidget {
       goal!.improvements != null && goal!.improvements!.length > 0
           ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
-                'Treatment options: ',
+                'Treatment Plan: ',
                 style: AppTextStyle.semiBoldStyle(fontSize: 14),
               ),
               ListView.builder(

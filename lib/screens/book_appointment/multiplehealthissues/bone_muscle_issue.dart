@@ -490,7 +490,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                         controller: notesController,
                         textInputAction: TextInputAction.done,
                         decoration: InputDecoration(
-                          hintText: 'Additional notes',
+                          hintText: 'Additional Notes',
                           enabledBorder: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10.0)),

@@ -134,7 +134,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                                 height: 10,
                               ),
                               Text(
-                                'How was your experience?',
+                                'What went well?',
                                 style: TextStyle(fontSize: 18),
                               ),
                             ],
@@ -678,7 +678,7 @@ class _RateDoctorScreenState extends State<RateDoctorScreen> {
                 ),
                 SizedBox(height: 15),
                 Text(
-                  "Thank You.\nWe value your feedback.",
+                  "Thank You For Using Hutano.\nYou Feedback is Valuable.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,

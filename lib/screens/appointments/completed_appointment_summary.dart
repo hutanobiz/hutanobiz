@@ -524,7 +524,7 @@ class _CompletedAppointmentSummaryState
                 ),
                 SizedBox(width: 4),
                 Text(
-                  "Treatment Options",
+                  "Treatment Plan",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                 ),
               ],
