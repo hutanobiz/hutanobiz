@@ -113,9 +113,9 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok>
 
     Widgets.showConfirmationDialog(
         context: navigatorKey.currentState!.overlay!.context,
-        description: "Are you sure you want to remove \n Dr. ${name} ?",
+        description: "Delete Dr. ${name} ?",
         title: "",
-        leftText: "Remove",
+        leftText: "Delete",
         rightText: "Cancel",
         onLeftPressed: () {
           _onRemove(index, subIndex);
@@ -217,7 +217,7 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok>
                 onGroupDelete: (val) {
                   Widgets.showConfirmationDialog(
                     context: context,
-                    description: "Are you sure to delete this group?",
+                    description: "Delete This Group?",
                     onLeftPressed: () {
                       _deleteAddress(val);
                     },
@@ -310,7 +310,7 @@ class _MyProviderNetwrokState extends State<MyProviderNetwrok>
                         padding: const EdgeInsets.all(spacing8),
                         child: Image.asset(FileConstants.icSearchBlack,
                             color: colorBlack2, width: 20, height: 20))),
-                hintText: "Search provider to add in network",
+                hintText: "Find and Add Providers To Your Network",
                 isDense: true,
                 hintStyle: TextStyle(
                     color: colorBlack2,

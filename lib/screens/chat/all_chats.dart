@@ -111,7 +111,7 @@ class _ChatMainState extends State<ChatMain> {
                     ),
                   ),
                 ),
-                hintText: 'Search provider by name',
+                hintText: 'Find Provider By Name',
                 isDense: true,
                 hintStyle: TextStyle(
                     color: colorBlack2,
@@ -172,7 +172,7 @@ class _ChatMainState extends State<ChatMain> {
           ? Expanded(
               child: Center(
                 child: Text(
-                  'Search Provider to chat',
+                  'No Active Messaging Yet.\n You can only communicate directly with providers who are actively caring for you, and \n upto 24 hours after an appointment.',
                   style: TextStyle(
                       fontSize: 16,
                       color: colorBlack2,

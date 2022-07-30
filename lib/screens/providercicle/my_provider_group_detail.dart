@@ -349,7 +349,7 @@ class _MyProviderGroupDetailState extends State<MyProviderGroupDetail> {
                     width: 16,
                   ),
                 ),
-                hintText: 'Search provider',
+                hintText: 'Find Provider',
                 isDense: true,
                 hintStyle: TextStyle(
                     color: colorBlack2,

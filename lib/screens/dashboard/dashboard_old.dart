@@ -690,7 +690,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             filled: true,
             fillColor: AppColors.snow,
             labelStyle: TextStyle(fontSize: 13.0, color: Colors.grey),
-            hintText: "Search provider by name or speciality",
+            hintText: "Find Provider By Name or Speciality",
             prefixIcon: Padding(
               padding: const EdgeInsets.all(13.0),
               child: Image.asset(
