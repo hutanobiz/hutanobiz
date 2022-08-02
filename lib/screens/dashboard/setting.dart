@@ -60,7 +60,7 @@ class _SettingsScreenState extends State<SettingScreen> {
               email = response['response']['email']?.toString() ?? "---";
               avatar = response['response']['avatar']?.toString();
               String phoneNumber =
-                  (response['response']['phoneNumber']?.toString() ??'');
+                  (response['response']['phoneNumber']?.toString() ?? '');
               phoneNumber = "(" +
                   phoneNumber.substring(0, 3) +
                   ") " +
@@ -261,7 +261,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                     Expanded(
                       child: quickLinks(
                               'assets/images/profile_notification.png',
-                              'Notifications')
+                              'Alerts')
                           .onClick(
                         onTap: () {
                           Navigator.of(context).pushNamed(
@@ -271,8 +271,9 @@ class _SettingsScreenState extends State<SettingScreen> {
                       ),
                     ),
                     Expanded(
-                      child: quickLinks('assets/images/consultation_history.png',
-                              'Consultation history')
+                      child: quickLinks(
+                              'assets/images/consultation_history.png',
+                              'Past \nConsults')
                           .onClick(
                         onTap: () {
                           Navigator.of(context).pushNamed(
@@ -287,8 +288,8 @@ class _SettingsScreenState extends State<SettingScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                        child: quickLinks(
-                                'assets/images/health_record.png', 'Health records')
+                        child: quickLinks('assets/images/health_record.png',
+                                'My \nRecords')
                             .onClick(onTap: () {
                       Navigator.of(context).pushNamed(
                         Routes.myMedicalDocuments,
@@ -296,7 +297,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                     })),
                     Expanded(
                       child: quickLinks('assets/images/health_monitoring.png',
-                              'Health monitoring')
+                              'Health \nTracker')
                           .onClick(
                         onTap: () {
                           Navigator.of(context).pushNamed(
@@ -312,7 +313,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                   children: [
                     Expanded(
                       child: quickLinks('assets/images/calender_reminder.png',
-                              'Calendar reminder')
+                              'Future \nVisits')
                           .onClick(
                         onTap: () {
                           Navigator.of(context).pushNamed(
@@ -324,7 +325,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                     Expanded(
                       child: quickLinks(
                               'assets/images/profile_payment_method.png',
-                              'Payment Method')
+                              'Payment Methods')
                           .onClick(
                         onTap: () {
                           InheritedContainerState _container =
@@ -344,8 +345,8 @@ class _SettingsScreenState extends State<SettingScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: quickLinks(
-                              'assets/images/profile_address.png', 'Address')
+                      child: quickLinks('assets/images/profile_address.png',
+                              'Service \nAddress')
                           .onClick(
                         onTap: () {
                           Navigator.of(context).pushNamed(
@@ -357,7 +358,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                     ),
                     Expanded(
                       child: quickLinks('assets/images/profile_medical_doc.png',
-                              'My Medical Documents')
+                              'Hutano \nDrive')
                           .onClick(onTap: () {
                         Navigator.of(context).pushNamed(
                           Routes.myMedicalDocuments,
@@ -431,7 +432,7 @@ class _SettingsScreenState extends State<SettingScreen> {
                     Expanded(
                       child: quickLinks(
                               'assets/images/profile_my_medications.png',
-                              'My Medications')
+                              'Meds \nList')
                           .onClick(
                         onTap: () {
                           Navigator.of(context).pushNamed(

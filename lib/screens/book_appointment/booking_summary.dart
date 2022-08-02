@@ -448,7 +448,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
       physics: NeverScrollableScrollPhysics(),
       children: [
         Text(
-          "Problems",
+          "Ok, Lets Sum it up! \n Does this look correct?",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
         ),
         SizedBox(height: 20),
@@ -476,7 +476,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
       children: [
         SizedBox(height: 20),
         Text(
-          "Medical images",
+          "Photos of the problem",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
         ),
         SizedBox(height: 20),
@@ -733,7 +733,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
       children: [
         SizedBox(height: 20),
         Text(
-          "Medications",
+          "Medication List",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
         ),
         SizedBox(height: 20),
@@ -773,7 +773,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       SizedBox(height: 20),
       Text(
-        "Preferred Pharmacy",
+        "Your Pharmacy",
         style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
       ),
       SizedBox(height: 20),

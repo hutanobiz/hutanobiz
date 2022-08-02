@@ -88,7 +88,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                 _closedAppointmentsList.isEmpty &&
                 ondemandAppointmentsList!.isEmpty)
               return Center(
-                child: Text("No appointments."),
+                child: Text("Waiting for your first appointement."),
               );
             else
               return SingleChildScrollView(

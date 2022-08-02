@@ -334,14 +334,14 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
         title: ListTile(
           contentPadding: EdgeInsets.all(0),
           title: Text(
-            'Vaccination Documents',
+            'Do you have vaccination records?',
             style: TextStyle(
                 fontSize: fontSize15,
                 fontWeight: fontWeightSemiBold,
                 color: Colors.black),
           ),
           subtitle: Text(
-            'Like Covid 19',
+            'Take pictures and store them here for providers to review.',
             style: TextStyle(
                 fontSize: fontSize12,
                 fontWeight: fontWeightRegular,

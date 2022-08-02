@@ -106,7 +106,7 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
         child: Align(
           alignment: Alignment.topLeft,
           child: Text(
-            'Allergies',
+            'Do you have allergies?',
             style: const TextStyle(
                 color: colorDarkBlack,
                 fontWeight: fontWeightBold,
@@ -138,7 +138,7 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
                         padding: const EdgeInsets.all(spacing8),
                         child: Image.asset(FileConstants.icSearchBlack,
                             color: colorBlack2, width: 20, height: 20))),
-                hintText: 'Allergy. eg morphine',
+                hintText: 'What are you allergic to?',
                 isDense: true,
                 hintStyle: TextStyle(
                     color: colorBlack2,
@@ -193,7 +193,7 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
           ? Expanded(
               child: Center(
                 child: Text(
-                  'Add Allergies',
+                  'Food or Drug Allergies',
                   style: TextStyle(
                       fontSize: 16,
                       color: colorBlack2,
@@ -220,9 +220,10 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
                           itemBuilder: (BuildContext context) =>
                               <PopupMenuEntry<String>>[
                             _popMenuCommonItem(
-                                context,
-                                Localization.of(context)!.remove,
-                                FileConstants.icRemoveBlack) as PopupMenuEntry<String>
+                                    context,
+                                    Localization.of(context)!.remove,
+                                    FileConstants.icRemoveBlack)
+                                as PopupMenuEntry<String>
                           ],
                           child: Container(
                             padding: EdgeInsets.symmetric(horizontal: 8),

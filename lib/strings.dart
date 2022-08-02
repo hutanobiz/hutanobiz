@@ -18,7 +18,7 @@ class Strings {
   static const String introTitle1 = "Flexible Scheduling";
 
   static const String introSubTitle1 =
-      "Easy self-scheduling from your \nmobile device. ";
+      "Self-schedule healthcare appointments. \n You are no in control of your care! ";
 
   static const String introTitle2 = "Health Records";
 
@@ -26,10 +26,9 @@ class Strings {
       "Receive care by video or text using a \nmobile device or computer.";
 
   static const String introSubTitle2 =
-      "Store medical records in the cloud for easy access. ";
+      "Store and manage medical records \n using one easy-to-use interface. ";
 
-  static const String introSubTitle3 =
-      "Book an appointment to receive care \nin your home. ";
+  static const String introSubTitle3 = "\nin your home. ";
 
   static const String introTitle3 = "Onsite Visits";
 
@@ -56,9 +55,9 @@ class Strings {
 
   static const String msgEnterValidAddress = "Please enter valid email address";
 
-  static const String signIn = "Don't have an account? ";
+  static const String signIn = "New to Hutano? ";
 
-  static const String signInTitle = "Please sign in to continue.";
+  static const String signInTitle = "Sign in to continue.";
 
   static const String msgEnterName = "Please enter a name";
 
@@ -78,7 +77,7 @@ class Strings {
 
   static const String remembermeTitle = "Remember me";
 
-  static const String register = "Register";
+  static const String register = "Create an Account";
 
   static const String enterPin = "Enter Pin";
 
@@ -110,11 +109,12 @@ class Strings {
 
   static const String msgGetCode = "Get code via Call";
 
-  static const String msgOtpReceived = "Enter the OTP you received at";
+  static const String msgOtpReceived =
+      "Check out the text message from Hutano. n\ Enter the code sent to:";
 
-  static const String resend = "Resend";
+  static const String resend = "Resend Code";
 
-  static const String verifyCode = "Verify code";
+  static const String verifyCode = "Verify Code";
 
   static const String verify = "Verify";
 
@@ -150,7 +150,8 @@ class Strings {
 
   static const String next = "Next";
 
-  static const String uploadPhoto = "Upload Photo";
+  static const String uploadPhoto =
+      "Upload Photo \n so the provider can recognize you.";
 
   static const String zipcode = "Zip Code";
 
@@ -158,7 +159,8 @@ class Strings {
 
   static const String female = "Female";
 
-  static const String createAccount = "Let's start creating your account.";
+  static const String createAccount =
+      "Ok! We need some basic information \n about you.";
 
   static const String errorEnterFirstName = "Please enter first name";
 
@@ -182,7 +184,7 @@ class Strings {
   static const String errorValidPassword =
       "Password should be at least 6 characters";
 
-  static const String accNowActive = "A few more steps to go.";
+  static const String accNowActive = "A few more steps before we wrap this up!";
 
   static const String activateEmail = "Activate your email.";
 
@@ -219,7 +221,7 @@ class Strings {
   static const String emailVerification = "Email Verification";
 
   static const String enterActivationCode =
-      "Enter the activation code in the email \n from {{email}}.";
+      "Check your email {{email}} for a one time code (OTP).";
 
   static const String stepOneofFour = "Step 1 of 4";
 
@@ -244,7 +246,7 @@ class Strings {
 
   static const String required = "Required";
 
-  static const String addSecondaryInsurance = "Add Secondary Insurance";
+  static const String addSecondaryInsurance = "Add a Secondary Insurance";
 
   static const String additionalCreditCard = "Additional Credit Card";
 
@@ -326,9 +328,9 @@ class Strings {
   static const String redeemPoints = "REDEEM POINTS";
 
   static const String msgVerification =
-      "A 6 digit verification will be sent via SMS \n to verify your phone number!";
+      "A 6 digit verification code will be sent via SMS \n to verify your phone number!";
 
-  static const String yourPhone = "Your Phone";
+  static const String yourPhone = "New Account";
 
   static const String termsAndCondition = "Terms & Conditions";
 
@@ -662,7 +664,8 @@ class Strings {
 
   static const String medicalHistoryLabel = "Medical History";
 
-  static const String enterPastConditionHint = "Past Medical History. Eg. Heart Disease";
+  static const String enterPastConditionHint =
+      "Past Medical History. Eg. Heart Disease";
 
   static const String communicationCenterHeader = "Communication Center";
 
@@ -771,9 +774,11 @@ class Strings {
   static const String uploadMedicalDocsSubLabel =
       "Upload Any Medical Documents";
 
-  static const String uploadMedicalImagesLabel = "Images are worth a thousand words!";
+  static const String uploadMedicalImagesLabel =
+      "Images are worth a thousand words!";
 
-  static const String uploadMedicalImagesSubLabel = "Upload images to Support your Condition";
+  static const String uploadMedicalImagesSubLabel =
+      "Upload images to Support your Condition";
 
   static const String errImageDate = "Enter image date";
 
@@ -914,7 +919,7 @@ class Strings {
 
   static const String tellUsAboutCare = "Tell us why you are seeking care.";
 
-  static const String tellUsAboutMore = "Tell us more about your condition.";
+  static const String tellUsAboutMore = "What is the main problem?";
 
   static const String searchForProblem = "Health Issue.";
 

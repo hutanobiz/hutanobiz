@@ -26,10 +26,10 @@ class LocalizationEN implements Localization {
   String get msgEnterValidAddress => "Please enter a valid email address";
 
   @override
-  String get signIn => "Don't have an account? ";
+  String get signIn => "New to Hutano? ";
 
   @override
-  String get signInTitle => "Please sign in to continue.";
+  String get signInTitle => "Sign in to continue.";
 
   @override
   String get msgEnterName => "Please enter a name";
@@ -62,7 +62,7 @@ class LocalizationEN implements Localization {
   String get remembermeTitle => "Remember me";
 
   @override
-  String get register => "Register";
+  String get register => "Create an Account";
 
   String get enterPin => "Enter Pin";
 
@@ -107,7 +107,8 @@ class LocalizationEN implements Localization {
   String get msgGetCode => "Get code via Call";
 
   @override
-  String get msgOtpReceived => "Enter the OTP you received at";
+  String get msgOtpReceived =>
+      "Check out the text message from Hutano. \n Enter the code sent to:";
 
   @override
   String get resend => "Resend";
@@ -166,7 +167,7 @@ class LocalizationEN implements Localization {
   String get next => "Next";
 
   @override
-  String get uploadPhoto => "Upload Photo";
+  String get uploadPhoto => "Upload a photo";
 
   @override
   String get zipcode => "Zip Code";
@@ -178,28 +179,28 @@ class LocalizationEN implements Localization {
   String get female => "Female";
 
   @override
-  String get createAccount => "Let's start creating your account.";
+  String get createAccount => "Ok! Tell us about you.";
 
   @override
-  String get errorEnterFirstName => "Please enter fist name";
+  String get errorEnterFirstName => "Enter your first name";
 
   @override
-  String get errorEnterLastName => "Please enter last name";
+  String get errorEnterLastName => "Enter your last name";
 
   @override
-  String get errorEnterPassword => "Please enter password";
+  String get errorEnterPassword => "Enter a password";
 
   @override
-  String get errorEnterCity => "Please enter city";
+  String get errorEnterCity => "City";
 
   @override
-  String get errorEnterAddress => "Please enter address";
+  String get errorEnterAddress => "Address";
 
   @override
   String get errorShortPassword => "Password should be at least 6 characters";
 
   @override
-  String get errorZipCode => "Please enter zip code";
+  String get errorZipCode => "Zip code";
 
   @override
   String get errorPhoneNo => "Please enter phone no";
@@ -210,22 +211,22 @@ class LocalizationEN implements Localization {
   String get errorValidPassword => "Password should be at least 6 characters";
 
   @override
-  String get accNowActive => "A few more stepe to go.";
+  String get accNowActive => "A few more steps before we wrap this up!";
 
   @override
-  String get activateEmail => "Activate your email.";
+  String get activateEmail => "Email Verification.";
 
   @override
-  String get activateEmailDesc => "To receive important health notifications.";
+  String get activateEmailDesc => "Required to secure your account.";
 
   @override
   String get addFamily => "Add family to my network.";
 
   @override
-  String get addFamilyDesc => "To collaborate with your family and friends.";
+  String get addFamilyDesc => "Include trusted people to access your account.";
 
   @override
-  String get addPaymentDesc => "For efficient checkout.";
+  String get addPaymentDesc => "To securely pay for out-of-pocket costs.";
 
   @override
   String get addPaymentOption => "Add payment options.";
@@ -234,10 +235,11 @@ class LocalizationEN implements Localization {
   String get addProvider => "Add providers to my network.";
 
   @override
-  String get addProviderDesc => "To access your health team in one place.";
+  String get addProviderDesc => "To access your health team easily.";
 
   @override
-  String get completeTask => "Complete these important tasks now \nor later.";
+  String get completeTask =>
+      "You may skip any of these 4 steps \nand complete later.";
 
   @override
   String get welcome => "Welcome!";
@@ -255,11 +257,11 @@ class LocalizationEN implements Localization {
   String get didReceiveTheCode => "Didn't receive code?";
 
   @override
-  String get emailVerification => "Email Verification";
+  String get emailVerification => "Email Verified!";
 
   @override
   String get enterActivationCode =>
-      "Enter the activation code in the email \n from {{email}}.";
+      "Check you email {{email}} \nWe just sent you the verification code.";
 
   @override
   String get stepOneofFour => "Step 1 of 4";
@@ -271,7 +273,7 @@ class LocalizationEN implements Localization {
   String get complete => "Complete";
 
   @override
-  String get taskComplete => "Task complete!";
+  String get taskComplete => "Three More Steps to Go!";
 
   @override
   String get addCreditCardAndInsurance =>
@@ -299,7 +301,7 @@ class LocalizationEN implements Localization {
   String get required => "Required";
 
   @override
-  String get addSecondaryInsurance => "Add Secondary Insurance";
+  String get addSecondaryInsurance => "Add a Secondary Insurance";
 
   @override
   String get additionalCreditCard => "Additional Credit Card";
@@ -419,10 +421,10 @@ class LocalizationEN implements Localization {
 
   @override
   String get msgVerification =>
-      "A 6 digit verification will be sent via SMS \n to verify your phone number!";
+      "A 6 digit verification code will be sent via SMS \n to verify your phone number!";
 
   @override
-  String get yourPhone => "Your Phone";
+  String get yourPhone => "New Account";
 
   @override
   String get termsAndCondition => "Terms & Conditions";
@@ -728,14 +730,14 @@ class LocalizationEN implements Localization {
 
   @override
   String get introSubTitle1 =>
-      "Easy self-scheduling from your \nmobile device. ";
+      "Self-schedule healthcare appointments. \n You are now in control of your care! ";
 
   @override
   String get introTitle2 => "Health Records";
 
   @override
   String get introSubTitle4 =>
-      "Receive care by video or text using a \nmobile device or computer.";
+      "Receive care virtually via telemedicine \n with you local healthcare provider";
 
   @override
   String get introSubTitle2 =>
@@ -743,7 +745,7 @@ class LocalizationEN implements Localization {
 
   @override
   String get introSubTitle3 =>
-      "Book an appointment to receive care \nin your home. ";
+      "Need a provider to come right to your door\n try Hutano's Onsite Care. ";
 
   @override
   String get introTitle3 => "Onsite Visits";
@@ -773,7 +775,7 @@ class LocalizationEN implements Localization {
   String get insuranceCompany => "Insurance Company";
 
   @override
-  String get insuranceMemberName => "Insured Member Name";
+  String get insuranceMemberName => "Insured Member";
 
   @override
   String get memberId => "Member ID:";
@@ -782,7 +784,7 @@ class LocalizationEN implements Localization {
   String get skipForLater => "Skip for later";
 
   @override
-  String get uploadInsuranceCardImage => "Upload Insurance card image.";
+  String get uploadInsuranceCardImage => "Upload Insurance Card Images.";
 
   @override
   String get addCard => "ADD CARD";
@@ -911,23 +913,23 @@ class LocalizationEN implements Localization {
   String get noAppointmentSelected => "Please select an appointment type";
 
   @override
-  String get providerOfficeLabel => "At the provider's office";
+  String get providerOfficeLabel => "Office Appointment";
 
   @override
-  String get videoChatLabel => "Video Chat Appointment";
+  String get videoChatLabel => "Virtual Appointment";
 
   @override
   String get onSiteLabel => "Onsite Appointment";
 
   //TODO Same Values In Below Three Strings For Now , Will Change After Client Feedback.
   @override
-  String get providerOfficeSubLabel => "Schedule an in-office appointment.";
+  String get providerOfficeSubLabel => "Get care at the provider's office.";
 
   @override
-  String get videoChatSubLabel => "Schedule an online video appointment.";
+  String get videoChatSubLabel => "Video Conference Appointment.";
 
   @override
-  String get onSiteSubLabel => "Schedule an onsite appointment.";
+  String get onSiteSubLabel => "Have the provider come to you.";
 
   @override
   String get selectTimeSlot => "Select time slot";
@@ -942,10 +944,10 @@ class LocalizationEN implements Localization {
   String get instantAppointmentLabel => "Instant appointment";
 
   @override
-  String get medicalHistoryLabel => "Medical History";
+  String get medicalHistoryLabel => "Significant Medical Conditions";
 
   @override
-  String get enterPastConditionHint => "Enter Medical History";
+  String get enterPastConditionHint => "Tell us past medical diagnoses";
 
   @override
   String get communicationCenterHeader => "Communication Center";
@@ -973,7 +975,7 @@ class LocalizationEN implements Localization {
   String get selectMonthError => "Please select month";
 
   @override
-  String get whenLabel => "When?";
+  String get whenLabel => "   When where you diagnosed? ";
 
   @override
   String get healthMonitoringHeader => "Health Monitoring";
@@ -1018,10 +1020,10 @@ class LocalizationEN implements Localization {
   String get bmrSubLabel => "Weight control";
 
   @override
-  String get addPharmacyLabel => "Your Preferred Pharmacy";
+  String get addPharmacyLabel => "What is your pharmacy of choice?";
 
   @override
-  String get noMedicalHistoryFound => "No medical history found";
+  String get noMedicalHistoryFound => "Surgical, and Medical History ";
 
   @override
   String get healthMonitoringLabel => "Health monitoring";
@@ -1099,16 +1101,18 @@ class LocalizationEN implements Localization {
   String get parkingInstHeader => "Parking Instructions";
 
   @override
-  String get uploadMedicalDocsLabel => "Upload Medical Documents";
+  String get uploadMedicalDocsLabel => "Do have medical documents to share?";
 
   @override
-  String get uploadMedicalDocsSubLabel => "like labs and imaging reports";
+  String get uploadMedicalDocsSubLabel =>
+      "take photos or upload medical documents pertinent to this issue";
 
   @override
-  String get uploadMedicalImagesLabel => "Upload images";
+  String get uploadMedicalImagesLabel => "Images are worth a thousand words.";
 
   @override
-  String get uploadMedicalImagesSubLabel => "to support your condition";
+  String get uploadMedicalImagesSubLabel =>
+      "upload photos to help the provider get a picture of what is going on.";
 
   @override
   String get errImageDate => "Image date can't be empty";
@@ -1211,13 +1215,13 @@ class LocalizationEN implements Localization {
   String get takeVitalsHeader => "Have you taken vitals recently? ";
 
   @override
-  String get dateFieldHeader => "Date:";
+  String get dateFieldHeader => "When?";
 
   @override
-  String get timeFieldHeader => "Time:";
+  String get timeFieldHeader => "At what time?";
 
   @override
-  String get bloodPressureFieldHeader => "Blood Pressure";
+  String get bloodPressureFieldHeader => "What was your blood pressure?";
 
   @override
   String get sbpHint => "SBP";
@@ -1226,16 +1230,16 @@ class LocalizationEN implements Localization {
   String get dbpHint => "DBP";
 
   @override
-  String get heartRateFieldHeader => "Heart Rate";
+  String get heartRateFieldHeader => "How about your heart rate?";
 
   @override
-  String get beatsPerMinuteLabel => "Beats Per Minute";
+  String get beatsPerMinuteLabel => "BPM";
 
   @override
   String get oxygenFieldHeader => "Oxygen Saturation";
 
   @override
-  String get temperatureFieldHeader => "Temperature";
+  String get temperatureFieldHeader => "and temperature?";
 
   @override
   String get amField => "AM";
@@ -1314,43 +1318,44 @@ class LocalizationEN implements Localization {
   @override
   String get tellUsAboutCare => "Why are you are seeking care today.";
 
-  String get tellUsAboutMore => "Tell us more";
+  String get tellUsAboutMore => "Ok! What is the problem";
 
   @override
-  String get aboutMore => "about your condition.";
+  String get aboutMore => "that brings you here?.";
 
   @override
-  String get searchForProblem => "Problems";
+  String get searchForProblem => "search or pick one of the categories below";
 
   @override
-  String get welcomeBackHeader => "Welcome Back";
+  String get welcomeBackHeader => "    Welcome";
 
   @override
   String get newHealthIssueHeader => "New Health Issue";
 
   @override
-  String get newEpisodeHeader => "This is a New Episode of Care.";
+  String get newEpisodeHeader =>
+      "This provider has never seen me for this problem.";
 
   @override
-  String get followUpAppointmentHeader => "Follow Up Appointment";
+  String get followUpAppointmentHeader => "Follow Up ";
 
   @override
-  String get followUpHeader => "This is Follow Up on Previous Care";
+  String get followUpHeader => "This provider saw me for this issue before.";
 
   @override
   String get boneAndMuscleIssueHeader => "Bone and Muscle Issue";
 
   @override
-  String get describeSymptomsHeader => "Describe the Symptoms.";
+  String get describeSymptomsHeader => "Describe the symptoms.";
 
   @override
-  String get rateYourPainHeader => "Rate your pain 0-10";
+  String get rateYourPainHeader => "Rate your discomfort Zero-Ten";
 
   @override
-  String get searchForBodyPart => "Body Part? For example, Hip.";
+  String get searchForBodyPart => "type the body part - hip for example.";
 
   @override
-  String get selectSideLabel => "Which Side?";
+  String get selectSideLabel => "left, or right?";
 
   @override
   String get breathingIssueLabel => "Breathing Issue";
@@ -1425,7 +1430,7 @@ class LocalizationEN implements Localization {
 
   @override
   String get conditionAffectedHeader =>
-      "How is the problem affecting performance of daily activities?";
+      "What is the effect on performing daily activities - say work?";
 
   @override
   String get hearingAndSightHeader => "Hearing and Sight";
@@ -1465,11 +1470,10 @@ class LocalizationEN implements Localization {
 
   @override
   String get actuallyMakesYourProblemBetter =>
-      "What Makes your Symptoms Better?";
+      "What makes the symptoms better?";
 
   @override
-  String get actuallyMakesYourProblemWorst =>
-      "What Makes Your Symptoms Worse";
+  String get actuallyMakesYourProblemWorst => "What makes the symptoms worse";
 
   @override
   String get improvingProblem => "Improving";

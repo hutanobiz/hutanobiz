@@ -38,7 +38,7 @@ class _UploadSymptomsImagesState extends State<UploadSymptomsImages> {
   _uploadImages() async {
     if (_images.length == 0) {
       DialogUtils.showAlertDialog(
-              context, Localization.of(context)!.selecteOnImage);
+          context, Localization.of(context)!.selecteOnImage);
       return;
     }
     var appointmentId =
@@ -60,7 +60,7 @@ class _UploadSymptomsImagesState extends State<UploadSymptomsImages> {
           _sortList(res.data!.medicalImages);
           // DialogUtils.showAlertDialog(
           //     context, Localization.of(context).imagesUploaded);
-          Navigator.of(context).pushNamed( routeUploadTestDocuments);
+          Navigator.of(context).pushNamed(routeUploadTestDocuments);
         }
       } on ErrorModel catch (e) {
         ProgressDialogUtils.dismissProgressDialog();
@@ -101,7 +101,7 @@ class _UploadSymptomsImagesState extends State<UploadSymptomsImages> {
       var res = await ApiManager().removeMedicalImages(request);
       ProgressDialogUtils.dismissProgressDialog();
       _sortList(res.data!.medicalImages);
-      Navigator.of(context).pushNamed( routeUploadTestDocuments);
+      Navigator.of(context).pushNamed(routeUploadTestDocuments);
     } on ErrorModel catch (e) {
       ProgressDialogUtils.dismissProgressDialog();
       DialogUtils.showAlertDialog(context, e.response!);
@@ -260,12 +260,12 @@ class _UploadSymptomsImagesState extends State<UploadSymptomsImages> {
                     buttonType: HutanoButtonType.withPrefixIcon,
                     icon: FileConstants.icupload,
                     iconSize: 22,
-                    label: "Upload Images",
+                    label: "Images are worth a thousand words!",
                     color: primaryColor,
                     // onPressed: _uploadImages,
                     onPressed: () {
-                    presentBottomSheet();
-                  },
+                      presentBottomSheet();
+                    },
                   ),
                 ),
                 SizedBox(width: spacing20),
@@ -279,7 +279,7 @@ class _UploadSymptomsImagesState extends State<UploadSymptomsImages> {
                     label: Localization.of(context)!.skip,
                     color: primaryColor,
                     onPressed: () {
-                      Navigator.of(context).pushNamed( routeUploadTestDocuments);
+                      Navigator.of(context).pushNamed(routeUploadTestDocuments);
                     },
                   ),
                 ),

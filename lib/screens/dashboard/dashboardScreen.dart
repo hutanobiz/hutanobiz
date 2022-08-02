@@ -142,8 +142,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       unreadCount = value['count'];
       _api.checkCardInsuranceAdded(context).then((value) {
         if ((value['response']['InsuranceAdded'] ?? true) ||
-                (value['response']['CardAdded'] ??
-            true)) {
+            (value['response']['CardAdded'] ?? true)) {
         } else {
           unreadCount++;
         }
@@ -825,7 +824,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                 ),
                                 Text(
-                                  professionalTitle ,
+                                  professionalTitle,
                                   maxLines: 1,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
@@ -1066,7 +1065,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                 ),
                                 Text(
-                                  professionalTitle ,
+                                  professionalTitle,
                                   maxLines: 1,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
@@ -1461,7 +1460,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         print("Service status: $serviceStatus");
 
         if (serviceStatus) {
-          Widgets.showToast("Getting Location. Please wait.");
+          Widgets.showToast("Updating Your Location.");
 
           try {
             LocationData locationData = await _location.getLocation();
@@ -1511,7 +1510,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     try {
       // final coordinates = new Coordinates(latitude, longitude);
       var addresses = await Geo.placemarkFromCoordinates(latitude, longitude);
-      String? first = addresses.first.locality! + ' ' + addresses.first.country!;
+      String? first =
+          addresses.first.locality! + ' ' + addresses.first.country!;
       if (addresses[0].locality != null) {
         first = addresses[0].locality;
       } else {

@@ -386,7 +386,7 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
                                 });
                               });
                             },
-                            title: 'Social history'),
+                            title: 'Social history1'),
                         editWidget(
                             onTap: () {
                               animateTo = scrollController.position.pixels;

@@ -249,7 +249,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
               if (_initialApiCalled && _enableSaveButton) _buildCardDetails(),
               _buildAddCardRow(),
               SizedBox(height: spacing30),
-              if(_initialApiCalled) _buildInsuranceDetails(),
+              if (_initialApiCalled) _buildInsuranceDetails(),
               SizedBox(height: spacing15),
               _buildAddInsurance(),
               SizedBox(height: spacing15),
@@ -349,7 +349,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
         child: Column(
           children: [
             Form(
-              autovalidateMode:AutovalidateMode.onUserInteraction,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               key: _keyName,
               child: HutanoTextField(
                 textInputType: TextInputType.text,
@@ -364,12 +364,12 @@ class _PaymentMethodsState extends State<PaymentMethods> {
             ),
             SizedBox(height: 20),
             Form(
-             autovalidateMode:AutovalidateMode.onUserInteraction,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               key: _keyNumber,
               child: HutanoTextField(
                 focusNode: FocusNode(),
                 labelText: "Card Number",
-                isSecureField:true,
+                isSecureField: true,
                 textInputAction: TextInputAction.next,
                 textInputType: TextInputType.number,
                 controller: _cardNumberController,
@@ -388,7 +388,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
             ),
             SizedBox(height: 20),
             Form(
-             autovalidateMode:AutovalidateMode.onUserInteraction,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               key: _keyExpiary,
               child: HutanoTextField(
                 controller: _expiryController,
@@ -409,12 +409,12 @@ class _PaymentMethodsState extends State<PaymentMethods> {
             ),
             SizedBox(height: 20),
             Form(
-             autovalidateMode:AutovalidateMode.onUserInteraction,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               key: _keyCVV,
               child: HutanoTextField(
                 focusNode: FocusNode(),
                 controller: _cvvController,
-                isSecureField:true,
+                isSecureField: true,
                 textInputType: TextInputType.number,
                 textInputAction: TextInputAction.next,
                 textInputFormatter: [
@@ -571,7 +571,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
   Widget _buildAddInsurance() => InkWell(
         onTap: () {
           if (_selectedInsurance != null) {
-            Navigator.of(context).pushNamed( routeUploadInsuranceImage,
+            Navigator.of(context).pushNamed(routeUploadInsuranceImage,
                 arguments: {
                   ArgumentConstant.insuranceId: _selectedInsurance?.sId ?? ""
                 });
@@ -592,7 +592,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
               ),
               SizedBox(width: spacing15),
               Text(
-                "Upload Insurance Card",
+                "You want to add a new insurance? Get started here!",
                 style: TextStyle(
                   fontSize: fontSize14,
                   fontWeight: fontWeightMedium,
@@ -632,7 +632,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
                       context, Localization.of(context)!.selectCreditCard);
                   return;
                 }
-                Navigator.of(context).pushNamed( routeCheckout, arguments: {
+                Navigator.of(context).pushNamed(routeCheckout, arguments: {
                   ArgumentConstant.card: list[_selectedCardIndex!]
                 });
               },

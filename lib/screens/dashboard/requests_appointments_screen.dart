@@ -127,7 +127,10 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
                           ondemandAppointmentsList!.isNotEmpty
                               ? _listWidget(ondemandAppointmentsList!, 0)
                               : Container(),
-                          heading("Active Requests", _activeRequestsList!, 1),
+                          heading(
+                              "Hang Tight! \nProviders are reviewing your records",
+                              _activeRequestsList!,
+                              1),
                           _activeRequestsList!.isNotEmpty
                               ? _listWidget(_activeRequestsList!, 1)
                               : Container(),
@@ -186,9 +189,8 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
     if (response["doctor"] != null) {
       if (response["isOndemand"]) {
         name = (response["doctor"][0]['title']?.toString() ?? 'Dr.') +
-                ' ' +
-                (response["doctor"][0]["fullName"]?.toString() ??
-            "---");
+            ' ' +
+            (response["doctor"][0]["fullName"]?.toString() ?? "---");
         avatar = response["doctor"][0]["avatar"].toString();
         if (response['doctorData'] != null) {
           if (response['doctorData']["professionalTitle"] != null) {
@@ -199,17 +201,15 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
           }
           if (response['doctorData']["education"].isNotEmpty) {
             name += ' ' +
-                    (response['doctorData']["education"][0]["degree"]
-                        ?.toString() ??
-                "---");
+                (response['doctorData']["education"][0]["degree"]?.toString() ??
+                    "---");
             ;
           }
         }
       } else if (response['isFollowUp']) {
         name = (response["doctor"]['title']?.toString() ?? 'Dr.') +
-                ' ' +
-                (response["doctor"]["fullName"]?.toString() ??
-            "---");
+            ' ' +
+            (response["doctor"]["fullName"]?.toString() ?? "---");
         avatar = response["doctor"]["avatar"].toString();
         if (response['doctorData'] != null) {
           if (response['doctorData'][0]["professionalTitle"] != null) {
@@ -220,16 +220,15 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
           }
           if (response['doctorData'][0]["education"].isNotEmpty) {
             name += ' ' +
-                    (response['doctorData'][0]["education"][0]["degree"]
+                (response['doctorData'][0]["education"][0]["degree"]
                         ?.toString() ??
-                "---");
+                    "---");
           }
         }
       } else {
         name = (response["doctor"]['title']?.toString() ?? 'Dr.') +
-                ' ' +
-                (response["doctor"]["fullName"]?.toString() ??
-            "---");
+            ' ' +
+            (response["doctor"]["fullName"]?.toString() ?? "---");
         avatar = response["doctor"]["avatar"].toString();
         if (response['doctorData'] != null) {
           if (response['doctorData'][0]["professionalTitle"] != null) {
@@ -240,9 +239,9 @@ class _RequestAppointmentsScreenState extends State<RequestAppointmentsScreen> {
           }
           if (response['doctorData'][0]["education"].isNotEmpty) {
             name += ' ' +
-                    (response['doctorData'][0]["education"][0]["degree"]
+                (response['doctorData'][0]["education"][0]["degree"]
                         ?.toString() ??
-                "---");
+                    "---");
           }
         }
       }
