@@ -385,7 +385,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
               if (_cardList == null || _cardList.isEmpty) {
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                  child: Text("No Credit Card on File"),
+                  child: Text("Please Add a Credit Card"),
                 );
               } else {
                 return ListView.separated(
@@ -517,7 +517,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
               if (snapshot.data == null) {
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                  child: Text("NO saved insurance available"),
+                  child: Text("Add Insurance Information"),
                 );
               }
               _insuranceList = snapshot.data['insuranceData'];
@@ -525,7 +525,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
               if (_insuranceList == null || _insuranceList!.isEmpty) {
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                  child: Text("NO saved insurance available"),
+                  child: Text("Please Add Insurance Information"),
                 );
               } else {
                 return ListView.separated(

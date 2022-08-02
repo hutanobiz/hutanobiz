@@ -621,7 +621,7 @@ class ApiBaseHelper {
     });
   }
 
-   Future<dynamic> patientHoldResumeCall(String? token, Map map) {
+  Future<dynamic> patientHoldResumeCall(String? token, Map map) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token!,
     };
@@ -633,6 +633,7 @@ class ApiBaseHelper {
       return res["response"];
     });
   }
+
   Future<dynamic> cancelRequest(String? token, Map rateDoctorData) {
     Map<String, String> headers = {
       HttpHeaders.authorizationHeader: token!,
