@@ -592,7 +592,7 @@ class _PaymentMethodsState extends State<PaymentMethods> {
               ),
               SizedBox(width: spacing15),
               Text(
-                "You want to add a new insurance? Get started here!",
+                "You want to add new insurance? Get started here!",
                 style: TextStyle(
                   fontSize: fontSize14,
                   fontWeight: fontWeightMedium,

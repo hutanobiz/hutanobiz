@@ -947,7 +947,7 @@ class LocalizationEN implements Localization {
   String get medicalHistoryLabel => "Significant Medical Conditions";
 
   @override
-  String get enterPastConditionHint => "Tell us past medical diagnoses";
+  String get enterPastConditionHint => "significant past medical diagnoses";
 
   @override
   String get communicationCenterHeader => "Communication Center";
@@ -1340,7 +1340,8 @@ class LocalizationEN implements Localization {
   String get followUpAppointmentHeader => "Follow Up ";
 
   @override
-  String get followUpHeader => "This provider saw me for this issue before.";
+  String get followUpHeader =>
+      "This provider treated me for this problem before.";
 
   @override
   String get boneAndMuscleIssueHeader => "Bone and Muscle Issue";

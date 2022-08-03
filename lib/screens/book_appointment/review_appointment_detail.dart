@@ -946,8 +946,8 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                 ? getString(PreferenceKey.fullName, "").capitalizeFirstOfEach +
                     " 's Address"
                 : _profileMap!.containsKey("User")
-                    ? "Dr. ${_profileMap!['User'][0]['fullName']}'s Office Address"
-                    : "Dr. ${_profileMap!["userId"]["fullName"]}'s Office Address",
+                    ? "${_profileMap!['User'][0]['fullName']}'s Office Address is"
+                    : "${_profileMap!["userId"]["fullName"]}'s Office Address is",
             style:
                 TextStyle(fontWeight: fontWeightSemiBold, fontSize: fontSize14),
           ),

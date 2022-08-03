@@ -422,7 +422,7 @@ class _TrackTelemedicineAppointmentState
                                 });
                               });
                             },
-                            title: 'Vaccination documents1'),
+                            title: 'Vaccination documents'),
                         editWidget(
                             onTap: () {
                               animateTo = scrollController.position.pixels;

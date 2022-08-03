@@ -101,8 +101,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                       ondemandAppointmentsList!.isNotEmpty
                           ? _listWidget(ondemandAppointmentsList!, 0)
                           : Container(),
-                      heading(
-                          "Active Appointments", _activeAppointmentsList!, 1),
+                      heading("My Appointments", _activeAppointmentsList!, 1),
                       _activeAppointmentsList!.isNotEmpty
                           ? _listWidget(_activeAppointmentsList!, 1)
                           : Container(),

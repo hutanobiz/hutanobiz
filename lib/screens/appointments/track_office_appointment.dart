@@ -263,9 +263,9 @@ class _TrackOfficeAppointmentState extends State<TrackOfficeAppointment> {
   Widget timingWidget(Map response) {
     return Column(
       children: <Widget>[
-        timingSubWidget("Appointment Placed", -1,
+        timingSubWidget("Appointment Request Placed", -1,
             response[_trackStatusKey]["status"], "", false),
-        timingSubWidget("Chart Reviewed", -1,
+        timingSubWidget("Documents Reviewed", -1,
             response[_trackStatusKey]["status"], "", false),
         timingSubWidget("Appointment Accepted", 0,
             response[_trackStatusKey]["status"], "", false),

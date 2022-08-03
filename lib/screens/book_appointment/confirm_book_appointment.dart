@@ -794,11 +794,11 @@ class _ConfirmBookAppointmentScreenState
               children: <Widget>[
                 Text(
                   _container.projectsResponse["serviceType"].toString() == '1'
-                      ? "Office Request Sent!"
+                      ? "It's a wrap!"
                       : _container.projectsResponse["serviceType"].toString() ==
                               '2'
-                          ? "Video Request Sent!"
-                          : "Onsite Request Sent!",
+                          ? "It's a wrap!"
+                          : "It's a wrap!",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
@@ -808,8 +808,8 @@ class _ConfirmBookAppointmentScreenState
                 ),
                 SizedBox(height: 12),
                 Text(
-                  "Your request has been sent. You will be notified when the "
-                  "provider accepts your appointment request.",
+                  "Your provider will review you request soon."
+                  "Thanks for using Hutano.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
@@ -1183,7 +1183,7 @@ class _ConfirmBookAppointmentScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            "Lets get you checked out!",
+            "Let's get you checked out!",
             style: TextStyle(
                 color: colorBlack.withOpacity(0.93),
                 fontWeight: FontWeight.w600,

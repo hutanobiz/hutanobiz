@@ -487,7 +487,7 @@ class _TrackOnsiteAppointmentState extends State<TrackOnsiteAppointment> {
                                 });
                               });
                             },
-                            title: 'Vaccination documents1'),
+                            title: 'Vaccination documents'),
                         editWidget(
                             onTap: () {
                               animateTo = scrollController.position.pixels;

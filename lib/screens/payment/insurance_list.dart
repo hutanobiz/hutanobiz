@@ -262,7 +262,7 @@ class _InsuranceListScreenState extends State<InsuranceListScreen> {
                           padding: EdgeInsets.fromLTRB(
                               4, insuranceList.isEmpty ? 4 : 30, 4, 4),
                           child: Text(
-                            'Iwwnsurance not accepted by Provider',
+                            'Insurance not accepted by Provider',
                             style: TextStyle(
                               fontSize: 14.0,
                               color: Colors.black,

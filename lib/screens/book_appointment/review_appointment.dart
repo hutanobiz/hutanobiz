@@ -147,8 +147,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
       if (_profileMap!["businessLocation"] != null) {
         if (_profileMap!["businessLocation"]["coordinates"].length > 0) {
           _initialPosition = LatLng(
-              double.parse(
-                  _profileMap!["businessLocation"]["coordinates"][1].toString()),
+              double.parse(_profileMap!["businessLocation"]["coordinates"][1]
+                  .toString()),
               double.parse(_profileMap!["businessLocation"]["coordinates"][0]
                   .toString()));
         }
@@ -157,8 +157,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
       if (_profileMap!["businessLocation"] != null) {
         if (_profileMap!["businessLocation"]["coordinates"].length > 0) {
           _desPosition = LatLng(
-              double.parse(
-                  _profileMap!["businessLocation"]["coordinates"][1].toString()),
+              double.parse(_profileMap!["businessLocation"]["coordinates"][1]
+                  .toString()),
               double.parse(_profileMap!["businessLocation"]["coordinates"][0]
                   .toString()));
         }
@@ -468,9 +468,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
               if (_profileMap!["userId"] != null) {
                 nameTitle =
                     _profileMap!["userId"]["title"]?.toString() ?? 'Dr. ';
-                name =
-                    nameTitle + (_profileMap!["userId"]["fullName"]?.toString() ??
-                        "---");
+                name = nameTitle +
+                    (_profileMap!["userId"]["fullName"]?.toString() ?? "---");
               }
             } else if (_profileMap!["User"] != null &&
                 _profileMap!["User"].length > 0) {
@@ -539,11 +538,11 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
               children: <Widget>[
                 Text(
                   _container.projectsResponse["serviceType"].toString() == '1'
-                      ? "Office Request Sent!"
+                      ? "It's a wrap!"
                       : _container.projectsResponse["serviceType"].toString() ==
                               '2'
-                          ? "Video Request Sent!"
-                          : "Onsite Request Sent!",
+                          ? "It's a wrap!"
+                          : "It's a wrap!",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 18,
@@ -553,8 +552,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                 ),
                 SizedBox(height: 12),
                 Text(
-                  "Your request has been sent. You will be notified when the "
-                  "provider accepts your appointment request.",
+                  "The provider is reviewing your request "
+                  "Thank you for trusting Hutano with your care.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
@@ -985,7 +984,8 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
                             )
                                 .then((value) {
                               if (value != null) {
-                                Map _editDateTimeData = value as Map<dynamic, dynamic>;
+                                Map _editDateTimeData =
+                                    value as Map<dynamic, dynamic>;
 
                                 setState(() {
                                   _setBookingTime(_editDateTimeData["time"]);
@@ -1181,7 +1181,7 @@ class _ReviewAppointmentScreenState extends State<ReviewAppointmentScreen> {
               ),
             ),
             TextSpan(
-              text: consultaion["duration"]?.toString()??'---' + ' minutes' ,
+              text: consultaion["duration"]?.toString() ?? '---' + ' minutes',
               style: TextStyle(
                 fontSize: 13.0,
                 fontWeight: FontWeight.w600,

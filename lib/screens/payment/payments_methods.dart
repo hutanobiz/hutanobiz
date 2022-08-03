@@ -338,7 +338,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
             ),
           )
         : addCard("ic_upload_insurance",
-            "You want to add a new insurance?\nGet started here!"));
+            "You want to add new insurance?\nGet started here!"));
 
     _widgetList.add(SizedBox(height: 40.0));
 
