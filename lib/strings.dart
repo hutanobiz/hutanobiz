@@ -775,7 +775,7 @@ class Strings {
       "Upload Any Medical Documents";
 
   static const String uploadMedicalImagesLabel =
-      "Images are worth a thousand words!";
+      "Bmages are worth a thousand words!";
 
   static const String uploadMedicalImagesSubLabel =
       "Upload images to Support your Condition";

@@ -448,7 +448,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
       physics: NeverScrollableScrollPhysics(),
       children: [
         Text(
-          "Ok, Lets Sum it up! \n Does this look correct?",
+          "Ok, Let's sum it up! \n Does this look correct?",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
         ),
         SizedBox(height: 20),

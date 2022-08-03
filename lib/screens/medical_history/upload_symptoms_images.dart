@@ -260,7 +260,7 @@ class _UploadSymptomsImagesState extends State<UploadSymptomsImages> {
                     buttonType: HutanoButtonType.withPrefixIcon,
                     icon: FileConstants.icupload,
                     iconSize: 22,
-                    label: "Images are worth a thousand words!",
+                    label: "Photos can bring clarity,",
                     color: primaryColor,
                     // onPressed: _uploadImages,
                     onPressed: () {

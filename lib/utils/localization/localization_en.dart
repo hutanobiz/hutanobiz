@@ -737,7 +737,7 @@ class LocalizationEN implements Localization {
 
   @override
   String get introSubTitle4 =>
-      "Receive care virtually via telemedicine \n with you local healthcare provider";
+      "Receive care virtually via telemedicine \n with your local healthcare provider";
 
   @override
   String get introSubTitle2 =>
@@ -1101,18 +1101,18 @@ class LocalizationEN implements Localization {
   String get parkingInstHeader => "Parking Instructions";
 
   @override
-  String get uploadMedicalDocsLabel => "Do have medical documents to share?";
+  String get uploadMedicalDocsLabel =>
+      "Do you have medical documents to share?";
 
   @override
-  String get uploadMedicalDocsSubLabel =>
-      "take photos or upload medical documents pertinent to this issue";
+  String get uploadMedicalDocsSubLabel => "Upload MRI, Xray, Lab reports etc.";
 
   @override
-  String get uploadMedicalImagesLabel => "Images are worth a thousand words.";
+  String get uploadMedicalImagesLabel => "Can you take a photo of the problem?";
 
   @override
   String get uploadMedicalImagesSubLabel =>
-      "upload photos to help the provider get a picture of what is going on.";
+      "If so, take a photo or upload photos on your camera.";
 
   @override
   String get errImageDate => "Image date can't be empty";
@@ -1321,7 +1321,7 @@ class LocalizationEN implements Localization {
   String get tellUsAboutMore => "Ok! What is the problem";
 
   @override
-  String get aboutMore => "that brings you here?.";
+  String get aboutMore => "that brings you here?";
 
   @override
   String get searchForProblem => "search or pick one of the categories below";
@@ -1350,7 +1350,7 @@ class LocalizationEN implements Localization {
   String get describeSymptomsHeader => "Describe the symptoms.";
 
   @override
-  String get rateYourPainHeader => "Rate your discomfort Zero-Ten";
+  String get rateYourPainHeader => "Rate your discomfort Zero-Ten.";
 
   @override
   String get searchForBodyPart => "type the body part - hip for example.";
@@ -1431,7 +1431,7 @@ class LocalizationEN implements Localization {
 
   @override
   String get conditionAffectedHeader =>
-      "What is the effect on performing daily activities - say work?";
+      "What is the effect on performing daily activities like chores?";
 
   @override
   String get hearingAndSightHeader => "Hearing and Sight";
@@ -1474,7 +1474,7 @@ class LocalizationEN implements Localization {
       "What makes the symptoms better?";
 
   @override
-  String get actuallyMakesYourProblemWorst => "What makes the symptoms worse";
+  String get actuallyMakesYourProblemWorst => "What makes the symptoms worse?";
 
   @override
   String get improvingProblem => "Improving";
