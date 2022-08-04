@@ -214,13 +214,13 @@ class LocalizationEN implements Localization {
   String get accNowActive => "A few more steps before we wrap this up!";
 
   @override
-  String get activateEmail => "Email Verification.";
+  String get activateEmail => "Email verification";
 
   @override
   String get activateEmailDesc => "Required to secure your account.";
 
   @override
-  String get addFamily => "Add family to my network.";
+  String get addFamily => "Add family to your network";
 
   @override
   String get addFamilyDesc => "Include trusted people to access your account.";
@@ -229,10 +229,10 @@ class LocalizationEN implements Localization {
   String get addPaymentDesc => "To securely pay for out-of-pocket costs.";
 
   @override
-  String get addPaymentOption => "Add payment options.";
+  String get addPaymentOption => "Add payment options";
 
   @override
-  String get addProvider => "Add providers to my network.";
+  String get addProvider => "Add providers to your network";
 
   @override
   String get addProviderDesc => "To access your health team easily.";
@@ -242,7 +242,7 @@ class LocalizationEN implements Localization {
       "You may skip any of these 4 steps \nand complete later.";
 
   @override
-  String get welcome => "Welcome!";
+  String get welcome => "Insurance Info";
 
   @override
   String get completeTaskNow => "Complete Tasks Now";
@@ -273,7 +273,7 @@ class LocalizationEN implements Localization {
   String get complete => "Complete";
 
   @override
-  String get taskComplete => "Three More Steps to Go!";
+  String get taskComplete => "Almost done!";
 
   @override
   String get addCreditCardAndInsurance =>
@@ -760,7 +760,7 @@ class LocalizationEN implements Localization {
   String get start => "Start";
 
   @override
-  String get addInsurance => "Add Insurance";
+  String get addInsurance => "Add Insurance Information";
 
   @override
   String get effectiveDate => "Effective Date";
