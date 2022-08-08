@@ -382,15 +382,15 @@ class Vitals {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['date'] = this.date;
     data['time'] = this.time;
-    data['bloodPressureSbp'] = this.bloodPressureSbp;
-    data['bloodPressureDbp'] = this.bloodPressureDbp;
-    data['heartRate'] = this.heartRate;
-    data['oxygenSaturation'] = this.oxygenSaturation;
-    data['temperature'] = this.temperature;
-    data['height'] = this.height;
-    data['weight'] = this.weight;
-    data['bmi'] = this.bmi;
-    data['bloodGlucose'] = this.bloodGlucose;
+    data['bloodPressureSbp'] = this.bloodPressureSbp.toString();
+    data['bloodPressureDbp'] = this.bloodPressureDbp.toString();
+    data['heartRate'] = this.heartRate.toString();
+    data['oxygenSaturation'] = this.oxygenSaturation.toString();
+    data['temperature'] = this.temperature.toString();
+    data['height'] = this.height.toString();
+    data['weight'] = this.weight.toString();
+    data['bmi'] = this.bmi.toString();
+    data['bloodGlucose'] = this.bloodGlucose.toString();
     return data;
   }
 }

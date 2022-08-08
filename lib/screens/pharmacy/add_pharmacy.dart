@@ -197,16 +197,24 @@ class _AddPharmacyState extends State<AddPharmacy> {
         onForwardTap: defaultPharmacy != null
             ? () {
                 if (widget.args['isEdit']) {
-                  PreferredPharmacy preferredPharmacy =
-                      PreferredPharmacy(pharmacyId: defaultPharmacy!.sId);
-                  Map<String, dynamic> model = {};
-                  model['preferredPharmacy'] = preferredPharmacy;
-                  model['appointmentId'] = widget.args['appointmentId'];
-                  setLoading(true);
-                  ApiManager().updateAppointmentData(model).then((value) {
-                    setLoading(false);
+                  if (widget.args['appointmentId'] == '1') {
+                    PreferredPharmacy preferredPharmacy =
+                        PreferredPharmacy(pharmacyId: defaultPharmacy!.sId);
+                    Provider.of<HealthConditionProvider>(context, listen: false)
+                        .updatePharmacy(preferredPharmacy, defaultPharmacy);
                     Navigator.pop(context);
-                  });
+                  } else {
+                    PreferredPharmacy preferredPharmacy =
+                        PreferredPharmacy(pharmacyId: defaultPharmacy!.sId);
+                    Map<String, dynamic> model = {};
+                    model['preferredPharmacy'] = preferredPharmacy;
+                    model['appointmentId'] = widget.args['appointmentId'];
+                    setLoading(true);
+                    ApiManager().updateAppointmentData(model).then((value) {
+                      setLoading(false);
+                      Navigator.pop(context);
+                    });
+                  }
                 } else {
                   PreferredPharmacy preferredPharmacy =
                       PreferredPharmacy(pharmacyId: defaultPharmacy!.sId);

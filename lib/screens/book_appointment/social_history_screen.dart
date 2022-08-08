@@ -597,7 +597,15 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
     }).then((value) {
       setString('patientSocialHistory', jsonEncode(socialHistory));
       if (widget.map['isEdit']) {
-        if (widget.map['appointmentId'] != null) {
+        if (widget.map['appointmentId'] == null) {
+          setLoading(false);
+          Navigator.pop(context);
+        } else if (widget.map['appointmentId'] == '1') {
+          Provider.of<HealthConditionProvider>(context, listen: false)
+              .updateSocialHistory(socialHistory);
+          setLoading(false);
+          Navigator.pop(context);
+        } else {
           Map<String, dynamic> model = {};
           model['socialHistory'] = socialHistory.toJson();
           model['appointmentId'] = widget.map['appointmentId'];
@@ -610,9 +618,6 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
           api.profile("Bearer ${getString(PreferenceKey.tokens)}", {
             'patientSocialHistory': socialHistory.toJson(),
           });
-        } else {
-          setLoading(false);
-          Navigator.pop(context);
         }
       } else {
         setLoading(false);

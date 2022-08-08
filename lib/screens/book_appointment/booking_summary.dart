@@ -7,16 +7,19 @@ import 'package:hutano/screens/appointments/model/res_uploaded_document_images_m
     as MedImg;
 import 'package:hutano/screens/book_appointment/diagnosis/model/res_diagnostic_test_model.dart';
 import 'package:hutano/screens/book_appointment/model/allergy.dart';
+import 'package:hutano/screens/book_appointment/morecondition/model/selection_health_issue_model.dart';
 import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/screens/book_appointment/vitals/model/social_history.dart';
 import 'package:hutano/screens/medical_history/model/req_medication_detail.dart';
 import 'package:hutano/screens/pharmacy/model/res_preferred_pharmacy_list.dart';
+import 'package:hutano/utils/constants/file_constants.dart';
+import 'package:hutano/utils/constants/key_constant.dart';
 import 'package:hutano/utils/extensions.dart';
 import 'package:hutano/text_style.dart';
-import 'package:hutano/utils/argument_const.dart';
 import 'package:hutano/utils/preference_constants.dart';
 import 'package:hutano/utils/preference_key.dart';
 import 'package:hutano/utils/preference_utils.dart';
+import 'package:hutano/widgets/controller.dart';
 import 'package:hutano/widgets/inherited_widget.dart';
 import 'package:hutano/widgets/loading_background_new.dart';
 import 'package:hutano/widgets/problem_widget.dart';
@@ -90,69 +93,299 @@ class _BookingsummaryState extends State<Bookingsummary> {
   Widget profileWidget() {
     return ListView(padding: EdgeInsets.all(20), children: [
       problemswidget(
-        Provider.of<HealthConditionProvider>(context, listen: false)
+        Provider.of<HealthConditionProvider>(context, listen: true)
             .allHealthIssuesData,
       ),
-      Provider.of<HealthConditionProvider>(context, listen: false)
+      SizedBox(height: 20),
+      Row(
+        children: [
+          Expanded(
+            child: Text(
+              "Medical History",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+            ),
+          ),
+          GestureDetector(
+            child: Image.asset(FileConstants.icEdit),
+            onTap: () {
+              Navigator.of(context).pushNamed(Routes.medicalHistoryScreen,
+                  arguments: {'isEdit': true, 'appointmentId': '1'});
+            },
+          )
+        ],
+      ),
+      Provider.of<HealthConditionProvider>(context, listen: true)
                   .medicalHistoryData
                   .length >
               0
           ? medicalHistoryWidget(
-              Provider.of<HealthConditionProvider>(context, listen: false)
+              Provider.of<HealthConditionProvider>(context, listen: true)
                   .medicalHistoryData)
           : SizedBox(),
+      SizedBox(
+        height: 20,
+      ),
+      Row(
+        children: [
+          Expanded(
+            child: Text(
+              "Social history",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+            ),
+          ),
+          GestureDetector(
+            child: Image.asset(FileConstants.icEdit),
+            onTap: () {
+              Navigator.of(context).pushNamed(Routes.socialHistory, arguments: {
+                'isEdit': true,
+                'socialHistory':
+                    Provider.of<HealthConditionProvider>(context, listen: false)
+                        .socialHistory!
+                        .toJson(),
+                'appointmentId': '1'
+              });
+            },
+          )
+        ],
+      ),
       socialHistoryWidget(
-        Provider.of<HealthConditionProvider>(context, listen: false)
+        Provider.of<HealthConditionProvider>(context, listen: true)
             .socialHistory!,
       ),
-      allergiesWidget(
-        Provider.of<HealthConditionProvider>(context, listen: false).allergies!,
+      SizedBox(height: 20),
+      Row(
+        children: [
+          Expanded(
+            child: Text(
+              "Allergies",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+            ),
+          ),
+          GestureDetector(
+            child: Image.asset(FileConstants.icEdit),
+            onTap: () {
+              Navigator.of(context).pushNamed(Routes.allergiesScreen,
+                  arguments: {'isEdit': true, 'appointmentId': '1'});
+            },
+          )
+        ],
       ),
-      Provider.of<HealthConditionProvider>(context, listen: false)
+      allergiesWidget(
+        Provider.of<HealthConditionProvider>(context, listen: true).allergies!,
+      ),
+      SizedBox(height: 20),
+      Row(
+        children: [
+          Expanded(
+            child: Text(
+              "Vitals",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+            ),
+          ),
+          GestureDetector(
+            child: Image.asset(FileConstants.icEdit),
+            onTap: () {
+              Navigator.of(context)
+                  .pushNamed(Routes.routeVitalReviews, arguments: {
+                'isEdit': true,
+                'vitals':
+                    Provider.of<HealthConditionProvider>(context, listen: false)
+                        .vitalsData!
+                        .toJson(),
+                'appointmentId': '1'
+              });
+            },
+          )
+        ],
+      ),
+      Provider.of<HealthConditionProvider>(context, listen: true)
                   .vitalsData!
                   .date !=
               null
           ? vitalsDetailWidgets(
-              Provider.of<HealthConditionProvider>(context, listen: false)
+              Provider.of<HealthConditionProvider>(context, listen: true)
                   .vitalsData!)
           : SizedBox(),
-      Provider.of<HealthConditionProvider>(context, listen: false)
+      SizedBox(height: 20),
+      Row(
+        children: [
+          Expanded(
+            child: Text(
+              "Medications",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+            ),
+          ),
+          GestureDetector(
+            child: Image.asset(FileConstants.icEdit),
+            onTap: () {
+              Navigator.of(context).pushNamed(Routes.routeMedicineInformation,
+                  arguments: {
+                    'isEdit': true,
+                    'medicationDetails': [],
+                    'appointmentId': '1'
+                  });
+            },
+          )
+        ],
+      ),
+      Provider.of<HealthConditionProvider>(context, listen: true)
                   .medicines
                   .length >
               0
           ? prescriptionWidget(
-              Provider.of<HealthConditionProvider>(context, listen: false)
+              Provider.of<HealthConditionProvider>(context, listen: true)
                   .medicines)
           : SizedBox(),
-      Provider.of<HealthConditionProvider>(context, listen: false)
+      SizedBox(height: 20),
+      Row(
+        children: [
+          Expanded(
+            child: Text(
+              "Preferred Pharmacy",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+            ),
+          ),
+          GestureDetector(
+            child: Image.asset(FileConstants.icEdit),
+            onTap: () {
+              Navigator.of(context)
+                  .pushNamed(Routes.routeAddPharmacy, arguments: {
+                'isEdit': true,
+                'preferredPharmacy':
+                    Provider.of<HealthConditionProvider>(context, listen: false)
+                        .prefPharmacy!
+                        .toJson(),
+                'appointmentId': '1'
+              });
+            },
+          )
+        ],
+      ),
+      Provider.of<HealthConditionProvider>(context, listen: true)
                   .prefPharmacy !=
               null
           ? pharmacyWidget(
-              Provider.of<HealthConditionProvider>(context, listen: false)
+              Provider.of<HealthConditionProvider>(context, listen: true)
                   .prefPharmacy!)
           : SizedBox(),
-      Provider.of<HealthConditionProvider>(context, listen: false)
+      SizedBox(height: 20),
+      Row(
+        children: [
+          Expanded(
+            child: Text(
+              "Medical images",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+            ),
+          ),
+          GestureDetector(
+            child: Image.asset(FileConstants.icEdit),
+            onTap: () {
+              var medicalImages = [];
+              Provider.of<HealthConditionProvider>(context, listen: true)
+                  .medicalImagesData
+                  .forEach((element) {
+                medicalImages.add(element.toJson());
+              });
+              Navigator.of(context)
+                  .pushNamed(Routes.bookingUploadImages, arguments: {
+                'isEdit': true,
+                'medicalImages': medicalImages,
+                'appointmentId': '1',
+                'appointmentProblems':
+                    Provider.of<HealthConditionProvider>(context, listen: false)
+                        .allHealthIssuesData[0]
+                        .toJson()
+              });
+            },
+          )
+        ],
+      ),
+      Provider.of<HealthConditionProvider>(context, listen: true)
                   .medicalImagesData
                   .length >
               0
           ? medicalImagesWidget(
-              Provider.of<HealthConditionProvider>(context, listen: false)
+              Provider.of<HealthConditionProvider>(context, listen: true)
                   .medicalImagesData)
           : SizedBox(),
-      Provider.of<HealthConditionProvider>(context, listen: false)
+      SizedBox(height: 20),
+      Row(
+        children: [
+          Expanded(
+            child: Text(
+              "Medical Documents",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+            ),
+          ),
+          GestureDetector(
+            child: Image.asset(FileConstants.icEdit),
+            onTap: () {
+              var medicalDocs = [];
+              Provider.of<HealthConditionProvider>(context, listen: true)
+                  .medicalDocumentsData
+                  .forEach((element) {
+                medicalDocs.add(element.toJson());
+              });
+              Navigator.of(context)
+                  .pushNamed(Routes.bookingUploadMedicalDocument, arguments: {
+                'isEdit': true,
+                'medicalDocuments': medicalDocs,
+                'appointmentId': '1',
+                'appointmentProblems':
+                    Provider.of<HealthConditionProvider>(context, listen: false)
+                        .allHealthIssuesData[0]
+                        .toJson()
+              });
+            },
+          )
+        ],
+      ),
+      Provider.of<HealthConditionProvider>(context, listen: true)
                   .medicalDocumentsData
                   .length >
               0
           ? medicalDocumentWidget(
-              Provider.of<HealthConditionProvider>(context, listen: false)
+              Provider.of<HealthConditionProvider>(context, listen: true)
                   .medicalDocumentsData)
           : SizedBox(),
-      Provider.of<HealthConditionProvider>(context, listen: false)
+      SizedBox(height: 20),
+      Row(
+        children: [
+          Expanded(
+            child: Text(
+              "Vaccination documents",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+            ),
+          ),
+          GestureDetector(
+            child: Image.asset(FileConstants.icEdit),
+            onTap: () {
+              var medicalDiagnosis = [];
+              Provider.of<HealthConditionProvider>(context, listen: true)
+                  .medicalDiagnosticsTestsModelData
+                  .forEach((element) {
+                medicalDiagnosis.add(element.toJson());
+              });
+              Navigator.of(context)
+                  .pushNamed(Routes.routeUploadDiagnosticNew, arguments: {
+                'isEdit': true,
+                'medicalDiagnostics': medicalDiagnosis,
+                'appointmentId': '1',
+                'appointmentProblems':
+                    Provider.of<HealthConditionProvider>(context, listen: false)
+                        .allHealthIssuesData[0]
+                        .toJson()
+              });
+            },
+          )
+        ],
+      ),
+      Provider.of<HealthConditionProvider>(context, listen: true)
                   .medicalDiagnosticsTestsModelData
                   .length >
               0
           ? diagnosticTestWidget(
-              Provider.of<HealthConditionProvider>(context, listen: false)
+              Provider.of<HealthConditionProvider>(context, listen: true)
                   .medicalDiagnosticsTestsModelData)
           : SizedBox(),
     ]);
@@ -160,14 +393,9 @@ class _BookingsummaryState extends State<Bookingsummary> {
 
   ListView socialHistoryWidget(SocialHistory socialHistory) {
     return ListView(
-      padding: EdgeInsets.only(top: 20),
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       children: [
-        Text(
-          "Social history",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-        ),
         SizedBox(
           height: 14,
         ),
@@ -263,11 +491,6 @@ class _BookingsummaryState extends State<Bookingsummary> {
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       children: [
-        SizedBox(height: 20),
-        Text(
-          "Allergies",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-        ),
         SizedBox(
           height: 14,
         ),
@@ -289,11 +512,6 @@ class _BookingsummaryState extends State<Bookingsummary> {
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       children: [
-        SizedBox(height: 20),
-        Text(
-          "Medical History",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-        ),
         SizedBox(
           height: 14,
         ),
@@ -324,11 +542,6 @@ class _BookingsummaryState extends State<Bookingsummary> {
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       children: [
-        SizedBox(height: 20),
-        Text(
-          "Vitals",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-        ),
         SizedBox(
           height: 14,
         ),
@@ -447,9 +660,90 @@ class _BookingsummaryState extends State<Bookingsummary> {
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       children: [
-        Text(
-          "Problems",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                "Problems",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+              ),
+            ),
+            GestureDetector(
+                onTap: () {
+                  List<SelectionHealthIssueModel> _selectedConditionList = [];
+                  List<int> tempList = [];
+                  int i = 0;
+                  Provider.of<HealthConditionProvider>(context, listen: true)
+                      .allHealthIssuesData
+                      .forEach((element) {
+                    _selectedConditionList.add(SelectionHealthIssueModel(
+                        index: i,
+                        sId: element.problemId,
+                        name: element.name,
+                        image: element.image,
+                        problem: Provider.of<HealthConditionProvider>(context,
+                                listen: true)
+                            .allHealthIssuesData[i]
+                            .toJson(),
+                        isSelected: true));
+                    tempList.add(i);
+                    i++;
+                    // } else {
+                    //   i++;
+                    // }
+                  });
+                  if (tempList.isNotEmpty) {
+                    Provider.of<HealthConditionProvider>(context, listen: true)
+                        .updateHealthConditions(tempList);
+                    Provider.of<HealthConditionProvider>(context, listen: true)
+                        .updateListOfSelectedHealthIssues(
+                            _selectedConditionList);
+                    for (int i = 0;
+                        i <
+                            Provider.of<HealthConditionProvider>(context,
+                                    listen: true)
+                                .listOfSelectedHealthIssues
+                                .length;
+                        i++) {
+                      if (i ==
+                          Provider.of<HealthConditionProvider>(context,
+                                  listen: true)
+                              .currentIndexOfIssue) {
+                        Provider.of<HealthConditionProvider>(context,
+                                listen: true)
+                            .updateCurrentIndex(0);
+                        Navigator.of(context)
+                            .pushNamed(Routes.routeBoneAndMuscle, arguments: {
+                          ArgumentConstant.problemIdKey:
+                              Provider.of<HealthConditionProvider>(context,
+                                      listen: false)
+                                  .listOfSelectedHealthIssues[i]
+                                  .sId,
+                          ArgumentConstant.problemNameKey:
+                              Provider.of<HealthConditionProvider>(context,
+                                      listen: true)
+                                  .listOfSelectedHealthIssues[i]
+                                  .name,
+                          ArgumentConstant.problemImageKey:
+                              Provider.of<HealthConditionProvider>(context,
+                                      listen: true)
+                                  .listOfSelectedHealthIssues[i]
+                                  .image,
+                          ArgumentConstant.problem:
+                              Provider.of<HealthConditionProvider>(context,
+                                      listen: true)
+                                  .listOfSelectedHealthIssues[i]
+                                  .problem,
+                          ArgumentConstant.appointmentId: '1'
+                        });
+                      }
+                    }
+                  } else {
+                    Widgets.showToast("Please select any health condition");
+                  }
+                },
+                child: Image.asset(FileConstants.icEdit))
+          ],
         ),
         SizedBox(height: 20),
         ListView.separated(
@@ -474,11 +768,6 @@ class _BookingsummaryState extends State<Bookingsummary> {
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       children: [
-        SizedBox(height: 20),
-        Text(
-          "Medical images",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-        ),
         SizedBox(height: 20),
         Container(
           padding: EdgeInsets.all(10),
@@ -559,11 +848,6 @@ class _BookingsummaryState extends State<Bookingsummary> {
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       children: [
-        SizedBox(height: 20),
-        Text(
-          "Medical Documents",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-        ),
         SizedBox(height: 20),
         Container(
           padding: EdgeInsets.all(10),
@@ -647,11 +931,6 @@ class _BookingsummaryState extends State<Bookingsummary> {
       physics: NeverScrollableScrollPhysics(),
       children: [
         SizedBox(height: 20),
-        Text(
-          "Vaccination documents",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-        ),
-        SizedBox(height: 20),
         Container(
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
@@ -732,11 +1011,6 @@ class _BookingsummaryState extends State<Bookingsummary> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 20),
-        Text(
-          "Medications",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-        ),
-        SizedBox(height: 20),
         Container(
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
@@ -771,11 +1045,6 @@ class _BookingsummaryState extends State<Bookingsummary> {
 
   Column pharmacyWidget(Pharmacy pharmacy) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      SizedBox(height: 20),
-      Text(
-        "Preferred Pharmacy",
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-      ),
       SizedBox(height: 20),
       Container(
         padding: EdgeInsets.all(10),

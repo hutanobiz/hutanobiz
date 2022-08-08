@@ -59,7 +59,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.args['isEdit']) {
+    if (widget.args['isEdit'] && widget.args['appointmentId'] != '1') {
       SharedPref().getToken().then((token) {
         setState(() {
           this.token = token;
@@ -242,14 +242,16 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
                                 <PopupMenuEntry<String>>[
                               if (!isFromAppointment)
                                 _popMenuCommonItem(
-                                    context,
-                                    Localization.of(context)!.edit,
-                                    FileConstants.icEdit) as PopupMenuEntry<String>,
+                                        context,
+                                        Localization.of(context)!.edit,
+                                        FileConstants.icEdit)
+                                    as PopupMenuEntry<String>,
                               if (!isFromAppointment)
                                 _popMenuCommonItem(
-                                    context,
-                                    Localization.of(context)!.remove,
-                                    FileConstants.icRemoveBlack) as PopupMenuEntry<String>
+                                        context,
+                                        Localization.of(context)!.remove,
+                                        FileConstants.icRemoveBlack)
+                                    as PopupMenuEntry<String>
                             ],
                             child: ListTile(
                               contentPadding: EdgeInsets.all(0),
@@ -362,7 +364,7 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
   }
 
   void saveMedicalHistory() {
-    if (widget.args['isEdit']) {
+    if (widget.args['isEdit'] && widget.args['appointmentId'] != '1') {
       List<BookedMedicalHistory> _listOfHistory = [];
 
       if (_showDiseaseData != null && _showDiseaseData!.length > 0) {
@@ -401,20 +403,29 @@ class _MedicalHistoryScreenState extends State<MedicalHistoryScreen> {
             }
             Provider.of<HealthConditionProvider>(context, listen: false)
                 .updateMedicalHistory(_listOfHistory);
-            Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
-            // Navigator.of(context).pushNamed(Routes.routeMoreCondition);
+            if (widget.args['appointmentId'] == '1') {
+              Navigator.pop(context);
+            } else {
+              Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
+            }
           }
         } else {
           Provider.of<HealthConditionProvider>(context, listen: false)
               .updateMedicalHistory([]);
-          Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
-          // Navigator.of(context).pushNamed(Routes.routeMoreCondition);
+          if (widget.args['appointmentId'] == '1') {
+            Navigator.pop(context);
+          } else {
+            Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
+          }
         }
       } else {
         Provider.of<HealthConditionProvider>(context, listen: false)
             .updateMedicalHistory([]);
-        Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
-        // Navigator.of(context).pushNamed(Routes.routeMoreCondition);
+        if (widget.args['appointmentId'] == '1') {
+          Navigator.pop(context);
+        } else {
+          Navigator.of(context).pushNamed(Routes.routeWelcomeNewFollowup);
+        }
       }
     }
   }
