@@ -110,7 +110,7 @@ class _AddMedicationBottomState extends State<AddMedicationBottomSheet> {
                               filled: true,
                               fillColor: AppColors.mineShaft.withOpacity(0.06),
                               contentPadding: EdgeInsets.all(10),
-                              hintText: 'Medication. Eg. Aspirin',
+                              hintText: 'type the name of the medication',
                               prefixIconConstraints: BoxConstraints(),
                               prefixIcon: GestureDetector(
                                   onTap: () {},

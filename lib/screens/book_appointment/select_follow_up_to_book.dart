@@ -165,7 +165,7 @@ class _SelectFollowUpToBookState extends State<SelectFollowUpToBook> {
           child: Column(
             children: [
               Text(
-                'Chief Complaint',
+                'Welcome back!',
                 style: AppTextStyle.boldStyle(fontSize: 20),
               ),
               SizedBox(height: 6),
@@ -190,7 +190,7 @@ class _SelectFollowUpToBookState extends State<SelectFollowUpToBook> {
                           onSearchTextChanged('');
                         },
                       ),
-                      hintText: 'Search',
+                      hintText: 'who is the provider?',
                       isDense: true,
                       hintStyle: TextStyle(
                           color: colorBlack2,
@@ -275,11 +275,12 @@ class _SelectFollowUpToBookState extends State<SelectFollowUpToBook> {
                         height: 80.0,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image:
-                                (chatAppointment['doctor'][0]["avatar"] == null
+                            image: (chatAppointment['doctor'][0]["avatar"] ==
+                                        null
                                     ? AssetImage(FileConstants.icImgPlaceHolder)
                                     : NetworkImage(ApiBaseHelper.imageUrl +
-                                        chatAppointment['doctor'][0]["avatar"])) as ImageProvider<Object>,
+                                        chatAppointment['doctor'][0]["avatar"]))
+                                as ImageProvider<Object>,
                             fit: BoxFit.cover,
                           ),
                           borderRadius:

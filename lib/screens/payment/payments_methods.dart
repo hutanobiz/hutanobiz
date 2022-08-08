@@ -278,7 +278,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
     _widgetList.add(
       Text(
-        "Saved Cards",
+        "Credit Cards",
         style: TextStyle(
           fontSize: 14.0,
           fontWeight: FontWeight.w500,
@@ -302,7 +302,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
               (_providerInsuranceList == null ||
                   _providerInsuranceList!.isEmpty)
           ? 'Insurance'
-          : "Your Insurance",
+          : "Paying offline by insurance? ",
       style: TextStyle(
         fontSize: 14.0,
         fontWeight: FontWeight.w500,
@@ -337,7 +337,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
               ),
             ),
           )
-        : addCard("ic_upload_insurance", "Upload Insurance Card"));
+        : addCard("ic_upload_insurance",
+            "You want to add new insurance?\nGet started here!"));
 
     _widgetList.add(SizedBox(height: 40.0));
 
@@ -385,7 +386,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
               if (_cardList == null || _cardList.isEmpty) {
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                  child: Text("Please Add a Credit Card"),
+                  child: Text("You do not have credit cards on file."),
                 );
               } else {
                 return ListView.separated(
@@ -562,7 +563,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                                     _insuranceList![index]["insuranceId"]
                                         .toString())
                                 ? Text(
-                                    "Insurance not accepted by the provider",
+                                    "Unfortunately, this provider does not accept your insurance.",
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(

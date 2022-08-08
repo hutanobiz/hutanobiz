@@ -692,7 +692,7 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
         Padding(
           padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
           child: Text(
-            "Note: You Payment will be disbursed to the provider after the appointment.",
+            "The provider will be paid after the appointment.",
             style: TextStyle(
                 color: colorBlack.withOpacity(0.9),
                 fontWeight: fontWeightRegular,
@@ -946,8 +946,8 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
                 ? getString(PreferenceKey.fullName, "").capitalizeFirstOfEach +
                     " 's Address"
                 : _profileMap!.containsKey("User")
-                    ? "Dr. ${_profileMap!['User'][0]['fullName']}'s Office Address"
-                    : "Dr. ${_profileMap!["userId"]["fullName"]}'s Office Address",
+                    ? "${_profileMap!['User'][0]['fullName']}'s Office Address is;"
+                    : "${_profileMap!["userId"]["fullName"]}'s Office Address is;",
             style:
                 TextStyle(fontWeight: fontWeightSemiBold, fontSize: fontSize14),
           ),
@@ -1112,7 +1112,7 @@ class _ReviewAppointmentDetailState extends State<ReviewAppointmentDetail> {
           ),
           SizedBox(height: 5),
           Text(
-            "You will only be charged when the request has been accepted.",
+            "If you paid be credit card, look out for a charge from Hutano.",
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w500,

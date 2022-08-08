@@ -172,7 +172,7 @@ class _ChatMainState extends State<ChatMain> {
           ? Expanded(
               child: Center(
                 child: Text(
-                  'No Active Messaging Yet.\n You can only communicate directly with providers who are actively caring for you, and \n upto 24 hours after an appointment.',
+                  'No Messages Yet. \nBook an appointment to start messaging. ',
                   style: TextStyle(
                       fontSize: 16,
                       color: colorBlack2,
@@ -239,7 +239,8 @@ class _ChatMainState extends State<ChatMain> {
                               image: (chatAppointment.doctor![0].avatar == null
                                   ? AssetImage(FileConstants.icImgPlaceHolder)
                                   : NetworkImage(ApiBaseHelper.imageUrl +
-                                      chatAppointment.doctor![0].avatar!)) as ImageProvider<Object>,
+                                      chatAppointment.doctor![0]
+                                          .avatar!)) as ImageProvider<Object>,
                               fit: BoxFit.cover,
                             ),
                             borderRadius:
@@ -403,9 +404,10 @@ class _ChatMainState extends State<ChatMain> {
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           image: (chatAppointment.doctor![0].avatar == null
-                              ? AssetImage(FileConstants.icImgPlaceHolder)
-                              : NetworkImage(ApiBaseHelper.imageUrl +
-                                  chatAppointment.doctor![0].avatar!)) as ImageProvider<Object>,
+                                  ? AssetImage(FileConstants.icImgPlaceHolder)
+                                  : NetworkImage(ApiBaseHelper.imageUrl +
+                                      chatAppointment.doctor![0].avatar!))
+                              as ImageProvider<Object>,
                           fit: BoxFit.cover,
                         ),
                         borderRadius:

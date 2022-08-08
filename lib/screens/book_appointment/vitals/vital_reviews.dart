@@ -290,7 +290,7 @@ class _VitalReviewsState extends State<VitalReviews> {
                       children: [
                         _commonTextFormField(
                             context,
-                            'Weight',
+                            'How much do you weigh?',
                             _weightController,
                             _weightFocusNode,
                             "",
@@ -302,14 +302,14 @@ class _VitalReviewsState extends State<VitalReviews> {
                           _feetController,
                           _feetFocusNode,
                           'feet',
-                          "Feet",
+                          "",
                           TextInputType.number,
                           dbpController: _inchesController,
                           dbpFocusNode: _inchesFocusNode,
                           hint: 'inches',
                         ),
-                        _bmiTextFormField(context, 'My BMI', _bmiController, "",
-                            "%", TextInputType.number),
+                        _bmiTextFormField(context, 'Your BMI is',
+                            _bmiController, "", "%", TextInputType.number),
                       ],
                     )),
                 SizedBox(
@@ -779,7 +779,7 @@ class _VitalReviewsState extends State<VitalReviews> {
               ),
             ),
             Text(
-              'inches',
+              '',
               style:
                   TextStyle(fontSize: fontSize13, fontWeight: fontWeightMedium),
             ),

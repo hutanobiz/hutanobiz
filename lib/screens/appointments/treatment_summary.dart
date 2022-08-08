@@ -116,7 +116,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
             serviceType = followUpMap["service"] == "1"
                 ? "Office appointment"
                 : followUpMap["service"] == "2"
-                    ? "Video Chat APpointment"
+                    ? "Virtual Appointment"
                     : followUpMap["service"] == "3"
                         ? "Onsite Appointment"
                         : "---";
@@ -173,7 +173,8 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                         .toString()
                         .formatDate() +
                     ' on ' +
-                    appointmentData![_trackingStatusKey]["patientTreatmentEnded"]
+                    appointmentData![_trackingStatusKey]
+                            ["patientTreatmentEnded"]
                         .toString()
                         .formatDate(dateFormat: 'hh:mm aa');
               }
@@ -277,7 +278,7 @@ class _TreatmentSummaryScreenState extends State<TreatmentSummaryScreen> {
                 ),
               ),
               feeWidget(
-                name ,
+                name,
                 type,
                 durationOfSymtoms,
                 "---",

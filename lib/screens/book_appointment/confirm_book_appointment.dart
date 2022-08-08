@@ -44,7 +44,7 @@ class _ConfirmBookAppointmentScreenState
     extends State<ConfirmBookAppointmentScreen> {
   late InheritedContainerState _container;
   late Map _appointmentData;
- late Map _providerData, _userLocationMap;
+  late Map _providerData, _userLocationMap;
   bool _isLoading = false;
   String? _timeHours, _timeMins;
   DateTime? _bookedDate;
@@ -175,8 +175,8 @@ class _ConfirmBookAppointmentScreenState
       if (_profileMap!["businessLocation"] != null) {
         if (_profileMap!["businessLocation"]["coordinates"].length > 0) {
           _desPosition = LatLng(
-              double.parse(
-                  _profileMap!["businessLocation"]["coordinates"][1].toString()),
+              double.parse(_profileMap!["businessLocation"]["coordinates"][1]
+                  .toString()),
               double.parse(_profileMap!["businessLocation"]["coordinates"][0]
                   .toString()));
         }
@@ -244,7 +244,7 @@ class _ConfirmBookAppointmentScreenState
         print("Service status: $serviceStatus");
 
         if (serviceStatus) {
-          Widgets.showToast("Getting Location. Please wait.");
+          Widgets.showToast("Updating Your Location.");
 
           try {
             LocationData locationData = await _location.getLocation();
@@ -794,11 +794,11 @@ class _ConfirmBookAppointmentScreenState
               children: <Widget>[
                 Text(
                   _container.projectsResponse["serviceType"].toString() == '1'
-                      ? "Office Request Sent!"
+                      ? "It's a wrap!"
                       : _container.projectsResponse["serviceType"].toString() ==
                               '2'
-                          ? "Video Request Sent!"
-                          : "Onsite Request Sent!",
+                          ? "It's a wrap!"
+                          : "It's a wrap!",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
@@ -808,8 +808,8 @@ class _ConfirmBookAppointmentScreenState
                 ),
                 SizedBox(height: 12),
                 Text(
-                  "Your request has been sent. You will be notified when the "
-                  "provider accepts your appointment request.",
+                  "Your provider will review you request soon."
+                  "Thanks for using Hutano.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
@@ -1033,7 +1033,7 @@ class _ConfirmBookAppointmentScreenState
           ),
           SizedBox(height: 5),
           Text(
-            "You will be charged when your request is accepted.",
+            "If you paid by credit card. Look out for a charge from Hutano.",
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w500,
@@ -1136,7 +1136,8 @@ class _ConfirmBookAppointmentScreenState
                             )
                                 .then((value) {
                               if (value != null) {
-                                Map _editDateTimeData = value as Map<dynamic, dynamic>;
+                                Map _editDateTimeData =
+                                    value as Map<dynamic, dynamic>;
 
                                 setState(() {
                                   _setBookingTime(_editDateTimeData["time"]);
@@ -1182,7 +1183,7 @@ class _ConfirmBookAppointmentScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            "Checkout",
+            "Let's get you checked out!",
             style: TextStyle(
                 color: colorBlack.withOpacity(0.93),
                 fontWeight: FontWeight.w600,
@@ -1397,7 +1398,7 @@ class _ConfirmBookAppointmentScreenState
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-          child: Text("Confirm and Pay",
+          child: Text("Does this look ok?",
               style: const TextStyle(
                   color: const Color(0xff040238),
                   fontWeight: FontWeight.w700,

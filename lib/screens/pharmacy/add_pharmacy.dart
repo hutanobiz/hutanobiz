@@ -400,7 +400,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
                                             pharmacyList!.isEmpty) &&
                                         !isIndicatorLoading
                                 ? Text(
-                                    'No pharmacy found',
+                                    'Add One or More Pharmacies',
                                     style: TextStyle(
                                         fontSize: 16,
                                         color: colorBlack2,
@@ -620,7 +620,7 @@ class _AddPharmacyState extends State<AddPharmacy> {
                       padding: const EdgeInsets.all(spacing8),
                       child: Image.asset(FileConstants.icSearchBlack,
                           color: colorBlack2, width: 20, height: 20))),
-              hintText: 'Pharmacy. Eg. Walgreens',
+              hintText: 'name of the pharmacy',
               isDense: true,
               hintStyle: TextStyle(
                   color: colorBlack2,

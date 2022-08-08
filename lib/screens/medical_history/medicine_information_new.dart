@@ -117,7 +117,7 @@ class _MedicineInformationState extends State<MedicineInformation>
                 child: Row(
                   children: [
                     Expanded(
-                      child: Text("My Medications",
+                      child: Text("Med List",
                           style: AppTextStyle.boldStyle(fontSize: 18)),
                     ),
                     OutlinedButton(
@@ -147,7 +147,7 @@ class _MedicineInformationState extends State<MedicineInformation>
                             }
                           });
                         },
-                        child: Text('New Medication',
+                        child: Text('Add New Medication',
                             style: TextStyle(color: AppColors.windsor)))
                   ],
                 ),

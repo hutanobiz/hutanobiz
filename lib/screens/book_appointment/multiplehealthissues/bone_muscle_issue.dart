@@ -310,7 +310,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                         widget.problemName ?? "Health Issue",
                         widget.problemImage),
                     hasBodyParts == 1
-                        ? _commonHeaderText(context, "1. What Hurts?",
+                        ? _commonHeaderText(context, "1.What Hurts?",
                             _listOfSelectedDisease.length > 0)
                         : SizedBox(),
 
@@ -490,7 +490,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                         controller: notesController,
                         textInputAction: TextInputAction.done,
                         decoration: InputDecoration(
-                          hintText: 'Additional Notes',
+                          hintText: 'Anything else you want us to know?',
                           enabledBorder: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10.0)),
@@ -524,8 +524,8 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
               suffixheight: spacing12,
               suffixwidth: spacing12,
               isFieldEnable: false,
-              labelText: 'Where were you treated?',
-              hintText: 'Where were you treated?',
+              labelText: 'Where did you get care?',
+              hintText: 'Where did you get care?',
               textInputAction: TextInputAction.done),
         ));
   }
@@ -2145,7 +2145,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
               _selectedProValue == "0") {
             Widgets.showToast('Please select problem duration');
           } else if (_isTreated && _selectedValue == '0') {
-            Widgets.showToast('Please select how long ago');
+            Widgets.showToast('When were you treated for this problem?');
           } else {
             addProblemData();
           }

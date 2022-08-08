@@ -35,7 +35,7 @@ class AppointmentDetailScreen extends StatefulWidget {
 class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   Future<dynamic>? _profileFuture;
   late InheritedContainerState _container;
-  List feeList =[];
+  List feeList = [];
   double totalFee = 0;
   String _appointmentStatus = "---";
 
@@ -44,7 +44,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   Map _medicalHistoryMap = {};
 
   ApiBaseHelper api = ApiBaseHelper();
-  String? token = '',avatar;
+  String? token = '', avatar;
   String name = "---";
 
   final Set<Marker> _markers = {};
@@ -99,7 +99,6 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             e.toString().debugLog();
 
             log(e.code);
-
           }
         } else {
           bool serviceStatusResult = await _location.requestService();
@@ -196,8 +195,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                               : _appointmentStatus == "2" ||
                                       _appointmentStatus == "6"
                                   ? SizedBox()
-                                  : (profileMap!["data"]["paymentMethod"] == 1 &&
-                                          profileMap!["data"]["paymentStatus"] ==
+                                  : (profileMap!["data"]["paymentMethod"] ==
+                                              1 &&
+                                          profileMap!["data"]
+                                                  ["paymentStatus"] ==
                                               2)
                                       ? FancyButton(
                                           title: "Change Payment Method",
@@ -368,11 +369,11 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
     feeList.clear();
     feeList.add({
-      'serviceName': 'Provider Fee',
+      'serviceName': 'Service Fee',
       'amount': _data['data']['providerFees']
     });
     feeList.add({
-      'serviceName': 'Application Fee',
+      'serviceName': 'Administration Fee',
       'amount': _data['data']['applicationFees']
     });
     if (_data['data']["type"].toString() == '3') {
@@ -391,9 +392,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     // }
     if (_providerData["doctor"] != null) {
       name = (_providerData["doctor"]['title']?.toString() ?? 'Dr.') +
-              ' ' +
-              (_providerData["doctor"]["fullName"]?.toString() ??
-          "---");
+          ' ' +
+          (_providerData["doctor"]["fullName"]?.toString() ?? "---");
       avatar = _providerData["doctor"]["avatar"];
     }
 
@@ -401,7 +401,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       for (dynamic detail in _data["doctorData"]) {
         if (detail["professionalTitle"] != null) {
           professionalTitle = detail["professionalTitle"]["title"] ?? "---";
-          name += (Extensions.getSortProfessionTitle(professionalTitle)??'');
+          name += (Extensions.getSortProfessionTitle(professionalTitle) ?? '');
         }
 
         List? providerInsuranceList = [];
@@ -471,8 +471,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: (avatar == null
-                        ? AssetImage('images/profile_user.png')
-                        : NetworkImage(ApiBaseHelper.imageUrl + avatar!)) as ImageProvider<Object>,
+                            ? AssetImage('images/profile_user.png')
+                            : NetworkImage(ApiBaseHelper.imageUrl + avatar!))
+                        as ImageProvider<Object>,
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.all(Radius.circular(50.0)),
@@ -548,7 +549,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         Padding(
           padding: const EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 11.0),
           child: Text(
-            "Appointment Type",
+            "How you are receiving care.",
             style: TextStyle(
               fontSize: 14.0,
               fontWeight: FontWeight.w600,
@@ -596,7 +597,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         SizedBox(height: 10),
         Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Text('Complaint summary',
+            child: Text('Why you are seeking care.',
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
@@ -685,7 +686,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         Icons.star,
                         color: Colors.amber,
                       ),
-                      onRatingUpdate: (v){},
+                      onRatingUpdate: (v) {},
                     ),
             ),
           )
@@ -743,7 +744,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            "Date & Time",
+            "When?",
             style: TextStyle(
               fontWeight: FontWeight.w500,
             ),
@@ -822,7 +823,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            "Location",
+            "Where?",
             style: TextStyle(
               fontWeight: FontWeight.w500,
             ),
@@ -1012,7 +1013,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            "Consultation Fee Breakdown",
+            "Service Fees",
             style: TextStyle(
               fontWeight: FontWeight.w500,
             ),
@@ -1052,7 +1053,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            "Description of problem",
+            "The reason for seeking care",
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: 14.0,

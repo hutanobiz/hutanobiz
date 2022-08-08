@@ -127,7 +127,7 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
             padding: EdgeInsets.zero,
             child: ListView(padding: EdgeInsets.all(20), children: [
               Text(
-                'Social History',
+                'My Social History',
                 style: const TextStyle(
                     color: colorDarkBlack,
                     fontWeight: fontWeightBold,
@@ -146,7 +146,7 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
                   ),
                   child: Column(
                     children: [
-                      titleWidget(1, 'Smoker', isSmoker),
+                      titleWidget(1, 'Do you smoke?', isSmoker),
                       isSmoker
                           ? Column(
                               children: [
@@ -156,7 +156,7 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
                                     '1-10 cigarettes per day',
                                     smokerGroupValue),
                                 smokerRadioListItem(
-                                    1, "2", 'a Pack a day', smokerGroupValue),
+                                    1, "2", 'One Pack a day', smokerGroupValue),
                                 smokerRadioListItem(
                                     1,
                                     "3",
@@ -182,7 +182,7 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
                   ),
                   child: Column(
                     children: [
-                      titleWidget(2, 'Drinker', isDrinker),
+                      titleWidget(2, 'Do you drink alcohol?', isDrinker),
                       isDrinker
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -310,7 +310,7 @@ class _SocialHistoryScreenState extends State<SocialHistoryScreen> {
                   child: Column(
                     children: [
                       recreationaltitleWidget(
-                          3, 'Recreational Drugs', isRecreationalDrug),
+                          3, 'Recreational drug use?', isRecreationalDrug),
                       isRecreationalDrug
                           ? Column(
                               children: [

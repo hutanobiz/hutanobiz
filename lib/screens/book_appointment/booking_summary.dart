@@ -211,7 +211,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
         children: [
           Expanded(
             child: Text(
-              "Medications",
+              "Medication List",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
             ),
           ),
@@ -241,7 +241,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
         children: [
           Expanded(
             child: Text(
-              "Preferred Pharmacy",
+              "Your Pharmacy",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
             ),
           ),
@@ -273,7 +273,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
         children: [
           Expanded(
             child: Text(
-              "Medical images",
+              "Photos of the problem",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
             ),
           ),
@@ -664,7 +664,7 @@ class _BookingsummaryState extends State<Bookingsummary> {
           children: [
             Expanded(
               child: Text(
-                "Problems",
+                "Ok, Let's sum it up! \n Does this look correct?",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
               ),
             ),

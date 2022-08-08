@@ -242,7 +242,11 @@ class _TrackTelemedicineAppointmentState
             response['isDoctorJoin']),
         timingSubWidget("Appointment Accepted", 0, status,
             response['isUserJoin'], response['isDoctorJoin']),
-        timingSubWidget(response['isDoctorOnHold'] ? 'Provider on hold' :'Provider Ready', 1, status, response['isUserJoin'],
+        timingSubWidget(
+            response['isDoctorOnHold'] ? 'Provider on hold' : 'Provider Ready',
+            1,
+            status,
+            response['isUserJoin'],
             response['isDoctorJoin']),
         timingSubWidget('Consult Complete', 2, status, response['isUserJoin'],
             response['isDoctorJoin']),
@@ -797,80 +801,69 @@ class _TrackTelemedicineAppointmentState
                                                             setState(() {});
                                                           });
                                                         })
-                                                    : appointmentResponse['data']
-                                                        ['isDoctorOnHold']
-                                                    ? SizedBox()
-                                                    : TrackingButton(
-                                                        title: 'Join Call',
-                                                        image:
-                                                            'images/ic_video_app.png',
-                                                        onTap: () async {
-                                                          Widgets
-                                                              .showCallDialog(
-                                                                  context:
-                                                                      context,
-                                                                  isRejoin:
-                                                                      false,
-                                                                  onEnterCall: (bool
-                                                                          record,
-                                                                      bool
-                                                                          video) async {
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                    print(
-                                                                        '$record $video');
-                                                                    Map<
-                                                                            Permission
-                                                                                .Permission,
-                                                                            Permission.PermissionStatus>
-                                                                        statuses =
-                                                                        await [
-                                                                      Permission
-                                                                          .Permission
-                                                                          .camera,
-                                                                      Permission
-                                                                          .Permission
-                                                                          .microphone
-                                                                    ].request();
-                                                                    if ((statuses[Permission.Permission.camera]!
-                                                                            .isGranted) &&
-                                                                        (statuses[Permission.Permission.microphone]!
-                                                                            .isGranted)) {
-                                                                      Map appointment =
-                                                                          {};
-                                                                      appointment[
-                                                                              "_id"] =
-                                                                          widget
-                                                                              .appointmentId;
-                                                                      appointment[
-                                                                              'video'] =
-                                                                          video;
-                                                                      appointment[
-                                                                              'record'] =
-                                                                          record;
-                                                                      OverlayService().addVideosOverlay(
+                                                    : appointmentResponse[
+                                                                'data']
+                                                            ['isDoctorOnHold']
+                                                        ? SizedBox()
+                                                        : TrackingButton(
+                                                            title: 'Join Call',
+                                                            image:
+                                                                'images/ic_video_app.png',
+                                                            onTap: () async {
+                                                              Widgets
+                                                                  .showCallDialog(
+                                                                      context:
                                                                           context,
-                                                                          CallPage(
-                                                                              channelName: appointment));
-                                                                      //     .then(
-                                                                      //         (value) {
-                                                                      //   _profileFuture =
-                                                                      //       api.getAppointmentDetails(
-                                                                      //           token,
-                                                                      //           widget
-                                                                      //               .appointmentId,
-                                                                      //           _userLocation);
-                                                                      //   setState(() {});
-                                                                      // });
-                                                                    } else {
-                                                                      Widgets.showErrorialog(
-                                                                          context:
+                                                                      isRejoin:
+                                                                          false,
+                                                                      onEnterCall: (bool
+                                                                              record,
+                                                                          bool
+                                                                              video) async {
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                        print(
+                                                                            '$record $video');
+                                                                        Map<Permission.Permission, Permission.PermissionStatus>
+                                                                            statuses =
+                                                                            await [
+                                                                          Permission
+                                                                              .Permission
+                                                                              .camera,
+                                                                          Permission
+                                                                              .Permission
+                                                                              .microphone
+                                                                        ].request();
+                                                                        if ((statuses[Permission.Permission.camera]!.isGranted) &&
+                                                                            (statuses[Permission.Permission.microphone]!.isGranted)) {
+                                                                          Map appointment =
+                                                                              {};
+                                                                          appointment["_id"] =
+                                                                              widget.appointmentId;
+                                                                          appointment['video'] =
+                                                                              video;
+                                                                          appointment['record'] =
+                                                                              record;
+                                                                          OverlayService().addVideosOverlay(
                                                                               context,
-                                                                          description:
-                                                                              'Camera & Microphone permission Requied');
-                                                                    }
-                                                                  });
-                                                        })
+                                                                              CallPage(channelName: appointment));
+                                                                          //     .then(
+                                                                          //         (value) {
+                                                                          //   _profileFuture =
+                                                                          //       api.getAppointmentDetails(
+                                                                          //           token,
+                                                                          //           widget
+                                                                          //               .appointmentId,
+                                                                          //           _userLocation);
+                                                                          //   setState(() {});
+                                                                          // });
+                                                                        } else {
+                                                                          Widgets.showErrorialog(
+                                                                              context: context,
+                                                                              description: 'Camera & Microphone permission Requied');
+                                                                        }
+                                                                      });
+                                                            })
                                 : Row(
                                     children: [
                                       isUserJoin! || isDoctorJoin!

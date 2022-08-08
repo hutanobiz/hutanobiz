@@ -262,7 +262,8 @@ class _SelectAppointmentTimeScreenState
   }
 
   void _getScheduleDaysList() {
-    if (profileMap!['schedules'] != null && profileMap!['schedules'].isNotEmpty) {
+    if (profileMap!['schedules'] != null &&
+        profileMap!['schedules'].isNotEmpty) {
       List scheduleList = profileMap!['schedules'];
 
       for (dynamic schedule in scheduleList) {
@@ -706,7 +707,7 @@ class _SelectAppointmentTimeScreenState
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Select address',
+                    Text('Which Office?',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,

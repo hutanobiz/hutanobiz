@@ -237,7 +237,7 @@ class _CurrentAppointmentMedicalHistoryState
       children: [
         SizedBox(height: 20),
         Text(
-          "Allergies",
+          "Do you have allergies?",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
         ),
         SizedBox(
@@ -328,7 +328,7 @@ class _CurrentAppointmentMedicalHistoryState
       children: [
         SizedBox(height: 20),
         Text(
-          "Vaccination documents",
+          "Do you have vaccination records?",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
         ),
         SizedBox(height: 14),

@@ -82,7 +82,7 @@ class _RegisterNumberState extends State<RegisterNumber> {
       if (res.response is String) {
         Widgets.showToast(res.response);
         if (res.response.toString() ==
-            'user already register with the system') {
+            'Phone number exists. \nRecover account or re-enter the number.') {
         } else {
           final args = {
             ArgumentConstant.verificationModel: VerificationModel(
