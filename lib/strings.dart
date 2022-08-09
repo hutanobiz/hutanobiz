@@ -566,7 +566,7 @@ class Strings {
 
   static const String newPinCreation = "New Pin Creation";
 
-  static const String searchPhoneContacts = "Search my phone contacts";
+  static const String searchPhoneContacts = "Earn Hutano points for referring \nfamily and friends";
 
   static const String createPin = "Create a PIN to unlock the app";
 
