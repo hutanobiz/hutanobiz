@@ -46,14 +46,18 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
     super.initState();
 
     if (widget.args['isEdit']) {
-      SharedPref().getToken().then((token) {
-        setState(() {
-          this.token = token;
+      if (widget.args['appointmentId'] == '1') {
+      } else {
+        SharedPref().getToken().then((token) {
+          setState(() {
+            this.token = token;
+          });
         });
-      });
-      if (widget.args['allergy'] != null && widget.args['allergy'].length > 0) {
-        for (dynamic aa in widget.args['allergy']) {
-          myAllergiesList!.add(Allergy.fromJson(aa));
+        if (widget.args['allergy'] != null &&
+            widget.args['allergy'].length > 0) {
+          for (dynamic aa in widget.args['allergy']) {
+            myAllergiesList!.add(Allergy.fromJson(aa));
+          }
         }
       }
     }
@@ -318,14 +322,26 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
 
   void saveAllergies() {
     if (widget.args['isEdit']) {
-      Map<String, dynamic> model = {};
-      model['allergy'] = myAllergiesList;
-      model['appointmentId'] = widget.args['appointmentId'];
-      setLoading(true);
-      ApiManager().updateAppointmentData(model).then((value) {
-        setLoading(false);
-        Navigator.pop(context);
-      });
+      if (widget.args['appointmentId'] == '1') {
+        if (myAllergiesList!.length > 0) {
+          Provider.of<HealthConditionProvider>(context, listen: false)
+              .updateAllergies(myAllergiesList);
+          Navigator.pop(context);
+        } else {
+          Provider.of<HealthConditionProvider>(context, listen: false)
+              .updateAllergies([]);
+          Navigator.pop(context);
+        }
+      } else {
+        Map<String, dynamic> model = {};
+        model['allergy'] = myAllergiesList;
+        model['appointmentId'] = widget.args['appointmentId'];
+        setLoading(true);
+        ApiManager().updateAppointmentData(model).then((value) {
+          setLoading(false);
+          Navigator.pop(context);
+        });
+      }
     } else {
       if (myAllergiesList!.length > 0) {
         Provider.of<HealthConditionProvider>(context, listen: false)
@@ -360,6 +376,9 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
       if (!widget.args['isEdit']) {
         myAllergiesList = profileAllergiesList;
       }
+      if (widget.args['appointmentId'] == '1') {
+        myAllergiesList = profileAllergiesList;
+      }
       setState(() {
         isIndicatorLoading = false;
       });
@@ -375,7 +394,7 @@ class _AllergiesScreenState extends State<AllergiesScreen> {
   }
 
   _addMedicalAllergy(Allergy allergy) async {
-    if (widget.args['isEdit']) {
+    if (widget.args['isEdit'] && widget.args['appointmentId'] != '1') {
       // if ((profileAllergiesList.singleWhere((it) => it.name == allergy.name,
       //         orElse: () => null)) !=
       //     null) {

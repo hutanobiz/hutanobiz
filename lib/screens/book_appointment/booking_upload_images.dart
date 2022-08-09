@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hutano/apis/api_manager.dart';
 import 'package:hutano/dimens.dart';
 import 'package:hutano/screens/appointments/model/res_uploaded_document_images_model.dart';
+import 'package:hutano/screens/book_appointment/morecondition/model/selection_health_issue_model.dart';
 import 'package:hutano/screens/book_appointment/morecondition/providers/health_condition_provider.dart';
 import 'package:hutano/utils/color_utils.dart';
 import 'package:hutano/utils/extensions.dart';
@@ -161,7 +162,8 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
         defaultBodyPart = side + ' ' + part;
       }
     }
-    if (widget.args['appointmentProblems'] != null) {
+    if (widget.args['appointmentProblems'] != null &&
+        widget.args['appointmentId'] != '1') {
       if (widget.args['appointmentProblems']['bodyPart'] != null &&
           widget.args['appointmentProblems']['bodyPart'].length > 0) {
         var part = widget.args['appointmentProblems']['bodyPart'][0]['name'];
@@ -203,25 +205,43 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
         },
         onForwardTap: () {
           if (widget.args['isEdit']) {
-            List<String?> selectedImagesId = [];
-            if (_selectedImagesList != null && _selectedImagesList.length > 0) {
-              _selectedImagesList.forEach((element) {
-                selectedImagesId.add(MedicalImages.fromJson(element as Map<String, dynamic>).sId);
+            if (widget.args['appointmentId'] == '1') {
+              List<MedicalImages> _selectedMedicalImages = [];
+              if (_selectedImagesList != null &&
+                  _selectedImagesList.length > 0) {
+                _selectedImagesList.forEach((element) {
+                  _selectedMedicalImages.add(
+                      MedicalImages.fromJson(element as Map<String, dynamic>));
+                });
+                Provider.of<HealthConditionProvider>(context, listen: false)
+                    .updateImages(_selectedMedicalImages);
+              }
+              Navigator.pop(context);
+            } else {
+              List<String?> selectedImagesId = [];
+              if (_selectedImagesList != null &&
+                  _selectedImagesList.length > 0) {
+                _selectedImagesList.forEach((element) {
+                  selectedImagesId.add(
+                      MedicalImages.fromJson(element as Map<String, dynamic>)
+                          .sId);
+                });
+              }
+              Map<String, dynamic> model = {};
+              model['medicalImages'] = selectedImagesId;
+              model['appointmentId'] = widget.args['appointmentId'];
+              setLoading(true);
+              ApiManager().updateAppointmentData(model).then((value) {
+                setLoading(false);
+                Navigator.pop(context);
               });
             }
-            Map<String, dynamic> model = {};
-            model['medicalImages'] = selectedImagesId;
-            model['appointmentId'] = widget.args['appointmentId'];
-            setLoading(true);
-            ApiManager().updateAppointmentData(model).then((value) {
-              setLoading(false);
-              Navigator.pop(context);
-            });
           } else {
             List<MedicalImages> _selectedMedicalImages = [];
             if (_selectedImagesList != null && _selectedImagesList.length > 0) {
               _selectedImagesList.forEach((element) {
-                _selectedMedicalImages.add(MedicalImages.fromJson(element as Map<String, dynamic>));
+                _selectedMedicalImages.add(
+                    MedicalImages.fromJson(element as Map<String, dynamic>));
               });
               Provider.of<HealthConditionProvider>(context, listen: false)
                   .updateImages(_selectedMedicalImages);
@@ -390,8 +410,8 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
                           Align(
                               alignment: Alignment.topLeft,
                               child: Text(
-                                  filteredImagesList[index]!
-                                          [ArgumentConstant.nameKey] ??
+                                  filteredImagesList[index]![
+                                          ArgumentConstant.nameKey] ??
                                       '---+---',
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -401,8 +421,8 @@ class _BookingUploadImagesState extends State<BookingUploadImages>
                           Align(
                               alignment: Alignment.topLeft,
                               child: Text(
-                                  filteredImagesList[index]!
-                                          [ArgumentConstant.dateKey] ??
+                                  filteredImagesList[index]![
+                                          ArgumentConstant.dateKey] ??
                                       '---+---',
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(

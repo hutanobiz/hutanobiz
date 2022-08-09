@@ -865,14 +865,20 @@ class _VitalReviewsState extends State<VitalReviews> {
           : null,
     );
     if (widget.args['isEdit']) {
-      Map<String, dynamic> model = {};
-      model['vitals'] = vitalsModel;
-      model['appointmentId'] = widget.args['appointmentId'];
-      setLoading(true);
-      ApiManager().updateAppointmentData(model).then((value) {
-        setLoading(false);
+      if (widget.args['appointmentId'] == '1') {
+        Provider.of<HealthConditionProvider>(context, listen: false)
+            .updateVitals(vitalsModel);
         Navigator.pop(context);
-      });
+      } else {
+        Map<String, dynamic> model = {};
+        model['vitals'] = vitalsModel;
+        model['appointmentId'] = widget.args['appointmentId'];
+        setLoading(true);
+        ApiManager().updateAppointmentData(model).then((value) {
+          setLoading(false);
+          Navigator.pop(context);
+        });
+      }
     } else {
       Provider.of<HealthConditionProvider>(context, listen: false)
           .updateVitals(vitalsModel);

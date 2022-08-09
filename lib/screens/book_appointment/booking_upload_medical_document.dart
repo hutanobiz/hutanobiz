@@ -198,7 +198,8 @@ class _BookingUploadMedicalDocumentState
         defaultBodyPart = side + ' ' + part;
       }
     }
-    if (widget.args['appointmentProblems'] != null) {
+    if (widget.args['appointmentProblems'] != null &&
+        widget.args['appointmentId'] != '1') {
       if (widget.args['appointmentProblems']['bodyPart'] != null &&
           widget.args['appointmentProblems']['bodyPart'].length > 0) {
         var part = widget.args['appointmentProblems']['bodyPart'][0]['name'];
@@ -240,25 +241,41 @@ class _BookingUploadMedicalDocumentState
         },
         onForwardTap: () {
           if (widget.args['isEdit']) {
-            List<String?> selectedDocsId = [];
-            if (_selectedDocsList != null && _selectedDocsList.length > 0) {
-              _selectedDocsList.forEach((element) {
-                selectedDocsId.add(MedicalImages.fromJson(element as Map<String, dynamic>).sId);
+            if (widget.args['appointmentId'] == '1') {
+              List<MedicalDocuments> _selectedMedicalDocs = [];
+              if (_selectedDocsList != null && _selectedDocsList.length > 0) {
+                _selectedDocsList.forEach((element) {
+                  _selectedMedicalDocs.add(MedicalDocuments.fromJson(
+                      element as Map<String, dynamic>));
+                });
+                Provider.of<HealthConditionProvider>(context, listen: false)
+                    .updateDocuments(_selectedMedicalDocs);
+              }
+              Navigator.pop(context);
+            } else {
+              List<String?> selectedDocsId = [];
+              if (_selectedDocsList != null && _selectedDocsList.length > 0) {
+                _selectedDocsList.forEach((element) {
+                  selectedDocsId.add(
+                      MedicalImages.fromJson(element as Map<String, dynamic>)
+                          .sId);
+                });
+              }
+              Map<String, dynamic> model = {};
+              model['medicalDocuments'] = selectedDocsId;
+              model['appointmentId'] = widget.args['appointmentId'];
+              setLoading(true);
+              ApiManager().updateAppointmentData(model).then((value) {
+                setLoading(false);
+                Navigator.pop(context);
               });
             }
-            Map<String, dynamic> model = {};
-            model['medicalDocuments'] = selectedDocsId;
-            model['appointmentId'] = widget.args['appointmentId'];
-            setLoading(true);
-            ApiManager().updateAppointmentData(model).then((value) {
-              setLoading(false);
-              Navigator.pop(context);
-            });
           } else {
             List<MedicalDocuments> _selectedMedicalDocs = [];
             if (_selectedDocsList != null && _selectedDocsList.length > 0) {
               _selectedDocsList.forEach((element) {
-                _selectedMedicalDocs.add(MedicalDocuments.fromJson(element as Map<String, dynamic>));
+                _selectedMedicalDocs.add(
+                    MedicalDocuments.fromJson(element as Map<String, dynamic>));
               });
               Provider.of<HealthConditionProvider>(context, listen: false)
                   .updateDocuments(_selectedMedicalDocs);
@@ -388,24 +405,24 @@ class _BookingUploadMedicalDocumentState
                             .endsWith("pdf")
                         ? "ic_pdf".imageIcon()
                         : ((ApiBaseHelper.imageUrl +
-                                        filteredImagesList[index]!
-                                            ['medicalDocuments'])
+                                        filteredImagesList[index]![
+                                            'medicalDocuments'])
                                     .contains('http') ||
                                 (ApiBaseHelper.imageUrl +
-                                        filteredImagesList[index]!
-                                            ['medicalDocuments'])
+                                        filteredImagesList[index]![
+                                            'medicalDocuments'])
                                     .contains('https')
                             ? Image.network(
                                 (ApiBaseHelper.imageUrl +
-                                    filteredImagesList[index]!
-                                        ['medicalDocuments']),
+                                    filteredImagesList[index]![
+                                        'medicalDocuments']),
                                 height: 125.0,
                                 width: 180.0,
                                 fit: BoxFit.cover,
                               )
                             : Image.file(
-                                File(filteredImagesList[index]!
-                                    ['medicalDocuments']),
+                                File(filteredImagesList[index]![
+                                    'medicalDocuments']),
                                 height: 125.0,
                                 width: 180.0,
                                 fit: BoxFit.cover,
@@ -454,8 +471,8 @@ class _BookingUploadMedicalDocumentState
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              filteredImagesList[index]!
-                                  [ArgumentConstant.nameKey],
+                              filteredImagesList[index]![
+                                  ArgumentConstant.nameKey],
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   fontSize: fontSize14,
@@ -466,8 +483,8 @@ class _BookingUploadMedicalDocumentState
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              filteredImagesList[index]!
-                                  [ArgumentConstant.typeKey],
+                              filteredImagesList[index]![
+                                  ArgumentConstant.typeKey],
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   fontSize: fontSize12,
@@ -478,8 +495,8 @@ class _BookingUploadMedicalDocumentState
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              filteredImagesList[index]!
-                                  [ArgumentConstant.dateKey],
+                              filteredImagesList[index]![
+                                  ArgumentConstant.dateKey],
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   fontSize: fontSize12,
@@ -651,10 +668,11 @@ class _BookingUploadMedicalDocumentState
                 child: ButtonTheme(
                   height: 55,
                   child: OutlinedButton(
-                   style: OutlinedButton.styleFrom(
-                        shape: new RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(14.0),
-                    ),),
+                    style: OutlinedButton.styleFrom(
+                      shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(14.0),
+                      ),
+                    ),
                     // highlightedBorderColor: AppColors.windsor,
                     child: Text(
                       'Cancel',
@@ -825,33 +843,34 @@ class _BookingUploadMedicalDocumentState
   Future getImage(int source) async {
     ImagePicker _picker = ImagePicker();
 
-     XFile? image = await _picker.pickImage(
+    XFile? image = await _picker.pickImage(
         imageQuality: 25,
         source: (source == 1) ? ImageSource.camera : ImageSource.gallery);
     if (image != null) {
       File imageFile = File(image.path);
 
       var croppedFile = await ImageCropper().cropImage(
-        compressQuality: imageFile.lengthSync() > 100000 ? 25 : 100,
-        sourcePath: image.path,
-        aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
-        aspectRatioPresets: [
-          CropAspectRatioPreset.square,
-          CropAspectRatioPreset.ratio3x2,
-          CropAspectRatioPreset.original,
-          CropAspectRatioPreset.ratio4x3,
-          CropAspectRatioPreset.ratio16x9
-        ],
-       uiSettings: [AndroidUiSettings(
-            toolbarColor: Colors.transparent,
-            toolbarWidgetColor: Colors.transparent,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false),
-        IOSUiSettings(
-          minimumAspectRatio: 1.0,
-          aspectRatioLockDimensionSwapEnabled: true,
-        ),]
-      );
+          compressQuality: imageFile.lengthSync() > 100000 ? 25 : 100,
+          sourcePath: image.path,
+          aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+          aspectRatioPresets: [
+            CropAspectRatioPreset.square,
+            CropAspectRatioPreset.ratio3x2,
+            CropAspectRatioPreset.original,
+            CropAspectRatioPreset.ratio4x3,
+            CropAspectRatioPreset.ratio16x9
+          ],
+          uiSettings: [
+            AndroidUiSettings(
+                toolbarColor: Colors.transparent,
+                toolbarWidgetColor: Colors.transparent,
+                initAspectRatio: CropAspectRatioPreset.original,
+                lockAspectRatio: false),
+            IOSUiSettings(
+              minimumAspectRatio: 1.0,
+              aspectRatioLockDimensionSwapEnabled: true,
+            ),
+          ]);
 
       if (croppedFile != null) {
         uploadDocsBottomSheet(File(croppedFile.path));

@@ -59,9 +59,9 @@ class _ConsentToTreatScreenState extends State<ConsentToTreatScreen> {
               ?.toString() ??
           'Dr. ';
       name = nameTitle! +
-              (_container.providerResponse['providerData']["userId"]["fullName"]
+          (_container.providerResponse['providerData']["userId"]["fullName"]
                   ?.toString() ??
-          "---");
+              "---");
     } else if (_container.providerResponse['providerData']['data'][0]["User"] !=
         null is Map) {
       nameTitle = (_container.providerResponse['providerData']['data'][0]

@@ -54,8 +54,9 @@ class _WelcomeNewFollowUpState extends State<WelcomeNewFollowUp> {
         child: Text(
           "${Localization.of(context)!.welcomeBackHeader} ${getString(PreferenceKey.fullName, "")}!",
           style: AppTextStyle.boldStyle(
-              color: Color(0xff0e1c2a),
-              fontSize: 20,),
+            color: Color(0xff0e1c2a),
+            fontSize: 20,
+          ),
         ),
       );
 

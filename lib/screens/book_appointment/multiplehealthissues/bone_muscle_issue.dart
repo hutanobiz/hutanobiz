@@ -1992,8 +1992,14 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
               widget.problem['bodyPart'].length > 0) {
             for (dynamic body in widget.problem['bodyPart']) {
               if (element.name == body['name']) {
-                _listOfSelectedDisease.add(BodyPartModel(body['name'], false,
-                    element.sides, false, body['sides'].first));
+                _listOfSelectedDisease.add(BodyPartModel(
+                    body['name'],
+                    false,
+                    element.sides,
+                    false,
+                    body['sides'] is String
+                        ? int.parse(body['sides'])
+                        : body['sides'].first));
               }
             }
           }
@@ -2021,13 +2027,15 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
                 ? int.parse(widget.problem['dailyActivity'])
                 : null;
             if (widget.problem['isProblemImproving'] != null) {
-              _listOfDescribeSymptoms[widget.problem['isProblemImproving']]
+              _listOfDescribeSymptoms[
+                      int.parse(widget.problem['isProblemImproving'])]
                   .isSelected = true;
             }
             notesController.text = widget.problem['description'] ?? '';
-            _isTreated = (widget.problem['isTreatmentReceived'] ?? 0) == 1
-                ? true
-                : false;
+            _isTreated =
+                (int.parse(widget.problem['isTreatmentReceived'] ?? '0')) == 1
+                    ? true
+                    : false;
 
             if (widget.problem['problemFacingTimeSpan'] != null) {
               _selectedProType =
@@ -2070,6 +2078,7 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
     })).catchError((dynamic e) {
       ProgressDialogUtils.dismissProgressDialog();
       // _getAllHealthConditions(context);
+      e.toString().debugLog();
       if (e is ErrorModel) {
         e.toString().debugLog();
       }
@@ -2251,20 +2260,29 @@ class _BoneMuscleIssueState extends State<BoneMuscleIssue> {
         //     'appointmentId': widget.appointmentId
         //   });
         // });
-        Map<String, dynamic> model = {};
-        model['problems'] = finalProblems;
-        model['appointmentId'] = widget.appointmentId;
-        setLoading(true);
-        ApiManager().updateAppointmentData(model).then((value) {
-          setLoading(false);
-          // Navigator.pop(context);
+        if (widget.appointmentId == '1') {
           int count = 0;
           Navigator.of(context).popUntil((_) =>
               count++ >=
               Provider.of<HealthConditionProvider>(context, listen: false)
                   .listOfSelectedHealthIssues
                   .length);
-        });
+        } else {
+          Map<String, dynamic> model = {};
+          model['problems'] = finalProblems;
+          model['appointmentId'] = widget.appointmentId;
+          setLoading(true);
+          ApiManager().updateAppointmentData(model).then((value) {
+            setLoading(false);
+            // Navigator.pop(context);
+            int count = 0;
+            Navigator.of(context).popUntil((_) =>
+                count++ >=
+                Provider.of<HealthConditionProvider>(context, listen: false)
+                    .listOfSelectedHealthIssues
+                    .length);
+          });
+        }
       } else {
         Navigator.of(context).pushNamed(Routes.bookingUploadImages, arguments: {
           'isEdit': false,

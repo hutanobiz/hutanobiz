@@ -126,7 +126,8 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
         defaultBodyPart = side + ' ' + part;
       }
     }
-    if (widget.args!['appointmentProblems'] != null) {
+    if (widget.args!['appointmentProblems'] != null &&
+        widget.args!['appointmentId'] != '1') {
       if (widget.args!['appointmentProblems']['bodyPart'] != null &&
           widget.args!['appointmentProblems']['bodyPart'].length > 0) {
         var part = widget.args!['appointmentProblems']['bodyPart'][0]['name'];
@@ -942,21 +943,35 @@ class _UploadDiagnosticNewState extends State<UploadDiagnosticNew>
 
   void _forwardButtonPressed(BuildContext context) {
     if (widget.args!['isEdit']) {
-      List<String?> selectedTestsId = [];
-      if (_selectedDocsList != null && _selectedDocsList.length > 0) {
-        _selectedDocsList.forEach((element) {
-          selectedTestsId
-              .add(MedicalImages.fromJson(element as Map<String, dynamic>).sId);
+      if (widget.args!['appointmentId'] == '1') {
+        List<DiagnosticTest> selectedTestsModel = [];
+        if (_selectedDocsList != null && _selectedDocsList.length > 0) {
+          _selectedDocsList.forEach((element) {
+            selectedTestsModel
+                .add(DiagnosticTest.fromJson(element as Map<String, dynamic>));
+          });
+        }
+
+        Provider.of<HealthConditionProvider>(context, listen: false)
+            .updateDiagnosticsModel(selectedTestsModel);
+        Navigator.pop(context);
+      } else {
+        List<String?> selectedTestsId = [];
+        if (_selectedDocsList != null && _selectedDocsList.length > 0) {
+          _selectedDocsList.forEach((element) {
+            selectedTestsId.add(
+                MedicalImages.fromJson(element as Map<String, dynamic>).sId);
+          });
+        }
+        Map<String, dynamic> model = {};
+        model['medicalDiagnosticsTests'] = selectedTestsId;
+        model['appointmentId'] = widget.args!['appointmentId'];
+        setLoading(true);
+        ApiManager().updateAppointmentData(model).then((value) {
+          setLoading(false);
+          Navigator.pop(context);
         });
       }
-      Map<String, dynamic> model = {};
-      model['medicalDiagnosticsTests'] = selectedTestsId;
-      model['appointmentId'] = widget.args!['appointmentId'];
-      setLoading(true);
-      ApiManager().updateAppointmentData(model).then((value) {
-        setLoading(false);
-        Navigator.pop(context);
-      });
     } else {
       List<DiagnosticTest> selectedTestsModel = [];
       if (_selectedDocsList != null && _selectedDocsList.length > 0) {
